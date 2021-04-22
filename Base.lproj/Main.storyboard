@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -111,7 +111,7 @@
                                                     <color key="color" name="colorTint"/>
                                                 </activityIndicatorView>
                                                 <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="wcA-QO-E6S">
-                                                    <rect key="frame" x="93" y="178.5" width="280" height="47"/>
+                                                    <rect key="frame" x="93" y="180.5" width="280" height="43"/>
                                                     <subviews>
                                                         <progressView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vTy-88-2LK">
                                                             <rect key="frame" x="0.0" y="0.0" width="280" height="4"/>
@@ -119,7 +119,7 @@
                                                             <color key="trackTintColor" systemColor="secondaryLabelColor"/>
                                                         </progressView>
                                                         <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mEc-YZ-ZGZ">
-                                                            <rect key="frame" x="0.0" y="14" width="280" height="33"/>
+                                                            <rect key="frame" x="0.0" y="14" width="280" height="29"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <state key="normal" title="Cancel"/>
                                                             <connections>
@@ -259,7 +259,7 @@
                                                     </constraints>
                                                 </view>
                                                 <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="kIl-Ti-m4W">
-                                                    <rect key="frame" x="36.5" y="21.5" width="393" height="43"/>
+                                                    <rect key="frame" x="36.5" y="23.5" width="393" height="39"/>
                                                     <subviews>
                                                         <progressView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8qU-wy-3p4">
                                                             <rect key="frame" x="32.5" y="0.0" width="328" height="4"/>
@@ -267,7 +267,7 @@
                                                             <color key="trackTintColor" systemColor="secondaryLabelColor"/>
                                                         </progressView>
                                                         <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rCO-7L-9h4">
-                                                            <rect key="frame" x="170" y="10" width="53" height="33"/>
+                                                            <rect key="frame" x="174" y="10" width="45" height="29"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <state key="normal" title="Cancel"/>
                                                             <connections>
@@ -423,16 +423,16 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
-                            <rect key="frame" x="20" y="59.5" width="160" height="60.5"/>
+                            <rect key="frame" x="20" y="66.5" width="160" height="53.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                                    <rect key="frame" x="0.0" y="0.0" width="160" height="26.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="23"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Oo-XrT">
-                                    <rect key="frame" x="0.0" y="42.5" width="160" height="18"/>
+                                    <rect key="frame" x="0.0" y="39" width="160" height="14.5"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="colorTint"/>
                                     <nil key="highlightedColor"/>
@@ -479,20 +479,20 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelToggleCell" rowHeight="70" id="pwg-9e-MlX" customClass="LabelToggleCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="24.5" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pwg-9e-MlX" id="fje-lK-u5A">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIL-f2-cgn">
-                                                    <rect key="frame" x="16" y="11" width="208" height="18"/>
+                                                    <rect key="frame" x="16" y="11" width="208" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="1000" text="Item count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phz-mJ-ghT">
-                                                    <rect key="frame" x="16" y="29" width="208" height="30"/>
+                                                    <rect key="frame" x="16" y="25.5" width="208" height="33.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
@@ -525,7 +525,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOj-EL-dRw">
-                                <rect key="frame" x="24" y="214" width="192" height="88"/>
+                                <rect key="frame" x="24" y="219" width="192" height="78.5"/>
                                 <string key="text">You can add labels to items, and they will appear here.
 
 Selecting them will show only items that contain these labels.</string>
@@ -534,7 +534,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWn-S9-INk">
-                                <rect key="frame" x="78.5" y="346" width="83" height="41"/>
+                                <rect key="frame" x="81.5" y="341.5" width="77" height="37"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
                                 <state key="normal" title="Close"/>
@@ -590,13 +590,13 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="631"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out to export a ZIP file." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZOF-Yb-WSo">
-                                        <rect key="frame" x="40" y="351" width="240" height="14.5"/>
+                                        <rect key="frame" x="40" y="327" width="240" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHF-2i-yuv">
-                                        <rect key="frame" x="40" y="58.5" width="240" height="100"/>
+                                        <rect key="frame" x="40" y="54.5" width="240" height="100"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjC-x2-xmz">
                                                 <rect key="frame" x="8" y="8" width="224" height="84"/>
@@ -630,19 +630,19 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag out from this area to export your items as an archive." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-BU-EoU">
-                                        <rect key="frame" x="40" y="20" width="240" height="30.5"/>
+                                        <rect key="frame" x="40" y="20" width="240" height="26.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Drag in an existing Gladys archive above to merge its contents into your current items." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiR-cx-G23">
-                                        <rect key="frame" x="40" y="166.5" width="240" height="46.5"/>
+                                        <rect key="frame" x="40" y="162.5" width="240" height="26.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="emb-Ou-BQ2" userLabel="ZIP Container">
-                                        <rect key="frame" x="40" y="243" width="240" height="100"/>
+                                        <rect key="frame" x="40" y="219" width="240" height="100"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60f-T2-TvR">
                                                 <rect key="frame" x="8" y="8" width="224" height="84"/>
@@ -674,10 +674,10 @@ Selecting them will show only items that contain these labels.</string>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mrn-8f-Vbe" customClass="SwitchHolder" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="395.5" width="320" height="104.5"/>
+                                        <rect key="frame" x="0.0" y="370.5" width="320" height="78"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Limit to visible items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gar-th-nmX">
-                                                <rect key="frame" x="40" y="10" width="173" height="18"/>
+                                                <rect key="frame" x="40" y="10" width="173" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -690,7 +690,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Export / ZIP only the items which are currently visible as a result of your search or label selection" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iaP-VB-kpO">
-                                                <rect key="frame" x="40" y="32" width="173" height="62.5"/>
+                                                <rect key="frame" x="40" y="28.5" width="173" height="39.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                 <nil key="highlightedColor"/>
@@ -794,13 +794,13 @@ Selecting them will show only items that contain these labels.</string>
                                                         <rect key="frame" x="20" y="30" width="280" height="91.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="2" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="2" verticalCompressionResistancePriority="1000" text="When selecting an item…" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B6b-F7-z07">
-                                                                <rect key="frame" x="0.0" y="0.0" width="280" height="14.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="280" height="13.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                 <color key="textColor" name="colorTint"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <segmentedControl opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="kb7-3p-Ejf">
-                                                                <rect key="frame" x="0.0" y="24.5" width="280" height="32"/>
+                                                                <rect key="frame" x="0.0" y="23.5" width="280" height="32"/>
                                                                 <segments>
                                                                     <segment title="Info"/>
                                                                     <segment title="Preview"/>
@@ -812,7 +812,7 @@ Selecting them will show only items that contain these labels.</string>
                                                                 </connections>
                                                             </segmentedControl>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="2" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="2" verticalCompressionResistancePriority="100" text="If the action cannot be performed, the info panel will open; you can always open the info panel via each item's shortcut menu" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M24-E5-1cc">
-                                                                <rect key="frame" x="0.0" y="65.5" width="280" height="26"/>
+                                                                <rect key="frame" x="0.0" y="64.5" width="280" height="27"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -832,7 +832,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="137.5" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Display" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QcS-l6-XaN">
-                                                        <rect key="frame" x="164.5" y="20" width="58.5" height="40.5"/>
+                                                        <rect key="frame" x="173" y="20" width="50" height="40.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -849,7 +849,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="214" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Force two-column mode even in narrow displays" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0PN-Dk-mlt">
-                                                        <rect key="frame" x="30" y="6" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -862,7 +862,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display item placeholders in a two-column mode that would otherwise switch to a single-column mode" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oPw-Y2-Rzf">
-                                                        <rect key="frame" x="30" y="48" width="193" height="66.5"/>
+                                                        <rect key="frame" x="30" y="40.5" width="193" height="74"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -891,13 +891,13 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show previewed items full-screen even when they would normally appear in a popup" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5F-pD-D5I">
-                                                        <rect key="frame" x="30" y="32" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="50"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Full-screen Previews" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t25-a7-DGX">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -919,7 +919,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="439" width="320" height="78.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wide items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s1o-UY-Pov">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="25"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -932,7 +932,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display items in a list-like wide view; useful for showing more text on narrow displays" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sFB-bX-njT">
-                                                        <rect key="frame" x="30" y="32" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="39" width="193" height="39.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -954,7 +954,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="533.5" width="320" height="78.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Badge app icon" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sKR-Pc-nXM">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -967,7 +967,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display the numnber of visible items in the most recent window on the app icon" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r9C-hN-hOC">
-                                                        <rect key="frame" x="30" y="32" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="50"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -989,7 +989,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="628" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Labels &amp; Notes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9C4-5z-JUG">
-                                                        <rect key="frame" x="103.5" y="30" width="119.5" height="30.5"/>
+                                                        <rect key="frame" x="121.5" y="30" width="101.5" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1006,7 +1006,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="704.5" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display labels in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rne-ok-zIN">
-                                                        <rect key="frame" x="30" y="6" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1019,7 +1019,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show any labels for items in the main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CdL-dZ-yEL">
-                                                        <rect key="frame" x="30" y="28" width="193" height="34.5"/>
+                                                        <rect key="frame" x="30" y="24.5" width="193" height="38"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1041,7 +1041,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="783" width="320" height="62.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display notes in main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bb1-c4-GaQ">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="22"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1054,7 +1054,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Show any added notes for items in the main view" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y0I-9x-T9K">
-                                                        <rect key="frame" x="30" y="32" width="193" height="30.5"/>
+                                                        <rect key="frame" x="30" y="36" width="193" height="26.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1076,7 +1076,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="861.5" width="320" height="78.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Do not auto-label new items" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aea-Um-r1E">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1089,7 +1089,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Prevent new items from being automatically tagged by the currently active labels" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VRo-mb-1fQ">
-                                                        <rect key="frame" x="30" y="32" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="50"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1111,7 +1111,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="956" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Set labels or notes during &quot;Keep In Gladys&quot;" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BeI-MN-asw">
-                                                        <rect key="frame" x="30" y="10" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1124,7 +1124,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wait so you can apply labels or notes to new items added via the action extension" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PkJ-LT-EPc">
-                                                        <rect key="frame" x="30" y="52" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="44.5" width="193" height="54"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1146,7 +1146,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1070.5" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Exclusive multiple labels " textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obz-va-oDg">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1159,7 +1159,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="When multiple labels are selected in the label selector, show only items which have ALL labels, rather than any of those labels" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XhL-Va-snw">
-                                                        <rect key="frame" x="30" y="32" width="193" height="66.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="70"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1181,7 +1181,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1185" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ML" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P7q-5c-KvX">
-                                                        <rect key="frame" x="198.5" y="30" width="24.5" height="30.5"/>
+                                                        <rect key="frame" x="202.5" y="30" width="20.5" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1198,7 +1198,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1261.5" width="320" height="110.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create labels from titles" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9K9-4V-dtt">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1211,7 +1211,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to generate labels based on the contents of a text item" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pR3-ft-bqO">
-                                                        <rect key="frame" x="30" y="32" width="193" height="78.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="82"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1233,7 +1233,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1388" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create labels from images" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ERr-ym-eqN">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1246,7 +1246,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to generate labels based on any detected objects in an image" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eYJ-53-k5g">
-                                                        <rect key="frame" x="30" y="32" width="193" height="82.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="86"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1268,7 +1268,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1518.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create text from images" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lqP-Lq-u08">
-                                                        <rect key="frame" x="30" y="10" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1281,7 +1281,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to generate text components based on any detcted text in an image" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4X0-ot-Zpq">
-                                                        <rect key="frame" x="30" y="32" width="193" height="82.5"/>
+                                                        <rect key="frame" x="30" y="28.5" width="193" height="86"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1303,7 +1303,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1649" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Transcribe speech in media" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IpX-nj-TnK">
-                                                        <rect key="frame" x="30" y="10" width="193" height="54"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="61"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1316,7 +1316,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to transcribe speech from imported media. Processing is done on the local device " textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHv-MN-60R">
-                                                        <rect key="frame" x="30" y="68" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="75" width="193" height="39.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1338,7 +1338,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1779.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Apply ML settings to images from links" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WZh-xc-Pq1">
-                                                        <rect key="frame" x="30" y="10" width="193" height="70"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="74"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1351,7 +1351,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Apply ML processing to thumbnails of URLs" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uKP-d2-dye">
-                                                        <rect key="frame" x="30" y="84" width="193" height="30.5"/>
+                                                        <rect key="frame" x="30" y="88" width="193" height="26.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1373,7 +1373,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1910" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dragging" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wd1-LM-Zfz">
-                                                        <rect key="frame" x="149.5" y="30" width="73.5" height="30.5"/>
+                                                        <rect key="frame" x="161" y="30" width="62" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1390,7 +1390,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="1986.5" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove items after they are dragged out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UAB-01-35Y">
-                                                        <rect key="frame" x="30" y="6" width="193" height="42"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="62"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1403,7 +1403,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Remove an item once it is dragged out, instead of just copying it out" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ksr-Ak-jKv">
-                                                        <rect key="frame" x="30" y="52" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="72" width="193" height="26.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1425,7 +1425,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2101" width="320" height="98.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Offer copy/move switch while dragging" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLg-q9-oEP">
-                                                        <rect key="frame" x="30" y="10" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="10" width="193" height="45"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1438,7 +1438,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Display an option to switch between copy and move while an export drag is taking place" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4K-b8-7vf">
-                                                        <rect key="frame" x="30" y="52" width="193" height="46.5"/>
+                                                        <rect key="frame" x="30" y="59" width="193" height="39.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1460,7 +1460,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2215.5" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Data Components" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5t-2y-EqR">
-                                                        <rect key="frame" x="80" y="30" width="143" height="30.5"/>
+                                                        <rect key="frame" x="102" y="30" width="121" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1477,7 +1477,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2292" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Create separate items for each data component" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Osl-Ls-obl">
-                                                        <rect key="frame" x="30" y="6" width="193" height="42"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="65"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1490,7 +1490,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Import items with multiple data components as multiple items: One for each component of the original" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ErD-Lz-Lyv">
-                                                        <rect key="frame" x="30" y="52" width="193" height="62.5"/>
+                                                        <rect key="frame" x="30" y="75" width="193" height="39.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1512,7 +1512,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2422.5" width="320" height="178.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Automatically download targets of URL components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z8p-Se-Dag">
-                                                        <rect key="frame" x="30" y="6" width="193" height="106"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="116"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1525,7 +1525,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="When an item is first created and contains a URL data component, automatically download and archive the target of that URL" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mLb-FK-pnD">
-                                                        <rect key="frame" x="30" y="116" width="193" height="62.5"/>
+                                                        <rect key="frame" x="30" y="126" width="193" height="52.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1547,7 +1547,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2617" width="320" height="178.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Automatically convert text URLs to links" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icu-Rd-qAL">
-                                                        <rect key="frame" x="30" y="6" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1560,7 +1560,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Try to automatically convert shared or imported text URLs to actual link components" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jp0-rc-12U">
-                                                        <rect key="frame" x="30" y="48" width="193" height="130.5"/>
+                                                        <rect key="frame" x="30" y="40.5" width="193" height="138"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1582,7 +1582,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="2811.5" width="320" height="178.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Maintain a file mirror on the local device" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ffh-4h-qmT">
-                                                        <rect key="frame" x="30" y="6" width="193" height="38"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1595,7 +1595,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Mirror the data items in Gladys as files in a directory on the device, accessible via Files.app" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jyw-jI-g94">
-                                                        <rect key="frame" x="30" y="48" width="193" height="130.5"/>
+                                                        <rect key="frame" x="30" y="40.5" width="193" height="138"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1617,7 +1617,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="3006" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jjh-s5-9EJ">
-                                                        <rect key="frame" x="167" y="30" width="56" height="30.5"/>
+                                                        <rect key="frame" x="175.5" y="30" width="47.5" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1634,7 +1634,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="3082.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Inclusive search terms" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xy7-kO-9Hx">
-                                                        <rect key="frame" x="30" y="6" width="193" height="18"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1647,7 +1647,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Make results match any of the search terms provided, instead of having to contain all of them" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ove-52-IEo">
-                                                        <rect key="frame" x="30" y="28" width="193" height="86.5"/>
+                                                        <rect key="frame" x="30" y="24.5" width="193" height="90"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1669,7 +1669,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="3213" width="320" height="60.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Misc" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NlR-Fz-XBZ">
-                                                        <rect key="frame" x="185.5" y="30" width="37.5" height="30.5"/>
+                                                        <rect key="frame" x="191" y="30" width="32" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
@@ -1686,7 +1686,7 @@ Selecting them will show only items that contain these labels.</string>
                                                 <rect key="frame" x="0.0" y="3289.5" width="320" height="114.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Disable x-callback-url support" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7g-oJ-Tmd">
-                                                        <rect key="frame" x="30" y="6" width="193" height="42"/>
+                                                        <rect key="frame" x="30" y="6" width="193" height="52"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorComponentLabel"/>
                                                         <nil key="highlightedColor"/>
@@ -1699,7 +1699,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="For environents with locked-down security, you may want to ensure Gladys does not respond to any URL requests" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNv-eb-moz">
-                                                        <rect key="frame" x="30" y="52" width="193" height="62.5"/>
+                                                        <rect key="frame" x="30" y="62" width="193" height="52.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -1888,21 +1888,21 @@ Selecting them will show only items that contain these labels.</string>
                                                                 </constraints>
                                                             </view>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxQ-uD-Ykw">
-                                                                <rect key="frame" x="0.0" y="103.5" width="251" height="70"/>
+                                                                <rect key="frame" x="0.0" y="103.5" width="251" height="62.5"/>
                                                                 <string key="text">Gladys stores data in your private iCloud database, which only you have access to. No data or metadata is ever stored or sent anywhere else.</string>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLr-xZ-jCb">
-                                                                <rect key="frame" x="0.0" y="181.5" width="251" height="167.5"/>
+                                                                <rect key="frame" x="0.0" y="174" width="251" height="180.5"/>
                                                                 <state key="normal" title="Delete iCloud Data"/>
                                                                 <connections>
                                                                     <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="13R-i5-FJZ"/>
                                                                 </connections>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you store large items in Gladys, be sure to check your iCloud quota to ensure you have enough space for everything!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZ8-I2-EIj">
-                                                                <rect key="frame" x="0.0" y="357" width="251" height="52"/>
+                                                                <rect key="frame" x="0.0" y="362.5" width="251" height="46.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -1975,7 +1975,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="780"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="26" translatesAutoresizingMaskIntoConstraints="NO" id="JQU-c7-D51">
-                                        <rect key="frame" x="8" y="34" width="304" height="582"/>
+                                        <rect key="frame" x="8" y="34" width="304" height="518"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="250" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-xr-evN">
                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="120"/>
@@ -1984,10 +1984,10 @@ Selecting them will show only items that contain these labels.</string>
                                                 </constraints>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="CqQ-Qk-DZ1">
-                                                <rect key="frame" x="0.0" y="146" width="304" height="85"/>
+                                                <rect key="frame" x="0.0" y="146" width="304" height="60.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9C-HZ-FTk">
-                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="27"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <state key="normal" title="Gladys Web Site"/>
                                                         <connections>
@@ -1995,7 +1995,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K7X-0r-S6t">
-                                                        <rect key="frame" x="0.0" y="33" width="304" height="52"/>
+                                                        <rect key="frame" x="0.0" y="30" width="304" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
@@ -2003,23 +2003,23 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="NQQ-Pu-pLP">
-                                                <rect key="frame" x="0.0" y="257" width="304" height="171"/>
+                                                <rect key="frame" x="0.0" y="232.5" width="304" height="144"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Supporting Gladys" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSU-2U-3sW">
-                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="18"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="14.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <color key="textColor" name="colorTint"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7L-Su-Up0">
-                                                        <rect key="frame" x="0.0" y="28" width="304" height="70"/>
+                                                        <rect key="frame" x="0.0" y="24.5" width="304" height="46.5"/>
                                                         <string key="text">If you find Gladys useful then feel free to leave a tip! It will be greatly appreciated and will ensure I can keep working on and improving Gladys in the future.</string>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ukS-GM-zRt">
-                                                        <rect key="frame" x="0.0" y="108" width="304" height="63"/>
+                                                        <rect key="frame" x="0.0" y="81" width="304" height="63"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5sM-C8-DJQ">
                                                                 <rect key="frame" x="0.0" y="0.0" width="304" height="2"/>
@@ -2035,16 +2035,16 @@ Selecting them will show only items that contain these labels.</string>
                                                                         <rect key="frame" x="0.0" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="gp6-yW-WOL">
-                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="35.5"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="🙂" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8YS-iH-ueg">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2fR-kM-JFb">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="22" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2073,16 +2073,16 @@ Selecting them will show only items that contain these labels.</string>
                                                                         <rect key="frame" x="62" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="cnF-A1-IqQ">
-                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="35.5"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="😊" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6B5-8m-pWr">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4br-Bd-HvQ">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="22" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2111,16 +2111,16 @@ Selecting them will show only items that contain these labels.</string>
                                                                         <rect key="frame" x="124" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="o7A-wl-1JC">
-                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="35.5"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="🤗" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G85-yU-slg">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eyi-eQ-mA6">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="22" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2149,16 +2149,16 @@ Selecting them will show only items that contain these labels.</string>
                                                                         <rect key="frame" x="186" y="0.0" width="56" height="61"/>
                                                                         <subviews>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="5HM-vP-qKe">
-                                                                                <rect key="frame" x="3" y="11" width="50" height="39"/>
+                                                                                <rect key="frame" x="3" y="11" width="50" height="35.5"/>
                                                                                 <subviews>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="😮" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ABV-ol-I7e">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="17"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="GBP 19.99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C5L-qO-Y6G">
-                                                                                        <rect key="frame" x="0.0" y="25.5" width="50" height="13.5"/>
+                                                                                        <rect key="frame" x="0.0" y="22" width="50" height="13.5"/>
                                                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                                         <nil key="highlightedColor"/>
@@ -2236,10 +2236,10 @@ Selecting them will show only items that contain these labels.</string>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="H7n-k8-CdC">
-                                                <rect key="frame" x="0.0" y="454" width="304" height="128"/>
+                                                <rect key="frame" x="0.0" y="402.5" width="304" height="115.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7H-nn-9rl">
-                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="304" height="27"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <state key="normal" title="Thank You For Testing"/>
                                                         <connections>
@@ -2247,7 +2247,7 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RFz-7l-kqi">
-                                                        <rect key="frame" x="0.0" y="40" width="304" height="88"/>
+                                                        <rect key="frame" x="0.0" y="37" width="304" height="78.5"/>
                                                         <string key="text">Thank you for testing Gladys betas, your feedback goes a long way in improving and evolving Gladys over time. Please report issues you encounter via email or TestFlight feedback and they will be looked into as a matter of priority.</string>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -2331,10 +2331,10 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="56" width="320" height="775"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tLR-z3-jkh">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="657"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="598"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="IdW-dE-Hwr">
-                                                <rect key="frame" x="16" y="8" width="288" height="641"/>
+                                                <rect key="frame" x="16" y="8" width="288" height="582"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUb-ye-Kbd" userLabel="Spacer">
                                                         <rect key="frame" x="0.0" y="0.0" width="288" height="22"/>
@@ -2344,27 +2344,27 @@ Selecting them will show only items that contain these labels.</string>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OuU-1D-4Fr">
-                                                        <rect key="frame" x="0.0" y="22" width="288" height="88"/>
+                                                        <rect key="frame" x="0.0" y="22" width="288" height="62.5"/>
                                                         <string key="text">Gladys relies on user feedback to evolve and deliver new features. A huge thank you to everyone who has taken the time to send feedback, feature suggestions, and bug reports.</string>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="opw-wu-gPh" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="110" width="288" height="40"/>
+                                                        <rect key="frame" x="0.0" y="84.5" width="288" height="40"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="5Dl-bQ-uDf"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Design &amp; Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjL-KX-Co5">
-                                                        <rect key="frame" x="0.0" y="150" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="124.5" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O8w-Zm-DHn">
-                                                        <rect key="frame" x="0.0" y="164.5" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="138" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="Paul Tsochantaris"/>
                                                         <connections>
@@ -2372,20 +2372,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UMp-gk-Yjj" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="197.5" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="167" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="H9V-IN-Fif"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="HTML Scanning" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e8r-e6-CdO">
-                                                        <rect key="frame" x="0.0" y="219.5" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="189" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h5-SG-rEC">
-                                                        <rect key="frame" x="0.0" y="234" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="202.5" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="Fuzi"/>
                                                         <connections>
@@ -2393,20 +2393,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvV-WY-t4c" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="267" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="231.5" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="EYt-Nf-YJD"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Creating ZIP Archives" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jql-B6-3It">
-                                                        <rect key="frame" x="0.0" y="289" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="253.5" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kc0-to-reO">
-                                                        <rect key="frame" x="0.0" y="303.5" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="267" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="ZipFoundation"/>
                                                         <connections>
@@ -2414,20 +2414,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZQ-LV-vHl" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="336.5" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="296" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="Mn7-n0-qsR"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="x-callback-url Support" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Jh-r4-bUF">
-                                                        <rect key="frame" x="0.0" y="358.5" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="318" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4q-TB-Put">
-                                                        <rect key="frame" x="0.0" y="373" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="331.5" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="CallbackURLKit"/>
                                                         <connections>
@@ -2435,20 +2435,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pc-lt-IiB" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="406" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="360.5" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="dd6-Ty-MIh"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Diffing" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ea6-6W-6MI">
-                                                        <rect key="frame" x="0.0" y="428" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="382.5" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v61-AV-lhj">
-                                                        <rect key="frame" x="0.0" y="442.5" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="396" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="DeepDiff"/>
                                                         <connections>
@@ -2456,20 +2456,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="POX-nu-ak1" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="475.5" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="425" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="UNA-IR-bw4"/>
                                                         </constraints>
                                                     </view>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Sanity" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3Y-fI-TjG">
-                                                        <rect key="frame" x="0.0" y="497.5" width="288" height="14.5"/>
+                                                        <rect key="frame" x="0.0" y="447" width="288" height="13.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bny-va-9fm">
-                                                        <rect key="frame" x="0.0" y="512" width="288" height="33"/>
+                                                        <rect key="frame" x="0.0" y="460.5" width="288" height="29"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <state key="normal" title="SwiftLint"/>
                                                         <connections>
@@ -2477,20 +2477,20 @@ Selecting them will show only items that contain these labels.</string>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGY-dq-iBU" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="545" width="288" height="40"/>
+                                                        <rect key="frame" x="0.0" y="489.5" width="288" height="40"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="6i5-Yq-12M"/>
                                                         </constraints>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Gladys is Copyright (c) 2017-2020 Paul Tsochantaris, all rights reserved." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrS-5U-9pL">
-                                                        <rect key="frame" x="0.0" y="585" width="288" height="34"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Gladys is Copyright (c) 2017-2021 Paul Tsochantaris, all rights reserved." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrS-5U-9pL">
+                                                        <rect key="frame" x="0.0" y="529.5" width="288" height="30.5"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B2P-RD-hoO" userLabel="Spacer">
-                                                        <rect key="frame" x="0.0" y="619" width="288" height="22"/>
+                                                        <rect key="frame" x="0.0" y="560" width="288" height="22"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="rVo-hd-cLO"/>
@@ -2552,7 +2552,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="ucz-Df-3Uv" customClass="HeaderCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="55.5" width="288" height="80"/>
+                                        <rect key="frame" x="16" y="49.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ucz-Df-3Uv" id="2po-Br-7Vd">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
@@ -2582,7 +2582,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoteCell" id="flY-P9-4rB" customClass="NoteCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="135.5" width="288" height="80"/>
+                                        <rect key="frame" x="16" y="129.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="flY-P9-4rB" id="lkd-RA-F4O">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
@@ -2598,7 +2598,7 @@ Selecting them will show only items that contain these labels.</string>
                                                     </connections>
                                                 </textView>
                                                 <label opaque="NO" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Note" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORD-vD-01W">
-                                                    <rect key="frame" x="117.5" y="33" width="53" height="14.5"/>
+                                                    <rect key="frame" x="119.5" y="33.5" width="49.5" height="13.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="colorTint"/>
                                                     <nil key="highlightedColor"/>
@@ -2621,7 +2621,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="215.5" width="288" height="80"/>
+                                        <rect key="frame" x="16" y="209.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ksg-vx-bYr" id="gmt-hK-Po0">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
@@ -2648,7 +2648,7 @@ Selecting them will show only items that contain these labels.</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="295.5" width="288" height="225"/>
+                                        <rect key="frame" x="16" y="289.5" width="288" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="225"/>
@@ -3040,68 +3040,68 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Z3F-Pe-xJ2">
-                                <rect key="frame" x="20" y="65" width="180" height="349"/>
+                                <rect key="frame" x="20" y="65" width="180" height="346"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="COPY" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4a-nb-rj3">
-                                        <rect key="frame" x="0.0" y="0.0" width="180" height="14.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="180" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="colorTint"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Copy this item to the clipboard." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K0y-9t-kzl">
-                                        <rect key="frame" x="0.0" y="22.5" width="180" height="13.5"/>
+                                        <rect key="frame" x="0.0" y="21.5" width="180" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                         <color key="textColor" name="colorComponentLabel"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="Qyl-ng-oer">
-                                        <rect key="frame" x="0.0" y="44" width="180" height="50"/>
+                                        <rect key="frame" x="0.0" y="43" width="180" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cxm-zF-wUI" userLabel="Spacer">
-                                        <rect key="frame" x="0.0" y="102" width="180" height="11"/>
+                                        <rect key="frame" x="0.0" y="101" width="180" height="11"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="11" id="v7z-GW-qCu"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="QUICK LOOK" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Dj-7C-3su">
-                                        <rect key="frame" x="0.0" y="121" width="180" height="14.5"/>
+                                        <rect key="frame" x="0.0" y="120" width="180" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="colorTint"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Quick Look this item, if supported." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ldp-gE-gR6">
-                                        <rect key="frame" x="0.0" y="143.5" width="180" height="26.5"/>
+                                        <rect key="frame" x="0.0" y="141.5" width="180" height="26.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                         <color key="textColor" name="colorComponentLabel"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="Kaj-W2-oyz">
-                                        <rect key="frame" x="0.0" y="178" width="180" height="50"/>
+                                        <rect key="frame" x="0.0" y="176" width="180" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yR3-pi-J0n" userLabel="Spacer">
-                                        <rect key="frame" x="0.0" y="236" width="180" height="11"/>
+                                        <rect key="frame" x="0.0" y="234" width="180" height="11"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="11" id="a90-XZ-7oO"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="ITEM INFO" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ft-5V-CeS">
-                                        <rect key="frame" x="0.0" y="255" width="180" height="14.5"/>
+                                        <rect key="frame" x="0.0" y="253" width="180" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="colorTint"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Open this item's info view." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tXn-gf-qaC">
-                                        <rect key="frame" x="0.0" y="277.5" width="180" height="13.5"/>
+                                        <rect key="frame" x="0.0" y="274.5" width="180" height="13.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                         <color key="textColor" name="colorComponentLabel"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="100" placeholderIntrinsicHeight="50" translatesAutoresizingMaskIntoConstraints="NO" id="F4h-l2-ayn">
-                                        <rect key="frame" x="0.0" y="299" width="180" height="50"/>
+                                        <rect key="frame" x="0.0" y="296" width="180" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
@@ -3380,7 +3380,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelListCell" rowHeight="70" id="tYg-kK-YJK" customClass="LabelListCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="105.5" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="99.5" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tYg-kK-YJK" id="vaV-Ip-Y59">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
@@ -3508,23 +3508,23 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PlistEntryCell" rowHeight="77" id="y2L-Lx-8XT" customClass="PlistEditorCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="300" height="77"/>
+                                        <rect key="frame" x="0.0" y="24.5" width="300" height="77"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="y2L-Lx-8XT" id="QpT-Ag-0Zi">
-                                            <rect key="frame" x="0.0" y="0.0" width="273" height="77"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="274.5" height="77"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Bfg-tT-oO3">
-                                                    <rect key="frame" x="16" y="11" width="249" height="55"/>
+                                                    <rect key="frame" x="16" y="11" width="250.5" height="55"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hZ9-wp-Fuh">
-                                                            <rect key="frame" x="0.0" y="0.0" width="249" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="250.5" height="17"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <color key="textColor" name="colorComponentLabel"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aY7-ut-4ys">
-                                                            <rect key="frame" x="0.0" y="20.5" width="249" height="34.5"/>
+                                                            <rect key="frame" x="0.0" y="17" width="250.5" height="38"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
@@ -3741,7 +3741,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelEditorCell" rowHeight="70" id="KzW-m7-SWz" customClass="LabelEditorCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="93" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="89.5" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KzW-m7-SWz" id="oEA-Ty-W8a">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
@@ -3817,7 +3817,7 @@ Selecting them will show only items that contain these labels.</string>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Existing Labels" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OzW-Qz-ZYJ">
-                            <rect key="frame" x="16" y="13" width="208" height="18"/>
+                            <rect key="frame" x="16" y="15" width="208" height="14.5"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <color key="textColor" systemColor="tertiaryLabelColor"/>
                             <nil key="highlightedColor"/>
@@ -3905,7 +3905,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HelpControllerCell" rowHeight="61" id="UUj-6Y-btf" customClass="HelpControllerCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="55.5" width="288" height="61"/>
+                                        <rect key="frame" x="16" y="49.5" width="288" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UUj-6Y-btf" id="OdO-dC-Exf">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="61"/>
