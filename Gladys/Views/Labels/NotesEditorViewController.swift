@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol NotesEditorViewControllerDelegate: class {
+protocol NotesEditorViewControllerDelegate: AnyObject {
 	func newNoteSaved(note: String)
 }
 

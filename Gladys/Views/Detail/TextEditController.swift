@@ -10,7 +10,7 @@ import UIKit
 import MobileCoreServices
 import GladysFramework
 
-protocol TextEditControllerDelegate: class {
+protocol TextEditControllerDelegate: AnyObject {
 	func textEditControllerMadeChanges(_ textEditController: TextEditController)
 }
 
