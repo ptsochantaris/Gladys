@@ -593,18 +593,42 @@ extension Model {
     
     private static func _updateBadge() {
         #if MAC
-        let tile = NSApp.dockTile
+        let badgeValue: String?
         if CloudManager.showNetwork {
             log("Updating app badge to show network")
-            tile.badgeLabel = "↔"
+            badgeValue = "↔"
         } else if PersistedOptions.badgeIconWithItemCount {
             let count = Model.sharedFilter.filteredDrops.count
             log("Updating app badge to show item count (\(count))")
-            tile.badgeLabel = count > 0 ? String(count) : nil
+            badgeValue = count > 0 ? String(count) : nil
         } else {
             log("Updating app badge to clear")
-            tile.badgeLabel = nil
+            badgeValue = nil
         }
+        let tile = NSApp.dockTile
+        let v = NSImageView(image: NSApp.applicationIconImage)
+        if let badgeValue = badgeValue {
+            let label = NSTextField(labelWithString: badgeValue)
+            label.alignment = .center
+            label.font = NSFont.systemFont(ofSize: 24)
+            label.textColor = .white
+            label.sizeToFit()
+            
+            let img = NSImage(named: "statuslabel")!
+            let holderFrame = NSRect(origin: .zero, size: NSSize(width: max(label.frame.width + 12, img.size.width), height: img.size.height))
+
+            let holderRect = NSRect(origin: CGPoint(x: v.bounds.width - holderFrame.width + 2.5, y: v.bounds.height - holderFrame.height + 2.5), size: holderFrame.size)
+            let holder = NSImageView(frame: holderRect)
+            holder.imageScaling = .scaleAxesIndependently
+            holder.image = img
+            holder.autoresizingMask = [.minYMargin, .minXMargin]
+            label.frame = label.frame.offsetBy(dx: (holderFrame.width - label.frame.width) * 0.5, dy: 13)
+            holder.addSubview(label)
+            v.addSubview(holder)
+        }
+        tile.contentView = v
+        tile.display()
+        
         #else
         if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
             log("Updating app badge to show item count (\(count))")

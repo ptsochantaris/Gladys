@@ -191,6 +191,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		NSApplication.shared.servicesProvider = servicesProvider
 
 		setupSortMenu()
+        
+        if PersistedOptions.badgeIconWithItemCount {
+            Model.updateBadge()
+        }
 	}
     
 	func applicationDidFinishLaunching(_ notification: Notification) {
