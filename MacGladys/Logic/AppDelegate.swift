@@ -28,7 +28,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
-				guard let w = ViewController.shared.view.window else { return }
+				guard let w = NSApp.keyWindow?.contentViewController?.view.window else { return }
 				if NSApp.isActive, w.isVisible {
 					w.orderOut(nil)
 				} else {
@@ -61,7 +61,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	@objc private func statusBarItemSelected() {
-		if NSApp.isActive && (ViewController.shared.view.window?.isVisible ?? false) {
+		if NSApp.isActive && (keyGladysControllerIfExists?.view.window?.isVisible ?? false) {
             statusItem?.menu?.popUp(positioning: nil, at: .zero, in: nil)
 		} else {
 			focus()
@@ -135,7 +135,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 self.proceedWithImport(from: url)
             }
 		} else {
-			ViewController.shared.importFiles(paths: filenames)
+            Model.importFiles(paths: filenames, filterContext: keyGladysControllerIfExists?.filter)
 		}
 	}
 
@@ -143,7 +143,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		var urlEventBeforeLaunch = false
 
 		@objc func handleServices(_ pboard: NSPasteboard, userData: String, error: AutoreleasingUnsafeMutablePointer<NSString>) {
-			ViewController.shared.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil)
+			Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
 		}
 
 		@objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent: NSAppleEventDescriptor) {
@@ -166,36 +166,65 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			PersistedOptions.defaultsVersion = 1
 		}
 	}
+    
+    @IBAction private func newWindowSelected(_ sender: Any?) {
+        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
+        if let w = controller.window {
+            w.makeKeyAndOrderFront(sender)
+        }
+    }
+    
+    override init() {
+        super.init()
+
+        AppDelegate.shared = self
+
+        migrateDefaults()
+        
+        LauncherCommon.killHelper()
+
+        Model.setup()
+        
+        CallbackSupport.setupCallbackSupport()
+
+        PullState.checkMigrations()
+    }
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
-		AppDelegate.shared = self
+        let s = NSAppleEventManager.shared()
+        s.setEventHandler(servicesProvider,
+                          andSelector: #selector(ServicesProvider.handleURLEvent(event:replyEvent:)),
+                          forEventClass: AEEventClass(kInternetEventClass),
+                          andEventID: AEEventID(kAEGetURL))
 
-		migrateDefaults()
-		
-		LauncherCommon.killHelper()
+        NSApplication.shared.servicesProvider = servicesProvider
 
-		CallbackSupport.setupCallbackSupport()
+        for sortOption in Model.SortOption.options {
+            sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
+            sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
+        }
 
-		let s = NSAppleEventManager.shared()
-		s.setEventHandler(servicesProvider,
-						  andSelector: #selector(ServicesProvider.handleURLEvent(event:replyEvent:)),
-						  forEventClass: AEEventClass(kInternetEventClass),
-						  andEventID: AEEventID(kAEGetURL))
-
-		PullState.checkMigrations()
-		if CloudManager.syncSwitchedOn {
-			NSApplication.shared.registerForRemoteNotifications(matching: [])
-		}
-
-		NSApplication.shared.servicesProvider = servicesProvider
-
-		setupSortMenu()
-        
         if PersistedOptions.badgeIconWithItemCount {
             Model.updateBadge()
         }
+        
+        if CloudManager.syncSwitchedOn {
+            NSApplication.shared.registerForRemoteNotifications(matching: [])
+            CloudManager.sync { _ in }
+        }
+
+        setupClipboardSnooping()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setupClipboardSnooping), name: .ClipboardSnoopingChanged, object: nil)
+        
+        DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 	}
+        
+    @objc private func interfaceModeChanged(sender: NSNotification) {
+        imageCache.removeAllObjects()
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+    }
     
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		AppDelegate.updateHotkey()
@@ -203,25 +232,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
 
-		let isShowing = ViewController.shared.view.window?.isVisible ?? false
+		let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
 		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
 
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
         
         Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
+        
+        restoreWindows()
 	}
 
 	func applicationDidBecomeActive(_ notification: Notification) {
-		let isShowing = ViewController.shared.view.window?.isVisible ?? false
+		let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
 		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
-        ViewController.shared.showOnActiveIfNeeded()
+        keyGladysControllerIfExists?.showOnActiveIfNeeded()
 	}
 
 	func applicationDidResignActive(_ notification: Notification) {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
-        ViewController.shared.hideOnInactiveIfNeeded()
+        keyGladysControllerIfExists?.hideOnInactiveIfNeeded()
 	}
 
 	@objc private func systemDidWake() {
@@ -246,7 +277,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	private func focus() {
 		NSApp.activate(ignoringOtherApps: true)
-		ViewController.shared.view.window?.makeKeyAndOrderFront(nil)
+        keyGladysControllerIfExists?.view.window?.makeKeyAndOrderFront(nil)
 	}
 
 	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
@@ -262,7 +293,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		} else if userActivity.activityType == CSQueryContinuationActionType {
 			if let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
 				focus()
-				ViewController.shared.startSearch(initialText: searchQuery)
+                keyGladysControllerIfExists?.startSearch(initialText: searchQuery)
 			}
 			return true
 
@@ -304,9 +335,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	func applicationWillResignActive(_ notification: Notification) {
         Model.clearCaches()
 	}
+    
+    func applicationWillTerminate(_ notification: Notification) {
+        storeWindowStates()
+    }
+    
+    func applicationWillHide(_ notification: Notification) {
+        storeWindowStates()
+    }
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
-        ViewController.shared.performSegue(withIdentifier: "showAbout", sender: nil)
+        keyGladysControllerIfExists?.performSegue(withIdentifier: "showAbout", sender: nil)
 	}
 
 	@IBAction private func openWebSite(_ sender: Any) {
@@ -315,9 +354,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	/////////////////////////////////////////////////////////////////
 
+    private var pasteboardObservationTimer: Timer?
+    private var pasteboardObservationCount = NSPasteboard.general.changeCount
+
+    @objc private func setupClipboardSnooping() {
+        let snoop = PersistedOptions.clipboardSnooping
+        
+        if snoop, pasteboardObservationTimer == nil {
+            let pasteboard = NSPasteboard.general
+            let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+                let newCount = pasteboard.changeCount
+                guard let s = self, s.pasteboardObservationCount != newCount else {
+                    return
+                }
+                s.pasteboardObservationCount = newCount
+                if let text = pasteboard.string(forType: .string), (PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive) {
+                    let i = NSItemProvider(object: text as NSItemProviderWriting)
+                    Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
+                }
+            }
+            timer.tolerance = 0.5
+            pasteboardObservationTimer = timer
+
+        } else if !snoop, let p = pasteboardObservationTimer {
+            p.invalidate()
+            pasteboardObservationTimer = nil
+        }
+    }
+    
 	@IBAction private func importSelected(_ sender: NSMenuItem) {
 
-		let w = ViewController.shared.view.window!
+        guard let controller = keyGladysControllerIfExists, let w = controller.view.window else { return }
+
 		if !w.isVisible {
 			w.makeKeyAndOrderFront(nil)
 		}
@@ -335,13 +403,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	private func proceedWithImport(from url: URL) {
-		ViewController.shared.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
+        keyGladysControllerIfExists?.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
 		DispatchQueue.main.async { // give UI a chance to update
 			do {
 				try Model.importArchive(from: url, removingOriginal: false)
-				ViewController.shared.endProgress()
+                keyGladysControllerIfExists?.endProgress()
 			} catch {
-				ViewController.shared.endProgress()
+                keyGladysControllerIfExists?.endProgress()
 				self.alertOnMainThread(error: error)
 			}
 		}
@@ -359,7 +427,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	@IBAction private func exportSelected(_ sender: NSMenuItem) {
 
-		let w = ViewController.shared.view.window!
+        guard let controller = keyGladysControllerIfExists, let w = controller.view.window else { return }
+        
 		if !w.isVisible {
 			w.makeKeyAndOrderFront(nil)
 		}
@@ -373,10 +442,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		s.allowedFileTypes = ["gladysArchive"]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
-            let p = Model.createArchive(using: Model.sharedFilter) { createdUrl, error in
+            let p = Model.createArchive(using: controller.filter) { createdUrl, error in
                 self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
             }
-            ViewController.shared.startProgress(for: p)
+            keyGladysControllerIfExists?.startProgress(for: p)
         }
 	}
 
@@ -386,7 +455,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	@IBAction private func zipSelected(_ sender: NSMenuItem) {
 
-		let w = ViewController.shared.view.window!
+        guard let controller = keyGladysControllerIfExists else { return }
+		let w = controller.view.window!
 		if !w.isVisible {
 			w.makeKeyAndOrderFront(nil)
 		}
@@ -408,24 +478,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
             assert(Thread.isMainThread)
-            let p = Model.createZip(using: Model.sharedFilter) { createdUrl, error in
+            let p = Model.createZip(using: controller.filter) { createdUrl, error in
                 self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
             }
-            ViewController.shared.startProgress(for: p)
+            keyGladysControllerIfExists?.startProgress(for: p)
         }
 	}
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 
+        if menuItem.action == #selector(newWindowSelected(_:)) {
+            return true
+        }
+
+        guard let controller = keyGladysControllerIfExists else { return false }
+
 		if (menuItem.parent?.title ?? "").hasPrefix("Sort ") {
 			return !Model.drops.isEmpty
 		}
-
+        
 		switch menuItem.action {
 		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
-			return !ViewController.shared.isDisplayingProgress
+			return !controller.isDisplayingProgress
 		case #selector(showMain(_:)):
-			if let w = ViewController.shared.view.window {
+			if let w = controller.view.window {
 				menuItem.title = w.title
 				menuItem.isHidden = w.isVisible && statusItem == nil
 			}
@@ -436,7 +512,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	@objc private func showMain(_ sender: Any?) {
-		if let w = ViewController.shared.view.window {
+        if let w = keyGladysControllerIfExists?.view.window {
 			w.makeKeyAndOrderFront(nil)
 		}
 	}
@@ -444,7 +520,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
 		// thread
 		DispatchQueue.main.async {
-			ViewController.shared.endProgress()
+            keyGladysControllerIfExists?.endProgress()
 		}
 
 		guard let createdUrl = createdUrl else {
@@ -473,15 +549,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	@IBOutlet var sortAscendingMenu: NSMenu!
 	@IBOutlet var sortDescendingMenu: NSMenu!
 
-	private func setupSortMenu() {
-		for sortOption in Model.SortOption.options {
-			sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
-			sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
-		}
-	}
-
 	@objc private func sortOptionSelected(_ sender: NSMenu) {
-        let selectedItems = ContiguousArray(ViewController.shared.selectedItems)
+        guard let controller = keyGladysControllerIfExists else { return }
+        let selectedItems = ContiguousArray(controller.selectedItems)
 		if selectedItems.count < 2 {
 			proceedWithSort(sender: sender, items: [])
 		} else {

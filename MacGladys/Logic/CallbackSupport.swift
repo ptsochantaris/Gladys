@@ -67,7 +67,7 @@ struct CallbackSupport {
 		m["paste-share-pasteboard"] = { parameters, success, _, _ in
 			let importOverrides = createOverrides(from: parameters)
 			let pasteboard = NSPasteboard(name: sharingPasteboard)
-			ViewController.shared.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides)
+			Model.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
 			DistributedNotificationCenter.default().postNotificationName(.SharingPasteboardPasted, object: "build.bru.MacGladys", userInfo: nil, deliverImmediately: true)
 			success(nil)
 		}
@@ -80,19 +80,19 @@ struct CallbackSupport {
 			completion(data, nil)
 			return nil
 		}
-		return ViewController.shared.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides)
+		return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
 	}
 
 	@discardableResult
 	static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Bool {
 		let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
 		let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
-		return ViewController.shared.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: importOverrides)
+		return Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
 	}
 
 	@discardableResult
 	static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Bool {
 		let p = NSItemProvider(object: object)
-		return ViewController.shared.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides)
+		return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
 	}
 }

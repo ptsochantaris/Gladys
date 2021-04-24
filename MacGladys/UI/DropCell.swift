@@ -230,6 +230,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	@IBOutlet private var copiedLabel: NSTextField!
 
 	private var existingPreviewView: FirstMouseView?
+    
+    private var hostGladysController: ViewController {
+        return view.window!.gladysController
+    }
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -505,43 +509,43 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	}
 
 	@objc private func infoSelected() {
-		ViewController.shared.info(self)
+        hostGladysController.info(self)
 	}
 
 	@objc private func openSelected() {
-		ViewController.shared.open(self)
+        hostGladysController.open(self)
 	}
 
 	@objc private func copySelected() {
-		ViewController.shared.copy(self)
+        hostGladysController.copy(self)
 	}
 
 	@objc private func lockSelected() {
-		ViewController.shared.createLock(self)
+        hostGladysController.createLock(self)
 	}
 
 	@objc private func shareSelected() {
-		ViewController.shared.shareSelected(self)
+        hostGladysController.shareSelected(self)
 	}
 
 	@objc private func topSelected() {
-		ViewController.shared.moveToTop(self)
+        hostGladysController.moveToTop(self)
 	}
 
 	@objc private func labelsSelected() {
-		ViewController.shared.editLabels(self)
+        hostGladysController.editLabels(self)
 	}
 
 	@objc private func unlockSelected() {
-		ViewController.shared.unlock(self)
+        hostGladysController.unlock(self)
 	}
 
 	@objc private func removeLockSelected() {
-		ViewController.shared.removeLock(self)
+        hostGladysController.removeLock(self)
 	}
 
 	@objc private func deleteSelected() {
-		ViewController.shared.delete(self)
+        hostGladysController.delete(self)
 	}
 
 	@IBAction private func cancelSelected(_ sender: NSButton) {
@@ -551,7 +555,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	}
 
 	func menuWillOpen(_ menu: NSMenu) {
-		ViewController.shared.addCellToSelection(self)
+        hostGladysController.addCellToSelection(self)
 
 		menu.removeAllItems()
 		menu.title = ""
@@ -561,15 +565,15 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 		}
 
 		var lockItems = [NSMenuItem]()
-		if !ViewController.shared.lockableSelectedItems.isEmpty {
+		if !hostGladysController.lockableSelectedItems.isEmpty {
 			let m = NSMenuItem(title: "Lock", action: #selector(lockSelected), keyEquivalent: "")
 			lockItems.append(m)
 		}
-		if !ViewController.shared.unlockableSelectedItems.isEmpty {
+		if !hostGladysController.unlockableSelectedItems.isEmpty {
 			let m = NSMenuItem(title: "Unlock", action: #selector(unlockSelected), keyEquivalent: "")
 			lockItems.append(m)
 		}
-		if !ViewController.shared.removableLockSelectedItems.isEmpty {
+		if !hostGladysController.removableLockSelectedItems.isEmpty {
 			let m = NSMenuItem(title: "Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "")
 			lockItems.append(m)
 		}
@@ -625,7 +629,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         if let a = archivedDropItem, a.flags.contains(.needsUnlock) {
-            ViewController.shared.unlock(self)
+            hostGladysController.unlock(self)
         } else {
             switch action {
             case .copy:
@@ -639,7 +643,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             case .open:
                 openSelected()
             case .preview:
-                ViewController.shared.toggleQuickLookPreviewPanel(nil)
+                hostGladysController.toggleQuickLookPreviewPanel(nil)
             case .none:
                 break
             }

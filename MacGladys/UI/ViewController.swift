@@ -13,9 +13,9 @@ import DeepDiff
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
 
-	@IBOutlet var collection: MainCollectionView!
+    let filter = ModelFilterContext()
 
-	static var shared: ViewController!
+	@IBOutlet private var collection: MainCollectionView!
 
 	private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
@@ -75,19 +75,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private var observers = [NSObjectProtocol]()
-    private var pasteboardObservationTimer: Timer?
-    private var pasteboardObservationCount = NSPasteboard.general.changeCount
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		ViewController.shared = self
 		showSearch = false
 
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
 		updateDragOperationIndicators()
-
-        Model.setup()
 
 		let n = NotificationCenter.default
 
@@ -109,7 +104,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.deselectAll(nil)
-			Model.sharedFilter.updateFilter(signalUpdate: true)
+            self?.filter.updateFilter(signalUpdate: true)
 			self?.updateTitle()
 		}
 
@@ -142,8 +137,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] notification in
             guard let s = self, let item = notification.object as? ArchivedItem else { return }
             s.collection.animator().performBatchUpdates({
-                Model.sharedFilter.updateFilter(signalUpdate: false)
-                if let index = Model.sharedFilter.filteredDrops.firstIndex(of: item) {
+                s.filter.updateFilter(signalUpdate: false)
+                if let index = s.filter.filteredDrops.firstIndex(of: item) {
                     let n = IndexPath(item: index, section: 0)
                     s.collection.insertItems(at: [n])
                     s.updateEmptyView()
@@ -151,62 +146,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             })
         }
         
-        let a14 = n.addObserver(forName: .ClipboardSnoopingChanged, object: nil, queue: .main) { [weak self] _ in
-            self?.setupClipboardSnooping()
-        }
-        
-		DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
-
-		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13, a14]
-
-		if CloudManager.syncSwitchedOn {
-			CloudManager.sync { _ in }
-		}
+		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13]
 
         updateTitle()
         updateEmptyView()
         setupMouseMonitoring()
-        setupClipboardSnooping()
 	}
     
-    private func setupClipboardSnooping() {
-        let snoop = PersistedOptions.clipboardSnooping
-        
-        if snoop, pasteboardObservationTimer == nil {
-            let pasteboard = NSPasteboard.general
-            let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-                let newCount = pasteboard.changeCount
-                guard let s = self, s.pasteboardObservationCount != newCount else {
-                    return
-                }
-                s.pasteboardObservationCount = newCount
-                if let text = pasteboard.string(forType: .string), (PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive) {
-                    let i = NSItemProvider(object: text as NSItemProviderWriting)
-                    s.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil)
-                }
-            }
-            timer.tolerance = 0.5
-            pasteboardObservationTimer = timer
-
-        } else if !snoop, let p = pasteboardObservationTimer {
-            p.invalidate()
-            pasteboardObservationTimer = nil
-        }
-    }
-    
-	@objc private func interfaceModeChanged(sender: NSNotification) {
-		imageCache.removeAllObjects()
-		collection.reloadData()
-	}
-
 	private var optionPressed: Bool {
 		return NSApp.currentEvent?.modifierFlags.contains(.option) ?? false
 	}
 
 	private func updateTitle() {
 		var title: String
-		if Model.sharedFilter.isFilteringLabels {
-			title = Model.sharedFilter.enabledLabelsForTitles.joined(separator: ", ")
+		if filter.isFilteringLabels {
+			title = filter.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
 			title = "Gladys"
 		}
@@ -232,7 +186,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     private var firstKey = true
 	func isKey() {
-		if Model.sharedFilter.filteredDrops.isEmpty {
+		if filter.filteredDrops.isEmpty {
             if firstKey {
                 firstKey = false
                 blurb(Greetings.openLine)
@@ -299,12 +253,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-		return Model.sharedFilter.filteredDrops.count
+		return filter.filteredDrops.count
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
 		let i = collectionView.makeItem(withIdentifier: ViewController.dropCellId, for: indexPath)
-		i.representedObject = Model.sharedFilter.filteredDrops[indexPath.item]
+		i.representedObject = filter.filteredDrops[indexPath.item]
 		return i
 	}
 
@@ -346,12 +300,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         observers.forEach {
 			NotificationCenter.default.removeObserver($0)
 		}
-		DistributedNotificationCenter.default.removeObserver(self)
 	}
 
 	@objc func shareSelected(_ sender: Any?) {
 		guard let itemToShare = collection.actionableSelectedItems.first,
-			let i = Model.sharedFilter.filteredDrops.firstIndex(of: itemToShare),
+			let i = filter.filteredDrops.firstIndex(of: itemToShare),
 			let cell = collection.item(at: IndexPath(item: i, section: 0))
 			else { return }
 
@@ -375,7 +328,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         searchPopTimer.push()
 
 		if andLabels {
-			Model.sharedFilter.disableAllLabels()
+			filter.disableAllLabels()
 		}
 	}
 
@@ -397,7 +350,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         return PopTimer(timeInterval: 0.2) { [weak self] in
             guard let s = self else { return }
             let str = s.searchBar.stringValue
-            Model.sharedFilter.text = str.isEmpty ? nil : str
+            s.filter.text = str.isEmpty ? nil : str
             s.updateEmptyView()
         }
     }()
@@ -408,7 +361,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
     func touchedItem(_ item: ArchivedItem) {
-        if let index = Model.sharedFilter.filteredDrops.firstIndex(of: item) {
+        if let index = filter.filteredDrops.firstIndex(of: item) {
             let ip = IndexPath(item: index, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: index)
@@ -430,7 +383,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 info(nil)
             } else if request.preview {
                 if !(previewPanel?.isVisible ?? false) {
-                    ViewController.shared.toggleQuickLookPreviewPanel(self)
+                    toggleQuickLookPreviewPanel(self)
                 }
             }
         }
@@ -464,11 +417,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
-		return Model.sharedFilter.filteredDrops[indexPath.item].pasteboardItem(forDrag: true)
+		return filter.filteredDrops[indexPath.item].pasteboardItem(forDrag: true)
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
-        return !indexPaths.contains { Model.sharedFilter.filteredDrops[$0.item].flags.contains(.needsUnlock) }
+        return !indexPaths.contains { filter.filteredDrops[$0.item].flags.contains(.needsUnlock) }
 	}
 
 	func collectionView(_ collectionView: NSCollectionView, validateDrop draggingInfo: NSDraggingInfo, proposedIndexPath proposedDropIndexPath: AutoreleasingUnsafeMutablePointer<NSIndexPath>, dropOperation proposedDropOperation: UnsafeMutablePointer<NSCollectionView.DropOperation>) -> NSDragOperation {
@@ -486,7 +439,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {
 		if let d = draggingIndexPaths, !d.isEmpty {
 			if optionPressed {
-				let items = d.map { Model.sharedFilter.filteredDrops[$0.item] }
+				let items = d.map { filter.filteredDrops[$0.item] }
                 Model.delete(items: items)
 			}
 			draggingIndexPaths = nil
@@ -502,19 +455,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				return false
 			}
 
-			var destinationIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
+			var destinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
             let count = Model.drops.count
 			if destinationIndex >= count {
 				destinationIndex = count - 1
 			}
 
 			var indexPath = indexPath
-			if indexPath.item >= Model.sharedFilter.filteredDrops.count {
-				indexPath.item = Model.sharedFilter.filteredDrops.count - 1
+			if indexPath.item >= filter.filteredDrops.count {
+				indexPath.item = filter.filteredDrops.count - 1
 			}
 
 			for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
-				let sourceItem = Model.sharedFilter.filteredDrops[draggingIndexPath.item]
+				let sourceItem = filter.filteredDrops[draggingIndexPath.item]
                 let sourceIndex = Model.firstIndexOfItem(with: sourceItem.uuid)!
 				Model.drops.remove(at: sourceIndex)
 				Model.drops.insert(sourceItem, at: destinationIndex)
@@ -524,107 +477,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return true
 		} else {
 			let p = draggingInfo.draggingPasteboard
-			return addItems(from: p, at: indexPath, overrides: nil)
+            return Model.addItems(from: p, at: indexPath, overrides: nil, filterContext: filter)
 		}
-	}
-
-	@discardableResult
-	func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
-		guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
-
-		let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
-			let extractor = NSItemProvider()
-			var count = 0
-            
-            if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
-                let destinationUrl = Model.temporaryDirectoryUrl
-                for promise in filePromises {
-                    for promiseType in promise.fileTypes {
-                        let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
-                        var dropData: Data?
-                        let dropLock = DispatchSemaphore(value: 0)
-                        promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
-                            if let error = error {
-                                log("Warning, loading error in file drop: \(error.localizedDescription)")
-                            }
-                            dropData = try? Data(contentsOf: url)
-                            dropLock.signal()
-                        }
-                        
-                        count += 1
-                        extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
-                            let p = Progress()
-                            p.totalUnitCount = 1
-                            DispatchQueue.global(qos: .background).async {
-                                dropLock.wait()
-                                p.completedUnitCount += 1
-                                callback(dropData, nil)
-                            }
-                            return p
-                        }
-                    }
-                }
-            }
-            
-			for type in pasteboardItem.types {
-                count += 1
-                extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-                    let p = Progress()
-                    p.totalUnitCount = 1
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        let data = pasteboardItem.data(forType: type)
-                        callback(data, nil)
-                        p.completedUnitCount = 1
-                    }
-                    return p
-                }
-			}
-			return count > 0 ? extractor : nil
-		}
-
-		if itemProviders.isEmpty {
-			return false
-		}
-
-		return addItems(itemProviders: itemProviders, indexPath: indexPath, overrides: overrides)
-	}
-
-	@discardableResult
-	func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?) -> Bool {
-		var inserted = false
-		for provider in itemProviders {
-			for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
-
-				var modelIndex = indexPath.item
-				if Model.sharedFilter.isFiltering {
-					modelIndex = Model.sharedFilter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
-					if Model.sharedFilter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
-						newItem.labels = Model.sharedFilter.enabledLabelsForItems
-					}
-				}
-				Model.drops.insert(newItem, at: modelIndex)
-                inserted = true
-			}
-		}
-
-        if inserted {
-            Model.sharedFilter.updateFilter(signalUpdate: true)
-		}
-        return inserted
-	}
-
-	func importFiles(paths: [String]) {
-		let providers = paths.compactMap { path -> NSItemProvider? in
-			let url = NSURL(fileURLWithPath: path)
-			var isDir: ObjCBool = false
-			FileManager.default.fileExists(atPath: url.path ?? "", isDirectory: &isDir)
-			if isDir.boolValue {
-				return NSItemProvider(item: url, typeIdentifier: kUTTypeFileURL as String)
-			} else {
-				return NSItemProvider(contentsOf: url as URL)
-			}
-		}
-		addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil)
 	}
 
     private func modelDataUpdate(_ notification: Notification) {
@@ -636,13 +490,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         var ipsToReload = Set<IndexPath>()
         collection.animator().performBatchUpdates({
 
-            let oldUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
-            Model.sharedFilter.updateFilter(signalUpdate: false)
+            let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+            filter.updateFilter(signalUpdate: false)
             if Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
-            let newUUIDs = Model.sharedFilter.filteredDrops.map { $0.uuid }
+            let newUUIDs = filter.filteredDrops.map { $0.uuid }
             var ipsToRemove = Set<IndexPath>()
             var ipsToInsert = Set<IndexPath>()
             var moveList = [(IndexPath, IndexPath)]()
@@ -686,7 +540,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 
         var index = 0
         var indexSet = Set<IndexPath>()
-        for i in Model.sharedFilter.filteredDrops {
+        for i in filter.filteredDrops {
             if selectedUUIDS.contains(i.uuid) {
                 indexSet.insert(IndexPath(item: index, section: 0))
             }
@@ -702,9 +556,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
     
     private func itemsDeleted() {
-        if Model.sharedFilter.filteredDrops.isEmpty {
+        if filter.filteredDrops.isEmpty {
             
-            if Model.sharedFilter.isFiltering {
+            if filter.isFiltering {
                 resetSearch(andLabels: true)
             }
             updateEmptyView()
@@ -762,7 +616,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	func addCellToSelection(_ sender: DropCell) {
-		if let cellItem = sender.representedObject as? ArchivedItem, let index = Model.sharedFilter.filteredDrops.firstIndex(of: cellItem) {
+		if let cellItem = sender.representedObject as? ArchivedItem, let index = filter.filteredDrops.firstIndex(of: cellItem) {
 			let newIp = IndexPath(item: index, section: 0)
 			if !collection.selectionIndexPaths.contains(newIp) {
 				collection.selectionIndexPaths = [newIp]
@@ -961,12 +815,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	@objc func paste(_ sender: Any?) {
-		addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil)
+        Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filter)
 	}
 
 	var lockableSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.sharedFilter.filteredDrops[$0.item]
+			let item = filter.filteredDrops[$0.item]
 			let isLocked = item.isLocked
 			let canBeLocked = !isLocked || (isLocked && !item.flags.contains(.needsUnlock))
 			return (!canBeLocked || item.isImportedShare) ? nil : item
@@ -975,20 +829,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	var selectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.map {
-			Model.sharedFilter.filteredDrops[$0.item]
+            filter.filteredDrops[$0.item]
 		}
 	}
 
 	var removableLockSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.sharedFilter.filteredDrops[$0.item]
+			let item = filter.filteredDrops[$0.item]
 			return (!item.isLocked || item.isImportedShare) ? nil : item
 		}
 	}
 
 	var unlockableSelectedItems: [ArchivedItem] {
 		return collection.selectionIndexPaths.compactMap {
-			let item = Model.sharedFilter.filteredDrops[$0.item]
+			let item = filter.filteredDrops[$0.item]
 			return (!item.flags.contains(.needsUnlock) || item.isImportedShare) ? nil : item
 		}
 	}
@@ -1050,6 +904,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			if let item = sender as? ArchivedItem,
 				let window = segue.destinationController as? NSWindowController,
 				let d = window.contentViewController as? DetailController {
+                d.associatedFilter = filter
 				d.representedObject = item
 			}
 
@@ -1058,6 +913,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		case "editLabels":
 			if let destination = segue.destinationController as? LabelEditorViewController {
+                destination.associatedFilter = filter
 				destination.selectedItems = collection.actionableSelectedItems.map { $0.uuid }
 			}
 
@@ -1072,6 +928,25 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		default: break
 		}
 	}
+    
+    func restoreState(from windowState: WindowState) {
+        if !windowState.labels.isEmpty {
+            filter.enableLabelsByName(Set(windowState.labels))
+            filter.updateFilter(signalUpdate: true)
+        }
+        if let text = windowState.search, !text.isEmpty {
+            self.showSearch = true
+            self.searchBar.stringValue = text
+        }
+        if let w = view.window {
+            w.setFrame(windowState.frame, display: false, animate: false)
+            if PersistedOptions.autoShowFromEdge > 0 || PersistedOptions.hideMainWindowAtStartup {
+                w.orderOut(nil)
+            } else {
+                w.makeKeyAndOrderFront(nil)
+            }
+        }
+    }
 
 	private func updateEmptyView() {
 		if Model.drops.isEmpty && emptyView.alphaValue < 1 {
@@ -1115,7 +990,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
 		let index = collection.selectionIndexPaths.sorted()[index].item
-		return Model.sharedFilter.filteredDrops[index].previewableTypeItem?.quickLookItem
+		return filter.filteredDrops[index].previewableTypeItem?.quickLookItem
 	}
 
 	func previewPanel(_ panel: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
@@ -1128,7 +1003,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 	func previewPanel(_ panel: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
 		guard let qlItem = item as? Component.PreviewItem else { return .zero }
-		if let drop = Model.item(uuid: qlItem.parentUuid), let index = Model.sharedFilter.filteredDrops.firstIndex(of: drop) {
+		if let drop = Model.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
 			let frameRealativeToCollection = collection.frameForItem(at: index)
 			let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
 			let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
@@ -1205,7 +1080,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
         }
     }
-    
+        
     private func handleMouseMoved(draggingData: Bool) {
         let checkingDrag = PersistedOptions.autoShowWhenDragging && draggingData
         let autoShowOnEdge = PersistedOptions.autoShowFromEdge
@@ -1218,18 +1093,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 hideTimer = nil
 
             } else if enteredWindowAfterAutoShow && (self.presentedViewControllers?.isEmpty ?? true) {
-                hideWindowBecauseOfMouse()
+                hideWindowBecauseOfMouse(window: window)
             }
         } else if !window.isVisible {
             if checkingDrag || mouseInActivationBoundary(at: autoShowOnEdge, mouseLocation: mouseLocation) {
-                showWindowBecauseOfMouse()
+                showWindowBecauseOfMouse(window: window)
             }
         }
     }
     
     func hideOnInactiveIfNeeded() {
-        guard PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 else { return }
-        hideWindowBecauseOfMouse()
+        guard PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0, let window = view.window else { return }
+        hideWindowBecauseOfMouse(window: window)
     }
     
     func showOnActiveIfNeeded() {
@@ -1288,15 +1163,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let wasDraggingData = dragPboardChangeCount != newCount
         dragPboardChangeCount = newCount
         if autoShown && wasDraggingData && !window.frame.contains(mouseLocation) {
-            hideWindowBecauseOfMouse()
+            hideWindowBecauseOfMouse(window: window)
         }
     }
     
     private var hideTimer: GladysTimer?
     
-    private func showWindowBecauseOfMouse() {
-        guard let window = view.window else { return }
-        
+    private func showWindowBecauseOfMouse(window: NSWindow) {
         hideTimer = nil
         
         enteredWindowAfterAutoShow = false
@@ -1309,13 +1182,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let time = TimeInterval(PersistedOptions.autoHideAfter)
         if time > 0 {
             hideTimer = GladysTimer(interval: time) {
-                self.hideWindowBecauseOfMouse()
+                self.hideWindowBecauseOfMouse(window: window)
             }
         }
     }
     
-    private func hideWindowBecauseOfMouse() {
-        guard let window = view.window else { return }
+    private func hideWindowBecauseOfMouse(window: NSWindow) {
         enteredWindowAfterAutoShow = false
         autoShown = false
 

@@ -10,6 +10,10 @@ import Cocoa
 
 final class LabelSelectionViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate {
 
+    private var presentingGladysVc: ViewController {
+        return self.presentingViewController as! ViewController
+    }
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let n = NotificationCenter.default
@@ -19,7 +23,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 
 	override var preferredContentSize: NSSize {
 		get {
-			return NSSize(width: 200, height: ViewController.shared.view.frame.size.height)
+			return NSSize(width: 200, height: presentingGladysVc.view.frame.size.height)
 		}
         set {}
 	}
@@ -30,7 +34,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 
 	private var filteredLabels: [ModelFilterContext.LabelToggle] {
 		let text = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-		let toggles = Model.sharedFilter.labelToggles.filter { $0.count > 0 }
+        let toggles = presentingGladysVc.filter.labelToggles.filter { $0.count > 0 }
 		if text.isEmpty {
 			return toggles
 		} else {
@@ -59,7 +63,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
 		var item = filteredLabels[row]
 		item.enabled = (object as? Int == 1)
-		Model.sharedFilter.updateLabel(item)
+        presentingGladysVc.filter.updateLabel(item)
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 		labelsUpdated()
 	}
@@ -69,14 +73,14 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 	@IBOutlet private var searchField: NSSearchField!
 
 	@IBAction private func clearAllSelected(_ sender: NSButton) {
-		Model.sharedFilter.disableAllLabels()
+        presentingGladysVc.filter.disableAllLabels()
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 		labelsUpdated()
 	}
 
 	@objc private func labelsUpdated() {
 		tableView.reloadData()
-		clearAllButton.isEnabled = Model.sharedFilter.isFilteringLabels
+		clearAllButton.isEnabled = presentingGladysVc.filter.isFilteringLabels
 	}
 
 	func controlTextDidChange(_ obj: Notification) {
@@ -100,7 +104,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
             if response.rawValue == 1000 {
                 let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !text.isEmpty {
-                    Model.sharedFilter.renameLabel(toggle.name, to: text)
+                    self?.presentingGladysVc.filter.renameLabel(toggle.name, to: text)
                     self?.tableView.reloadData()
                 }
             }
@@ -117,7 +121,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
             action: "Remove From All Items",
             cancel: "Cancel") { [weak self] confirmed in
                 if confirmed {
-                    Model.sharedFilter.removeLabel(toggle.name)
+                    self?.presentingGladysVc.filter.removeLabel(toggle.name)
                     self?.tableView.reloadData()
                 }
         }

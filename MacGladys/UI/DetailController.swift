@@ -52,6 +52,8 @@ final class FocusableTextField: NSTextField {
 final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate, NSMenuItemValidation {
 
 	static var showingUUIDs = Set<UUID>()
+    
+    var associatedFilter: ModelFilterContext?
 
 	@IBOutlet private var titleField: FocusableTextField!
 	@IBOutlet private var notesField: FocusableTextField!
@@ -311,6 +313,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
 		if let d = segue.destinationController as? NewLabelController {
+            d.associatedFilter = associatedFilter
 			d.delegate = self
             d.exclude = Set(item.labels)
 		}

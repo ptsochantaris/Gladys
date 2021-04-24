@@ -1,8 +1,6 @@
-import Foundation
+import Cocoa
 
 extension Model {
-
-    static let sharedFilter = ModelFilterContext()
 
 	static var coordinator: NSFileCoordinator {
 		return NSFileCoordinator(filePresenter: nil)
@@ -66,4 +64,105 @@ extension Model {
 			}
 		}
 	}
+    
+    @discardableResult
+    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: ModelFilterContext?) -> Bool {
+        guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
+
+        let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
+            let extractor = NSItemProvider()
+            var count = 0
+            
+            if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
+                let destinationUrl = Model.temporaryDirectoryUrl
+                for promise in filePromises {
+                    for promiseType in promise.fileTypes {
+                        let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
+                        var dropData: Data?
+                        let dropLock = DispatchSemaphore(value: 0)
+                        promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                            if let error = error {
+                                log("Warning, loading error in file drop: \(error.localizedDescription)")
+                            }
+                            dropData = try? Data(contentsOf: url)
+                            dropLock.signal()
+                        }
+                        
+                        count += 1
+                        extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
+                            let p = Progress()
+                            p.totalUnitCount = 1
+                            DispatchQueue.global(qos: .background).async {
+                                dropLock.wait()
+                                p.completedUnitCount += 1
+                                callback(dropData, nil)
+                            }
+                            return p
+                        }
+                    }
+                }
+            }
+            
+            for type in pasteboardItem.types {
+                count += 1
+                extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+                    let p = Progress()
+                    p.totalUnitCount = 1
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let data = pasteboardItem.data(forType: type)
+                        callback(data, nil)
+                        p.completedUnitCount = 1
+                    }
+                    return p
+                }
+            }
+            return count > 0 ? extractor : nil
+        }
+
+        if itemProviders.isEmpty {
+            return false
+        }
+
+        return addItems(itemProviders: itemProviders, indexPath: indexPath, overrides: overrides, filterContext: filterContext)
+    }
+
+    @discardableResult
+    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: ModelFilterContext?) -> Bool {
+        var inserted = false
+        for provider in itemProviders {
+            for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
+
+                var modelIndex = indexPath.item
+                if let filterContext = filterContext, filterContext.isFiltering {
+                    modelIndex = filterContext.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
+                    if filterContext.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+                        newItem.labels = filterContext.enabledLabelsForItems
+                    }
+                }
+                Model.drops.insert(newItem, at: modelIndex)
+                inserted = true
+            }
+        }
+
+        if inserted {
+            allFilters.forEach {
+                $0.updateFilter(signalUpdate: true)
+            }
+        }
+        return inserted
+    }
+
+    static func importFiles(paths: [String], filterContext: ModelFilterContext?) {
+        let providers = paths.compactMap { path -> NSItemProvider? in
+            let url = NSURL(fileURLWithPath: path)
+            var isDir: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path ?? "", isDirectory: &isDir)
+            if isDir.boolValue {
+                return NSItemProvider(item: url, typeIdentifier: kUTTypeFileURL as String)
+            } else {
+                return NSItemProvider(contentsOf: url as URL)
+            }
+        }
+        addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
+    }
 }

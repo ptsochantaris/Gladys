@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
@@ -65,6 +65,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="zin-Ce-zvK">
                                     <items>
+                                        <menuItem title="New Gladys Window" keyEquivalent="n" id="H0j-i6-ZZC">
+                                            <connections>
+                                                <action selector="newWindowSelected" target="Voe-Tx-rLC" id="los-0B-Avy"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="eRd-hm-2NX"/>
                                         <menuItem title="Import Archive…" id="cM4-ss-B6A">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -83,7 +89,7 @@
                                                 <action selector="zipSelected:" target="Voe-Tx-rLC" id="9Dl-mY-FH6"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="eRd-hm-2NX"/>
+                                        <menuItem isSeparatorItem="YES" id="yM3-B6-tnj"/>
                                         <menuItem title="Quick Look" keyEquivalent=" " id="lwl-R5-EOJ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -318,7 +324,7 @@ CA
         <scene sceneID="ccC-16-4gU">
             <objects>
                 <windowController showSeguePresentationStyle="single" id="vMy-Xo-gFi" sceneMemberID="viewController">
-                    <window key="window" title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="mts-cK-sMM">
+                    <window key="window" title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="mts-cK-sMM">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="425" y="470" width="299" height="242"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
@@ -1126,8 +1132,8 @@ Cg
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" id="IQv-IB-iLA">
+                <windowController storyboardIdentifier="windowController" showSeguePresentationStyle="single" id="B8D-0N-5wS" customClass="WindowController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Gladys" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" visibleAtLaunch="NO" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="210" y="240" width="190" height="190"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -1585,7 +1591,7 @@ Cg
                                                     </customSpacing>
                                                 </stackView>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" id="CIB-fh-aeF">
-                                                    <rect key="frame" x="155" y="177" width="324" height="48"/>
+                                                    <rect key="frame" x="161" y="177" width="313" height="48"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" id="Gwz-kA-qOE">
                                                         <font key="font" usesAppearanceFont="YES"/>

@@ -6,12 +6,14 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 	@IBOutlet private var newLabelField: NSTextField!
 	@IBOutlet var togglesColumn: NSTableColumn!
 
+    var associatedFilter: ModelFilterContext?
+
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		return availableToggles.count
 	}
 
-	private var allToggles: [ModelFilterContext.LabelToggle] = {
-		return Model.sharedFilter.labelToggles.filter { !$0.emptyChecker }
+	private lazy var allToggles: [ModelFilterContext.LabelToggle] = {
+        return associatedFilter?.labelToggles.filter { !$0.emptyChecker } ?? []
 	}()
 
 	private var availableToggles: [ModelFilterContext.LabelToggle] {

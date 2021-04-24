@@ -11,7 +11,7 @@ import Cocoa
 final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
     override func keyDown(with event: NSEvent) {
         if event.charactersIgnoringModifiers == " " {
-            ViewController.shared.toggleQuickLookPreviewPanel(self)
+            window?.gladysController.toggleQuickLookPreviewPanel(self)
         } else {
             super.keyDown(with: event)
         }
@@ -19,8 +19,11 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
 
     var actionableSelectedItems: [ArchivedItem] {
         return selectionIndexPaths.compactMap {
-            let item = Model.sharedFilter.filteredDrops[$0.item]
-            return item.flags.contains(.needsUnlock) ? nil : item
+            if let item = window?.gladysController.filter.filteredDrops[$0.item] {
+                return item.flags.contains(.needsUnlock) ? nil : item
+            } else {
+                return nil
+            }
         }
     }
 

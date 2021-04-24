@@ -589,7 +589,7 @@ extension Model {
             log("Updating app badge to show network")
             badgeValue = "↔"
         } else if PersistedOptions.badgeIconWithItemCount {
-            let count = Model.sharedFilter.filteredDrops.count
+            let count = Model.drops.count
             log("Updating app badge to show item count (\(count))")
             badgeValue = count > 0 ? String(count) : nil
         } else {

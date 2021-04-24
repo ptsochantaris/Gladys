@@ -8,6 +8,10 @@
 
 import Cocoa
 
+private var vcForKeyWindow: ViewController {
+    return NSApp.keyWindow!.gladysController
+}
+
 extension ViewController {
     func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         switch identifier {
@@ -28,7 +32,7 @@ extension ViewController {
     
     override func makeTouchBar() -> NSTouchBar? {
         let mainBar = NSTouchBar()
-        mainBar.delegate = ViewController.shared
+        mainBar.delegate = self
         mainBar.defaultItemIdentifiers = [GladysTouchBarFind.identifier, GladysTouchBarScrubber.identifier]
         mainBar.customizationIdentifier = "build.bru.Gladys.touchbar"
         return mainBar
@@ -48,7 +52,7 @@ final class GladysTouchBarFind: NSCustomTouchBarItem {
     }
     
     @objc private func touchBarSearchSelected() {
-        ViewController.shared.findSelected(nil)
+        vcForKeyWindow.findSelected(nil)
     }
 }
 
@@ -104,13 +108,17 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
         (view as! NSScrubber).reloadData()
     }
     
+    private var filterForKeyWindow: ModelFilterContext {
+        return NSApp.keyWindow!.gladysController.filter
+    }
+    
     func numberOfItems(for scrubber: NSScrubber) -> Int {
-        return Model.sharedFilter.filteredDrops.count
+        return filterForKeyWindow.filteredDrops.count
     }
     
     func scrubber(_ scrubber: NSScrubber, viewForItemAt index: Int) -> NSScrubberItemView {
         if let itemView = scrubber.makeItem(withIdentifier: GladysThumbnailItemView.identifier, owner: nil) as? GladysThumbnailItemView {
-            let drop = Model.sharedFilter.filteredDrops[index]
+            let drop = filterForKeyWindow.filteredDrops[index]
             itemView.decorate(with: drop)
             return itemView
         }
@@ -123,8 +131,8 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     }
     
     func scrubber(_ scrubber: NSScrubber, didSelectItemAt index: Int) {
-        let drop = Model.sharedFilter.filteredDrops[index]
-        ViewController.shared.touchedItem(drop)
+        let drop = filterForKeyWindow.filteredDrops[index]
+        vcForKeyWindow.touchedItem(drop)
         scrubber.selectedIndex = -1
     }
 }

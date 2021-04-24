@@ -17,6 +17,8 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
 	@IBOutlet private var labelField: NSTextField!
     @IBOutlet private var labelList: NSOutlineView!
     
+    var associatedFilter: ModelFilterContext?
+    
 	weak var delegate: NewLabelControllerDelegate?
     
     private var sections = [ModelFilterContext.LabelToggle.Section]()
@@ -29,6 +31,8 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     }
 
     private func update() {
+        guard let associatedFilter = associatedFilter else { return }
+        
         sections.removeAll()
         
         let filter = labelField.stringValue
@@ -37,10 +41,10 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
             if !recent.isEmpty {
                 sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
-            let s = Model.sharedFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
+            let s = associatedFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
             sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "All Labels"))
         } else {
-            let s = Model.sharedFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
+            let s = associatedFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
             sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "Suggested Labels"))
         }
         

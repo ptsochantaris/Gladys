@@ -47,7 +47,7 @@ final class NotesEditor: NSViewController {
 			}
 		}
 		if changes {
-			ViewController.shared.collection.reloadData()
+            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 			Model.save()
 		}
 		dismiss(nil)

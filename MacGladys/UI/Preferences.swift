@@ -408,12 +408,12 @@ final class Preferences: NSViewController {
 
 	@IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayNotesInMainView = sender.integerValue == 1
-		ViewController.shared.collection.reloadData()
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 	}
 
 	@IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
 		PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
-		ViewController.shared.collection.reloadData()
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 	}
 
 	@IBAction private func multipleSwitchChanged(_ sender: NSButton) {
@@ -426,7 +426,9 @@ final class Preferences: NSViewController {
 
 	@IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSButton) {
 		PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
-		Model.sharedFilter.updateFilter(signalUpdate: true)
+        allFilters.forEach {
+            $0.updateFilter(signalUpdate: true)
+        }
 	}
     
     @IBAction private func automaticallyConvertUrlsSwitchChanged(_ sender: NSButton) {
