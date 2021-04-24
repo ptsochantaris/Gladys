@@ -54,4 +54,19 @@ extension Model {
 		}
 		return URL(string: "file://")!
 	}
+    
+    static func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex, completion: (() -> Void)? = nil) {
+        index.indexSearchableItems(items) { error in
+            if let error = error {
+                log("Error indexing items: \(error.finalDescription)")
+            } else {
+                log("\(items.count) item(s) indexed")
+            }
+            if let c = completion {
+                DispatchQueue.main.async {
+                    c()
+                }
+            }
+        }
+    }
 }

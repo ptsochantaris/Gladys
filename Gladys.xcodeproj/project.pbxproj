@@ -383,6 +383,10 @@
 		16CE3EA324DF6B43009EC017 /* Component+CopyCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CD7D9120A112670039E6C2 /* Component+CopyCommon.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
+		16D3CC0626343B0D00BCC5B4 /* NSPasteboard+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D3CC0526343B0D00BCC5B4 /* NSPasteboard+Extensions.swift */; };
+		16D3CC0826343B3300BCC5B4 /* GenericAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D3CC0726343B3300BCC5B4 /* GenericAlert.swift */; };
+		16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D3CC0926343B6400BCC5B4 /* WindowController.swift */; };
+		16D3CC0C26343B8A00BCC5B4 /* MainCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D3CC0B26343B8A00BCC5B4 /* MainCollectionView.swift */; };
 		16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D7F3A224CC6E040091F468 /* AboutViewController.swift */; };
 		16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D829121F86D3DD00CF06FF /* AboutController.swift */; };
 		16D984502160B25200D9D51C /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
@@ -409,7 +413,6 @@
 		16EC10472607B21700ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
-		16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16ED386320C08FAA00B9BFDA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -429,9 +432,6 @@
 		16F2990920CBEF30005DE3AD /* PushState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F2990620CBEF30005DE3AD /* PushState.swift */; };
 		16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
-		16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
-		16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
-		16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2937219D6341004174C3 /* Model+IndexLite.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -827,6 +827,10 @@
 		16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gladys Keys.entitlements"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		16D3CC0526343B0D00BCC5B4 /* NSPasteboard+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Extensions.swift"; sourceTree = "<group>"; };
+		16D3CC0726343B3300BCC5B4 /* GenericAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAlert.swift; sourceTree = "<group>"; };
+		16D3CC0926343B6400BCC5B4 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		16D3CC0B26343B8A00BCC5B4 /* MainCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionView.swift; sourceTree = "<group>"; };
 		16D5DCD31F1CE0080069661C /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		16D7F3A224CC6E040091F468 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		16D829121F86D3DD00CF06FF /* AboutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
@@ -844,7 +848,6 @@
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		16EC2934219D5F11004174C3 /* Model+Lite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Lite.swift"; sourceTree = "<group>"; };
-		16EC2937219D6341004174C3 /* Model+IndexLite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+IndexLite.swift"; sourceTree = "<group>"; };
 		16EC3D082145286F0015714A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ImportExport.swift"; sourceTree = "<group>"; };
@@ -1272,6 +1275,10 @@
 				161718C82094D333005ABD6C /* ViewController.swift */,
 				168FE05E2095363900E740E9 /* NSImage+Extensions.swift */,
 				16D7F3A224CC6E040091F468 /* AboutViewController.swift */,
+				16D3CC0526343B0D00BCC5B4 /* NSPasteboard+Extensions.swift */,
+				16D3CC0726343B3300BCC5B4 /* GenericAlert.swift */,
+				16D3CC0926343B6400BCC5B4 /* WindowController.swift */,
+				16D3CC0B26343B8A00BCC5B4 /* MainCollectionView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1411,7 +1418,6 @@
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 				16EC2934219D5F11004174C3 /* Model+Lite.swift */,
-				16EC2937219D6341004174C3 /* Model+IndexLite.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2155,6 +2161,7 @@
 				16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */,
 				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
+				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
 				16CD7D7A20A108550039E6C2 /* ArchivedItem+Ingest.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
 				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,
@@ -2170,7 +2177,6 @@
 				16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
 				16CD7D7520A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1658470B2376F9A800666B7B /* Model+UICommon.swift in Sources */,
-				16F3C2042395B055004AF596 /* Model+IndexLite.swift in Sources */,
 				16906A9A23C8C18E00D6C177 /* Component.swift in Sources */,
 				161718E52094DFD4005ABD6C /* Component+Cloud.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedItem+Indexing.swift in Sources */,
@@ -2183,6 +2189,7 @@
 				16E034FB20A0D8E200B9EE1A /* Greetings.swift in Sources */,
 				1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
+				16D3CC0626343B0D00BCC5B4 /* NSPasteboard+Extensions.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
 				168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */,
@@ -2200,6 +2207,7 @@
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
+				16D3CC0826343B3300BCC5B4 /* GenericAlert.swift in Sources */,
 				16ED386720C14F4500B9BFDA /* Model+ImportExport.swift in Sources */,
 				16D989242463737D00217F21 /* PopTimer.swift in Sources */,
 				161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */,
@@ -2219,6 +2227,7 @@
 				16CD7D7D20A108BB0039E6C2 /* ArchivedItem+UICommon.swift in Sources */,
 				168FE05F2095363900E740E9 /* NSImage+Extensions.swift in Sources */,
 				168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */,
+				16D3CC0C26343B8A00BCC5B4 /* MainCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2228,7 +2237,6 @@
 			files = (
 				16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */,
 				1605050523784961002755A2 /* Notifications.swift in Sources */,
-				16F3C2032395B054004AF596 /* Model+IndexLite.swift in Sources */,
 				16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16A80A102113AFE7004C72AB /* Caches.swift in Sources */,
 				16287AF61EFB05E4007188AE /* Component.swift in Sources */,
@@ -2265,7 +2273,6 @@
 				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1604A3361F091D7D005A477E /* Component.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
-				16EC293A219D69A3004174C3 /* Model+IndexLite.swift in Sources */,
 				16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */,
@@ -2366,7 +2373,6 @@
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				16906A9423C8C0C700D6C177 /* Component+iOS.swift in Sources */,
-				16F3C2022395B053004AF596 /* Model+IndexLite.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */,
 				16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
 				1602F3182030E4C90036E2B0 /* Data+Extensions.swift in Sources */,
@@ -3001,7 +3007,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 944;
+				CURRENT_PROJECT_VERSION = 945;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3149,7 +3155,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 944;
+				CURRENT_PROJECT_VERSION = 945;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;

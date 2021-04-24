@@ -343,7 +343,8 @@ final class ModelFilterContext {
 
     func renameLabel(_ label: String, to newLabel: String) {
         let wasEnabled = labelToggles.first { $0.name == label }?.enabled ?? false
-        let affectedUuids = Model.drops.compactMap { i -> String? in
+        
+        Model.drops.forEach { i in
             if let index = i.labels.firstIndex(of: label) {
                 if i.labels.contains(newLabel) {
                     i.labels.remove(at: index)
@@ -351,9 +352,8 @@ final class ModelFilterContext {
                     i.labels[index] = newLabel
                 }
                 i.needsCloudPush = true
-                return i.uuid.uuidString
+                i.flags.insert(.needsSaving)
             }
-            return nil
         }
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
@@ -363,33 +363,24 @@ final class ModelFilterContext {
             l.enabled = true
             labelToggles[i] = l
         }
+        
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-
-        if !affectedUuids.isEmpty {
-            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
-                Model.save()
-            }
-        }
+        
+        Model.save()
     }
     
     func removeLabel(_ label: String) {
-        let affectedUuids = Model.drops.compactMap { i -> String? in
+        Model.drops.forEach { i in
             if i.labels.contains(label) {
                 i.labels.removeAll { $0 == label }
                 i.needsCloudPush = true
-                return i.uuid.uuidString
+                i.flags.insert(.needsSaving)
             }
-            return nil
         }
         
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-
-        if !affectedUuids.isEmpty {
-            Model.searchableIndex(CSSearchableIndex.default(), reindexSearchableItemsWithIdentifiers: affectedUuids) {
-                Model.save()
-            }
-        }
+        Model.save()
     }
 }
 
@@ -696,9 +687,11 @@ extension Model {
 
         let saveableItems: ContiguousArray = drops.filter { $0.goodToSave }
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
-        let searchableItems = itemsToWrite.map { $0.searchableItem }
-        reIndex(items: searchableItems, in: index)
-
+        if !itemsToWrite.isEmpty {
+            let searchableItems = itemsToWrite.map { $0.searchableItem }
+            reIndex(items: searchableItems, in: index)
+        }
+        
 		let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
             i.flags.remove(.isBeingCreatedBySync)
             i.flags.remove(.needsSaving)
