@@ -1170,6 +1170,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         enteredWindowAfterAutoShow = false
         autoShown = wasAuto
         
+        window.collectionBehavior = .moveToActiveSpace
         window.alphaValue = 0
         window.orderFrontRegardless()
         window.makeKey()
