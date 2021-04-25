@@ -28,12 +28,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
-				guard let w = NSApp.keyWindow?.contentViewController?.view.window else { return }
+                guard let w = NSApp.windows.first else { return }
 				if NSApp.isActive, w.isVisible {
-					w.orderOut(nil)
+                    NSApp.orderedWindows.forEach {
+                        $0.orderOut(nil)
+                    }
 				} else {
 					NSApp.activate(ignoringOtherApps: true)
-					w.makeKeyAndOrderFront(nil)
+                    NSApp.orderedWindows.forEach {
+                        $0.makeKeyAndOrderFront(nil)
+                    }
 				}
 			}
 			hotKey = h
@@ -189,7 +193,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         PullState.checkMigrations()
     }
-
+    
+    @objc func newWindowForTab(_ sender: Any?) {
+        newWindowSelected(sender)
+    }
+            
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
         let s = NSAppleEventManager.shared()

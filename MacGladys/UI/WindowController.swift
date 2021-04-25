@@ -70,15 +70,27 @@ private var _lastWindowPosition: NSRect? {
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
-        
+    private static var strongRefs = [WindowController]()
+
+    override init(window: NSWindow?) {
+        super.init(window: window)
+        WindowController.strongRefs.append(self)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        WindowController.strongRefs.append(self)
+    }
+    
     var gladysController: ViewController {
         return contentViewController as! ViewController
     }
     
     func windowWillClose(_ notification: Notification) {
         Model.lockUnlockedItems()
+        WindowController.strongRefs.removeAll { $0 === self }
     }
-
+    
     func windowDidBecomeKey(_ notification: Notification) {
         gladysController.isKey()
     }
