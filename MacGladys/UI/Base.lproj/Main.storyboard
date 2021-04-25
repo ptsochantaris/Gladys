@@ -1185,10 +1185,10 @@ Cg
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VH1-rZ-Gog">
-                                                    <rect key="frame" x="178" y="53" width="280" height="313"/>
+                                                    <rect key="frame" x="178" y="58" width="280" height="302"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zed-26-wj9">
-                                                            <rect key="frame" x="0.0" y="283" width="147" height="30"/>
+                                                            <rect key="frame" x="0.0" y="272" width="147" height="30"/>
                                                             <subviews>
                                                                 <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-cR-W8A">
                                                                     <rect key="frame" x="-2" y="13" width="119" height="18"/>
@@ -1239,10 +1239,10 @@ Cg
                                                             </customSpacing>
                                                         </stackView>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hc7-rc-39A">
-                                                            <rect key="frame" x="0.0" y="211" width="280" height="52"/>
+                                                            <rect key="frame" x="0.0" y="211" width="280" height="41"/>
                                                             <subviews>
                                                                 <button horizontalHuggingPriority="249" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="8gK-QT-CWC">
-                                                                    <rect key="frame" x="-2" y="35" width="282" height="18"/>
+                                                                    <rect key="frame" x="-2" y="24" width="282" height="18"/>
                                                                     <buttonCell key="cell" type="check" title="Hide on launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xsw-Pt-y3q">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -1252,18 +1252,18 @@ Cg
                                                                     </connections>
                                                                 </button>
                                                                 <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XAg-ET-hcd">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="33"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="22"/>
                                                                     <subviews>
                                                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="3Im-P1-h7f">
-                                                                            <rect key="frame" x="0.0" y="29" width="21" height="4"/>
+                                                                            <rect key="frame" x="0.0" y="18" width="21" height="4"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="21" id="0h8-uQ-y0m"/>
                                                                                 <constraint firstAttribute="height" constant="4" id="W4F-qd-PGR"/>
                                                                             </constraints>
                                                                         </customView>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="cyZ-3B-jh6">
-                                                                            <rect key="frame" x="19" y="0.0" width="263" height="33"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Hide windows when launching Gladys. Combines nicely with menubar icon mode. (Makes no difference when auto-hiding is on)" id="ROE-xE-Y6J">
+                                                                            <rect key="frame" x="19" y="0.0" width="263" height="22"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Hide windows when launching Gladys. Combines nicely with menubar icon mode. (Ignored if auto-hiding is on)" id="ROE-xE-Y6J">
                                                                                 <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
