@@ -68,7 +68,7 @@ let mainWindow: UIWindow = {
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
     UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate,
-    UICloudSharingControllerDelegate {
+    UICloudSharingControllerDelegate, ModelFilterContextDelegate {
 
 	@IBOutlet private var collection: UICollectionView!
 	@IBOutlet private var totalSizeLabel: UIBarButtonItem!
@@ -146,6 +146,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			}, completion: nil)
 		}
 	}
+    
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
+        reloadData(onlyIfPopulated: true)
+    }
 
 	@IBAction private func dragModeButtonSelected(_ sender: UIButton) {
 		dragModeReverse = !dragModeReverse

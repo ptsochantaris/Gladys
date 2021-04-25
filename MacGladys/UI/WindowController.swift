@@ -50,6 +50,17 @@ func storeWindowStates() {
 func restoreWindows() {
     let sb = NSStoryboard(name: "Main", bundle: nil)
     let id = NSStoryboard.SceneIdentifier("windowController")
+
+    // migrate saved window position from previous version, if exists
+    if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
+        PersistedOptions.defaults.removeObject(forKey: "lastWindowPosition")
+        if let frame = NSRect(dictionaryRepresentation: d) {
+            let state = WindowState(frame: frame, search: nil, labels: [])
+            if let data = try? JSONEncoder().encode([state]) {
+                PersistedOptions.defaults.setValue(data, forKey: "lastWindowStates")
+            }
+        }
+    }
     
     if let data = PersistedOptions.defaults.data(forKey: "lastWindowStates"), let states = try? JSONDecoder().decode([WindowState].self, from: data) {
         for state in states {
@@ -62,14 +73,6 @@ func restoreWindows() {
         if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let w = controller.window {
             w.makeKeyAndOrderFront(nil)
         }
-    }
-}
-
-private var _lastWindowPosition: NSRect? {
-    if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
-        return NSRect(dictionaryRepresentation: d)
-    } else {
-        return nil
     }
 }
 

@@ -11,7 +11,8 @@ import Quartz
 import GladysFramework
 import DeepDiff
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
+                            NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, ModelFilterContextDelegate {
 
     let filter = ModelFilterContext()
 
@@ -73,12 +74,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.setDraggingSourceOperationMask(.move, forLocal: true)
 		collection.setDraggingSourceOperationMask(optionPressed ? .every : .copy, forLocal: false)
 	}
+    
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
+        itemCollectionNeedsDisplay()
+    }
 
 	private var observers = [NSObjectProtocol]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+        filter.delegate = self
 		showSearch = false
 
 		collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
@@ -93,9 +99,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 
 		let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
-			self?.updateTitle()
-            self?.collection.animator().reloadData()
-            self?.touchBarScrubber?.reloadData()
+            self?.itemCollectionNeedsDisplay()
 		}
 
 		let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
@@ -152,6 +156,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         updateEmptyView()
         setupMouseMonitoring()
 	}
+    
+    private func itemCollectionNeedsDisplay() {
+        updateTitle()
+        collection.animator().reloadData()
+        touchBarScrubber?.reloadData()
+    }
     
 	private var optionPressed: Bool {
 		return NSApp.currentEvent?.modifierFlags.contains(.option) ?? false
@@ -1076,7 +1086,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
         }
     }
-        
+    
     private func handleMouseMoved(draggingData: Bool) {
         let checkingDrag = PersistedOptions.autoShowWhenDragging && draggingData
         let autoShowOnEdge = PersistedOptions.autoShowFromEdge
@@ -1187,8 +1197,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         
         let time = TimeInterval(PersistedOptions.autoHideAfter)
         if time > 0 {
-            hideTimer = GladysTimer(interval: time) {
-                self.hideWindowBecauseOfMouse(window: window)
+            hideTimer = GladysTimer(interval: time) { [weak self] in
+                self?.hideWindowBecauseOfMouse(window: window)
             }
         }
     }

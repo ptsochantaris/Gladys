@@ -47,7 +47,6 @@ final class NotesEditor: NSViewController {
 			}
 		}
 		if changes {
-            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
 			Model.save()
 		}
 		dismiss(nil)

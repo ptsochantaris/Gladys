@@ -229,6 +229,7 @@ final class Singleton {
             filter.text = search
         }
         v.filter = filter
+        filter.delegate = v
         if replacing {
             v.onLoad = completion
             scene.windows.first?.rootViewController = v.navigationController
