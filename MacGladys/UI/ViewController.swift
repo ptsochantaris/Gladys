@@ -1103,19 +1103,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
         } else if !window.isVisible {
             if checkingDrag || mouseInActivationBoundary(at: autoShowOnEdge, mouseLocation: mouseLocation) {
-                showWindowBecauseOfMouse(window: window)
+                showWindow(window: window, wasAuto: true)
             }
         }
-    }
-    
-    func hideOnInactiveIfNeeded() {
-        guard PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0, let window = view.window else { return }
-        hideWindowBecauseOfMouse(window: window)
-    }
-    
-    func showOnActiveIfNeeded() {
-        guard let window = view.window else { return }
-        window.alphaValue = 1
     }
     
     private func mouseInActivationBoundary(at autoShowOnEdge: Int, mouseLocation: CGPoint) -> Bool {
@@ -1175,30 +1165,22 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     
     private var hideTimer: GladysTimer?
     
-    func showWindowBecauseHidingDisabled(window: NSWindow) {
+    func showWindow(window: NSWindow, wasAuto: Bool) {
+        hideTimer = nil
         enteredWindowAfterAutoShow = false
-        autoShown = false
-        window.alphaValue = 0
-        window.orderFrontRegardless()
-        window.makeKey()
-        window.animator().alphaValue = 1
-        hideTimer = nil
-    }
-    
-    func showWindowBecauseOfMouse(window: NSWindow) {
-        hideTimer = nil
+        autoShown = wasAuto
         
-        enteredWindowAfterAutoShow = false
-        autoShown = true
         window.alphaValue = 0
         window.orderFrontRegardless()
         window.makeKey()
         window.animator().alphaValue = 1
         
-        let time = TimeInterval(PersistedOptions.autoHideAfter)
-        if time > 0 {
-            hideTimer = GladysTimer(interval: time) { [weak self] in
-                self?.hideWindowBecauseOfMouse(window: window)
+        if wasAuto {
+            let time = TimeInterval(PersistedOptions.autoHideAfter)
+            if time > 0 {
+                hideTimer = GladysTimer(interval: time) { [weak self] in
+                    self?.hideWindowBecauseOfMouse(window: window)
+                }
             }
         }
     }
@@ -1206,11 +1188,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func hideWindowBecauseOfMouse(window: NSWindow) {
         enteredWindowAfterAutoShow = false
         autoShown = false
+        hideTimer = nil
 
-        NSAnimationContext.runAnimationGroup({ _ in
+        NSAnimationContext.runAnimationGroup { _ in
             window.animator().alphaValue = 0
-        }, completionHandler: {
+        }
+        completionHandler: {
             window.hide()
-        })
+        }
     }
 }

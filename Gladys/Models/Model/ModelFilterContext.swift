@@ -235,7 +235,7 @@ final class ModelFilterContext {
             }
         }
     }
-        
+    
     var enabledLabelsForItems: [String] {
         return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
     }

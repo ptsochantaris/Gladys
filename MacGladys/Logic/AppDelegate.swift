@@ -175,7 +175,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
         if let w = controller.window {
             if PersistedOptions.autoShowFromEdge > 0 {
-                w.gladysController?.showWindowBecauseOfMouse(window: w)
+                w.gladysController?.showWindow(window: w, wasAuto: true)
             } else {
                 w.makeKeyAndOrderFront(sender)
             }
@@ -250,17 +250,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         
         restoreWindows()
 	}
-
+    
+    private func showAll() {
+        NSApp.windows.forEach {
+            $0.gladysController?.showWindow(window: $0, wasAuto: PersistedOptions.autoShowFromEdge > 0)
+        }
+        updateMenubarIconMode(showing: true, forceUpdateMenu: false)
+    }
+    
 	func applicationDidBecomeActive(_ notification: Notification) {
-		let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
-		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
-        keyGladysControllerIfExists?.showOnActiveIfNeeded()
+        showAll()
 	}
 
 	func applicationDidResignActive(_ notification: Notification) {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
-        keyGladysControllerIfExists?.hideOnInactiveIfNeeded()
+        if PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 {
+            NSApp.windows.forEach {
+                $0.gladysController?.hideWindowBecauseOfMouse(window: $0)
+            }
+        }
 	}
 
 	@objc private func systemDidWake() {
@@ -275,7 +284,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
     
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-		NSApplication.shared.windows.first(where: { $0.contentViewController is ViewController })?.makeKeyAndOrderFront(self)
+        showAll()
 		return false
 	}
 
