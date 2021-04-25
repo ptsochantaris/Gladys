@@ -362,7 +362,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
-        keyGladysControllerIfExists?.performSegue(withIdentifier: "showAbout", sender: nil)
+        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "about") as! NSWindowController
+        if let w = controller.window {
+            w.makeKeyAndOrderFront(sender)
+        }
 	}
 
 	@IBAction private func openWebSite(_ sender: Any) {
@@ -511,37 +514,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 
-        if menuItem.action == #selector(newWindowSelected(_:)) {
-            return true
-        }
-
-        if menuItem.action == #selector(showPreferences(_:)) {
+        if menuItem.action == #selector(aboutSelected(_:))
+        || menuItem.action == #selector(newWindowSelected(_:))
+        || menuItem.action == #selector(showPreferences(_:)) {
             return true
         }
 
         guard let controller = keyGladysControllerIfExists else { return false }
 
 		if (menuItem.parent?.title ?? "").hasPrefix("Sort ") {
-			return !Model.drops.isEmpty
+            return !controller.filter.filteredDrops.isEmpty
 		}
         
 		switch menuItem.action {
 		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
 			return !controller.isDisplayingProgress
-		case #selector(showMain(_:)):
-			if let w = controller.view.window {
-				menuItem.title = w.title
-				menuItem.isHidden = w.isVisible && statusItem == nil
-			}
-			return !menuItem.isHidden
 		default:
 			return true
-		}
-	}
-
-	@objc private func showMain(_ sender: Any?) {
-        if let w = keyGladysControllerIfExists?.view.window {
-			w.makeKeyAndOrderFront(nil)
 		}
 	}
 
