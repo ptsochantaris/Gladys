@@ -232,7 +232,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 	private var existingPreviewView: FirstMouseView?
     
     private var hostGladysController: ViewController {
-        return view.window!.gladysController
+        return view.window!.gladysController!
     }
 
 	override func awakeFromNib() {

@@ -274,13 +274,6 @@ CA
                                                 <action selector="arrangeInFront:" target="Ady-hI-5gd" id="FoP-De-A03"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="djC-HT-RtX"/>
-                                        <menuItem title="Gladys" id="tqY-Q1-Bxc">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="showMain:" target="Ady-hI-5gd" id="4Au-gm-jkb"/>
-                                            </connections>
-                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -318,7 +311,7 @@ CA
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="wFq-Bh-Uz5"/>
             </objects>
-            <point key="canvasLocation" x="1077" y="-506"/>
+            <point key="canvasLocation" x="300" y="-467"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="ccC-16-4gU">
@@ -1127,7 +1120,7 @@ Cg
                 </viewController>
                 <customObject id="URB-7s-OFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1146" y="566"/>
+            <point key="canvasLocation" x="859" y="618"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -1148,19 +1141,19 @@ Cg
                 </windowController>
                 <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="720" y="-422"/>
+            <point key="canvasLocation" x="720" y="-444"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="LAQ-14-Lj7">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="TUE-ov-mN5" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="preferences" showSeguePresentationStyle="single" id="TUE-ov-mN5" sceneMemberID="viewController">
                     <window key="window" title="Preferences" separatorStyle="none" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="U1s-CY-tax">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="425" y="462" width="480" height="270"/>
+                        <rect key="contentRect" x="425" y="462" width="190" height="190"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
                         <view key="contentView" id="FFk-RW-IdU">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <rect key="frame" x="0.0" y="0.0" width="190" height="190"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <connections>
@@ -1173,7 +1166,7 @@ Cg
                 </windowController>
                 <customObject id="C50-wl-LKh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="201" y="662"/>
+            <point key="canvasLocation" x="-102" y="-444"/>
         </scene>
         <!--Preferences-->
         <scene sceneID="fmd-1D-McK">
@@ -1192,10 +1185,10 @@ Cg
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VH1-rZ-Gog">
-                                                    <rect key="frame" x="178" y="58" width="280" height="302"/>
+                                                    <rect key="frame" x="178" y="53" width="280" height="313"/>
                                                     <subviews>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zed-26-wj9">
-                                                            <rect key="frame" x="0.0" y="272" width="147" height="30"/>
+                                                            <rect key="frame" x="0.0" y="283" width="147" height="30"/>
                                                             <subviews>
                                                                 <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="0ax-cR-W8A">
                                                                     <rect key="frame" x="-2" y="13" width="119" height="18"/>
@@ -1246,10 +1239,10 @@ Cg
                                                             </customSpacing>
                                                         </stackView>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hc7-rc-39A">
-                                                            <rect key="frame" x="0.0" y="211" width="280" height="41"/>
+                                                            <rect key="frame" x="0.0" y="211" width="280" height="52"/>
                                                             <subviews>
                                                                 <button horizontalHuggingPriority="249" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="8gK-QT-CWC">
-                                                                    <rect key="frame" x="-2" y="24" width="282" height="18"/>
+                                                                    <rect key="frame" x="-2" y="35" width="282" height="18"/>
                                                                     <buttonCell key="cell" type="check" title="Hide on launch" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xsw-Pt-y3q">
                                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                         <font key="font" metaFont="system"/>
@@ -1259,18 +1252,18 @@ Cg
                                                                     </connections>
                                                                 </button>
                                                                 <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XAg-ET-hcd">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="22"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="33"/>
                                                                     <subviews>
                                                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="3Im-P1-h7f">
-                                                                            <rect key="frame" x="0.0" y="18" width="21" height="4"/>
+                                                                            <rect key="frame" x="0.0" y="29" width="21" height="4"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="21" id="0h8-uQ-y0m"/>
                                                                                 <constraint firstAttribute="height" constant="4" id="W4F-qd-PGR"/>
                                                                             </constraints>
                                                                         </customView>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="cyZ-3B-jh6">
-                                                                            <rect key="frame" x="19" y="0.0" width="263" height="22"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Do not show the main window when launching Gladys. Combines nicely with menubar icon mode." id="ROE-xE-Y6J">
+                                                                            <rect key="frame" x="19" y="0.0" width="263" height="33"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Hide windows when launching Gladys. Combines nicely with menubar icon mode. (Makes no difference when auto-hiding is on)" id="ROE-xE-Y6J">
                                                                                 <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1297,7 +1290,7 @@ Cg
                                                             </customSpacing>
                                                         </stackView>
                                                         <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="3" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G0r-Ya-jvU">
-                                                            <rect key="frame" x="0.0" y="161" width="280" height="30"/>
+                                                            <rect key="frame" x="0.0" y="161" width="277" height="30"/>
                                                             <subviews>
                                                                 <button horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="P9p-2i-lKm">
                                                                     <rect key="frame" x="-2" y="13" width="147" height="18"/>
@@ -1310,7 +1303,7 @@ Cg
                                                                     </connections>
                                                                 </button>
                                                                 <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xFA-K5-2vA">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="280" height="11"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="277" height="11"/>
                                                                     <subviews>
                                                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="nnm-Q7-fd4">
                                                                             <rect key="frame" x="0.0" y="7" width="21" height="4"/>
@@ -1320,8 +1313,8 @@ Cg
                                                                             </constraints>
                                                                         </customView>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Svd-ZN-a0j">
-                                                                            <rect key="frame" x="19" y="0.0" width="263" height="11"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show Gladys on the menubar rather than the macOS Dock." id="FCI-IJ-c5N">
+                                                                            <rect key="frame" x="19" y="0.0" width="260" height="11"/>
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Show Gladys on the menubar rather than the macOS Dock" id="FCI-IJ-c5N">
                                                                                 <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1372,7 +1365,7 @@ Cg
                                                                         </customView>
                                                                         <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="zmE-fk-xnd">
                                                                             <rect key="frame" x="19" y="0.0" width="263" height="22"/>
-                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Keep the Gladys window floating above other windows when it is visible." id="gsU-vb-tu6">
+                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" title="Keep the Gladys window floating above other windows when it is visible" id="gsU-vb-tu6">
                                                                                 <font key="font" metaFont="label" size="9"/>
                                                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1760,9 +1753,9 @@ Cg
                                                                         </stepperCell>
                                                                     </stepper>
                                                                     <textField horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hra-D9-E6j">
-                                                                        <rect key="frame" x="38" y="25" width="277" height="16"/>
+                                                                        <rect key="frame" x="38" y="0.0" width="277" height="41"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" title="Hide after X seconds unless mouse enters" id="xAA-P0-ep6">
+                                                                        <textFieldCell key="cell" title="Hide after X seconds unless mouse enters a window" id="xAA-P0-ep6">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1908,7 +1901,7 @@ Cg
                                                                         </connections>
                                                                     </popUpButton>
                                                                     <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bjY-Bu-Jbk">
-                                                                        <rect key="frame" x="20" y="20" width="593" height="21"/>
+                                                                        <rect key="frame" x="18" y="0.0" width="561" height="41"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" selectable="YES" alignment="left" title="You can open an item's info window with Cmd-I, via its context menu, or via the menubar" id="rBD-tP-WDu">
                                                                             <font key="font" metaFont="system"/>
@@ -1927,7 +1920,7 @@ Cg
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Th8-bZ-qEU">
-                                                                        <rect key="frame" x="18" y="89" width="193" height="32"/>
+                                                                        <rect key="frame" x="18" y="90" width="193" height="32"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" selectable="YES" alignment="left" id="cSF-cz-XKH">
                                                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1938,7 +1931,7 @@ system clipboard</string>
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Il5-ig-9jb">
-                                                                        <rect key="frame" x="18" y="61" width="146" height="18"/>
+                                                                        <rect key="frame" x="18" y="60" width="146" height="18"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <buttonCell key="cell" type="check" title="Enable snooping" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="R5k-gl-oWi">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -1949,7 +1942,7 @@ system clipboard</string>
                                                                         </connections>
                                                                     </button>
                                                                     <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="02j-C4-SrB">
-                                                                        <rect key="frame" x="18" y="20" width="284" height="32"/>
+                                                                        <rect key="frame" x="18" y="17" width="284" height="32"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="MtF-3L-wbv">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -2857,7 +2850,7 @@ to links</string>
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="200.5" y="1275"/>
+            <point key="canvasLocation" x="-102" y="73"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">
@@ -2971,7 +2964,7 @@ to links</string>
                     </items>
                 </menu>
             </objects>
-            <point key="canvasLocation" x="844" y="627"/>
+            <point key="canvasLocation" x="560" y="679"/>
         </scene>
         <!--Edit Labels-->
         <scene sceneID="8Vg-jj-cJX">
@@ -3053,7 +3046,7 @@ to links</string>
                 </viewController>
                 <customObject id="Sff-IY-fcm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="593" y="717"/>
+            <point key="canvasLocation" x="310" y="769"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="fhh-Vj-C0w">
@@ -3596,7 +3589,6 @@ Only</string>
                         <segue destination="Adk-lO-VOr" kind="modal" identifier="editLabels" id="sez-eE-yO6"/>
                         <segue destination="yA3-OV-Q47" kind="modal" identifier="editNotes" id="Oya-gR-tFF"/>
                         <segue destination="vMy-Xo-gFi" kind="show" identifier="showAbout" id="pnG-Uc-LdU"/>
-                        <segue destination="TUE-ov-mN5" kind="modal" identifier="showPreferences" id="T8q-pH-YaJ"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -3662,7 +3654,7 @@ Only</string>
                 </viewController>
                 <customObject id="xu4-p6-ZHx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1486" y="629.5"/>
+            <point key="canvasLocation" x="1203" y="678"/>
         </scene>
     </scenes>
     <resources>

@@ -8,10 +8,6 @@
 
 import Cocoa
 
-private var vcForKeyWindow: ViewController {
-    return NSApp.keyWindow!.gladysController
-}
-
 extension ViewController {
     func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         switch identifier {
@@ -52,7 +48,7 @@ final class GladysTouchBarFind: NSCustomTouchBarItem {
     }
     
     @objc private func touchBarSearchSelected() {
-        vcForKeyWindow.findSelected(nil)
+        NSApp.keyWindow?.gladysController?.findSelected(nil)
     }
 }
 
@@ -107,18 +103,14 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     func reloadData() {
         (view as! NSScrubber).reloadData()
     }
-    
-    private var filterForKeyWindow: ModelFilterContext {
-        return NSApp.keyWindow!.gladysController.filter
-    }
-    
+        
     func numberOfItems(for scrubber: NSScrubber) -> Int {
-        return filterForKeyWindow.filteredDrops.count
+        return NSApp.keyWindow?.gladysController?.filter.filteredDrops.count ?? 0
     }
     
     func scrubber(_ scrubber: NSScrubber, viewForItemAt index: Int) -> NSScrubberItemView {
-        if let itemView = scrubber.makeItem(withIdentifier: GladysThumbnailItemView.identifier, owner: nil) as? GladysThumbnailItemView {
-            let drop = filterForKeyWindow.filteredDrops[index]
+        if let itemView = scrubber.makeItem(withIdentifier: GladysThumbnailItemView.identifier, owner: nil) as? GladysThumbnailItemView, let filter = NSApp.keyWindow?.gladysController?.filter {
+            let drop = filter.filteredDrops[index]
             itemView.decorate(with: drop)
             return itemView
         }
@@ -131,8 +123,10 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     }
     
     func scrubber(_ scrubber: NSScrubber, didSelectItemAt index: Int) {
-        let drop = filterForKeyWindow.filteredDrops[index]
-        vcForKeyWindow.touchedItem(drop)
-        scrubber.selectedIndex = -1
+        if let filter = NSApp.keyWindow?.gladysController?.filter {
+            let drop = filter.filteredDrops[index]
+            NSApp.keyWindow?.gladysController?.touchedItem(drop)
+            scrubber.selectedIndex = -1
+        }
     }
 }

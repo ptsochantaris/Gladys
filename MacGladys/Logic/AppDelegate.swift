@@ -31,7 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 guard let w = NSApp.windows.first else { return }
 				if NSApp.isActive, w.isVisible {
                     NSApp.orderedWindows.forEach {
-                        $0.orderOut(nil)
+                        $0.hide()
                     }
 				} else {
 					NSApp.activate(ignoringOtherApps: true)
@@ -175,7 +175,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
         if let w = controller.window {
             if PersistedOptions.autoShowFromEdge > 0 {
-                w.gladysController.showWindowBecauseOfMouse(window: w)
+                w.gladysController?.showWindowBecauseOfMouse(window: w)
             } else {
                 w.makeKeyAndOrderFront(sender)
             }
@@ -492,10 +492,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             keyGladysControllerIfExists?.startProgress(for: p)
         }
 	}
+    
+    @objc func showPreferences(_ sender: Any?) {
+        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "preferences") as! NSWindowController
+        if let w = controller.window {
+            w.makeKeyAndOrderFront(sender)
+        }
+    }
 
 	func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
 
         if menuItem.action == #selector(newWindowSelected(_:)) {
+            return true
+        }
+
+        if menuItem.action == #selector(showPreferences(_:)) {
             return true
         }
 

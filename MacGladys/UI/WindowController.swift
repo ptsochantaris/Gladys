@@ -19,8 +19,12 @@ var keyGladysControllerIfExists: ViewController? {
 }
 
 extension NSWindow {
-    var gladysController: ViewController {
-        return contentViewController as! ViewController
+    var gladysController: ViewController? {
+        return contentViewController as? ViewController
+    }
+    
+    func hide() {
+        orderOut(nil)
     }
 }
 
@@ -49,8 +53,8 @@ func restoreWindows() {
     
     if let data = PersistedOptions.defaults.data(forKey: "lastWindowStates"), let states = try? JSONDecoder().decode([WindowState].self, from: data) {
         for state in states {
-            if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let w = controller.window {
-                w.gladysController.restoreState(from: state)
+            if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let g = controller.window?.gladysController {
+                g.restoreState(from: state)
             }
         }
 
@@ -93,6 +97,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     
     func windowDidBecomeKey(_ notification: Notification) {
         gladysController.isKey()
+        Model.updateBadge()
     }
 
     func windowDidMove(_ notification: Notification) {

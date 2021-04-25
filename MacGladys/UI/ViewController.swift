@@ -751,10 +751,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
 
-	@objc func showPreferences(_ sender: Any?) {
-		performSegue(withIdentifier: NSStoryboardSegue.Identifier("showPreferences"), sender: nil)
-	}
-
 	@objc func editLabels(_ sender: Any?) {
 		performSegue(withIdentifier: NSStoryboardSegue.Identifier("editLabels"), sender: nil)
 	}
@@ -941,7 +937,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
             if PersistedOptions.autoShowFromEdge > 0 || PersistedOptions.hideMainWindowAtStartup {
-                w.orderOut(nil)
+                w.hide()
             } else {
                 w.makeKeyAndOrderFront(nil)
             }
@@ -1204,7 +1200,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         NSAnimationContext.runAnimationGroup({ _ in
             window.animator().alphaValue = 0
         }, completionHandler: {
-            window.orderOut(nil)
+            window.hide()
         })
     }
 }

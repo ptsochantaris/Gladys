@@ -294,5 +294,15 @@ extension Model {
     
     static func deleteMirror(completion: @escaping () -> Void) {
         MirrorManager.removeMirrorIfNeeded(completion: completion)
-    }    
+    }
+    
+    static func _updateBadge() {
+        if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
+            log("Updating app badge to show item count (\(count))")
+            UIApplication.shared.applicationIconBadgeNumber = count
+        } else {
+            log("Updating app badge to clear")
+            UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+    }
 }
