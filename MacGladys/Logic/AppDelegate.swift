@@ -174,7 +174,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     @IBAction private func newWindowSelected(_ sender: Any?) {
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
         if let w = controller.window {
-            w.makeKeyAndOrderFront(sender)
+            if PersistedOptions.autoShowFromEdge > 0 {
+                w.gladysController.showWindowBecauseOfMouse(window: w)
+            } else {
+                w.makeKeyAndOrderFront(sender)
+            }
         }
     }
     
@@ -193,11 +197,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         PullState.checkMigrations()
     }
-    
-    @objc func newWindowForTab(_ sender: Any?) {
-        newWindowSelected(sender)
-    }
-            
+                
 	func applicationWillFinishLaunching(_ notification: Notification) {
 
         let s = NSAppleEventManager.shared()

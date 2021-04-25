@@ -1169,7 +1169,17 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     
     private var hideTimer: GladysTimer?
     
-    private func showWindowBecauseOfMouse(window: NSWindow) {
+    func showWindowBecauseHidingDisabled(window: NSWindow) {
+        enteredWindowAfterAutoShow = false
+        autoShown = false
+        window.alphaValue = 0
+        window.orderFrontRegardless()
+        window.makeKey()
+        window.animator().alphaValue = 1
+        hideTimer = nil
+    }
+    
+    func showWindowBecauseOfMouse(window: NSWindow) {
         hideTimer = nil
         
         enteredWindowAfterAutoShow = false
@@ -1187,7 +1197,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
     
-    private func hideWindowBecauseOfMouse(window: NSWindow) {
+    func hideWindowBecauseOfMouse(window: NSWindow) {
         enteredWindowAfterAutoShow = false
         autoShown = false
 
