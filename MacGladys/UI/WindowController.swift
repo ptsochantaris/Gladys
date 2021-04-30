@@ -28,54 +28,6 @@ extension NSWindow {
     }
 }
 
-struct WindowState: Codable {
-    let frame: NSRect
-    let search: String?
-    let labels: [String]
-}
-
-func storeWindowStates() {
-    let windowsToStore = NSApp.windows.compactMap { window -> WindowState? in
-        if let c = window.contentViewController as? ViewController {
-            let labels = c.filter.labelToggles.filter { $0.enabled }.map { $0.name }
-            return WindowState(frame: window.frame, search: c.filter.text, labels: labels)
-        }
-        return nil
-    }
-    if let json = try? JSONEncoder().encode(windowsToStore) {
-        PersistedOptions.defaults.setValue(json, forKey: "lastWindowStates")
-    }
-}
-
-func restoreWindows() {
-    let sb = NSStoryboard(name: "Main", bundle: nil)
-    let id = NSStoryboard.SceneIdentifier("windowController")
-
-    // migrate saved window position from previous version, if exists
-    if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
-        PersistedOptions.defaults.removeObject(forKey: "lastWindowPosition")
-        if let frame = NSRect(dictionaryRepresentation: d) {
-            let state = WindowState(frame: frame, search: nil, labels: [])
-            if let data = try? JSONEncoder().encode([state]) {
-                PersistedOptions.defaults.setValue(data, forKey: "lastWindowStates")
-            }
-        }
-    }
-    
-    if let data = PersistedOptions.defaults.data(forKey: "lastWindowStates"), let states = try? JSONDecoder().decode([WindowState].self, from: data) {
-        for state in states {
-            if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let g = controller.window?.gladysController {
-                g.restoreState(from: state)
-            }
-        }
-
-    } else {
-        if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let w = controller.window {
-            w.makeKeyAndOrderFront(nil)
-        }
-    }
-}
-
 final class WindowController: NSWindowController, NSWindowDelegate {
     private static var strongRefs = [WindowController]()
 
@@ -88,7 +40,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         super.init(coder: coder)
         WindowController.strongRefs.append(self)
     }
-    
+        
     var gladysController: ViewController {
         return contentViewController as! ViewController
     }
@@ -104,7 +56,9 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     }
 
     func windowDidMove(_ notification: Notification) {
-        storeWindowStates()
+        if window?.isVisible == true {
+            WindowController.storeStates()
+        }
     }
     
     func windowWillStartLiveResize(_ notification: Notification) {
@@ -112,6 +66,58 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     }
     
     func windowDidEndLiveResize(_ notification: Notification) {
-        storeWindowStates()
-    }    
+        if window?.isVisible == true {
+            WindowController.storeStates()
+        }
+    }
+    
+    struct State: Codable {
+        let frame: NSRect
+        let search: String?
+        let labels: [String]
+    }
+
+    static func storeStates() {
+        let windowsToStore = NSApp.windows.compactMap { window -> State? in
+            if let c = window.contentViewController as? ViewController {
+                let labels = c.filter.labelToggles.filter { $0.enabled }.map { $0.name }
+                return State(frame: window.frame, search: c.filter.text, labels: labels)
+            }
+            return nil
+        }
+        if let json = try? JSONEncoder().encode(windowsToStore) {
+            PersistedOptions.defaults.setValue(json, forKey: "lastWindowStates")
+        } else {
+            log("Warning: Could not persist window states!")
+        }
+    }
+
+    static func restoreStates() {
+        let sb = NSStoryboard(name: "Main", bundle: nil)
+        let id = NSStoryboard.SceneIdentifier("windowController")
+
+        // migrate saved window position from previous version, if exists
+        if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
+            PersistedOptions.defaults.removeObject(forKey: "lastWindowPosition")
+            if let frame = NSRect(dictionaryRepresentation: d) {
+                let state = State(frame: frame, search: nil, labels: [])
+                if let data = try? JSONEncoder().encode([state]) {
+                    PersistedOptions.defaults.setValue(data, forKey: "lastWindowStates")
+                }
+            }
+        }
+        
+        if let data = PersistedOptions.defaults.data(forKey: "lastWindowStates"), let states = try? JSONDecoder().decode([State].self, from: data) {
+            for state in states {
+                if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let g = controller.window?.gladysController {
+                    g.restoreState(from: state)
+                }
+            }
+
+        } else {
+            if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let w = controller.window {
+                w.makeKeyAndOrderFront(nil)
+            }
+        }
+    }
 }

@@ -935,7 +935,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
     
-    func restoreState(from windowState: WindowState) {
+    func restoreState(from windowState: WindowController.State) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
             filter.updateFilter(signalUpdate: true)

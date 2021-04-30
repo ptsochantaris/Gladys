@@ -248,20 +248,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
         
-        restoreWindows()
+        WindowController.restoreStates()
 	}
-    
-    private func showAll() {
-        NSApp.windows.forEach {
-            $0.gladysController?.showWindow(window: $0, wasAuto: PersistedOptions.autoShowFromEdge > 0)
-        }
-        updateMenubarIconMode(showing: true, forceUpdateMenu: false)
-    }
-    
-	func applicationDidBecomeActive(_ notification: Notification) {
-        showAll()
-	}
-
+        
 	func applicationDidResignActive(_ notification: Notification) {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
@@ -284,7 +273,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
     
 	func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        showAll()
+        focus()
 		return false
 	}
 
@@ -292,17 +281,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		return false
 	}
 
-	private func focus() {
+    private func focus() {
 		NSApp.activate(ignoringOtherApps: true)
-        keyGladysControllerIfExists?.view.window?.makeKeyAndOrderFront(nil)
-	}
+        NSApp.windows.forEach {
+            $0.gladysController?.showWindow(window: $0, wasAuto: false)
+        }
+        updateMenubarIconMode(showing: true, forceUpdateMenu: false)
+    }
 
 	func application(_ application: NSApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([NSUserActivityRestoring]) -> Void) -> Bool {
 
 		if userActivity.activityType == CSSearchableItemActionType {
 			if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
 				focus()
-                let request = HighlightRequest(uuid: itemIdentifier, open: true)
+                let request = HighlightRequest(uuid: itemIdentifier, open: false)
                 NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
 			}
 			return true
@@ -354,11 +346,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
     
     func applicationWillTerminate(_ notification: Notification) {
-        storeWindowStates()
+        WindowController.storeStates()
     }
     
     func applicationWillHide(_ notification: Notification) {
-        storeWindowStates()
+        WindowController.storeStates()
     }
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
