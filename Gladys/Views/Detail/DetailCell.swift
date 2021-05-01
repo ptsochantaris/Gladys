@@ -1,95 +1,80 @@
 import UIKit
 
+protocol DetailCellDelegate: AnyObject {
+    func inspectOptionSelected(in cell: DetailCell)
+    func archiveOptionSelected(in cell: DetailCell)
+    func viewOptionSelected(in cell: DetailCell)
+    func editOptionSelected(in cell: DetailCell)
+}
+
 final class DetailCell: UITableViewCell {
-        
+    
+    struct Flags: OptionSet {
+        let rawValue: UInt8
+
+        static let inspection = Flags(rawValue: 1 << 0)
+        static let archive    = Flags(rawValue: 1 << 1)
+        static let view       = Flags(rawValue: 1 << 2)
+        static let edit       = Flags(rawValue: 1 << 3)
+    }
+    
 	@IBOutlet private var name: UILabel!
 	@IBOutlet private var size: UILabel!
 	@IBOutlet private var desc: UILabel!
-	@IBOutlet private var nameHolder: UIView!
 	@IBOutlet var inspectButton: UIButton!
 	@IBOutlet private var viewButton: UIButton!
 	@IBOutlet var archiveButton: UIButton!
 	@IBOutlet private var editButton: UIButton!
     @IBOutlet private var imageHolder: UIImageView!
+
+    private var buttonFlags = Flags()
     
-	var inspectionCallback: (() -> Void)? {
-		didSet {
-			setNeedsUpdateConstraints()
-		}
-	}
-
-	var viewCallback: (() -> Void)? {
-		didSet {
-			setNeedsUpdateConstraints()
-		}
-	}
-
-	var archiveCallback: (() -> Void)? {
-		didSet {
-			setNeedsUpdateConstraints()
-		}
-	}
-
-	var editCallback: (() -> Void)? {
-		didSet {
-			setNeedsUpdateConstraints()
-		}
-	}
-
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		inspectionCallback = nil
-		viewCallback = nil
-		archiveCallback = nil
-		editCallback = nil
-	}
+    weak var delegate: DetailCellDelegate?
 
 	override func updateConstraints() {
-		inspectButton.isHidden = inspectionCallback == nil
-		viewButton.isHidden = viewCallback == nil
-		archiveButton.isHidden = archiveCallback == nil
-		editButton.isHidden = editCallback == nil
+        inspectButton.isHidden = !buttonFlags.contains(.inspection)
+		archiveButton.isHidden = !buttonFlags.contains(.archive)
+        viewButton.isHidden = !buttonFlags.contains(.view)
+		editButton.isHidden = !buttonFlags.contains(.edit)
 		super.updateConstraints()
 	}
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-        nameHolder.layer.cornerRadius = 5
-
 		inspectButton.accessibilityLabel = "Inspect data"
+        archiveButton.accessibilityLabel = "Archive target of link"
 		viewButton.accessibilityLabel = "Visual item preview"
-		archiveButton.accessibilityLabel = "Archive target of link"
 		editButton.accessibilityLabel = "Edit item"
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
 		super.dragStateDidChange(dragState)
-		inspectButton.alpha = (inspectionCallback != nil && dragState == .none) ? 0.7 : 0
-		viewButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
-		archiveButton.alpha = (viewCallback != nil && dragState == .none) ? 0.7 : 0
-		editButton.alpha = (editCallback != nil && dragState == .none) ? 0.7 : 0
+		inspectButton.alpha = (buttonFlags.contains(.inspection) && dragState == .none) ? 0.7 : 0
+        archiveButton.alpha = (buttonFlags.contains(.archive) && dragState == .none) ? 0.7 : 0
+		viewButton.alpha = (buttonFlags.contains(.view) && dragState == .none) ? 0.7 : 0
+		editButton.alpha = (buttonFlags.contains(.edit) && dragState == .none) ? 0.7 : 0
 	}
 
 	@objc private func previewSelected() {
-		viewCallback?()
+        delegate?.viewOptionSelected(in: self)
 	}
 
 	@IBAction private func editSelected(_ sender: UIButton) {
-		editCallback?()
+        delegate?.editOptionSelected(in: self)
 	}
 
 	@IBAction private func inspectSelected(_ sender: UIButton) {
-		inspectionCallback?()
+        delegate?.inspectOptionSelected(in: self)
 	}
 
 	@IBAction private func archiveSelected(_ sender: UIButton) {
 		UIAccessibility.post(notification: .announcement, argument: "Archiving, please wait")
-		archiveCallback?()
+        delegate?.archiveOptionSelected(in: self)
 	}
 
 	@IBAction private func viewSelected(_ sender: UIButton) {
-		viewCallback?()
+        delegate?.viewOptionSelected(in: self)
 	}
 
 	func animateArchive(_ animate: Bool) {
@@ -122,17 +107,13 @@ final class DetailCell: UITableViewCell {
         return d
     }()
     
-    private weak var component: Component?
-    private weak var parent: DetailController?
-
-    func configure(with typeEntry: Component, showTypeDetails: Bool, parent: DetailController) -> Bool {
-        self.parent = parent
-        component = typeEntry
+    func configure(with component: Component, showTypeDetails: Bool, isReadWrite: Bool, delegate: DetailCellDelegate) {
+        self.delegate = delegate
 
         imageHolder.image = nil
 
         var hasImage = false
-        if typeEntry.displayIconContentMode == .fill, let icon = typeEntry.componentIcon {
+        if component.displayIconContentMode == .fill, let icon = component.componentIcon {
             hasImage = true
             let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
             icon.desaturated(darkMode: darkMode) { [weak self] img in
@@ -141,14 +122,15 @@ final class DetailCell: UITableViewCell {
         }
     
         var ok = true
+        let itemURL = component.encodedUrl
         
-        if let title = typeEntry.displayTitle ?? typeEntry.accessoryTitle ?? typeEntry.encodedUrl?.path {
-            name.textAlignment = typeEntry.displayTitleAlignment
+        if let title = component.displayTitle ?? component.accessoryTitle ?? itemURL?.path {
+            name.textAlignment = component.displayTitleAlignment
             name.text = "\"\(title)\""
             
-        } else if typeEntry.dataExists {
-            if typeEntry.isWebArchive {
-                name.text = DetailCell.shortFormatter.string(from: typeEntry.createdAt)
+        } else if component.dataExists {
+            if component.isWebArchive {
+                name.text = DetailCell.shortFormatter.string(from: component.createdAt)
             } else {
                 name.text = hasImage ? nil : "Binary Data"
             }
@@ -158,18 +140,36 @@ final class DetailCell: UITableViewCell {
             ok = false
             name.text = "Loading Error"
             name.textAlignment = .center
-            inspectionCallback = nil
-            viewCallback = nil
         }
         
-        size.text = typeEntry.sizeDescription
+        size.text = component.sizeDescription
+        
         if showTypeDetails {
-            desc.text = typeEntry.typeIdentifier.uppercased()
+            desc.text = component.typeIdentifier.uppercased()
         } else {
-            desc.text = typeEntry.typeDescription.uppercased()
+            desc.text = component.typeDescription.uppercased()
         }
         
-        return ok
+        var newFlags = Flags()
+        if ok {
+            newFlags.insert(.inspection)
+            
+            if isReadWrite {
+                if let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
+                    newFlags.insert(.archive)
+                }
+
+                if itemURL != nil || component.isText {
+                    newFlags.insert(.edit)
+                }
+            }
+
+            if component.canPreview {
+                newFlags.insert(.view)
+            }
+        }
+        buttonFlags = newFlags
+        setNeedsUpdateConstraints()
     }
     
 	/////////////////////////////////////

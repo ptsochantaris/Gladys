@@ -14,7 +14,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
 	@IBOutlet private var textView: UITextView!
 
-	var resizeCallback: ((CGRect?, Bool) -> Void)?
+    weak var delegate: ResizingCellDelegate?
     
     private var observer: NSKeyValueObservation?
 
@@ -37,7 +37,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
         var caretRect = textView.caretRect(for: r.start)
         caretRect = textView.convert(caretRect, to: s)
         caretRect = caretRect.insetBy(dx: 0, dy: -22)
-        self.resizeCallback?(caretRect, false)
+        delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: false)
 	}
 
 	override func prepareForReuse() {
@@ -75,9 +75,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 				var caretRect = textView.caretRect(for: r.start)
 				caretRect = textView.convert(caretRect, to: s)
 				caretRect = caretRect.insetBy(dx: 0, dy: -22)
-				resizeCallback?(caretRect, true)
+                delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: true)
 			} else {
-				resizeCallback?(nil, true)
+                delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: false)
 			}
 			previousHeight = newHeight
 		}
@@ -91,7 +91,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		placeholder.isHidden = !newText.isEmpty
 
 		if previousText == newText {
-			resizeCallback?(nil, true)
+            delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 			return
 		}
 
@@ -100,7 +100,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 		item.note = newText
 		item.markUpdated()
 
-		resizeCallback?(nil, true)
+        delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 
 	    Model.save()
 	}

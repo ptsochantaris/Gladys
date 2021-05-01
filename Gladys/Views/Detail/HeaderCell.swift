@@ -18,7 +18,8 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		}
 	}
 
-	var resizeCallback: ((CGRect?, Bool) -> Void)?
+    weak var delegate: ResizingCellDelegate?
+    
     private var observer: NSKeyValueObservation?
 
 	override func awakeFromNib() {
@@ -34,7 +35,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 			var caretRect = label.caretRect(for: r.start)
 			caretRect = label.convert(caretRect, to: s)
 			caretRect = caretRect.insetBy(dx: 0, dy: -22)
-			self.resizeCallback?(caretRect, false)
+            delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: false)
 		}
 	}
 
@@ -75,9 +76,9 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 				var caretRect = textView.caretRect(for: r.start)
 				caretRect = textView.convert(caretRect, to: s)
 				caretRect = caretRect.insetBy(dx: 0, dy: -22)
-				resizeCallback?(caretRect, true)
+                delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: true)
 			} else {
-				resizeCallback?(nil, true)
+                delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 			}
 			previousHeight = newHeight
 		}
@@ -88,7 +89,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
 		if previousText == newText {
 			setLabelText()
-			resizeCallback?(nil, true)
+            delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 			return
 		}
 
@@ -104,7 +105,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 		item.markUpdated()
 		setLabelText()
 
-		resizeCallback?(nil, true)
+        delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 
 	    Model.save()
 	}

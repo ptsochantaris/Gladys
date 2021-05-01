@@ -2,9 +2,14 @@ import UIKit
 import CloudKit
 import MobileCoreServices
 
+protocol ResizingCellDelegate: AnyObject {
+    func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
+}
+
 final class DetailController: GladysViewController,
 	UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate {
+	UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate,
+    ResizingCellDelegate, DetailCellDelegate {
 
     var item: ArchivedItem!
 
@@ -193,15 +198,20 @@ final class DetailController: GladysViewController,
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		// log("laid-out for \(view.bounds.size)")
-        sizeWindow()
+        if !sizing {
+            sizeWindow()
+        }
 	}
+    
+    private var sizing = false
 
 	private func sizeWindow() {
+        sizing = true
         table.layoutIfNeeded()
         let preferredSize = CGSize(width: 320, height: table.contentSize.height)
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
 		log("Detail view preferred size is \(preferredSize)")
+        sizing = false
 	}
     
 	@IBAction private func openSelected(_ sender: UIBarButtonItem) {
@@ -236,7 +246,7 @@ final class DetailController: GladysViewController,
         }
 	}
     
-	private func cellNeedsResize(caretRect: CGRect?, section: Int, heightChange: Bool) {
+    func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool) {
 		if heightChange {
 			UIView.performWithoutAnimation {
 				table.beginUpdates()
@@ -245,7 +255,7 @@ final class DetailController: GladysViewController,
 		}
 		if let caretRect = caretRect {
 			table.scrollRectToVisible(caretRect, animated: false)
-		} else {
+        } else if let section = table.indexPath(for: cell)?.section {
 			table.scrollToRow(at: IndexPath(row: 0, section: section), at: .top, animated: false)
 		}
 	}
@@ -257,17 +267,13 @@ final class DetailController: GladysViewController,
                 let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
                 cell.item = item
                 cell.isUserInteractionEnabled = isReadWrite
-                cell.resizeCallback = { [weak self] caretRect, heightChange in
-                    self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
-                }
+                cell.delegate = self
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath) as! NoteCell
                 cell.item = item
                 cell.isUserInteractionEnabled = isReadWrite
-                cell.resizeCallback = { [weak self] caretRect, heightChange in
-                    self?.cellNeedsResize(caretRect: caretRect, section: indexPath.section, heightChange: heightChange)
-                }
+                cell.delegate = self
                 return cell
             }
 
@@ -281,11 +287,9 @@ final class DetailController: GladysViewController,
 			return cell
 
 		} else {
+            let component = item.components[indexPath.row]
 			let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-			let typeEntry = item.components[indexPath.row]
-            if cell.configure(with: typeEntry, showTypeDetails: showTypeDetails, parent: self) {
-                setCallbacks(for: cell, for: typeEntry)
-            }
+            cell.configure(with: component, showTypeDetails: showTypeDetails, isReadWrite: isReadWrite, delegate: self)
 			return cell
 		}
 	}
@@ -363,76 +367,60 @@ final class DetailController: GladysViewController,
             return nil
         }
     }
-        
-	private func checkInspection(for component: Component, in cell: DetailCell) {
-		if component.isPlist {
-			let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
-			a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
-				self.performSegue(withIdentifier: "plistEdit", sender: component)
-			})
-			a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { _ in
-				self.performSegue(withIdentifier: "hexEdit", sender: component)
-			})
-			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-			if let p = a.popoverPresentationController {
-				p.sourceView = cell.inspectButton
-				p.sourceRect = cell.inspectButton.bounds
-			}
-			present(a, animated: true)
-		} else {
-			performSegue(withIdentifier: "hexEdit", sender: component)
-		}
-	}
-
-	private func setCallbacks(for cell: DetailCell, for typeEntry: Component) {
-
-		cell.inspectionCallback = { [weak cell, weak self] in
-			if let s = self, let c = cell {
-				s.checkInspection(for: typeEntry, in: c)
-			}
-		}
-
-		let itemURL = typeEntry.encodedUrl
-		if isReadWrite, let i = itemURL, let s = i.scheme, s.hasPrefix("http") {
-			cell.archiveCallback = { [weak self, weak cell] in
-				if let s = self, let c = cell {
-					s.archiveWebComponent(cell: c, url: i as URL)
-				}
-			}
-		} else {
-			cell.archiveCallback = nil
-		}
-
-		if isReadWrite, itemURL != nil {
-			cell.editCallback = { [weak self] in
-				self?.editURL(typeEntry, existingEdit: nil)
-			}
-		} else if isReadWrite, typeEntry.isText {
-			cell.editCallback = { [weak self] in
-				self?.performSegue(withIdentifier: "textEdit", sender: typeEntry)
-			}
-		} else {
-			cell.editCallback = nil
-		}
-
-		if typeEntry.canPreview {
-			cell.viewCallback = { [weak self, weak cell] in
-				guard let s = self, let c = cell else { return }
-
-                guard let q = typeEntry.quickLook() else { return }
-                if s.phoneMode || !PersistedOptions.fullScreenPreviews {
-					s.navigationController?.pushViewController(q, animated: true)
-                    
-				} else if let presenter = s.view.window?.alertPresenter {
-                    q.sourceItemView = c
-                    presenter.present(q, animated: true)
-				}
-			}
-		} else {
-			cell.viewCallback = nil
-		}
-	}
     
+    private func component(for cell: DetailCell) -> Component? {
+        if let ip = table.indexPath(for: cell) {
+            return item.components[ip.row]
+        }
+        return nil
+    }
+
+    func inspectOptionSelected(in cell: DetailCell) {
+        guard let component = component(for: cell) else { return }
+        if component.isPlist {
+            let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
+            a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
+                self.performSegue(withIdentifier: "plistEdit", sender: component)
+            })
+            a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { _ in
+                self.performSegue(withIdentifier: "hexEdit", sender: component)
+            })
+            a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            if let p = a.popoverPresentationController {
+                p.sourceView = cell.inspectButton
+                p.sourceRect = cell.inspectButton.bounds
+            }
+            present(a, animated: true)
+        } else {
+            performSegue(withIdentifier: "hexEdit", sender: component)
+        }
+    }
+    
+    func editOptionSelected(in cell: DetailCell) {
+        guard let component = component(for: cell) else { return }
+        if component.encodedUrl != nil {
+            editURL(component, existingEdit: nil)
+        } else if component.isText {
+            performSegue(withIdentifier: "textEdit", sender: component)
+        }
+    }
+    
+    func viewOptionSelected(in cell: DetailCell) {
+        guard let component = component(for: cell), let q = component.quickLook() else { return }
+        if phoneMode || !PersistedOptions.fullScreenPreviews {
+            navigationController?.pushViewController(q, animated: true)
+            
+        } else if let presenter = view.window?.alertPresenter {
+            q.sourceItemView = cell
+            presenter.present(q, animated: true)
+        }
+    }
+    
+    func archiveOptionSelected(in cell: DetailCell) {
+        guard let component = component(for: cell), let url = component.encodedUrl else { return }
+        archiveWebComponent(cell: cell, url: url as URL)
+    }
+        
 	private func editURL(_ component: Component, existingEdit: String?) {
 		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }

@@ -2551,10 +2551,10 @@ Selecting them will show only items that contain these labels.</string>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="ucz-Df-3Uv" customClass="HeaderCell" customModule="Gladys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="ucz-Df-3Uv" customClass="HeaderCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="16" y="49.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ucz-Df-3Uv" id="2po-Br-7Vd">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ucz-Df-3Uv" id="2po-Br-7Vd">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -2581,10 +2581,10 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="label" destination="1hY-R9-9dr" id="ho2-up-QuW"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoteCell" id="flY-P9-4rB" customClass="NoteCell" customModule="Gladys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoteCell" id="flY-P9-4rB" customClass="NoteCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="16" y="129.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="flY-P9-4rB" id="lkd-RA-F4O">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="flY-P9-4rB" id="lkd-RA-F4O">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -2620,10 +2620,10 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="textView" destination="crv-5h-2hZ" id="hgE-Ob-kH8"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelCell" id="Ksg-vx-bYr" userLabel="LabelCell" customClass="LabelCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="16" y="209.5" width="288" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ksg-vx-bYr" id="gmt-hK-Po0">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ksg-vx-bYr" id="gmt-hK-Po0">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -2647,33 +2647,33 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="labelText" destination="FVY-cq-wvt" id="9Zh-kJ-Qiy"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" rowHeight="225" id="Px0-DU-AgV" customClass="DetailCell" customModule="Gladys" customModuleProvider="target">
                                         <rect key="frame" x="16" y="289.5" width="288" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Px0-DU-AgV" id="tOl-ri-qII">
                                             <rect key="frame" x="0.0" y="0.0" width="288" height="225"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="3mR-0k-GUz">
-                                                    <rect key="frame" x="10" y="9" width="278" height="205"/>
+                                                    <rect key="frame" x="16" y="9" width="272" height="201"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="42l-OU-dwE" userLabel="Type And Size">
-                                                            <rect key="frame" x="0.0" y="0.0" width="278" height="39"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="272" height="35"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X2E-UF-eyf">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="233.5" height="39"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="227.5" height="35"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c2U-hQ-bi9">
-                                                                    <rect key="frame" x="241.5" y="0.0" width="28.5" height="39"/>
+                                                                    <rect key="frame" x="235.5" y="0.0" width="28.5" height="35"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                                     <color key="textColor" systemColor="tertiaryLabelColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4ce-lC-itM">
-                                                                    <rect key="frame" x="278" y="0.0" width="0.0" height="39"/>
+                                                                    <rect key="frame" x="272" y="0.0" width="0.0" height="35"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" id="bub-Tw-UVb"/>
@@ -2682,37 +2682,42 @@ Selecting them will show only items that contain these labels.</string>
                                                             </subviews>
                                                         </stackView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VbD-WF-VPn" userLabel="Description And Actions">
-                                                            <rect key="frame" x="0.0" y="45" width="278" height="160"/>
+                                                            <rect key="frame" x="0.0" y="41" width="272" height="160"/>
                                                             <subviews>
-                                                                <view clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="234" height="160"/>
+                                                                <view contentMode="scaleToFill" horizontalHuggingPriority="1" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="eyj-G4-d4N">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="228" height="160"/>
                                                                     <subviews>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H5L-gJ-sUR">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="234" height="160"/>
+                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="1" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H5L-gJ-sUR">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="228" height="160"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                            <userDefinedRuntimeAttributes>
+                                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                                    <integer key="value" value="5"/>
+                                                                                </userDefinedRuntimeAttribute>
+                                                                            </userDefinedRuntimeAttributes>
                                                                         </imageView>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
-                                                                            <rect key="frame" x="10" y="5" width="214" height="150"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4v-Gs-QKx">
+                                                                            <rect key="frame" x="4" y="4" width="220" height="152"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                                            <color key="textColor" name="colorComponentLabel"/>
+                                                                            <color key="textColor" name="colorDarkGray"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" name="colorFill"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="bottom" secondItem="H5L-gJ-sUR" secondAttribute="bottom" id="9rT-YT-qYL"/>
-                                                                        <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="5" id="A4z-xs-pX2"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="c4v-Gs-QKx" secondAttribute="bottom" constant="4" id="A4z-xs-pX2"/>
                                                                         <constraint firstItem="H5L-gJ-sUR" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" id="MH2-hx-7Sq"/>
-                                                                        <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" constant="10" id="VyL-e1-tLl"/>
+                                                                        <constraint firstItem="c4v-Gs-QKx" firstAttribute="leading" secondItem="eyj-G4-d4N" secondAttribute="leading" constant="4" id="VyL-e1-tLl"/>
                                                                         <constraint firstItem="H5L-gJ-sUR" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" id="kTO-AX-G75"/>
                                                                         <constraint firstAttribute="trailing" secondItem="H5L-gJ-sUR" secondAttribute="trailing" id="nqS-Za-62l"/>
-                                                                        <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="5" id="sDA-vR-FnE"/>
-                                                                        <constraint firstAttribute="trailing" secondItem="c4v-Gs-QKx" secondAttribute="trailing" constant="10" id="vjp-PR-kDd"/>
+                                                                        <constraint firstItem="c4v-Gs-QKx" firstAttribute="top" secondItem="eyj-G4-d4N" secondAttribute="top" constant="4" id="sDA-vR-FnE"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="c4v-Gs-QKx" secondAttribute="trailing" constant="4" id="vjp-PR-kDd"/>
                                                                     </constraints>
                                                                     <edgeInsets key="layoutMargins" top="10" left="10" bottom="10" right="10"/>
                                                                 </view>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iZN-UI-7yx">
-                                                                    <rect key="frame" x="234" y="0.0" width="44" height="160"/>
+                                                                    <rect key="frame" x="228" y="0.0" width="44" height="160"/>
                                                                     <subviews>
                                                                         <button opaque="NO" clipsSubviews="YES" alpha="0.69999999999999996" contentMode="scaleAspectFit" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZD-lA-j0C">
                                                                             <rect key="frame" x="0.0" y="0.0" width="44" height="40"/>
@@ -2777,14 +2782,12 @@ Selecting them will show only items that contain these labels.</string>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="3mR-0k-GUz" firstAttribute="leading" secondItem="tOl-ri-qII" secondAttribute="leadingMargin" id="EPb-YL-sZf"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="3mR-0k-GUz" secondAttribute="bottom" id="Jtf-gl-HZa"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="3mR-0k-GUz" secondAttribute="trailing" id="P76-ac-YfS"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="3mR-0k-GUz" secondAttribute="bottom" constant="4" id="Jtf-gl-HZa"/>
+                                                <constraint firstAttribute="trailing" secondItem="3mR-0k-GUz" secondAttribute="trailing" id="P76-ac-YfS"/>
                                                 <constraint firstItem="3mR-0k-GUz" firstAttribute="top" secondItem="tOl-ri-qII" secondAttribute="topMargin" constant="-2" id="f9z-rT-owd"/>
                                             </constraints>
-                                            <edgeInsets key="layoutMargins" top="0.0" left="10" bottom="0.0" right="0.0"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="colorMacCard"/>
-                                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                                         <connections>
                                             <outlet property="archiveButton" destination="inF-G0-kRj" id="HQD-uC-kuc"/>
                                             <outlet property="desc" destination="X2E-UF-eyf" id="UAI-bk-gWx"/>
@@ -2792,7 +2795,6 @@ Selecting them will show only items that contain these labels.</string>
                                             <outlet property="imageHolder" destination="H5L-gJ-sUR" id="AqF-1E-s2v"/>
                                             <outlet property="inspectButton" destination="mRm-i0-pKo" id="NpG-ZJ-eTa"/>
                                             <outlet property="name" destination="c4v-Gs-QKx" id="grl-ue-LsH"/>
-                                            <outlet property="nameHolder" destination="eyj-G4-d4N" id="xUD-YK-fq8"/>
                                             <outlet property="size" destination="c2U-hQ-bi9" id="0sm-hS-09V"/>
                                             <outlet property="viewButton" destination="yZD-lA-j0C" id="o8G-6e-kav"/>
                                         </connections>
@@ -4071,7 +4073,7 @@ Selecting them will show only items that contain these labels.</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="j8r-Hv-OpL"/>
+        <segue reference="smU-wA-hcv"/>
         <segue reference="7zu-MP-PH8"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="colorTint"/>
@@ -4100,6 +4102,9 @@ Selecting them will show only items that contain these labels.</string>
         <image name="zip" width="53" height="45"/>
         <namedColor name="colorComponentLabel">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="colorDarkGray">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="colorFill">
             <color red="0.84299999475479126" green="0.83099997043609619" blue="0.80800002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
