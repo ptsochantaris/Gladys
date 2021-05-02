@@ -70,6 +70,11 @@
                                                 <action selector="newWindowSelected" target="Voe-Tx-rLC" id="los-0B-Avy"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Close Window" keyEquivalent="w" id="kWW-qX-DNg">
+                                            <connections>
+                                                <action selector="performClose:" target="Ady-hI-5gd" id="Hip-CJ-XoK"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eRd-hm-2NX"/>
                                         <menuItem title="Import Archive…" id="cM4-ss-B6A">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -94,12 +99,6 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="toggleQuickLookPreviewPanel:" target="Ady-hI-5gd" id="TZQ-te-Hn3"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="JX2-iB-erx"/>
-                                        <menuItem title="Close Window" keyEquivalent="w" id="kWW-qX-DNg">
-                                            <connections>
-                                                <action selector="performClose:" target="Ady-hI-5gd" id="Hip-CJ-XoK"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -174,7 +173,7 @@ CA
                                                 <action selector="shareSelected:" target="Ady-hI-5gd" id="LdJ-Fb-OvR"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Duplicate" keyEquivalent="D" id="czg-eH-HyW">
+                                        <menuItem title="Duplicate" keyEquivalent="d" id="czg-eH-HyW">
                                             <connections>
                                                 <action selector="duplicateItem:" target="Ady-hI-5gd" id="cWU-DK-cVX"/>
                                             </connections>

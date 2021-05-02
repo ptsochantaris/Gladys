@@ -520,6 +520,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         hostGladysController.copy(self)
 	}
 
+    @objc private func duplicateSelected() {
+        hostGladysController.duplicateItem(self)
+    }
+    
 	@objc private func lockSelected() {
         hostGladysController.createLock(self)
 	}
@@ -583,6 +587,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 			menu.addItem("Get Info", action: #selector(infoSelected), keyEquivalent: "i", keyEquivalentModifierMask: .command)
 			menu.addItem("Open", action: #selector(openSelected), keyEquivalent: "o", keyEquivalentModifierMask: .command)
 			menu.addItem("Move to Top", action: #selector(topSelected), keyEquivalent: "m", keyEquivalentModifierMask: .command)
+            menu.addItem("Duplicate", action: #selector(duplicateSelected), keyEquivalent: "d", keyEquivalentModifierMask: .command)
 			menu.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
 			menu.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
 			menu.addItem("Labels…", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
