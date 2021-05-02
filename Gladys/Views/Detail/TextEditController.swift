@@ -108,7 +108,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
 			}
 
 		} else if let t = textView.text {
-            let b = Data(t.utf8)
+            let b = t.data(using: typeEntry.textEncoding)
 			typeEntry.setBytes(b)
 			saveDone()
 		}
