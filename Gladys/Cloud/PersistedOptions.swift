@@ -320,4 +320,13 @@ final class PersistedOptions {
             defaults.set(newValue, forKey: "migratedSubscriptions7")
         }
     }
+    
+    static var requestInlineDrops: Bool {
+        get {
+            return defaults.bool(forKey: "requestInlineDrops")
+        }
+        set {
+            defaults.set(newValue, forKey: "requestInlineDrops")
+        }
+    }
 }

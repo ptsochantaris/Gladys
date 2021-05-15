@@ -15,7 +15,9 @@ extension ArchivedItem {
 	private var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = trimmedSuggestedName
-        p.preferredPresentationStyle = .inline
+        if PersistedOptions.requestInlineDrops {
+            p.preferredPresentationStyle = .inline
+        }
 		components.forEach { $0.register(with: p) }
 		return p
 	}

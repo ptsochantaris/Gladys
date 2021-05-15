@@ -32,6 +32,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var transcribeSpeechInMedia: UISwitch!
     @IBOutlet private var applyMlToUrlsSwitch: UISwitch!
     @IBOutlet private var badgeIconSwitch: UISwitch!
+    @IBOutlet private var requestInlineDrops: UISwitch!
 
 	@IBOutlet private var actionSelector: UISegmentedControl!
 	@IBOutlet private var autoArchiveSwitch: UISwitch!
@@ -136,7 +137,11 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func generateTextFromThumbnailSelected(_ sender: UISwitch) {
         PersistedOptions.autoGenerateTextFromImage = sender.isOn
     }
-    
+
+    @IBAction private func requestInlineDropsSelected(_ sender: UISwitch) {
+        PersistedOptions.requestInlineDrops = sender.isOn
+    }
+
     @IBAction private func transcribeSpeechInMediaSelected(_ sender: UISwitch) {
         if sender.isOn {
             SFSpeechRecognizer.requestAuthorization { status in
@@ -241,6 +246,8 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		wideModeSwitch.isOn = PersistedOptions.wideMode
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
         badgeIconSwitch.isOn = PersistedOptions.badgeIconWithItemCount
+        requestInlineDrops.isOn = PersistedOptions.requestInlineDrops
+
         fullScreenHolder.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 
 		actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue

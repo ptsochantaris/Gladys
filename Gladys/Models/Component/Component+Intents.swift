@@ -20,7 +20,9 @@ extension Component {
 	var itemProvider: NSItemProvider {
 		let p = NSItemProvider()
 		p.suggestedName = trimmedSuggestedName
-        p.preferredPresentationStyle = .inline
+        if PersistedOptions.requestInlineDrops {
+            p.preferredPresentationStyle = .inline
+        }
 		register(with: p)
 		return p
 	}
