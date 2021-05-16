@@ -242,6 +242,13 @@
 		16906A9723C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9923C8C0C700D6C177 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16906A9323C8C0C700D6C177 /* Component+iOS.swift */; };
 		16906A9A23C8C18E00D6C177 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
+		1690D8512651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8532651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8542651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8552651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8572651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8582651C31A00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
+		1690D8592651C33C00A07744 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690D8502651C31A00A07744 /* UserDefault.swift */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
@@ -764,6 +771,7 @@
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		16906A9323C8C0C700D6C177 /* Component+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+iOS.swift"; sourceTree = "<group>"; };
+		1690D8502651C31A00A07744 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -1009,6 +1017,7 @@
 				16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */,
 				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
 				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
+				1690D8502651C31A00A07744 /* UserDefault.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2223,6 +2232,7 @@
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
 				16CD7D9620A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
+				1690D8582651C31A00A07744 /* UserDefault.swift in Sources */,
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				16CD7D8D20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				168C940F20B0572700F4139D /* NSColor+Extensions.swift in Sources */,
@@ -2290,6 +2300,7 @@
 				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */,
+				1690D8532651C31A00A07744 /* UserDefault.swift in Sources */,
 				1602F3282030E5F20036E2B0 /* Notifications.swift in Sources */,
 				1602F3312030E64C0036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16F254661F2D5632008EE07B /* ArchivedItem+Ingest.swift in Sources */,
@@ -2412,6 +2423,7 @@
 				1661B2C7245E258800BE888E /* CloudManager+Mainapps.swift in Sources */,
 				163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
+				1690D8512651C31A00A07744 /* UserDefault.swift in Sources */,
 				16CD7D7F20A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				1658722C1FA7E0BC006EFB15 /* DeepPressGestureRecognizer.swift in Sources */,
 				166B6390236A451F00115AC3 /* FileMonitor.swift in Sources */,
@@ -2494,6 +2506,7 @@
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
 				16EC10452607B21500ABE6D2 /* Color+Extensions.swift in Sources */,
+				1690D8542651C31A00A07744 /* UserDefault.swift in Sources */,
 				1602F32D2030E6240036E2B0 /* FileManager+Extensions.swift in Sources */,
 				16969BB01FB0E6B1007B2F77 /* Model+SimpleCoordinator.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
@@ -2520,6 +2533,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1690D8592651C33C00A07744 /* UserDefault.swift in Sources */,
 				168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */,
 				16559C8F20A4CC55006C281D /* Global.swift in Sources */,
@@ -2550,6 +2564,7 @@
 				16B2AA5D24DF49E5004F3FC2 /* Component+iOS.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16B2AA4B24DF4746004F3FC2 /* ArchivedItem.swift in Sources */,
+				1690D8572651C31A00A07744 /* UserDefault.swift in Sources */,
 				16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */,
 				16B2AA4A24DF473F004F3FC2 /* PopTimer.swift in Sources */,
 				16B2AA5424DF498F004F3FC2 /* Types.swift in Sources */,
@@ -2574,6 +2589,7 @@
 			files = (
 				165B971E25CD886100E73E2D /* Component+Copy.swift in Sources */,
 				165B977925CD88B800E73E2D /* Component+iOS.swift in Sources */,
+				1690D8552651C31A00A07744 /* UserDefault.swift in Sources */,
 				165B975F25CD888C00E73E2D /* NSAttributedString+Extensions.swift in Sources */,
 				165B975225CD888300E73E2D /* Logging.swift in Sources */,
 				165B976C25CD88A200E73E2D /* Model+SimpleCoordinator.swift in Sources */,

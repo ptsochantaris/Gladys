@@ -45,7 +45,7 @@ extension Model {
         if let item = Model.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
 			return data
 		}
-		return Data()
+		return emptyData
 	}
 
 	static func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {

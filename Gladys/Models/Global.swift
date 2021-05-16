@@ -9,6 +9,8 @@ let groupName = "X727JSJUGJ.build.bru.MacGladys"
 
 let GladysFileUTI = "build.bru.gladys.archive"
 
+let emptyData = Data()
+
 enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100
     case cloudLoginRequired

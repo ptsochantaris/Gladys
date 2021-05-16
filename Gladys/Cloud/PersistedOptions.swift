@@ -14,7 +14,7 @@ enum DefaultTapAction: Int {
 
 final class PersistedOptions {
 
-	static let defaults = UserDefaults(suiteName: groupName)!
+    static let defaults = UserDefaults(suiteName: groupName)!
 
 	private static var wideModeCache: Bool?
 	static var wideMode: Bool {
@@ -22,311 +22,111 @@ final class PersistedOptions {
 			if let c = wideModeCache {
 				return c
 			}
-			wideModeCache = defaults.bool(forKey: "wideMode")
-			return wideModeCache!
+			wideModeCache = _wideMode
+			return _wideMode
 		}
 		set {
 			wideModeCache = newValue
-			defaults.set(newValue, forKey: "wideMode")
+            _wideMode = newValue
 		}
 	}
+
+    @UserDefault(key: "wideMode", defaultValue: false)
+    private static var _wideMode: Bool
+
+    @UserDefault(key: "extensionRequestedSync", defaultValue: false)
+    static var extensionRequestedSync: Bool
+
+    @UserDefault(key: "autoGenerateLabelsFromText", defaultValue: false)
+    static var autoGenerateLabelsFromText: Bool
+
+    @UserDefault(key: "autoGenerateLabelsFromImage", defaultValue: false)
+    static var autoGenerateLabelsFromImage: Bool
     
-    static var extensionRequestedSync: Bool {
-        get {
-            return defaults.bool(forKey: "extensionRequestedSync")
-        }
-        set {
-            defaults.set(newValue, forKey: "extensionRequestedSync")
-        }
-    }
-
-    static var autoGenerateLabelsFromText: Bool {
-        get {
-            return defaults.bool(forKey: "autoGenerateLabelsFromText")
-        }
-        set {
-            defaults.set(newValue, forKey: "autoGenerateLabelsFromText")
-        }
-    }
-
-    static var autoGenerateLabelsFromImage: Bool {
-        get {
-            return defaults.bool(forKey: "autoGenerateLabelsFromImage")
-        }
-        set {
-            defaults.set(newValue, forKey: "autoGenerateLabelsFromImage")
-        }
-    }
+    @UserDefault(key: "transcribeSpeechFromMedia", defaultValue: false)
+    static var transcribeSpeechFromMedia: Bool
     
-    static var transcribeSpeechFromMedia: Bool {
-        get {
-            return defaults.bool(forKey: "transcribeSpeechFromMedia")
-        }
-        set {
-            defaults.set(newValue, forKey: "transcribeSpeechFromMedia")
-        }
-    }
+    @UserDefault(key: "includeUrlImagesInMlLogic", defaultValue: false)
+    static var includeUrlImagesInMlLogic: Bool
+
+    @UserDefault(key: "autoGenerateTextFromImage", defaultValue: false)
+    static var autoGenerateTextFromImage: Bool
+
+    @UserDefault(key: "setLabelsWhenActioning", defaultValue: false)
+	static var setLabelsWhenActioning: Bool
+
+    @UserDefault(key: "fullScreenPreviews", defaultValue: false)
+	static var fullScreenPreviews: Bool
+
+    @UserDefault(key: "showCopyMoveSwitchSelector", defaultValue: false)
+	static var showCopyMoveSwitchSelector: Bool
+
+    @UserDefault(key: "displayNotesInMainView", defaultValue: false)
+	static var displayNotesInMainView: Bool
+
+    @UserDefault(key: "displayLabelsInMainView", defaultValue: false)
+	static var displayLabelsInMainView: Bool
+
+    @UserDefault(key: "removeItemsWhenDraggedOut", defaultValue: false)
+	static var removeItemsWhenDraggedOut: Bool
     
-    static var includeUrlImagesInMlLogic: Bool {
-        get {
-            return defaults.bool(forKey: "includeUrlImagesInMlLogic")
-        }
-        set {
-            defaults.set(newValue, forKey: "includeUrlImagesInMlLogic")
-        }
-    }
+    @UserDefault(key: "mirrorFilesToDocuments", defaultValue: false)
+    static var mirrorFilesToDocuments: Bool
 
-    static var autoGenerateTextFromImage: Bool {
-        get {
-            return defaults.bool(forKey: "autoGenerateTextFromImage")
-        }
-        set {
-            defaults.set(newValue, forKey: "autoGenerateTextFromImage")
-        }
-    }
+    @UserDefault(key: "dontAutoLabelNewItems", defaultValue: false)
+	static var dontAutoLabelNewItems: Bool
 
-	static var setLabelsWhenActioning: Bool {
-		get {
-			return defaults.bool(forKey: "setLabelsWhenActioning")
-		}
-		set {
-			defaults.set(newValue, forKey: "setLabelsWhenActioning")
-		}
-	}
+    @UserDefault(key: "exportOnlyVisibleItems", defaultValue: false)
+	static var exportOnlyVisibleItems: Bool
 
-	static var fullScreenPreviews: Bool {
-		get {
-			return defaults.bool(forKey: "fullScreenPreviews")
-		}
-		set {
-			defaults.set(newValue, forKey: "fullScreenPreviews")
-		}
-	}
+    @UserDefault(key: "separateItemPreference", defaultValue: false)
+	static var separateItemPreference: Bool
 
-	static var showCopyMoveSwitchSelector: Bool {
-		get {
-			return defaults.bool(forKey: "showCopyMoveSwitchSelector")
-		}
-		set {
-			defaults.set(newValue, forKey: "showCopyMoveSwitchSelector")
-		}
-	}
+    @UserDefault(key: "forceTwoColumnPreference", defaultValue: false)
+	static var forceTwoColumnPreference: Bool
 
-	static var displayNotesInMainView: Bool {
-		get {
-			return defaults.bool(forKey: "displayNotesInMainView")
-		}
-		set {
-			defaults.set(newValue, forKey: "displayNotesInMainView")
-		}
-	}
+    @UserDefault(key: "pasteShortcutAutoDonated", defaultValue: false)
+	static var pasteShortcutAutoDonated: Bool
 
-	static var displayLabelsInMainView: Bool {
-		get {
-			return defaults.bool(forKey: "displayLabelsInMainView")
-		}
-		set {
-			defaults.set(newValue, forKey: "displayLabelsInMainView")
-		}
-	}
+    @UserDefault(key: "exclusiveMultipleLabels", defaultValue: false)
+	static var exclusiveMultipleLabels: Bool
 
-	static var removeItemsWhenDraggedOut: Bool {
-		get {
-			return defaults.bool(forKey: "removeItemsWhenDraggedOut")
-		}
-		set {
-			defaults.set(newValue, forKey: "removeItemsWhenDraggedOut")
-		}
-	}
+    @UserDefault(key: "autoArchiveUrlComponents", defaultValue: false)
+	static var autoArchiveUrlComponents: Bool
+
+    @EnumUserDefault(key: "actionOnTap", defaultValue: .infoPanel)
+	static var actionOnTap: DefaultTapAction
+
+    @EnumUserDefault(key: "actionOnTouchbar", defaultValue: .infoPanel)
+    static var actionOnTouchbar: DefaultTapAction
     
-    static var mirrorFilesToDocuments: Bool {
-        get {
-            return defaults.bool(forKey: "mirrorFilesToDocuments")
-        }
-        set {
-            defaults.set(newValue, forKey: "mirrorFilesToDocuments")
-        }
-    }
-
-	static var dontAutoLabelNewItems: Bool {
-		get {
-			return defaults.bool(forKey: "dontAutoLabelNewItems")
-		}
-		set {
-			defaults.set(newValue, forKey: "dontAutoLabelNewItems")
-		}
-	}
-
-	static var exportOnlyVisibleItems: Bool {
-		get {
-			return defaults.bool(forKey: "exportOnlyVisibleItems")
-		}
-		set {
-			defaults.set(newValue, forKey: "exportOnlyVisibleItems")
-		}
-	}
-
-	static var separateItemPreference: Bool {
-		get {
-			return defaults.bool(forKey: "separateItemPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "separateItemPreference")
-		}
-	}
-
-	static var forceTwoColumnPreference: Bool {
-		get {
-			return defaults.bool(forKey: "forceTwoColumnPreference")
-		}
-		set {
-			defaults.set(newValue, forKey: "forceTwoColumnPreference")
-		}
-	}
-
-	static var pasteShortcutAutoDonated: Bool {
-		get {
-			return defaults.bool(forKey: "pasteShortcutAutoDonated")
-		}
-		set {
-			defaults.set(newValue, forKey: "pasteShortcutAutoDonated")
-		}
-	}
-
-	static var exclusiveMultipleLabels: Bool {
-		get {
-			return defaults.bool(forKey: "exclusiveMultipleLabels")
-		}
-		set {
-			defaults.set(newValue, forKey: "exclusiveMultipleLabels")
-		}
-	}
-
-	static var autoArchiveUrlComponents: Bool {
-		get {
-			return defaults.bool(forKey: "autoArchiveUrlComponents")
-		}
-		set {
-			defaults.set(newValue, forKey: "autoArchiveUrlComponents")
-		}
-	}
-
-	static var actionOnTap: DefaultTapAction {
-		get {
-			let value = defaults.integer(forKey: "actionOnTap")
-			return DefaultTapAction(rawValue: value) ?? .infoPanel
-		}
-		set {
-			defaults.set(newValue.rawValue, forKey: "actionOnTap")
-		}
-	}
-
-    static var actionOnTouchbar: DefaultTapAction {
-        get {
-            let value = defaults.integer(forKey: "actionOnTouchbar")
-            return DefaultTapAction(rawValue: value) ?? .infoPanel
-        }
-        set {
-            defaults.set(newValue.rawValue, forKey: "actionOnTouchbar")
-        }
-    }
+    @UserDefault(key: "lastSelectedPreferencesTab", defaultValue: 0)
+	static var lastSelectedPreferencesTab: Int
     
-	static var lastSelectedPreferencesTab: Int {
-		get {
-			return defaults.integer(forKey: "lastSelectedPreferencesTab")
-		}
-		set {
-			defaults.set(newValue, forKey: "lastSelectedPreferencesTab")
-		}
-	}
+    @OptionalUserDefault(key: "lastPushToken", emptyValue: emptyData)
+	static var lastPushToken: Data?
 
-	static var lastPushToken: Data? {
-		get {
-			return defaults.data(forKey: "lastPushToken")
-		}
-		set {
-			if let n = newValue {
-				defaults.set(n, forKey: "lastPushToken")
-			} else {
-				defaults.set(Data(), forKey: "lastPushToken")
-			}
-		}
-	}
+    @UserDefault(key: "inclusiveSearchTerms", defaultValue: false)
+	static var inclusiveSearchTerms: Bool
 
-	static var inclusiveSearchTerms: Bool {
-		get {
-			return defaults.bool(forKey: "inclusiveSearchTerms")
-		}
-		set {
-			defaults.set(newValue, forKey: "inclusiveSearchTerms")
-		}
-	}
-
-	static var lastRanVersion: String? {
-        get {
-            return UserDefaults.standard.string(forKey: "LastRanVersion")
-        }
-		set {
-			let d = UserDefaults.standard
-			if let newValue = newValue {
-				d.set(newValue, forKey: "LastRanVersion")
-			} else {
-				d.removeObject(forKey: "LastRanVersion")
-			}
-		}
-	}
+    @OptionalUserDefault(key: "LastRanVersion", emptyValue: nil)
+	static var lastRanVersion: String?
     
-    static var automaticallyDetectAndConvertWebLinks: Bool {
-        get {
-            return defaults.bool(forKey: "AutomaticallyConvertWebLinks")
-        }
-        set {
-            defaults.set(newValue, forKey: "AutomaticallyConvertWebLinks")
-        }
-    }
+    @UserDefault(key: "AutomaticallyConvertWebLinks", defaultValue: false)
+    static var automaticallyDetectAndConvertWebLinks: Bool
     
-    static var readAndStoreFinderTagsAsLabels: Bool {
-        get {
-            return defaults.bool(forKey: "ReadAndStoreFinderTagsAsLabels")
-        }
-        set {
-            defaults.set(newValue, forKey: "ReadAndStoreFinderTagsAsLabels")
-        }
-    }
+    @UserDefault(key: "ReadAndStoreFinderTagsAsLabels", defaultValue: false)
+    static var readAndStoreFinderTagsAsLabels: Bool
     
-    static var blockGladysUrlRequests: Bool {
-        get {
-            return defaults.bool(forKey: "BlockGladysUrlRequests")
-        }
-        set {
-            defaults.set(newValue, forKey: "BlockGladysUrlRequests")
-        }
-    }
+    @UserDefault(key: "BlockGladysUrlRequests", defaultValue: false)
+    static var blockGladysUrlRequests: Bool
     
-    static var badgeIconWithItemCount: Bool {
-        get {
-            return defaults.bool(forKey: "badgeIconWithItemCount")
-        }
-        set {
-            defaults.set(newValue, forKey: "badgeIconWithItemCount")
-        }
-    }
+    @UserDefault(key: "badgeIconWithItemCount", defaultValue: false)
+    static var badgeIconWithItemCount: Bool
     
-    static var migratedSubscriptions7: Bool {
-        get {
-            return defaults.bool(forKey: "migratedSubscriptions7")
-        }
-        set {
-            defaults.set(newValue, forKey: "migratedSubscriptions7")
-        }
-    }
+    @UserDefault(key: "migratedSubscriptions7", defaultValue: false)
+    static var migratedSubscriptions7: Bool
     
-    static var requestInlineDrops: Bool {
-        get {
-            return defaults.bool(forKey: "requestInlineDrops")
-        }
-        set {
-            defaults.set(newValue, forKey: "requestInlineDrops")
-        }
-    }
+    @UserDefault(key: "requestInlineDrops", defaultValue: false)
+    static var requestInlineDrops: Bool
 }

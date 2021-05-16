@@ -15,16 +15,8 @@ extension CloudManager {
         case always, wifiOnly, manualOnly
     }
     
-    static var syncContextSetting: SyncPermissionContext {
-        get {
-            let i = PersistedOptions.defaults.integer(forKey: "syncContextSetting")
-            return SyncPermissionContext(rawValue: i) ?? .always
-        }
-
-        set {
-            PersistedOptions.defaults.set(newValue.rawValue, forKey: "syncContextSetting")
-        }
-    }
+    @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
+    static var syncContextSetting: SyncPermissionContext
 
 	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         Model.updateBadge()

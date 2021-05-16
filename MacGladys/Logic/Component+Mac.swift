@@ -101,7 +101,7 @@ extension Component {
 					}
 					representedClass = .data
 					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-                    let data = Data.forceMemoryMapped(contentsOf: item) ?? Data()
+                    let data = Data.forceMemoryMapped(contentsOf: item) ?? emptyData
                     handleData(data, resolveUrls: false, storeBytes: storeBytes, andCall: andCall)
 				}
 
@@ -182,7 +182,7 @@ extension Component {
             
 		} else {
 			let tid = NSPasteboard.PasteboardType(typeIdentifier)
-			pasteboardItem.setData(bytes ?? Data(), forType: tid)
+			pasteboardItem.setData(bytes ?? emptyData, forType: tid)
 		}
 	}
 

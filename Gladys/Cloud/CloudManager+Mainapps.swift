@@ -143,15 +143,8 @@ extension CloudManager {
         }
     }
 
-    static var lastSyncCompletion: Date {
-        get {
-            return PersistedOptions.defaults.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast
-        }
-
-        set {
-            PersistedOptions.defaults.set(newValue, forKey: "lastSyncCompletion")
-        }
-    }
+    @UserDefault(key: "lastSyncCompletion", defaultValue: .distantPast)
+    static var lastSyncCompletion: Date
 
     static var uuidSequence: [String] {
         get {

@@ -123,7 +123,7 @@ extension Component {
 		classWasWrapped = false
         
         if let scheme = url.scheme, !scheme.hasPrefix("http") {
-            handleData(Data(), resolveUrls: false, storeBytes: true, andCall: completion)
+            handleData(emptyData, resolveUrls: false, storeBytes: true, andCall: completion)
             return
         }
 
@@ -197,7 +197,7 @@ extension Component {
                         setBytes(b)
                         #else
                         let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
-                        setBytes(b ?? Data())
+                        setBytes(b ?? emptyData)
                         #endif
                     }
                 } else {

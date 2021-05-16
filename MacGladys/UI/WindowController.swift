@@ -86,7 +86,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             return nil
         }
         if let json = try? JSONEncoder().encode(windowsToStore) {
-            PersistedOptions.defaults.setValue(json, forKey: "lastWindowStates")
+            lastWindowStates = json
         } else {
             log("Warning: Could not persist window states!")
         }
@@ -97,17 +97,17 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         let id = NSStoryboard.SceneIdentifier("windowController")
 
         // migrate saved window position from previous version, if exists
-        if let d = PersistedOptions.defaults.value(forKey: "lastWindowPosition") as? NSDictionary {
-            PersistedOptions.defaults.removeObject(forKey: "lastWindowPosition")
+        if let d = lastWindowPosition {
+            lastWindowPosition = nil
             if let frame = NSRect(dictionaryRepresentation: d) {
                 let state = State(frame: frame, search: nil, labels: [])
                 if let data = try? JSONEncoder().encode([state]) {
-                    PersistedOptions.defaults.setValue(data, forKey: "lastWindowStates")
+                    lastWindowStates = data
                 }
             }
         }
         
-        if let data = PersistedOptions.defaults.data(forKey: "lastWindowStates"), let states = try? JSONDecoder().decode([State].self, from: data) {
+        if let data = lastWindowStates, let states = try? JSONDecoder().decode([State].self, from: data) {
             for state in states {
                 if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let g = controller.window?.gladysController {
                     g.restoreState(from: state)
@@ -120,4 +120,11 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             }
         }
     }
+    
+    @OptionalUserDefault(key: "lastWindowStates", emptyValue: nil)
+    static private var lastWindowStates: Data?
+    
+    @OptionalUserDefault(key: "lastWindowPosition", emptyValue: nil)
+    static private var lastWindowPosition: NSDictionary?
+
 }

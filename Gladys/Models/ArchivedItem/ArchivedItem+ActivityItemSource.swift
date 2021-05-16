@@ -20,7 +20,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     }
     
     func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return (component.encodedUrl as Any?) ?? (previewItem.previewItemURL as Any?) ?? Data()
+        return (component.encodedUrl as Any?) ?? (previewItem.previewItemURL as Any?) ?? emptyData
     }
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {

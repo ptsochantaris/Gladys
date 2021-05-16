@@ -60,13 +60,6 @@ final class CloudManager {
 	
 	static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
     
-    static var syncSwitchedOn: Bool {
-        get {
-            return PersistedOptions.defaults.bool(forKey: "syncSwitchedOn")
-        }
-
-        set {
-            PersistedOptions.defaults.set(newValue, forKey: "syncSwitchedOn")
-        }
-    }
+    @UserDefault(key: "syncSwitchedOn", defaultValue: false)
+    static var syncSwitchedOn: Bool
 }

@@ -173,7 +173,7 @@ extension Model {
 					uuidData = try Data(contentsOf: url.appendingPathComponent("uuids"))
 				} else {
 					try fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-					uuidData = Data()
+					uuidData = emptyData
 				}
 
                 let encoder = saveEncoder

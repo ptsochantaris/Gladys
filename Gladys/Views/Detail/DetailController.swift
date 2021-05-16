@@ -103,6 +103,7 @@ final class DetailController: GladysViewController,
             updateMenuButton()
             self.view.setNeedsLayout()
             table.reloadData()
+            sizeWindow()
 		}
 	}
     
@@ -195,22 +196,23 @@ final class DetailController: GladysViewController,
 			NotificationCenter.default.post(name: .DetailViewClosing, object: nil, userInfo: nil)
 		}
 	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-        if !sizing {
-            sizeWindow()
-        }
-	}
     
     private var sizing = false
-
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if firstAppearance {
+            sizeWindow()
+        }
+    }
+    
 	private func sizeWindow() {
+        if sizing { return }
         sizing = true
         table.layoutIfNeeded()
         let preferredSize = CGSize(width: 320, height: table.contentSize.height)
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
-		log("Detail view preferred size is \(preferredSize)")
+		log("Detail view preferred size set to \(preferredSize)")
         sizing = false
 	}
     
@@ -251,6 +253,7 @@ final class DetailController: GladysViewController,
 			UIView.performWithoutAnimation {
 				table.beginUpdates()
 				table.endUpdates()
+                sizeWindow()
 			}
 		}
 		if let caretRect = caretRect {
@@ -524,7 +527,7 @@ final class DetailController: GladysViewController,
                   let typeEntry = sender as? Component,
                   let e = segue.destination as? HexEdit {
             
-            e.bytes = typeEntry.bytes ?? Data()
+            e.bytes = typeEntry.bytes ?? emptyData
             
             let f = ByteCountFormatter()
             let size = f.string(fromByteCount: Int64(e.bytes.count))
