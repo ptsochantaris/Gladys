@@ -31,13 +31,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 guard let w = NSApp.windows.first else { return }
 				if NSApp.isActive, w.isVisible {
                     NSApp.orderedWindows.forEach {
-                        $0.hide()
+                        $0.orderOut(nil)
                     }
 				} else {
-					NSApp.activate(ignoringOtherApps: true)
-                    NSApp.orderedWindows.forEach {
-                        $0.makeKeyAndOrderFront(nil)
-                    }
+                    (NSApp.delegate as? AppDelegate)?.focus()
 				}
 			}
 			hotKey = h

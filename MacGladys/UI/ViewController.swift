@@ -947,7 +947,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
             if PersistedOptions.autoShowFromEdge > 0 || PersistedOptions.hideMainWindowAtStartup {
-                w.hide()
+                w.orderOut(nil)
             } else {
                 w.makeKeyAndOrderFront(nil)
             }
@@ -1195,7 +1195,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             window.animator().alphaValue = 0
         }
         completionHandler: {
-            window.hide()
+            window.orderOut(nil)
         }
     }
 }

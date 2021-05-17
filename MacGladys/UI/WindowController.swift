@@ -22,10 +22,6 @@ extension NSWindow {
     var gladysController: ViewController? {
         return contentViewController as? ViewController
     }
-    
-    func hide() {
-        orderOut(nil)
-    }
 }
 
 final class WindowController: NSWindowController, NSWindowDelegate {
