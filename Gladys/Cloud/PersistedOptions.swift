@@ -22,8 +22,9 @@ final class PersistedOptions {
 			if let c = wideModeCache {
 				return c
 			}
-			wideModeCache = _wideMode
-			return _wideMode
+            let w = _wideMode
+			wideModeCache = w
+			return w
 		}
 		set {
 			wideModeCache = newValue
