@@ -29,14 +29,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
                 let visibleWindows = NSApp.orderedWindows.filter { $0.isVisible }
-                if !NSApp.isActive || visibleWindows.count != NSApp.orderedWindows.count {
-                    (NSApp.delegate as? AppDelegate)?.focus()
-				} else {
+                if NSApp.isActive && visibleWindows.count == NSApp.orderedWindows.count {
                     visibleWindows.forEach {
+                        if $0.contentViewController is Preferences {
+                            return
+                        }
                         $0.orderOut(nil)
                     }
-				}
-			}
+                } else {
+                    (NSApp.delegate as? AppDelegate)?.focus()
+                }
+            }
 			hotKey = h
 		}
 	}
@@ -237,15 +240,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		let wn = NSWorkspace.shared.notificationCenter
 		wn.addObserver(self, selector: #selector(systemDidWake), name: NSWorkspace.didWakeNotification, object: nil)
 
-		let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
-		updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
-
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
         
         Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
         
         WindowController.restoreStates()
+
+        let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
+        updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
+        NSApp.activate(ignoringOtherApps: true)
 	}
         
 	func applicationDidResignActive(_ notification: Notification) {
