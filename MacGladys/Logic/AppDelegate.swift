@@ -28,13 +28,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
-                guard let w = NSApp.windows.first else { return }
-				if NSApp.isActive, w.isVisible {
-                    NSApp.orderedWindows.forEach {
+                let visibleWindows = NSApp.orderedWindows.filter { $0.isVisible }
+                if !NSApp.isActive || visibleWindows.count != NSApp.orderedWindows.count {
+                    (NSApp.delegate as? AppDelegate)?.focus()
+				} else {
+                    visibleWindows.forEach {
                         $0.orderOut(nil)
                     }
-				} else {
-                    (NSApp.delegate as? AppDelegate)?.focus()
 				}
 			}
 			hotKey = h
@@ -252,7 +252,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
         if PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 {
-            NSApp.windows.forEach {
+            NSApp.orderedWindows.forEach {
                 $0.gladysController?.hideWindowBecauseOfMouse(window: $0)
             }
         }
@@ -280,7 +280,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     private func focus() {
 		NSApp.activate(ignoringOtherApps: true)
-        NSApp.windows.forEach {
+        NSApp.orderedWindows.forEach {
             $0.gladysController?.showWindow(window: $0, wasAuto: false)
         }
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)

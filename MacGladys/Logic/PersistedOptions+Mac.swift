@@ -155,12 +155,12 @@ extension PersistedOptions {
             _autoShowFromEdge = newValue
             defaults.set(newValue, forKey: "autoShowFromEdge")
             if newValue == 0 {
-                NSApp.windows.compactMap { $0.contentViewController as? ViewController }.forEach {
+                NSApp.orderedWindows.compactMap { $0.contentViewController as? ViewController }.forEach {
                     guard let w = $0.view.window else { return }
                     $0.showWindow(window: w, wasAuto: false)
                 }
             } else {
-                NSApp.windows.compactMap { $0.contentViewController as? ViewController }.forEach {
+                NSApp.orderedWindows.compactMap { $0.contentViewController as? ViewController }.forEach {
                     guard let w = $0.view.window else { return }
                     $0.hideWindowBecauseOfMouse(window: w)
                 }

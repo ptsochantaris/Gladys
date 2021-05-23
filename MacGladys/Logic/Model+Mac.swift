@@ -176,7 +176,7 @@ extension Model {
             if let k = NSApp.keyWindow?.contentViewController as? ViewController {
                 count = k.filter.filteredDrops.count
                 log("Updating app badge to show current key window item count (\(count))")
-            } else if NSApp.windows.count == 1, let k = NSApp.windows.first(where: { $0.contentViewController is ViewController })?.gladysController {
+            } else if NSApp.orderedWindows.count == 1, let k = NSApp.orderedWindows.first(where: { $0.contentViewController is ViewController })?.gladysController {
                 count = k.filter.filteredDrops.count
                 log("Updating app badge to show current only window item count (\(count))")
             } else {
