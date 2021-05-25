@@ -245,13 +245,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
         
-        WindowController.restoreStates()
-
-        let isShowing = keyGladysControllerIfExists?.view.window?.isVisible ?? false
-        updateMenubarIconMode(showing: isShowing, forceUpdateMenu: false)
-        NSApp.activate(ignoringOtherApps: true)
+        if PersistedOptions.hideMainWindowAtStartup {
+            updateMenubarIconMode(showing: false, forceUpdateMenu: false)
+        } else {
+            focus()
+        }
 	}
-        
+    
 	func applicationDidResignActive(_ notification: Notification) {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
@@ -284,8 +284,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     private func focus() {
 		NSApp.activate(ignoringOtherApps: true)
-        NSApp.orderedWindows.forEach {
-            $0.gladysController?.showWindow(window: $0, wasAuto: false)
+        let windows = NSApp.orderedWindows
+        if windows.isEmpty {
+            if !WindowController.openRecentWindow() {
+                self.newWindowSelected(nil)
+            }
+        } else {
+            windows.forEach {
+                $0.gladysController?.showWindow(window: $0, wasAuto: false)
+            }
         }
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)
     }

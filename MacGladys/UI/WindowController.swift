@@ -44,6 +44,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
         Model.lockUnlockedItems()
         WindowController.strongRefs.removeAll { $0 === self }
+        WindowController.storeStates()
     }
     
     func windowDidBecomeKey(_ notification: Notification) {
@@ -81,6 +82,10 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             }
             return nil
         }
+        if windowsToStore.isEmpty {
+            log("Keeping last visible window position")
+            return
+        }
         if let json = try? JSONEncoder().encode(windowsToStore) {
             lastWindowStates = json
         } else {
@@ -115,6 +120,20 @@ final class WindowController: NSWindowController, NSWindowDelegate {
                 w.makeKeyAndOrderFront(nil)
             }
         }
+    }
+    
+    static func openRecentWindow() -> Bool {
+        let sb = NSStoryboard(name: "Main", bundle: nil)
+        let id = NSStoryboard.SceneIdentifier("windowController")
+        if let data = lastWindowStates,
+           let states = try? JSONDecoder().decode([State].self, from: data),
+           let state = states.first,
+           let controller = sb.instantiateController(withIdentifier: id) as? WindowController,
+           let g = controller.window?.gladysController {
+            g.restoreState(from: state)
+            return true
+        }
+        return false
     }
     
     @OptionalUserDefault(key: "lastWindowStates", emptyValue: nil)

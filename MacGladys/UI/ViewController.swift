@@ -946,7 +946,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
-            if PersistedOptions.autoShowFromEdge > 0 || PersistedOptions.hideMainWindowAtStartup {
+            if PersistedOptions.autoShowFromEdge > 0 {
                 w.orderOut(nil)
             } else {
                 w.makeKeyAndOrderFront(nil)
