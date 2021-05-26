@@ -168,11 +168,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		}
 	}
     
-    @IBAction private func newWindowSelected(_ sender: Any?) {
+    private func createNewWindow() {
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
         if let w = controller.window {
             w.gladysController?.showWindow(window: w)
         }
+    }
+    
+    @IBAction private func newWindowSelected(_ sender: Any?) {
+        if !NSApp.orderedWindows.isEmpty {
+            createNewWindow()
+        } else if !WindowController.openRecentWindow() {
+            createNewWindow()
+        }
+        updateMenubarIconMode(showing: true, forceUpdateMenu: false)
     }
     
     override init() {
@@ -238,12 +247,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Model.detectExternalChanges()
 		Model.startMonitoringForExternalChangesToBlobs()
         
-        WindowController.restoreStates()
-        if PersistedOptions.hideMainWindowAtStartup {
-            WindowController.visibleItemWindows.forEach { $0.orderOut(nil) }
-            updateMenubarIconMode(showing: false, forceUpdateMenu: false)
+        if WindowController.restoreStates() {
+            if !(PersistedOptions.hideMainWindowAtStartup || PersistedOptions.autoShowFromEdge > 0) {
+                focus()
+            }
         } else {
-            focus()
+            newWindowSelected(nil)
         }
 	}
     
@@ -281,9 +290,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		NSApp.activate(ignoringOtherApps: true)
         let windows = NSApp.orderedWindows
         if windows.isEmpty {
-            if !WindowController.openRecentWindow() {
-                self.newWindowSelected(nil)
-            }
+            newWindowSelected(nil)
         } else {
             windows.forEach {
                 $0.gladysController?.showWindow(window: $0)

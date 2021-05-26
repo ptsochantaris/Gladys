@@ -93,7 +93,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         }
     }
 
-    static func restoreStates() {
+    static func restoreStates() -> Bool {
         let sb = NSStoryboard(name: "Main", bundle: nil)
         let id = NSStoryboard.SceneIdentifier("windowController")
 
@@ -108,18 +108,16 @@ final class WindowController: NSWindowController, NSWindowDelegate {
             }
         }
         
+        var restoredAtLeastOneWindow = false
         if let data = lastWindowStates, let states = try? JSONDecoder().decode([State].self, from: data) {
             for state in states {
                 if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let g = controller.window?.gladysController {
                     g.restoreState(from: state)
+                    restoredAtLeastOneWindow = true
                 }
             }
-
-        } else {
-            if let controller = sb.instantiateController(withIdentifier: id) as? WindowController, let w = controller.window {
-                w.makeKeyAndOrderFront(nil)
-            }
         }
+        return restoredAtLeastOneWindow
     }
     
     static func openRecentWindow() -> Bool {

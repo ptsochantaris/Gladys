@@ -947,7 +947,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
             if PersistedOptions.autoShowFromEdge == 0 || forceVisibleNow {
-                showWindow(window: w, startHideTimerIfNeeded: true)
+                showWindow(window: w)
             } else {
                 w.orderOut(nil)
             }
