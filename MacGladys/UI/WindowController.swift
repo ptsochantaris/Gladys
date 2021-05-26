@@ -130,10 +130,14 @@ final class WindowController: NSWindowController, NSWindowDelegate {
            let state = states.first,
            let controller = sb.instantiateController(withIdentifier: id) as? WindowController,
            let g = controller.window?.gladysController {
-            g.restoreState(from: state)
+            g.restoreState(from: state, forceVisibleNow: true)
             return true
         }
         return false
+    }
+    
+    static var visibleItemWindows: [NSWindow] {
+        return NSApp.orderedWindows.filter { $0.isVisible && ($0.contentViewController is ViewController) }
     }
     
     @OptionalUserDefault(key: "lastWindowStates", emptyValue: nil)

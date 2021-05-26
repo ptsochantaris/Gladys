@@ -935,7 +935,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		}
 	}
     
-    func restoreState(from windowState: WindowController.State) {
+    func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
             filter.updateFilter(signalUpdate: true)
@@ -946,10 +946,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
-            if PersistedOptions.autoShowFromEdge > 0 {
-                w.orderOut(nil)
-            } else {
+            if PersistedOptions.autoShowFromEdge == 0 || forceVisibleNow {
                 w.makeKeyAndOrderFront(nil)
+            } else {
+                w.orderOut(nil)
             }
         }
     }

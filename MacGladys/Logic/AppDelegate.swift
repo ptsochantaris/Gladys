@@ -28,14 +28,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			if PersistedOptions.hotkeyCmd { modifiers = modifiers.union(.command) }
 			let h = HotKey(carbonKeyCode: UInt32(hotKeyCode), carbonModifiers: modifiers.carbonFlags)
 			h.keyDownHandler = {
-                let visibleWindows = NSApp.orderedWindows.filter { $0.isVisible }
-                if NSApp.isActive && visibleWindows.count == NSApp.orderedWindows.count {
-                    visibleWindows.forEach {
-                        if $0.contentViewController is Preferences {
-                            return
-                        }
-                        $0.orderOut(nil)
-                    }
+                let visibleItemWindows = WindowController.visibleItemWindows
+                let visibleItemWindowsCount = visibleItemWindows.count
+                let allItemWindowCount = NSApp.orderedWindows.reduce(0) { $1.contentViewController is ViewController ? $0 + 1 : $0 }
+                if visibleItemWindowsCount > 0 && visibleItemWindowsCount == allItemWindowCount {
+                    visibleItemWindows.forEach { $0.orderOut(nil) }
                 } else {
                     (NSApp.delegate as? AppDelegate)?.focus()
                 }
@@ -43,7 +40,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			hotKey = h
 		}
 	}
-
+    
 	private var statusItem: NSStatusItem?
 
 	@IBOutlet private var gladysMenuItem: NSMenuItem!
@@ -256,7 +253,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		updateMenubarIconMode(showing: false, forceUpdateMenu: false)
 		Model.trimTemporaryDirectory()
         if PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 {
-            NSApp.orderedWindows.forEach {
+            WindowController.visibleItemWindows.forEach {
                 $0.gladysController?.hideWindowBecauseOfMouse(window: $0)
             }
         }
@@ -362,6 +359,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
 	@IBAction private func aboutSelected(_ sender: NSMenuItem) {
+        if let about = NSApp.orderedWindows.first(where: { $0.contentViewController is AboutViewController }) {
+            about.makeKeyAndOrderFront(sender)
+            return
+        }
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "about") as! NSWindowController
         if let w = controller.window {
             w.makeKeyAndOrderFront(sender)
@@ -506,6 +507,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
     
     @objc func showPreferences(_ sender: Any?) {
+        if let prefs = NSApp.orderedWindows.first(where: { $0.contentViewController is Preferences }) {
+            prefs.makeKeyAndOrderFront(sender)
+            return
+        }
+        
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "preferences") as! NSWindowController
         if let w = controller.window {
             w.makeKeyAndOrderFront(sender)
