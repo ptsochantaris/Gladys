@@ -947,7 +947,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
             if PersistedOptions.autoShowFromEdge == 0 || forceVisibleNow {
-                w.makeKeyAndOrderFront(nil)
+                showWindow(window: w, startHideTimerIfNeeded: true)
             } else {
                 w.orderOut(nil)
             }
@@ -1103,7 +1103,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
         } else if !window.isVisible {
             if checkingDrag || mouseInActivationBoundary(at: autoShowOnEdge, mouseLocation: mouseLocation) {
-                showWindow(window: window, wasAuto: true)
+                showWindow(window: window, startHideTimerIfNeeded: true)
             }
         }
     }
@@ -1165,10 +1165,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     
     private var hideTimer: GladysTimer?
     
-    func showWindow(window: NSWindow, wasAuto: Bool) {
+    func showWindow(window: NSWindow, startHideTimerIfNeeded: Bool = false) {
         hideTimer = nil
         enteredWindowAfterAutoShow = false
-        autoShown = wasAuto
+        autoShown = startHideTimerIfNeeded
         
         window.collectionBehavior = .moveToActiveSpace
         window.alphaValue = 0
@@ -1176,7 +1176,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         window.makeKey()
         window.animator().alphaValue = 1
         
-        if wasAuto {
+        if startHideTimerIfNeeded {
             let time = TimeInterval(PersistedOptions.autoHideAfter)
             if time > 0 {
                 hideTimer = GladysTimer(interval: time) { [weak self] in

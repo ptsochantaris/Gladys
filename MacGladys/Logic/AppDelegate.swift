@@ -171,11 +171,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     @IBAction private func newWindowSelected(_ sender: Any?) {
         let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("windowController")) as! WindowController
         if let w = controller.window {
-            if PersistedOptions.autoShowFromEdge > 0 {
-                w.gladysController?.showWindow(window: w, wasAuto: true)
-            } else {
-                w.makeKeyAndOrderFront(sender)
-            }
+            w.gladysController?.showWindow(window: w)
         }
     }
     
@@ -290,7 +286,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             }
         } else {
             windows.forEach {
-                $0.gladysController?.showWindow(window: $0, wasAuto: false)
+                $0.gladysController?.showWindow(window: $0)
             }
         }
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)
@@ -410,7 +406,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         guard let controller = keyGladysControllerIfExists, let w = controller.view.window else { return }
 
 		if !w.isVisible {
-			w.makeKeyAndOrderFront(nil)
+            controller.showWindow(window: w)
 		}
 
 		let o = NSOpenPanel()
@@ -453,7 +449,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         guard let controller = keyGladysControllerIfExists, let w = controller.view.window else { return }
         
 		if !w.isVisible {
-			w.makeKeyAndOrderFront(nil)
+            controller.showWindow(window: w)
 		}
 
 		let s = NSSavePanel()
@@ -478,10 +474,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
 	@IBAction private func zipSelected(_ sender: NSMenuItem) {
 
-        guard let controller = keyGladysControllerIfExists else { return }
-		let w = controller.view.window!
+        guard let controller = keyGladysControllerIfExists, let w = controller.view.window else { return }
 		if !w.isVisible {
-			w.makeKeyAndOrderFront(nil)
+            controller.showWindow(window: w)
 		}
 
 		let optionView = NSView(frame: NSRect(x: 0, y: 0, width: 200, height: 44))

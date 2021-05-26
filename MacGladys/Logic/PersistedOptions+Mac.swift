@@ -157,7 +157,7 @@ extension PersistedOptions {
             if newValue == 0 {
                 NSApp.orderedWindows.compactMap { $0.contentViewController as? ViewController }.forEach {
                     guard let w = $0.view.window else { return }
-                    $0.showWindow(window: w, wasAuto: false)
+                    $0.showWindow(window: w)
                 }
             } else {
                 NSApp.orderedWindows.compactMap { $0.contentViewController as? ViewController }.forEach {
