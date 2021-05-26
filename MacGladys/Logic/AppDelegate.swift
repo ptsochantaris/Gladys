@@ -248,7 +248,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 		Model.startMonitoringForExternalChangesToBlobs()
         
         if WindowController.restoreStates() {
-            if !(PersistedOptions.hideMainWindowAtStartup || PersistedOptions.autoShowFromEdge > 0) {
+            if PersistedOptions.hideMainWindowAtStartup || PersistedOptions.autoShowFromEdge > 0 {
+                NSApp.activate(ignoringOtherApps: true)
+                updateMenubarIconMode(showing: false, forceUpdateMenu: false)
+            } else {
                 focus()
             }
         } else {
