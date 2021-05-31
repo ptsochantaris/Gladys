@@ -18,13 +18,20 @@ extension UIImage {
         kCGImageSourceShouldCache: kCFBooleanFalse
     ] as CFDictionary
 
-    private static let regularFormat = UIGraphicsImageRendererFormat.default()
-    private static let templateFormat: UIGraphicsImageRendererFormat = {
-        let f = UIGraphicsImageRendererFormat.default()
-        f.scale = screenScale
+    private static let regularFormat: UIGraphicsImageRendererFormat = {
+        let f = UIGraphicsImageRendererFormat()
+        f.preferredRange = .standard
+        f.scale = 1
         return f
     }()
     
+    private static let templateFormat: UIGraphicsImageRendererFormat = {
+        let f = UIGraphicsImageRendererFormat()
+        f.preferredRange = .standard
+        f.scale = screenScale
+        return f
+    }()
+
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
         guard let provider = CGDataProvider(url: url as CFURL),
             let source = CGImageSourceCreateWithDataProvider(provider, nil),
