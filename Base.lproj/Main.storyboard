@@ -21,11 +21,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="800" height="800"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="colorPaper"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="O1B-Q3-jL2">
-                                    <size key="itemSize" width="300" height="300"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hED-lh-gMN">
+                                    <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="10" minY="0.0" maxX="10" maxY="10"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell autoresizesSubviews="NO" opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ArchivedItemCell" id="x5M-NP-dlj" customClass="ArchivedItemCell" customModule="Gladys" customModuleProvider="target">
@@ -4110,7 +4110,7 @@ Selecting them will show only items that contain these labels.</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="smU-wA-hcv"/>
+        <segue reference="j8r-Hv-OpL"/>
         <segue reference="7zu-MP-PH8"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="colorTint"/>

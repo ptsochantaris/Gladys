@@ -61,12 +61,8 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 	from.present(a, animated: true)
 }
 
-let mainWindow: UIWindow = {
-	return UIApplication.shared.windows.first!
-}()
-
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
-	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource,
+	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDataSource,
     UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate,
     UICloudSharingControllerDelegate, ModelFilterContextDelegate {
 
@@ -574,7 +570,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
-
+        
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor.g_colorLightGray
 		]
@@ -1409,73 +1405,79 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         view.setNeedsLayout()
 	}
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        self.collection.collectionViewLayout.invalidateLayout()
-    }
+    private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
+        let itemWidth, itemHeight: NSCollectionLayoutDimension
 
-    private var lastLayoutProcessed: CGFloat = 0
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        guard let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
+        let columnCount = CGFloat(columns)
+        let extras = spacing * (columnCount - 1)
+        let side = ((width - extras) / columnCount).rounded(.down)
+        view.window?.windowScene?.session.userInfo?["ItemSide"] = side
+
+        if let fixedwidth = fixedwidth {
+            itemWidth = .absolute(fixedwidth)
+        } else {
+            itemWidth = .fractionalHeight(1)
         }
 
-        let sinset = layout.sectionInset
-        let insets = collection.safeAreaInsets
-        let bounds = collection.bounds
-        let width = bounds.size.width - insets.left - insets.right - sinset.left - sinset.right
+        if let fixedHeight = fixedHeight {
+            itemHeight = .absolute(fixedHeight)
+        } else {
+            itemHeight = .absolute(side)
+        }
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
+        group.interItemSpacing = .fixed(spacing)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = spacing
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+    
+    private var lastLayoutProcessed: CGFloat = 0
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        let insets = view.safeAreaInsets
+        let bounds = view.bounds
+        let width = bounds.size.width - insets.left - insets.right
         let wideMode = PersistedOptions.wideMode
         let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
         
-        let key = width + (wideMode ? 0.2 : 0) + (forceTwoColumn ? 0.2 : 0)
+        let key = width + (wideMode ? 1 : 0) + (forceTwoColumn ? 1 : 0)
         if lastLayoutProcessed == key {
+            log("Handlesize not needed")
             return
         }
 
-        ////////////////////////////////////////
-                
-        func calculateSizes(for columnCount: CGFloat) -> CGSize {
-            let extras = layout.minimumInteritemSpacing * (columnCount - 1)
-            let side = ((width - extras) / columnCount).rounded(.down)
-            return CGSize(width: side, height: side)
-        }
-
-        func calculateWideSizes(for columnCount: CGFloat) -> CGSize {
-            let extras = layout.minimumInteritemSpacing * (columnCount - 1)
-            let side = ((width - extras) / columnCount).rounded(.down)
-            return CGSize(width: side, height: 80)
-        }
-
-        let itemSize: CGSize
-
         if wideMode {
             if width >= 768 {
-                itemSize = calculateWideSizes(for: 2)
+                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80)
             } else {
-                itemSize = CGSize(width: width, height: 80)
+                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80)
             }
         } else {
             if width <= 320 && !forceTwoColumn {
-                itemSize = CGSize(width: 300, height: 200)
+                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedwidth: 300, fixedHeight: 200)
             } else if width >= 1366 {
-                itemSize = calculateSizes(for: 5)
+                collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10)
             } else if width > 980 {
-                itemSize = calculateSizes(for: 4)
+                collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10)
             } else if width > 438 {
-                itemSize = calculateSizes(for: 3)
+                collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8)
             } else {
-                itemSize = calculateSizes(for: 2)
+                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6)
             }
         }
         
-        layout.itemSize = itemSize
         lastLayoutProcessed = key
         
-        view.window?.windowScene?.session.userInfo?["ItemSize"] = itemSize
-
-        log("Handlesize for: \(width), width: \(itemSize.width)")
+        log("Handlesize ran for: \(width)")
 
         ///////////////////////////////
         

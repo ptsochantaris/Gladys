@@ -203,9 +203,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 		progressView.observedProgress = nil
 		progressView.progress = 0
 		image.image = nil
-        if let size = window?.windowScene?.session.userInfo?["ItemSize"] as? CGSize {
-            itemSize = size
-        }
 	}
 
     deinit {
@@ -339,9 +336,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 					}
 				}
 
-                let H = itemSize.height
-				let wideMode = H > 145
-				let smallMode = H < 240
+                let side = window?.windowScene?.session.userInfo?["ItemSize"] as? CGFloat ?? 200
+				let wideMode = side > 145
+				let smallMode = side < 240
 
 				if PersistedOptions.displayLabelsInMainView {
 					labels = item.labels
@@ -471,9 +468,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
 		topLabelLeft.constant = (shareHolder == nil || wideCell) ? 0 : 41
 	}
-    
-    private var itemSize = CGSize(width: 200, height: 200)
-    
+        
 	func flash() {
         let originalColor = container.backgroundColor
         let topColor = topLabel.textColor
