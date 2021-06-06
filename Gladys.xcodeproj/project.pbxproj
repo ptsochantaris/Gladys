@@ -322,7 +322,6 @@
 		16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
 		16B552811F12E5C200641009 /* GladysFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		16B89E6E2523D4F1007FD864 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E6D2523D4F1007FD864 /* DeepDiff */; };
 		16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E7C2523D50C007FD864 /* CallbackURLKit */; };
 		16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E8B2523D536007FD864 /* ZIPFoundation */; };
 		16B89E9B2523D545007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E9A2523D545007FD864 /* Fuzi */; };
@@ -948,7 +947,6 @@
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 				16B89E9B2523D545007FD864 /* Fuzi in Frameworks */,
-				16B89E6E2523D4F1007FD864 /* DeepDiff in Frameworks */,
 				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1687,7 +1685,6 @@
 			);
 			name = Gladys;
 			packageProductDependencies = (
-				16B89E6D2523D4F1007FD864 /* DeepDiff */,
 				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
 				16B89E8B2523D536007FD864 /* ZIPFoundation */,
 				16B89E9A2523D545007FD864 /* Fuzi */,
@@ -3662,11 +3659,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		16B89E6D2523D4F1007FD864 /* DeepDiff */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
-			productName = DeepDiff;
-		};
 		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;

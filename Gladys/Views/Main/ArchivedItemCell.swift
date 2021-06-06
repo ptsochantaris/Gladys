@@ -190,6 +190,8 @@ final class ArchivedItemCell: UICollectionViewCell {
         let pencil = UIIndirectScribbleInteraction(delegate: self)
         addInteraction(pencil)
         #endif
+        
+        tintColorDidChange()
 	}
         
 	weak var archivedDropItem: ArchivedItem? {

@@ -1,6 +1,5 @@
 import UIKit
 import Intents
-import DeepDiff
 
 extension UIKeyCommand {
     static func makeCommand(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, title: String) -> UIKeyCommand {
@@ -62,9 +61,8 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 }
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
-	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDataSource,
-    UICollectionViewDropDelegate, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate,
-    UICloudSharingControllerDelegate, ModelFilterContextDelegate {
+	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
+    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, ModelFilterContextDelegate {
 
 	@IBOutlet private var collection: UICollectionView!
 	@IBOutlet private var totalSizeLabel: UIBarButtonItem!
@@ -79,6 +77,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @IBOutlet private var dragModeSubtitle: UILabel!
 	@IBOutlet private var shareButton: UIBarButtonItem!
     @IBOutlet private var editButton: UIBarButtonItem!
+    
+    enum Section: CaseIterable {
+        case main
+    }
 
     var filter: ModelFilterContext!
     
@@ -144,7 +146,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
-        reloadData(onlyIfPopulated: true)
+        updateDataSource()
+        updateLabelIcon()
     }
 
 	@IBAction private func dragModeButtonSelected(_ sender: UIButton) {
@@ -211,22 +214,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			return [dragItem]
 		}
-	}
-
-	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return filter.filteredDrops.count
-	}
-
-	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
-		if indexPath.item < filter.filteredDrops.count {
-			cell.lowMemoryMode = lowMemoryMode
-			let item = filter.filteredDrops[indexPath.item]
-			cell.archivedDropItem = item
-			cell.isEditing = isEditing
-		}
-		return cell
 	}
 
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
@@ -563,6 +550,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     var onLoad: ((ViewController) -> Void)?
+    
+    private lazy var dataSource = UICollectionViewDiffableDataSource<Section, UUID>(collectionView: collection) { collectionView, indexPath, uuid in
+        let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
+        cell.lowMemoryMode = self.lowMemoryMode
+        cell.archivedDropItem = Model.item(uuid: uuid)
+        cell.isEditing = self.isEditing
+        return cell
+    }
+    
+    private func updateDataSource(reloading: Set<UUID>? = nil) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, UUID>()
+        snapshot.appendSections([.main])
+        let uuids = filter.filteredDrops.map { $0.uuid }
+        snapshot.appendItems(uuids)
+        if let reloading = reloading?.filter({ uuids.contains($0) }), !reloading.isEmpty {
+            snapshot.reloadItems(Array(reloading))
+        }
+        dataSource.apply(snapshot)
+    }
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -570,6 +577,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
+        updateDataSource()
+        collection.dataSource = dataSource
+        collection.contentOffset = .zero
         
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor.g_colorLightGray
@@ -596,14 +606,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
-        n.addObserver(self, selector: #selector(reloadDataRequested(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
+        n.addObserver(self, selector: #selector(reloadExistingItems(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
 		n.addObserver(self, selector: #selector(modelDataUpdate(_:)), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(itemCreated(_:)), name: .ItemAddedBySync, object: nil)
 		n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
 		n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
 		n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
 		n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
-        n.addObserver(self, selector: #selector(forceLayout), name: .ForceLayoutRequested, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
         n.addObserver(self, selector: #selector(uiRequest(_:)), name: .UIRequest, object: nil)
@@ -796,83 +805,57 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func itemCreated(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
-        collection.performBatchUpdates({
-            filter.updateFilter(signalUpdate: false)
-            if let index = filter.filteredDrops.firstIndex(of: item) {
-                let n = IndexPath(item: index, section: 0)
-                collection.insertItems(at: [n])
-                updateEmptyView()
-            }
-        }, completion: nil)
+        filter.updateFilter(signalUpdate: false)
+        if filter.filteredDrops.contains(item) {
+            updateDataSource()
+            updateEmptyView()
+        }
     }
     
     @objc private func modelDataUpdate(_ notification: Notification) {
+        let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+        filter.updateFilter(signalUpdate: false)
+        let oldSet = Set(oldUUIDs)
+
         let parameters = notification.object as? [AnyHashable: Any]
-        let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
+        let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet)
+        updateDataSource(reloading: uuidsToReload)
         
-        var removedItems = false
-        var orderChanged = false
-        var ipsToReload = [IndexPath]()
-        collection.performBatchUpdates({
-
-            let oldUUIDs = filter.filteredDrops.map { $0.uuid }
-            filter.updateFilter(signalUpdate: false)
-            if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
-                collection.reloadSections(IndexSet(integer: 0))
-                return
+        if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
+            return
+        }
+        
+        let newUUIDs = filter.filteredDrops.map { $0.uuid }
+        let newSet = Set(newUUIDs)
+        
+        let removed = oldSet.subtracting(newSet)
+        let added = newSet.subtracting(oldSet)
+        
+        let removedItems = !removed.isEmpty
+        let ipsInsered = !added.isEmpty
+        let ipsMoved = !removedItems && !ipsInsered && oldUUIDs != newUUIDs
+                
+        if removedItems || ipsInsered || ipsMoved {
+            if !phoneMode, let vc = (currentDetailView ?? currentPreviewView) {
+                vc.dismiss(animated: false)
             }
             
-            let newUUIDs = filter.filteredDrops.map { $0.uuid }
-            
-            var ipsToRemove = [IndexPath]()
-            var ipsToInsert = [IndexPath]()
-            var moveList = [(IndexPath, IndexPath)]()
-
-            let changes = diff(old: oldUUIDs, new: newUUIDs)
-            for change in changes {
-                switch change {
-                case .delete(let deletion):
-                    ipsToRemove.append(IndexPath(item: deletion.index, section: 0))
-                case .insert(let insertion):
-                    ipsToInsert.append(IndexPath(item: insertion.index, section: 0))
-                case .move(let move):
-                    moveList.append((IndexPath(item: move.fromIndex, section: 0), IndexPath(item: move.toIndex, section: 0)))
-                case .replace(let reload):
-                    ipsToReload.append(IndexPath(item: reload.index, section: 0))
-                }
-            }
-            
-            for uuid in savedUUIDs {
-                if let i = newUUIDs.firstIndex(of: uuid) {
-                    let ip = IndexPath(item: i, section: 0)
-                    if !ipsToReload.contains(ip) {
-                        ipsToReload.append(ip)
-                    }
-                }
-            }
-            
-            removedItems = !ipsToRemove.isEmpty
-            orderChanged = removedItems || !(ipsToInsert.isEmpty && moveList.isEmpty)
-            
-            collection.deleteItems(at: ipsToRemove)
-            collection.insertItems(at: ipsToInsert)
-            for move in moveList {
-                collection.moveItem(at: move.0, to: move.1)
-            }
-            
-        }, completion: { _ in
-            if orderChanged {
-                if !self.phoneMode, let vc = (self.currentDetailView ?? self.currentPreviewView) {
-                    vc.dismiss(animated: false)
-                }
-            }
             if removedItems {
-                self.itemsDeleted()
-            }
-            self.updateUI()
-        })
+                if filter.filteredDrops.isEmpty {
+                    
+                    if filter.isFiltering {
+                        resetSearch(andLabels: true)
+                    }
 
-        collection.reloadItems(at: ipsToReload)
+                    setEditing(false, animated: true)
+                    mostRecentIndexPathActioned = nil
+                    blurb(Greetings.randomCleanLine)
+                }
+                focusInitialAccessibilityElement()
+            }
+        }
+                
+        updateUI()
     }
 
 	private var emptyView: UIImageView?
@@ -1400,10 +1383,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return nil
     }
-
-	@objc private func forceLayout() {
-        view.setNeedsLayout()
-	}
     
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
         let itemWidth, itemHeight: NSCollectionLayoutDimension
@@ -1592,21 +1571,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-    private func itemsDeleted() {
-        if filter.filteredDrops.isEmpty {
-            
-            if filter.isFiltering {
-                resetSearch(andLabels: true)
-            }
-
-            setEditing(false, animated: true)
-            mostRecentIndexPathActioned = nil
-            blurb(Greetings.randomCleanLine)
-        }
-        
-        focusInitialAccessibilityElement()
-    }
-
     @objc private func itemIngested(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
 
@@ -1697,22 +1661,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		searchTimer.push()
 	}
 
-    @objc private func reloadDataRequested(_ notification: Notification) {
-        if self === notification.object as? ViewController { return } // ignore
-        let onlyIfPopulated = notification.object as? Bool ?? false
-        reloadData(onlyIfPopulated: onlyIfPopulated)
+    @objc private func reloadExistingItems(_ notification: Notification) {
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadItems(snapshot.itemIdentifiers)
+        dataSource.apply(snapshot)
     }
     
-    private func reloadData(onlyIfPopulated: Bool) {
-		updateLabelIcon()
-        if onlyIfPopulated && filter.filteredDrops.isEmpty {
-			return
-		}
-		collection.performBatchUpdates({
-            self.collection.reloadSections(IndexSet(integer: 0))
-		})
-	}
-
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		let t = (controller.presentedViewController as? UINavigationController)?.topViewController
 		if t is LabelSelector || t is LabelEditorController || t is SiriShortcutsViewController {
