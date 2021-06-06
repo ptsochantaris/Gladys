@@ -63,7 +63,7 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, ModelFilterContextDelegate {
-
+    
 	@IBOutlet private var collection: UICollectionView!
 	@IBOutlet private var totalSizeLabel: UIBarButtonItem!
 	@IBOutlet private var deleteButton: UIBarButtonItem!
@@ -554,13 +554,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     var onLoad: ((ViewController) -> Void)?
-    
-    private struct ItemIdentifier: Hashable {
-        let section: ModelFilterContext.LabelToggle
-        let uuid: UUID
-    }
-    
-    private lazy var dataSource = UICollectionViewDiffableDataSource<ModelFilterContext.LabelToggle, ItemIdentifier>(collectionView: collection) { [weak self] collectionView, indexPath, sectionItem in
+        
+    private lazy var dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { [weak self] collectionView, indexPath, sectionItem in
         let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
         if let self = self {
@@ -571,36 +566,51 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return cell
     }
     
-    private var labelToggles: [ModelFilterContext.LabelToggle] {
-        if filter.isFilteringLabels {
-            return filter.labelToggles.filter { $0.enabled }
-        } else {
-            return filter.labelToggles
-        }
-    }
+    private var collapsedToggles = Set<String>()
     
     private func updateDataSource(reloading: Set<UUID>? = nil) {
-        let toggles = labelToggles
-        let drops = filter.filteredDrops
         let animate = !firstAppearance
+        let toggles = filter.enabledToggles
+        let collapsedToggles = collapsedToggles
+        
+        let drops = filter.filteredDrops
+        var labelLookups = [String: [UUID]]()
+        labelLookups.reserveCapacity(labelLookups.count)
+        for item in drops {
+            if item.labels.isEmpty {
+                let label = "Items with no labels"
+                if var list = labelLookups[label] {
+                    list.append(item.uuid)
+                    labelLookups[label] = list
+                } else {
+                    labelLookups[label] = [item.uuid]
+                }
+            } else {
+                for label in item.labels {
+                    if var list = labelLookups[label] {
+                        list.append(item.uuid)
+                        labelLookups[label] = list
+                    } else {
+                        labelLookups[label] = [item.uuid]
+                    }
+                }
+            }
+        }
 
         dataSourceQueue.async {
-            var snapshot = NSDiffableDataSourceSnapshot<ModelFilterContext.LabelToggle, ItemIdentifier>()
+            var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
             let reloadRequest = reloading ?? Set<UUID>()
             var itemsToReload = [ItemIdentifier]()
 
             toggles.forEach { toggle in
-                let sectionItems: [ItemIdentifier]
-                if toggle.emptyChecker {
-                    sectionItems = drops.filter { $0.labels.isEmpty }.map { ItemIdentifier(section: toggle, uuid: $0.uuid) }
-                } else {
-                    sectionItems = drops.filter { $0.labels.contains(toggle.name) }.map { ItemIdentifier(section: toggle, uuid: $0.uuid) }
-                }
-                if !sectionItems.isEmpty {
-                    snapshot.appendSections([toggle])
-                    snapshot.appendItems(sectionItems, toSection: toggle)
-                    let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
-                    itemsToReload.append(contentsOf: reloadInThisSection)
+                if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                    let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !self.collapsedToggles.contains(toggle.name))
+                    snapshot.appendSections([sectionIdentifier])
+                    if !collapsedToggles.contains(toggle.name) {
+                        snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
+                        let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
+                        itemsToReload.append(contentsOf: reloadInThisSection)
+                    }
                 }
             }
             
@@ -613,23 +623,47 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private let dataSourceQueue = DispatchQueue(label: "build.bru.Gladys.dataSourceQueue", qos: .userInitiated)
 
+    private func headerSelected(for identifier: SectionIdentifier, view: LabelSectionTitle) {
+        let name = identifier.section.name
+        if collapsedToggles.remove(name) == nil {
+            collapsedToggles.insert(name)
+        }
+        updateDataSource()
+    }
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
-        collection.register(LabelTitle.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: LabelTitle.identifier)
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
         collection.dataSource = dataSource
         collection.contentOffset = .zero
         
-        dataSource.supplementaryViewProvider = { [weak self] collectionView, _, indexPath in
-            let titleView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: LabelTitle.identifier, for: indexPath) as! LabelTitle
-            if let self = self, let toggle = self.dataSource.itemIdentifier(for: indexPath)?.section {
-                titleView.configure(with: toggle, topSpace: self.spacingForMode)
+        let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
+            guard let self = self else { return }
+            let toggle = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+            titleView.configure(with: toggle, topSpace: self.headerSpacingForMode) { [weak self] in
+                self?.headerSelected(for: toggle, view: titleView)
             }
-            return titleView
+            titleView.menuOptions = [
+                UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.collapsedToggles.removeAll()
+                    self.updateDataSource()
+                },
+                UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.collapsedToggles = Set(self.dataSource.snapshot().sectionIdentifiers.map({ $0.section.name }))
+                    self.updateDataSource()
+                }
+            ]
         }
+                
+        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+        }
+        
         updateDataSource()
 
 		navigationController?.navigationBar.titleTextAttributes = [
@@ -1452,46 +1486,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
     
-    private class LabelTitle: UICollectionReusableView {
-        static let identifier = "LabelTitleIdentifier"
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            setup()
-        }
-        
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setup()
-        }
-
-        private let label = UILabel()
-        private var topPadding: NSLayoutConstraint!
-
-        private func setup() {
-            label.textColor = .secondaryLabel
-            label.font = UIFont.preferredFont(forTextStyle: .headline)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(label)
-            topPadding = label.topAnchor.constraint(equalTo: topAnchor)
-            NSLayoutConstraint.activate([
-                label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
-                label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
-                topPadding,
-                label.bottomAnchor.constraint(equalTo: bottomAnchor)
-            ])
-        }
-        
-        func configure(with toggle: ModelFilterContext.LabelToggle, topSpace: CGFloat) {
-            label.text = toggle.name
-            topPadding.constant = topSpace
-        }
-    }
-    
-    private var spacingForMode: CGFloat = 0
+    private var headerSpacingForMode: CGFloat = 0
     
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
-        spacingForMode = spacing
+        headerSpacingForMode = spacing + 1
         
         let itemWidth, itemHeight: NSCollectionLayoutDimension
 
@@ -1525,7 +1523,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         section.interGroupSpacing = spacing
         section.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: sideSpace + spacing, bottom: spacing * 2, trailing: sideSpace + spacing)
 
-        let sectionTitleHeight = UIFont.preferredFont(forTextStyle: .headline).lineHeight + spacing
+        let sectionTitleHeight = UIFont.preferredFont(forTextStyle: .headline).lineHeight + spacing + 2
         let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionTitleHeight))
         let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
         section.boundarySupplementaryItems = [sectionTitle]

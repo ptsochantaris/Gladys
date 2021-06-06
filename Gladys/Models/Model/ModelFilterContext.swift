@@ -313,6 +313,14 @@ final class ModelFilterContext {
         }
     }
     
+    var enabledToggles: [LabelToggle] {
+        if isFilteringLabels {
+            return labelToggles.filter { $0.enabled }
+        } else {
+            return labelToggles
+        }
+    }
+    
     func disableAllLabels() {
         labelToggles = labelToggles.map {
             if $0.enabled {
