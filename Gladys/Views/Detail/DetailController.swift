@@ -12,6 +12,7 @@ final class DetailController: GladysViewController,
     ResizingCellDelegate, DetailCellDelegate {
 
     var item: ArchivedItem!
+    var sourceIndexPath: IndexPath?
 
 	private var showTypeDetails = false
 
@@ -65,8 +66,8 @@ final class DetailController: GladysViewController,
     }
     
     private func updateMenuButton() {
-        if let m = menuButton, let v = view.window?.windowScene?.mainController {
-            m.menu = v.createShortcutActions(for: item, mainView: false)
+        if let m = menuButton, let v = view.window?.windowScene?.mainController, let sourceIndexPath = sourceIndexPath {
+            m.menu = v.createShortcutActions(for: item, mainView: false, indexPath: sourceIndexPath)
         }
     }
     

@@ -130,4 +130,7 @@ final class PersistedOptions {
     
     @UserDefault(key: "requestInlineDrops", defaultValue: false)
     static var requestInlineDrops: Bool
+    
+    @UserDefault(key: "createSectionsFromLabels", defaultValue: false)
+    static var createSectionsFromLabels: Bool
 }

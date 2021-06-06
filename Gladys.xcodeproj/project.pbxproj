@@ -442,6 +442,7 @@
 		16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F693F91FD1AE2500DFE536 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
+		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -874,6 +875,7 @@
 		16F2990620CBEF30005DE3AD /* PushState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushState.swift; sourceTree = "<group>"; };
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
+		16F72B35266D8232000E2C67 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1401,6 +1403,7 @@
 				1660C0252465C32000ABFDFD /* Singleton.swift */,
 				16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */,
 				1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */,
+				16F72B35266D8232000E2C67 /* RoundedBackground.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2398,6 +2401,7 @@
 				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
 				161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */,
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
+				16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */,
 				1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */,
 				167CDF9520B62B3E00EABC0A /* Component+Preview.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,

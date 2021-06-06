@@ -9,12 +9,12 @@
 import UIKit
 
 struct SectionIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle
+    let section: ModelFilterContext.LabelToggle?
     let expanded: Bool
 }
 
 struct ItemIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle
+    let section: ModelFilterContext.LabelToggle?
     let uuid: UUID
 }
 
@@ -34,15 +34,25 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let indicator = UIImageView()
     private let button = UIButton(type: .custom)
     private var tappedCompletion: (() -> Void)?
+    
+    static let titleStyle = UIFont.TextStyle.subheadline
 
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+        label.textColor = self.tintColor
+    }
+    
     private func setup() {
-        label.textColor = .secondaryLabel
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        self.tintColor = .secondaryLabel
+        layoutMargins = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+
+        label.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         label.isUserInteractionEnabled = false
-        
+
         indicator.contentMode = .center
-        indicator.image = UIImage(systemName: "chevron.down")
-        indicator.highlightedImage = UIImage(systemName: "chevron.up")
+        let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
+        indicator.image = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
+        indicator.highlightedImage = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.isUserInteractionEnabled = false
         
         let stack = UIStackView(arrangedSubviews: [label, indicator])
@@ -63,9 +73,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             stack.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
             stack.topAnchor.constraint(equalTo: guide.topAnchor),
             stack.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
-            
-            indicator.heightAnchor.constraint(equalTo: indicator.widthAnchor),
-            
+                        
             button.topAnchor.constraint(equalTo: topAnchor),
             button.bottomAnchor.constraint(equalTo: bottomAnchor),
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -73,9 +81,8 @@ final class LabelSectionTitle: UICollectionReusableView {
         ])
     }
     
-    func configure(with identifier: SectionIdentifier, topSpace: CGFloat, tapCompletion: @escaping () -> Void) {
-        layoutMargins = UIEdgeInsets(top: topSpace, left: 4, bottom: 0, right: 4)
-        label.text = identifier.section.name
+    func configure(with identifier: SectionIdentifier, tapCompletion: @escaping () -> Void) {
+        label.text = identifier.section?.name
         tappedCompletion = tapCompletion
         indicator.isHighlighted = identifier.expanded
     }

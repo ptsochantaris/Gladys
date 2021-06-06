@@ -119,12 +119,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private func showDragModeOverlay(_ show: Bool) {
 		if dragModePanel.superview != nil, !show {
-			UIView.animate(withDuration: 0.1, animations: {
+			UIView.animate(withDuration: 0.1) {
 				self.dragModePanel.alpha = 0
                 self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
-			}, completion: { _ in
+			} completion: { _ in
 				self.dragModePanel.removeFromSuperview()
-			})
+			}
 		} else if dragModePanel.superview == nil, show, let n = navigationController {
 			dragModeReverse = false
 			updateDragModeOverlay()
@@ -134,10 +134,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 dragModePanel.topAnchor.constraint(equalTo: n.view.topAnchor)
 				])
             self.dragModePanel.transform = CGAffineTransform(translationX: 0, y: -44)
-			UIView.animate(withDuration: 0.1, animations: {
+			UIView.animate(withDuration: 0.1) {
 				self.dragModePanel.alpha = 1
                 self.dragModePanel.transform = .identity
-			}, completion: nil)
+			}
 		}
 	}
     
@@ -197,16 +197,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         Component.droppedIds.removeAll()
-        if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid,
-              let item = Model.item(uuid: uuid),
-              !item.flags.contains(.needsUnlock) {
+        if let item = item(for: indexPath), !item.flags.contains(.needsUnlock) {
             return [item.dragItem]
         }
         return []
 	}
 
 	func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let item = filter.filteredDrops[indexPath.item]
+        guard let item = item(for: indexPath) else { return [] }
 		let dragItem = item.dragItem
         if session.localContext as? String == "typeItem" || session.items.contains(dragItem) || item.flags.contains(.needsUnlock) {
 			return []
@@ -217,8 +215,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 		for indexPath in indexPaths {
-            if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let drop = Model.item(uuid: uuid) {
-                ArchivedItemCell.warmUp(for: drop)
+            if let item = item(for: indexPath) {
+                ArchivedItemCell.warmUp(for: item)
             }
 		}
 	}
@@ -255,6 +253,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
                 if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
+                    // TODO
                     var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item, checkForWeirdness: true)
                     if modelDestinationIndex < 0 {
                         log("Collection view wants to drop beyond the end of items, discaring local drop")
@@ -377,6 +376,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 				let myNavView = navigationController?.view
 				else { return }
 
+            d.sourceIndexPath = indexPath
 			d.item = item
 
             p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
@@ -450,11 +450,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
+    private func item(for indexPath: IndexPath) -> ArchivedItem? {
+        if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
+            return Model.item(uuid: uuid)
+        }
+        return nil
+    }
+    
+    private func cell(for identifier: ItemIdentifier) -> ArchivedItemCell? {
+        if let indexPath = dataSource.indexPath(for: identifier), let cell = dataSource.collectionView(collection, cellForItemAt: indexPath) as? ArchivedItemCell {
+            return cell
+        }
+        return nil
+    }
+    
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if collectionView.hasActiveDrop && Singleton.shared.componentDropActiveFromDetailView == nil { return false }
-        let item = filter.filteredDrops[indexPath.item]
-        if item.shouldDisplayLoading { return false }
-        return true
+        guard let item = item(for: indexPath) else {
+            return false
+        }
+        return !item.shouldDisplayLoading
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -469,7 +484,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         collectionView.deselectItem(at: indexPath, animated: false)
         
-        guard let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let item = Model.item(uuid: uuid) else {
+        guard let item = item(for: indexPath) else {
             return
         }
         
@@ -571,30 +586,36 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func updateDataSource(reloading: Set<UUID>? = nil) {
         let animate = !firstAppearance
         let toggles = filter.enabledToggles
-        let collapsedToggles = collapsedToggles
+        let collapsed = collapsedToggles
+        let labelMode = PersistedOptions.createSectionsFromLabels
         
         let drops = filter.filteredDrops
         var labelLookups = [String: [UUID]]()
-        labelLookups.reserveCapacity(labelLookups.count)
-        for item in drops {
-            if item.labels.isEmpty {
-                let label = "Items with no labels"
-                if var list = labelLookups[label] {
-                    list.append(item.uuid)
-                    labelLookups[label] = list
-                } else {
-                    labelLookups[label] = [item.uuid]
-                }
-            } else {
-                for label in item.labels {
+        if labelMode {
+            labelLookups.reserveCapacity(toggles.count)
+            for item in drops {
+                if item.labels.isEmpty {
+                    let label = "Items with no labels"
                     if var list = labelLookups[label] {
                         list.append(item.uuid)
                         labelLookups[label] = list
                     } else {
                         labelLookups[label] = [item.uuid]
                     }
+                } else {
+                    for label in item.labels {
+                        if var list = labelLookups[label] {
+                            list.append(item.uuid)
+                            labelLookups[label] = list
+                        } else {
+                            labelLookups[label] = [item.uuid]
+                        }
+                    }
                 }
             }
+        } else {
+            collapsedToggles.removeAll()
+            labelLookups[""] = drops.map { $0.uuid }
         }
 
         dataSourceQueue.async {
@@ -602,16 +623,24 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let reloadRequest = reloading ?? Set<UUID>()
             var itemsToReload = [ItemIdentifier]()
 
-            toggles.forEach { toggle in
-                if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
-                    let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !self.collapsedToggles.contains(toggle.name))
-                    snapshot.appendSections([sectionIdentifier])
-                    if !collapsedToggles.contains(toggle.name) {
-                        snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
-                        let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
-                        itemsToReload.append(contentsOf: reloadInThisSection)
+            if labelMode {
+                toggles.forEach { toggle in
+                    if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                        let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !collapsed.contains(toggle.name))
+                        snapshot.appendSections([sectionIdentifier])
+                        if !collapsed.contains(toggle.name) {
+                            snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
+                            let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
+                            itemsToReload.append(contentsOf: reloadInThisSection)
+                        }
                     }
                 }
+            } else {
+                let section = SectionIdentifier(section: nil, expanded: true)
+                snapshot.appendSections([section])
+                let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
+                snapshot.appendItems(identifiers)
+                itemsToReload = identifiers.filter { reloadRequest.contains($0.uuid) }
             }
             
             if !itemsToReload.isEmpty {
@@ -624,7 +653,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private let dataSourceQueue = DispatchQueue(label: "build.bru.Gladys.dataSourceQueue", qos: .userInitiated)
 
     private func headerSelected(for identifier: SectionIdentifier, view: LabelSectionTitle) {
-        let name = identifier.section.name
+        guard let name = identifier.section?.name else { return }
         if collapsedToggles.remove(name) == nil {
             collapsedToggles.insert(name)
         }
@@ -643,7 +672,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self = self else { return }
             let toggle = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            titleView.configure(with: toggle, topSpace: self.headerSpacingForMode) { [weak self] in
+            titleView.configure(with: toggle) { [weak self] in
                 self?.headerSelected(for: toggle, view: titleView)
             }
             titleView.menuOptions = [
@@ -654,7 +683,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 },
                 UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
                     guard let self = self else { return }
-                    self.collapsedToggles = Set(self.dataSource.snapshot().sectionIdentifiers.map({ $0.section.name }))
+                    self.collapsedToggles = Set(self.dataSource.snapshot().sectionIdentifiers.compactMap { $0.section?.name })
                     self.updateDataSource()
                 }
             ]
@@ -962,7 +991,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             itemsCount.title = "\(count) \(text)\(colonText)"
         }
 
-		let itemCount = filter.filteredDrops.count
+        let filteredDrops = filter.filteredDrops
+		let itemCount = filteredDrops.count
 		let c = someSelected ? selectedCount : itemCount
 		if c > 1 {
 			if someSelected {
@@ -982,7 +1012,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		itemsCount.isEnabled = itemCount > 0
 
         totalSizeLabel.title = "…"
-        let filteredDrops = filter.filteredDrops
         let selected = selectedItems
         imageProcessingQueue.async {
             let drops: ContiguousArray<ArchivedItem>
@@ -1003,7 +1032,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		updateLabelIcon()
         currentLabelEditor?.selectedItems = selectedItems.map { $0.uuid }
-		collection.isAccessibilityElement = filter.filteredDrops.isEmpty
+		collection.isAccessibilityElement = filteredDrops.isEmpty
 
         updateEmptyView()
 	}
@@ -1177,9 +1206,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     private var selectedItems: [ArchivedItem] {
-        return (collection.indexPathsForSelectedItems ?? []).map {
-            self.filter.filteredDrops[$0.item]
-        }
+        return (collection.indexPathsForSelectedItems ?? []).compactMap { item(for: $0) }
     }
 
 	override func setEditing(_ editing: Bool, animated: Bool) {
@@ -1238,16 +1265,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func collectionView(_ collectionView: UICollectionView, willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionCommitAnimating) {
         guard
-            let uuidString = configuration.identifier as? String,
-            let uuid = uuidString.split(separator: "/").first,
-            let item = Model.item(uuid: String(uuid)),
+            let indexPath = configuration.identifier as? IndexPath,
+            let item = item(for: indexPath),
             item.canPreview else {
                 animator.preferredCommitStyle = .dismiss
                 return
         }
         noteLastActioned(item: item)
         animator.preferredCommitStyle = .pop
-        if let index = self.filter.filteredDrops.firstIndex(of: item), let cell = collectionView.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+        if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
             animator.addCompletion {
                 item.tryPreview(in: self, from: cell, forceFullscreen: false)
             }
@@ -1255,7 +1281,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let item = filter.filteredDrops[indexPath.item]
+        guard let item = item(for: indexPath) else {
+            return nil
+        }
 
         if item.flags.contains(.needsUnlock) {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
@@ -1272,10 +1300,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             })
         }
         
-        return UIContextMenuConfiguration(identifier: (item.uuid.uuidString + "/" + UUID().uuidString) as NSCopying, previewProvider: {
+        return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: {
             return item.previewableTypeItem?.quickLook()
         }, actionProvider: { [weak self] _ in
-            return self?.createShortcutActions(for: item, mainView: true)
+            return self?.createShortcutActions(for: item, mainView: true, indexPath: indexPath)
         })
     }
 
@@ -1291,7 +1319,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         Model.save()
     }
 
-    func createShortcutActions(for item: ArchivedItem, mainView: Bool) -> UIMenu? {
+    func createShortcutActions(for item: ArchivedItem, mainView: Bool, indexPath: IndexPath) -> UIMenu? {
         
         func makeAction(title: String, callback: @escaping () -> Void, style: UIAction.Attributes, iconName: String?) -> UIAction {
             let a = UIAction(title: title) { _ in callback() }
@@ -1367,9 +1395,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
-            if let s = self,
-                let index = s.filter.filteredDrops.firstIndex(of: item),
-                let cell = s.collection.cellForItem(at: IndexPath(item: index, section: 0)) {
+            if let s = self, let cell = s.collection.cellForItem(at: indexPath) {
                 if let detail = s.currentDetailView {
                     detail.performSegue(withIdentifier: "toSiriShortcuts", sender: nil)
                 } else {
@@ -1385,7 +1411,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
                     guard let s = self else { return }
                     s.dismissAnyPopOver {
-                        s.addInvites(to: item)
+                        s.addInvites(to: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
                 
@@ -1394,11 +1420,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     guard let s = self else { return }
                     s.dismissAnyPopOver {
                         if item.isPrivateShareWithOnlyOwner {
-                            s.shareOptionsPrivate(for: item)
+                            s.shareOptionsPrivate(for: item, at: indexPath)
                         } else if item.isShareWithOnlyOwner {
-                            s.shareOptionsPublic(for: item)
+                            s.shareOptionsPublic(for: item, at: indexPath)
                         } else {
-                            s.editInvites(in: item)
+                            s.editInvites(in: item, at: indexPath)
                         }
                     }
                 }, style: [], iconName: "person.crop.circle.fill.badge.checkmark"))
@@ -1407,10 +1433,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         if let m = item.mostRelevantTypeItem {
             children.append(makeAction(title: "Share", callback: { [weak self] in
-                guard let s = self,
-                    let index = s.filter.filteredDrops.firstIndex(of: item),
-                    let cell = s.collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell else {
-                        return
+                guard let s = self, let cell = s.collection.cellForItem(at: indexPath) else {
+                    return
                 }
                 
                 s.dismissAnyPopOver {
@@ -1444,11 +1468,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if UIAccessibility.isVoiceOverRunning,
-            let uuidString = configuration.identifier as? String,
-            let uuid = uuidString.split(separator: "/").first,
-            let item = Model.item(uuid: String(uuid)),
-            let index = filter.filteredDrops.firstIndex(of: item),
-            let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+            let indexPath = configuration.identifier as? IndexPath,
+            let cell = collectionView.cellForItem(at: indexPath) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 UIAccessibility.post(notification: .layoutChanged, argument: cell)
             }
@@ -1458,39 +1479,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if
-            let uuidString = configuration.identifier as? String,
-            let uuid = uuidString.split(separator: "/").first,
-            let item = Model.item(uuid: String(uuid)),
-            let index = filter.filteredDrops.firstIndex(of: item),
-            let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) as? ArchivedItemCell {
+            let indexPath = configuration.identifier as? IndexPath,
+            let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell,
+            let item = cell.archivedDropItem {
             noteLastActioned(item: item)
             return cell.targetedPreviewItem
         }
         return nil
     }
-    
-    private class RoundedBackground: UICollectionReusableView {
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            setup()
-        }
         
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setup()
-        }
-        
-        private func setup() {
-            self.backgroundColor = .tertiarySystemFill
-            self.layer.cornerRadius = 10
-        }
-    }
-    
-    private var headerSpacingForMode: CGFloat = 0
-    
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
-        headerSpacingForMode = spacing + 1
-        
         let itemWidth, itemHeight: NSCollectionLayoutDimension
 
         let columnCount = CGFloat(columns)
@@ -1516,22 +1514,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
         group.interItemSpacing = .fixed(spacing)
-        
-        let sideSpace = spacing * 2
-        
+
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: sideSpace + spacing, bottom: spacing * 2, trailing: sideSpace + spacing)
 
-        let sectionTitleHeight = UIFont.preferredFont(forTextStyle: .headline).lineHeight + spacing + 2
-        let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionTitleHeight))
-        let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-        section.boundarySupplementaryItems = [sectionTitle]
+        if PersistedOptions.createSectionsFromLabels {
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing + spacing, bottom: spacing * 2, trailing: spacing + spacing)
+
+            let sectionTitleHeight = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle).lineHeight + 20
+            let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionTitleHeight))
+            let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+            section.boundarySupplementaryItems = [sectionTitle]
+            
+            let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "sectionBackground")
+            sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+            section.decorationItems = [sectionBackground]
+        } else {
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+        }
         
-        let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "sectionBackground")
-        sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sideSpace, bottom: spacing, trailing: sideSpace)
-        section.decorationItems = [sectionBackground]
-
         let layout = UICollectionViewCompositionalLayout(section: section)
         layout.register(RoundedBackground.self, forDecorationViewOfKind: "sectionBackground")
         return layout
@@ -1691,19 +1692,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func itemIngested(_ notification: Notification) {
-        guard let item = notification.object as? ArchivedItem else { return }
-
-		if let i = filter.filteredDrops.firstIndex(of: item) {
-			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-			if currentDetailView == nil {
-				focusInitialAccessibilityElement()
-			}
-		}
-
-		if Model.doneIngesting {
-			UIAccessibility.post(notification: .screenChanged, argument: nil)
-		}
-	}
+        if let item = notification.object as? ArchivedItem,
+           let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
+           let indexPath = dataSource.indexPath(for: firstIdentifier) {
+            
+            mostRecentIndexPathActioned = indexPath
+            if currentDetailView == nil {
+                focusInitialAccessibilityElement()
+            }
+        }
+        
+        if Model.doneIngesting {
+            UIAccessibility.post(notification: .screenChanged, argument: nil)
+        }
+    }
 
 	//////////////////////////
 
@@ -1735,22 +1737,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func highlightItem(_ notification: Notification) {
-        guard let request = notification.object as? HighlightRequest else { return }
-        if let index = filter.filteredDrops.firstIndex(where: { $0.uuid.uuidString == request.uuid }) {
+        guard let request = notification.object as? HighlightRequest, let uuid = UUID(uuidString: request.uuid) else { return }
+        if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
 			dismissAnyPopOverOrModal {
-                self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
+                self.highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
 			}
-        } else if let index = Model.firstIndexOfItem(with: request.uuid) {
+        } else if Model.firstIndexOfItem(with: request.uuid) != nil {
             self.resetSearch(andLabels: true)
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.highlightItem(at: index, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
+                self.highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
             }
 		}
 	}
-
-	private func highlightItem(at index: Int, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
-		collection.isUserInteractionEnabled = false
-		let ip = IndexPath(item: index, section: 0)
+    
+    private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
+        guard let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == uuid }),
+              let ip = dataSource.indexPath(for: firstIdentifier)
+        else { return }
+        
+        collection.isUserInteractionEnabled = false
+        
 		collection.scrollToItem(at: ip, at: .centeredVertically, animated: false)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -1781,11 +1787,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadExistingItems(_ notification: Notification) {
-        dataSourceQueue.async {
-            var snapshot = self.dataSource.snapshot()
-            snapshot.reloadItems(snapshot.itemIdentifiers)
-            self.dataSource.apply(snapshot)
-        }
+        let uuids = filter.filteredDrops.map { $0.uuid }
+        lastLayoutProcessed = 0
+        updateDataSource(reloading: Set(uuids))
     }
     
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -1863,8 +1867,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             return false
         }
 
-        if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let drop = Model.item(uuid: uuid) {
-            return !drop.shouldDisplayLoading
+        if let item = item(for: indexPath) {
+            return !item.shouldDisplayLoading
         }
         return false
     }
@@ -1938,58 +1942,58 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    private func shareOptionsPrivate(for item: ArchivedItem) {
+    private func shareOptionsPrivate(for item: ArchivedItem, at indexPath: IndexPath) {
         let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
         a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
-            self?.editInvites(in: item)
+            self?.editInvites(in: item, at: indexPath)
         })
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
             CloudManager.deleteShare(item) { _ in }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
-        if let p = a.popoverPresentationController, let index = filter.filteredDrops.firstIndex(of: item), let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) {
+        if let p = a.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
             p.sourceView = cell
             p.sourceRect = cell.bounds
         }
     }
 
-    private func shareOptionsPublic(for item: ArchivedItem) {
+    private func shareOptionsPublic(for item: ArchivedItem, at indexPath: IndexPath) {
         let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
         a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
-            self?.editInvites(in: item)
+            self?.editInvites(in: item, at: indexPath)
         })
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
             CloudManager.deleteShare(item) { _ in }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
-        if let p = a.popoverPresentationController, let index = filter.filteredDrops.firstIndex(of: item), let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) {
+        if let p = a.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
             p.sourceView = cell
             p.sourceRect = cell.bounds
         }
     }
 
-    private func addInvites(to item: ArchivedItem) {
+    private func addInvites(to item: ArchivedItem, at indexPath: IndexPath) {
         guard let rootRecord = item.cloudKitRecord else { return }
         let cloudSharingController = UICloudSharingController { _, completion in
             CloudManager.share(item: item, rootRecord: rootRecord, completion: completion)
         }
-        presentCloudController(cloudSharingController, for: item)
+        presentCloudController(cloudSharingController, for: item, at: indexPath)
     }
 
-    private func editInvites(in item: ArchivedItem) {
+    private func editInvites(in item: ArchivedItem, at indexPath: IndexPath) {
         guard let shareRecord = item.cloudKitShareRecord else { return }
         let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
-        presentCloudController(cloudSharingController, for: item)
+        presentCloudController(cloudSharingController, for: item, at: indexPath)
     }
 
-    private func presentCloudController(_ cloudSharingController: UICloudSharingController, for item: ArchivedItem) {
+    private func presentCloudController(_ cloudSharingController: UICloudSharingController, for item: ArchivedItem, at indexPath: IndexPath) {
         itemToBeShared = item
         cloudSharingController.delegate = self
         cloudSharingController.view.tintColor = view.tintColor
         present(cloudSharingController, animated: true)
-        if let p = cloudSharingController.popoverPresentationController, let index = filter.filteredDrops.firstIndex(of: item), let cell = collection.cellForItem(at: IndexPath(item: index, section: 0)) {
+        if let p = cloudSharingController.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
             p.sourceView = cell
             p.sourceRect = cell.bounds
         }
