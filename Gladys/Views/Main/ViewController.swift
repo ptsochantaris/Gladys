@@ -78,8 +78,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private var shareButton: UIBarButtonItem!
     @IBOutlet private var editButton: UIBarButtonItem!
     
-    enum Section: CaseIterable {
-        case main
+    private enum Section: Hashable {
+        case label(ModelFilterContext.LabelToggle)
+        
+        struct Item: Hashable {
+            let label: String
+            let uuid: UUID
+        }
     }
 
     var filter: ModelFilterContext!
@@ -218,7 +223,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
 		for indexPath in indexPaths {
-			ArchivedItemCell.warmUp(for: filter.filteredDrops[indexPath.item])
+            if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let drop = Model.item(uuid: uuid) {
+                ArchivedItemCell.warmUp(for: drop)
+            }
 		}
 	}
 
@@ -468,7 +475,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         collectionView.deselectItem(at: indexPath, animated: false)
         
-		let item = filter.filteredDrops[indexPath.item]
+        guard let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let item = Model.item(uuid: uuid) else {
+            return
+        }
+        
 		if item.flags.contains(.needsUnlock) {
 			mostRecentIndexPathActioned = indexPath
             item.unlock(label: "Unlock Item", action: "Unlock") { success in
@@ -551,25 +561,58 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     var onLoad: ((ViewController) -> Void)?
     
-    private lazy var dataSource = UICollectionViewDiffableDataSource<Section, UUID>(collectionView: collection) { collectionView, indexPath, uuid in
+    private lazy var dataSource = UICollectionViewDiffableDataSource<Section, Section.Item>(collectionView: collection) { collectionView, indexPath, sectionItem in
         let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
         cell.lowMemoryMode = self.lowMemoryMode
-        cell.archivedDropItem = Model.item(uuid: uuid)
+        cell.archivedDropItem = Model.item(uuid: sectionItem.uuid)
         cell.isEditing = self.isEditing
         return cell
     }
     
     private func updateDataSource(reloading: Set<UUID>? = nil) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, UUID>()
-        snapshot.appendSections([.main])
-        let uuids = filter.filteredDrops.map { $0.uuid }
-        snapshot.appendItems(uuids)
-        if let reloading = reloading?.filter({ uuids.contains($0) }), !reloading.isEmpty {
-            snapshot.reloadItems(Array(reloading))
+        let sections: [Section]
+        if filter.isFilteringLabels {
+            sections = filter.labelToggles.filter { $0.enabled }.map { Section.label($0) }
+        } else {
+            sections = filter.labelToggles.map { Section.label($0) }
         }
-        dataSource.apply(snapshot)
+        
+        let drops = filter.filteredDrops
+
+        dataSourceQueue.async {
+            var generatedSnapshots = [(Section, [Section.Item])]()
+            for section in sections {
+                if case let .label(label) = section {
+                    let sectionItems: [Section.Item]
+                    if label.emptyChecker {
+                        sectionItems = drops.filter { $0.labels.isEmpty }.map { Section.Item(label: "No labels", uuid: $0.uuid) }
+                    } else {
+                        sectionItems = drops.filter { $0.labels.contains(label.name) }.map { Section.Item(label: label.name, uuid: $0.uuid) }
+                    }
+                    if !sectionItems.isEmpty {
+                        generatedSnapshots.append((section, sectionItems))
+                    }
+                }
+            }
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Section.Item>()
+            snapshot.appendSections(generatedSnapshots.map { $0.0 })
+            let reloadRequest = reloading ?? Set<UUID>()
+            var itemsToReload = [Section.Item]()
+            for snap in generatedSnapshots {
+                snapshot.appendItems(snap.1, toSection: snap.0)
+                let reloadInThisSection = snap.1.filter { reloadRequest.contains($0.uuid) }
+                itemsToReload.append(contentsOf: reloadInThisSection)
+            }
+            if !itemsToReload.isEmpty {
+                snapshot.reloadItems(itemsToReload)
+            }
+            self.dataSource.apply(snapshot)
+        }
     }
+    
+    private let dataSourceQueue = DispatchQueue(label: "build.bru.Gladys.dataSourceQueue", qos: .userInitiated)
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -577,10 +620,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
-        updateDataSource()
         collection.dataSource = dataSource
         collection.contentOffset = .zero
-        
+
+        updateDataSource()
+
 		navigationController?.navigationBar.titleTextAttributes = [
             .foregroundColor: UIColor.g_colorLightGray
 		]
@@ -1662,9 +1706,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadExistingItems(_ notification: Notification) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reloadItems(snapshot.itemIdentifiers)
-        dataSource.apply(snapshot)
+        dataSourceQueue.async {
+            var snapshot = self.dataSource.snapshot()
+            snapshot.reloadItems(snapshot.itemIdentifiers)
+            self.dataSource.apply(snapshot)
+        }
     }
     
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -1742,8 +1788,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             return false
         }
 
-        let item = filter.filteredDrops[indexPath.item]
-        return !item.shouldDisplayLoading
+        if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid, let drop = Model.item(uuid: uuid) {
+            return !drop.shouldDisplayLoading
+        }
+        return false
     }
     
     private var selectingGestureActive = false
