@@ -241,50 +241,65 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var needsPost = false
         var needsFullSave = false
         var needsSaveIndex = false
-                
-        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: filter.filteredDrops.count, section: 0)
-        
-        let dragItems = coordinator.items.map { $0.dragItem }
-        
-        for dragItem in dragItems {
+                        
+        for dropItem in coordinator.items {
             
+            let dragItem = dropItem.dragItem
             if let existingItem = dragItem.localObject as? ArchivedItem {
                 
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
                 
-                if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
-                    // TODO
-                    var modelDestinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(destinationIndexPath.item, checkForWeirdness: true)
-                    if modelDestinationIndex < 0 {
-                        log("Collection view wants to drop beyond the end of items, discaring local drop")
-                        continue // collection view has gone funny while returning a drag, do nothing
-                    }
-                    let itemToMove = Model.drops.remove(at: modelSourceIndex)
-                    if !collectionView.hasActiveDrag {
-                        modelDestinationIndex = max(0, modelDestinationIndex - 1)
-                    }
-                    Model.drops.insert(itemToMove, at: modelDestinationIndex)
-
-                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && itemToMove.labels != filter.enabledLabelsForItems {
-                        itemToMove.labels = Array(Set(itemToMove.labels).union(filter.enabledLabelsForItems))
-                        itemToMove.postModified()
-                        itemToMove.markUpdated()
+                if let destinationIndexPath = coordinator.destinationIndexPath,
+                   let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid),
+                   let closestNeighborIdentifier = dataSource.itemIdentifier(for: destinationIndexPath),
+                   let modelDestinationIndex = Model.firstIndexOfItem(with: closestNeighborIdentifier.uuid) {
+                    
+                    Model.drops.remove(at: modelSourceIndex)
+                    Model.drops.insert(existingItem, at: modelDestinationIndex)
+                    
+                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
+                        existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
+                        existingItem.postModified()
+                        existingItem.markUpdated()
                         needsFullSave = true
                     } else {
                         needsSaveIndex = true
                     }
+
+                    updateDataSource()
+                    coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+                    mostRecentIndexPathActioned = destinationIndexPath
                 }
-                                
+                
             } else {
                 
                 for item in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-                    let i = coordinator.destinationIndexPath?.item ?? filter.filteredDrops.count
-                    let dataIndex = filter.nearestUnfilteredIndexForFilteredIndex(i, checkForWeirdness: false)
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
                         item.labels = filter.enabledLabelsForItems
                     }
-                    
-                    Model.drops.insert(item, at: dataIndex)
+                    if let destinationIndexPath = coordinator.destinationIndexPath,
+                       let closestNeighborIdentifier = dataSource.itemIdentifier(for: destinationIndexPath),
+                       let closestIndex = Model.firstIndexOfItem(with: closestNeighborIdentifier.uuid) {
+                        
+                        Model.drops.insert(item, at: closestIndex)
+                        updateDataSource()
+                        coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+                        mostRecentIndexPathActioned = destinationIndexPath
+
+                    } else {
+                        if filter.isFiltering {
+                            let count = filter.filteredDrops.count
+                            if count > 0 {
+                                Model.drops.insert(item, at: count)
+                            } else {
+                                Model.drops.insert(item, at: 0)
+                            }
+                        } else {
+                            Model.drops.append(item)
+                        }
+                        updateDataSource()
+                        // TODO mostRecentIndexPathActioned = destinationIndexPath
+                    }
                     needsFullSave = true
                     needsPost = true
                 }
@@ -302,12 +317,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Model.saveIndexOnly()
         }
         
-        for dragItem in dragItems {
-            coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-        }
-
         self.collection.isAccessibilityElement = false
-        self.mostRecentIndexPathActioned = destinationIndexPath
     }
     
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
@@ -584,9 +594,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private var collapsedToggles = Set<String>()
     
     private func updateDataSource(reloading: Set<UUID>? = nil) {
-        let animate = !firstAppearance
         let toggles = filter.enabledToggles
-        let collapsed = collapsedToggles
         let labelMode = PersistedOptions.createSectionsFromLabels
         
         let drops = filter.filteredDrops
@@ -618,40 +626,37 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             labelLookups[""] = drops.map { $0.uuid }
         }
 
-        dataSourceQueue.async {
-            var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
-            let reloadRequest = reloading ?? Set<UUID>()
-            var itemsToReload = [ItemIdentifier]()
-
-            if labelMode {
-                toggles.forEach { toggle in
-                    if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
-                        let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !collapsed.contains(toggle.name))
-                        snapshot.appendSections([sectionIdentifier])
-                        if !collapsed.contains(toggle.name) {
-                            snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
-                            let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
-                            itemsToReload.append(contentsOf: reloadInThisSection)
-                        }
+        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
+        let reloadRequest = reloading ?? Set<UUID>()
+        var itemsToReload = [ItemIdentifier]()
+        
+        if labelMode {
+            toggles.forEach { toggle in
+                if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                    let collapsed = collapsedToggles
+                    let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !collapsed.contains(toggle.name))
+                    snapshot.appendSections([sectionIdentifier])
+                    if !collapsed.contains(toggle.name) {
+                        snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
+                        let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
+                        itemsToReload.append(contentsOf: reloadInThisSection)
                     }
                 }
-            } else {
-                let section = SectionIdentifier(section: nil, expanded: true)
-                snapshot.appendSections([section])
-                let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
-                snapshot.appendItems(identifiers)
-                itemsToReload = identifiers.filter { reloadRequest.contains($0.uuid) }
             }
-            
-            if !itemsToReload.isEmpty {
-                snapshot.reloadItems(itemsToReload)
-            }
-            self.dataSource.apply(snapshot, animatingDifferences: animate)
+        } else {
+            let section = SectionIdentifier(section: nil, expanded: true)
+            snapshot.appendSections([section])
+            let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
+            snapshot.appendItems(identifiers)
+            itemsToReload = identifiers.filter { reloadRequest.contains($0.uuid) }
         }
+        
+        if !itemsToReload.isEmpty {
+            snapshot.reloadItems(itemsToReload)
+        }
+        dataSource.apply(snapshot, animatingDifferences: !firstAppearance)
     }
     
-    private let dataSourceQueue = DispatchQueue(label: "build.bru.Gladys.dataSourceQueue", qos: .userInitiated)
-
     private func headerSelected(for identifier: SectionIdentifier, view: LabelSectionTitle) {
         guard let name = identifier.section?.name else { return }
         if collapsedToggles.remove(name) == nil {
