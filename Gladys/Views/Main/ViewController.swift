@@ -1305,7 +1305,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 animator.preferredCommitStyle = .dismiss
                 return
         }
-        noteLastActioned(item: item)
+        mostRecentIndexPathActioned = indexPath
         animator.preferredCommitStyle = .pop
         if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
             animator.addCompletion {
@@ -1318,6 +1318,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let item = item(for: indexPath) else {
             return nil
         }
+        
+        mostRecentIndexPathActioned = indexPath
 
         if item.flags.contains(.needsUnlock) {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
@@ -1368,26 +1370,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         if mainView && item.canOpen {
             children.append(makeAction(title: "Open", callback: { [weak self] in
-                self?.noteLastActioned(item: item)
+                self?.mostRecentIndexPathActioned = indexPath
                 item.tryOpen(in: nil) { _ in }
             }, style: [], iconName: "arrow.up.doc"))
         }
 
         var topElements = mainView ? [
             makeAction(title: "Info Panel", callback: { [weak self] in
-                self?.noteLastActioned(item: item)
+                self?.mostRecentIndexPathActioned = indexPath
                 self?.performSegue(withIdentifier: "showDetail", sender: item)
             }, style: [], iconName: "list.bullet.below.rectangle")
         ] : [UIAction]()
         
         topElements.append(contentsOf: [
             makeAction(title: "Move to Top", callback: { [weak self] in
-                self?.noteLastActioned(item: item)
+                self?.mostRecentIndexPathActioned = indexPath
                 Model.sendToTop(items: [item])
             }, style: [], iconName: "arrow.turn.left.up"),
             
             makeAction(title: "Copy to Clipboard", callback: { [weak self] in
-                self?.noteLastActioned(item: item)
+                self?.mostRecentIndexPathActioned = indexPath
                 item.copyToPasteboard()
                 if UIAccessibility.isVoiceOverRunning {
                     UIAccessibility.post(notification: .announcement, argument: "Copied.")
@@ -1399,7 +1401,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         children.append(topHolder)
 
         children.append(makeAction(title: "Duplicate", callback: { [weak self] in
-            self?.noteLastActioned(item: item)
+            self?.mostRecentIndexPathActioned = indexPath
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
@@ -1411,7 +1413,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 children.append(makeAction(title: "Remove Lock", callback: {
                     item.unlock(label: "Remove Lock", action: "Remove") { [weak self] success in
                         if success {
-                            self?.noteLastActioned(item: item)
+                            self?.mostRecentIndexPathActioned = indexPath
                             self?.passwordUpdate(nil, hint: nil, for: item)
                         }
                     }
@@ -1420,7 +1422,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 children.append(makeAction(title: "Add Lock", callback: {
                     item.lock { [weak self] passwordData, passwordHint in
                         if let d = passwordData {
-                            self?.noteLastActioned(item: item)
+                            self?.mostRecentIndexPathActioned = indexPath
                             self?.passwordUpdate(d, hint: passwordHint, for: item)
                         }
                     }
@@ -1472,7 +1474,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
                 
                 s.dismissAnyPopOver {
-                    s.noteLastActioned(item: item)
+                    s.mostRecentIndexPathActioned = indexPath
                     let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
                     s.present(a, animated: true)
                     if let p = a.popoverPresentationController {
@@ -1512,11 +1514,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
                 
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        if
-            let indexPath = configuration.identifier as? IndexPath,
-            let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell,
-            let item = cell.archivedDropItem {
-            noteLastActioned(item: item)
+        if let indexPath = configuration.identifier as? IndexPath,
+           let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
+            mostRecentIndexPathActioned = indexPath
             return cell.targetedPreviewItem
         }
         return nil
@@ -1844,13 +1844,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	///////////////////////////// Accessibility
 
-	private var mostRecentIndexPathActioned: IndexPath?
-
-    private func noteLastActioned(item: ArchivedItem) {
-        if let i = filter.filteredDrops.firstIndex(of: item) {
-			mostRecentIndexPathActioned = IndexPath(item: i, section: 0)
-		}
-	}
+    private var mostRecentIndexPathActioned: IndexPath?
 
 	private var closestIndexPathSinceLast: IndexPath? {
 		let count = filter.filteredDrops.count
