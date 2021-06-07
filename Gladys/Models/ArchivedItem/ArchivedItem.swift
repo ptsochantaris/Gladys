@@ -162,7 +162,7 @@ final class ArchivedItem: Codable {
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt
-		suggestedName = providers.first!.suggestedName
+		suggestedName = providers.first?.suggestedName
 		needsReIngest = false // original ingest, not re-ingest, show "cancel"
 		needsDeletion = false
 		titleOverride = overrides?.title ?? ""

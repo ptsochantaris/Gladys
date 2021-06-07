@@ -298,7 +298,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                             finalDestinationPath = destinationPath
                         }
                     }
-                    needsFullSave = true
+                    // needsFullSave = true // ingest will take care of this - do not save here, dangerous
                     needsPost = true
                 }
             }
