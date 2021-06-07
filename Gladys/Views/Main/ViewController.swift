@@ -247,18 +247,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             var finalDestinationPath: IndexPath?
             
             if let existingItem = dragItem.localObject as? ArchivedItem {
+                // Gladys to Gladys
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
-                
-                if let destinationIndexPath = coordinator.destinationIndexPath,
-                   let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid),
-                   let closestNeighborIdentifier = dataSource.itemIdentifier(for: destinationIndexPath),
-                   let modelDestinationIndex = Model.firstIndexOfItem(with: closestNeighborIdentifier.uuid) {
-                    
+                if let destinationIndexPath = coordinator.destinationIndexPath, let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
+
                     Model.drops.remove(at: modelSourceIndex)
-                    if modelSourceIndex < (modelDestinationIndex-1) {
-                        Model.drops.insert(existingItem, at: modelDestinationIndex - 1)
+
+                    if let originalItemAtDropIdentifier = dataSource.itemIdentifier(for: destinationIndexPath), let modelDestinationIndex = Model.firstIndexOfItem(with: originalItemAtDropIdentifier.uuid) {
+                        // pushing items to the right
+                        if modelSourceIndex == modelDestinationIndex {
+                            Model.drops.insert(existingItem, at: modelDestinationIndex + 1)
+                        } else {
+                            Model.drops.insert(existingItem, at: modelDestinationIndex)
+                        }
                     } else {
-                        Model.drops.insert(existingItem, at: modelDestinationIndex)
+                        // appending to the end of the section
+                        Model.drops.append(existingItem)
                     }
                     
                     switch filter.groupingMode {
@@ -267,6 +271,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                            let destinationSectionLabel = dataSource.itemIdentifier(for: destinationIndexPath)?.section?.name,
                            let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.section?.name,
                            sourceSectionLabel != destinationSectionLabel {
+                            // drag between sections in same window
+                            
                             let oldLabels = existingItem.labels
                             existingItem.labels.removeAll { $0 == sourceSectionLabel }
                             if !existingItem.labels.contains(destinationSectionLabel) {
@@ -278,6 +284,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                                 existingItem.markUpdated()
                                 needsFullSave = true
                             }
+                            
+                        } else if let destinationSectionLabel = dataSource.itemIdentifier(for: IndexPath(item: 0, section: destinationIndexPath.section))?.section?.name {
+                            // drag into section from another Gladys window
+                            
+                            if !existingItem.labels.contains(destinationSectionLabel) {
+                                existingItem.labels.append(destinationSectionLabel)
+                                existingItem.markUpdated()
+                                needsFullSave = true
+                            } else {
+                                needsSaveIndex = true
+                            }
+                            
                         } else {
                             needsSaveIndex = true
                         }
@@ -295,6 +313,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
                 
             } else {
+                // External to Gladys
                 
                 for newItem in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
