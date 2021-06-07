@@ -276,7 +276,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var needsSaveIndex = false
         
         let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView))
-        
+        let sectionPath = IndexPath(item: 0, section: destinationIndexPath.section)
+
         for coordinatorItem in coordinator.items {
             let dragItem = coordinatorItem.dragItem
             
@@ -286,7 +287,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
 
                     Model.drops.remove(at: modelSourceIndex)
-                    let sectionPath = IndexPath(item: 0, section: destinationIndexPath.section)
                     
                     switch filter.groupingMode {
                     case .byLabel:
@@ -355,10 +355,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 // External to Gladys
                 
                 for newItem in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
-                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
-                        newItem.labels = filter.enabledLabelsForItems
+                    switch filter.groupingMode {
+                    case .byLabel:
+                        if let destinationSectionLabel = dataSource.itemIdentifier(for: sectionPath)?.section?.name {
+                            newItem.labels.append(destinationSectionLabel)
+                        }
+                        insert(item: newItem, at: destinationIndexPath)
+
+                    case .flat:
+                        if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
+                            newItem.labels = filter.enabledLabelsForItems
+                        }
+                        insert(item: newItem, at: destinationIndexPath)
                     }
-                    insert(item: newItem, at: destinationIndexPath)
                     // needsFullSave = true // ingest will take care of this - do not save here, dangerous
                     needsPost = true
                 }
