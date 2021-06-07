@@ -141,8 +141,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
-        updateDataSource()
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
+        updateDataSource(animated: animate)
         updateLabelIcon()
     }
 
@@ -242,7 +242,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var needsFullSave = false
         var needsSaveIndex = false
                         
-        for dragItem in coordinator.items.map({ $0.dragItem }) {
+        for coordinatorItem in coordinator.items {
+            let dragItem = coordinatorItem.dragItem
             var finalDestinationPath: IndexPath?
             
             if let existingItem = dragItem.localObject as? ArchivedItem {
@@ -254,9 +255,33 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                    let modelDestinationIndex = Model.firstIndexOfItem(with: closestNeighborIdentifier.uuid) {
                     
                     Model.drops.remove(at: modelSourceIndex)
-                    Model.drops.insert(existingItem, at: modelDestinationIndex)
+                    if modelSourceIndex < (modelDestinationIndex-1) {
+                        Model.drops.insert(existingItem, at: modelDestinationIndex - 1)
+                    } else {
+                        Model.drops.insert(existingItem, at: modelDestinationIndex)
+                    }
                     
-                    if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
+                    if PersistedOptions.createSectionsFromLabels {
+                        if let sourceIndexPath = coordinatorItem.sourceIndexPath,
+                           let destinationSectionLabel = dataSource.itemIdentifier(for: destinationIndexPath)?.section?.name,
+                           let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.section?.name,
+                           sourceSectionLabel != destinationSectionLabel {
+                            let oldLabels = existingItem.labels
+                            existingItem.labels.removeAll { $0 == sourceSectionLabel }
+                            if !existingItem.labels.contains(destinationSectionLabel) {
+                                existingItem.labels.append(destinationSectionLabel)
+                            }
+                            if oldLabels == existingItem.labels {
+                                needsSaveIndex = true
+                            } else {
+                                existingItem.markUpdated()
+                                needsFullSave = true
+                            }
+                        } else {
+                            needsSaveIndex = true
+                        }
+
+                    } else if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
                         existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
                         existingItem.postModified()
                         existingItem.markUpdated()
@@ -291,7 +316,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         } else {
                             Model.drops.append(newItem)
                         }
-                        filter.updateFilter(signalUpdate: true)
+                        filter.updateFilter(signalUpdate: .instant)
                         let snapshot = dataSource.snapshot()
                         if let newIdentifier = snapshot.itemIdentifiers.first(where: { $0.uuid == newItem.uuid }),
                            let destinationPath = dataSource.indexPath(for: newIdentifier) {
@@ -304,7 +329,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
             if let finalDestinationPath = finalDestinationPath {
-                filter.updateFilter(signalUpdate: true)
+                filter.updateFilter(signalUpdate: .instant)
                 coordinator.drop(dragItem, toItemAt: finalDestinationPath)
                 mostRecentIndexPathActioned = finalDestinationPath
             }
@@ -597,8 +622,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private var collapsedToggles = Set<String>()
     
-    @discardableResult
-    private func updateDataSource(reloading: Set<UUID>? = nil) {
+    private func updateDataSource(reloading: Set<UUID>? = nil, animated: Bool = true) {
         let toggles = filter.enabledToggles
         let labelMode = PersistedOptions.createSectionsFromLabels
         
@@ -659,7 +683,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if !itemsToReload.isEmpty {
             snapshot.reloadItems(itemsToReload)
         }
-        dataSource.apply(snapshot, animatingDifferences: !firstAppearance)
+        dataSource.apply(snapshot, animatingDifferences: animated && !firstAppearance)
     }
     
     private func headerSelected(for identifier: SectionIdentifier, view: LabelSectionTitle) {
@@ -747,7 +771,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(keyboardHiding), name: UIApplication.keyboardWillHideNotification, object: nil)
         
         if filter.isFilteringLabels { // in case we're restored with active labels
-            filter.updateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: .none)
         }
 
         updateUI()
@@ -929,7 +953,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func itemCreated(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
-        filter.updateFilter(signalUpdate: false)
+        filter.updateFilter(signalUpdate: .none)
         if filter.filteredDrops.contains(item) {
             updateDataSource()
             updateEmptyView()
@@ -938,7 +962,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let oldUUIDs = filter.filteredDrops.map { $0.uuid }
-        filter.updateFilter(signalUpdate: false)
+        filter.updateFilter(signalUpdate: .none)
         let oldSet = Set(oldUUIDs)
 
         let parameters = notification.object as? [AnyHashable: Any]
@@ -1091,7 +1115,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
 			sortMethod()
-			filter.updateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: .none)
             Model.save()
 		}
 	}
@@ -1132,7 +1156,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	@objc private func labelSelectionChanged() {
-	    filter.updateFilter(signalUpdate: true)
+        filter.updateFilter(signalUpdate: .animated)
 		updateLabelIcon()
         userActivity?.needsSave = true
 	}

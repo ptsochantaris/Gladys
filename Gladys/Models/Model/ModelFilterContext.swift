@@ -13,10 +13,14 @@ import UIKit
 #endif
 
 protocol ModelFilterContextDelegate: AnyObject {
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext)
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool)
 }
 
 final class ModelFilterContext {
+    
+    enum UpdateType {
+        case none, instant, animated
+    }
     
     weak var delegate: ModelFilterContextDelegate?
 
@@ -68,7 +72,7 @@ final class ModelFilterContext {
             let v = newValue == "" ? nil : newValue
             if modelFilter != v {
                 modelFilter = v
-                updateFilter(signalUpdate: true)
+                updateFilter(signalUpdate: .animated)
             }
         }
     }
@@ -126,7 +130,7 @@ final class ModelFilterContext {
     }
 
     @discardableResult
-    func updateFilter(signalUpdate: Bool) -> Bool {
+    func updateFilter(signalUpdate: UpdateType) -> Bool {
         currentFilterQuery = nil
 
         let previousFilteredDrops = filteredDrops
@@ -176,9 +180,9 @@ final class ModelFilterContext {
         let changesToVisibleItems = previousFilteredDrops != filteredDrops
         if changesToVisibleItems {
             Model.updateBadge()
-            if signalUpdate {
+            if signalUpdate != .none {
 
-                self.delegate?.modelFilterContextChanged(self)
+                self.delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
                 #if os(iOS)
                 if filtering && UIAccessibility.isVoiceOverRunning {
@@ -314,11 +318,17 @@ final class ModelFilterContext {
     }
     
     var enabledToggles: [LabelToggle] {
+        var res: [ModelFilterContext.LabelToggle]
         if isFilteringLabels {
-            return labelToggles.filter { $0.enabled }
+            res = labelToggles.filter { $0.enabled }
         } else {
-            return labelToggles
+            res = labelToggles
         }
+        if let i = res.firstIndex(where: { $0.emptyChecker }), i != 0 {
+            let item = res.remove(at: i)
+            res.insert(item, at: 0)
+        }
+        return res
     }
     
     func disableAllLabels() {
