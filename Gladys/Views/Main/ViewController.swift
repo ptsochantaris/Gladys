@@ -261,7 +261,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         Model.drops.insert(existingItem, at: modelDestinationIndex)
                     }
                     
-                    if PersistedOptions.createSectionsFromLabels {
+                    switch filter.groupingMode {
+                    case .byLabel:
                         if let sourceIndexPath = coordinatorItem.sourceIndexPath,
                            let destinationSectionLabel = dataSource.itemIdentifier(for: destinationIndexPath)?.section?.name,
                            let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.section?.name,
@@ -280,14 +281,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         } else {
                             needsSaveIndex = true
                         }
-
-                    } else if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
-                        existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
-                        existingItem.postModified()
-                        existingItem.markUpdated()
-                        needsFullSave = true
-                    } else {
-                        needsSaveIndex = true
+                    case .flat:
+                        if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
+                            existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
+                            existingItem.postModified()
+                            existingItem.markUpdated()
+                            needsFullSave = true
+                        } else {
+                            needsSaveIndex = true
+                        }
                     }
                     finalDestinationPath = destinationIndexPath
                 }
@@ -624,11 +626,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     private func updateDataSource(reloading: Set<UUID>? = nil, animated: Bool = true) {
         let toggles = filter.enabledToggles
-        let labelMode = PersistedOptions.createSectionsFromLabels
         
         let drops = filter.filteredDrops
         var labelLookups = [String: [UUID]]()
-        if labelMode {
+        
+        switch filter.groupingMode {
+        case .byLabel:
             labelLookups.reserveCapacity(toggles.count)
             for item in drops {
                 if item.labels.isEmpty {
@@ -650,7 +653,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
-        } else {
+        case .flat:
             collapsedToggles.removeAll()
             labelLookups[""] = drops.map { $0.uuid }
         }
@@ -659,7 +662,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let reloadRequest = reloading ?? Set<UUID>()
         var itemsToReload = [ItemIdentifier]()
         
-        if labelMode {
+        switch filter.groupingMode {
+        case .byLabel:
             toggles.forEach { toggle in
                 if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
                     let collapsed = collapsedToggles
@@ -672,7 +676,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
-        } else {
+        case .flat:
             let section = SectionIdentifier(section: nil, expanded: true)
             snapshot.appendSections([section])
             let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
@@ -1512,7 +1516,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return previewForContextMenu(of: configuration)
     }
-                
+    
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if let indexPath = configuration.identifier as? IndexPath,
            let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
@@ -1552,7 +1556,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
 
-        if PersistedOptions.createSectionsFromLabels {
+        switch filter.groupingMode {
+        case .byLabel:
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing + spacing, bottom: spacing * 2, trailing: spacing + spacing)
 
             let sectionTitleHeight = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle).lineHeight + 20
@@ -1563,7 +1568,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "sectionBackground")
             sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
             section.decorationItems = [sectionBackground]
-        } else {
+        case .flat:
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
         }
         
@@ -1935,7 +1940,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         super.updateUserActivityState(activity)
         activity.title = title
         activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
-                             kGladysMainViewSearchText: filter.text ?? ""]
+                             kGladysMainViewSearchText: filter.text ?? "",
+                             kGladysMainViewDisplayMode: filter.groupingMode.rawValue]
     }
     
     // MARK: 

@@ -8,12 +8,12 @@
 
 import UIKit
 
-final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate,
-UISearchResultsUpdating, UITableViewDragDelegate {
+final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate {
 
 	@IBOutlet private var table: UITableView!
 	@IBOutlet private var clearAllButton: UIBarButtonItem!
-	@IBOutlet private var emptyLabel: UILabel!
+    @IBOutlet private var modeButton: UIBarButtonItem!
+    @IBOutlet private var emptyLabel: UILabel!
     @IBOutlet private var closeButton: UIButton!
     
     var filter: ModelFilterContext!
@@ -56,6 +56,8 @@ UISearchResultsUpdating, UITableViewDragDelegate {
 		table.tableFooterView = UIView()
         table.dragInteractionEnabled = true
         table.dragDelegate = self
+
+        updateModeButton()
 
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
@@ -140,12 +142,28 @@ UISearchResultsUpdating, UITableViewDragDelegate {
         }
     }
 
-	@IBAction private func clearAllSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func showAllSelected(_ sender: UIBarButtonItem) {
 	    filter.disableAllLabels()
 		updates()
 		done()
 		LabelSelector.filter = ""
 	}
+    
+    @IBAction private func modeSelcted(_ sender: UIBarButtonItem) {
+        switch filter.groupingMode {
+        case .byLabel:
+            filter.groupingMode = .flat
+        case .flat:
+            filter.groupingMode = .byLabel
+        }
+        updates() // also causes the user activity to save
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil) // layout update
+        updateModeButton()
+    }
+    
+    private func updateModeButton() {
+        modeButton.image = UIImage(systemName: filter.groupingMode.imageName)
+    }
 
 	private func updates() {
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
@@ -235,7 +253,7 @@ UISearchResultsUpdating, UITableViewDragDelegate {
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-        let fullscreen = navigationItem.leftBarButtonItem != nil
+        let fullscreen = (navigationItem.leftBarButtonItems?.count ?? 0) > 1
         view.backgroundColor = fullscreen ? UIColor.systemBackground : .clear
         closeButton.isHidden = !fullscreen
 	}

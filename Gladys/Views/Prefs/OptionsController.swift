@@ -33,7 +33,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var applyMlToUrlsSwitch: UISwitch!
     @IBOutlet private var badgeIconSwitch: UISwitch!
     @IBOutlet private var requestInlineDrops: UISwitch!
-    @IBOutlet private var createSectionsFromLabels: UISwitch!
     
 	@IBOutlet private var actionSelector: UISegmentedControl!
 	@IBOutlet private var autoArchiveSwitch: UISwitch!
@@ -142,11 +141,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         PersistedOptions.requestInlineDrops = sender.isOn
     }
     
-    @IBAction private func createSectionsFromLabelsSelected(_ sender: UISwitch) {
-        PersistedOptions.createSectionsFromLabels = sender.isOn
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
-    }
-
     @IBAction private func transcribeSpeechInMediaSelected(_ sender: UISwitch) {
         if sender.isOn {
             SFSpeechRecognizer.requestAuthorization { status in
@@ -252,7 +246,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 		fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
         badgeIconSwitch.isOn = PersistedOptions.badgeIconWithItemCount
         requestInlineDrops.isOn = PersistedOptions.requestInlineDrops
-        createSectionsFromLabels.isOn = PersistedOptions.createSectionsFromLabels
 
         fullScreenHolder.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 

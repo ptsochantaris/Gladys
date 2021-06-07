@@ -19,6 +19,7 @@ let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid
 let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
 let kGladysMainViewLabelList = "kGladysMainViewLabelList"
 let kGladysMainViewSearchText = "kGladysMainViewSearchText"
+let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
 let kGladysMainFilter = "mainFilter"
 #endif
 

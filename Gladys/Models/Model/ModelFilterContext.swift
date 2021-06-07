@@ -22,7 +22,22 @@ final class ModelFilterContext {
         case none, instant, animated
     }
     
+    enum GroupingMode: Int {
+        case flat, byLabel
+        
+        var imageName: String {
+            switch self {
+            case .flat:
+                return "square.grid.3x3"
+            case .byLabel:
+                return "square.grid.3x1.below.line.grid.1x2"
+            }
+        }
+    }
+    
     weak var delegate: ModelFilterContextDelegate?
+    
+    var groupingMode = GroupingMode.flat
 
     private var modelFilter: String?
     private var currentFilterQuery: CSSearchQuery?

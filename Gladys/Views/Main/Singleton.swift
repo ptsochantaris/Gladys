@@ -111,7 +111,8 @@ final class Singleton {
                 labelList = nil
             }
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
-            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText)
+            let displayMode = userActivity?.userInfo?[kGladysMainViewDisplayMode] as? Int
+            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText, restoringDisplayMode: displayMode)
             return
 
         case kGladysQuicklookActivity:
@@ -208,7 +209,7 @@ final class Singleton {
         }
     }
     
-    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -227,6 +228,9 @@ final class Singleton {
         }
         if let search = restoringSearch, !search.isEmpty {
             filter.text = search
+        }
+        if let modeNumber = restoringDisplayMode, let mode = ModelFilterContext.GroupingMode(rawValue: modeNumber) {
+            filter.groupingMode = mode
         }
         v.filter = filter
         filter.delegate = v
