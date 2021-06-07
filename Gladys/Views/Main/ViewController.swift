@@ -234,6 +234,39 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		]
 	}
     
+    private func path(at point: CGPoint) -> IndexPath {
+        var rects = [Int: CGRect]()
+        for cell in collection.visibleCells {
+            guard let indexPath = collection.indexPath(for: cell) else {
+                continue
+            }
+            let frame = cell.frame
+            if frame.contains(point) {
+                return indexPath
+            }
+            let wideFrame = CGRect(x: 0, y: frame.origin.y, width: collection.bounds.width, height: frame.height)
+            if let existingRect = rects[indexPath.section] {
+                rects[indexPath.section] = existingRect.union(wideFrame)
+            } else {
+                rects[indexPath.section] = wideFrame
+            }
+        }
+        if let rect = rects.first(where: { $0.value.contains(point) }) {
+            let section = rect.key
+            let itemCount = collection.numberOfItems(inSection: section)
+            return IndexPath(item: itemCount, section: section)
+        }
+        return IndexPath(item: 0, section: 0)
+    }
+    
+    private func insert(item: ArchivedItem, at destinationIndexPath: IndexPath, offset: Int = 0) {
+        if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = Model.firstIndexOfItem(with: uuid) {
+            Model.drops.insert(item, at: index + offset)
+        } else {
+            Model.drops.append(item)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
                         
         coordinator.session.progressIndicatorStyle = .none
@@ -241,38 +274,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var needsPost = false
         var needsFullSave = false
         var needsSaveIndex = false
-                        
+        
+        let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView))
+        
         for coordinatorItem in coordinator.items {
             let dragItem = coordinatorItem.dragItem
-            var finalDestinationPath: IndexPath?
             
             if let existingItem = dragItem.localObject as? ArchivedItem {
                 // Gladys to Gladys
                 Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
-                if let destinationIndexPath = coordinator.destinationIndexPath, let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
+                if let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) {
 
                     Model.drops.remove(at: modelSourceIndex)
-
-                    if let originalItemAtDropIdentifier = dataSource.itemIdentifier(for: destinationIndexPath), let modelDestinationIndex = Model.firstIndexOfItem(with: originalItemAtDropIdentifier.uuid) {
-                        // pushing items to the right
-                        if modelSourceIndex == modelDestinationIndex {
-                            Model.drops.insert(existingItem, at: modelDestinationIndex + 1)
-                        } else {
-                            Model.drops.insert(existingItem, at: modelDestinationIndex)
-                        }
-                    } else {
-                        // appending to the end of the section
-                        Model.drops.append(existingItem)
-                    }
+                    let sectionPath = IndexPath(item: 0, section: destinationIndexPath.section)
                     
                     switch filter.groupingMode {
                     case .byLabel:
                         if let sourceIndexPath = coordinatorItem.sourceIndexPath,
-                           let destinationSectionLabel = dataSource.itemIdentifier(for: destinationIndexPath)?.section?.name,
+                           let destinationSectionLabel = dataSource.itemIdentifier(for: sectionPath)?.section?.name,
                            let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.section?.name,
                            sourceSectionLabel != destinationSectionLabel {
                             // drag between sections in same window
-                            
+                            insert(item: existingItem, at: destinationIndexPath)
+
                             let oldLabels = existingItem.labels
                             existingItem.labels.removeAll { $0 == sourceSectionLabel }
                             if !existingItem.labels.contains(destinationSectionLabel) {
@@ -285,9 +309,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                                 needsFullSave = true
                             }
                             
-                        } else if let destinationSectionLabel = dataSource.itemIdentifier(for: IndexPath(item: 0, section: destinationIndexPath.section))?.section?.name {
-                            // drag into section from another Gladys window
+                        } else if let sourceIndexPath = coordinatorItem.sourceIndexPath {
+                            // drag inside same section
+                            if sourceIndexPath.item <= destinationIndexPath.item {
+                                insert(item: existingItem, at: destinationIndexPath, offset: 1)
+                            } else {
+                                insert(item: existingItem, at: destinationIndexPath)
+                            }
+
+                            needsSaveIndex = true
                             
+                        } else if let destinationSectionLabel = dataSource.itemIdentifier(for: sectionPath)?.section?.name {
+                            // drag into section from another Gladys window
+                            insert(item: existingItem, at: destinationIndexPath)
+
                             if !existingItem.labels.contains(destinationSectionLabel) {
                                 existingItem.labels.append(destinationSectionLabel)
                                 existingItem.markUpdated()
@@ -295,11 +330,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                             } else {
                                 needsSaveIndex = true
                             }
-                            
-                        } else {
-                            needsSaveIndex = true
                         }
+                        
                     case .flat:
+                        // gladys-to-gladys
+                        if let sourceIndexPath = coordinatorItem.sourceIndexPath, sourceIndexPath.item < destinationIndexPath.item {
+                            insert(item: existingItem, at: destinationIndexPath, offset: 1)
+                        } else {
+                            // also covers case of another window
+                            insert(item: existingItem, at: destinationIndexPath)
+                        }
                         if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels && existingItem.labels != filter.enabledLabelsForItems {
                             existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
                             existingItem.postModified()
@@ -309,7 +349,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                             needsSaveIndex = true
                         }
                     }
-                    finalDestinationPath = destinationIndexPath
                 }
                 
             } else {
@@ -319,41 +358,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
                         newItem.labels = filter.enabledLabelsForItems
                     }
-                    if let destinationIndexPath = coordinator.destinationIndexPath,
-                       let closestNeighborIdentifier = dataSource.itemIdentifier(for: destinationIndexPath),
-                       let closestIndex = Model.firstIndexOfItem(with: closestNeighborIdentifier.uuid) {
-                        
-                        Model.drops.insert(newItem, at: closestIndex)
-                        finalDestinationPath = destinationIndexPath
-
-                    } else {
-                        if filter.isFiltering {
-                            let count = filter.filteredDrops.count
-                            if count > 0 {
-                                Model.drops.insert(newItem, at: count)
-                            } else {
-                                Model.drops.insert(newItem, at: 0)
-                            }
-                        } else {
-                            Model.drops.append(newItem)
-                        }
-                        filter.updateFilter(signalUpdate: .instant)
-                        let snapshot = dataSource.snapshot()
-                        if let newIdentifier = snapshot.itemIdentifiers.first(where: { $0.uuid == newItem.uuid }),
-                           let destinationPath = dataSource.indexPath(for: newIdentifier) {
-                            finalDestinationPath = destinationPath
-                        }
-                    }
+                    insert(item: newItem, at: destinationIndexPath)
                     // needsFullSave = true // ingest will take care of this - do not save here, dangerous
                     needsPost = true
                 }
             }
             
-            if let finalDestinationPath = finalDestinationPath {
-                filter.updateFilter(signalUpdate: .instant)
-                coordinator.drop(dragItem, toItemAt: finalDestinationPath)
-                mostRecentIndexPathActioned = finalDestinationPath
-            }
+            filter.updateFilter(signalUpdate: .instant)
+            coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+            mostRecentIndexPathActioned = destinationIndexPath
         }
         
         if needsPost {
