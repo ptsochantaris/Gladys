@@ -1618,7 +1618,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         switch filter.groupingMode {
         case .byLabel:
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing + spacing, bottom: spacing * 2, trailing: spacing + spacing)
+            let compact = view.traitCollection.horizontalSizeClass == .compact
+            let sectionSide = compact ? spacing : spacing * 2
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionSide, bottom: spacing * 2, trailing: sectionSide)
 
             let sectionTitleHeight = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle).lineHeight + 20
             let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionTitleHeight))
@@ -1626,14 +1628,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             section.boundarySupplementaryItems = [sectionTitle]
             
             let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "sectionBackground")
-            sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+            let backgroundSide = compact ? 0 : spacing
+            sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: backgroundSide, bottom: spacing, trailing: backgroundSide)
             section.decorationItems = [sectionBackground]
+
         case .flat:
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
         }
         
         let layout = UICollectionViewCompositionalLayout(section: section)
-        layout.register(RoundedBackground.self, forDecorationViewOfKind: "sectionBackground")
+        if filter.groupingMode == .byLabel {
+            layout.register(RoundedBackground.self, forDecorationViewOfKind: "sectionBackground")
+        }
         return layout
     }
     
@@ -1850,6 +1856,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
+        if filter.groupingMode == .byLabel, let labelList = Model.item(uuid: uuid)?.labels {
+            let labels = Set(labelList)
+            let expandedLabels = labels.subtracting(collapsedToggles)
+            if expandedLabels.isEmpty {
+                if let firstLabel = labelList.first {
+                    collapsedToggles.remove(firstLabel)
+                } else {
+                    collapsedToggles.remove("Items with no labels")
+                }
+                updateDataSource()
+            }
+        }
+        
         guard let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == uuid }),
               let ip = dataSource.indexPath(for: firstIdentifier)
         else { return }

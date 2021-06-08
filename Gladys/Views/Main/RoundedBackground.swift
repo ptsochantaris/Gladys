@@ -20,7 +20,12 @@ final class RoundedBackground: UICollectionReusableView {
     }
     
     private func setup() {
-        self.backgroundColor = .tertiarySystemFill
-        self.layer.cornerRadius = 10
+        self.backgroundColor = .quaternarySystemFill
+        self.layer.cornerRadius = self.traitCollection.horizontalSizeClass == .compact ? 0 : 10
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.layer.cornerRadius = self.traitCollection.horizontalSizeClass == .compact ? 0 : 10
     }
 }
