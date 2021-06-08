@@ -69,5 +69,6 @@ extension Notification.Name {
     static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
     static let MultipleWindowModeChange = Notification.Name("MainWindowCloseStateChange")
     static let PreferencesOpen = Notification.Name("PreferencesOpen")
+    static let SectionBackgroundTapped = Notification.Name("SectionBackgroundTapped")
 }
 #endif

@@ -19,6 +19,7 @@ struct ItemIdentifier: Hashable {
 }
 
 final class LabelSectionTitle: UICollectionReusableView {
+    static let height: CGFloat = 50
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,8 +34,6 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let label = UILabel()
     private let indicator = UIImageView()
     private let button = UIButton(type: .custom)
-    private var tappedCompletion: (() -> Void)?
-    
     static let titleStyle = UIFont.TextStyle.subheadline
 
     override func tintColorDidChange() {
@@ -44,11 +43,11 @@ final class LabelSectionTitle: UICollectionReusableView {
     
     private func setup() {
         self.tintColor = .secondaryLabel
-        layoutMargins = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
-
+        self.isUserInteractionEnabled = true
+                
         label.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         label.isUserInteractionEnabled = false
-
+        
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
         indicator.image = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
@@ -56,15 +55,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.isUserInteractionEnabled = false
         
         let stack = UIStackView(arrangedSubviews: [label, indicator])
+        stack.isUserInteractionEnabled = false
         stack.axis = .horizontal
         stack.alignment = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stack)
         
+        button.addTarget(self, action: #selector(selected), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addAction(UIAction { [weak self] _ in
-            self?.tappedCompletion?()
-        }, for: .touchUpInside)
         addSubview(button)
         
         let guide = layoutMarginsGuide
@@ -73,7 +71,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             stack.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
             stack.topAnchor.constraint(equalTo: guide.topAnchor),
             stack.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
-                        
+            
             button.topAnchor.constraint(equalTo: topAnchor),
             button.bottomAnchor.constraint(equalTo: bottomAnchor),
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -81,19 +79,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         ])
     }
     
-    func configure(with identifier: SectionIdentifier, tapCompletion: @escaping () -> Void) {
-        label.text = identifier.section?.name
-        tappedCompletion = tapCompletion
-        indicator.isHighlighted = identifier.expanded
+    @objc private func selected() {
+        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: self.label.text)
     }
     
-    var menuOptions: [UIMenuElement]? {
-        didSet {
-            if let menuOptions = menuOptions {
-                button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
-            } else {
-                button.menu = nil
-            }
-        }
+    func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {
+        label.text = identifier.section?.name
+        indicator.isHighlighted = identifier.expanded
+        layoutMargins = UIEdgeInsets(top: 8, left: 5, bottom: 0, right: 6)
+        button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
     }
 }

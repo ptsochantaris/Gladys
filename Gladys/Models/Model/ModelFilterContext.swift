@@ -23,7 +23,7 @@ final class ModelFilterContext {
     }
     
     enum GroupingMode: Int {
-        case flat, byLabel
+        case flat, byLabel, byLabelScrollable
         
         var imageName: String {
             switch self {
@@ -31,6 +31,8 @@ final class ModelFilterContext {
                 return "square.grid.3x3"
             case .byLabel:
                 return "square.grid.3x1.below.line.grid.1x2"
+            case .byLabelScrollable:
+                return "rectangle.grid.1x2"
             }
         }
     }
