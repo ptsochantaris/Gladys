@@ -240,11 +240,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             guard let indexPath = collection.indexPath(for: cell) else {
                 continue
             }
-            let frame = cell.frame
-            if frame.contains(point) {
-                return indexPath
-            }
-            let wideFrame = CGRect(x: 0, y: frame.origin.y, width: collection.bounds.width, height: frame.height)
+            let wideFrame = CGRect(x: 0, y: cell.frame.origin.y, width: collection.bounds.width, height: cell.frame.height)
             if let existingRect = rects[indexPath.section] {
                 rects[indexPath.section] = existingRect.union(wideFrame)
             } else {
@@ -252,9 +248,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
         if let entry = rects.first(where: { $0.value.contains(point) }) {
-            let section = entry.key
-            let itemCount = collection.numberOfItems(inSection: section)
-            return IndexPath(item: itemCount, section: section)
+            let itemCount = collection.numberOfItems(inSection: entry.key)
+            return IndexPath(item: itemCount, section: entry.key)
         }
         return nil
     }
