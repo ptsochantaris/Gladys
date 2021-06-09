@@ -289,7 +289,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 
                 let oldLabels = existingItem.labels
                 existingItem.labels.removeAll { $0 == sourceSectionLabel }
-                if !existingItem.labels.contains(destinationSectionLabel) {
+                if destinationSectionLabel != ModelFilterContext.LabelToggle.noNameTitle, !existingItem.labels.contains(destinationSectionLabel) {
                     existingItem.labels.append(destinationSectionLabel)
                 }
                 if oldLabels == existingItem.labels {
@@ -391,11 +391,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 action = newAction
             }
 
-            filter.updateFilter(signalUpdate: .instant)
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+            filter.updateFilter(signalUpdate: .instant)
             mostRecentIndexPathActioned = destinationIndexPath
         }
-        
+                
         switch action {
         case .none:
             break
@@ -683,17 +683,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
         
     private func updateDataSource(reloading: Set<UUID>? = nil, animated: Bool = true) {
-        let toggles = filter.enabledToggles
-        
-        let drops = filter.filteredDrops
-        var labelLookups = [String: [UUID]]()
-        
+        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
+        let reloadRequest = reloading ?? Set<UUID>()
+        var itemsToReload = [ItemIdentifier]()
+
         switch filter.groupingMode {
         case .byLabel, .byLabelScrollable:
+            let toggles = filter.enabledToggles
+            var labelLookups = [String: [UUID]]()
             labelLookups.reserveCapacity(toggles.count)
-            for item in drops {
+            for item in filter.filteredDrops {
                 if item.labels.isEmpty {
-                    let label = "Items with no labels"
+                    let label = ModelFilterContext.LabelToggle.noNameTitle
                     if var list = labelLookups[label] {
                         list.append(item.uuid)
                         labelLookups[label] = list
@@ -711,16 +712,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
-        case .flat:
-            break
-        }
-
-        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
-        let reloadRequest = reloading ?? Set<UUID>()
-        var itemsToReload = [ItemIdentifier]()
-        
-        switch filter.groupingMode {
-        case .byLabel, .byLabelScrollable:
+            
             toggles.forEach { toggle in
                 if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
                     let sectionIdentifier = SectionIdentifier(section: toggle)
@@ -732,17 +724,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
+
         case .flat:
             let section = SectionIdentifier(section: nil)
             snapshot.appendSections([section])
-            let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
+            let identifiers = filter.filteredDrops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
             snapshot.appendItems(identifiers)
             itemsToReload = identifiers.filter { reloadRequest.contains($0.uuid) }
         }
-        
+
         if !itemsToReload.isEmpty {
             snapshot.reloadItems(itemsToReload)
         }
+        
         dataSource.apply(snapshot, animatingDifferences: animated && !firstAppearance)
     }
     
@@ -1927,7 +1921,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 if let firstLabel = labelList.first {
                     filter.expandLabelsByName([firstLabel])
                 } else {
-                    filter.expandLabelsByName(["Items with no labels"])
+                    filter.expandLabelsByName([ModelFilterContext.LabelToggle.noNameTitle])
                 }
                 updateDataSource()
             }

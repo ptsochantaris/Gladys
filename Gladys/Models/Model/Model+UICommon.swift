@@ -24,11 +24,11 @@ extension Model {
 	private static var nextSaveCallbacks: [() -> Void]?
 
 	static var sizeInBytes: Int64 {
-		return drops.reduce(0, { $0 + $1.sizeInBytes })
+		return drops.reduce(0) { $0 + $1.sizeInBytes }
 	}
 
 	static func sizeForItems(uuids: [UUID]) -> Int64 {
-		return drops.reduce(0, { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) })
+		return drops.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
 	}
 
 	enum SortOption {

@@ -405,6 +405,7 @@ final class ModelFilterContext {
 
     func rebuildLabels() {
         var counts = [String: Int]()
+        counts.reserveCapacity(labelToggles.count)
         var noLabelCount = 0
         for item in Model.drops {
             item.labels.forEach {
@@ -419,21 +420,20 @@ final class ModelFilterContext {
             }
         }
 
-        let previous = labelToggles
-        labelToggles.removeAll()
-        for (label, count) in counts {
-            // TODO optimise
-            let previousEnabled = previous.contains { $0.enabled && $0.name == label }
-            let previousCollapsed = previous.contains { $0.collapsed && $0.name == label }
-            let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: false)
-            labelToggles.append(toggle)
+        let previousList = labelToggles
+        labelToggles = counts.map { (label, count) in
+            let previousItem = previousList.first { $0.name == label }
+            let previousEnabled = previousItem?.enabled ?? false
+            let previousCollapsed = previousItem?.collapsed ?? false
+            return LabelToggle(name: label, count: count, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: false)
         }
+        .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        
         if !labelToggles.isEmpty {
-            labelToggles.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-
             let name = ModelFilterContext.LabelToggle.noNameTitle
-            let previousEnabled = previous.contains { $0.enabled && $0.name == name }
-            let previousCollapsed = previous.contains { $0.collapsed && $0.name == name }
+            let previousItem = previousList.first { $0.name == name }
+            let previousEnabled = previousItem?.enabled ?? false
+            let previousCollapsed = previousItem?.collapsed ?? false
             labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: true))
         }
     }
