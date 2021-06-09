@@ -759,11 +759,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     @objc private func sectionBackgroundSelected(_ notification: Notification) {
-        var name = notification.object as? String
+        guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
+        var name = event.name
         
-        if name == nil,
-           let frame = notification.object as? CGRect,
-           let sectionIndexPath = anyPath(in: frame) {
+        if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
             name = dataSource.itemIdentifier(for: sectionIndexPath)?.section?.name
         }
 

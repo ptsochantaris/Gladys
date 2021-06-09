@@ -80,7 +80,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     @objc private func selected() {
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: self.label.text)
+        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
     func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {

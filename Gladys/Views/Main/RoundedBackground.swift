@@ -8,6 +8,12 @@
 
 import UIKit
 
+struct BackgroundSelectionEvent {
+    let scene: UIWindowScene?
+    let frame: CGRect?
+    let name: String?
+}
+
 class SectionBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,7 +31,8 @@ class SectionBackground: UICollectionReusableView {
     }
     
     @objc private func tapped(tap: UITapGestureRecognizer) {
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: tap.view?.frame)
+        let event = BackgroundSelectionEvent(scene: self.window?.windowScene, frame: tap.view?.frame, name: nil)
+        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
     }
 }
 
@@ -41,7 +48,8 @@ final class RoundedBackground: UICollectionReusableView {
     }
         
     @objc private func tapped(tap: UITapGestureRecognizer) {
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: tap.view?.frame)
+        let event = BackgroundSelectionEvent(scene: self.window?.windowScene, frame: tap.view?.frame, name: nil)
+        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
     }
     
     private func setup() {
