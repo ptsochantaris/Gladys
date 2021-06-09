@@ -681,9 +681,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return cell
     }
-    
-    private var collapsedToggles = Set<String>()
-    
+        
     private func updateDataSource(reloading: Set<UUID>? = nil, animated: Bool = true) {
         let toggles = filter.enabledToggles
         
@@ -714,7 +712,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
             }
         case .flat:
-            collapsedToggles.removeAll()
+            break
         }
 
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
@@ -725,10 +723,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         case .byLabel, .byLabelScrollable:
             toggles.forEach { toggle in
                 if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
-                    let collapsed = collapsedToggles
-                    let sectionIdentifier = SectionIdentifier(section: toggle, expanded: !collapsed.contains(toggle.name))
+                    let sectionIdentifier = SectionIdentifier(section: toggle)
                     snapshot.appendSections([sectionIdentifier])
-                    if !collapsed.contains(toggle.name) {
+                    if !toggle.collapsed {
                         snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
                         let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
                         itemsToReload.append(contentsOf: reloadInThisSection)
@@ -736,7 +733,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
             }
         case .flat:
-            let section = SectionIdentifier(section: nil, expanded: true)
+            let section = SectionIdentifier(section: nil)
             snapshot.appendSections([section])
             let identifiers = drops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
             snapshot.appendItems(identifiers)
@@ -766,10 +763,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             name = dataSource.itemIdentifier(for: sectionIndexPath)?.section?.name
         }
 
-        guard let name = name else { return }
-        
-        if collapsedToggles.remove(name) == nil {
-            collapsedToggles.insert(name)
+        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
+        if toggle.collapsed {
+            filter.expandLabelsByName([toggle.name])
+        } else {
+            filter.collapseLabelsByName([toggle.name])
         }
         updateDataSource()
     }
@@ -789,12 +787,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             titleView.configure(with: toggle, menuOptions: [
                 UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
                     guard let self = self else { return }
-                    self.collapsedToggles.removeAll()
+                    self.filter.expandAllLabels()
                     self.updateDataSource()
                 },
                 UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
                     guard let self = self else { return }
-                    self.collapsedToggles = Set(self.dataSource.snapshot().sectionIdentifiers.compactMap { $0.section?.name })
+                    self.filter.collapseAllLabels()
                     self.updateDataSource()
                 }
             ])
@@ -1635,7 +1633,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     collapsed = false
                 }
 
-                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: collapsed ? .absolute(0) : itemHeight)
+                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
                 group.interItemSpacing = .fixed(spacing)
 
@@ -1670,13 +1668,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     collapsed = false
                 }
 
-                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: collapsed ? .absolute(0) : itemHeight)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
+                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: collapsed ? .absolute(1) : itemHeight)
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
                 group.interItemSpacing = .fixed(spacing)
 
                 let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = spacing
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: collapsed ? 0 : spacing, trailing: spacing)
 
                 let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
                 let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
@@ -1925,12 +1922,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
         if filter.groupingMode == .byLabel, let labelList = Model.item(uuid: uuid)?.labels {
             let labels = Set(labelList)
-            let expandedLabels = labels.subtracting(collapsedToggles)
+            let expandedLabels = labels.subtracting(filter.collapsedLabels.map { $0.name })
             if expandedLabels.isEmpty {
                 if let firstLabel = labelList.first {
-                    collapsedToggles.remove(firstLabel)
+                    filter.expandLabelsByName([firstLabel])
                 } else {
-                    collapsedToggles.remove("Items with no labels")
+                    filter.expandLabelsByName(["Items with no labels"])
                 }
                 updateDataSource()
             }
@@ -2088,7 +2085,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         activity.title = title
         activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
                              kGladysMainViewSearchText: filter.text ?? "",
-                             kGladysMainViewDisplayMode: filter.groupingMode.rawValue]
+                             kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
+                             kGladysMainViewCollapsedSections: filter.collapsedLabels.map { $0.name }]
     }
     
     // MARK: 

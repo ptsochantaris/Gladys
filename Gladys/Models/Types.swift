@@ -20,6 +20,7 @@ let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItem
 let kGladysMainViewLabelList = "kGladysMainViewLabelList"
 let kGladysMainViewSearchText = "kGladysMainViewSearchText"
 let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
+let kGladysMainViewCollapsedSections = "kGladysMainViewCollapsedSections"
 let kGladysMainFilter = "mainFilter"
 #endif
 

@@ -10,7 +10,6 @@ import UIKit
 
 struct SectionIdentifier: Hashable {
     let section: ModelFilterContext.LabelToggle?
-    let expanded: Bool
 }
 
 struct ItemIdentifier: Hashable {
@@ -84,8 +83,9 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {
-        label.text = identifier.section?.name
-        indicator.isHighlighted = identifier.expanded
+        guard let section = identifier.section else { return }
+        label.text = section.name
+        indicator.isHighlighted = !section.collapsed
         layoutMargins = UIEdgeInsets(top: 8, left: 5, bottom: 0, right: 6)
         button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
     }

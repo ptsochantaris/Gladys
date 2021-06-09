@@ -153,7 +153,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 		textField.text = nil
 		if !allToggles.contains(where: { $0.name == newTag }) {
-			let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems.count, enabled: false, emptyChecker: false)
+            let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems.count, enabled: false, collapsed: false, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
 		}

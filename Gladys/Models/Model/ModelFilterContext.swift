@@ -30,9 +30,9 @@ final class ModelFilterContext {
             case .flat:
                 return "square.grid.3x3"
             case .byLabel:
-                return "square.grid.3x1.below.line.grid.1x2"
+                return "square.grid.3x3.fill.square"
             case .byLabelScrollable:
-                return "rectangle.grid.1x2"
+                return "square.grid.3x1.below.line.grid.1x2"
             }
         }
     }
@@ -123,6 +123,48 @@ final class ModelFilterContext {
             var newToggle = $0
             let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
             newToggle.enabled = names.contains(effectiveName)
+            return newToggle
+        }
+    }
+
+    func collapseLabelsByName(_ names: Set<String>) {
+        labelToggles = labelToggles.map {
+            var newToggle = $0
+            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
+            if names.contains(effectiveName) {
+                newToggle.collapsed = true
+            } else {
+                newToggle.collapsed = $0.collapsed
+            }
+            return newToggle
+        }
+    }
+    
+    var collapsedLabels: [LabelToggle] {
+        return labelToggles.filter { $0.collapsed }
+    }
+    
+    func expandAllLabels() {
+        labelToggles = labelToggles.map {
+            return LabelToggle(name: $0.name, count: $0.count, enabled: $0.enabled, collapsed: false, emptyChecker: $0.emptyChecker)
+        }
+    }
+
+    func collapseAllLabels() {
+        labelToggles = labelToggles.map {
+            return LabelToggle(name: $0.name, count: $0.count, enabled: $0.enabled, collapsed: true, emptyChecker: $0.emptyChecker)
+        }
+    }
+
+    func expandLabelsByName(_ names: Set<String>) {
+        labelToggles = labelToggles.map {
+            var newToggle = $0
+            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
+            if names.contains(effectiveName) {
+                newToggle.collapsed = false
+            } else {
+                newToggle.collapsed = $0.collapsed
+            }
             return newToggle
         }
     }
@@ -307,6 +349,7 @@ final class ModelFilterContext {
         let name: String
         let count: Int
         var enabled: Bool
+        var collapsed: Bool
         let emptyChecker: Bool
 
         enum State {
@@ -379,8 +422,10 @@ final class ModelFilterContext {
         let previous = labelToggles
         labelToggles.removeAll()
         for (label, count) in counts {
+            // TODO optimise
             let previousEnabled = previous.contains { $0.enabled && $0.name == label }
-            let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, emptyChecker: false)
+            let previousCollapsed = previous.contains { $0.collapsed && $0.name == label }
+            let toggle = LabelToggle(name: label, count: count, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: false)
             labelToggles.append(toggle)
         }
         if !labelToggles.isEmpty {
@@ -388,7 +433,8 @@ final class ModelFilterContext {
 
             let name = ModelFilterContext.LabelToggle.noNameTitle
             let previousEnabled = previous.contains { $0.enabled && $0.name == name }
-            labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, emptyChecker: true))
+            let previousCollapsed = previous.contains { $0.collapsed && $0.name == name }
+            labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: true))
         }
     }
 
