@@ -12,6 +12,15 @@ import CoreSpotlight
 import UIKit
 #endif
 
+struct SectionIdentifier: Hashable {
+    let section: ModelFilterContext.LabelToggle?
+}
+
+struct ItemIdentifier: Hashable {
+    let section: ModelFilterContext.LabelToggle?
+    let uuid: UUID
+}
+
 protocol ModelFilterContextDelegate: AnyObject {
     func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool)
 }

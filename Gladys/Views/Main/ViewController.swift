@@ -691,10 +691,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     private func reloadCells(for uuids: Set<UUID>) {
-        var snapshot = dataSource.snapshot()
-        let identifiers = snapshot.itemIdentifiers.filter { uuids.contains($0.uuid) }
-        snapshot.reloadItems(identifiers)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        for uuid in uuids {
+            if let item = Model.item(uuid: uuid) {
+                item.postModified()
+            }
+        }
     }
 
     private func updateDataSource(animated: Bool) {
@@ -1982,9 +1983,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadExistingItems(_ notification: Notification) {
-        lastLayoutProcessed = 0
-        setupLayout()
-        updateDataSource(animated: false)
+        if notification.object as? Bool == true {
+            lastLayoutProcessed = 0
+            setupLayout()
+            updateDataSource(animated: false)
+        }
         let uuids = filter.filteredDrops.map { $0.uuid }
         reloadCells(for: Set(uuids))
     }

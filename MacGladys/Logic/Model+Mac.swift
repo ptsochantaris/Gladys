@@ -146,7 +146,7 @@ extension Model {
 
         if inserted {
             allFilters.forEach {
-                $0.updateFilter(signalUpdate: true)
+                $0.updateFilter(signalUpdate: .animated)
             }
         }
         return inserted

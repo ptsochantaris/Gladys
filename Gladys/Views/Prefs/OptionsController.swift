@@ -42,7 +42,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
         imageCache.removeAllObjects()
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 
 	@IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
@@ -100,7 +100,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 	@IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.forceTwoColumnPreference = sender.isOn
 		if phoneMode {
-            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 		}
 	}
 

@@ -75,7 +75,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.setDraggingSourceOperationMask(optionPressed ? .every : .copy, forLocal: false)
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
         itemCollectionNeedsDisplay()
     }
 
@@ -108,7 +108,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
 		let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.collection.deselectAll(nil)
-            self?.filter.updateFilter(signalUpdate: true)
+            self?.filter.updateFilter(signalUpdate: .animated)
 			self?.updateTitle()
 		}
 
@@ -138,16 +138,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             self?.highlightItem(with: request)
         }
         
-        let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] notification in
-            guard let s = self, let item = notification.object as? ArchivedItem else { return }
-            s.collection.animator().performBatchUpdates({
-                s.filter.updateFilter(signalUpdate: false)
-                if let index = s.filter.filteredDrops.firstIndex(of: item) {
-                    let n = IndexPath(item: index, section: 0)
-                    s.collection.insertItems(at: [n])
-                    s.updateEmptyView()
-                }
-            })
+        let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] _ in
+            self?.filter.updateFilter(signalUpdate: .animated)
         }
         
 		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13]
@@ -501,7 +493,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         collection.animator().performBatchUpdates({
 
             let oldUUIDs = filter.filteredDrops.map { $0.uuid }
-            filter.updateFilter(signalUpdate: false)
+            filter.updateFilter(signalUpdate: .animated)
             if Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
@@ -938,7 +930,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
-            filter.updateFilter(signalUpdate: true)
+            filter.updateFilter(signalUpdate: .instant)
         }
         if let text = windowState.search, !text.isEmpty {
             self.showSearch = true

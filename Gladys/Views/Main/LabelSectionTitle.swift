@@ -8,15 +8,6 @@
 
 import UIKit
 
-struct SectionIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle?
-}
-
-struct ItemIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle?
-    let uuid: UUID
-}
-
 final class LabelSectionTitle: UICollectionReusableView {
     static let height: CGFloat = 50
     

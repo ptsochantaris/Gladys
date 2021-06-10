@@ -233,7 +233,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         
     @objc private func interfaceModeChanged(sender: NSNotification) {
         imageCache.removeAllObjects()
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
     }
     
 	func applicationDidFinishLaunching(_ notification: Notification) {
