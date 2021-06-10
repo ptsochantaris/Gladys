@@ -367,7 +367,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return result
     }
-        
+            
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
                         
         coordinator.session.progressIndicatorStyle = .none
@@ -375,7 +375,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView)) else {
             return
         }
-
+        
+        let scrollRestoration: [CGFloat]?
+        if filter.groupingMode == .byLabelScrollable {
+            scrollRestoration = collection.subviews.compactMap {
+                if let scroll = $0 as? UIScrollView {
+                    return scroll.contentOffset.x
+                }
+                return nil
+            }
+        } else {
+            scrollRestoration = nil
+        }
+        
         var action = PostDropAction.none
         
         for coordinatorItem in coordinator.items {
@@ -405,6 +417,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         case .saveIndex:
             Model.saveIndexOnly()
         case .saveDB:
+            Model.queueNextSaveCallback {
+                if let scrollRestoration = scrollRestoration, !scrollRestoration.isEmpty {
+                    let scrolls = self.collection.subviews.compactMap { $0 as? UIScrollView }
+                    if scrollRestoration.count == scrolls.count {
+                        for i in 0 ..< scrolls.count where scrolls[i].contentOffset.x == 0 && scrollRestoration[i] > 0 && scrolls[i].contentSize.width > scrolls[i].bounds.width {
+                            log("Restoring scrollview offset for \(scrolls[i]) to \(scrollRestoration[i])")
+                            scrolls[i].setContentOffset(CGPoint(x: scrollRestoration[i], y: scrolls[i].contentOffset.y), animated: false)
+                        }
+                    }
+                }
+            }
             Model.save()
         }
         
