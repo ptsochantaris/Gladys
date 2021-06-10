@@ -141,8 +141,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
-        updateDataSource()
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
+        updateDataSource(animated: animate)
         updateLabelIcon()
     }
 
@@ -367,9 +367,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return result
     }
-    
-    //private var scrollOffsetsFromDrop = [CGPoint]()
-    
+        
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
                         
         coordinator.session.progressIndicatorStyle = .none
@@ -380,8 +378,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         var action = PostDropAction.none
         
-        //scrollOffsetsFromDrop = collection.subviews.compactMap { ($0 as? UIScrollView)?.contentOffset }
-
         for coordinatorItem in coordinator.items {
             let dragItem = coordinatorItem.dragItem
             let newAction: PostDropAction
@@ -395,11 +391,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 action = newAction
             }
 
-            coordinator.drop(dragItem, toItemAt: destinationIndexPath)
             filter.updateFilter(signalUpdate: .animated)
+            coordinator.drop(dragItem, toItemAt: destinationIndexPath)
             mostRecentIndexPathActioned = destinationIndexPath
         }
-                
+        
         switch action {
         case .none:
             break
@@ -693,11 +689,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         cell.archivedDropItem = Model.item(uuid: identifier.uuid)
         cell.isEditing = self.isEditing
     }
+    
+    private func reloadCells(for uuids: Set<UUID>) {
+        var snapshot = dataSource.snapshot()
+        let identifiers = snapshot.itemIdentifiers.filter { uuids.contains($0.uuid) }
+        snapshot.reloadItems(identifiers)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
 
-    private func updateDataSource(reloading: Set<UUID>? = nil) {
+    private func updateDataSource(animated: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
-        let reloadRequest = reloading ?? Set<UUID>()
-        var itemsToReload = [ItemIdentifier]()
 
         switch filter.groupingMode {
         case .byLabel, .byLabelScrollable:
@@ -731,8 +732,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     snapshot.appendSections([sectionIdentifier])
                     if !toggle.collapsed {
                         snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
-                        let reloadInThisSection = sectionItems.filter { reloadRequest.contains($0.uuid) }
-                        itemsToReload.append(contentsOf: reloadInThisSection)
                     }
                 }
             }
@@ -742,14 +741,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             snapshot.appendSections([section])
             let identifiers = filter.filteredDrops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
             snapshot.appendItems(identifiers)
-            itemsToReload = identifiers.filter { reloadRequest.contains($0.uuid) }
-        }
-
-        if !itemsToReload.isEmpty {
-            snapshot.reloadItems(itemsToReload)
         }
         
-        dataSource.apply(snapshot, animatingDifferences: !firstAppearance)
+        dataSource.apply(snapshot, animatingDifferences: animated && !firstAppearance)
     }
     
     private func anyPath(in frame: CGRect) -> IndexPath? {
@@ -775,7 +769,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         } else {
             filter.collapseLabelsByName([toggle.name])
         }
-        updateDataSource()
+        updateDataSource(animated: true)
     }
     
 	override func viewDidLoad() {
@@ -794,12 +788,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
                     guard let self = self else { return }
                     self.filter.expandAllLabels()
-                    self.updateDataSource()
+                    self.updateDataSource(animated: true)
                 },
                 UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
                     guard let self = self else { return }
                     self.filter.collapseAllLabels()
-                    self.updateDataSource()
+                    self.updateDataSource(animated: true)
                 }
             ])
         }
@@ -872,7 +866,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         collection.addGestureRecognizer(p)
         
-        updateDataSource()
+        updateDataSource(animated: false)
 	}
     
     override func viewDidAppear(_ animated: Bool) {
@@ -1034,22 +1028,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     @objc private func itemCreated(_ notification: Notification) {
-        guard let item = notification.object as? ArchivedItem else { return }
-        filter.updateFilter(signalUpdate: .none)
-        if filter.filteredDrops.contains(item) {
-            updateDataSource()
-            updateEmptyView()
-        }
+        filter.updateFilter(signalUpdate: .animated)
     }
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let oldUUIDs = filter.filteredDrops.map { $0.uuid }
-        filter.updateFilter(signalUpdate: .none)
+        filter.updateFilter(signalUpdate: .instant)
         let oldSet = Set(oldUUIDs)
-
+        
         let parameters = notification.object as? [AnyHashable: Any]
-        let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet)
-        updateDataSource(reloading: uuidsToReload)
+        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet) {
+            reloadCells(for: uuidsToReload)
+        }
         
         if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
             return
@@ -1603,7 +1593,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return nil
     }
-            
+    
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
         let itemWidth, itemHeight: NSCollectionLayoutDimension
 
@@ -1952,7 +1942,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 } else {
                     filter.expandLabelsByName([ModelFilterContext.LabelToggle.noNameTitle])
                 }
-                updateDataSource()
+                updateDataSource(animated: false)
             }
         }
         
@@ -1992,10 +1982,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadExistingItems(_ notification: Notification) {
-        let uuids = filter.filteredDrops.map { $0.uuid }
         lastLayoutProcessed = 0
         setupLayout()
-        updateDataSource(reloading: Set(uuids))
+        updateDataSource(animated: false)
+        let uuids = filter.filteredDrops.map { $0.uuid }
+        reloadCells(for: Set(uuids))
     }
     
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
