@@ -13,13 +13,13 @@ import UIKit
 #endif
 
 protocol ModelFilterContextDelegate: AnyObject {
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool)
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext)
 }
 
 final class ModelFilterContext {
     
     enum UpdateType {
-        case none, instant, animated
+        case none, animated
     }
     
     enum GroupingMode: Int {
@@ -241,7 +241,7 @@ final class ModelFilterContext {
             Model.updateBadge()
             if signalUpdate != .none {
 
-                self.delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
+                self.delegate?.modelFilterContextChanged(self)
 
                 #if os(iOS)
                 if filtering && UIAccessibility.isVoiceOverRunning {

@@ -285,6 +285,8 @@
 		16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
+		16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */; };
 		16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AECA611F94B83900981B29 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
@@ -806,6 +808,8 @@
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
+		16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchivedItemCell.xib; sourceTree = "<group>"; };
+		16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WideArchivedItemCell.xib; sourceTree = "<group>"; };
 		16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKDatabaseScope+Extensions.swift"; sourceTree = "<group>"; };
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
 		16AED98921B457550049E433 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
@@ -1474,6 +1478,8 @@
 				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
 				16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */,
+				16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */,
+				16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */,
 			);
 			name = Support;
 			path = ..;
@@ -2064,8 +2070,10 @@
 				1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */,
 				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
+				16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */,
 				162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
+				16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2769,7 +2777,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 974;
+				DYLIB_CURRENT_VERSION = 976;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = GladysFramework/Info.plist;
@@ -2797,7 +2805,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 974;
+				DYLIB_CURRENT_VERSION = 976;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = GladysFramework/Info.plist;
@@ -3033,7 +3041,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 974;
+				CURRENT_PROJECT_VERSION = 976;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3054,7 +3062,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -3132,7 +3140,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 974;
+				DYLIB_CURRENT_VERSION = 976;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = GladysFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -3181,7 +3189,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 974;
+				CURRENT_PROJECT_VERSION = 976;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;
@@ -3198,7 +3206,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
@@ -3277,7 +3285,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 974;
+				DYLIB_CURRENT_VERSION = 976;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = GladysFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

@@ -141,8 +141,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
-        updateDataSource(animated: animate)
+    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext) {
+        updateDataSource()
         updateLabelIcon()
     }
 
@@ -368,6 +368,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return result
     }
     
+    //private var scrollOffsetsFromDrop = [CGPoint]()
+    
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
                         
         coordinator.session.progressIndicatorStyle = .none
@@ -377,6 +379,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         var action = PostDropAction.none
+        
+        //scrollOffsetsFromDrop = collection.subviews.compactMap { ($0 as? UIScrollView)?.contentOffset }
 
         for coordinatorItem in coordinator.items {
             let dragItem = coordinatorItem.dragItem
@@ -392,7 +396,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
 
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-            filter.updateFilter(signalUpdate: .instant)
+            filter.updateFilter(signalUpdate: .animated)
             mostRecentIndexPathActioned = destinationIndexPath
         }
                 
@@ -670,19 +674,27 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     var onLoad: ((ViewController) -> Void)?
-        
-    private lazy var dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { [weak self] collectionView, indexPath, sectionItem in
-        let type = PersistedOptions.wideMode ? "WideArchivedItemCell" : "ArchivedItemCell"
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: type, for: indexPath) as! ArchivedItemCell
-        if let self = self {
-            cell.lowMemoryMode = self.lowMemoryMode
-            cell.archivedDropItem = Model.item(uuid: sectionItem.uuid)
-            cell.isEditing = self.isEditing
-        }
-        return cell
+    
+    private lazy var dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { [unowned self] collectionView, indexPath, sectionItem in
+        let type = PersistedOptions.wideMode ? self.wideCellRegistration : self.cellRegistration
+        return collectionView.dequeueConfiguredReusableCell(using: type, for: indexPath, item: sectionItem)
     }
-        
-    private func updateDataSource(reloading: Set<UUID>? = nil, animated: Bool = true) {
+    
+    private static let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
+    private lazy var cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: ViewController.archivedItemCellNib) { [unowned self] cell, _, identifier in
+        cell.lowMemoryMode = self.lowMemoryMode
+        cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+        cell.isEditing = self.isEditing
+    }
+
+    private static let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
+    private lazy var wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: ViewController.wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
+        cell.lowMemoryMode = self.lowMemoryMode
+        cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+        cell.isEditing = self.isEditing
+    }
+
+    private func updateDataSource(reloading: Set<UUID>? = nil) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
         let reloadRequest = reloading ?? Set<UUID>()
         var itemsToReload = [ItemIdentifier]()
@@ -737,7 +749,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             snapshot.reloadItems(itemsToReload)
         }
         
-        dataSource.apply(snapshot, animatingDifferences: animated && !firstAppearance)
+        dataSource.apply(snapshot, animatingDifferences: !firstAppearance)
     }
     
     private func anyPath(in frame: CGRect) -> IndexPath? {
@@ -1704,6 +1716,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         setupLayout()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        /*DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+            if !self.scrollOffsetsFromDrop.isEmpty {
+                let scrollViews = self.collection.subviews.compactMap { ($0 as? UIScrollView) }
+                if scrollViews.count == self.scrollOffsetsFromDrop.count {
+                    for i in 0 ..< scrollViews.count {
+                        var offset = scrollViews[i].contentOffset
+                        offset.x = self.scrollOffsetsFromDrop[i].x
+                        scrollViews[i].contentOffset = offset
+                    }
+                }
+                self.scrollOffsetsFromDrop.removeAll()
+            }
+        }*/
+    }
+    
     private func setupLayout() {
         let insets = view.safeAreaInsets
         let bounds = view.bounds
@@ -1966,7 +1995,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let uuids = filter.filteredDrops.map { $0.uuid }
         lastLayoutProcessed = 0
         setupLayout()
-        updateDataSource(reloading: Set(uuids), animated: false)
+        updateDataSource(reloading: Set(uuids))
     }
     
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
