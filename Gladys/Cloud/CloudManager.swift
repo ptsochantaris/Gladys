@@ -13,14 +13,13 @@ let diskSizeFormatter = ByteCountFormatter()
 extension Array {
 	func bunch(maxSize: Int) -> [[Element]] {
 		var pos = 0
-		var res = [[Element]]()
+		var slices = [ArraySlice<Element>]()
 		while pos < count {
 			let end = Swift.min(count, pos + maxSize)
-			let a = self[pos ..< end]
-			res.append(Array(a))
+            slices.append(self[pos ..< end])
 			pos += maxSize
 		}
-		return res
+        return slices.map { Array($0) }
 	}
 }
 
