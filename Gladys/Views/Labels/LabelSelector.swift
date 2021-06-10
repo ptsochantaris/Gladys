@@ -159,7 +159,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             filter.groupingMode = .byLabel
         }
         updates() // also causes the user activity to save
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
+        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: view.window?.windowScene)
         updateModeButton()
     }
     

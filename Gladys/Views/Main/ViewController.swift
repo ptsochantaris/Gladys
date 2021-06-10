@@ -1034,11 +1034,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let oldUUIDs = filter.filteredDrops.map { $0.uuid }
-        filter.updateFilter(signalUpdate: .instant)
+        filter.updateFilter(signalUpdate: .animated)
         let oldSet = Set(oldUUIDs)
         
         let parameters = notification.object as? [AnyHashable: Any]
-        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet) {
+        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
             reloadCells(for: uuidsToReload)
         }
         
@@ -1596,27 +1596,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
-        let itemWidth, itemHeight: NSCollectionLayoutDimension
-
         let columnCount = CGFloat(columns)
         let extras = spacing * (columnCount - 1)
         let side = ((width - extras) / columnCount).rounded(.down)
         view.window?.windowScene?.session.userInfo?["ItemSide"] = side
-
-        if let fixedwidth = fixedwidth {
-            itemWidth = .absolute(fixedwidth)
-        } else {
-            itemWidth = .fractionalHeight(1)
-        }
-
-        if let fixedHeight = fixedHeight {
-            itemHeight = .absolute(fixedHeight)
-        } else {
-            itemHeight = .absolute(side)
-        }
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         switch filter.groupingMode {
         case .byLabel:
@@ -1629,6 +1612,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 } else {
                     collapsed = false
                 }
+
+                let itemWidth = NSCollectionLayoutDimension.absolute(fixedwidth ?? side)
+                let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side)
+                let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
                 let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
@@ -1665,12 +1653,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     collapsed = false
                 }
 
-                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: collapsed ? .absolute(1) : itemHeight)
+                let W = fixedwidth ?? side * 0.9
+                let itemWidth = NSCollectionLayoutDimension.absolute(W)
+                let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.9)
+                let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: collapsed ? .absolute(1) : itemHeight)
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
-                group.interItemSpacing = .fixed(spacing)
 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: collapsed ? 0 : spacing, trailing: spacing)
+                section.interGroupSpacing = spacing
 
                 let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
                 let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
@@ -1689,6 +1683,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             return layout
 
         case .flat:
+            let itemWidth = NSCollectionLayoutDimension.absolute(fixedwidth ?? side)
+            let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side)
+            let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
             collection.contentInset = .zero
             let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
@@ -1983,7 +1982,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
     @objc private func reloadExistingItems(_ notification: Notification) {
-        if notification.object as? Bool == true {
+        if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
             lastLayoutProcessed = 0
             setupLayout()
             updateDataSource(animated: false)
