@@ -285,6 +285,8 @@ extension CloudManager {
                     activationFailure(error: GladysError.cloudLoginRequired.error, completion: completion)
                 case .restricted:
                     activationFailure(error: GladysError.cloudAccessRestricted.error, completion: completion)
+                // case .temporarilyUnavailable:
+                    // activationFailure(error: GladysError.cloudAccessTemporarilyUnavailable.error, completion: completion)
                 @unknown default:
                     activationFailure(error: GladysError.cloudAccessNotSupported.error, completion: completion)
                 }
@@ -949,7 +951,7 @@ extension CloudManager {
         switch ckError.code {
 
         case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
-             .userDeletedZone, .badDatabase, .badContainer:
+             .userDeletedZone, .badDatabase, .badContainer: // , .accountTemporarilyUnavailable:
 
             // shutdown-worthy failure
             genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")

@@ -694,25 +694,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     var onLoad: ((ViewController) -> Void)?
     
-    private lazy var dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { [unowned self] collectionView, indexPath, sectionItem in
-        let type = PersistedOptions.wideMode ? self.wideCellRegistration : self.cellRegistration
-        return collectionView.dequeueConfiguredReusableCell(using: type, for: indexPath, item: sectionItem)
-    }
-    
-    private static let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
-    private lazy var cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: ViewController.archivedItemCellNib) { [unowned self] cell, _, identifier in
-        cell.lowMemoryMode = self.lowMemoryMode
-        cell.archivedDropItem = Model.item(uuid: identifier.uuid)
-        cell.isEditing = self.isEditing
-    }
-
-    private static let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
-    private lazy var wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: ViewController.wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
-        cell.lowMemoryMode = self.lowMemoryMode
-        cell.archivedDropItem = Model.item(uuid: identifier.uuid)
-        cell.isEditing = self.isEditing
-    }
-    
     private func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
             if let item = Model.item(uuid: uuid) {
@@ -751,7 +732,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
             toggles.forEach { toggle in
-                if let sectionItems = labelLookups[toggle.name]?.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                if let sectionItems = labelLookups[toggle.name]?.uniqued.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
                     let sectionIdentifier = SectionIdentifier(section: toggle)
                     snapshot.appendSections([sectionIdentifier])
                     if !toggle.collapsed {
@@ -796,9 +777,31 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         updateDataSource(animated: true)
     }
     
+    private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
         
+        let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
+        let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: archivedItemCellNib) { [unowned self] cell, _, identifier in
+            cell.lowMemoryMode = self.lowMemoryMode
+            cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+            cell.isEditing = self.isEditing
+        }
+
+        let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
+        let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [weak self] cell, _, identifier in
+            guard let self = self else { return }
+            cell.lowMemoryMode = self.lowMemoryMode
+            cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+            cell.isEditing = self.isEditing
+        }
+
+        dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
+            let type = PersistedOptions.wideMode ? wideCellRegistration : cellRegistration
+            return collectionView.dequeueConfiguredReusableCell(using: type, for: indexPath, item: sectionItem)
+        }
+                
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true
@@ -1066,6 +1069,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         
         if !Model.drops.isEmpty && Model.drops.allSatisfy({ $0.shouldDisplayLoading }) {
+            updateEmptyView()
             return
         }
         

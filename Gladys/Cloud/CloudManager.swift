@@ -10,6 +10,12 @@ import CloudKit
 
 let diskSizeFormatter = ByteCountFormatter()
 
+extension Sequence where Element: Hashable {
+    var uniqued: [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+}
 extension Array {
 	func bunch(maxSize: Int) -> [[Element]] {
 		var pos = 0

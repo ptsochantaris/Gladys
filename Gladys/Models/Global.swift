@@ -15,6 +15,7 @@ enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100
     case cloudLoginRequired
     case cloudAccessRestricted
+    case cloudAccessTemporarilyUnavailable
     case cloudAccessNotSupported
     case importingArchiveFailed
     case unknownIngestError
@@ -32,6 +33,7 @@ enum GladysError: Int {
         case .unknownIngestError: message = "Unknown item ingesting error."
         case .actionCancelled: message = "Action cancelled."
         case .mainAppFailedToOpen: message = "Main app could not be opened."
+        case .cloudAccessTemporarilyUnavailable: message = "iCloud access is temporarily unavailable, you may need to re-sign in to your iCloud account."
         }
         return NSError(domain: "build.bru.Gladys.error",
                        code: self.rawValue,
