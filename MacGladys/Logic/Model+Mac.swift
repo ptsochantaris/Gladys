@@ -108,7 +108,7 @@ extension Model {
                 extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
                     let p = Progress()
                     p.totalUnitCount = 1
-                    DispatchQueue.global(qos: .userInitiated).async {
+                    DispatchQueue.global(qos: .background).async {
                         let data = pasteboardItem.data(forType: type)
                         callback(data, nil)
                         p.completedUnitCount = 1

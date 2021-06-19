@@ -143,7 +143,7 @@ extension ArchivedItem {
                 if !ocrRequests.isEmpty {
                     let handler = VNImageRequestHandler(cgImage: img)
                     group.enter()
-                    DispatchQueue.global(qos: .utility).async {
+                    DispatchQueue.global(qos: .userInitiated).async {
                         try? handler.perform(ocrRequests)
                         group.leave()
                     }
@@ -181,7 +181,7 @@ extension ArchivedItem {
         
         let finalGroup = DispatchGroup()
         finalGroup.enter()
-        group.notify(queue: .global(qos: .utility)) {
+        group.notify(queue: .global(qos: .userInitiated)) {
             if autoText, let finalTitle = transcribedText ?? finalTitle {
                 let tagger = NLTagger(tagSchemes: [.nameType])
                 tagger.string = finalTitle

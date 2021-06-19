@@ -1728,32 +1728,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     private var lastLayoutProcessed: CGFloat = 0
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        setupLayout()
+        if firstAppearance {
+            setupLayout(for: view.bounds.size)
+        }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        /*DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-            if !self.scrollOffsetsFromDrop.isEmpty {
-                let scrollViews = self.collection.subviews.compactMap { ($0 as? UIScrollView) }
-                if scrollViews.count == self.scrollOffsetsFromDrop.count {
-                    for i in 0 ..< scrollViews.count {
-                        var offset = scrollViews[i].contentOffset
-                        offset.x = self.scrollOffsetsFromDrop[i].x
-                        scrollViews[i].contentOffset = offset
-                    }
-                }
-                self.scrollOffsetsFromDrop.removeAll()
-            }
-        }*/
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        setupLayout(for: size)
     }
     
-    private func setupLayout() {
+    private func setupLayout(for bounds: CGSize) {
         let insets = view.safeAreaInsets
-        let bounds = view.bounds
-        let width = bounds.size.width - insets.left - insets.right
+        let width = bounds.width - insets.left - insets.right
         let wideMode = PersistedOptions.wideMode
         let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
         
@@ -1762,7 +1752,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             log("Handlesize not needed")
             return
         }
-
+        
         if wideMode {
             if width >= 768 {
                 collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80)
@@ -1785,7 +1775,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         lastLayoutProcessed = key
         
-        log("Handlesize ran for: \(width)")
+        log("Handlesize ran for: \(bounds)")
 
         ///////////////////////////////
         
@@ -2011,7 +2001,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @objc private func reloadExistingItems(_ notification: Notification) {
         if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
             lastLayoutProcessed = 0
-            setupLayout()
+            setupLayout(for: view.bounds.size)
             updateDataSource(animated: false)
         }
         let uuids = filter.filteredDrops.map { $0.uuid }

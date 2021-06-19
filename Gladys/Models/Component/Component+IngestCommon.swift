@@ -113,7 +113,7 @@ extension Component {
         flags.insert(.loadingAborted)
     }
 
-    static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .background)
+    static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .userInitiated)
     
     private func ingest(from url: URL, completion: @escaping (Error?) -> Void) {
         // in thread!

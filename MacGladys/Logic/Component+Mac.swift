@@ -256,7 +256,7 @@ extension Component {
         } else {
             provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
                 let p = Progress(totalUnitCount: 1)
-                DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue.global(qos: .background).async {
                     let response = self.dataForDropping ?? self.bytes
                     p.completedUnitCount = 1
                     completion(response, nil)

@@ -12,8 +12,6 @@ let screenScale = UIScreen.main.scale
 
 extension UIImage {
 
-    private static let colourSpace = CGColorSpaceCreateDeviceRGB()
-
     private static let fromFileOptions: CFDictionary = [
         kCGImageSourceShouldCache: kCFBooleanFalse
     ] as CFDictionary
@@ -33,6 +31,18 @@ extension UIImage {
     }()
 
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
+        
+        if #available(iOS 15.0, *) {
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
+                if template {
+                    return image.withRenderingMode(.alwaysTemplate).preparingForDisplay()
+                } else {
+                    return image.preparingForDisplay()
+                }
+            }
+            return nil
+        }
+        
         guard let provider = CGDataProvider(url: url as CFURL),
             let source = CGImageSourceCreateWithDataProvider(provider, nil),
             let imageRef = CGImageSourceCreateImageAtIndex(source, 0, fromFileOptions) else {
@@ -137,8 +147,8 @@ extension UIImage {
             let a: CGFloat = darkMode ? 0.05 : 0.2
             let blackAndWhiteImage = ciImage
                 .applyingFilter("CIFalseColor", parameters: [
-                    p1: CIColor(color: UIColor.systemBackground),
-                    p2: CIColor(color: UIColor.secondaryLabel.withAlphaComponent(a))
+                    p1: CIColor(color: .systemBackground),
+                    p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
                 ])
             let img = UIImage(ciImage: blackAndWhiteImage)
             DispatchQueue.main.async {

@@ -39,25 +39,25 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		if let uuid = message["view"] as? String {
             let request = HighlightRequest(uuid: uuid, open: true)
             NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
-			DispatchQueue.global(qos: .userInitiated).async {
+			DispatchQueue.global(qos: .default).async {
 				replyHandler([:])
 			}
 
 		} else if let uuid = message["moveToTop"] as? String, let item = Model.item(uuid: uuid) {
             Model.sendToTop(items: [item])
-			DispatchQueue.global(qos: .userInitiated).async {
+			DispatchQueue.global(qos: .default).async {
 				replyHandler([:])
 			}
 
 		} else if let uuid = message["delete"] as? String, let item = Model.item(uuid: uuid) {
             Model.delete(items: [item])
-			DispatchQueue.global(qos: .userInitiated).async {
+			DispatchQueue.global(qos: .default).async {
 				replyHandler([:])
 			}
 
 		} else if let uuid = message["copy"] as? String, let item = Model.item(uuid: uuid) {
 			item.copyToPasteboard()
-			DispatchQueue.global(qos: .userInitiated).async {
+			DispatchQueue.global(qos: .default).async {
 				replyHandler([:])
 			}
 
@@ -87,7 +87,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 			}
 
 		} else {
-			DispatchQueue.global(qos: .userInitiated).async {
+			DispatchQueue.global(qos: .default).async {
 				replyHandler([:])
 			}
 		}
