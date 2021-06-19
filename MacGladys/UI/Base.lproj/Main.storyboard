@@ -310,7 +310,7 @@ CA
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="wFq-Bh-Uz5"/>
             </objects>
-            <point key="canvasLocation" x="300" y="-467"/>
+            <point key="canvasLocation" x="296" y="-528"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="ccC-16-4gU">
@@ -1093,10 +1093,34 @@ Cg
             </objects>
             <point key="canvasLocation" x="-850" y="100"/>
         </scene>
+        <!--Window Controller-->
+        <scene sceneID="2IX-iR-ecs">
+            <objects>
+                <windowController storyboardIdentifier="showProgress" id="ps7-r8-dej" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="UNZ-9F-sb3">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <rect key="contentRect" x="0.0" y="0.0" width="315" height="83"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+                        <view key="contentView" id="S61-Co-M66">
+                            <rect key="frame" x="0.0" y="0.0" width="315" height="83"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="ps7-r8-dej" id="JNZ-SA-5UD"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="rmF-nd-Zeh" kind="relationship" relationship="window.shadowedContentViewController" id="kup-qD-s3h"/>
+                    </connections>
+                </windowController>
+                <customObject id="9JC-B8-JdF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1269" y="-628"/>
+        </scene>
         <!--Progress View Controller-->
         <scene sceneID="LSu-cs-qiS">
             <objects>
-                <viewController id="rmF-nd-Zeh" customClass="ProgressViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController showSeguePresentationStyle="single" id="rmF-nd-Zeh" customClass="ProgressViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="YAH-US-hch">
                         <rect key="frame" x="0.0" y="0.0" width="315" height="83"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1130,7 +1154,7 @@ Cg
                 </viewController>
                 <customObject id="URB-7s-OFx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="859" y="618"/>
+            <point key="canvasLocation" x="1269" y="-391"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -3595,7 +3619,6 @@ Only</string>
                         <outlet property="translucentView" destination="1b8-kc-m0N" id="IRk-CO-FkJ"/>
                         <segue destination="x60-ic-s1p" kind="show" identifier="showDetail" id="gPV-xh-a7s"/>
                         <segue destination="VWp-gh-Zmf" kind="popover" identifier="showLabels" popoverAnchorView="m2S-Jp-Qdl" popoverBehavior="applicationDefined" preferredEdge="maxX" id="pvz-ms-nO1"/>
-                        <segue destination="rmF-nd-Zeh" kind="modal" identifier="showProgress" id="wwQ-Kz-x6M"/>
                         <segue destination="Adk-lO-VOr" kind="modal" identifier="editLabels" id="sez-eE-yO6"/>
                         <segue destination="yA3-OV-Q47" kind="modal" identifier="editNotes" id="Oya-gR-tFF"/>
                     </connections>

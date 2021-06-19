@@ -226,11 +226,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         setupClipboardSnooping()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(setupClipboardSnooping), name: .ClipboardSnoopingChanged, object: nil)
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(setupClipboardSnooping), name: .ClipboardSnoopingChanged, object: nil)
+        nc.addObserver(self, selector: #selector(acceptShareStarted), name: .AcceptStarting, object: nil)
+        nc.addObserver(self, selector: #selector(endProgress), name: .AcceptEnding, object: nil)
         
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 	}
-        
+    
+    @objc private func acceptShareStarted() {
+        startProgress(for: nil, titleOverride: "Accepting Share…")
+    }
+
     @objc private func interfaceModeChanged(sender: NSNotification) {
         imageCache.removeAllObjects()
         NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
@@ -432,13 +439,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	}
 
 	private func proceedWithImport(from url: URL) {
-        keyGladysControllerIfExists?.startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
+        startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
 		DispatchQueue.main.async { // give UI a chance to update
 			do {
 				try Model.importArchive(from: url, removingOriginal: false)
-                keyGladysControllerIfExists?.endProgress()
+                self.endProgress()
 			} catch {
-                keyGladysControllerIfExists?.endProgress()
+                self.endProgress()
 				self.alertOnMainThread(error: error)
 			}
 		}
@@ -474,7 +481,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             let p = Model.createArchive(using: controller.filter) { createdUrl, error in
                 self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
             }
-            keyGladysControllerIfExists?.startProgress(for: p)
+            startProgress(for: p)
         }
 	}
 
@@ -509,7 +516,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             let p = Model.createZip(using: controller.filter) { createdUrl, error in
                 self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
             }
-            keyGladysControllerIfExists?.startProgress(for: p)
+            self.startProgress(for: p)
         }
 	}
     
@@ -541,7 +548,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         
 		switch menuItem.action {
 		case #selector(importSelected(_:)), #selector(exportSelected(_:)), #selector(zipSelected(_:)):
-			return !controller.isDisplayingProgress
+			return !self.isDisplayingProgress
 		default:
 			return true
 		}
@@ -550,7 +557,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 	private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
 		// thread
 		DispatchQueue.main.async {
-            keyGladysControllerIfExists?.endProgress()
+            self.endProgress()
 		}
 
 		guard let createdUrl = createdUrl else {
@@ -612,4 +619,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 			sortMethod()
 		}
 	}
+    
+    /////////////////////////////////////////// Progress reports
+
+    private var progressController: ProgressViewController?
+
+    private func startProgress(for progress: Progress?, titleOverride: String? = nil) {
+        if isDisplayingProgress {
+            endProgress()
+        }
+        let progressWindow = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("showProgress")) as! NSWindowController
+        let pvc = progressWindow.contentViewController as! ProgressViewController
+        pvc.startMonitoring(progress: progress, titleOverride: titleOverride)
+        progressController = pvc
+        progressWindow.window?.makeKeyAndOrderFront(nil)
+    }
+
+    private var isDisplayingProgress: Bool {
+        return progressController != nil
+    }
+
+    @objc private func endProgress() {
+        if let p = progressController {
+            progressController = nil
+            p.endMonitoring()
+            p.view.window?.close()
+        }
+    }
 }

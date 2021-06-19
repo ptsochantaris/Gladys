@@ -112,14 +112,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			self?.updateTitle()
 		}
 
-		let a6 = n.addObserver(forName: .AcceptStarting, object: nil, queue: .main) { [weak self] _ in
-			self?.startProgress(for: nil, titleOverride: "Accepting Share…")
-		}
-
-		let a7 = n.addObserver(forName: .AcceptEnding, object: nil, queue: .main) { [weak self] _ in
-			self?.endProgress()
-		}
-
 		let a8  = n.addObserver(forName: .AlwaysOnTopChanged, object: nil, queue: .main) { [weak self] _ in
 			self?.updateAlwaysOnTop()
 		}
@@ -142,7 +134,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             self?.filter.updateFilter(signalUpdate: .animated)
         }
         
-		observers = [a1, a3, a4, a5, a6, a7, a8, a9, a11, a12, a13]
+		observers = [a1, a3, a4, a5, a8, a9, a11, a12, a13]
 
         updateTitle()
         updateEmptyView()
@@ -920,9 +912,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 				destination.uuids = collection.actionableSelectedItems.map { $0.uuid }
 			}
 
-		case "showProgress":
-			progressController = segue.destinationController as? ProgressViewController
-
 		default: break
 		}
 	}
@@ -1018,30 +1007,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 			return (visibleCells[cellIndex] as? DropCell)?.previewImage
 		}
 		return nil
-	}
-
-	/////////////////////////////////////////// Progress reports
-
-	private var progressController: ProgressViewController?
-
-	func startProgress(for progress: Progress?, titleOverride: String? = nil) {
-		if isDisplayingProgress {
-			endProgress()
-		}
-		performSegue(withIdentifier: NSStoryboardSegue.Identifier("showProgress"), sender: self)
-		progressController?.startMonitoring(progress: progress, titleOverride: titleOverride)
-	}
-
-	var isDisplayingProgress: Bool {
-		return progressController != nil
-	}
-
-	func endProgress() {
-		if let p = progressController {
-			p.endMonitoring()
-			p.dismiss(p)
-			progressController = nil
-		}
 	}
     
     /////////////////////////////// Mouse monitoring
