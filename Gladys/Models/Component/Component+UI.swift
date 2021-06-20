@@ -8,8 +8,8 @@ import QuickLook
 final class GladysNavController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.g_colorPaper
-        view.tintColor = UIColor.g_colorTint
+        view.backgroundColor = .g_colorPaper
+        view.tintColor = .g_colorTint
     }
 }
 
@@ -17,7 +17,7 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
     private var typeItem: Component
     
     weak var sourceItemView: UIView?
-        
+    
     init(item: Component) {
         self.typeItem = item
         super.init(nibName: nil, bundle: nil)
@@ -25,6 +25,13 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         dataSource = self
         modalPresentationStyle = .overFullScreen
         transitioningDelegate = self
+
+        let n = NotificationCenter.default
+        n.addObserver(self, selector: #selector(multipleWindowModeChange), name: .MultipleWindowModeChange, object: nil)
+    }
+    
+    @objc private func multipleWindowModeChange() {
+        navigationController?.navigationBar.setNeedsLayout()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -107,26 +114,23 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
             }
         }
         
-        let newWindowIndex = i.rightBarButtonItems?.firstIndex(of: newWindowButton)
-        if showNewWindow && newWindowIndex == nil {
-            i.rightBarButtonItems?.insert(newWindowButton, at: 0)
-        } else if !showNewWindow, let newWindowIndex = newWindowIndex {
-            i.rightBarButtonItems?.remove(at: newWindowIndex)
-        }
+        var rightItems = [UIBarButtonItem]()
 
-        let mainWindowIndex = i.rightBarButtonItems?.firstIndex(of: mainWindowButton)
+        let mainWindowIndex = rightItems.firstIndex(of: mainWindowButton)
         if showMainWindow && mainWindowIndex == nil {
-            i.rightBarButtonItems?.insert(mainWindowButton, at: 0)
+            rightItems.insert(mainWindowButton, at: 0)
         } else if !showMainWindow, let mainWindowIndex = mainWindowIndex {
-            i.rightBarButtonItems?.remove(at: mainWindowIndex)
+            rightItems.remove(at: mainWindowIndex)
         }
 
-        let doneIndex = i.rightBarButtonItems?.firstIndex(of: doneButton)
+        let doneIndex = rightItems.firstIndex(of: doneButton)
         if showDone && doneIndex == nil {
-            i.rightBarButtonItems?.insert(doneButton, at: 0)
+            rightItems.insert(doneButton, at: 0)
         } else if !showDone, let doneIndex = doneIndex {
-            i.rightBarButtonItems?.remove(at: doneIndex)
+            rightItems.remove(at: doneIndex)
         }
+        
+        i.rightBarButtonItems = rightItems
 
         if showDone {
             doneButton.target = self
@@ -164,7 +168,8 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
         super.viewDidLoad()
         edgesForExtendedLayout = []
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-
+        userActivity?.needsSave = true
+        
         let tint = UIColor.g_colorTint
         view.tintColor = tint
 

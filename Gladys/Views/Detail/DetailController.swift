@@ -42,6 +42,7 @@ final class DetailController: GladysViewController,
         isReadWrite = item.shareMode != .elsewhereReadOnly
 
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
+        userActivity?.needsSave = true
         
 		let n = NotificationCenter.default
 		n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)

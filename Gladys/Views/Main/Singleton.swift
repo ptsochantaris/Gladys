@@ -280,7 +280,7 @@ final class Singleton {
         
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)
-            activity.userInfo = [CSSearchableItemActivityIdentifier: itemId]
+            activity.addUserInfoEntries(from: [CSSearchableItemActivityIdentifier: itemId])
             Singleton.shared.boot(with: activity, in: scene)
         
         } else if url.host == nil { // just opening

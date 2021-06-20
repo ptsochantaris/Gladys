@@ -20,7 +20,7 @@ extension String {
     private var labelActivity: NSUserActivity {
         let activity = NSUserActivity(activityType: kGladysMainListActivity)
         activity.title = self
-        activity.userInfo = [kGladysMainViewLabelList: [self]]
+        activity.addUserInfoEntries(from: [kGladysMainViewLabelList: [self]])
         return activity
     }
     

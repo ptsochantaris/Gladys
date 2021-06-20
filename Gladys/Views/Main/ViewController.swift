@@ -600,6 +600,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         updateUI()
     }
     
+    @available(iOS 15.0, *)
+    func collectionView(_ collectionView: UICollectionView, sceneActivationConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIWindowScene.ActivationConfiguration? {
+        guard let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell,
+              let item = cell.archivedDropItem else {
+            return nil
+        }
+        
+        mostRecentIndexPathActioned = indexPath
+        let activity = NSUserActivity(activityType: kGladysQuicklookActivity)
+        ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Quick look")
+        
+        let options = UIWindowScene.ActivationRequestOptions()
+        options.preferredPresentationStyle = .prominent
+        
+        return UIWindowScene.ActivationConfiguration(userActivity: activity, options: options, preview: cell.targetedPreviewItem)
+    }
+    
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if isEditing {
             updateUI()
@@ -775,6 +792,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             filter.collapseLabelsByName([toggle.name])
         }
         updateDataSource(animated: true)
+        userActivity?.needsSave = true
     }
     
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
@@ -847,6 +865,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
             self?.filter.text = searchController?.searchBar.text
+            self?.userActivity?.needsSave = true
 			self?.updateUI()
 		}
 
@@ -887,11 +906,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
         
-        let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_ :)))
-        for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
-            r.require(toFail: p)
+        if #available(iOS 15.0, *) {
+            // nothing to do here, will use delegate method to detect pinch
+        } else {
+            let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_ :)))
+            for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
+                r.require(toFail: p)
+            }
+            collection.addGestureRecognizer(p)
         }
-        collection.addGestureRecognizer(p)
         
         updateDataSource(animated: false)
 	}
@@ -2116,10 +2139,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         activity.title = title
-        activity.userInfo = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
-                             kGladysMainViewSearchText: filter.text ?? "",
-                             kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
-                             kGladysMainViewCollapsedSections: filter.collapsedLabels.map { $0.name }]
+        let userInfo: [AnyHashable: Any] = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
+                                           kGladysMainViewSearchText: filter.text ?? "",
+                                          kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
+                                    kGladysMainViewCollapsedSections: filter.collapsedLabels.map { $0.name }]
+        activity.addUserInfoEntries(from: userInfo)
     }
     
     // MARK: 

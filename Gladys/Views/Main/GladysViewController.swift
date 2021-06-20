@@ -178,7 +178,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         }
         navigationController?.navigationBar.setNeedsLayout()
     }
-        
+    
     private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if Singleton.shared.openCount > 1 {
@@ -231,7 +231,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         b.tag = 10923
         return b
     }()
-        
+    
     // MARK: scrolling
     
     private final class ScrollInfo {

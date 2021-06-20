@@ -140,6 +140,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		labels.dataSource = self
 
 		userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
+        userActivity?.needsSave = true
 
 		DetailController.showingUUIDs.insert(item.uuid)
 	}

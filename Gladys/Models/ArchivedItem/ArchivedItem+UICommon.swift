@@ -86,15 +86,19 @@ extension ArchivedItem {
 	}
 
 	static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {
-		let uuidString = item.uuid.uuidString
-		activity.title = titled + " \"" + item.trimmedName + "\""
+		
+        activity.title = titled + " \"" + item.trimmedName + "\""
 
-		var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
-		userInfo[kGladysDetailViewingActivityItemTypeUuid] = child?.uuid.uuidString
-		activity.userInfo = userInfo
+        let uuidString = item.uuid.uuidString
+        let childUuidString = child?.uuid.uuidString
+
+        var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
+        userInfo[kGladysDetailViewingActivityItemTypeUuid] = childUuidString
+        activity.addUserInfoEntries(from: userInfo)
 
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
+        activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
 
 		#if MAC
 			activity.isEligibleForSearch = false
