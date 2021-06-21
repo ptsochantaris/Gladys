@@ -23,10 +23,10 @@ NSString *bundleId = @"build.bru.MacGladys.Framework";
 NSString *receiptId = @"build.bru.MacGladys";
 #endif
 
-@interface SafeArchiver: NSKeyedArchiver
+@interface SafeArchiver: NSObject
 + (NSData *)archive:(id)object;
 @end
 
-@interface SafeUnarchiver: NSKeyedUnarchiver
+@interface SafeUnarchiver: NSObject
 + (id)unarchive:(NSData *)data;
 @end

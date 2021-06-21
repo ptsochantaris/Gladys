@@ -98,7 +98,9 @@ extension ArchivedItem {
 
 		activity.isEligibleForHandoff = true
 		activity.isEligibleForPublicIndexing = false
-        activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
+        if #available(macOS 10.15, *) {
+            activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
+        }
 
 		#if MAC
 			activity.isEligibleForSearch = false
