@@ -24,24 +24,25 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let label = UILabel()
     private let indicator = UIImageView()
     private let button = UIButton(type: .custom)
+    private let topLine = UIView()
+    private let bottomLine = UIView()
+
     static let titleStyle = UIFont.TextStyle.subheadline
 
-    override func tintColorDidChange() {
-        super.tintColorDidChange()
-        label.textColor = self.tintColor
-    }
-    
     private func setup() {
-        self.tintColor = .secondaryLabel
-        self.isUserInteractionEnabled = true
-                
+        
+        tintColor = .secondaryLabel
+        isUserInteractionEnabled = true
+
         label.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         label.isUserInteractionEnabled = false
+        label.textColor = .secondaryLabel
+        label.highlightedTextColor = .label
         
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
-        indicator.image = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
-        indicator.highlightedImage = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
+        indicator.highlightedImage = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
+        indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.isUserInteractionEnabled = false
         
         let stack = UIStackView(arrangedSubviews: [label, indicator])
@@ -55,17 +56,35 @@ final class LabelSectionTitle: UICollectionReusableView {
         button.translatesAutoresizingMaskIntoConstraints = false
         addSubview(button)
         
-        let guide = layoutMarginsGuide
+        topLine.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        topLine.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(topLine)
+
+        bottomLine.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        bottomLine.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(bottomLine)
+
+        let pixelHeight: CGFloat = 1 / screenScale
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
-            stack.topAnchor.constraint(equalTo: guide.topAnchor),
-            stack.bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+            stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            stack.topAnchor.constraint(equalTo: topAnchor),
+            stack.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             button.topAnchor.constraint(equalTo: topAnchor),
             button.bottomAnchor.constraint(equalTo: bottomAnchor),
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: trailingAnchor)
+            button.trailingAnchor.constraint(equalTo: trailingAnchor),
+
+            topLine.heightAnchor.constraint(equalToConstant: pixelHeight),
+            topLine.topAnchor.constraint(equalTo: topAnchor),
+            topLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
+            topLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44),
+            
+            bottomLine.heightAnchor.constraint(equalToConstant: pixelHeight),
+            bottomLine.bottomAnchor.constraint(equalTo: bottomAnchor),
+            bottomLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
+            bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
     }
     
@@ -73,11 +92,15 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {
+    func configure(with identifier: SectionIdentifier, firstSection: Bool, menuOptions: [UIMenuElement]) {
         guard let section = identifier.section else { return }
         label.text = section.name
-        indicator.isHighlighted = !section.collapsed
-        layoutMargins = UIEdgeInsets(top: 8, left: 5, bottom: 0, right: 6)
+        label.isHighlighted = section.collapsed
+        indicator.isHighlighted = section.collapsed
+        indicator.tintColor = section.collapsed ? .label : .secondaryLabel
+        let expanded = !section.collapsed
+        topLine.isHidden = expanded || firstSection
+        bottomLine.isHidden = expanded
         button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
     }
 }

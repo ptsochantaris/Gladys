@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17156" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="19115.2" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc" pageOrientation="vertical">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17034"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19107.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="19026"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
     </dependencies>
     <scenes>
@@ -191,7 +192,8 @@ Label</string>
                                                 <button alignment="left" id="Ucw-Jd-QYV">
                                                     <group key="contentGroup" width="1" alignment="left" spacing="5" id="ddR-pr-cej">
                                                         <items>
-                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" image="bin.xmark.fill" catalog="system" contentMode="scaleAspectFit" id="eV3-QB-rTJ">
+                                                            <imageView width="22" height="1" alignment="left" verticalAlignment="center" contentMode="scaleAspectFit" id="eV3-QB-rTJ">
+                                                                <imageReference key="image" image="xmark.bin.fill" catalog="system"/>
                                                                 <color key="tintColor" name="colorTint"/>
                                                             </imageView>
                                                             <label alignment="left" verticalAlignment="center" text="Delete Item" id="zOZ-yf-Ljy">
@@ -271,9 +273,9 @@ Label</string>
     <color key="tintColor" name="colorTint"/>
     <resources>
         <image name="arrow.up.square.fill" catalog="system" width="128" height="114"/>
-        <image name="bin.xmark.fill" catalog="system" width="128" height="91"/>
         <image name="doc.on.clipboard.fill" catalog="system" width="119" height="128"/>
-        <image name="eye.fill" catalog="system" width="128" height="77"/>
+        <image name="eye.fill" catalog="system" width="128" height="80"/>
+        <image name="xmark.bin.fill" catalog="system" width="128" height="91"/>
         <namedColor name="colorDarkGray">
             <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

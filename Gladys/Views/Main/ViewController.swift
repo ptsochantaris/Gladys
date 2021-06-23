@@ -828,8 +828,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self = self else { return }
-            let toggle = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            titleView.configure(with: toggle, menuOptions: [
+            let identifiers = self.dataSource.snapshot().sectionIdentifiers
+            let toggle = identifiers[indexPath.section]
+            titleView.configure(with: toggle, firstSection: indexPath.section == 0, menuOptions: [
                 UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
                     guard let self = self else { return }
                     self.filter.expandAllLabels()
@@ -1286,12 +1287,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private func updateLabelIcon() {
 		if filter.isFilteringLabels {
-			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle.fill")
+			labelsButton.image = UIImage(systemName: "line.3.horizontal.circle.fill")
 			labelsButton.accessibilityLabel = "Labels"
 			labelsButton.accessibilityValue = "Active"
 			title = filter.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
-			labelsButton.image = UIImage(systemName: "line.horizontal.3.decrease.circle")
+			labelsButton.image = UIImage(systemName: "line.3.horizontal.circle")
 			labelsButton.accessibilityLabel = "Labels"
 			labelsButton.accessibilityValue = "Inactive"
 			title = "Gladys"
@@ -1653,9 +1654,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         switch filter.groupingMode {
         case .byLabel:
-            collection.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
-            let layout = UICollectionViewCompositionalLayout { [weak self] index, environment in
-                let compact = environment.traitCollection.horizontalSizeClass == .compact
+            let layout = UICollectionViewCompositionalLayout { [weak self] index, _ in
                 let collapsed: Bool
                 if let self = self, self.dataSource.itemIdentifier(for: IndexPath(item: 0, section: index)) == nil {
                     collapsed = true
@@ -1674,27 +1673,22 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = spacing
-
-                let sectionSide = compact ? spacing : spacing * 2
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionSide, bottom: spacing, trailing: sectionSide)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
 
                 let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
                 let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
                 section.boundarySupplementaryItems = [sectionTitle]
                 
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: collapsed ? "collapsedBackground" : "expandedBackground")
-                let backgroundSide = compact ? 0 : spacing
-                sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: backgroundSide, bottom: 0, trailing: backgroundSide)
+                let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: collapsed ? "SectionBackground" : "SquareBackground")
                 section.decorationItems = [sectionBackground]
                 return section
             }
             
-            layout.register(SectionBackground.self, forDecorationViewOfKind: "collapsedBackground")
-            layout.register(RoundedBackground.self, forDecorationViewOfKind: "expandedBackground")
+            layout.register(SectionBackground.self, forDecorationViewOfKind: "SectionBackground")
+            layout.register(SquareBackground.self, forDecorationViewOfKind: "SquareBackground")
             return layout
             
         case .byLabelScrollable:
-            collection.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
             let layout = UICollectionViewCompositionalLayout { [weak self] index, _ in
                 let collapsed: Bool
                 if let self = self, self.dataSource.itemIdentifier(for: IndexPath(item: 0, section: index)) == nil {
@@ -1703,33 +1697,51 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     collapsed = false
                 }
 
-                let W = fixedwidth ?? side * 0.9
-                let itemWidth = NSCollectionLayoutDimension.absolute(W)
-                let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.9)
-                let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let section: NSCollectionLayoutSection
+                if collapsed {
+                    let itemWidth = NSCollectionLayoutDimension.absolute(0)
+                    let itemHeight = NSCollectionLayoutDimension.absolute(0)
+                    let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    
+                    let groupsSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
 
-                let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: collapsed ? .absolute(1) : itemHeight)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
+                    section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: 0, trailing: spacing)
 
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: collapsed ? 0 : spacing, trailing: spacing)
+                    let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "SectionBackground")
+                    section.decorationItems = [sectionBackground]
+
+                } else {
+                    let W = fixedwidth ?? side * 0.8
+                    let itemWidth = NSCollectionLayoutDimension.absolute(W)
+                    let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.8)
+                    let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                    let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: itemHeight)
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
+
+                    section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                    
+                    let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")
+                    section.decorationItems = [sectionBackground]
+                }
+                
                 section.interGroupSpacing = spacing
 
                 let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
                 let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
                 section.boundarySupplementaryItems = [sectionTitle]
                 
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: collapsed ? "collapsedBackground" : "expandedBackground")
-                sectionBackground.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: 0, bottom: 0, trailing: 0)
-                section.decorationItems = [sectionBackground]
-
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             }
             
-            layout.register(SectionBackground.self, forDecorationViewOfKind: "collapsedBackground")
-            layout.register(RoundedBackground.self, forDecorationViewOfKind: "expandedBackground")
+            layout.register(SectionBackground.self, forDecorationViewOfKind: "SectionBackground")
+            layout.register(SquareBackground.self, forDecorationViewOfKind: "SquareBackground")
             return layout
 
         case .flat:
@@ -1738,7 +1750,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-            collection.contentInset = .zero
             let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
             group.interItemSpacing = .fixed(spacing)

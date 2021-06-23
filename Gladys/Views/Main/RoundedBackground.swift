@@ -25,7 +25,7 @@ class SectionBackground: UICollectionReusableView {
         setup()
     }
     
-    private func setup() {
+    func setup() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.addGestureRecognizer(tap)
     }
@@ -36,31 +36,9 @@ class SectionBackground: UICollectionReusableView {
     }
 }
 
-final class RoundedBackground: UICollectionReusableView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
-    }
-        
-    @objc private func tapped(tap: UITapGestureRecognizer) {
-        let event = BackgroundSelectionEvent(scene: self.window?.windowScene, frame: tap.view?.frame, name: nil)
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
-    }
-    
-    private func setup() {
+final class SquareBackground: SectionBackground {
+    override func setup() {
+        super.setup()
         self.backgroundColor = .quaternarySystemFill
-        self.layer.cornerRadius = self.traitCollection.horizontalSizeClass == .compact ? 0 : 10
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        self.addGestureRecognizer(tap)
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        self.layer.cornerRadius = self.traitCollection.horizontalSizeClass == .compact ? 0 : 10
     }
 }
