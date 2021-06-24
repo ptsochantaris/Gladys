@@ -21,4 +21,6 @@ extension COLORCLASS {
     static let g_colorShadow = COLORCLASS(named: "colorShadow")!
     static let g_colorShadowContrast = COLORCLASS(named: "colorShadowContrast")!
     static let g_colorTint = COLORCLASS(named: "colorTint")!
+    static let g_sectionTitleTop = COLORCLASS(named: "sectionTitleTop")!
+    static let g_sectionTitleBottom = COLORCLASS(named: "sectionTitleBottom")!
 }

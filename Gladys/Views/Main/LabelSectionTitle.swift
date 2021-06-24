@@ -56,11 +56,11 @@ final class LabelSectionTitle: UICollectionReusableView {
         button.translatesAutoresizingMaskIntoConstraints = false
         addSubview(button)
         
-        topLine.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        topLine.backgroundColor = .g_sectionTitleTop
         topLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topLine)
 
-        bottomLine.backgroundColor = UIColor(white: 0, alpha: 0.3)
+        bottomLine.backgroundColor = .g_sectionTitleBottom
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomLine)
 
@@ -92,14 +92,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with identifier: SectionIdentifier, firstSection: Bool, menuOptions: [UIMenuElement]) {
+    func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {
         guard let section = identifier.section else { return }
         label.text = section.name
         label.isHighlighted = section.collapsed
         indicator.isHighlighted = section.collapsed
         indicator.tintColor = section.collapsed ? .label : .secondaryLabel
         let expanded = !section.collapsed
-        topLine.isHidden = expanded || firstSection
+        topLine.isHidden = expanded
         bottomLine.isHidden = expanded
         button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
     }

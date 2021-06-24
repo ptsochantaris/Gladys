@@ -830,7 +830,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             guard let self = self else { return }
             let identifiers = self.dataSource.snapshot().sectionIdentifiers
             let toggle = identifiers[indexPath.section]
-            titleView.configure(with: toggle, firstSection: indexPath.section == 0, menuOptions: [
+            titleView.configure(with: toggle, menuOptions: [
                 UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
                     guard let self = self else { return }
                     self.filter.expandAllLabels()
