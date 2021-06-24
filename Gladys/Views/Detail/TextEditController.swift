@@ -85,7 +85,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
 		if !hasChanges { return }
 
 		if typeEntry.classWasWrapped, let d: Any = (isAttributed ? textView.attributedText : textView.text) {
-			let b = SafeArchiver.archive(d) ?? emptyData
+			let b = SafeArchiving.archive(d) ?? emptyData
 			typeEntry.setBytes(b)
 			saveDone()
 

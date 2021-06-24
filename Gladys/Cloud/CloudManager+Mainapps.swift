@@ -149,13 +149,13 @@ extension CloudManager {
     static var uuidSequence: [String] {
         get {
             if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
-                return SafeUnarchiver.unarchive(data) as? [String] ?? []
+                return SafeArchiving.unarchive(data) as? [String] ?? []
             } else {
                 return []
             }
         }
         set {
-            if let data = SafeArchiver.archive(newValue) {
+            if let data = SafeArchiving.archive(newValue) {
                 PersistedOptions.defaults.set(data, forKey: "uuidSequence")
             }
         }
@@ -198,13 +198,13 @@ extension CloudManager {
     static var deletionQueue: Set<String> {
         get {
             if let data = try? Data(contentsOf: deleteQueuePath) {
-                return SafeUnarchiver.unarchive(data) as? Set<String> ?? []
+                return SafeArchiving.unarchive(data) as? Set<String> ?? []
             } else {
                 return []
             }
         }
         set {
-            try? SafeArchiver.archive(newValue)?.write(to: deleteQueuePath)
+            try? SafeArchiving.archive(newValue)?.write(to: deleteQueuePath)
         }
     }
 
@@ -509,7 +509,7 @@ extension CloudManager {
                 if item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
-                    log("Drop \(recordType) deletion: \(itemUUID)")
+                    log("Item deletion: \(itemUUID)")
                     item.needsDeletion = true
                     item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
                     item.cloudKitShareRecord = nil // get rid of useless file
@@ -523,7 +523,7 @@ extension CloudManager {
                 if component.parentZone != recordId.zoneID {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
                 } else {
-                    log("Component \(recordType) deletion: \(itemUUID)")
+                    log("Component deletion: \(itemUUID)")
                     component.needsDeletion = true
                     component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
                     stats.deletionCount += 1

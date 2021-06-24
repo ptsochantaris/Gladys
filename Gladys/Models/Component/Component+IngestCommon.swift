@@ -146,7 +146,7 @@ extension Component {
 
 		clearCachedFields()
         
-        if data.isPlist, let obj = SafeUnarchiver.unarchive(data) {
+        if data.isPlist, let obj = SafeArchiving.unarchive(data) {
             log("      unwrapped keyed object: \(type(of: obj))")
             classWasWrapped = true
             

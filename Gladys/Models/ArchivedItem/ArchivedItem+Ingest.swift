@@ -279,7 +279,7 @@ extension ArchivedItem {
         provider.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
             if let data = data, data.count < 16384 {
                 var extractedText: String?
-                if data.isPlist, let text = SafeUnarchiver.unarchive(data) as? String {
+                if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
                     extractedText = text
                     
                 } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {

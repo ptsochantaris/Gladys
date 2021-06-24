@@ -95,14 +95,14 @@ final class PullState {
 	private static var legacyZoneChangeToken: CKServerChangeToken? {
 		get {
 			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), !data.isEmpty {
-                return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
+                return SafeArchiving.unarchive(data) as? CKServerChangeToken
 			} else {
 				return nil
 			}
 		}
 		set {
 			if let n = newValue {
-                if let data = SafeArchiver.archive(n) {
+                if let data = SafeArchiving.archive(n) {
                     PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
                 }
 			} else {
@@ -125,7 +125,7 @@ final class PullState {
 
 	static func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
 		if let data = zoneTokens[zoneId.ownerName + ":" + zoneId.zoneName] {
-            return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
+            return SafeArchiving.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}
@@ -133,7 +133,7 @@ final class PullState {
 	static func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
-			zoneTokens[key] = SafeArchiver.archive(n)
+			zoneTokens[key] = SafeArchiving.archive(n)
 		} else {
             zoneTokens[key] = nil
 		}
@@ -151,14 +151,14 @@ final class PullState {
 
 	static func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
 		if let data = databaseTokens[database.keyName] {
-            return SafeUnarchiver.unarchive(data) as? CKServerChangeToken
+            return SafeArchiving.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}
 
 	private static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
 		if let n = token {
-            databaseTokens[database.keyName] = SafeArchiver.archive(n)
+            databaseTokens[database.keyName] = SafeArchiving.archive(n)
 		} else {
             databaseTokens[database.keyName] = nil
 		}

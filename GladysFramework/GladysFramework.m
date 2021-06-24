@@ -1,4 +1,3 @@
-#import <CommonCrypto/CommonCrypto.h>
 #import "GladysFramework.h"
 #if TARGET_OS_IPHONE
 @import UIKit;
@@ -6,20 +5,15 @@
 @import MapKit;
 @import CloudKit;
 
-NSData *sha1(NSString *input) {
-	unsigned char digest[CC_SHA1_DIGEST_LENGTH];
-	NSData *stringBytes = [input dataUsingEncoding: NSUTF8StringEncoding];
-	CC_SHA1([stringBytes bytes], (CC_LONG)[stringBytes length], digest);
-	return [NSData dataWithBytes:digest length:CC_SHA1_DIGEST_LENGTH];
-}
-
 uint32_t valueForKeyedArchiverUID(id keyedArchiverUID) {
 	void *uid = (__bridge void*)keyedArchiverUID;
 	uint32_t *valuePtr = uid+16;
 	return *valuePtr;
 }
 
-@implementation SafeArchiver
+NSSet *_allowedClasses = nil;
+
+@implementation SafeArchiving
 + (NSData *)archive:(id)object {
     @try {
         NSError *error;
@@ -28,11 +22,7 @@ uint32_t valueForKeyedArchiverUID(id keyedArchiverUID) {
         return nil;
     }
 }
-@end
 
-NSSet *_allowedClasses = nil;
-
-@implementation SafeUnarchiver
 + (NSSet *)allowedClasses{
     if(_allowedClasses == nil) {
         _allowedClasses = [[NSSet alloc] initWithObjects:
@@ -58,7 +48,7 @@ NSSet *_allowedClasses = nil;
 }
 + (id)unarchive:(NSData *)data {
     @try {
-        id a = [NSKeyedUnarchiver unarchivedObjectOfClasses:[SafeUnarchiver allowedClasses] fromData:data error:nil];
+        id a = [NSKeyedUnarchiver unarchivedObjectOfClasses:[SafeArchiving allowedClasses] fromData:data error:nil];
 /*#if DEBUG
         id b = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:nil];
         if(!(a == nil && b == nil) && ![a isEqual:b]) {

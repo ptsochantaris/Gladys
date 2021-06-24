@@ -63,7 +63,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			let reportedCount = context["total"] as? Int,
 			let compressedData = context["dropList"] as? Data,
 			let uncompressedData = compressedData.data(operation: .decompress),
-			let itemInfo = NSKeyedUnarchiver.unarchiveObject(with: uncompressedData) as? [[String: Any]] {
+            let itemInfo = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: uncompressedData) as? [[String: Any]] {
 
 			var count = 1
 			let list = itemInfo.map { dict -> [String: Any] in
