@@ -1699,8 +1699,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
                 let section: NSCollectionLayoutSection
                 if collapsed {
-                    let itemWidth = NSCollectionLayoutDimension.absolute(0)
-                    let itemHeight = NSCollectionLayoutDimension.absolute(0)
+                    let itemWidth = NSCollectionLayoutDimension.fractionalWidth(1)
+                    let itemHeight = NSCollectionLayoutDimension.absolute(CGFloat.leastNonzeroMagnitude)
                     let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     
@@ -1714,14 +1714,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     section.decorationItems = [sectionBackground]
 
                 } else {
-                    let W = fixedwidth ?? side * 0.8
+                    let W = fixedwidth ?? side * 0.9
                     let itemWidth = NSCollectionLayoutDimension.absolute(W)
-                    let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.8)
+                    let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.9)
                     let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                    let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: itemHeight)
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: itemHeight)
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
                     section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
