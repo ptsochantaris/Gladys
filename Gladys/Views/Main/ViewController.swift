@@ -688,6 +688,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             pinchRecognizer.state = .ended
         }
     }
+    
+    @objc private func quickLookFocusedItem() {
+        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem {
+            item.tryPreview(in: self, from: focusedCell)
+        }
+    }
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -828,6 +834,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if #available(iOS 15.0, *) {
             collection.focusGroupIdentifier = "build.bru.gladys.collection"
             collection.allowsFocus = true
+            collection.remembersLastFocusedIndexPath = true
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
@@ -2145,6 +2152,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			UIKeyCommand.makeCommand(input: "f", modifierFlags: .command, action: #selector(openSearch), title: "Search Items"),
 			UIKeyCommand.makeCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), title: "Toggle Edit Mode")
 		])
+        if UIScreen.main.focusedView is ArchivedItemCell {
+            let ql = UIKeyCommand.makeCommand(input: " ", modifierFlags: [], action: #selector(quickLookFocusedItem), title: "Quick look item")
+            a.append(ql)
+        }
 		return a
 	}
 

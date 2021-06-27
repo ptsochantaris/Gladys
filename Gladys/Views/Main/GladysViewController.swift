@@ -255,23 +255,21 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 
     override var keyCommands: [UIKeyCommand]? {
         var a = [UIKeyCommand]()
-        if isFirstResponder {
-            if explicitScrolling {
-                a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
-                a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
-            }
-            a.append(UIKeyCommand(title: "Page Down", action: #selector(pageDown), input: UIKeyCommand.inputPageDown))
-            a.append(UIKeyCommand(title: "Page Up", action: #selector(pageUp), input: UIKeyCommand.inputPageUp))
-            let itemsToCheck = (navigationItem.leftBarButtonItems ?? []) + (navigationItem.rightBarButtonItems ?? [])
-            if itemsToCheck.contains(doneButton) {
-                a.append(UIKeyCommand(title: "Close Window", action: #selector(done), input: "w", modifierFlags: .command))
-            }
-            if itemsToCheck.contains(newWindowButton) {
-                a.append(UIKeyCommand(title: "New Window", action: #selector(newWindowSelected), input: "n", modifierFlags: .command))
-            }
-            if itemsToCheck.contains(mainWindowButton) {
-                a.append(UIKeyCommand(title: "Main Window", action: #selector(mainWindowSelected), input: "n", modifierFlags: .command))
-            }
+        if explicitScrolling {
+            a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
+            a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
+        }
+        a.append(UIKeyCommand(title: "Page Down", action: #selector(pageDown), input: UIKeyCommand.inputPageDown))
+        a.append(UIKeyCommand(title: "Page Up", action: #selector(pageUp), input: UIKeyCommand.inputPageUp))
+        let itemsToCheck = (navigationItem.leftBarButtonItems ?? []) + (navigationItem.rightBarButtonItems ?? [])
+        if itemsToCheck.contains(doneButton) {
+            a.append(UIKeyCommand(title: "Close Window", action: #selector(done), input: "w", modifierFlags: .command))
+        }
+        if itemsToCheck.contains(newWindowButton) {
+            a.append(UIKeyCommand(title: "New Window", action: #selector(newWindowSelected), input: "n", modifierFlags: .command))
+        }
+        if itemsToCheck.contains(mainWindowButton) {
+            a.append(UIKeyCommand(title: "Main Window", action: #selector(mainWindowSelected), input: "n", modifierFlags: .command))
         }
         if self.popoverPresenter != nil {
             let esc = UIKeyCommand.makeCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(done), title: "Close Popup")

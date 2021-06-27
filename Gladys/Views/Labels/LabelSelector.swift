@@ -23,6 +23,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 		doneButtonLocation = .left
         if #available(iOS 15.0, *) {
             table.allowsFocus = true
+            table.remembersLastFocusedIndexPath = true
         }
 		var count = 0
 		for toggle in filteredToggles {

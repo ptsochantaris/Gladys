@@ -35,6 +35,7 @@ final class DetailController: GladysViewController,
 		table.dropDelegate = self
         if #available(iOS 15.0, *) {
             table.allowsFocus = true
+            table.remembersLastFocusedIndexPath = true
             table.focusGroupIdentifier = "build.bru.gladys.detail.focus"
         }
 

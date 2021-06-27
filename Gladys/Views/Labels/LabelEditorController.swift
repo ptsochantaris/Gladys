@@ -38,6 +38,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         
         if #available(iOS 15.0, *) {
             table.allowsFocus = true
+            table.remembersLastFocusedIndexPath = true
             table.focusGroupIdentifier = "build.bru.gladys.labeleditor.table"
             headerLabel.focusGroupIdentifier = "build.bru.gladys.labeleditor.field"
         }
