@@ -21,6 +21,11 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 	override func awakeFromNib() {
         super.awakeFromNib()
         textView.textContainerInset = .zero
+        
+        if #available(iOS 15.0, *) {
+            focusEffect = UIFocusHaloEffect()
+            textView?.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+        }
 
 		let c = UIColor.g_colorTint
 		textView.textColor = c
@@ -29,6 +34,10 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
             self?.caretMoved()
         }
 	}
+    
+    func startEdit() {
+        textView.becomeFirstResponder()
+    }
 
 	private func caretMoved() {
 		guard let r = textView.selectedTextRange, let s = superview else {

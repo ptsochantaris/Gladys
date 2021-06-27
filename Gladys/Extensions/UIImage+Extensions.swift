@@ -136,10 +136,14 @@ extension UIImage {
 		return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
 	}
     
+    private static let sharedCiContext = CIContext()
+    
     final func desaturated(darkMode: Bool, completion: @escaping (UIImage?) -> Void) {
         DispatchQueue.global(qos: .utility).async {
             guard let ciImage = CIImage(image: self) else {
-                completion(nil)
+                DispatchQueue.main.async {
+                    completion(self)
+                }
                 return
             }
             let p1 = darkMode ? "inputColor0" : "inputColor1"
@@ -150,9 +154,15 @@ extension UIImage {
                     p1: CIColor(color: .systemBackground),
                     p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
                 ])
-            let img = UIImage(ciImage: blackAndWhiteImage)
-            DispatchQueue.main.async {
-                completion(img)
+            if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
+                let img = UIImage(cgImage: cgImage)
+                DispatchQueue.main.async {
+                    completion(img)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion(self)
+                }
             }
         }
     }

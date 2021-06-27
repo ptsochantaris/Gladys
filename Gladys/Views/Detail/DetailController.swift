@@ -33,6 +33,10 @@ final class DetailController: GladysViewController,
 		table.dragInteractionEnabled = true
 		table.dragDelegate = self
 		table.dropDelegate = self
+        if #available(iOS 15.0, *) {
+            table.allowsFocus = true
+            table.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+        }
 
 		openButton.isEnabled = item.canOpen
         
@@ -754,23 +758,44 @@ final class DetailController: GladysViewController,
 	func tableView(_ tableView: UITableView, dropPreviewParametersForRowAt indexPath: IndexPath) -> UIDragPreviewParameters? {
 		return dragParameters(for: indexPath)
 	}
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard indexPath.section == 1, indexPath.row < item.labels.count else {
+            return nil
+        }
+        let text = item.labels[indexPath.row]
+        return UISwipeActionsConfiguration(actions: [
+            UIContextualAction(style: .destructive, title: "Remove") { [weak self] _, _, completion in
+                self?.removeLabel(text)
+                completion(true)
+            }
+        ])
+    }
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		view.endEditing(false)
+        view.endEditing(false)
+        
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.cellForRow(at: indexPath)
+            if let cell = cell as? HeaderCell {
+                cell.startEdit()
+            } else if let cell = cell as? NoteCell {
+                cell.startEdit()
+            }
 
-		if indexPath.section == 2 {
-			showTypeDetails = !showTypeDetails
-			table.reloadData()
-		}
+        case 1:
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "addLabel", sender: indexPath)
+            }
 
-		guard indexPath.section == 1 else {
-			tableView.deselectRow(at: indexPath, animated: false)
-			return
-		}
+        case 2:
+            showTypeDetails = !showTypeDetails
+            table.reloadData()
 
-		DispatchQueue.main.async {
-			self.performSegue(withIdentifier: "addLabel", sender: indexPath)
-		}
+        default:
+            tableView.deselectRow(at: indexPath, animated: false)
+        }
 	}
 
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {

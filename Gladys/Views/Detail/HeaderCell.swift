@@ -28,7 +28,16 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
         observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
             self?.caretMoved()
         }
+        
+        if #available(iOS 15.0, *) {
+            self.focusEffect = UIFocusHaloEffect()
+            label.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+        }
 	}
+    
+    func startEdit() {
+        label.becomeFirstResponder()
+    }
 
     private func caretMoved() {
 		if let r = label.selectedTextRange, let s = superview {

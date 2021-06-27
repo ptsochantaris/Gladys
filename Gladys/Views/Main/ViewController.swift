@@ -825,6 +825,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		collection.dragInteractionEnabled = true
         collection.dataSource = dataSource
         collection.contentOffset = .zero
+        if #available(iOS 15.0, *) {
+            collection.focusGroupIdentifier = "build.bru.gladys.collection"
+            collection.allowsFocus = true
+        }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self = self else { return }
@@ -862,6 +866,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		searchController.searchResultsUpdater = self
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
+        searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
 		navigationItem.searchController = searchController
 
 		searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in

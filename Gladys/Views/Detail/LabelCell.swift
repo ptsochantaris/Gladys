@@ -17,6 +17,10 @@ final class LabelCell: UITableViewCell {
         let b = UIView()
         b.backgroundColor = UIColor.g_colorTint.withAlphaComponent(0.1)
         selectedBackgroundView = b
+        
+        if #available(iOS 15.0, *) {
+            self.focusEffect = UIFocusHaloEffect()
+        }
     }
     
     var label: String? {

@@ -46,6 +46,10 @@ final class DetailCell: UITableViewCell {
         archiveButton.accessibilityLabel = "Archive target of link"
 		viewButton.accessibilityLabel = "Visual item preview"
 		editButton.accessibilityLabel = "Edit item"
+        
+        if #available(iOS 15.0, *) {
+            self.focusEffect = UIFocusHaloEffect()
+        }
 	}
 
 	override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {
@@ -107,17 +111,25 @@ final class DetailCell: UITableViewCell {
         return d
     }()
     
+    private var handlingComponentId: UUID?
+    
     func configure(with component: Component, showTypeDetails: Bool, isReadWrite: Bool, delegate: DetailCellDelegate) {
         self.delegate = delegate
 
         imageHolder.image = nil
+        handlingComponentId = component.uuid
 
         var hasImage = false
         if component.displayIconContentMode == .fill, let icon = component.componentIcon {
             hasImage = true
             let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
             icon.desaturated(darkMode: darkMode) { [weak self] img in
-                self?.imageHolder.image = img
+                guard let self = self else {
+                    return
+                }
+                if self.handlingComponentId == component.uuid {
+                    self.imageHolder.image = img
+                }
             }
         }
     

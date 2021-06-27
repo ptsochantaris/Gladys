@@ -250,18 +250,22 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
     
     private var scrollInfo: ScrollInfo?
+    
+    var explicitScrolling = false
 
     override var keyCommands: [UIKeyCommand]? {
         var a = [UIKeyCommand]()
         if isFirstResponder {
-            a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
-            a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
+            if explicitScrolling {
+                a.append(UIKeyCommand(title: "Scroll Down", action: #selector(scrollDown), input: UIKeyCommand.inputUpArrow))
+                a.append(UIKeyCommand(title: "Scroll Up", action: #selector(scrollUp), input: UIKeyCommand.inputDownArrow))
+            }
             a.append(UIKeyCommand(title: "Page Down", action: #selector(pageDown), input: UIKeyCommand.inputPageDown))
             a.append(UIKeyCommand(title: "Page Up", action: #selector(pageUp), input: UIKeyCommand.inputPageUp))
         }
         if self.popoverPresenter != nil {
-            let w = UIKeyCommand.makeCommand(input: "w", modifierFlags: .command, action: #selector(done), title: "Close Popup")
-            a.insert(w, at: 0)
+            let esc = UIKeyCommand.makeCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(done), title: "Close Popup")
+            a.insert(esc, at: 0)
         }
         return a
     }
@@ -285,7 +289,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
 
     private func pressesDone(_ presses: Set<UIPress>) -> Bool {
-        if isFirstResponder {
+        if explicitScrolling {
             let code = presses.first?.key?.keyCode
             if code == UIKeyboardHIDUsage.keyboardUpArrow || code == UIKeyboardHIDUsage.keyboardDownArrow {
                 scrollInfo = nil
@@ -296,7 +300,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        if isFirstResponder, let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
+        if explicitScrolling, let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
             let code = presses.first?.key?.keyCode
             if code == UIKeyboardHIDUsage.keyboardUpArrow {
                 scrollInfo = ScrollInfo(scrollView: scr, target: self, selector: #selector(scrollLineDown))

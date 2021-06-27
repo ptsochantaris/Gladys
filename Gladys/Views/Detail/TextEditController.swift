@@ -123,12 +123,4 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
             self.delegate?.textEditControllerMadeChanges(self)
         }
 	}
-
-	override var keyCommands: [UIKeyCommand]? {
-		let a = super.keyCommands ?? []
-		return a.filter {
-			return !($0.input == UIKeyCommand.inputUpArrow || $0.input == UIKeyCommand.inputDownArrow)
-		}
-	}
-
 }

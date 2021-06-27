@@ -46,6 +46,13 @@ final class AsciiCell: UICollectionViewCell {
         accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
 		updateSelected()
 	}
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if #available(iOS 15.0, *) {
+            focusEffect = UIFocusHaloEffect(roundedRect: self.bounds.insetBy(dx: 4, dy: 4), cornerRadius: 0, curve: .circular)
+        }
+    }
 
 	private func updateSelected() {
 		if isSelected {

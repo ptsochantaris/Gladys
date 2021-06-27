@@ -7,9 +7,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private var headerLabel: UILabel!
-    
-    @IBOutlet private var spinner: UIActivityIndicatorView!
-    
+        
 	var note = ""
 
 	private var allToggles = [String]()
@@ -22,10 +20,10 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
             self.allToggles = Model.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
             DispatchQueue.main.async { [weak self] in
                 self?.table.isHidden = false
-                self?.spinner.stopAnimating()
                 self?.updateFilter(nil)
             }
         }
+                
         NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         itemIngested(nil)
 	}

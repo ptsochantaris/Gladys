@@ -21,6 +21,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		doneButtonLocation = .left
+        if #available(iOS 15.0, *) {
+            table.allowsFocus = true
+        }
 		var count = 0
 		for toggle in filteredToggles {
 			if toggle.enabled {

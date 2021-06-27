@@ -178,6 +178,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 		table.backgroundView = nil
 		table.backgroundColor = .clear
         table.tintColor = UIColor.g_colorTint
+        explicitScrolling = true
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {

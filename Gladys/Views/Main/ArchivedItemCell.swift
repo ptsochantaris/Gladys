@@ -170,6 +170,13 @@ final class ArchivedItemCell: UICollectionViewCell {
         container.layer.borderColor = UIColor.opaqueSeparator.cgColor
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if #available(iOS 15.0, *) {
+            self.focusEffect = UIFocusHaloEffect(roundedRect: self.bounds.insetBy(dx: 2, dy: 2), cornerRadius: 10, curve: .continuous)
+        }
+    }
+        
 	override func awakeFromNib() {
 		super.awakeFromNib()
         
