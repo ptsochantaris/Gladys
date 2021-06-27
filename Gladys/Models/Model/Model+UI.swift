@@ -153,6 +153,29 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	}
 }
 
+extension Model.SortOption {
+    var ascendingIcon: UIImage? {
+        switch self {
+        case .label: return UIImage(systemName: "dock.arrow.down.rectangle")
+        case .dateAdded: return UIImage(systemName: "arrow.down.circle.fill")
+        case .dateModified: return UIImage(systemName: "arrow.down.circle")
+        case .note: return UIImage(systemName: "menubar.arrow.down.rectangle")
+        case .title: return UIImage(systemName: "arrow.down")
+        case .size: return UIImage(systemName: "arrow.up.left.and.arrow.down.right.circle")
+        }
+    }
+    var descendingIcon: UIImage? {
+        switch self {
+        case .label: return UIImage(systemName: "dock.arrow.up.rectangle")
+        case .dateAdded: return UIImage(systemName: "arrow.up.circle.fill")
+        case .dateModified: return UIImage(systemName: "arrow.up.circle")
+        case .note: return UIImage(systemName: "menubar.arrow.up.rectangle")
+        case .title: return UIImage(systemName: "arrow.up")
+        case .size: return UIImage(systemName: "arrow.down.forward.and.arrow.up.backward.circle")
+        }
+    }
+}
+
 extension UISceneSession {
     var associatedFilter: ModelFilterContext {
         if let existing = userInfo?[kGladysMainFilter] as? ModelFilterContext {

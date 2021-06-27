@@ -69,10 +69,8 @@
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="UtX-Oo-KuH"/>
-                        <barButtonItem title="Sort Ascending" image="arrow.up.arrow.down.circle" catalog="system" style="plain" id="bEM-HJ-RRy" userLabel="Sort Button">
-                            <connections>
-                                <action selector="sortAscendingButtonSelected" destination="BYZ-38-t0r" id="yQv-ax-DIp"/>
-                            </connections>
+                        <barButtonItem title="Sort Ascending" style="plain" id="bEM-HJ-RRy" userLabel="Sort Button">
+                            <imageReference key="image" image="arrow.up.arrow.down.circle" catalog="system"/>
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Gladys" id="99e-Fx-10u">
@@ -3843,7 +3841,7 @@ Selecting them will show only items that contain these labels.</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="smU-wA-hcv"/>
+        <segue reference="j8r-Hv-OpL"/>
         <segue reference="7zu-MP-PH8"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="colorTint"/>

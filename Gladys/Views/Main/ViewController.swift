@@ -930,8 +930,27 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         
         updateDataSource(animated: false)
+        
+        let descendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
+            UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil) { [weak self] _ in
+                guard let self = self else { return }
+                self.sortRequested(option, ascending: false, button: self.sortAscendingButton)
+            }
+        }
+        let ascendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
+            UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil) { [weak self] _ in
+                guard let self = self else { return }
+                self.sortRequested(option, ascending: true, button: self.sortAscendingButton)
+            }
+        }
+        let menuItems = [
+            UIMenu(title: "Descending", image: UIImage(systemName: "arrow.up"), identifier: nil, options: [.displayInline], children: descendingMenu),
+            UIMenu(title: "Ascending", image: UIImage(systemName: "arrow.down"), identifier: nil, options: [.displayInline], children: ascendingMenu)
+        ]
+        let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
+        sortAscendingButton.menu = menu
 	}
-    
+        
     override func viewDidAppear(_ animated: Bool) {
 
         if firstAppearance {
@@ -1218,21 +1237,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 		present(a, animated: true)
         a.popoverPresentationController?.barButtonItem = sender
-	}
-
-	@IBAction private func sortAscendingButtonSelected() {
-		let a = UIAlertController(title: "Sort", message: "Please select your preferred order.  This will sort your items once, it will not keep them sorted.", preferredStyle: .actionSheet)
-		for sortOption in Model.SortOption.options {
-			a.addAction(UIAlertAction(title: sortOption.ascendingTitle, style: .default) { _ in
-				self.sortRequested(sortOption, ascending: true, button: self.sortAscendingButton)
-			})
-            a.addAction(UIAlertAction(title: sortOption.descendingTitle, style: .default) { _ in
-                self.sortRequested(sortOption, ascending: false, button: self.sortAscendingButton)
-            })
-		}
-		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(a, animated: true)
-		a.popoverPresentationController?.barButtonItem = sortAscendingButton
 	}
 
 	private func sortRequested(_ option: Model.SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
