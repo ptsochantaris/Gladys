@@ -9,6 +9,7 @@
 import UIKit
 
 let screenScale = UIScreen.main.scale
+let pixelSize: CGFloat = 1 / screenScale
 
 extension UIImage {
 

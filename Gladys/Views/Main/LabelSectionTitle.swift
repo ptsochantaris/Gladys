@@ -64,7 +64,6 @@ final class LabelSectionTitle: UICollectionReusableView {
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomLine)
 
-        let pixelHeight: CGFloat = 1 / screenScale
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
@@ -76,12 +75,12 @@ final class LabelSectionTitle: UICollectionReusableView {
             button.leadingAnchor.constraint(equalTo: leadingAnchor),
             button.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            topLine.heightAnchor.constraint(equalToConstant: pixelHeight),
+            topLine.heightAnchor.constraint(equalToConstant: pixelSize),
             topLine.topAnchor.constraint(equalTo: topAnchor),
             topLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             topLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44),
             
-            bottomLine.heightAnchor.constraint(equalToConstant: pixelHeight),
+            bottomLine.heightAnchor.constraint(equalToConstant: pixelSize),
             bottomLine.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
