@@ -43,11 +43,7 @@
                         <color key="backgroundColor" name="colorPaper"/>
                     </view>
                     <toolbarItems>
-                        <barButtonItem title="X Items" style="plain" id="2pe-qg-DFG" userLabel="Count Label">
-                            <connections>
-                                <action selector="itemsCountSelected:" destination="BYZ-38-t0r" id="qAh-aC-P9P"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem title="X Items" style="plain" id="2pe-qg-DFG" userLabel="Count Label"/>
                         <barButtonItem enabled="NO" image="square.and.arrow.up" catalog="system" style="plain" id="fec-eA-o3L">
                             <connections>
                                 <action selector="shareButtonSelected:" destination="BYZ-38-t0r" id="B9v-3b-MZJ"/>
@@ -82,7 +78,8 @@
                                     </segue>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Paste" image="doc.on.doc" catalog="system" id="jsK-Yx-Re8">
+                            <barButtonItem title="Paste" id="jsK-Yx-Re8">
+                                <imageReference key="image" image="arrow.down.doc" catalog="system"/>
                                 <connections>
                                     <action selector="pasteSelected:" destination="BYZ-38-t0r" id="Z8T-pE-mzS"/>
                                 </connections>
@@ -95,7 +92,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Labels" id="rde-vn-hL8">
-                                <imageReference key="image" image="line.horizontal.3" catalog="system"/>
+                                <imageReference key="image" image="line.horizontal.3.circle" catalog="system"/>
                                 <connections>
                                     <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -3851,14 +3848,13 @@ Selecting them will show only items that contain these labels.</string>
         <image name="arrow.up.arrow.down.circle" catalog="system" width="128" height="121"/>
         <image name="checkmark.circle" catalog="system" width="128" height="121"/>
         <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
-        <image name="doc.on.doc" catalog="system" width="116" height="128"/>
         <image name="doc.zipper" catalog="system" width="109" height="128"/>
         <image name="ellipsis.circle" catalog="system" width="128" height="121"/>
         <image name="eye" catalog="system" width="128" height="81"/>
         <image name="gladysImage" width="1024" height="1024"/>
         <image name="icloud" catalog="system" width="128" height="88"/>
         <image name="info.circle" catalog="system" width="128" height="121"/>
-        <image name="line.horizontal.3" catalog="system" width="128" height="64"/>
+        <image name="line.horizontal.3.circle" catalog="system" width="128" height="121"/>
         <image name="list.bullet" catalog="system" width="128" height="88"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="mic" catalog="system" width="108" height="128"/>

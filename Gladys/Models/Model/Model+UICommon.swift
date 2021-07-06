@@ -35,8 +35,8 @@ extension Model {
 		case dateAdded, dateModified, title, note, size, label
 		var ascendingTitle: String {
 			switch self {
-			case .dateAdded: return "Oldest First"
-			case .dateModified: return "Oldest Modified First"
+			case .dateAdded: return "Oldest Item First"
+			case .dateModified: return "Oldest Update First"
 			case .title: return "Title (A-Z)"
 			case .note: return "Note (A-Z)"
 			case .label: return "First Label (A-Z)"
@@ -45,8 +45,8 @@ extension Model {
 		}
 		var descendingTitle: String {
 			switch self {
-			case .dateAdded: return "Newest First"
-			case .dateModified: return "Newest Modified First"
+			case .dateAdded: return "Newest Item First"
+			case .dateModified: return "Newest Update First"
 			case .title: return "Title (Z-A)"
 			case .note: return "Note (Z-A)"
 			case .label: return "First Label (Z-A)"
@@ -134,7 +134,7 @@ extension Model {
                 Model.saveIndexOnly()
 			}
 		}
-		static var options: [SortOption] { return [SortOption.dateAdded, SortOption.dateModified, SortOption.title, SortOption.note, SortOption.label, SortOption.size] }
+		static var options: [SortOption] { return [SortOption.title, SortOption.dateAdded, SortOption.dateModified, SortOption.note, SortOption.label, SortOption.size] }
 	}
 
 	static func resetEverything() {

@@ -702,8 +702,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		pasteButton.accessibilityLabel = "Paste from clipboard"
 		settingsButton.accessibilityLabel = "Settings"
 		shareButton.accessibilityLabel = "Share"
-
-        pasteButton.image = UIImage(systemName: "doc.on.doc", withConfiguration: UIImage.SymbolConfiguration(weight: .light))
         
 		dragModePanel.translatesAutoresizingMaskIntoConstraints = false
         dragModePanel.layer.shadowColor = UIColor.label.cgColor
@@ -944,8 +942,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
         let menuItems = [
-            UIMenu(title: "Descending", image: UIImage(systemName: "arrow.up"), identifier: nil, options: [.displayInline], children: descendingMenu),
-            UIMenu(title: "Ascending", image: UIImage(systemName: "arrow.down"), identifier: nil, options: [.displayInline], children: ascendingMenu)
+            UIMenu(title: "Ascending", image: UIImage(systemName: "arrow.down"), identifier: nil, options: [.displayInline], children: ascendingMenu),
+            UIMenu(title: "Descending", image: UIImage(systemName: "arrow.up"), identifier: nil, options: [.displayInline], children: descendingMenu)
         ]
         let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
         sortAscendingButton.menu = menu
@@ -1172,7 +1170,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             editButton.isEnabled = true
         }
 
-		let selectedCount = selectedItems.count
+        let selected = selectedItems
+        let selectedCount = selected.count
 		let someSelected = selectedCount > 0
 
         func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
@@ -1181,8 +1180,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         let filteredDrops = filter.filteredDrops
-		let itemCount = filteredDrops.count
-		let c = someSelected ? selectedCount : itemCount
+		let currentItemCount = filteredDrops.count
+		let c = someSelected ? selectedCount : currentItemCount
 		if c > 1 {
 			if someSelected {
 				setItemCountTitle(c, "Selected", colon: true)
@@ -1198,13 +1197,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		} else {
 			itemsCount.title = "No Items"
 		}
-		itemsCount.isEnabled = itemCount > 0
 
         totalSizeLabel.title = "…"
-        let selected = selectedItems
         imageProcessingQueue.async {
             let drops: ContiguousArray<ArchivedItem>
-            if !selected.isEmpty {
+            if someSelected {
                 drops = filteredDrops.filter { selected.contains($0) }
             } else {
                 drops = filteredDrops
@@ -1220,10 +1217,38 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		shareButton.isEnabled = someSelected
 
 		updateLabelIcon()
-        currentLabelEditor?.selectedItems = selectedItems.map { $0.uuid }
+        currentLabelEditor?.selectedItems = selected.map { $0.uuid }
 		collection.isAccessibilityElement = filteredDrops.isEmpty
 
         updateEmptyView()
+        
+        if currentItemCount == 0 {
+            itemsCount.isEnabled = false
+            itemsCount.menu = nil
+        } else {
+            var actions = [UIAction]()
+            if selectedCount < currentItemCount {
+                let selectTitle: String
+                let extra = currentItemCount - selectedCount
+                if extra < currentItemCount {
+                    selectTitle = "Select \(extra) More"
+                } else {
+                    selectTitle = extra > 1 ? "Select \(extra) Items" : "Select Item"
+                }
+                actions.append(UIAction(title: selectTitle, image: UIImage(systemName: "square.grid.2x2.fill")) { [weak self] _ in
+                    self?.selectAll(nil)
+                })
+            }
+            if selectedCount > 0 {
+                let title = selectedCount > 1 ? "Deselect All Items" : "Deselect Item"
+                actions.append(UIAction(title: title, image: UIImage(systemName: "square.grid.2x2")) { [weak self] _ in
+                    self?.deselectAll()
+                })
+            }
+            
+            itemsCount.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: actions)
+            itemsCount.isEnabled = true
+        }
 	}
 
 	@IBAction private func shareButtonSelected(_ sender: UIBarButtonItem) {
@@ -1260,41 +1285,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
 
-	@IBAction private func itemsCountSelected(_ sender: UIBarButtonItem) {
-		let selectedCount = selectedItems.count
-		if selectedCount > 0 {
-			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-			let msg = selectedCount > 1 ? "Deselect \(selectedCount) Items" : "Deselect Item"
-			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
-                self.deselectAll()
-			})
-			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-			a.modalPresentationStyle = .popover
-			navigationController?.visibleViewController?.present(a, animated: true)
-			if let p = a.popoverPresentationController {
-				p.permittedArrowDirections = [.any]
-				p.barButtonItem = itemsCount
-				p.delegate = self
-			}
-		} else {
-			let itemCount = filter.filteredDrops.count
-			guard itemCount > 0 else { return }
-			let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-			let msg = itemCount > 1 ? "Select \(itemCount) Items" : "Select Item"
-			a.addAction(UIAlertAction(title: msg, style: .default) { _ in
-                self.selectAll(nil)
-			})
-			a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-			a.modalPresentationStyle = .popover
-			navigationController?.visibleViewController?.present(a, animated: true)
-			if let p = a.popoverPresentationController {
-				p.permittedArrowDirections = [.any]
-				p.barButtonItem = itemsCount
-				p.delegate = self
-			}
-		}
-	}
-
 	@objc private func labelSelectionChanged() {
         filter.updateFilter(signalUpdate: .animated)
 		updateLabelIcon()
@@ -1303,16 +1293,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	private func updateLabelIcon() {
 		if filter.isFilteringLabels {
-			labelsButton.image = UIImage(systemName: "line.3.horizontal.circle.fill")
-			labelsButton.accessibilityLabel = "Labels"
+			labelsButton.image = UIImage(systemName: "line.horizontal.3.circle.fill")
 			labelsButton.accessibilityValue = "Active"
 			title = filter.enabledLabelsForTitles.joined(separator: ", ")
 		} else {
-			labelsButton.image = UIImage(systemName: "line.3.horizontal.circle")
-			labelsButton.accessibilityLabel = "Labels"
+			labelsButton.image = UIImage(systemName: "line.horizontal.3.circle")
 			labelsButton.accessibilityValue = "Inactive"
 			title = "Gladys"
 		}
+        labelsButton.accessibilityLabel = "Labels"
+        
         let haveDrops = !Model.drops.isEmpty
 		labelsButton.isEnabled = haveDrops
 		sortAscendingButton.isEnabled = haveDrops
@@ -1625,13 +1615,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }, style: [], iconName: "square.and.arrow.up"))
         }
         
-        let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm Delete"
+        let confirmTitle = item.shareMode == .sharing ? "Confirm (Will delete from shared users too)" : "Confirm"
         let confirmAction = UIAction(title: confirmTitle) { _ in
             Model.delete(items: [item])
         }
         confirmAction.attributes = .destructive
-        confirmAction.image = UIImage(systemName: "bin.xmark")
-        let deleteMenu = UIMenu(title: "Delete", image: confirmAction.image, identifier: nil, options: .destructive, children: [confirmAction])
+        let deleteMenu = UIMenu(title: "Delete", image: UIImage(systemName: "bin.xmark"), identifier: nil, options: .destructive, children: [confirmAction])
         let deleteHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [deleteMenu])
         children.append(deleteHolder)
         
