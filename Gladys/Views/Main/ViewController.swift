@@ -222,26 +222,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {}
-
-    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        if elementKind != "SquareBackground" {
-            return
-        }
-        
-        if let sv = collectionView.subviews.compactMap({ $0 as? UIScrollView }).first(where: { view.frame.contains($0.frame) }) {
-            hackScrollView(sv)
-        }
-    }
-    
-    private func hackScrollView(_ sv: UIScrollView) {
-        if sv.gestureRecognizers?.contains(where: { $0 is UITapGestureRecognizer }) == true {
-            // all good
-        } else {
-            log("Hacking in a tap recognizer to collection view scrollview")
-            let tap = UITapGestureRecognizer(target: self, action: #selector(sectionBackgroundTapped))
-            sv.addGestureRecognizer(tap)
-        }
-    }
     
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		let center = cell.center
@@ -790,12 +770,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         updateDataSource(animated: true)
         userActivity?.needsSave = true
     }
-    
-    @objc private func sectionBackgroundTapped(tap: UITapGestureRecognizer) {
-        let event = BackgroundSelectionEvent(scene: tap.view?.window?.windowScene, frame: tap.view?.frame, name: nil)
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
-    }
-    
+        
     @objc private func sectionBackgroundSelected(_ notification: Notification) {
         guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
         var name = event.name
@@ -872,15 +847,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self = self else { return }
-            let label: ModelFilterContext.LabelToggle
-            if #available(iOS 15.0, *) {
-                guard let l = self.dataSource.sectionIdentifier(for: indexPath.section)?.label else { return }
-                label = l
-            } else {
-                guard let l = self.dataSource.snapshot().sectionIdentifiers[indexPath.section].label else { return }
-                label = l
-            }
-            titleView.configure(with: label, firstSection: indexPath.section == 0, dataSource: self.dataSource, viewController: self, menuOptions: headerMenuOptions)
+            let snap = self.dataSource.snapshot()
+            let sid = snap.sectionIdentifiers[indexPath.section]
+            guard let label = sid.label else { return }
+            let count = snap.numberOfItems(inSection: sid)
+            titleView.configure(with: label, firstSection: indexPath.section == 0, count: count, viewController: self, menuOptions: headerMenuOptions)
         }
         
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
@@ -979,7 +950,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
         sortAscendingButton.menu = menu
 	}
-        
+    
     override func viewDidAppear(_ animated: Bool) {
 
         if firstAppearance {
@@ -989,10 +960,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 updateSearchResults(for: sc)
             }
             updateTitle()
-            
-            for sv in collection.subviews.compactMap({ $0 as? UIScrollView }) {
-                hackScrollView(sv)
-            }
         }
         
         super.viewDidAppear(animated)
@@ -1148,8 +1115,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+        
+        let previous = filter.enabledToggles
         filter.rebuildLabels()
-        filter.updateFilter(signalUpdate: .animated)
+        let forceAnnounce = previous != filter.enabledToggles
+        filter.updateFilter(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+        
         let oldSet = Set(oldUUIDs)
         
         let parameters = notification.object as? [AnyHashable: Any]

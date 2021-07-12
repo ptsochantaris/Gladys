@@ -27,10 +27,8 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let topLine = UIView()
     private let bottomLine = UIView()
     private var menuOptions = [UIMenuElement]()
-    private var toggle: ModelFilterContext.LabelToggle?
-    
+    private var count = 0
     private weak var viewController: ViewController?
-    private weak var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>?
 
     static let titleStyle = UIFont.TextStyle.subheadline
 
@@ -113,11 +111,9 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>, viewController: ViewController, menuOptions: [UIMenuElement]) {
-        self.menuOptions = menuOptions
-        self.dataSource = dataSource
+    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, count: Int, viewController: ViewController, menuOptions: [UIMenuElement]) {
+        self.count = count
         self.viewController = viewController
-        self.toggle = toggle
 
         label.text = toggle.name
 
@@ -146,17 +142,19 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.isHidden = true
             showAllButton.setTitle("Less", for: .normal)
         }
+        
+        updateMoreButton()
     }
     
     override func layoutSubviews() {
         updateMoreButton()
         super.layoutSubviews()
     }
-    
+        
     private func updateMoreButton() {
-        guard let toggle = self.toggle, let dataSource = self.dataSource, let viewController = self.viewController else { return }
-        let snapshot = dataSource.snapshot(for: SectionIdentifier(label: toggle))
-        let count = snapshot.items.count
+        guard let viewController = viewController else {
+            return
+        }
         showAllButton.isHidden = showAllButton.title(for: .normal) == nil || viewController.currentColumnCount >= count
     }
 }
