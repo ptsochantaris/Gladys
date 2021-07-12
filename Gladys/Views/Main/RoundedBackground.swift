@@ -31,7 +31,7 @@ class SectionBackground: UICollectionReusableView {
     }
     
     @objc private func tapped(tap: UITapGestureRecognizer) {
-        let event = BackgroundSelectionEvent(scene: self.window?.windowScene, frame: tap.view?.frame, name: nil)
+        let event = BackgroundSelectionEvent(scene: tap.view?.window?.windowScene, frame: tap.view?.frame, name: nil)
         NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
     }
 }

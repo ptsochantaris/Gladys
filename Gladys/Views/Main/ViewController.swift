@@ -223,6 +223,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
 	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {}
 
+    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind != "SquareBackground" {
+            return
+        }
+        
+        if let sv = collectionView.subviews.compactMap({ $0 as? UIScrollView }).first(where: { view.frame.contains($0.frame) }) {
+            hackScrollView(sv)
+        }
+    }
+    
+    private func hackScrollView(_ sv: UIScrollView) {
+        if sv.gestureRecognizers?.contains(where: { $0 is UITapGestureRecognizer }) == true {
+            // all good
+        } else {
+            log("Hacking in a tap recognizer to collection view scrollview")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(sectionBackgroundTapped))
+            sv.addGestureRecognizer(tap)
+        }
+    }
+    
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		let center = cell.center
 		let x = center.x
@@ -771,6 +791,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         userActivity?.needsSave = true
     }
     
+    @objc private func sectionBackgroundTapped(tap: UITapGestureRecognizer) {
+        let event = BackgroundSelectionEvent(scene: tap.view?.window?.windowScene, frame: tap.view?.frame, name: nil)
+        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: event)
+    }
+    
     @objc private func sectionBackgroundSelected(_ notification: Notification) {
         guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
         var name = event.name
@@ -964,6 +989,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 updateSearchResults(for: sc)
             }
             updateTitle()
+            
+            for sv in collection.subviews.compactMap({ $0 as? UIScrollView }) {
+                hackScrollView(sv)
+            }
         }
         
         super.viewDidAppear(animated)

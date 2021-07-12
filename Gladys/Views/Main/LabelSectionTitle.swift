@@ -155,7 +155,8 @@ final class LabelSectionTitle: UICollectionReusableView {
     
     private func updateMoreButton() {
         guard let toggle = self.toggle, let dataSource = self.dataSource, let viewController = self.viewController else { return }
-        let count = dataSource.snapshot().numberOfItems(inSection: SectionIdentifier(label: toggle))
+        let snapshot = dataSource.snapshot(for: SectionIdentifier(label: toggle))
+        let count = snapshot.items.count
         showAllButton.isHidden = showAllButton.title(for: .normal) == nil || viewController.currentColumnCount >= count
     }
 }
