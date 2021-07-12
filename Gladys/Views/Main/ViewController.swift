@@ -797,14 +797,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: archivedItemCellNib) { [unowned self] cell, _, identifier in
+            cell.wideCell = false
             cell.lowMemoryMode = self.lowMemoryMode
             cell.archivedDropItem = Model.item(uuid: identifier.uuid)
             cell.isEditing = self.isEditing
         }
 
         let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
-        let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [weak self] cell, _, identifier in
-            guard let self = self else { return }
+        let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
+            cell.wideCell = true
             cell.lowMemoryMode = self.lowMemoryMode
             cell.archivedDropItem = Model.item(uuid: identifier.uuid)
             cell.isEditing = self.isEditing
@@ -826,27 +827,36 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             collection.remembersLastFocusedIndexPath = true
         }
         
+        let headerMenuOptions = [
+            UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
+                guard let self = self else { return }
+                self.filter.setDisplayMode(to: .collapsed, for: nil)
+                self.updateDataSource(animated: true)
+            },
+            UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2")) { [weak self] _ in
+                guard let self = self else { return }
+                self.filter.setDisplayMode(to: .scrolling, for: nil)
+                self.updateDataSource(animated: true)
+            },
+            UIAction(title: "Expand All Fully", image: UIImage(systemName: "square")) { [weak self] _ in
+                guard let self = self else { return }
+                self.filter.setDisplayMode(to: .full, for: nil)
+                self.updateDataSource(animated: true)
+            }
+        ]
+        
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
+            guard let self = self else { return }
             let label: ModelFilterContext.LabelToggle
             if #available(iOS 15.0, *) {
-                guard let self = self, let l = self.dataSource.sectionIdentifier(for: indexPath.section)?.label else { return }
+                guard let l = self.dataSource.sectionIdentifier(for: indexPath.section)?.label else { return }
                 label = l
             } else {
-                guard let self = self, let l = self.dataSource.snapshot().sectionIdentifiers[indexPath.section].label else { return }
+                guard let l = self.dataSource.snapshot().sectionIdentifiers[indexPath.section].label else { return }
                 label = l
             }
-            titleView.configure(with: label, firstSection: indexPath.section == 0, menuOptions: [
-                UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
-                    guard let self = self else { return }
-                    self.filter.setDisplayMode(to: .scrolling, for: nil)
-                    self.updateDataSource(animated: true)
-                },
-                UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
-                    guard let self = self else { return }
-                    self.filter.setDisplayMode(to: .collapsed, for: nil)
-                    self.updateDataSource(animated: true)
-                }
-            ])
+            let count = self.dataSource.collectionView(self.collection, numberOfItemsInSection: indexPath.section)
+            titleView.configure(with: label, firstSection: indexPath.section == 0, allowsMore: count > self.currentColumnCount, menuOptions: headerMenuOptions)
         }
         
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
@@ -1649,7 +1659,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
     
+    private var currentColumnCount = 1
+    
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedWidth: CGFloat? = nil, fixedHeight: CGFloat? = nil, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>) -> UICollectionViewCompositionalLayout {
+        currentColumnCount = columns
         let columnCount = CGFloat(columns)
         let extras = spacing * (columnCount + 1)
         let side = ((width - extras) / columnCount).rounded(.down)

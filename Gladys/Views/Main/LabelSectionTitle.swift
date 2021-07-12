@@ -47,10 +47,10 @@ final class LabelSectionTitle: UICollectionReusableView {
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
         indicator.highlightedImage = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
+        indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.isUserInteractionEnabled = true
         
         showAllButton.titleLabel?.font = labelFont
-        showAllButton.setTitle("Show All", for: .normal)
         showAllButton.addTarget(self, action: #selector(showAllSelected), for: .touchUpInside)
         showAllButton.setContentHuggingPriority(.required, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
@@ -103,7 +103,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, menuOptions: [UIMenuElement]) {
+    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, allowsMore: Bool, menuOptions: [UIMenuElement]) {
         label.text = toggle.name
         self.menuOptions = menuOptions
         
@@ -115,22 +115,32 @@ final class LabelSectionTitle: UICollectionReusableView {
             topLine.isHidden = firstSection
             bottomLine.isHidden = false
             showAllButton.isHidden = true
+
         case .scrolling:
             label.isHighlighted = false
             indicator.isHighlighted = false
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
             bottomLine.isHidden = true
-            showAllButton.setTitle("Show More", for: .normal)
-            showAllButton.isHidden = false
+            if allowsMore {
+                showAllButton.setTitle("More", for: .normal)
+                showAllButton.isHidden = false
+            } else {
+                showAllButton.isHidden = true
+            }
+
         case .full:
             label.isHighlighted = false
             indicator.isHighlighted = false
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
             bottomLine.isHidden = true
-            showAllButton.setTitle("Show Less", for: .normal)
-            showAllButton.isHidden = false
+            if allowsMore {
+                showAllButton.setTitle("Less", for: .normal)
+                showAllButton.isHidden = false
+            } else {
+                showAllButton.isHidden = true
+            }
         }
     }
 }

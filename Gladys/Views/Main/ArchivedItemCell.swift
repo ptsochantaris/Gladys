@@ -163,8 +163,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 		}
 	}
     
-	private lazy var wideCell = { return reuseIdentifier == "WideArchivedItemCell" }()
-
+    var wideCell = false
+    
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         container.layer.borderColor = UIColor.opaqueSeparator.cgColor
@@ -184,7 +184,6 @@ final class ArchivedItemCell: UICollectionViewCell {
         container.layer.borderWidth = 1.0 / screenScale
         container.layer.borderColor = UIColor.opaqueSeparator.cgColor
 
-        image.wideMode = wideCell
 		image.accessibilityIgnoresInvertColors = true
 
 		labelStack.setCustomSpacing(4, after: labelsHolder)
@@ -285,6 +284,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 		var labels: [String]?
 
         progressView.observedProgress = nil
+        image.wideMode = wideCell
 
 		if let item = item {
 
