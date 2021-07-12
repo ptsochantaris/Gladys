@@ -23,9 +23,10 @@ final class LabelSectionTitle: UICollectionReusableView {
     
     private let label = UILabel()
     private let indicator = UIImageView()
-    private let button = UIButton(type: .custom)
+    private let showAllButton = UIButton(type: .custom)
     private let topLine = UIView()
     private let bottomLine = UIView()
+    private var menuOptions = [UIMenuElement]()
 
     static let titleStyle = UIFont.TextStyle.subheadline
 
@@ -33,9 +34,12 @@ final class LabelSectionTitle: UICollectionReusableView {
         
         tintColor = .secondaryLabel
         isUserInteractionEnabled = true
+        addInteraction(UIContextMenuInteraction(delegate: self))
 
-        label.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
-        label.isUserInteractionEnabled = false
+        let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
+        
+        label.font = labelFont
+        label.isUserInteractionEnabled = true
         label.textColor = .secondaryLabel
         label.highlightedTextColor = .label
         
@@ -43,19 +47,28 @@ final class LabelSectionTitle: UICollectionReusableView {
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
         indicator.highlightedImage = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
-        indicator.isUserInteractionEnabled = false
+        indicator.isUserInteractionEnabled = true
         
-        let stack = UIStackView(arrangedSubviews: [label, indicator])
-        stack.isUserInteractionEnabled = false
+        showAllButton.titleLabel?.font = labelFont
+        showAllButton.setTitle("Show All", for: .normal)
+        showAllButton.addTarget(self, action: #selector(showAllSelected), for: .touchUpInside)
+        showAllButton.setContentHuggingPriority(.required, for: .horizontal)
+        showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
+        addSubview(showAllButton)
+        
+        let labelTap = UITapGestureRecognizer(target: self, action: #selector(selected))
+        label.addGestureRecognizer(labelTap)
+        
+        let indicatorTap = UITapGestureRecognizer(target: self, action: #selector(selected))
+        indicator.addGestureRecognizer(indicatorTap)
+
+        let stack = UIStackView(arrangedSubviews: [label, showAllButton, indicator])
         stack.axis = .horizontal
         stack.alignment = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.spacing = 10
         addSubview(stack)
-        
-        button.addTarget(self, action: #selector(selected), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(button)
-        
+
         topLine.backgroundColor = .g_sectionTitleTop
         topLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topLine)
@@ -63,18 +76,13 @@ final class LabelSectionTitle: UICollectionReusableView {
         bottomLine.backgroundColor = .g_sectionTitleBottom
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomLine)
-
+        
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
             stack.topAnchor.constraint(equalTo: topAnchor),
             stack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            button.topAnchor.constraint(equalTo: topAnchor),
-            button.bottomAnchor.constraint(equalTo: bottomAnchor),
-            button.leadingAnchor.constraint(equalTo: leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: trailingAnchor),
-
+                        
             topLine.heightAnchor.constraint(equalToConstant: pixelSize),
             topLine.topAnchor.constraint(equalTo: topAnchor),
             topLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
@@ -91,15 +99,46 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with identifier: SectionIdentifier, menuOptions: [UIMenuElement]) {
-        guard let section = identifier.section else { return }
-        label.text = section.name
-        label.isHighlighted = section.collapsed
-        indicator.isHighlighted = section.collapsed
-        indicator.tintColor = section.collapsed ? .label : .secondaryLabel
-        let expanded = !section.collapsed
-        topLine.isHidden = expanded
-        bottomLine.isHidden = expanded
-        button.menu = UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: menuOptions)
+    @objc private func showAllSelected() {
+        NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+    }
+    
+    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, menuOptions: [UIMenuElement]) {
+        label.text = toggle.name
+        self.menuOptions = menuOptions
+        
+        switch toggle.displayMode {
+        case .collapsed:
+            label.isHighlighted = true
+            indicator.isHighlighted = true
+            indicator.tintColor = .label
+            topLine.isHidden = firstSection
+            bottomLine.isHidden = false
+            showAllButton.isHidden = true
+        case .scrolling:
+            label.isHighlighted = false
+            indicator.isHighlighted = false
+            indicator.tintColor = .secondaryLabel
+            topLine.isHidden = true
+            bottomLine.isHidden = true
+            showAllButton.setTitle("Show More", for: .normal)
+            showAllButton.isHidden = false
+        case .full:
+            label.isHighlighted = false
+            indicator.isHighlighted = false
+            indicator.tintColor = .secondaryLabel
+            topLine.isHidden = true
+            bottomLine.isHidden = true
+            showAllButton.setTitle("Show Less", for: .normal)
+            showAllButton.isHidden = false
+        }
+    }
+}
+
+extension LabelSectionTitle: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            return UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: self.menuOptions)
+        }
     }
 }

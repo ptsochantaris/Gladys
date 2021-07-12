@@ -93,7 +93,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let n = NotificationCenter.default
 
 		let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
-			Model.detectExternalChanges()
+            self?.filter.rebuildLabels()
             self?.updateEmptyView()
             self?.modelDataUpdate(notification)
 		}

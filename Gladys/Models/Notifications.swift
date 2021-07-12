@@ -70,5 +70,6 @@ extension Notification.Name {
     static let MultipleWindowModeChange = Notification.Name("MainWindowCloseStateChange")
     static let PreferencesOpen = Notification.Name("PreferencesOpen")
     static let SectionBackgroundTapped = Notification.Name("SectionBackgroundTapped")
+    static let SectionShowAllTapped = Notification.Name("SectionShowAllTapped")
 }
 #endif

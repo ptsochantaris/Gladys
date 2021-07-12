@@ -21,6 +21,7 @@ let kGladysMainViewLabelList = "kGladysMainViewLabelList"
 let kGladysMainViewSearchText = "kGladysMainViewSearchText"
 let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
 let kGladysMainViewCollapsedSections = "kGladysMainViewCollapsedSections"
+let kGladysMainViewFullSections = "kGladysMainViewFullSections"
 let kGladysMainFilter = "mainFilter"
 #endif
 

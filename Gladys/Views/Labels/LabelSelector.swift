@@ -156,8 +156,6 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     @IBAction private func modeSelcted(_ sender: UIBarButtonItem) {
         switch filter.groupingMode {
         case .byLabel:
-            filter.groupingMode = .byLabelScrollable
-        case .byLabelScrollable:
             filter.groupingMode = .flat
         case .flat:
             filter.groupingMode = .byLabel

@@ -279,25 +279,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         Model.drops.remove(at: modelSourceIndex)
         
         switch filter.groupingMode {
-        case .byLabel, .byLabelScrollable:
+        case .byLabel:
             if let sourceIndexPath = sourceIndexPath,
-               let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.section?.name,
-               let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.section?.name,
+               let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name,
+               let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.label?.name,
                sourceSectionLabel != destinationSectionLabel {
                 // drag between sections in same window
                 insert(item: existingItem, at: destinationIndexPath)
                 
-                let oldLabels = existingItem.labels
                 existingItem.labels.removeAll { $0 == sourceSectionLabel }
                 if destinationSectionLabel != ModelFilterContext.LabelToggle.noNameTitle, !existingItem.labels.contains(destinationSectionLabel) {
                     existingItem.labels.append(destinationSectionLabel)
                 }
-                if oldLabels == existingItem.labels {
-                    return .saveIndex
-                } else {
-                    existingItem.markUpdated()
-                    return .saveDB
-                }
+                existingItem.markUpdated()
+                return .saveDB
                 
             } else if let sourceIndexPath = sourceIndexPath {
                 // drag inside same section
@@ -308,7 +303,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
                 return .saveIndex
                 
-            } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.section?.name {
+            } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name {
                 // drag into section from another Gladys window
                 insert(item: existingItem, at: destinationIndexPath)
                 
@@ -348,9 +343,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         for newItem in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
             switch filter.groupingMode {
-            case .byLabel, .byLabelScrollable:
+            case .byLabel:
                 let destinationSectionIndex = IndexPath(item: 0, section: destinationIndexPath.section)
-                if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.section?.name {
+                if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name {
                     newItem.labels.append(destinationSectionLabel)
                 }
             case .flat:
@@ -367,25 +362,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return result
     }
-            
+
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-                        
+        
         coordinator.session.progressIndicatorStyle = .none
 
         guard let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView)) else {
             return
-        }
-        
-        let scrollRestoration: [CGFloat]?
-        if filter.groupingMode == .byLabelScrollable {
-            scrollRestoration = collection.subviews.compactMap {
-                if let scroll = $0 as? UIScrollView {
-                    return scroll.contentOffset.x
-                }
-                return nil
-            }
-        } else {
-            scrollRestoration = nil
         }
         
         var action = PostDropAction.none
@@ -394,8 +377,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let dragItem = coordinatorItem.dragItem
             let newAction: PostDropAction
             if let existingItem = dragItem.localObject as? ArchivedItem {
-                let sourceIndexPath = coordinatorItem.sourceIndexPath
-                newAction = gladysToGladysDrop(existingItem: existingItem, sourceIndexPath: sourceIndexPath, to: destinationIndexPath)
+                newAction = gladysToGladysDrop(existingItem: existingItem, sourceIndexPath: coordinatorItem.sourceIndexPath, to: destinationIndexPath)
             } else {
                 newAction = externalDrop(dragItem: dragItem, to: destinationIndexPath)
             }
@@ -403,11 +385,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 action = newAction
             }
 
-            filter.updateFilter(signalUpdate: .animated)
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
+            filter.updateFilter(signalUpdate: .animated)
             mostRecentIndexPathActioned = destinationIndexPath
         }
-        
+
         switch action {
         case .none:
             break
@@ -417,23 +399,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         case .saveIndex:
             Model.saveIndexOnly()
         case .saveDB:
-            Model.queueNextSaveCallback {
-                if let scrollRestoration = scrollRestoration, !scrollRestoration.isEmpty {
-                    let scrolls = self.collection.subviews.compactMap { $0 as? UIScrollView }
-                    if scrollRestoration.count == scrolls.count {
-                        for i in 0 ..< scrolls.count where scrolls[i].contentOffset.x == 0 && scrollRestoration[i] > 0 && scrolls[i].contentSize.width > scrolls[i].bounds.width {
-                            log("Restoring scrollview offset for \(scrolls[i]) to \(scrollRestoration[i])")
-                            scrolls[i].setContentOffset(CGPoint(x: scrollRestoration[i], y: scrolls[i].contentOffset.y), animated: false)
-                        }
-                    }
-                }
-            }
             Model.save()
         }
         
-        self.collection.isAccessibilityElement = false
+        collection.isAccessibilityElement = false
     }
-    
+        
 	func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
 		return true
 	}
@@ -727,7 +698,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
         switch filter.groupingMode {
-        case .byLabel, .byLabelScrollable:
+        case .byLabel:
             let toggles = filter.enabledToggles
             var labelLookups = [String: [UUID]]()
             labelLookups.reserveCapacity(toggles.count)
@@ -753,23 +724,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             
             toggles.forEach { toggle in
-                if let sectionItems = labelLookups[toggle.name]?.uniqued.map({ ItemIdentifier(section: toggle, uuid: $0) }), !sectionItems.isEmpty {
-                    let sectionIdentifier = SectionIdentifier(section: toggle)
+                if let sectionItems = labelLookups[toggle.name]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                    let sectionIdentifier = SectionIdentifier(label: toggle)
                     snapshot.appendSections([sectionIdentifier])
-                    if !toggle.collapsed {
+                    if toggle.displayMode != .collapsed {
                         snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
                     }
                 }
             }
 
         case .flat:
-            let section = SectionIdentifier(section: nil)
+            let section = SectionIdentifier(label: nil)
             snapshot.appendSections([section])
-            let identifiers = filter.filteredDrops.map { ItemIdentifier(section: nil, uuid: $0.uuid) }
+            let identifiers = filter.filteredDrops.map { ItemIdentifier(label: nil, uuid: $0.uuid) }
             snapshot.appendItems(identifiers)
         }
         
-        dataSource.apply(snapshot, animatingDifferences: animated && !firstAppearance)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     private func anyPath(in frame: CGRect) -> IndexPath? {
@@ -780,20 +751,40 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         return nil
     }
+
+    @objc private func sectionShowAllTapped(_ notification: Notification) {
+        guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
+        var name = event.name
+        
+        if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
+            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.name
+        }
+
+        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
+        switch toggle.displayMode {
+        case .collapsed, .scrolling:
+            filter.setDisplayMode(to: .full, for: [toggle.name])
+        case .full:
+            filter.setDisplayMode(to: .scrolling, for: [toggle.name])
+        }
+        updateDataSource(animated: true)
+        userActivity?.needsSave = true
+    }
     
     @objc private func sectionBackgroundSelected(_ notification: Notification) {
         guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
         var name = event.name
         
         if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-            name = dataSource.itemIdentifier(for: sectionIndexPath)?.section?.name
+            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.name
         }
 
         guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
-        if toggle.collapsed {
-            filter.expandLabelsByName([toggle.name])
-        } else {
-            filter.collapseLabelsByName([toggle.name])
+        switch toggle.displayMode {
+        case .collapsed:
+            filter.setDisplayMode(to: .scrolling, for: [toggle.name])
+        case .full, .scrolling:
+            filter.setDisplayMode(to: .collapsed, for: [toggle.name])
         }
         updateDataSource(animated: true)
         userActivity?.needsSave = true
@@ -836,18 +827,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
-            guard let self = self else { return }
-            let identifiers = self.dataSource.snapshot().sectionIdentifiers
-            let toggle = identifiers[indexPath.section]
-            titleView.configure(with: toggle, menuOptions: [
+            let label: ModelFilterContext.LabelToggle
+            if #available(iOS 15.0, *) {
+                guard let self = self, let l = self.dataSource.sectionIdentifier(for: indexPath.section)?.label else { return }
+                label = l
+            } else {
+                guard let self = self, let l = self.dataSource.snapshot().sectionIdentifiers[indexPath.section].label else { return }
+                label = l
+            }
+            titleView.configure(with: label, firstSection: indexPath.section == 0, menuOptions: [
                 UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.expand.vertical")) { [weak self] _ in
                     guard let self = self else { return }
-                    self.filter.expandAllLabels()
+                    self.filter.setDisplayMode(to: .scrolling, for: nil)
                     self.updateDataSource(animated: true)
                 },
                 UIAction(title: "Collapse All", image: UIImage(systemName: "arrow.up.to.line")) { [weak self] _ in
                     guard let self = self else { return }
-                    self.filter.collapseAllLabels()
+                    self.filter.setDisplayMode(to: .collapsed, for: nil)
                     self.updateDataSource(animated: true)
                 }
             ])
@@ -900,7 +896,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
         n.addObserver(self, selector: #selector(keyboardHiding), name: UIApplication.keyboardWillHideNotification, object: nil)
         n.addObserver(self, selector: #selector(sectionBackgroundSelected), name: .SectionBackgroundTapped, object: nil)
-        
+        n.addObserver(self, selector: #selector(sectionShowAllTapped), name: .SectionShowAllTapped, object: nil)
+
         if filter.isFilteringLabels { // in case we're restored with active labels
             filter.updateFilter(signalUpdate: .none)
         }
@@ -1113,6 +1110,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     @objc private func modelDataUpdate(_ notification: Notification) {
         let oldUUIDs = filter.filteredDrops.map { $0.uuid }
+        filter.rebuildLabels()
         filter.updateFilter(signalUpdate: .animated)
         let oldSet = Set(oldUUIDs)
         
@@ -1286,8 +1284,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
 
 	@objc private func labelSelectionChanged() {
-        filter.updateFilter(signalUpdate: .animated)
-		updateLabelIcon()
+        filter.updateFilter(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+        updateLabelIcon()
         userActivity?.needsSave = true
 	}
 
@@ -1651,119 +1649,60 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
     
-    private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedwidth: CGFloat? = nil, fixedHeight: CGFloat? = nil) -> UICollectionViewCompositionalLayout {
+    private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedWidth: CGFloat? = nil, fixedHeight: CGFloat? = nil, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>) -> UICollectionViewCompositionalLayout {
         let columnCount = CGFloat(columns)
-        let extras = spacing * (columnCount - 1)
+        let extras = spacing * (columnCount + 1)
         let side = ((width - extras) / columnCount).rounded(.down)
         view.window?.windowScene?.session.userInfo?["ItemSide"] = side
+        
+        let fixedWidth = fixedWidth ?? side
+        let fixedHeight = fixedHeight ?? side
+        let itemWidth = NSCollectionLayoutDimension.absolute(fixedWidth)
+        let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight)
+        let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(width - spacing - spacing), heightDimension: itemHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
+        group.interItemSpacing = .fixed(spacing)
 
-        switch filter.groupingMode {
-        case .byLabel:
-            let layout = UICollectionViewCompositionalLayout { [weak self] index, _ in
-                let collapsed: Bool
-                if let self = self, self.dataSource.itemIdentifier(for: IndexPath(item: 0, section: index)) == nil {
-                    collapsed = true
-                } else {
-                    collapsed = false
-                }
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = spacing
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
 
-                let itemWidth = NSCollectionLayoutDimension.absolute(fixedwidth ?? side)
-                let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side)
-                let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
-                group.interItemSpacing = .fixed(spacing)
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.interGroupSpacing = spacing
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
-
-                let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
-                let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-                section.boundarySupplementaryItems = [sectionTitle]
-                
-                let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: collapsed ? "SectionBackground" : "SquareBackground")
-                section.decorationItems = [sectionBackground]
-                return section
-            }
-            
-            layout.register(SectionBackground.self, forDecorationViewOfKind: "SectionBackground")
-            layout.register(SquareBackground.self, forDecorationViewOfKind: "SquareBackground")
-            return layout
-            
-        case .byLabelScrollable:
-            let layout = UICollectionViewCompositionalLayout { [weak self] index, _ in
-                let collapsed: Bool
-                if let self = self, self.dataSource.itemIdentifier(for: IndexPath(item: 0, section: index)) == nil {
-                    collapsed = true
-                } else {
-                    collapsed = false
-                }
-
-                let section: NSCollectionLayoutSection
-                if collapsed {
-                    let itemWidth = NSCollectionLayoutDimension.fractionalWidth(1)
-                    let itemHeight = NSCollectionLayoutDimension.absolute(CGFloat.leastNonzeroMagnitude)
-                    let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
-                    let groupsSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitems: [item])
-
-                    section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: 0, trailing: spacing)
-
-                    let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "SectionBackground")
-                    section.decorationItems = [sectionBackground]
-
-                } else {
-                    let W = fixedwidth ?? side * 0.9
-                    let itemWidth = NSCollectionLayoutDimension.absolute(W)
-                    let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side * 0.9)
-                    let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: itemHeight)
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(W), heightDimension: itemHeight)
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                    section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
-                    
-                    let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")
-                    section.decorationItems = [sectionBackground]
-                }
-                
-                section.interGroupSpacing = spacing
-
-                let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
-                let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-                section.boundarySupplementaryItems = [sectionTitle]
-                
-                section.orthogonalScrollingBehavior = .continuous
-                return section
-            }
-            
-            layout.register(SectionBackground.self, forDecorationViewOfKind: "SectionBackground")
-            layout.register(SquareBackground.self, forDecorationViewOfKind: "SquareBackground")
-            return layout
-
-        case .flat:
-            let itemWidth = NSCollectionLayoutDimension.absolute(fixedwidth ?? side)
-            let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight ?? side)
-            let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            let groupsSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: itemHeight)
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
-            group.interItemSpacing = .fixed(spacing)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = spacing
-            section.contentInsets = NSDirectionalEdgeInsets(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        if filter.groupingMode == .flat {
             return UICollectionViewCompositionalLayout(section: section)
         }
+
+        let layout = UICollectionViewCompositionalLayout { index, _ in
+            let backgroundType: String
+            switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.displayMode {
+            case .collapsed, .none:
+                backgroundType = "SectionBackground"
+                section.orthogonalScrollingBehavior = .none
+
+            case .scrolling:
+                section.orthogonalScrollingBehavior = .continuous
+                backgroundType = "SquareBackground"
+
+            case .full:
+                backgroundType = "SquareBackground"
+                section.orthogonalScrollingBehavior = .none
+            }
+
+            let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: backgroundType)
+            section.decorationItems = [sectionBackground]
+
+            let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
+            let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
+            section.boundarySupplementaryItems = [sectionTitle]
+            
+            return section
+        }
+        
+        layout.register(SectionBackground.self, forDecorationViewOfKind: "SectionBackground")
+        layout.register(SquareBackground.self, forDecorationViewOfKind: "SquareBackground")
+        return layout
     }
     
     private var lastLayoutProcessed: CGFloat = 0
@@ -1781,8 +1720,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
     
     private func setupLayout(for bounds: CGSize) {
-        let insets = view.safeAreaInsets
-        let width = bounds.width - insets.left - insets.right
+        let width = bounds.width
         let wideMode = PersistedOptions.wideMode
         let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
         
@@ -1792,30 +1730,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             return
         }
         
-        if wideMode {
-            if width >= 768 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80)
-            } else {
-                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80)
-            }
-        } else {
-            if width <= 320 && !forceTwoColumn {
-                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedwidth: 300, fixedHeight: 200)
-            } else if width >= 1366 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10)
-            } else if width > 980 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10)
-            } else if width > 438 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8)
-            } else {
-                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6)
-            }
-        }
-        
         lastLayoutProcessed = key
         
         log("Handlesize ran for: \(bounds)")
-
+        
+        if wideMode {
+            if width >= 768 {
+                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+            } else {
+                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+            }
+        } else {
+            if width <= 320 && !forceTwoColumn {
+                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
+            } else if width >= 1366 {
+                collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
+            } else if width > 980 {
+                collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
+            } else if width > 438 {
+                collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
+            } else {
+                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
+            }
+        }
+        
         ///////////////////////////////
         
         let font: UIFont
@@ -1991,12 +1929,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
         if filter.groupingMode == .byLabel, let labelList = Model.item(uuid: uuid)?.labels {
             let labels = Set(labelList)
-            let expandedLabels = labels.subtracting(filter.collapsedLabels.map { $0.name })
-            if expandedLabels.isEmpty {
+            let fullLabels = labels.subtracting(filter.labels(for: .full).map { $0.name })
+            if fullLabels.isEmpty {
                 if let firstLabel = labelList.first {
-                    filter.expandLabelsByName([firstLabel])
+                    filter.setDisplayMode(to: .full, for: [firstLabel])
                 } else {
-                    filter.expandLabelsByName([ModelFilterContext.LabelToggle.noNameTitle])
+                    filter.setDisplayMode(to: .full, for: [ModelFilterContext.LabelToggle.noNameTitle])
                 }
                 updateDataSource(animated: false)
             }
@@ -2162,7 +2100,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let userInfo: [AnyHashable: Any] = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
                                            kGladysMainViewSearchText: filter.text ?? "",
                                           kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
-                                    kGladysMainViewCollapsedSections: filter.collapsedLabels.map { $0.name }]
+                                    kGladysMainViewCollapsedSections: filter.labels(for: .collapsed).map { $0.name },
+                                         kGladysMainViewFullSections: filter.labels(for: .full).map { $0.name }]
         activity.addUserInfoEntries(from: userInfo)
     }
     

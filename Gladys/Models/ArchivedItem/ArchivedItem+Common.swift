@@ -34,7 +34,7 @@ extension ArchivedItem: Hashable {
 	func hash(into hasher: inout Hasher) {
 		hasher.combine(uuid)
 	}
-
+    
 	var trimmedName: String {
 		return displayTitleOrUuid.truncateWithEllipses(limit: 32)
 	}

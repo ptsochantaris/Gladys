@@ -13,11 +13,11 @@ import UIKit
 #endif
 
 struct SectionIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle?
+    let label: ModelFilterContext.LabelToggle?
 }
 
 struct ItemIdentifier: Hashable {
-    let section: ModelFilterContext.LabelToggle?
+    let label: ModelFilterContext.LabelToggle?
     let uuid: UUID
 }
 
@@ -31,16 +31,18 @@ final class ModelFilterContext {
         case none, instant, animated
     }
     
+    enum DisplayMode: Int {
+        case collapsed, scrolling, full
+    }
+    
     enum GroupingMode: Int {
-        case flat, byLabel, byLabelScrollable
+        case flat, byLabel
         
         var imageName: String {
             switch self {
             case .flat:
                 return "square.grid.3x3"
             case .byLabel:
-                return "square.grid.3x3.fill.square"
-            case .byLabelScrollable:
                 return "square.grid.3x1.below.line.grid.1x2"
             }
         }
@@ -53,18 +55,9 @@ final class ModelFilterContext {
     private var modelFilter: String?
     private var currentFilterQuery: CSSearchQuery?
     private var cachedFilteredDrops: ContiguousArray<ArchivedItem>?
-    
-    private var reloadObservation: NSObjectProtocol?
-    
+
     init() {
-        reloadObservation = NotificationCenter.default.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] _ in
-            self?.rebuildLabels()
-        }
         rebuildLabels()
-    }
-    
-    deinit {
-        reloadObservation = nil
     }
 
     var sizeOfVisibleItemsInBytes: Int64 {
@@ -127,53 +120,36 @@ final class ModelFilterContext {
         }
     }
     
+    func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?) {
+        if let names = names {
+            labelToggles = labelToggles.map {
+                let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
+                if names.contains(effectiveName) {
+                    var newToggle = $0
+                    newToggle.displayMode = displayMode
+                    return newToggle
+                } else {
+                    return $0
+                }
+            }
+        } else {
+            labelToggles = labelToggles.map {
+                var newToggle = $0
+                newToggle.displayMode = displayMode
+                return newToggle
+            }
+        }
+    }
+    
+    func labels(for displayMode: DisplayMode) -> [LabelToggle] {
+        return labelToggles.filter { $0.displayMode == displayMode }
+    }
+    
     func enableLabelsByName(_ names: Set<String>) {
         labelToggles = labelToggles.map {
             var newToggle = $0
             let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
             newToggle.enabled = names.contains(effectiveName)
-            return newToggle
-        }
-    }
-
-    func collapseLabelsByName(_ names: Set<String>) {
-        labelToggles = labelToggles.map {
-            var newToggle = $0
-            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
-            if names.contains(effectiveName) {
-                newToggle.collapsed = true
-            } else {
-                newToggle.collapsed = $0.collapsed
-            }
-            return newToggle
-        }
-    }
-    
-    var collapsedLabels: [LabelToggle] {
-        return labelToggles.filter { $0.collapsed }
-    }
-    
-    func expandAllLabels() {
-        labelToggles = labelToggles.map {
-            return LabelToggle(name: $0.name, count: $0.count, enabled: $0.enabled, collapsed: false, emptyChecker: $0.emptyChecker)
-        }
-    }
-
-    func collapseAllLabels() {
-        labelToggles = labelToggles.map {
-            return LabelToggle(name: $0.name, count: $0.count, enabled: $0.enabled, collapsed: true, emptyChecker: $0.emptyChecker)
-        }
-    }
-
-    func expandLabelsByName(_ names: Set<String>) {
-        labelToggles = labelToggles.map {
-            var newToggle = $0
-            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
-            if names.contains(effectiveName) {
-                newToggle.collapsed = false
-            } else {
-                newToggle.collapsed = $0.collapsed
-            }
             return newToggle
         }
     }
@@ -198,7 +174,7 @@ final class ModelFilterContext {
     }
 
     @discardableResult
-    func updateFilter(signalUpdate: UpdateType) -> Bool {
+    func updateFilter(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
         currentFilterQuery = nil
 
         let previousFilteredDrops = filteredDrops
@@ -245,7 +221,7 @@ final class ModelFilterContext {
             cachedFilteredDrops = postLabelDrops
         }
 
-        let changesToVisibleItems = previousFilteredDrops != filteredDrops
+        let changesToVisibleItems = forceAnnounce || previousFilteredDrops != filteredDrops
         if changesToVisibleItems {
             Model.updateBadge()
             if signalUpdate != .none {
@@ -358,8 +334,22 @@ final class ModelFilterContext {
         let name: String
         let count: Int
         var enabled: Bool
-        var collapsed: Bool
+        var displayMode: DisplayMode
         let emptyChecker: Bool
+        
+        static func == (lhs: LabelToggle, rhs: LabelToggle) -> Bool {
+            return lhs.emptyChecker == rhs.emptyChecker
+            && lhs.enabled == rhs.enabled
+            && lhs.displayMode == rhs.displayMode
+            && lhs.name == rhs.name
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(emptyChecker)
+            hasher.combine(enabled)
+            hasher.combine(displayMode)
+            hasher.combine(name)
+        }
 
         enum State {
             case none, some, all
@@ -431,19 +421,27 @@ final class ModelFilterContext {
 
         let previousList = labelToggles
         labelToggles = counts.map { (label, count) in
-            let previousItem = previousList.first { $0.name == label }
-            let previousEnabled = previousItem?.enabled ?? false
-            let previousCollapsed = previousItem?.collapsed ?? false
-            return LabelToggle(name: label, count: count, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: false)
+            if let previousItem = previousList.first(where: { $0.name == label }) {
+                let previousEnabled = previousItem.enabled
+                let previousDisplayMode = previousItem.displayMode
+                return LabelToggle(name: label, count: count, enabled: previousEnabled, displayMode: previousDisplayMode, emptyChecker: false)
+            } else {
+                return LabelToggle(name: label, count: count, enabled: false, displayMode: .scrolling, emptyChecker: false)
+            }
         }
         .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         
-        if !labelToggles.isEmpty {
-            let name = ModelFilterContext.LabelToggle.noNameTitle
-            let previousItem = previousList.first { $0.name == name }
-            let previousEnabled = previousItem?.enabled ?? false
-            let previousCollapsed = previousItem?.collapsed ?? false
-            labelToggles.append(LabelToggle(name: name, count: noLabelCount, enabled: previousEnabled, collapsed: previousCollapsed, emptyChecker: true))
+        if !labelToggles.isEmpty && noLabelCount > 0 {
+            let label = ModelFilterContext.LabelToggle.noNameTitle
+            let t: LabelToggle
+            if let previousItem = previousList.first(where: { $0.name == label }) {
+                let previousEnabled = previousItem.enabled
+                let previousDisplayMode = previousItem.displayMode
+                t = LabelToggle(name: label, count: noLabelCount, enabled: previousEnabled, displayMode: previousDisplayMode, emptyChecker: true)
+            } else {
+                t = LabelToggle(name: label, count: noLabelCount, enabled: false, displayMode: .scrolling, emptyChecker: true)
+            }
+            labelToggles.append(t)
         }
     }
 

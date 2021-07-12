@@ -116,9 +116,15 @@ final class Singleton {
             } else {
                 collapsedList = nil
             }
+            let fullList: Set<String>?
+            if let list = userActivity?.userInfo?[kGladysMainViewFullSections] as? [String], !list.isEmpty {
+                fullList = Set(list)
+            } else {
+                fullList = nil
+            }
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
             let displayMode = userActivity?.userInfo?[kGladysMainViewDisplayMode] as? Int
-            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText, restoringDisplayMode: displayMode, restoringCollapsedLabels: collapsedList)
+            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText, restoringDisplayMode: displayMode, restoringCollapsedLabels: collapsedList, restoringFullLabels: fullList)
             return
 
         case kGladysQuicklookActivity:
@@ -215,7 +221,7 @@ final class Singleton {
         }
     }
     
-    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, restoringCollapsedLabels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, restoringCollapsedLabels: Set<String>? = nil, restoringFullLabels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -238,8 +244,12 @@ final class Singleton {
         if let modeNumber = restoringDisplayMode, let mode = ModelFilterContext.GroupingMode(rawValue: modeNumber) {
             filter.groupingMode = mode
         }
+        filter.setDisplayMode(to: .scrolling, for: nil)
         if let collapsedLabels = restoringCollapsedLabels {
-            filter.collapseLabelsByName(collapsedLabels)
+            filter.setDisplayMode(to: .collapsed, for: collapsedLabels)
+        }
+        if let fullLabels = restoringFullLabels {
+            filter.setDisplayMode(to: .full, for: fullLabels)
         }
         v.filter = filter
         filter.delegate = v

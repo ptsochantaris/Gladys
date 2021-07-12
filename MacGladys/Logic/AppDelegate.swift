@@ -230,9 +230,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         nc.addObserver(self, selector: #selector(setupClipboardSnooping), name: .ClipboardSnoopingChanged, object: nil)
         nc.addObserver(self, selector: #selector(acceptShareStarted), name: .AcceptStarting, object: nil)
         nc.addObserver(self, selector: #selector(endProgress), name: .AcceptEnding, object: nil)
+        nc.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
         
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
 	}
+    
+    @objc private func modelDataUpdate() {
+        Model.detectExternalChanges()
+    }
     
     @objc private func acceptShareStarted() {
         startProgress(for: nil, titleOverride: "Accepting Share…")
