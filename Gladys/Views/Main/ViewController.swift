@@ -855,8 +855,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 guard let l = self.dataSource.snapshot().sectionIdentifiers[indexPath.section].label else { return }
                 label = l
             }
-            let count = self.dataSource.collectionView(self.collection, numberOfItemsInSection: indexPath.section)
-            titleView.configure(with: label, firstSection: indexPath.section == 0, allowsMore: count > self.currentColumnCount, menuOptions: headerMenuOptions)
+            titleView.configure(with: label, firstSection: indexPath.section == 0, dataSource: self.dataSource, viewController: self, menuOptions: headerMenuOptions)
         }
         
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
@@ -1659,7 +1658,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
     
-    private var currentColumnCount = 1
+    var currentColumnCount = 1
     
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedWidth: CGFloat? = nil, fixedHeight: CGFloat? = nil, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>) -> UICollectionViewCompositionalLayout {
         currentColumnCount = columns

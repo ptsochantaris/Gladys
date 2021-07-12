@@ -27,6 +27,10 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let topLine = UIView()
     private let bottomLine = UIView()
     private var menuOptions = [UIMenuElement]()
+    private var toggle: ModelFilterContext.LabelToggle?
+    
+    private weak var viewController: ViewController?
+    private weak var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>?
 
     static let titleStyle = UIFont.TextStyle.subheadline
 
@@ -93,6 +97,12 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setNeedsLayout), name: .ModelDataUpdated, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func selected() {
@@ -103,10 +113,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
     }
     
-    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, allowsMore: Bool, menuOptions: [UIMenuElement]) {
-        label.text = toggle.name
+    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>, viewController: ViewController, menuOptions: [UIMenuElement]) {
         self.menuOptions = menuOptions
-        
+        self.dataSource = dataSource
+        self.viewController = viewController
+        self.toggle = toggle
+
+        label.text = toggle.name
+
         switch toggle.displayMode {
         case .collapsed:
             label.isHighlighted = true
@@ -114,7 +128,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             indicator.tintColor = .label
             topLine.isHidden = firstSection
             bottomLine.isHidden = false
-            showAllButton.isHidden = true
+            showAllButton.setTitle(nil, for: .normal)
 
         case .scrolling:
             label.isHighlighted = false
@@ -122,12 +136,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
             bottomLine.isHidden = true
-            if allowsMore {
-                showAllButton.setTitle("More", for: .normal)
-                showAllButton.isHidden = false
-            } else {
-                showAllButton.isHidden = true
-            }
+            showAllButton.setTitle("More", for: .normal)
 
         case .full:
             label.isHighlighted = false
@@ -135,13 +144,19 @@ final class LabelSectionTitle: UICollectionReusableView {
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
             bottomLine.isHidden = true
-            if allowsMore {
-                showAllButton.setTitle("Less", for: .normal)
-                showAllButton.isHidden = false
-            } else {
-                showAllButton.isHidden = true
-            }
+            showAllButton.setTitle("Less", for: .normal)
         }
+    }
+    
+    override func layoutSubviews() {
+        updateMoreButton()
+        super.layoutSubviews()
+    }
+    
+    private func updateMoreButton() {
+        guard let toggle = self.toggle, let dataSource = self.dataSource, let viewController = self.viewController else { return }
+        let count = dataSource.snapshot().numberOfItems(inSection: SectionIdentifier(label: toggle))
+        showAllButton.isHidden = showAllButton.title(for: .normal) == nil || viewController.currentColumnCount >= count
     }
 }
 
