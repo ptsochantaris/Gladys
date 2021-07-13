@@ -27,10 +27,12 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let topLine = UIView()
     private let bottomLine = UIView()
     private var menuOptions = [UIMenuElement]()
-    private var count = 0
+    private var mode = ModelFilterContext.DisplayMode.collapsed
+    private var sectionCount = 0
+    private var layoutForParentCount = 0
     private weak var viewController: ViewController?
 
-    static let titleStyle = UIFont.TextStyle.subheadline
+    private static let titleStyle = UIFont.TextStyle.subheadline
 
     private func setup() {
         
@@ -44,19 +46,22 @@ final class LabelSectionTitle: UICollectionReusableView {
         label.isUserInteractionEnabled = true
         label.textColor = .secondaryLabel
         label.highlightedTextColor = .label
-        
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
         indicator.highlightedImage = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.setContentHuggingPriority(.required, for: .horizontal)
+        indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         indicator.isUserInteractionEnabled = true
         
         showAllButton.titleLabel?.font = labelFont
         showAllButton.addTarget(self, action: #selector(showAllSelected), for: .touchUpInside)
-        showAllButton.setContentHuggingPriority(.required, for: .horizontal)
+        showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
-        addSubview(showAllButton)
         
         let labelTap = UITapGestureRecognizer(target: self, action: #selector(selected))
         label.addGestureRecognizer(labelTap)
@@ -112,9 +117,10 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, count: Int, viewController: ViewController, menuOptions: [UIMenuElement]) {
-        self.count = count
+        self.sectionCount = count
         self.viewController = viewController
-
+        
+        mode = toggle.displayMode
         label.text = toggle.name
 
         switch toggle.displayMode {
@@ -147,15 +153,19 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     override func layoutSubviews() {
-        updateMoreButton()
+        if let viewController = viewController, layoutForParentCount != viewController.currentColumnCount {
+            updateMoreButton()
+        }
         super.layoutSubviews()
     }
-        
+    
     private func updateMoreButton() {
         guard let viewController = viewController else {
             return
         }
-        showAllButton.isHidden = showAllButton.title(for: .normal) == nil || viewController.currentColumnCount >= count
+        let current = viewController.currentColumnCount
+        showAllButton.isHidden = mode == .collapsed || sectionCount <= current
+        layoutForParentCount = current
     }
 }
 
