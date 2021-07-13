@@ -30,6 +30,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     private var mode = ModelFilterContext.DisplayMode.collapsed
     private var sectionCount = 0
     private var layoutForParentCount = 0
+    private var toggle: ModelFilterContext.LabelToggle?
     private weak var viewController: ViewController?
 
     private static let titleStyle = UIFont.TextStyle.subheadline
@@ -38,7 +39,10 @@ final class LabelSectionTitle: UICollectionReusableView {
         
         tintColor = .secondaryLabel
         isUserInteractionEnabled = true
+        addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
+        
+        layer.cornerRadius = 15
 
         let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         
@@ -117,8 +121,10 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, count: Int, viewController: ViewController, menuOptions: [UIMenuElement]) {
-        self.sectionCount = count
         self.viewController = viewController
+        self.menuOptions = menuOptions
+        self.sectionCount = count
+        self.toggle = toggle
         
         mode = toggle.displayMode
         label.text = toggle.name
@@ -167,12 +173,77 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.isHidden = mode == .collapsed || sectionCount <= current
         layoutForParentCount = current
     }
+    
+    private var previewRect: CGRect {
+        return CGRect(x: 0, y: 0, width: 280, height: LabelSectionTitle.height * 2)
+    }
+    
+    private func createLabelView() -> UIView {
+        let labelView = UILabel(frame: .zero)
+        labelView.text = self.toggle?.name
+        labelView.font = UIFont.preferredFont(forTextStyle: .headline)
+        labelView.textColor = UIColor.g_colorTint
+        labelView.textAlignment = .center
+        labelView.setContentHuggingPriority(.required, for: .vertical)
+        
+        let n = NumberFormatter()
+        n.numberStyle = .decimal
+        let number = n.string(for: layoutForParentCount) ?? ""
+
+        let countView = UILabel(frame: .zero)
+        countView.text = "\(number) items"
+        countView.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        countView.textColor = UIColor.secondaryLabel
+        countView.textAlignment = .center
+        countView.setContentHuggingPriority(.required, for: .vertical)
+
+        let stack = UIStackView(arrangedSubviews: [labelView, countView])
+        stack.axis = .vertical
+        stack.spacing = 2
+
+        let holder = UIView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        holder.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.centerYAnchor.constraint(equalTo: holder.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: holder.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: holder.trailingAnchor)
+        ])
+
+        holder.frame = previewRect
+        return holder
+    }
+    
+    private func dragParams() -> UIDragPreviewParameters {
+        let params = UIDragPreviewParameters()
+        params.visiblePath = UIBezierPath(roundedRect: previewRect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 15, height: 15))
+        return params
+    }
 }
 
 extension LabelSectionTitle: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            return UIMenu(title: "Sections", image: nil, identifier: nil, options: [], children: self.menuOptions)
+        return UIContextMenuConfiguration(identifier: nil) {
+            let vc = UIViewController()
+            let labelView = self.createLabelView()
+            vc.preferredContentSize = labelView.frame.size
+            vc.view.addSubview(labelView)
+            return vc
+        } actionProvider: { _ in
+            return UIMenu(title: "All Sections", image: nil, identifier: nil, options: [], children: self.menuOptions)
+        }
+    }
+}
+
+extension LabelSectionTitle: UIDragInteractionDelegate {
+    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+        if let toggle = toggle, let label = toggle.name.labelDragItem {
+            label.previewProvider = {
+                return UIDragPreview(view: self.createLabelView(), parameters: self.dragParams())
+            }
+            return [label]
+        } else {
+            return []
         }
     }
 }

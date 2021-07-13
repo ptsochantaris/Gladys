@@ -838,7 +838,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 self.filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             },
-            UIAction(title: "Expand All Fully", image: UIImage(systemName: "square")) { [weak self] _ in
+            UIAction(title: "Fully Expand All", image: UIImage(systemName: "square")) { [weak self] _ in
                 guard let self = self else { return }
                 self.filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
