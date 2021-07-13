@@ -77,7 +77,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 
 		newLabelField.stringValue = ""
 		if !allToggles.contains(where: { $0.name == newTag }) {
-            let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, displayMode: .full, emptyChecker: false)
+            let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, displayMode: .collapsed, emptyChecker: false)
 			allToggles.append(newToggle)
 			allToggles.sort { $0.name < $1.name }
 		}

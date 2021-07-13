@@ -763,9 +763,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
         switch toggle.displayMode {
         case .collapsed, .scrolling:
-            filter.setDisplayMode(to: .full, for: [toggle.name])
+            filter.setDisplayMode(to: .full, for: [toggle.name], setAsPreference: true)
         case .full:
-            filter.setDisplayMode(to: .scrolling, for: [toggle.name])
+            filter.setDisplayMode(to: .scrolling, for: [toggle.name], setAsPreference: true)
         }
         updateDataSource(animated: true)
         userActivity?.needsSave = true
@@ -782,9 +782,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
         switch toggle.displayMode {
         case .collapsed:
-            filter.setDisplayMode(to: .scrolling, for: [toggle.name])
+            filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [toggle.name], setAsPreference: false)
         case .full, .scrolling:
-            filter.setDisplayMode(to: .collapsed, for: [toggle.name])
+            filter.setDisplayMode(to: .collapsed, for: [toggle.name], setAsPreference: false)
         }
         updateDataSource(animated: true)
         userActivity?.needsSave = true
@@ -830,17 +830,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let headerMenuOptions = [
             UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
                 guard let self = self else { return }
-                self.filter.setDisplayMode(to: .collapsed, for: nil)
+                self.filter.setDisplayMode(to: .collapsed, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             },
             UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2")) { [weak self] _ in
                 guard let self = self else { return }
-                self.filter.setDisplayMode(to: .scrolling, for: nil)
+                self.filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             },
             UIAction(title: "Expand All Fully", image: UIImage(systemName: "square")) { [weak self] _ in
                 guard let self = self else { return }
-                self.filter.setDisplayMode(to: .full, for: nil)
+                self.filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             }
         ]
@@ -1944,9 +1944,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let fullLabels = labels.subtracting(filter.labels(for: .full).map { $0.name })
             if fullLabels.isEmpty {
                 if let firstLabel = labelList.first {
-                    filter.setDisplayMode(to: .full, for: [firstLabel])
+                    filter.setDisplayMode(to: .full, for: [firstLabel], setAsPreference: false)
                 } else {
-                    filter.setDisplayMode(to: .full, for: [ModelFilterContext.LabelToggle.noNameTitle])
+                    filter.setDisplayMode(to: .full, for: [ModelFilterContext.LabelToggle.noNameTitle], setAsPreference: false)
                 }
                 updateDataSource(animated: false)
             }
@@ -2109,11 +2109,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         activity.title = title
-        let userInfo: [AnyHashable: Any] = [kGladysMainViewLabelList: filter.enabledLabelsForTitles,
-                                           kGladysMainViewSearchText: filter.text ?? "",
-                                          kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
-                                    kGladysMainViewCollapsedSections: filter.labels(for: .collapsed).map { $0.name },
-                                         kGladysMainViewFullSections: filter.labels(for: .full).map { $0.name }]
+        let data = (try? JSONEncoder().encode(filter.labelToggles)) ?? Data()
+        let userInfo: [AnyHashable: Any] = [kGladysMainViewSearchText: filter.text ?? "",
+                                           kGladysMainViewDisplayMode: filter.groupingMode.rawValue,
+                                              kGladysMainViewSections: data]
         activity.addUserInfoEntries(from: userInfo)
     }
     

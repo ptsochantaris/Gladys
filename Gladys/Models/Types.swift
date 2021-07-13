@@ -17,11 +17,9 @@ let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
 let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
 let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
 let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
-let kGladysMainViewLabelList = "kGladysMainViewLabelList"
 let kGladysMainViewSearchText = "kGladysMainViewSearchText"
 let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
-let kGladysMainViewCollapsedSections = "kGladysMainViewCollapsedSections"
-let kGladysMainViewFullSections = "kGladysMainViewFullSections"
+let kGladysMainViewSections = "kGladysMainViewSections"
 let kGladysMainFilter = "mainFilter"
 #endif
 

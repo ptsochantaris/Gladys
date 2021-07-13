@@ -31,7 +31,7 @@ final class ModelFilterContext {
         case none, instant, animated
     }
     
-    enum DisplayMode: Int {
+    enum DisplayMode: Int, Codable {
         case collapsed, scrolling, full
     }
     
@@ -120,13 +120,16 @@ final class ModelFilterContext {
         }
     }
     
-    func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?) {
+    func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?, setAsPreference: Bool) {
         if let names = names {
             labelToggles = labelToggles.map {
                 let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
                 if names.contains(effectiveName) {
                     var newToggle = $0
                     newToggle.displayMode = displayMode
+                    if setAsPreference, displayMode == .scrolling || displayMode == .full {
+                        newToggle.preferredDisplayMode = displayMode
+                    }
                     return newToggle
                 } else {
                     return $0
@@ -136,6 +139,9 @@ final class ModelFilterContext {
             labelToggles = labelToggles.map {
                 var newToggle = $0
                 newToggle.displayMode = displayMode
+                if setAsPreference, displayMode == .scrolling || displayMode == .full {
+                    newToggle.preferredDisplayMode = displayMode
+                }
                 return newToggle
             }
         }
@@ -298,8 +304,18 @@ final class ModelFilterContext {
     }
     
     var labelToggles = [LabelToggle]()
+    
+    func applyLabelConfig(from newToggles: [LabelToggle]) {
+        labelToggles = labelToggles.map { existingToggle in
+            if let newToggle = newToggles.first(where: { $0.name == existingToggle.name }) {
+                return LabelToggle(name: newToggle.name, count: existingToggle.count, enabled: newToggle.enabled, displayMode: newToggle.displayMode, preferredDisplayMode: newToggle.preferredDisplayMode, emptyChecker: newToggle.emptyChecker)
+            } else {
+                return existingToggle
+            }
+        }
+    }
 
-    struct LabelToggle: Hashable {
+    struct LabelToggle: Hashable, Codable {
         
         enum Section {
             case recent(labels: [String], title: String)
@@ -335,6 +351,7 @@ final class ModelFilterContext {
         let count: Int
         var enabled: Bool
         var displayMode: DisplayMode
+        var preferredDisplayMode: DisplayMode
         let emptyChecker: Bool
         
         static func == (lhs: LabelToggle, rhs: LabelToggle) -> Bool {
@@ -424,9 +441,10 @@ final class ModelFilterContext {
             if let previousItem = previousList.first(where: { $0.name == label }) {
                 let previousEnabled = previousItem.enabled
                 let previousDisplayMode = previousItem.displayMode
-                return LabelToggle(name: label, count: count, enabled: previousEnabled, displayMode: previousDisplayMode, emptyChecker: false)
+                let previousPreferredMode = previousItem.preferredDisplayMode
+                return LabelToggle(name: label, count: count, enabled: previousEnabled, displayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode, emptyChecker: false)
             } else {
-                return LabelToggle(name: label, count: count, enabled: false, displayMode: .scrolling, emptyChecker: false)
+                return LabelToggle(name: label, count: count, enabled: false, displayMode: .collapsed, preferredDisplayMode: .scrolling, emptyChecker: false)
             }
         }
         .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
@@ -437,9 +455,10 @@ final class ModelFilterContext {
             if let previousItem = previousList.first(where: { $0.name == label }) {
                 let previousEnabled = previousItem.enabled
                 let previousDisplayMode = previousItem.displayMode
-                t = LabelToggle(name: label, count: noLabelCount, enabled: previousEnabled, displayMode: previousDisplayMode, emptyChecker: true)
+                let previousPreferredMode = previousItem.preferredDisplayMode
+                t = LabelToggle(name: label, count: noLabelCount, enabled: previousEnabled, displayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode, emptyChecker: true)
             } else {
-                t = LabelToggle(name: label, count: noLabelCount, enabled: false, displayMode: .scrolling, emptyChecker: true)
+                t = LabelToggle(name: label, count: noLabelCount, enabled: false, displayMode: .collapsed, preferredDisplayMode: .scrolling, emptyChecker: true)
             }
             labelToggles.append(t)
         }

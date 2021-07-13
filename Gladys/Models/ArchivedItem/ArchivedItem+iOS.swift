@@ -20,7 +20,10 @@ extension String {
     private var labelActivity: NSUserActivity {
         let activity = NSUserActivity(activityType: kGladysMainListActivity)
         activity.title = self
-        activity.addUserInfoEntries(from: [kGladysMainViewLabelList: [self]])
+        let section = ModelFilterContext.LabelToggle(name: self, count: 0, enabled: true, displayMode: .scrolling, preferredDisplayMode: .scrolling, emptyChecker: false)
+        if let data = try? JSONEncoder().encode([section]) {
+            activity.addUserInfoEntries(from: [kGladysMainViewSections: data])
+        }
         return activity
     }
     

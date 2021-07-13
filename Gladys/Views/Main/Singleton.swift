@@ -103,28 +103,22 @@ final class Singleton {
         
         switch userActivity?.activityType {
         case kGladysMainListActivity:
-            
-            let labelList: Set<String>?
-            if let list = userActivity?.userInfo?[kGladysMainViewLabelList] as? [String], !list.isEmpty {
-                labelList = Set(list)
-            } else {
-                labelList = nil
-            }
-            let collapsedList: Set<String>?
-            if let list = userActivity?.userInfo?[kGladysMainViewCollapsedSections] as? [String], !list.isEmpty {
-                collapsedList = Set(list)
-            } else {
-                collapsedList = nil
-            }
-            let fullList: Set<String>?
-            if let list = userActivity?.userInfo?[kGladysMainViewFullSections] as? [String], !list.isEmpty {
-                fullList = Set(list)
-            } else {
-                fullList = nil
-            }
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
             let displayMode = userActivity?.userInfo?[kGladysMainViewDisplayMode] as? Int
-            showMainWindow(in: scene, restoringLabels: labelList, restoringSearch: searchText, restoringDisplayMode: displayMode, restoringCollapsedLabels: collapsedList, restoringFullLabels: fullList)
+
+            let legacyLabelList: Set<String>?
+            if let list = userActivity?.userInfo?["kGladysMainViewLabelList"] as? [String], !list.isEmpty {
+                legacyLabelList = Set(list)
+            } else {
+                legacyLabelList = nil
+            }
+            
+            var labels: [ModelFilterContext.LabelToggle]?
+            if let labelData = userActivity?.userInfo?[kGladysMainViewSections] as? Data, let labelList = try? JSONDecoder().decode([ModelFilterContext.LabelToggle].self, from: labelData) {
+                labels = labelList
+            }
+
+            showMainWindow(in: scene, restoringSearch: searchText, restoringDisplayMode: displayMode, labelList: labels, legacyLabelList: legacyLabelList)
             return
 
         case kGladysQuicklookActivity:
@@ -221,7 +215,7 @@ final class Singleton {
         }
     }
     
-    private func showMainWindow(in scene: UIWindowScene, restoringLabels labels: Set<String>? = nil, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, restoringCollapsedLabels: Set<String>? = nil, restoringFullLabels: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [ModelFilterContext.LabelToggle]? = nil, legacyLabelList: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -235,21 +229,18 @@ final class Singleton {
         }
         
         let filter = s.associatedFilter
-        if let labels = labels {
-            filter.enableLabelsByName(labels)
+        if let labelList = labelList {
+            filter.applyLabelConfig(from: labelList)
+            
+        } else if let legacyLabelList = legacyLabelList {
+            filter.enableLabelsByName(legacyLabelList)
         }
+        
         if let search = restoringSearch, !search.isEmpty {
             filter.text = search
         }
         if let modeNumber = restoringDisplayMode, let mode = ModelFilterContext.GroupingMode(rawValue: modeNumber) {
             filter.groupingMode = mode
-        }
-        filter.setDisplayMode(to: .scrolling, for: nil)
-        if let collapsedLabels = restoringCollapsedLabels {
-            filter.setDisplayMode(to: .collapsed, for: collapsedLabels)
-        }
-        if let fullLabels = restoringFullLabels {
-            filter.setDisplayMode(to: .full, for: fullLabels)
         }
         v.filter = filter
         filter.delegate = v
