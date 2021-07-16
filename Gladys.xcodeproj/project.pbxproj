@@ -2686,6 +2686,7 @@
 		};
 		16B2AA3E24DF42B5004F3FC2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 16B2AA3724DF42B5004F3FC2 /* GladysKeys */;
 			targetProxy = 16B2AA3D24DF42B5004F3FC2 /* PBXContainerItemProxy */;
 		};

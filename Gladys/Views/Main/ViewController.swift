@@ -815,7 +815,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let type = PersistedOptions.wideMode ? wideCellRegistration : cellRegistration
             return collectionView.dequeueConfiguredReusableCell(using: type, for: indexPath, item: sectionItem)
         }
-                
+        
         collection.reorderingCadence = .slow
 		collection.accessibilityLabel = "Items"
 		collection.dragInteractionEnabled = true

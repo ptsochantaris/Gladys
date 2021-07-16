@@ -47,11 +47,11 @@ final class LabelSectionTitle: UICollectionReusableView {
         let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         
         label.font = labelFont
-        label.isUserInteractionEnabled = true
         label.textColor = .secondaryLabel
         label.highlightedTextColor = .label
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.isUserInteractionEnabled = true
 
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
@@ -80,10 +80,12 @@ final class LabelSectionTitle: UICollectionReusableView {
         stack.spacing = 10
         addSubview(stack)
 
+        topLine.isUserInteractionEnabled = false
         topLine.backgroundColor = .g_sectionTitleTop
         topLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(topLine)
 
+        bottomLine.isUserInteractionEnabled = false
         bottomLine.backgroundColor = .g_sectionTitleBottom
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
         addSubview(bottomLine)

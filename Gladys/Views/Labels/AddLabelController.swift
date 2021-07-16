@@ -102,7 +102,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections[section].title
     }
-        
+    
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		if string == "\n" {
 			dismiss(animated: true, completion: nil)

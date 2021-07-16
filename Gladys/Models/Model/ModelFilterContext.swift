@@ -51,9 +51,9 @@ final class ModelFilterContext {
     weak var delegate: ModelFilterContextDelegate?
     
     var groupingMode = GroupingMode.flat
+    var isFilteringText = false
 
     private var modelFilter: String?
-    private var currentFilterQuery: CSSearchQuery?
     private var cachedFilteredDrops: ContiguousArray<ArchivedItem>?
 
     init() {
@@ -62,10 +62,6 @@ final class ModelFilterContext {
 
     var sizeOfVisibleItemsInBytes: Int64 {
         return filteredDrops.reduce(0, { $0 + $1.sizeInBytes })
-    }
-
-    var isFilteringText: Bool {
-        return currentFilterQuery != nil
     }
 
     var isFilteringLabels: Bool {
@@ -181,22 +177,55 @@ final class ModelFilterContext {
 
     @discardableResult
     func updateFilter(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
-        currentFilterQuery = nil
-
+        
         let previousFilteredDrops = filteredDrops
-        var filtering = false
+        
+        // label pass
+        
+        let enabledToggles = labelToggles.filter { $0.enabled }
+        let postLabelDrops: ContiguousArray<ArchivedItem>
+        if enabledToggles.isEmpty {
+            postLabelDrops = Model.drops
+            
+        } else if PersistedOptions.exclusiveMultipleLabels {
+            let expectedCount = enabledToggles.count
+            postLabelDrops = Model.drops.filter { item in
+                var matchCount = 0
+                for toggle in enabledToggles {
+                    if toggle.emptyChecker {
+                        if item.labels.isEmpty {
+                            matchCount += 1
+                        }
+                    } else if item.labels.contains(toggle.name) {
+                        matchCount += 1
+                    }
+                }
+                return matchCount == expectedCount
+            }
+            
+        } else {
+            postLabelDrops = Model.drops.filter { item in
+                for toggle in enabledToggles {
+                    if toggle.emptyChecker {
+                        if item.labels.isEmpty {
+                            return true
+                        }
+                    } else if item.labels.contains(toggle.name) {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        
+        // text pass
 
         if let terms = ModelFilterContext.terms(for: modelFilter), !terms.isEmpty {
+            var replacementResults = Set<UUID>()
 
-            filtering = true
-
-            var replacementResults = [String]()
-
-            let group = DispatchGroup()
-            group.enter()
-
+            let lock = DispatchSemaphore(value: 0)
             let queryString: String
-            if     terms.count > 1 {
+            if terms.count > 1 {
                 if PersistedOptions.inclusiveSearchTerms {
                     queryString = "(" + terms.joined(separator: ") || (") + ")"
                 } else {
@@ -208,22 +237,25 @@ final class ModelFilterContext {
 
             let q = CSSearchQuery(queryString: queryString, attributes: nil)
             q.foundItemsHandler = { items in
-                let uuids = items.map { $0.uniqueIdentifier }
-                replacementResults.append(contentsOf: uuids)
+                items.forEach {
+                    if let uuid = UUID(uuidString: $0.uniqueIdentifier) {
+                        replacementResults.insert(uuid)
+                    }
+                }
             }
             q.completionHandler = { error in
                 if let error = error {
                     log("Search error: \(error.finalDescription)")
                 }
-                group.leave()
+                lock.signal()
             }
-            currentFilterQuery = q
-
+            isFilteringText = true
             q.start()
-            group.wait()
+            lock.wait()
 
-            cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid.uuidString) }
+            cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid) }
         } else {
+            isFilteringText = false
             cachedFilteredDrops = postLabelDrops
         }
 
@@ -235,7 +267,7 @@ final class ModelFilterContext {
                 self.delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
                 #if os(iOS)
-                if filtering && UIAccessibility.isVoiceOverRunning {
+                if isFilteringText && UIAccessibility.isVoiceOverRunning {
                     let resultString: String
                     let c = filteredDrops.count
                     if c == 0 {
@@ -253,43 +285,7 @@ final class ModelFilterContext {
 
         return changesToVisibleItems
     }
-    
-    private var postLabelDrops: ContiguousArray<ArchivedItem> {
-        let enabledToggles = labelToggles.filter { $0.enabled }
-        if enabledToggles.isEmpty { return Model.drops }
-
-        if PersistedOptions.exclusiveMultipleLabels {
-            let expectedCount = enabledToggles.count
-            return Model.drops.filter { item in
-                var matchCount = 0
-                for toggle in enabledToggles {
-                    if toggle.emptyChecker {
-                        if item.labels.isEmpty {
-                            matchCount += 1
-                        }
-                    } else if item.labels.contains(toggle.name) {
-                        matchCount += 1
-                    }
-                }
-                return matchCount == expectedCount
-            }
-
-        } else {
-            return Model.drops.filter { item in
-                for toggle in enabledToggles {
-                    if toggle.emptyChecker {
-                        if item.labels.isEmpty {
-                            return true
-                        }
-                    } else if item.labels.contains(toggle.name) {
-                        return true
-                    }
-                }
-                return false
-            }
-        }
-    }
-    
+        
     var enabledLabelsForItems: [String] {
         return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
     }
