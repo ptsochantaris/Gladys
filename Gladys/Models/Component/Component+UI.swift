@@ -5,218 +5,30 @@ import ContactsUI
 import CloudKit
 import QuickLook
 
-final class GladysNavController: UINavigationController {
+final class GladysNavController: UINavigationController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
+    weak var sourceItemView: UIView?
+
+    override init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+        transitioningDelegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .g_colorPaper
         view.tintColor = .g_colorTint
     }
-}
-
-final class GladysPreviewController: QLPreviewController, QLPreviewControllerDataSource, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
-    private var typeItem: Component
     
-    weak var sourceItemView: UIView?
-    
-    init(item: Component) {
-        self.typeItem = item
-        super.init(nibName: nil, bundle: nil)
-        title = item.oneTitle
-        dataSource = self
-        modalPresentationStyle = .overFullScreen
-        transitioningDelegate = self
-
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(multipleWindowModeChange), name: .MultipleWindowModeChange, object: nil)
-    }
-    
-    @objc private func multipleWindowModeChange() {
-        navigationController?.navigationBar.setNeedsLayout()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        guard let currentWindowSize = currentWindow?.bounds.size else { return }
-        popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, currentWindowSize.width), height: currentWindowSize.height)
-    }
-    
-    private lazy var doneButton: UIBarButtonItem = {
-        return makeDoneButton(target: self, action: #selector(done))
-    }()
-    
-    private lazy var mainWindowButton: UIBarButtonItem = {
-        let b = UIBarButtonItem(title: "Main Window", style: .plain, target: self, action: #selector(mainWindowSelected))
-        b.image = UIImage(systemName: "square.grid.2x2")
-        return b
-    }()
-    
-    private lazy var newWindowButton: UIBarButtonItem = {
-        let b = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
-        b.image = UIImage(systemName: "uiwindow.split.2x1")
-        return b
-    }()
-
-    @objc private func newWindowSelected() {
-        let activity = userActivity
-        done()
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = view.window?.windowScene
-        UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: options) { error in
-            log("Error opening new window: \(error.localizedDescription)")
-        }
-    }
-
-    @objc private func mainWindowSelected() {
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = view.window?.windowScene
-        let mainWindowSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
-        UIApplication.shared.requestSceneSessionActivation(mainWindowSession, userActivity: nil, options: options) { error in
-            log("Error opening new window: \(error.localizedDescription)")
-        }
-    }
-
-    // cloning updateButtons from GladysViewController
-    override var navigationItem: UINavigationItem {
-        let i = super.navigationItem
-        i.title = self.title
-                
-        var showDone = false
-        var showMainWindow = false
-        var showNewWindow = false
-        
-        if phoneMode {
-            showDone = true
-            
-        } else if Singleton.shared.openCount > 1 {
-            if UIAccessibility.isVoiceOverRunning {
-                showDone = true
-                
-            } else if isHovering { // hovering
-                if self.traitCollection.verticalSizeClass == .compact {
-                    showDone = true
-                }
-                
-            } else if popoverPresentationController == nil { // full window?
-                showDone = true
-            }
-            
-        } else if navigationController?.viewControllers.count == 1 && popoverPresentationController == nil { // fullscreen
-            showDone = true
-        }
-        
-        if UIApplication.shared.supportsMultipleScenes {
-            if isAccessoryWindow {
-                if Singleton.shared.openCount <= 1 {
-                    showMainWindow = true
-                }
-            } else {
-                showNewWindow = true
-            }
-        }
-        
-        var rightItems = [UIBarButtonItem]()
-
-        let mainWindowIndex = rightItems.firstIndex(of: mainWindowButton)
-        if showMainWindow && mainWindowIndex == nil {
-            rightItems.insert(mainWindowButton, at: 0)
-        } else if !showMainWindow, let mainWindowIndex = mainWindowIndex {
-            rightItems.remove(at: mainWindowIndex)
-        }
-
-        let doneIndex = rightItems.firstIndex(of: doneButton)
-        if showDone && doneIndex == nil {
-            rightItems.insert(doneButton, at: 0)
-        } else if !showDone, let doneIndex = doneIndex {
-            rightItems.remove(at: doneIndex)
-        }
-        
-        i.rightBarButtonItems = rightItems
-
-        if showDone {
-            doneButton.target = self
-            doneButton.action = #selector(done)
-            doneButton.isEnabled = true
-        }
-        
-        if showNewWindow {
-            newWindowButton.target = self
-            newWindowButton.action = #selector(newWindowSelected)
-            newWindowButton.isEnabled = true
-        }
-        
-        if showMainWindow {
-            mainWindowButton.target = self
-            mainWindowButton.action = #selector(mainWindowSelected)
-            mainWindowButton.isEnabled = true
-        }
-        
-        return i
-    }
-    
-    @objc private func done() {
-        NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
-        if isAccessoryWindow, let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
-            let options = UIWindowSceneDestructionRequestOptions()
-            options.windowDismissalAnimation = .standard
-            UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
-        } else {
-            dismiss(animated: true)
-        }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        edgesForExtendedLayout = []
-        userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
-        userActivity?.needsSave = true
-        
-        let tint = UIColor.g_colorTint
-        view.tintColor = tint
-
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.titleTextAttributes = [
-            .font: UIFont.preferredFont(forTextStyle: .callout),
-            .foregroundColor: UIColor.g_colorComponentLabel
-        ]
-
-        if let nav = navigationController, nav.viewControllers.first == self {
-            nav.navigationBar.tintColor = tint
-            if isAccessoryWindow {
-                appearance.backgroundColor = nav.view.backgroundColor
-            }
-        }
-        
-        navigationItem.standardAppearance = appearance
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        super.updateUserActivityState(activity)
-        if let relatedItem = typeItem.parent {
-            ArchivedItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
-        }
-    }
-    
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        return 1
-    }
-
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        return Component.PreviewItem(typeItem: typeItem)
-    }
-    
-    // animated transitioning
-
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return self
+        return sourceItemView == nil ? nil : self
     }
 
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return self
+        return sourceItemView == nil ? nil : self
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -293,6 +105,59 @@ final class GladysPreviewController: QLPreviewController, QLPreviewControllerDat
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             })
         }
+    }
+}
+
+final class GladysPreviewController: GladysViewController, QLPreviewControllerDataSource {
+    private var typeItem: Component
+    
+    init(item: Component) {
+        self.typeItem = item
+        super.init(nibName: nil, bundle: nil)
+        title = item.oneTitle
+        doneButtonLocation = .right
+        windowButtonLocation = .right
+    }
+    
+    override func loadView() {
+        view = GladysView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard let currentWindowSize = currentWindow?.bounds.size else { return }
+        popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, currentWindowSize.width), height: currentWindowSize.height)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let ql = QLPreviewController()
+        ql.dataSource = self
+        addChildController(ql, to: view)
+        
+        edgesForExtendedLayout = []
+        userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
+        userActivity?.needsSave = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        super.updateUserActivityState(activity)
+        if let relatedItem = typeItem.parent {
+            ArchivedItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
+        }
+    }
+    
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return 1
+    }
+
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return Component.PreviewItem(typeItem: typeItem)
     }
 }
 

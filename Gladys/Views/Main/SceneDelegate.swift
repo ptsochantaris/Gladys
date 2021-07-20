@@ -103,7 +103,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func updateWindowCount() {
-        Singleton.shared.openCount = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.count
+        Singleton.shared.openCount = UIApplication.shared.connectedScenes.reduce(0) {
+            if $1.activationState == .background {
+                return $0
+            }
+            return $0 + 1
+        }
         if let c = currentWindow {
             lastUsedWindow = c
         }

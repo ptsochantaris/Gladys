@@ -167,15 +167,16 @@ extension ArchivedItem {
 		itemToPreview = itemToPreview ?? previewableTypeItem
 
         guard let ql = itemToPreview?.quickLook() else { return false }
-
-		if !PersistedOptions.wideMode {
-			ql.sourceItemView = cell
-		}
         
         let goFullscreen = PersistedOptions.fullScreenPreviews || forceFullscreen || UIDevice.current.userInterfaceIdiom == .phone
         
         if goFullscreen {
-            viewController.present(ql, animated: true)
+            let nav = GladysNavController(rootViewController: ql)
+            nav.modalPresentationStyle = .overFullScreen
+            if !PersistedOptions.wideMode {
+                nav.sourceItemView = cell
+            }
+            viewController.present(nav, animated: true)
 
         } else {
             let n = GladysNavController(rootViewController: ql)

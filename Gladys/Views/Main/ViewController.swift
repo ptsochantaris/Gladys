@@ -666,6 +666,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
+    @objc private func deleteItem() {
+        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell {
+            self.deleteButtonSelected(focusedCell)
+        }
+    }
+    
+    @objc private func infoForFocusedItem() {
+        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
+            mostRecentIndexPathActioned = indexPath
+            performSegue(withIdentifier: "showDetail", sender: item)
+        }
+    }
+    
+    @objc private func openFocusedItem() {
+        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
+            mostRecentIndexPathActioned = indexPath
+            item.tryOpen(in: self.navigationController) { [weak self] success in
+                if !success {
+                    self?.performSegue(withIdentifier: "showDetail", sender: item)
+                }
+            }
+        }
+    }
+    
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		navigationItem.largeTitleDisplayMode = .never
@@ -1410,6 +1434,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if collection.numberOfSections == 0 {
             return
         }
+        if !isEditing {
+            isEditing = true
+        }
         for ip in 0 ..< collection.numberOfItems(inSection: 0) {
             collection.selectItem(at: IndexPath(item: ip, section: 0), animated: false, scrollPosition: .centeredHorizontally)
         }
@@ -1788,7 +1815,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
 	/////////////////////////////////
 
-	@IBAction private func deleteButtonSelected(_ sender: UIBarButtonItem) {
+	@IBAction private func deleteButtonSelected(_ sender: Any) {
         let candidates = selectedItems
         guard !candidates.isEmpty else { return }
 
@@ -1802,7 +1829,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		navigationController?.visibleViewController?.present(a, animated: true)
 		if let p = a.popoverPresentationController {
 			p.permittedArrowDirections = [.any]
-			p.barButtonItem = deleteButton
+            if let sender = sender as? UIBarButtonItem {
+                p.barButtonItem = sender
+            } else if let sender = sender as? UIView {
+                p.sourceView = sender
+                p.sourceRect = sender.bounds
+            } else {
+                p.barButtonItem = deleteButton
+            }
 			p.delegate = self
 		}
 	}

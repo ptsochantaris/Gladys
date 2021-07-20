@@ -421,8 +421,10 @@ final class DetailController: GladysViewController,
             navigationController?.pushViewController(q, animated: true)
             
         } else if let presenter = view.window?.alertPresenter {
-            q.sourceItemView = cell
-            presenter.present(q, animated: true)
+            let nav = GladysNavController(rootViewController: q)
+            nav.modalPresentationStyle = .overFullScreen
+            nav.sourceItemView = cell
+            presenter.present(nav, animated: true)
         }
     }
     
