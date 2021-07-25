@@ -8,6 +8,18 @@
 
 import UIKit
 
+final class PassthroughStackView: UIStackView {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        for s in arrangedSubviews where s.isUserInteractionEnabled {
+            let converted = convert(point, to: s)
+            if let view = s.hitTest(converted, with: event) {
+                return view
+            }
+        }
+        return nil
+    }
+}
+
 final class LabelSectionTitle: UICollectionReusableView {
     static let height: CGFloat = 50
     
@@ -28,8 +40,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let bottomLine = UIView()
     private var menuOptions = [UIMenuElement]()
     private var mode = ModelFilterContext.DisplayMode.collapsed
-    private var sectionCount = 0
-    private var layoutForParentCount = 0
+    private var layoutForColumnCount = 0
     private var toggle: ModelFilterContext.LabelToggle?
     private weak var viewController: ViewController?
 
@@ -44,6 +55,12 @@ final class LabelSectionTitle: UICollectionReusableView {
         
         layer.cornerRadius = 15
 
+        let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
+            guard let self = self else { return }
+            NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+        })
+        selectionButton.translatesAutoresizingMaskIntoConstraints = false
+        
         let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         
         label.font = labelFont
@@ -51,7 +68,6 @@ final class LabelSectionTitle: UICollectionReusableView {
         label.highlightedTextColor = .label
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.isUserInteractionEnabled = true
 
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
@@ -59,40 +75,43 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        indicator.isUserInteractionEnabled = true
         
         showAllButton.titleLabel?.font = labelFont
-        showAllButton.addTarget(self, action: #selector(showAllSelected), for: .touchUpInside)
+        showAllButton.addAction(UIAction { [weak self] _ in
+            guard let self = self else { return }
+            NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+        }, for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
         
-        let labelTap = UITapGestureRecognizer(target: self, action: #selector(selected))
-        label.addGestureRecognizer(labelTap)
-        
-        let indicatorTap = UITapGestureRecognizer(target: self, action: #selector(selected))
-        indicator.addGestureRecognizer(indicatorTap)
-
-        let stack = UIStackView(arrangedSubviews: [label, showAllButton, indicator])
+        let stack = PassthroughStackView(arrangedSubviews: [label, showAllButton, indicator])
         stack.axis = .horizontal
         stack.alignment = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.spacing = 10
-        addSubview(stack)
 
         topLine.isUserInteractionEnabled = false
         topLine.backgroundColor = .g_sectionTitleTop
         topLine.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(topLine)
 
         bottomLine.isUserInteractionEnabled = false
         bottomLine.backgroundColor = .g_sectionTitleBottom
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(selectionButton)
+        addSubview(topLine)
         addSubview(bottomLine)
+        addSubview(stack)
         
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            selectionButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            selectionButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            selectionButton.topAnchor.constraint(equalTo: topAnchor),
+            selectionButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            stack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 3),
+            stack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -2),
             stack.topAnchor.constraint(equalTo: topAnchor),
             stack.bottomAnchor.constraint(equalTo: bottomAnchor),
                         
@@ -110,22 +129,18 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.addObserver(self, selector: #selector(setNeedsLayout), name: .ModelDataUpdated, object: nil)
     }
     
+    func reset() {
+        layoutForColumnCount = 0
+        setNeedsLayout()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
-    @objc private func selected() {
-        NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
-    }
-    
-    @objc private func showAllSelected() {
-        NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
-    }
-    
-    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, count: Int, viewController: ViewController, menuOptions: [UIMenuElement]) {
+        
+    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, viewController: ViewController, menuOptions: [UIMenuElement]) {
         self.viewController = viewController
         self.menuOptions = menuOptions
-        self.sectionCount = count
         self.toggle = toggle
         
         mode = toggle.displayMode
@@ -161,7 +176,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
     
     override func layoutSubviews() {
-        if let viewController = viewController, layoutForParentCount != viewController.currentColumnCount {
+        if let viewController = viewController, layoutForColumnCount != viewController.currentColumnCount {
             updateMoreButton()
         }
         super.layoutSubviews()
@@ -173,7 +188,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         }
         let current = viewController.currentColumnCount
         showAllButton.isHidden = mode == .collapsed || sectionCount <= current
-        layoutForParentCount = current
+        layoutForColumnCount = current
+    }
+    
+    private var sectionCount: Int {
+        guard let viewController = viewController, let toggle = toggle else {
+            return 0
+        }
+        return viewController.filter.countItems(for: toggle)
     }
     
     private var previewRect: CGRect {
@@ -190,7 +212,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         
         let n = NumberFormatter()
         n.numberStyle = .decimal
-        let number = n.string(for: layoutForParentCount) ?? ""
+        let number = n.string(for: sectionCount) ?? ""
 
         let countView = UILabel(frame: .zero)
         countView.text = "\(number) items"

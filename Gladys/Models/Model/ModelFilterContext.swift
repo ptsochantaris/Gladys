@@ -174,6 +174,19 @@ final class ModelFilterContext {
         }
         return terms
     }
+    
+    func countItems(for toggle: LabelToggle) -> Int {
+        return filteredDrops.reduce(0) {
+            if toggle.emptyChecker {
+                if $1.labels.isEmpty {
+                    return $0 + 1
+                }
+            } else if $1.labels.contains(toggle.name) {
+                return $0 + 1
+            }
+            return $0
+        }
+    }
 
     @discardableResult
     func updateFilter(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {

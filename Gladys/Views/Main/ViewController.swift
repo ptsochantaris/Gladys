@@ -756,6 +756,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     }
                 }
             }
+            
+            collection.subviews.forEach { ($0 as? LabelSectionTitle)?.reset() }
 
         case .flat:
             let section = SectionIdentifier(label: nil)
@@ -871,11 +873,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self = self else { return }
-            let snap = self.dataSource.snapshot()
-            let sid = snap.sectionIdentifiers[indexPath.section]
-            guard let label = sid.label else { return }
-            let count = snap.numberOfItems(inSection: sid)
-            titleView.configure(with: label, firstSection: indexPath.section == 0, count: count, viewController: self, menuOptions: headerMenuOptions)
+            let sid: SectionIdentifier?
+            if #available(iOS 15.0, *) {
+                sid = self.dataSource.sectionIdentifier(for: indexPath.section)
+            } else {
+                let snap = self.dataSource.snapshot()
+                sid = snap.sectionIdentifiers[indexPath.section]
+            }
+            guard let label = sid?.label else { return }
+            titleView.configure(with: label, firstSection: indexPath.section == 0, viewController: self, menuOptions: headerMenuOptions)
         }
         
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
@@ -1708,6 +1714,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+        section.supplementariesFollowContentInsets = false
 
         if filter.groupingMode == .flat {
             return UICollectionViewCompositionalLayout(section: section)
