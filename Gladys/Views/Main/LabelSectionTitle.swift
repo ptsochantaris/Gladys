@@ -21,6 +21,7 @@ final class PassthroughStackView: UIStackView {
 }
 
 final class LabelSectionTitle: UICollectionReusableView {
+    
     static let height: CGFloat = 50
     
     override init(frame: CGRect) {
@@ -45,13 +46,20 @@ final class LabelSectionTitle: UICollectionReusableView {
     private weak var viewController: ViewController?
 
     private static let titleStyle = UIFont.TextStyle.subheadline
-
+    
     private func setup() {
         
         tintColor = .secondaryLabel
         isUserInteractionEnabled = true
         addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
+        
+        addInteraction(UISpringLoadedInteraction { [weak self] _, context in
+            guard let self = self else { return }
+            if context.state == .activated && self.mode == .collapsed {
+                NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            }
+        })
         
         layer.cornerRadius = 15
 
