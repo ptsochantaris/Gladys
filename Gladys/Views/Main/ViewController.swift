@@ -893,6 +893,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 let snap = self.dataSource.snapshot()
                 sid = snap.sectionIdentifiers[indexPath.section]
             }
+            guard let label = sid?.label else { return }
+            view.configure(with: label, viewController: self)
         }
         
         dataSource.supplementaryViewProvider = { collectionView, type, indexPath in

@@ -21,6 +21,23 @@ final class PassthroughStackView: UIStackView {
 }
 
 final class ScrollFadeView: UICollectionReusableView {
+    
+    private weak var viewController: ViewController?
+    private var toggle: ModelFilterContext.LabelToggle?
+    
+    private var sectionCount: Int {
+        guard let viewController = viewController, let toggle = toggle else {
+            return 0
+        }
+        return viewController.filter.countItems(for: toggle)
+    }
+    
+    func configure(with toggle: ModelFilterContext.LabelToggle, viewController: ViewController) {
+        self.toggle = toggle
+        self.viewController = viewController
+        updateColor()
+    }
+    
     override class var layerClass: AnyClass {
         return CAGradientLayer.self
     }
@@ -28,22 +45,31 @@ final class ScrollFadeView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        updateColor()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateColor), name: .ModelDataUpdated, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
     }
-    
-    private func updateColor() {
+        
+    @objc private func updateColor() {
         let g = self.layer as! CAGradientLayer
-        g.startPoint = CGPoint(x: 0, y: 0)
-        g.endPoint = CGPoint(x: 1, y: 0)
-        let three = UIColor.g_expandedSection
-        let one = three.withAlphaComponent(0)
-        g.locations = [0, 1]
-        g.colors = [one.cgColor, three.cgColor]
+        if let count = viewController?.currentColumnCount, sectionCount > count {
+            g.startPoint = CGPoint(x: 0, y: 0)
+            g.endPoint = CGPoint(x: 1, y: 0)
+            let three = UIColor.g_expandedSection
+            let one = three.withAlphaComponent(0)
+            g.locations = [0, 1]
+            g.colors = [one.cgColor, three.cgColor]
+            g.isHidden = false
+        } else {
+            g.isHidden = true
+        }
     }
     
     required init?(coder: NSCoder) {
