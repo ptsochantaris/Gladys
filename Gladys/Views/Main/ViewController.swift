@@ -884,8 +884,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             titleView.configure(with: label, firstSection: indexPath.section == 0, viewController: self, menuOptions: headerMenuOptions)
         }
         
-        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+        let faderRegistration = UICollectionView.SupplementaryRegistration<ScrollFadeView>(elementKind: "ScrollFadeView") { [weak self] view, _, indexPath in
+            guard let self = self else { return }
+            let sid: SectionIdentifier?
+            if #available(iOS 15.0, *) {
+                sid = self.dataSource.sectionIdentifier(for: indexPath.section)
+            } else {
+                let snap = self.dataSource.snapshot()
+                sid = snap.sectionIdentifiers[indexPath.section]
+            }
+        }
+        
+        dataSource.supplementaryViewProvider = { collectionView, type, indexPath in
+            switch type {
+            case UICollectionView.elementKindSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            case "ScrollFadeView":
+                return collectionView.dequeueConfiguredReusableSupplementary(using: faderRegistration, for: indexPath)
+            default:
+                fatalError("Unknown supplementary view type requested")
+            }
         }
         
 		navigationController?.navigationBar.titleTextAttributes = [
@@ -1713,36 +1731,39 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
         section.supplementariesFollowContentInsets = false
 
         if filter.groupingMode == .flat {
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
             return UICollectionViewCompositionalLayout(section: section)
         }
 
         let layout = UICollectionViewCompositionalLayout { index, _ in
-            let backgroundType: String
-            switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.displayMode {
-            case .collapsed, .none:
-                backgroundType = "SectionBackground"
-                section.orthogonalScrollingBehavior = .none
-
-            case .scrolling:
-                section.orthogonalScrollingBehavior = .continuous
-                backgroundType = "SquareBackground"
-
-            case .full:
-                backgroundType = "SquareBackground"
-                section.orthogonalScrollingBehavior = .none
-            }
-
-            let sectionBackground = NSCollectionLayoutDecorationItem.background(elementKind: backgroundType)
-            section.decorationItems = [sectionBackground]
-
             let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
             let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
-            section.boundarySupplementaryItems = [sectionTitle]
-            
+
+            switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.displayMode {
+            case .collapsed, .none:
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                section.orthogonalScrollingBehavior = .none
+                section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SectionBackground")]
+                section.boundarySupplementaryItems = [sectionTitle]
+
+            case .scrolling:
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing + 50)
+                section.orthogonalScrollingBehavior = .continuous
+                let fadeSize = NSCollectionLayoutSize(widthDimension: .absolute(50), heightDimension: .absolute(fixedHeight + spacing * 2))
+                section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
+                let fader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: fadeSize, elementKind: "ScrollFadeView", containerAnchor: NSCollectionLayoutAnchor(edges: [.trailing, .top, .bottom], absoluteOffset: CGPoint(x: 0, y: -4)))
+                fader.extendsBoundary = false
+                section.boundarySupplementaryItems = [fader, sectionTitle]
+
+            case .full:
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                section.orthogonalScrollingBehavior = .none
+                section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
+                section.boundarySupplementaryItems = [sectionTitle]
+            }
             return section
         }
         

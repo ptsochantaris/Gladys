@@ -20,6 +20,37 @@ final class PassthroughStackView: UIStackView {
     }
 }
 
+final class ScrollFadeView: UICollectionReusableView {
+    override class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        updateColor()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateColor()
+    }
+    
+    private func updateColor() {
+        let g = self.layer as! CAGradientLayer
+        g.startPoint = CGPoint(x: 0, y: 0)
+        g.endPoint = CGPoint(x: 1, y: 0)
+        let three = UIColor.g_expandedSection
+        let one = three.withAlphaComponent(0)
+        g.locations = [0, 1]
+        g.colors = [one.cgColor, three.cgColor]
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 final class LabelSectionTitle: UICollectionReusableView {
     
     static let height: CGFloat = 50

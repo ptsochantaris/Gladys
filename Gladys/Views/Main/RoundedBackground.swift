@@ -14,23 +14,16 @@ struct BackgroundSelectionEvent {
     let name: String?
 }
 
-class SectionBackground: UICollectionReusableView {
+final class SectionBackground: UICollectionReusableView {
+}
+
+final class SquareBackground: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
+        self.backgroundColor = .g_expandedSection
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
-    }
-    
-    func setup() {}    
-}
-
-final class SquareBackground: SectionBackground {
-    override func setup() {
-        super.setup()
-        self.backgroundColor = .quaternarySystemFill
+        fatalError("init(coder:) has not been implemented")
     }
 }
