@@ -56,16 +56,15 @@ final class ScrollFadeView: UICollectionReusableView {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
     }
-        
+    
     @objc private func updateColor() {
         let g = self.layer as! CAGradientLayer
         if let count = viewController?.currentColumnCount, sectionCount > count {
             g.startPoint = CGPoint(x: 0, y: 0)
             g.endPoint = CGPoint(x: 1, y: 0)
-            let three = UIColor.g_expandedSection
-            let one = three.withAlphaComponent(0)
-            g.locations = [0, 1]
-            g.colors = [one.cgColor, three.cgColor]
+            let two = UIColor.g_expandedSection
+            let one = two.withAlphaComponent(0)
+            g.colors = [one.cgColor, two.cgColor]
             g.isHidden = false
         } else {
             g.isHidden = true
