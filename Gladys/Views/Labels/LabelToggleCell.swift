@@ -14,10 +14,10 @@ final class LabelToggleCell: UITableViewCell {
     
     weak var parent: LabelSelector?
         
-    var toggle: ModelFilterContext.LabelToggle? {
+    var toggle: Filter.Toggle? {
         didSet {
             guard let toggle = toggle else { return }
-            labelName.text = toggle.name
+            labelName.text = toggle.function.displayText
             let c = toggle.count
             labelCount.text = c == 1 ? "1 item" : "\(c) items"
         }

@@ -22,7 +22,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 
 	weak var delegate: AddLabelControllerDelegate?
         
-    private var sections = [ModelFilterContext.LabelToggle.Section]()
+    private var sections = [Filter.Toggle.Section]()
 
     private var dirty = false
 
@@ -46,22 +46,32 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         }
 	}
     
-    var modelFilter: ModelFilterContext!
+    var modelFilter: Filter!
 
     private func update() {
         
         sections.removeAll()
         
         if filter.isEmpty {
-            let recent = ModelFilterContext.LabelToggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
+            let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
             if !recent.isEmpty {
-                sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: Array(recent), title: "Recent"))
+                sections.append(Filter.Toggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
-            let s = modelFilter.labelToggles.compactMap { $0.emptyChecker ? nil : $0.name }
-            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "All Labels"))
+            let s = modelFilter.labelToggles.compactMap { toggle -> String? in
+                if case .userLabel(let text) = toggle.function {
+                    return text
+                }
+                return nil
+            }
+            sections.append(Filter.Toggle.Section.filtered(labels: s, title: "All Labels"))
         } else {
-            let s = modelFilter.labelToggles.compactMap { $0.name.localizedCaseInsensitiveContains(filter) && !$0.emptyChecker ? $0.name : nil }
-            sections.append(ModelFilterContext.LabelToggle.Section.filtered(labels: s, title: "Suggested Labels"))
+            let s = modelFilter.labelToggles.compactMap { toggle -> String? in
+                if case .userLabel(let text) = toggle.function {
+                    return text.localizedCaseInsensitiveContains(filter) ? text : nil
+                }
+                return nil
+            }
+            sections.append(Filter.Toggle.Section.filtered(labels: s, title: "Suggested Labels"))
         }
     }
     
@@ -120,12 +130,12 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
 		super.viewWillDisappear(animated)
 		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
         if let result = result, !result.isEmpty {
-            var latest = ModelFilterContext.LabelToggle.Section.latestLabels
+            var latest = Filter.Toggle.Section.latestLabels
             if let i = latest.firstIndex(of: result) {
                 latest.remove(at: i)
             }
             latest.insert(result, at: 0)
-            ModelFilterContext.LabelToggle.Section.latestLabels = Array(latest.prefix(10))
+            Filter.Toggle.Section.latestLabels = Array(latest.prefix(10))
         }
 		dirty = false
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

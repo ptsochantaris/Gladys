@@ -158,7 +158,6 @@ final class ArchivedItem: Codable {
 	}
 
 	private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
-
 		uuid = UUID()
 		createdAt = Date()
 		updatedAt = createdAt

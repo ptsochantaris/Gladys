@@ -62,7 +62,7 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
-    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, ModelFilterContextDelegate {
+    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate {
     
 	@IBOutlet private var collection: UICollectionView!
 	@IBOutlet private var totalSizeLabel: UIBarButtonItem!
@@ -78,7 +78,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	@IBOutlet private var shareButton: UIBarButtonItem!
     @IBOutlet private var editButton: UIBarButtonItem!
     
-    var filter: ModelFilterContext!
+    var filter: Filter!
     
 	var itemView: UICollectionView {
 		return collection!
@@ -141,7 +141,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
+    func modelFilterContextChanged(_ modelFilterContext: Filter, animate: Bool) {
         updateDataSource(animated: animate)
         updateLabelIcon()
     }
@@ -281,15 +281,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         switch filter.groupingMode {
         case .byLabel:
             if let sourceIndexPath = sourceIndexPath,
-               let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name,
-               let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.label?.name,
+               let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function,
+               let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.label?.function,
                sourceSectionLabel != destinationSectionLabel {
                 // drag between sections in same window
                 insert(item: existingItem, at: destinationIndexPath)
                 
-                existingItem.labels.removeAll { $0 == sourceSectionLabel }
-                if destinationSectionLabel != ModelFilterContext.LabelToggle.noNameTitle, !existingItem.labels.contains(destinationSectionLabel) {
-                    existingItem.labels.append(destinationSectionLabel)
+                existingItem.labels.removeAll { $0 == sourceSectionLabel.displayText }
+                if case .userLabel(let text) = destinationSectionLabel, !existingItem.labels.contains(text) {
+                    existingItem.labels.append(text)
                 }
                 existingItem.markUpdated()
                 return .saveDB
@@ -303,12 +303,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
                 return .saveIndex
                 
-            } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name {
+            } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function {
                 // drag into section from another Gladys window
                 insert(item: existingItem, at: destinationIndexPath)
                 
-                if !existingItem.labels.contains(destinationSectionLabel) {
-                    existingItem.labels.append(destinationSectionLabel)
+                if case .userLabel(let text) = destinationSectionLabel, !existingItem.labels.contains(text) {
+                    existingItem.labels.append(text)
                     existingItem.markUpdated()
                     return .saveDB
                 } else {
@@ -345,8 +345,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             switch filter.groupingMode {
             case .byLabel:
                 let destinationSectionIndex = IndexPath(item: 0, section: destinationIndexPath.section)
-                if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.name {
-                    newItem.labels.append(destinationSectionLabel)
+                if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function, case .userLabel(let text) = destinationSectionLabel {
+                    newItem.labels.append(text)
                 }
             case .flat:
                 if !PersistedOptions.dontAutoLabelNewItems && filter.isFilteringLabels {
@@ -724,34 +724,42 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         switch filter.groupingMode {
         case .byLabel:
             let toggles = filter.enabledToggles
-            var labelLookups = [String: [UUID]]()
+            var labelLookups = [Filter.Toggle.Function: [UUID]]()
             labelLookups.reserveCapacity(toggles.count)
             for item in filter.filteredDrops {
-                if item.labels.isEmpty {
-                    let label = ModelFilterContext.LabelToggle.noNameTitle
-                    if var list = labelLookups[label] {
+                if item.isRecentlyAdded {
+                    if var list = labelLookups[.recentlyAddedItems] {
                         list.append(item.uuid)
-                        labelLookups[label] = list
+                        labelLookups[.recentlyAddedItems] = list
                     } else {
-                        labelLookups[label] = [item.uuid]
+                        labelLookups[.recentlyAddedItems] = [item.uuid]
+                    }
+                }
+                if item.labels.isEmpty {
+                    if var list = labelLookups[.unlabeledItems] {
+                        list.append(item.uuid)
+                        labelLookups[.unlabeledItems] = list
+                    } else {
+                        labelLookups[.unlabeledItems] = [item.uuid]
                     }
                 } else {
-                    for label in item.labels {
-                        if var list = labelLookups[label] {
+                    for text in item.labels {
+                        let function = Filter.Toggle.Function.userLabel(text)
+                        if var list = labelLookups[function] {
                             list.append(item.uuid)
-                            labelLookups[label] = list
+                            labelLookups[function] = list
                         } else {
-                            labelLookups[label] = [item.uuid]
+                            labelLookups[function] = [item.uuid]
                         }
                     }
                 }
             }
             
             toggles.forEach { toggle in
-                if let sectionItems = labelLookups[toggle.name]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                if let sectionItems = labelLookups[toggle.function]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), !sectionItems.isEmpty {
                     let sectionIdentifier = SectionIdentifier(label: toggle)
                     snapshot.appendSections([sectionIdentifier])
-                    if toggle.displayMode != .collapsed {
+                    if toggle.currentDisplayMode != .collapsed {
                         snapshot.appendItems(sectionItems, toSection: sectionIdentifier)
                     }
                 }
@@ -783,15 +791,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var name = event.name
         
         if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.name
+            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
         }
 
-        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
-        switch toggle.displayMode {
+        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
+        switch toggle.currentDisplayMode {
         case .collapsed, .scrolling:
-            filter.setDisplayMode(to: .full, for: [toggle.name], setAsPreference: true)
+            filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
         case .full:
-            filter.setDisplayMode(to: .scrolling, for: [toggle.name], setAsPreference: true)
+            filter.setDisplayMode(to: .scrolling, for: [name], setAsPreference: true)
         }
         updateDataSource(animated: true)
         userActivity?.needsSave = true
@@ -802,15 +810,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         var name = event.name
         
         if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.name
+            name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
         }
 
-        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.name == name }) else { return }
-        switch toggle.displayMode {
+        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
+        switch toggle.currentDisplayMode {
         case .collapsed:
-            filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [toggle.name], setAsPreference: false)
+            filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
         case .full, .scrolling:
-            filter.setDisplayMode(to: .collapsed, for: [toggle.name], setAsPreference: false)
+            filter.setDisplayMode(to: .collapsed, for: [name], setAsPreference: false)
         }
         updateDataSource(animated: true)
         userActivity?.needsSave = true
@@ -1744,7 +1752,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let sectionTitleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(LabelSectionTitle.height))
             let sectionTitle = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: sectionTitleSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)
 
-            switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.displayMode {
+            switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.currentDisplayMode {
             case .collapsed, .none:
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
                 section.orthogonalScrollingBehavior = .none
@@ -2003,14 +2011,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	}
     
     private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
-        if filter.groupingMode == .byLabel, let labelList = Model.item(uuid: uuid)?.labels {
+        if filter.groupingMode == .byLabel, let item = Model.item(uuid: uuid) {
+            let labelList = item.labels
             let labels = Set(labelList)
-            let fullLabels = labels.subtracting(filter.labels(for: .full).map { $0.name })
+            let fullLabels = labels.subtracting(filter.labels(for: .full).map { $0.function.displayText })
             if fullLabels.isEmpty {
                 if let firstLabel = labelList.first {
                     filter.setDisplayMode(to: .full, for: [firstLabel], setAsPreference: false)
+                } else if item.isRecentlyAdded {
+                    filter.setDisplayMode(to: .full, for: [Filter.Toggle.Function.recentlyAddedItems.displayText], setAsPreference: false)
                 } else {
-                    filter.setDisplayMode(to: .full, for: [ModelFilterContext.LabelToggle.noNameTitle], setAsPreference: false)
+                    filter.setDisplayMode(to: .full, for: [Filter.Toggle.Function.unlabeledItems.displayText], setAsPreference: false)
                 }
                 updateDataSource(animated: false)
             }

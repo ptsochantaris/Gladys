@@ -113,8 +113,8 @@ final class Singleton {
                 legacyLabelList = nil
             }
             
-            var labels: [ModelFilterContext.LabelToggle]?
-            if let labelData = userActivity?.userInfo?[kGladysMainViewSections] as? Data, let labelList = try? JSONDecoder().decode([ModelFilterContext.LabelToggle].self, from: labelData) {
+            var labels: [Filter.Toggle]?
+            if let labelData = userActivity?.userInfo?[kGladysMainViewSections] as? Data, let labelList = try? JSONDecoder().decode([Filter.Toggle].self, from: labelData) {
                 labels = labelList
             }
 
@@ -215,7 +215,7 @@ final class Singleton {
         }
     }
     
-    private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [ModelFilterContext.LabelToggle]? = nil, legacyLabelList: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [Filter.Toggle]? = nil, legacyLabelList: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -239,7 +239,7 @@ final class Singleton {
         if let search = restoringSearch, !search.isEmpty {
             filter.text = search
         }
-        if let modeNumber = restoringDisplayMode, let mode = ModelFilterContext.GroupingMode(rawValue: modeNumber) {
+        if let modeNumber = restoringDisplayMode, let mode = Filter.GroupingMode(rawValue: modeNumber) {
             filter.groupingMode = mode
         }
         v.filter = filter

@@ -180,6 +180,10 @@ extension ArchivedItem: Hashable {
 	enum ShareMode {
 		case none, elsewhereReadOnly, elsewhereReadWrite, sharing
 	}
+    
+    var isRecentlyAdded: Bool {
+        return self.createdAt.timeIntervalSinceNow > -86400 // 24h
+    }
 
 	var shareMode: ShareMode {
 		if let shareRecord = cloudKitShareRecord {

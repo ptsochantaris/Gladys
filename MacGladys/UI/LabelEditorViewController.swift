@@ -6,22 +6,22 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 	@IBOutlet private var newLabelField: NSTextField!
 	@IBOutlet var togglesColumn: NSTableColumn!
 
-    var associatedFilter: ModelFilterContext?
+    var associatedFilter: Filter?
 
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		return availableToggles.count
 	}
 
-	private lazy var allToggles: [ModelFilterContext.LabelToggle] = {
-        return associatedFilter?.labelToggles.filter { !$0.emptyChecker } ?? []
+	private lazy var allToggles: [Filter.Toggle] = {
+        return associatedFilter?.labelToggles.filter { $0.function != .unlabeledItems } ?? []
 	}()
 
-	private var availableToggles: [ModelFilterContext.LabelToggle] {
+	private var availableToggles: [Filter.Toggle] {
 		let filter = newLabelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
 		if filter.isEmpty {
 			return allToggles
 		} else {
-			return allToggles.filter { $0.name.localizedCaseInsensitiveContains(filter) }
+            return allToggles.filter { $0.function.displayText.localizedCaseInsensitiveContains(filter) }
 		}
 	}
 
@@ -33,7 +33,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		let item = availableToggles[row]
 		let cell = tableColumn?.dataCell as? NSButtonCell
 
-		let title = NSMutableAttributedString(string: item.name, attributes: [
+        let title = NSMutableAttributedString(string: item.function.displayText, attributes: [
 			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
 			.foregroundColor: NSColor.labelColor
 			])
@@ -76,13 +76,14 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 	private func addNewLabel(_ newTag: String) {
 
 		newLabelField.stringValue = ""
-		if !allToggles.contains(where: { $0.name == newTag }) {
-            let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems?.count ?? 0, enabled: false, displayMode: .collapsed, emptyChecker: false)
+        let function = Filter.Toggle.Function.userLabel(newTag)
+		if !allToggles.contains(where: { $0.function == function }) {
+            let newToggle = Filter.Toggle(function: function, count: selectedItems?.count ?? 0, active: false, currentDisplayMode: .collapsed, preferredDisplayMode: .scrolling)
 			allToggles.append(newToggle)
-			allToggles.sort { $0.name < $1.name }
+            allToggles.sort { $0.function.displayText.localizedCaseInsensitiveCompare($1.function.displayText) == .orderedAscending }
 		}
 		tableView.reloadData()
-		if let i = allToggles.firstIndex(where: { $0.name == newTag }) {
+		if let i = allToggles.firstIndex(where: { $0.function == function }) {
 			let existingToggle = allToggles[i]
 			if existingToggle.toggleState(across: selectedItems) != .all {
 				tableView(tableView, setObjectValue: NSButton.StateValue.on, for: togglesColumn, row: i)
@@ -95,26 +96,27 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
 		guard let selectedItems = selectedItems else { return }
 		let toggle = availableToggles[row]
 		let state = toggle.toggleState(across: selectedItems)
+        let name = toggle.function.displayText
 		switch state {
 		case .none:
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0) {
-					item.labels.append(toggle.name)
+					item.labels.append(name)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .some:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), !item.labels.contains(toggle.name) {
-					item.labels.append(toggle.name)
+				if let item = Model.item(uuid: $0), !item.labels.contains(name) {
+					item.labels.append(name)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .all:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.name) {
+				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: name) {
 					item.labels.remove(at: i)
 					item.postModified()
 					editedUUIDs.insert($0)

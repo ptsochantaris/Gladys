@@ -66,7 +66,7 @@ extension Model {
 	}
     
     @discardableResult
-    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: ModelFilterContext?) -> Bool {
+    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
         guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
@@ -127,7 +127,7 @@ extension Model {
     }
 
     @discardableResult
-    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: ModelFilterContext?) -> Bool {
+    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
         var inserted = false
         for provider in itemProviders {
             for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
@@ -152,7 +152,7 @@ extension Model {
         return inserted
     }
 
-    static func importFiles(paths: [String], filterContext: ModelFilterContext?) {
+    static func importFiles(paths: [String], filterContext: Filter?) {
         let providers = paths.compactMap { path -> NSItemProvider? in
             let url = NSURL(fileURLWithPath: path)
             var isDir: ObjCBool = false

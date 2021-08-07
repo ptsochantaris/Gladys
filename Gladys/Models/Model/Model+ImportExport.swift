@@ -73,7 +73,7 @@ extension Model {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@discardableResult
-    static func createArchive(using filter: ModelFilterContext, completion: @escaping (URL?, Error?) -> Void) -> Progress {
+    static func createArchive(using filter: Filter, completion: @escaping (URL?, Error?) -> Void) -> Progress {
         let eligibleItems: ContiguousArray = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
 		let count = 2 + eligibleItems.count
 		let p = Progress(totalUnitCount: Int64(count))
@@ -122,7 +122,7 @@ extension Model {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@discardableResult
-    static func createZip(using filter: ModelFilterContext, completion: @escaping (URL?, Error?) -> Void) -> Progress {
+    static func createZip(using filter: Filter, completion: @escaping (URL?, Error?) -> Void) -> Progress {
 
         let dropsCopy = filter.eligibleDropsForExport
 		let itemCount = Int64(1 + dropsCopy.count)

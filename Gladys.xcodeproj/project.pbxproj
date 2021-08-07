@@ -178,8 +178,8 @@
 		165B97A025CD88D000E73E2D /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		165B97AD25CD88DC00E73E2D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		165B97BA25CD88E400E73E2D /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
-		165FC62C2635A8BA003F9268 /* ModelFilterContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FC62B2635A8BA003F9268 /* ModelFilterContext.swift */; };
-		165FC62D2635A8C5003F9268 /* ModelFilterContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FC62B2635A8BA003F9268 /* ModelFilterContext.swift */; };
+		165FC62C2635A8BA003F9268 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FC62B2635A8BA003F9268 /* Filter.swift */; };
+		165FC62D2635A8C5003F9268 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FC62B2635A8BA003F9268 /* Filter.swift */; };
 		1660C0262465C32000ABFDFD /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1660C0252465C32000ABFDFD /* Singleton.swift */; };
 		1661B2C1245E219200BE888E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		1661B2C7245E258800BE888E /* CloudManager+Mainapps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1661B2C6245E258800BE888E /* CloudManager+Mainapps.swift */; };
@@ -724,7 +724,7 @@
 		165847082376EE4A00666B7B /* Model+Importing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Importing.swift"; sourceTree = "<group>"; };
 		1658722B1FA7E0BC006EFB15 /* CenteredPinchGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredPinchGestureRecognizer.swift; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
-		165FC62B2635A8BA003F9268 /* ModelFilterContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFilterContext.swift; sourceTree = "<group>"; };
+		165FC62B2635A8BA003F9268 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		1660C0252465C32000ABFDFD /* Singleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		1661B2C6245E258800BE888E /* CloudManager+Mainapps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mainapps.swift"; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
@@ -1434,7 +1434,7 @@
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 				16EC2934219D5F11004174C3 /* Model+Lite.swift */,
-				165FC62B2635A8BA003F9268 /* ModelFilterContext.swift */,
+				165FC62B2635A8BA003F9268 /* Filter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2198,7 +2198,7 @@
 				16906A9A23C8C18E00D6C177 /* Component.swift in Sources */,
 				161718E52094DFD4005ABD6C /* Component+Cloud.swift in Sources */,
 				161718E12094DCEC005ABD6C /* ArchivedItem+Indexing.swift in Sources */,
-				165FC62D2635A8C5003F9268 /* ModelFilterContext.swift in Sources */,
+				165FC62D2635A8C5003F9268 /* Filter.swift in Sources */,
 				166B6391236A451F00115AC3 /* FileMonitor.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
@@ -2382,7 +2382,7 @@
 			files = (
 				16CD7D7320A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
-				165FC62C2635A8BA003F9268 /* ModelFilterContext.swift in Sources */,
+				165FC62C2635A8BA003F9268 /* Filter.swift in Sources */,
 				1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */,
 				161089A01FA322A90095FE34 /* Component+Cloud.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,

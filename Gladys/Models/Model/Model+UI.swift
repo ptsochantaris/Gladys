@@ -177,11 +177,11 @@ extension Model.SortOption {
 }
 
 extension UISceneSession {
-    var associatedFilter: ModelFilterContext {
-        if let existing = userInfo?[kGladysMainFilter] as? ModelFilterContext {
+    var associatedFilter: Filter {
+        if let existing = userInfo?[kGladysMainFilter] as? Filter {
             return existing
         }
-        let newFilter = ModelFilterContext()
+        let newFilter = Filter()
         if userInfo == nil {
             userInfo = [String: Any]()
         }
@@ -191,7 +191,7 @@ extension UISceneSession {
 }
 
 extension UIView {
-    var associatedFilter: ModelFilterContext? {
+    var associatedFilter: Filter? {
         let w = (self as? UIWindow) ?? window
         return w?.windowScene?.session.associatedFilter
     }

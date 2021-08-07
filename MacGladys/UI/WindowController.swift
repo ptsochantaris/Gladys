@@ -8,7 +8,7 @@
 
 import Cocoa
 
-var allFilters: [ModelFilterContext] {
+var allFilters: [Filter] {
     return NSApp.orderedWindows.compactMap {
         ($0.contentViewController as? ViewController)?.filter
     }
@@ -77,7 +77,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     static func storeStates() {
         let windowsToStore = NSApp.orderedWindows.compactMap { window -> State? in
             if let c = window.contentViewController as? ViewController {
-                let labels = c.filter.labelToggles.filter { $0.enabled }.map { $0.name }
+                let labels = c.filter.labelToggles.filter { $0.active }.map { $0.function.displayText }
                 return State(frame: window.frame, search: c.filter.text, labels: labels)
             }
             return nil

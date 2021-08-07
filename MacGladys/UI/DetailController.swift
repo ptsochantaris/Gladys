@@ -53,7 +53,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
 	static var showingUUIDs = Set<UUID>()
     
-    var associatedFilter: ModelFilterContext?
+    var associatedFilter: Filter?
 
 	@IBOutlet private var titleField: FocusableTextField!
 	@IBOutlet private var notesField: FocusableTextField!

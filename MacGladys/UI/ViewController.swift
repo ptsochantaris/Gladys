@@ -12,9 +12,9 @@ import GladysFramework
 import DeepDiff
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-                            NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, ModelFilterContextDelegate {
+                            NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
 
-    let filter = ModelFilterContext()
+    let filter = Filter()
 
 	@IBOutlet private var collection: MainCollectionView!
 
@@ -75,7 +75,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		collection.setDraggingSourceOperationMask(optionPressed ? .every : .copy, forLocal: false)
 	}
     
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool) {
+    func modelFilterContextChanged(_ modelFilterContext: Filter, animate: Bool) {
         itemCollectionNeedsDisplay()
     }
 

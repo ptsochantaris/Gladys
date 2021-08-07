@@ -1,5 +1,5 @@
 //
-//  ModelFilterContext.swift
+//  Filter.swift
 //  Gladys
 //
 //  Created by Paul Tsochantaris on 25/04/2021.
@@ -13,19 +13,19 @@ import UIKit
 #endif
 
 struct SectionIdentifier: Hashable {
-    let label: ModelFilterContext.LabelToggle?
+    let label: Filter.Toggle?
 }
 
 struct ItemIdentifier: Hashable {
-    let label: ModelFilterContext.LabelToggle?
+    let label: Filter.Toggle?
     let uuid: UUID
 }
 
-protocol ModelFilterContextDelegate: AnyObject {
-    func modelFilterContextChanged(_ modelFilterContext: ModelFilterContext, animate: Bool)
+protocol FilterDelegate: AnyObject {
+    func modelFilterContextChanged(_ modelFilterContext: Filter, animate: Bool)
 }
 
-final class ModelFilterContext {
+final class Filter {
     
     enum UpdateType {
         case none, instant, animated
@@ -48,7 +48,7 @@ final class ModelFilterContext {
         }
     }
     
-    weak var delegate: ModelFilterContextDelegate?
+    weak var delegate: FilterDelegate?
     
     var groupingMode = GroupingMode.flat
     var isFilteringText = false
@@ -65,7 +65,7 @@ final class ModelFilterContext {
     }
 
     var isFilteringLabels: Bool {
-        return labelToggles.contains { $0.enabled }
+        return labelToggles.contains { $0.active }
     }
 
     var isFiltering: Bool {
@@ -119,10 +119,10 @@ final class ModelFilterContext {
     func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?, setAsPreference: Bool) {
         if let names = names {
             labelToggles = labelToggles.map {
-                let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
+                let effectiveName = $0.function.displayText
                 if names.contains(effectiveName) {
                     var newToggle = $0
-                    newToggle.displayMode = displayMode
+                    newToggle.currentDisplayMode = displayMode
                     if setAsPreference, displayMode == .scrolling || displayMode == .full {
                         newToggle.preferredDisplayMode = displayMode
                     }
@@ -134,7 +134,7 @@ final class ModelFilterContext {
         } else {
             labelToggles = labelToggles.map {
                 var newToggle = $0
-                newToggle.displayMode = displayMode
+                newToggle.currentDisplayMode = displayMode
                 if setAsPreference, displayMode == .scrolling || displayMode == .full {
                     newToggle.preferredDisplayMode = displayMode
                 }
@@ -143,15 +143,14 @@ final class ModelFilterContext {
         }
     }
     
-    func labels(for displayMode: DisplayMode) -> [LabelToggle] {
-        return labelToggles.filter { $0.displayMode == displayMode }
+    func labels(for displayMode: DisplayMode) -> [Toggle] {
+        return labelToggles.filter { $0.currentDisplayMode == displayMode }
     }
     
     func enableLabelsByName(_ names: Set<String>) {
         labelToggles = labelToggles.map {
             var newToggle = $0
-            let effectiveName = $0.emptyChecker ? ModelFilterContext.LabelToggle.noNameTitle : $0.name
-            newToggle.enabled = names.contains(effectiveName)
+            newToggle.active = names.contains($0.function.displayText)
             return newToggle
         }
     }
@@ -175,14 +174,21 @@ final class ModelFilterContext {
         return terms
     }
     
-    func countItems(for toggle: LabelToggle) -> Int {
+    func countItems(for toggle: Toggle) -> Int {
         return filteredDrops.reduce(0) {
-            if toggle.emptyChecker {
+            switch toggle.function {
+            case .userLabel(let text):
+                if $1.labels.contains(text) {
+                    return $0 + 1
+                }
+            case .unlabeledItems:
                 if $1.labels.isEmpty {
                     return $0 + 1
                 }
-            } else if $1.labels.contains(toggle.name) {
-                return $0 + 1
+            case .recentlyAddedItems:
+                if $1.isRecentlyAdded {
+                    return $0 + 1
+                }
             }
             return $0
         }
@@ -195,7 +201,7 @@ final class ModelFilterContext {
         
         // label pass
         
-        let enabledToggles = labelToggles.filter { $0.enabled }
+        let enabledToggles = labelToggles.filter { $0.active }
         let postLabelDrops: ContiguousArray<ArchivedItem>
         if enabledToggles.isEmpty {
             postLabelDrops = Model.drops
@@ -205,12 +211,10 @@ final class ModelFilterContext {
             postLabelDrops = Model.drops.filter { item in
                 var matchCount = 0
                 for toggle in enabledToggles {
-                    if toggle.emptyChecker {
-                        if item.labels.isEmpty {
-                            matchCount += 1
-                        }
-                    } else if item.labels.contains(toggle.name) {
-                        matchCount += 1
+                    switch toggle.function {
+                    case .unlabeledItems: if item.labels.isEmpty { matchCount += 1 }
+                    case .recentlyAddedItems: if item.isRecentlyAdded { matchCount += 1 }
+                    case .userLabel(let text): if item.labels.contains(text) { matchCount += 1 }
                     }
                 }
                 return matchCount == expectedCount
@@ -219,12 +223,10 @@ final class ModelFilterContext {
         } else {
             postLabelDrops = Model.drops.filter { item in
                 for toggle in enabledToggles {
-                    if toggle.emptyChecker {
-                        if item.labels.isEmpty {
-                            return true
-                        }
-                    } else if item.labels.contains(toggle.name) {
-                        return true
+                    switch toggle.function {
+                    case .unlabeledItems: if item.labels.isEmpty { return true }
+                    case .recentlyAddedItems: if item.isRecentlyAdded { return true }
+                    case .userLabel(let text): if item.labels.contains(text) { return true }
                     }
                 }
                 return false
@@ -233,7 +235,7 @@ final class ModelFilterContext {
         
         // text pass
 
-        if let terms = ModelFilterContext.terms(for: modelFilter), !terms.isEmpty {
+        if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
             var replacementResults = Set<UUID>()
 
             let lock = DispatchSemaphore(value: 0)
@@ -300,11 +302,18 @@ final class ModelFilterContext {
     }
         
     var enabledLabelsForItems: [String] {
-        return labelToggles.compactMap { $0.enabled && !$0.emptyChecker ? $0.name : nil }
+        return labelToggles.compactMap {
+            if $0.active {
+                if case .userLabel(let name) = $0.function {
+                    return name
+                }
+            }
+            return nil
+        }
     }
 
     var enabledLabelsForTitles: [String] {
-        return labelToggles.compactMap { $0.enabled ? $0.name : nil }
+        return labelToggles.compactMap { $0.active ? $0.function.displayText : nil }
     }
     
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
@@ -312,19 +321,19 @@ final class ModelFilterContext {
         return items.filter { $0.goodToSave }
     }
     
-    var labelToggles = [LabelToggle]()
+    var labelToggles = [Toggle]()
     
-    func applyLabelConfig(from newToggles: [LabelToggle]) {
+    func applyLabelConfig(from newToggles: [Toggle]) {
         labelToggles = labelToggles.map { existingToggle in
-            if let newToggle = newToggles.first(where: { $0.name == existingToggle.name }) {
-                return LabelToggle(name: newToggle.name, count: existingToggle.count, enabled: newToggle.enabled, displayMode: newToggle.displayMode, preferredDisplayMode: newToggle.preferredDisplayMode, emptyChecker: newToggle.emptyChecker)
+            if let newToggle = newToggles.first(where: { $0.function == existingToggle.function }) {
+                return Toggle(function: newToggle.function, count: existingToggle.count, active: newToggle.active, currentDisplayMode: newToggle.currentDisplayMode, preferredDisplayMode: newToggle.preferredDisplayMode)
             } else {
                 return existingToggle
             }
         }
     }
 
-    struct LabelToggle: Hashable, Codable {
+    struct Toggle: Hashable, Codable {
         
         enum Section {
             case recent(labels: [String], title: String)
@@ -353,28 +362,53 @@ final class ModelFilterContext {
                 }
             }
         }
+        
+        enum Function: Hashable, Codable {
+            case userLabel(String)
+            case recentlyAddedItems
+            case unlabeledItems
 
-        static let noNameTitle = "Items with no labels"
+            static func == (lhs: Function, rhs: Function) -> Bool {
+                switch lhs {
+                case .userLabel(let leftText):
+                    switch rhs {
+                    case .userLabel(let rightText):
+                        return leftText.localizedCaseInsensitiveCompare(rightText) == .orderedSame
+                    case .recentlyAddedItems, .unlabeledItems:
+                        return false
+                    }
+                case .recentlyAddedItems:
+                    if case .recentlyAddedItems = rhs { return true } else { return false }
+                case .unlabeledItems:
+                    if case .unlabeledItems = rhs { return true } else { return false }
+                }
+            }
+            
+            var displayText: String {
+                switch self {
+                case .userLabel(let name): return name
+                case .unlabeledItems: return "Items with no labels"
+                case .recentlyAddedItems: return "Recently added"
+                }
+            }
+        }
         
-        let name: String
+        let function: Function
         let count: Int
-        var enabled: Bool
-        var displayMode: DisplayMode
+        var active: Bool
+        var currentDisplayMode: DisplayMode
         var preferredDisplayMode: DisplayMode
-        let emptyChecker: Bool
         
-        static func == (lhs: LabelToggle, rhs: LabelToggle) -> Bool {
-            return lhs.emptyChecker == rhs.emptyChecker
-            && lhs.enabled == rhs.enabled
-            && lhs.displayMode == rhs.displayMode
-            && lhs.name == rhs.name
+        static func == (lhs: Toggle, rhs: Toggle) -> Bool {
+            return lhs.function == rhs.function
+            && lhs.active == rhs.active
+            && lhs.currentDisplayMode == rhs.currentDisplayMode
         }
         
         func hash(into hasher: inout Hasher) {
-            hasher.combine(emptyChecker)
-            hasher.combine(enabled)
-            hasher.combine(displayMode)
-            hasher.combine(name)
+            hasher.combine(function)
+            hasher.combine(active)
+            hasher.combine(currentDisplayMode)
         }
 
         enum State {
@@ -389,6 +423,9 @@ final class ModelFilterContext {
         }
 
         func toggleState(across uuids: [UUID]?) -> State {
+            guard case .userLabel(let name) = function else {
+                return .none
+            }
             let n = uuids?.reduce(0) { total, uuid -> Int in
                 if let item = Model.item(uuid: uuid), item.labels.contains(name) {
                     return total + 1
@@ -402,14 +439,20 @@ final class ModelFilterContext {
         }
     }
     
-    var enabledToggles: [LabelToggle] {
-        var res: [ModelFilterContext.LabelToggle]
+    var enabledToggles: [Toggle] {
+        var res: [Filter.Toggle]
         if isFilteringLabels {
-            res = labelToggles.filter { $0.enabled }
+            res = labelToggles.filter { $0.active }
         } else {
             res = labelToggles
         }
-        if let i = res.firstIndex(where: { $0.emptyChecker }), i != 0 {
+        
+        if let i = res.firstIndex(where: { $0.function == .unlabeledItems }), i != 0 {
+            let item = res.remove(at: i)
+            res.insert(item, at: 0)
+        }
+        
+        if let i = res.firstIndex(where: { $0.function == .recentlyAddedItems }), i != 0 {
             let item = res.remove(at: i)
             res.insert(item, at: 0)
         }
@@ -418,20 +461,46 @@ final class ModelFilterContext {
     
     func disableAllLabels() {
         labelToggles = labelToggles.map {
-            if $0.enabled {
+            if $0.active {
                 var l = $0
-                l.enabled = false
+                l.active = false
                 return l
             } else {
                 return $0
             }
         }
     }
+    
+    func rebuildRecentlyAdded() -> Bool {
+        let count = Model.drops.reduce(0) {
+            return $0 + ($1.isRecentlyAdded ? 1 : 0)
+        }
+        let recentlyAddedIndex = labelToggles.firstIndex(where: { $0.function == .recentlyAddedItems })
+        if count == 0 {
+            if let index = recentlyAddedIndex {
+                labelToggles.remove(at: index)
+                return true
+            }
+        } else {
+            let t = newOrExistingToggle(of: .recentlyAddedItems, in: labelToggles, newCount: count)
+            if let index = recentlyAddedIndex {
+                labelToggles[index] = t
+            } else if let index = labelToggles.firstIndex(where: { $0.function == .unlabeledItems }) {
+                labelToggles.insert(t, at: index + 1)
+                return true
+            } else {
+                labelToggles.append(t)
+                return true
+            }
+        }
+        return false
+    }
 
     func rebuildLabels() {
         var counts = [String: Int]()
         counts.reserveCapacity(labelToggles.count)
         var noLabelCount = 0
+        var recentlyAddedCount = 0
         for item in Model.drops {
             item.labels.forEach {
                 if let c = counts[$0] {
@@ -443,51 +512,67 @@ final class ModelFilterContext {
             if item.labels.isEmpty {
                 noLabelCount += 1
             }
+            if item.isRecentlyAdded {
+                recentlyAddedCount += 1
+            }
         }
 
         let previousList = labelToggles
-        labelToggles = counts.map { (label, count) in
-            if let previousItem = previousList.first(where: { $0.name == label }) {
-                let previousEnabled = previousItem.enabled
-                let previousDisplayMode = previousItem.displayMode
+        labelToggles = counts.map { (labelText, count) in
+            let function = Toggle.Function.userLabel(labelText)
+            if let previousItem = previousList.first(where: { $0.function == function }) {
+                let previousEnabled = previousItem.active
+                let previousDisplayMode = previousItem.currentDisplayMode
                 let previousPreferredMode = previousItem.preferredDisplayMode
-                return LabelToggle(name: label, count: count, enabled: previousEnabled, displayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode, emptyChecker: false)
+                return Toggle(function: function, count: count, active: previousEnabled, currentDisplayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode)
             } else {
-                return LabelToggle(name: label, count: count, enabled: false, displayMode: .collapsed, preferredDisplayMode: .scrolling, emptyChecker: false)
+                return Toggle(function: function, count: count, active: false, currentDisplayMode: .collapsed, preferredDisplayMode: .scrolling)
             }
         }
-        .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        .sorted { $0.function.displayText.localizedCaseInsensitiveCompare($1.function.displayText) == .orderedAscending }
         
-        if !labelToggles.isEmpty && noLabelCount > 0 {
-            let label = ModelFilterContext.LabelToggle.noNameTitle
-            let t: LabelToggle
-            if let previousItem = previousList.first(where: { $0.name == label }) {
-                let previousEnabled = previousItem.enabled
-                let previousDisplayMode = previousItem.displayMode
-                let previousPreferredMode = previousItem.preferredDisplayMode
-                t = LabelToggle(name: label, count: noLabelCount, enabled: previousEnabled, displayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode, emptyChecker: true)
-            } else {
-                t = LabelToggle(name: label, count: noLabelCount, enabled: false, displayMode: .collapsed, preferredDisplayMode: .scrolling, emptyChecker: true)
-            }
+        if labelToggles.isEmpty {
+            return
+        }
+        
+        if recentlyAddedCount > 0 {
+            let t = newOrExistingToggle(of: .recentlyAddedItems, in: previousList, newCount: recentlyAddedCount)
+            labelToggles.append(t)
+        }
+        
+        if noLabelCount > 0 {
+            let t = newOrExistingToggle(of: .unlabeledItems, in: previousList, newCount: noLabelCount)
             labelToggles.append(t)
         }
     }
+    
+    private func newOrExistingToggle(of function: Toggle.Function, in list: [Toggle], newCount: Int) -> Toggle {
+        if let previousItem = list.first(where: { $0.function == function }) {
+            let previousEnabled = previousItem.active
+            let previousDisplayMode = previousItem.currentDisplayMode
+            let previousPreferredMode = previousItem.preferredDisplayMode
+            return Toggle(function: function, count: newCount, active: previousEnabled, currentDisplayMode: previousDisplayMode, preferredDisplayMode: previousPreferredMode)
+        } else {
+            let mode: DisplayMode = function == .recentlyAddedItems ? .scrolling : .collapsed
+            return Toggle(function: function, count: newCount, active: false, currentDisplayMode: mode, preferredDisplayMode: .scrolling)
+        }
+    }
 
-    func updateLabel(_ label: LabelToggle) {
-        if let i = labelToggles.firstIndex(where: { $0.name == label.name }) {
+    func updateLabel(_ label: Toggle) {
+        if let i = labelToggles.firstIndex(where: { $0.function == label.function }) {
             labelToggles[i] = label
         }
     }
 
-    func renameLabel(_ label: String, to newLabel: String) {
-        let wasEnabled = labelToggles.first { $0.name == label }?.enabled ?? false
+    func renameLabel(_ oldName: String, to newName: String) {
+        let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
         
         Model.drops.forEach { i in
-            if let index = i.labels.firstIndex(of: label) {
-                if i.labels.contains(newLabel) {
-                    i.labels.remove(at: index)
+            if let oldIndex = i.labels.firstIndex(of: oldName) {
+                if i.labels.contains(newName) {
+                    i.labels.remove(at: oldIndex)
                 } else {
-                    i.labels[index] = newLabel
+                    i.labels[oldIndex] = newName
                 }
                 i.needsCloudPush = true
                 i.flags.insert(.needsSaving)
@@ -496,9 +581,9 @@ final class ModelFilterContext {
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         
-        if wasEnabled, let i = labelToggles.firstIndex(where: { $0.name == newLabel }) {
+        if wasEnabled, let i = labelToggles.firstIndex(where: { $0.function == .userLabel(newName) }) {
             var l = labelToggles[i]
-            l.enabled = true
+            l.active = true
             labelToggles[i] = l
         }
         

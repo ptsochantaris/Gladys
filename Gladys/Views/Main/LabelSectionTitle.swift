@@ -23,7 +23,7 @@ final class PassthroughStackView: UIStackView {
 final class ScrollFadeView: UICollectionReusableView {
     
     private weak var viewController: ViewController?
-    private var toggle: ModelFilterContext.LabelToggle?
+    private var toggle: Filter.Toggle?
     
     private var sectionCount: Int {
         guard let viewController = viewController, let toggle = toggle else {
@@ -32,7 +32,7 @@ final class ScrollFadeView: UICollectionReusableView {
         return viewController.filter.countItems(for: toggle)
     }
     
-    func configure(with toggle: ModelFilterContext.LabelToggle, viewController: ViewController) {
+    func configure(with toggle: Filter.Toggle, viewController: ViewController) {
         self.toggle = toggle
         self.viewController = viewController
         updateColor()
@@ -96,13 +96,13 @@ final class LabelSectionTitle: UICollectionReusableView {
     private let topLine = UIView()
     private let bottomLine = UIView()
     private var menuOptions = [UIMenuElement]()
-    private var mode = ModelFilterContext.DisplayMode.collapsed
+    private var mode = Filter.DisplayMode.collapsed
     private var layoutForColumnCount = 0
-    private var toggle: ModelFilterContext.LabelToggle?
+    private var toggle: Filter.Toggle?
     private weak var viewController: ViewController?
 
     private static let titleStyle = UIFont.TextStyle.subheadline
-    
+
     private func setup() {
         
         tintColor = .secondaryLabel
@@ -125,11 +125,6 @@ final class LabelSectionTitle: UICollectionReusableView {
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
-        
-        label.font = labelFont
-        label.textColor = .secondaryLabel
-        label.highlightedTextColor = .label
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
@@ -140,7 +135,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        showAllButton.titleLabel?.font = labelFont
+        showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
             NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
@@ -202,17 +197,23 @@ final class LabelSectionTitle: UICollectionReusableView {
         NotificationCenter.default.removeObserver(self)
     }
         
-    func configure(with toggle: ModelFilterContext.LabelToggle, firstSection: Bool, viewController: ViewController, menuOptions: [UIMenuElement]) {
+    func configure(with toggle: Filter.Toggle, firstSection: Bool, viewController: ViewController, menuOptions: [UIMenuElement]) {
         self.viewController = viewController
         self.menuOptions = menuOptions
         self.toggle = toggle
         
-        mode = toggle.displayMode
-        label.text = toggle.name
+        mode = toggle.currentDisplayMode
+        label.text = toggle.function.displayText
+        let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
 
-        switch toggle.displayMode {
+        switch toggle.currentDisplayMode {
         case .collapsed:
-            label.isHighlighted = true
+            if case .userLabel = toggle.function {
+                label.font = labelFont
+            } else {
+                label.font = UIFont.systemFont(ofSize: labelFont.pointSize, weight: .medium)
+            }
+            label.textColor = .label
             indicator.isHighlighted = true
             indicator.tintColor = .label
             topLine.isHidden = firstSection
@@ -220,7 +221,8 @@ final class LabelSectionTitle: UICollectionReusableView {
             showAllButton.setTitle(nil, for: .normal)
 
         case .scrolling:
-            label.isHighlighted = false
+            label.font = labelFont
+            label.textColor = .secondaryLabel
             indicator.isHighlighted = false
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
@@ -228,7 +230,8 @@ final class LabelSectionTitle: UICollectionReusableView {
             showAllButton.setTitle("More", for: .normal)
 
         case .full:
-            label.isHighlighted = false
+            label.font = labelFont
+            label.textColor = .secondaryLabel
             indicator.isHighlighted = false
             indicator.tintColor = .secondaryLabel
             topLine.isHidden = true
@@ -268,7 +271,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     
     private func createLabelView() -> UIView {
         let labelView = UILabel(frame: .zero)
-        labelView.text = self.toggle?.name
+        labelView.text = self.toggle?.function.displayText
         labelView.font = UIFont.preferredFont(forTextStyle: .headline)
         labelView.textColor = UIColor.g_colorTint
         labelView.textAlignment = .center
@@ -325,7 +328,7 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
 
 extension LabelSectionTitle: UIDragInteractionDelegate {
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        if let toggle = toggle, let label = toggle.name.labelDragItem {
+        if let toggle = toggle, let label = toggle.function.dragItem {
             label.previewProvider = {
                 return UIDragPreview(view: self.createLabelView(), parameters: self.dragParams())
             }

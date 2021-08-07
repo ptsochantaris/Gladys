@@ -16,7 +16,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     @IBOutlet private var emptyLabel: UILabel!
     @IBOutlet private var closeButton: UIButton!
     
-    var filter: ModelFilterContext!
+    var filter: Filter!
     
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -25,9 +25,13 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             table.allowsFocus = true
             table.remembersLastFocusedIndexPath = true
         }
+        if filter.rebuildRecentlyAdded() {
+            // there were changes to the labels, keep main views in sync
+            updates()
+        }
 		var count = 0
 		for toggle in filteredToggles {
-			if toggle.enabled {
+			if toggle.active {
 				table.selectRow(at: IndexPath(row: count, section: 0), animated: false, scrollPosition: .none)
 			}
 			count += 1
@@ -116,7 +120,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		let toggle = filteredToggles[indexPath.row]
-		cell.setSelected(toggle.enabled, animated: false)
+		cell.setSelected(toggle.active, animated: false)
 	}
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
@@ -128,7 +132,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
                     self.rename(toggle: toggle)
                 },
                 UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
-                    UIPasteboard.general.string = toggle.name
+                    UIPasteboard.general.string = toggle.function.displayText
                     genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
                 },
                 UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
@@ -138,7 +142,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             
             if UIApplication.shared.supportsMultipleScenes {
                 children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
-                    toggle.name.openInWindow(from: self.view.window?.windowScene)
+                    toggle.function.openInWindow(from: self.view.window?.windowScene)
                 }, at: 1)
             }
             
@@ -176,9 +180,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		var newState = filteredToggles[indexPath.row]
-		newState.enabled = !newState.enabled
+		newState.active = !newState.active
 	    filter.updateLabel(newState)
-		if !newState.enabled {
+		if !newState.active {
 			tableView.deselectRow(at: indexPath, animated: false)
 		}
 		updates()
@@ -186,20 +190,24 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     
 	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		let toggle = filteredToggles[indexPath.row]
-		return toggle.emptyChecker ? .none : .delete
+        if case .userLabel = toggle.function {
+            return .delete
+        } else {
+            return .none
+        }
 	}
 
-    private func rename(toggle: ModelFilterContext.LabelToggle) {
-        let a = UIAlertController(title: "Rename '\(toggle.name)'?", message: "This will change it on all items that contain it.", preferredStyle: .alert)
+    private func rename(toggle: Filter.Toggle) {
+        let a = UIAlertController(title: "Rename '\(toggle.function.displayText)'?", message: "This will change it on all items that contain it.", preferredStyle: .alert)
         var textField: UITextField?
         a.addTextField { field in
             field.autocapitalizationType = .sentences
-            field.text = toggle.name
+            field.text = toggle.function.displayText
             textField = field
         }
         a.addAction(UIAlertAction(title: "Rename", style: .default) { [weak self] _ in
             if let field = textField, let text = field.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
-                self?.filter.renameLabel(toggle.name, to: text)
+                self?.filter.renameLabel(toggle.function.displayText, to: text)
             }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -210,11 +218,11 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         }
     }
         
-    private func delete(toggle: ModelFilterContext.LabelToggle) {
-		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.name)' from any item that contains it.", preferredStyle: .alert)
+    private func delete(toggle: Filter.Toggle) {
+		let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.function.displayText)' from any item that contains it.", preferredStyle: .alert)
 		a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
 			guard let s = self else { return }
-            s.filter.removeLabel(toggle.name)
+            s.filter.removeLabel(toggle.function.displayText)
             if s.filter.labelToggles.isEmpty {
                 s.table.isHidden = true
 				s.emptyLabel.isHidden = false
@@ -239,7 +247,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let toggle = filteredToggles[indexPath.row]
-        if let d = toggle.name.labelDragItem {
+        if let d = toggle.function.dragItem {
             return [d]
         } else {
             return []
@@ -266,14 +274,21 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
 	static private var filter = ""
 
-	var filteredToggles: [ModelFilterContext.LabelToggle] {
-		let items: [ModelFilterContext.LabelToggle]
+	var filteredToggles: [Filter.Toggle] {
+		let items: [Filter.Toggle]
 		if LabelSelector.filter.isEmpty {
 			items = filter.labelToggles
 		} else {
-			items = filter.labelToggles.filter { $0.name.localizedCaseInsensitiveContains(LabelSelector.filter) }
+            let function = Filter.Toggle.Function.userLabel(LabelSelector.filter)
+			items = filter.labelToggles.filter { $0.function == function }
 		}
-		return items.filter { !$0.emptyChecker || $0.enabled || $0.count > 0 }
+		return items.filter {
+            if case .userLabel = $0.function {
+                return true
+            }
+            return $0.active || $0.count > 0
+            
+        }
 	}
 
 	func willDismissSearchController(_ searchController: UISearchController) {

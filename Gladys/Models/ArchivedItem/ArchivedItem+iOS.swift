@@ -7,40 +7,40 @@ import CoreSpotlight
 import MobileCoreServices
 import GladysFramework
 
-extension String {
-    var labelDragItem: UIDragItem? {
-        let p = NSItemProvider(item: self as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
-        p.registerObject(labelActivity, visibility: .all)
+extension Filter.Toggle.Function {
+    var dragItem: UIDragItem? {
+        let p = NSItemProvider(item: self.displayText as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
+        p.registerObject(userActivity, visibility: .all)
         
         let i = UIDragItem(itemProvider: p)
         i.localObject = self
         return i
     }
     
-    private var labelActivity: NSUserActivity {
+    private var userActivity: NSUserActivity {
         let activity = NSUserActivity(activityType: kGladysMainListActivity)
-        activity.title = self
-        let section = ModelFilterContext.LabelToggle(name: self, count: 0, enabled: true, displayMode: .scrolling, preferredDisplayMode: .scrolling, emptyChecker: false)
+        activity.title = self.displayText
+        let section = Filter.Toggle(function: self, count: 0, active: true, currentDisplayMode: .scrolling, preferredDisplayMode: .scrolling)
         if let data = try? JSONEncoder().encode([section]) {
             activity.addUserInfoEntries(from: [kGladysMainViewSections: data])
         }
         return activity
     }
     
-    private var suggestedLabelSession: UISceneSession? {
-        return UIApplication.shared.openSessions.first {
-            if let f = ($0.userInfo?[kGladysMainFilter] as? ModelFilterContext) {
-                return f.enabledLabelsForTitles == [self]
+    func openInWindow(from scene: UIScene?) {
+        let options = UIScene.ActivationRequestOptions()
+        options.requestingScene = scene
+        
+        let text = displayText
+        let suggestedLabelSession = UIApplication.shared.openSessions.first {
+            if let f = ($0.userInfo?[kGladysMainFilter] as? Filter) {
+                return f.enabledLabelsForTitles == [text]
             } else {
                 return false
             }
         }
-    }
-    
-    func openInWindow(from scene: UIScene?) {
-        let options = UIScene.ActivationRequestOptions()
-        options.requestingScene = scene
-        UIApplication.shared.requestSceneSessionActivation(suggestedLabelSession, userActivity: labelActivity, options: options) { error in
+        
+        UIApplication.shared.requestSceneSessionActivation(suggestedLabelSession, userActivity: userActivity, options: options) { error in
             log("Error opening new window: \(error.localizedDescription)")
         }
     }
@@ -52,8 +52,8 @@ extension ArchivedItem {
 		guard index < labels.count else {
 			return nil
 		}
-
-        return labels[index].labelDragItem
+        let text = labels[index]
+        return Filter.Toggle.Function.userLabel(text).dragItem
 	}
 
 	private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?) -> Void) {

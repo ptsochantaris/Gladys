@@ -32,20 +32,20 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 		return filteredLabels.count
 	}
 
-	private var filteredLabels: [ModelFilterContext.LabelToggle] {
+	private var filteredLabels: [Filter.Toggle] {
 		let text = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         let toggles = presentingGladysVc.filter.labelToggles.filter { $0.count > 0 }
 		if text.isEmpty {
 			return toggles
 		} else {
-			return toggles.filter { $0.name.localizedCaseInsensitiveContains(text) }
+            return toggles.filter { $0.function.displayText.localizedCaseInsensitiveContains(text) }
 		}
 	}
 
 	func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
 		let item = filteredLabels[row]
 		let cell = tableColumn?.dataCell as? NSButtonCell
-		let title = NSMutableAttributedString(string: item.name + "\n", attributes: [
+        let title = NSMutableAttributedString(string: item.function.displayText + "\n", attributes: [
 			.font: NSFont.systemFont(ofSize: NSFont.systemFontSize(for: .regular)),
 			.foregroundColor: NSColor.labelColor
 			])
@@ -56,13 +56,13 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 			])
 		title.append(subtitle)
 		cell?.attributedTitle = title
-		cell?.integerValue = item.enabled ? 1 : 0
+		cell?.integerValue = item.active ? 1 : 0
 		return cell
 	}
 
 	func tableView(_ tableView: NSTableView, setObjectValue object: Any?, for tableColumn: NSTableColumn?, row: Int) {
 		var item = filteredLabels[row]
-		item.enabled = (object as? Int == 1)
+		item.active = (object as? Int == 1)
         presentingGladysVc.filter.updateLabel(item)
 		NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 		labelsUpdated()
@@ -90,21 +90,22 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
     @IBAction private func renameLabelSelected(_ sender: NSMenuItem) {
         let index = tableView.clickedRow
         let toggle = filteredLabels[index]
-        
+        let name = toggle.function.displayText
+
         let a = NSAlert()
-        a.messageText = "Rename '\(toggle.name)'?"
+        a.messageText = "Rename '\(name)'?"
         a.informativeText = "This will change it on all items that contain it."
         a.addButton(withTitle: "Rename")
         a.addButton(withTitle: "Cancel")
         let label = NSTextField(frame: NSRect(x: 0, y: 32, width: 290, height: 24))
-        label.stringValue = toggle.name
+        label.stringValue = name
         a.accessoryView = label
         a.window.initialFirstResponder = label
         a.beginSheetModal(for: view.window!) { [weak self] response in
             if response.rawValue == 1000 {
                 let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !text.isEmpty {
-                    self?.presentingGladysVc.filter.renameLabel(toggle.name, to: text)
+                    self?.presentingGladysVc.filter.renameLabel(name, to: text)
                     self?.tableView.reloadData()
                 }
             }
@@ -114,14 +115,15 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
     @IBAction private func deleteLabelSelected(_ sender: NSMenuItem) {
         let index = tableView.clickedRow
         let toggle = filteredLabels[index]
+        let name = toggle.function.displayText
         
         confirm(
             title: "Are you sure?",
-            message: "This will remove the label '\(toggle.name)' from any item that contains it.",
+            message: "This will remove the label '\(name)' from any item that contains it.",
             action: "Remove From All Items",
             cancel: "Cancel") { [weak self] confirmed in
                 if confirmed {
-                    self?.presentingGladysVc.filter.removeLabel(toggle.name)
+                    self?.presentingGladysVc.filter.removeLabel(name)
                     self?.tableView.reloadData()
                 }
         }

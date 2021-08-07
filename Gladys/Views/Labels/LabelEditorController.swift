@@ -21,15 +21,20 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 	var endCallback: ((Bool) -> Void)?
     
-    var currentFilter: ModelFilterContext!
+    var currentFilter: Filter!
 
-    private var modelToggles: [ModelFilterContext.LabelToggle] {
-        return currentFilter.labelToggles.filter { !$0.emptyChecker }
+    private var modelToggles: [Filter.Toggle] {
+        return currentFilter.labelToggles.filter {
+            if case .userLabel = $0.function {
+                return true
+            }
+            return false
+        }
     }
     
-	private lazy var allToggles = [ModelFilterContext.LabelToggle]()
+	private lazy var allToggles = [Filter.Toggle]()
 
-	private var availableToggles = [ModelFilterContext.LabelToggle]()
+	private var availableToggles = [Filter.Toggle]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -80,8 +85,8 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelEditorCell") as! LabelEditorCell
 
 		let toggle = availableToggles[indexPath.row]
-		cell.labelName.text = toggle.name
-		cell.accessibilityLabel = toggle.name
+        cell.labelName.text = toggle.function.displayText
+        cell.accessibilityLabel = toggle.function.displayText
 
 		let state = toggle.toggleState(across: selectedItems)
 		cell.tick.isHidden = state == .none
@@ -97,22 +102,22 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		case .none:
 			selectedItems.forEach {
 				if let item = Model.item(uuid: $0) {
-					item.labels.append(toggle.name)
+                    item.labels.append(toggle.function.displayText)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .some:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), !item.labels.contains(toggle.name) {
-					item.labels.append(toggle.name)
+                if let item = Model.item(uuid: $0), !item.labels.contains(toggle.function.displayText) {
+                    item.labels.append(toggle.function.displayText)
 					item.postModified()
 					editedUUIDs.insert($0)
 				}
 			}
 		case .all:
 			selectedItems.forEach {
-				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.name) {
+				if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.function.displayText) {
 					item.labels.remove(at: i)
 					item.postModified()
 					editedUUIDs.insert($0)
@@ -135,7 +140,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 		if filter.isEmpty {
 			availableToggles = allToggles
 		} else {
-			availableToggles = allToggles.filter { $0.name.localizedCaseInsensitiveContains(filter) }
+			availableToggles = allToggles.filter { $0.function.displayText.localizedCaseInsensitiveContains(filter) }
 		}
 		table.reloadData()
 	}
@@ -154,18 +159,19 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
 		textField.resignFirstResponder()
 
-		guard let newTag = textField.text, !newTag.isEmpty else {
+		guard let newText = textField.text, !newText.isEmpty else {
 			return false
 		}
 
+        let function = Filter.Toggle.Function.userLabel(newText)
 		textField.text = nil
-		if !allToggles.contains(where: { $0.name == newTag }) {
-            let newToggle = ModelFilterContext.LabelToggle(name: newTag, count: selectedItems.count, enabled: false, displayMode: .collapsed, preferredDisplayMode: .scrolling, emptyChecker: false)
+		if !allToggles.contains(where: { $0.function == function }) {
+            let newToggle = Filter.Toggle(function: function, count: selectedItems.count, active: false, currentDisplayMode: .collapsed, preferredDisplayMode: .scrolling)
 			allToggles.append(newToggle)
-			allToggles.sort { $0.name < $1.name }
+            allToggles.sort { $0.function.displayText.localizedCaseInsensitiveCompare($1.function.displayText) == .orderedAscending }
 		}
 		updateFilter(nil)
-		if let i = allToggles.firstIndex(where: { $0.name == newTag }) {
+		if let i = allToggles.firstIndex(where: { $0.function == function }) {
 			let existingToggle = allToggles[i]
 			let ip = IndexPath(row: i, section: 0)
 			if existingToggle.toggleState(across: selectedItems) != .all {
