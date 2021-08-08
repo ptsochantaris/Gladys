@@ -805,7 +805,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         userActivity?.needsSave = true
     }
         
-    @objc private func sectionBackgroundSelected(_ notification: Notification) {
+    @objc private func sectionHeaderSelected(_ notification: Notification) {
         guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
         var name = event.name
         
@@ -958,7 +958,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
         n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
         n.addObserver(self, selector: #selector(keyboardHiding), name: UIApplication.keyboardWillHideNotification, object: nil)
-        n.addObserver(self, selector: #selector(sectionBackgroundSelected), name: .SectionBackgroundTapped, object: nil)
+        n.addObserver(self, selector: #selector(sectionHeaderSelected), name: .SectionHeaderTapped, object: nil)
         n.addObserver(self, selector: #selector(sectionShowAllTapped), name: .SectionShowAllTapped, object: nil)
 
         if filter.isFilteringLabels { // in case we're restored with active labels

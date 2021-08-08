@@ -317,9 +317,9 @@ final class DetailController: GladysViewController,
                     }
                 ]
                 
-                if UIApplication.shared.supportsMultipleScenes {
+                if UIApplication.shared.supportsMultipleScenes, let scene = self.view.window?.windowScene {
                     children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
-                        Filter.Toggle.Function.userLabel(text).openInWindow(from: self.view.window?.windowScene)
+                        Filter.Toggle.Function.userLabel(text).openInWindow(from: scene)
                     }, at: 1)
                 }
 

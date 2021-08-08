@@ -104,7 +104,6 @@ final class LabelSectionTitle: UICollectionReusableView {
     private static let titleStyle = UIFont.TextStyle.subheadline
 
     private func setup() {
-        
         tintColor = .secondaryLabel
         isUserInteractionEnabled = true
         addInteraction(UIDragInteraction(delegate: self))
@@ -113,7 +112,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
             guard let self = self else { return }
             if context.state == .activated && self.mode == .collapsed {
-                NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+                NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
             }
         })
         
@@ -121,7 +120,7 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
             guard let self = self else { return }
-            NotificationCenter.default.post(name: .SectionBackgroundTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -314,6 +313,14 @@ final class LabelSectionTitle: UICollectionReusableView {
 
 extension LabelSectionTitle: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        var myOptions = self.menuOptions
+        if UIApplication.shared.supportsMultipleScenes, let scene = self.window?.windowScene {
+            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+                self?.toggle?.function.openInWindow(from: scene)
+            }
+            myOptions.append(windowOption)
+        }
+        
         return UIContextMenuConfiguration(identifier: nil) {
             let vc = UIViewController()
             let labelView = self.createLabelView()
@@ -321,7 +328,7 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
             vc.view.addSubview(labelView)
             return vc
         } actionProvider: { _ in
-            return UIMenu(title: "All Sections", image: nil, identifier: nil, options: [], children: self.menuOptions)
+            return UIMenu(title: "All Sections", image: nil, identifier: nil, options: [], children: myOptions)
         }
     }
 }

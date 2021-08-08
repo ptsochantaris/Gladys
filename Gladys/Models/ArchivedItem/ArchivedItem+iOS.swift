@@ -27,7 +27,7 @@ extension Filter.Toggle.Function {
         return activity
     }
     
-    func openInWindow(from scene: UIScene?) {
+    func openInWindow(from scene: UIScene) {
         let options = UIScene.ActivationRequestOptions()
         options.requestingScene = scene
         
