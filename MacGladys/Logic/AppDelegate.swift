@@ -263,11 +263,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if PersistedOptions.hideMainWindowAtStartup || PersistedOptions.autoShowFromEdge > 0 {
                 NSApp.activate(ignoringOtherApps: true)
                 updateMenubarIconMode(showing: false, forceUpdateMenu: false)
+                WindowController.visibleItemWindows.forEach { $0.orderOut(nil) }
             } else {
                 focus()
             }
         } else {
-            newWindowSelected(nil)
+            if !PersistedOptions.hideMainWindowAtStartup {
+                newWindowSelected(nil)
+            }
         }
 	}
     

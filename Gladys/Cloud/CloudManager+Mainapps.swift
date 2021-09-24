@@ -285,8 +285,10 @@ extension CloudManager {
                     activationFailure(error: GladysError.cloudLoginRequired.error, completion: completion)
                 case .restricted:
                     activationFailure(error: GladysError.cloudAccessRestricted.error, completion: completion)
+#if os(iOS)
                 case .temporarilyUnavailable:
                     activationFailure(error: GladysError.cloudAccessTemporarilyUnavailable.error, completion: completion)
+#endif
                 @unknown default:
                     activationFailure(error: GladysError.cloudAccessNotSupported.error, completion: completion)
                 }
@@ -454,6 +456,7 @@ extension CloudManager {
 
     static private func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
         DispatchQueue.main.async {
+            log("Activation aborted: \(error)")
             completion(error)
             deactivate(force: true, completion: { _ in })
         }
@@ -950,8 +953,13 @@ extension CloudManager {
     private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
         switch ckError.code {
 
+#if os(iOS)
+        case .accountTemporarilyUnavailable:
+            log("iCloud account temporarily unavailable")
+            fallthrough
+#endif
         case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
-             .userDeletedZone, .badDatabase, .badContainer, .accountTemporarilyUnavailable:
+             .userDeletedZone, .badDatabase, .badContainer:
 
             // shutdown-worthy failure
             genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
