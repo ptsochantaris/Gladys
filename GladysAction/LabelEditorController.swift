@@ -2,16 +2,14 @@ import UIKit
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-	@IBOutlet private var labelText: UITextField!
+    @IBOutlet private var notesText: UITextField!
+    @IBOutlet private var labelText: UITextField!
 	@IBOutlet private var table: UITableView!
 
 	@IBOutlet private var headerView: UIView!
 	@IBOutlet private var headerLabel: UILabel!
-        
-	var note = ""
-
+    
 	private var allToggles = [String]()
-
 	private var availableToggles = [String]()
 
 	override func viewDidLoad() {
@@ -23,19 +21,30 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
                 self?.updateFilter(nil)
             }
         }
+        
+        notesText.text = ActionRequestViewController.noteToApply
                 
         NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         itemIngested(nil)
 	}
-    
-    @objc private func itemIngested(_ notification: Notification?) {
-        if Model.doneIngesting {
-            navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(done))
-        }
+        
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        commitNote()
     }
     
-    @objc private func done() {
-        NotificationCenter.default.post(name: .DoneSelected, object: nil)
+    @objc private func itemIngested(_ notification: Notification?) {
+        guard Model.doneIngesting else { return }
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in
+            guard let self = self else { return }
+            self.commitNote()
+            NotificationCenter.default.post(name: .DoneSelected, object: nil)
+        })
+    }
+    
+    private func commitNote() {
+        ActionRequestViewController.noteToApply = notesText.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
 	func numberOfSections(in tableView: UITableView) -> Int {

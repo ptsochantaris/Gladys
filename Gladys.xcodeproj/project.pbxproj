@@ -289,7 +289,6 @@
 		16AC07AF20D070FD0030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
 		16AECA611F94B83900981B29 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
-		16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98921B457550049E433 /* NoteEditorController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
 		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -809,7 +808,6 @@
 		16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WideArchivedItemCell.xib; sourceTree = "<group>"; };
 		16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CKDatabaseScope+Extensions.swift"; sourceTree = "<group>"; };
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
-		16AED98921B457550049E433 /* NoteEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyhive.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
@@ -1158,7 +1156,6 @@
 				1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */,
 				1641368F1F09195000B34574 /* ActionRequestViewController.swift */,
 				162383F320F969650086E719 /* LabelEditorController.swift */,
-				16AED98921B457550049E433 /* NoteEditorController.swift */,
 				162383F520F96C650086E719 /* LabelEditorCell.swift */,
 				164136931F09195000B34574 /* Info.plist */,
 			);
@@ -2295,7 +2292,6 @@
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
-				16AED98A21B457550049E433 /* NoteEditorController.swift in Sources */,
 				16559C8C20A4CC55006C281D /* Global.swift in Sources */,
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedItem.swift in Sources */,

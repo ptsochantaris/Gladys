@@ -17,7 +17,6 @@ final class ActionRequestViewController: UIViewController {
 	@IBOutlet private var statusLabel: UILabel!
 	@IBOutlet private var cancelButton: UIBarButtonItem!
 	@IBOutlet private var image: UIImageView!
-	@IBOutlet private var labelsButton: UIButton!
     @IBOutlet private var spinner: UIActivityIndicatorView!
     @IBOutlet private var check: UIImageView!
     
@@ -31,7 +30,7 @@ final class ActionRequestViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(done), name: .DoneSelected, object: nil)
         ingest()
     }
-
+        
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
         
@@ -146,29 +145,32 @@ final class ActionRequestViewController: UIViewController {
             return
 		}
         
-        if PersistedOptions.setLabelsWhenActioning {
-            navigationItem.rightBarButtonItem = makeDoneButton(target: self, action: #selector(signalDone))
-        }
-        
         self.showBusy(false)
         self.check.transform = CGAffineTransform(scaleX: 0.33, y: 0.33)
         self.view.layoutIfNeeded()
 
-        UIView.animate(withDuration: 0.33, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.33, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.check.transform = CGAffineTransform(scaleX: 1, y: 1)
-        }, completion: { _ in
-            if !PersistedOptions.setLabelsWhenActioning {
+        } completion: { _ in
+            if PersistedOptions.setLabelsWhenActioning {
+                if self.navigationController?.viewControllers.count == 1 {
+                    self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
+                }
+            } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.signalDone()
                 }
             }
-        })
+        }
     }
 
     private func reset(ingestOnNextAppearance: Bool) {
         statusLabel.isHidden = true
-        labelsButton.isHidden = true
-        labelsButton.isHidden = !PersistedOptions.setLabelsWhenActioning
+        if PersistedOptions.setLabelsWhenActioning {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction { [weak self] _ in self?.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil) })
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
         showBusy(false)
         
         ingestOnWillAppear = ingestOnNextAppearance
