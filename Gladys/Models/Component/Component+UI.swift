@@ -5,6 +5,13 @@ import ContactsUI
 import CloudKit
 import QuickLook
 
+final class NavBarHiderNavigationController: UINavigationController {    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.navigationBar.isHidden = true
+    }
+}
+
 final class GladysNavController: UINavigationController, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate {
     weak var sourceItemView: UIView?
 
@@ -108,7 +115,7 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
     }
 }
 
-final class GladysPreviewController: GladysViewController, QLPreviewControllerDataSource {
+final class GladysPreviewController: GladysViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
     private var typeItem: Component
     
     init(item: Component) {
@@ -129,14 +136,18 @@ final class GladysPreviewController: GladysViewController, QLPreviewControllerDa
         popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, currentWindowSize.width), height: currentWindowSize.height)
     }
     
+    private lazy var qlNav: UINavigationController = {
+        let ql = QLPreviewController()
+        ql.dataSource = self
+        ql.delegate = self
+        return NavBarHiderNavigationController(rootViewController: ql)
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let ql = QLPreviewController()
-        ql.dataSource = self
-        addChildController(ql, to: view)
+        addChildController(qlNav, to: view)
         
-        edgesForExtendedLayout = []
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
         userActivity?.needsSave = true
     }
@@ -158,6 +169,10 @@ final class GladysPreviewController: GladysViewController, QLPreviewControllerDa
 
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         return Component.PreviewItem(typeItem: typeItem)
+    }
+        
+    func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
+        return .disabled
     }
 }
 
