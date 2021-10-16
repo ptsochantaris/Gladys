@@ -1,18 +1,7 @@
 #!/bin/sh
 
 # Clean
-xcodebuild clean -project Gladys.xcodeproj -scheme "MacGladys" | xcpretty
-
-if [ $? -eq 0 ]
-then
-echo
-else
-echo "!!! Cleaning failed, stopping script"
-exit 1
-fi
-
-# Build
-xcodebuild archive -project Gladys.xcodeproj -scheme "MacGladys" -destination "generic/platform=OS X" -archivePath ~/Desktop/macgladys.xcarchive | xcpretty
+xcodebuild clean archive -project Gladys.xcodeproj -scheme "MacGladys" -destination "generic/platform=OS X" -archivePath ~/Desktop/macgladys.xcarchive | xcpretty
 
 if [ $? -eq 0 ]
 then
