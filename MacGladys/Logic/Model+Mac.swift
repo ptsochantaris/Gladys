@@ -66,7 +66,7 @@ extension Model {
 	}
     
     @discardableResult
-    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
+    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?, importGroup: DispatchGroup? = nil) -> Bool {
         guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
@@ -78,24 +78,19 @@ extension Model {
                 for promise in filePromises {
                     for promiseType in promise.fileTypes {
                         let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
-                        var dropData: Data?
-                        let dropLock = DispatchSemaphore(value: 0)
-                        promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
-                            if let error = error {
-                                log("Warning, loading error in file drop: \(error.localizedDescription)")
-                            }
-                            dropData = try? Data(contentsOf: url)
-                            dropLock.signal()
-                        }
-                        
                         count += 1
+                        importGroup?.enter()
                         extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
                             let p = Progress()
                             p.totalUnitCount = 1
-                            DispatchQueue.global(qos: .background).async {
-                                dropLock.wait()
-                                p.completedUnitCount += 1
+                            promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                                if let error = error {
+                                    log("Warning, loading error in file drop: \(error.localizedDescription)")
+                                }
+                                let dropData = try? Data(contentsOf: url)
                                 callback(dropData, nil)
+                                p.completedUnitCount += 1
+                                importGroup?.leave()
                             }
                             return p
                         }
@@ -105,6 +100,7 @@ extension Model {
             
             for type in pasteboardItem.types {
                 count += 1
+                importGroup?.enter()
                 extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
                     let p = Progress()
                     p.totalUnitCount = 1
@@ -112,6 +108,7 @@ extension Model {
                         let data = pasteboardItem.data(forType: type)
                         callback(data, nil)
                         p.completedUnitCount = 1
+                        importGroup?.leave()
                     }
                     return p
                 }
@@ -131,7 +128,6 @@ extension Model {
         var inserted = false
         for provider in itemProviders {
             for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
-
                 var modelIndex = indexPath.item
                 if let filterContext = filterContext, filterContext.isFiltering {
                     modelIndex = filterContext.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)

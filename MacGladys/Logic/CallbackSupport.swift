@@ -67,8 +67,11 @@ struct CallbackSupport {
 		m["paste-share-pasteboard"] = { parameters, success, _, _ in
 			let importOverrides = createOverrides(from: parameters)
 			let pasteboard = NSPasteboard(name: sharingPasteboard)
-			Model.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
-			DistributedNotificationCenter.default().postNotificationName(.SharingPasteboardPasted, object: "build.bru.MacGladys", userInfo: nil, deliverImmediately: true)
+            let group = DispatchGroup()
+			Model.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil, importGroup: group)
+            group.notify(queue: .main) {
+                DistributedNotificationCenter.default().postNotificationName(.SharingPasteboardPasted, object: "build.bru.MacGladys", userInfo: nil, deliverImmediately: true)
+            }
 			success(nil)
 		}
 	}

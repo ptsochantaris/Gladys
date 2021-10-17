@@ -32,7 +32,17 @@ final class ShareViewController: NSViewController {
 		}
 		progresses.removeAll()
 	}
-
+    
+    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        importGroup.enter() // released after load
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        importGroup.enter() // released after load
+    }
+    
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		DistributedNotificationCenter.default().addObserver(self, selector: #selector(pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
@@ -92,6 +102,8 @@ final class ShareViewController: NSViewController {
                 }
 			}
 		}
+        
+        importGroup.leave() // from the one in awakeFromNib
 	}
 
 	override func viewDidAppear() {
