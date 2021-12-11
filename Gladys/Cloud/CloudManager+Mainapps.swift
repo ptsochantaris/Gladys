@@ -285,10 +285,8 @@ extension CloudManager {
                     activationFailure(error: GladysError.cloudLoginRequired.error, completion: completion)
                 case .restricted:
                     activationFailure(error: GladysError.cloudAccessRestricted.error, completion: completion)
-#if os(iOS)
                 case .temporarilyUnavailable:
                     activationFailure(error: GladysError.cloudAccessTemporarilyUnavailable.error, completion: completion)
-#endif
                 @unknown default:
                     activationFailure(error: GladysError.cloudAccessNotSupported.error, completion: completion)
                 }
@@ -953,11 +951,10 @@ extension CloudManager {
     private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
         switch ckError.code {
 
-#if os(iOS)
         case .accountTemporarilyUnavailable:
             log("iCloud account temporarily unavailable")
             fallthrough
-#endif
+
         case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
              .userDeletedZone, .badDatabase, .badContainer:
 

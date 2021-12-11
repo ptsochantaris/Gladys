@@ -66,9 +66,11 @@ extension Model {
 	}
     
     @discardableResult
-    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?, importGroup: DispatchGroup? = nil) -> Bool {
+    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
         guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
+        let importGroup = DispatchGroup()
+        
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
             let extractor = NSItemProvider()
             var count = 0
@@ -76,45 +78,40 @@ extension Model {
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 let destinationUrl = Model.temporaryDirectoryUrl
                 for promise in filePromises {
-                    for promiseType in promise.fileTypes {
-                        let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
-                        count += 1
-                        importGroup?.enter()
-                        extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
-                            let p = Progress()
-                            p.totalUnitCount = 1
-                            promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
-                                if let error = error {
-                                    log("Warning, loading error in file drop: \(error.localizedDescription)")
-                                }
-                                let dropData = try? Data(contentsOf: url)
+                    guard let promiseType = promise.fileTypes.first else {
+                        continue
+                    }
+                    let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
+                    count += 1
+                    importGroup.enter()
+                    
+                    promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                        if let error = error {
+                            log("Warning, loading error in file drop: \(error.localizedDescription)")
+                        } else {
+                            let dropData = try? Data(contentsOf: url)
+                            extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
                                 callback(dropData, nil)
-                                p.completedUnitCount += 1
-                                importGroup?.leave()
+                                return nil
                             }
-                            return p
                         }
+                        importGroup.leave()
                     }
                 }
             }
             
             for type in pasteboardItem.types {
                 count += 1
-                importGroup?.enter()
+                let data = pasteboardItem.data(forType: type)
                 extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-                    let p = Progress()
-                    p.totalUnitCount = 1
-                    DispatchQueue.global(qos: .background).async {
-                        let data = pasteboardItem.data(forType: type)
-                        callback(data, nil)
-                        p.completedUnitCount = 1
-                        importGroup?.leave()
-                    }
-                    return p
+                    callback(data, nil)
+                    return nil
                 }
             }
             return count > 0 ? extractor : nil
         }
+        
+        importGroup.wait()
 
         if itemProviders.isEmpty {
             return false
