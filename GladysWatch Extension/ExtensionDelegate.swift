@@ -77,9 +77,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			return ([], 0)
 		}
 	}
-
-	private let updateQueue = DispatchQueue(label: "build.bru.Gladys.watch.updates", qos: .utility)
-
+    
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
 		updatePages(session.receivedApplicationContext)
 	}
@@ -120,9 +118,9 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 	}
 
     func applicationDidFinishLaunching() {
-		let session = WCSession.default
-		session.delegate = self
-		session.activate()
+        let session = WCSession.default
+        session.delegate = self
+        session.activate()
     }
 
 	func applicationDidEnterBackground() {

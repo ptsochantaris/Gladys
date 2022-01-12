@@ -181,9 +181,10 @@ extension Model {
 		}
 		if let B = bytes ?? typeItem.bytes {
 			let timmedName = typeItem.prepareFilename(name: name, directory: directory)
-			try archive.addEntry(with: timmedName, type: .file, uncompressedSize: UInt32(B.count)) { pos, size -> Data in
-				return B[pos ..< pos+size]
-			}
+            let provider: Provider = { (pos: Int64, size: Int) throws -> Data in
+                return B[pos ..< pos + Int64(size)]
+            }
+            try archive.addEntry(with: timmedName, type: .file, uncompressedSize: Int64(B.count), provider: provider)
 		}
 	}
 
