@@ -1264,7 +1264,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		}
 
         totalSizeLabel.title = "…"
-        imageProcessingQueue.async {
+        dataAccessQueue.async(flags: .barrier) {
             let drops: ContiguousArray<ArchivedItem>
             if someSelected {
                 drops = filteredDrops.filter { selected.contains($0) }

@@ -15,10 +15,8 @@ extension Component {
         }
         set {
             let ipath = imagePath
-            if let n = newValue {
-                if let data = n.pngData() {
-                    try? data.write(to: ipath)
-                }
+            if let n = newValue, let data = n.pngData() {
+                try? data.write(to: ipath)
             } else {
                 try? FileManager.default.removeItem(at: ipath)
             }

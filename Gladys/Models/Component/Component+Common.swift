@@ -17,7 +17,7 @@ extension Component: Equatable {
 
 	func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
-		dataAccessQueue.async {
+		dataAccessQueue.async(flags: .barrier) {
             if data == nil || self.flags.contains(.loadingAborted) {
 				let f = FileManager.default
 				if f.fileExists(atPath: byteLocation.path) {
@@ -429,12 +429,13 @@ extension Component: Equatable {
 
 	var cloudKitRecord: CKRecord? {
 		get {
+            let nsuuid = uuid as NSUUID
+            let recordLocation = cloudKitDataPath
             return dataAccessQueue.sync {
-                let nsuuid = uuid as NSUUID
                 if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
                     return cachedValue.record
                     
-                } else if let data = try? Data(contentsOf: cloudKitDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
@@ -449,7 +450,7 @@ extension Component: Equatable {
 		set {
             let nsuuid = uuid as NSUUID
             let recordLocation = cloudKitDataPath
-            dataAccessQueue.async {
+            dataAccessQueue.async(flags: .barrier) {
                 if let newValue = newValue {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)

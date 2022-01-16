@@ -308,23 +308,20 @@ final class ArchivedItemCell: UICollectionViewCell {
 				shared = item.shareMode
 
 				imageProcessingQueue.async { [weak self] in
-					if let u1 = self?.archivedDropItem?.uuid, u1 == item.uuid {
+					if let self = self, let u1 = self.archivedDropItem?.uuid, u1 == item.uuid {
 						let cacheKey = item.imageCacheKey
+                        let image: UIImage
 						if let cachedImage = imageCache.object(forKey: cacheKey) {
-							DispatchQueue.main.async { [weak self] in
-								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
-									self?.image.image = cachedImage
-								}
-							}
+                            image = cachedImage
 						} else {
-							let img = item.displayIcon
-							imageCache.setObject(img, forKey: cacheKey)
-							DispatchQueue.main.async { [weak self] in
-								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
-									self?.image.image = img
-								}
-							}
+                            image = item.displayIcon
+							imageCache.setObject(image, forKey: cacheKey)
 						}
+                        DispatchQueue.main.sync { [weak self] in
+                            if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
+                                self.image.image = image
+                            }
+                        }
 					}
 				}
 

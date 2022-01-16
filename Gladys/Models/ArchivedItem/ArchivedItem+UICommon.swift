@@ -53,7 +53,7 @@ extension ArchivedItem {
 		}
 		removeIntents()
         let p = folderUrl.path
-		dataAccessQueue.async {
+		dataAccessQueue.async(flags: .barrier) {
 			let f = FileManager.default
 			if f.fileExists(atPath: p) {
                 try? f.removeItem(atPath: p)

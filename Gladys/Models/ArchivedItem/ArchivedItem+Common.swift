@@ -165,13 +165,14 @@ extension ArchivedItem: Hashable {
 	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
 	var needsCloudPush: Bool {
         get {
+            let path = cloudKitDataPath
             return dataAccessQueue.sync {
-                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: cloudKitDataPath) ?? true
+                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
             }
         }
 		set {
             let path = cloudKitDataPath
-            dataAccessQueue.async {
+            dataAccessQueue.async(flags: .barrier) {
                 FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
             }
 		}
@@ -227,12 +228,13 @@ extension ArchivedItem: Hashable {
 
 	var cloudKitRecord: CKRecord? {
 		get {
+            let nsuuid = uuid as NSUUID
+            let recordLocation = cloudKitDataPath
             return dataAccessQueue.sync {
-                let nsuuid = uuid as NSUUID
                 if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
                     return cachedValue.record
                     
-                } else if let data = try? Data(contentsOf: cloudKitDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
@@ -245,9 +247,9 @@ extension ArchivedItem: Hashable {
             }
 		}
 		set {
-            let recordLocation = cloudKitDataPath
             let nsuuid = uuid as NSUUID
-            dataAccessQueue.async {
+            let recordLocation = cloudKitDataPath
+            dataAccessQueue.async(flags: .barrier) {
                 if let newValue = newValue {
                     cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
 
@@ -270,8 +272,8 @@ extension ArchivedItem: Hashable {
 
 	var cloudKitShareRecord: CKShare? {
 		get {
+            let nsuuid = uuid as NSUUID
             return dataAccessQueue.sync {
-                let nsuuid = uuid as NSUUID
                 if let cachedValue = cloudKitShareCache.object(forKey: nsuuid) {
                     return cachedValue.share
                     
@@ -290,7 +292,7 @@ extension ArchivedItem: Hashable {
 		set {
             let recordLocation = cloudKitShareDataPath
             let nsuuid = uuid as NSUUID
-            dataAccessQueue.async {
+            dataAccessQueue.async(flags: .barrier) {
                 if let newValue = newValue {
                     cloudKitShareCache.setObject(CKShareCacheEntry(share: newValue), forKey: nsuuid)
 

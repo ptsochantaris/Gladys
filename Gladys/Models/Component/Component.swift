@@ -8,9 +8,9 @@ import CloudKit
 final class Component: Codable {
     
     private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
-    private static let componentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue")
+    private static let componentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue", attributes: .concurrent)
     static func register(_ component: Component) {
-        componentLookupQueue.async {
+        componentLookupQueue.async(flags: .barrier) {
             componentLookup.setObject(component, forKey: component.uuid as NSUUID)
         }
     }

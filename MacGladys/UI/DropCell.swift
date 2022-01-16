@@ -180,7 +180,7 @@ final class MiniMapView: FirstMouseView {
 		let O = MKMapSnapshotter.Options()
 		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
 		O.showsBuildings = true
-		O.showsPointsOfInterest = true
+        O.showsPointsOfInterest = true
 		O.size = NSSize(width: 512, height: 512)
 		snapshotOptions = O
 
@@ -357,9 +357,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 							}
 							imageCache.setObject(img, forKey: cacheKey)
 							DispatchQueue.main.sync { [weak self] in
-								if let u2 = self?.archivedDropItem?.uuid, u1 == u2 {
-									self?.image.layer?.contents = img
-									self?.image.updateLayer()
+                                if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
+									self.image.layer?.contents = img
+									self.image.updateLayer()
 								}
 							}
 						}

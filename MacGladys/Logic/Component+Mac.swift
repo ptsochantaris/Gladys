@@ -211,7 +211,7 @@ extension Component {
 
 	func scanForBlobChanges() -> Bool {
 		var detectedChange = false
-		dataAccessQueue.sync {
+		dataAccessQueue.sync(flags: .barrier) {
 			let recordLocation = bytesPath
 			let fm = FileManager.default
 			guard fm.fileExists(atPath: recordLocation.path) else { return }
