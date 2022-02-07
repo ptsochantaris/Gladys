@@ -1742,9 +1742,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
         section.supplementariesFollowContentInsets = false
+        section.contentInsetsReference = .none
+        
+        let sectionLeft = view.safeAreaInsets.left + spacing
+        let sectionRight = view.safeAreaInsets.right + spacing
 
         if filter.groupingMode == .flat {
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
             return UICollectionViewCompositionalLayout(section: section)
         }
 
@@ -1754,13 +1758,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.currentDisplayMode {
             case .collapsed, .none:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
                 section.orthogonalScrollingBehavior = .none
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SectionBackground")]
                 section.boundarySupplementaryItems = [sectionTitle]
 
             case .scrolling:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing + 50)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight + 50)
                 section.orthogonalScrollingBehavior = .continuous
                 let fadeSize = NSCollectionLayoutSize(widthDimension: .absolute(50), heightDimension: .absolute(fixedHeight + spacing * 2))
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
@@ -1769,7 +1773,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 section.boundarySupplementaryItems = [fader, sectionTitle]
 
             case .full:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: spacing, bottom: spacing, trailing: spacing)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
                 section.orthogonalScrollingBehavior = .none
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
                 section.boundarySupplementaryItems = [sectionTitle]
@@ -1786,30 +1790,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        if firstAppearance {
-            setupLayout(for: view.bounds.size)
-        }
+        setupLayout()
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        setupLayout(for: size)
-    }
-    
-    private func setupLayout(for bounds: CGSize) {
-        let width = bounds.width
+    private func setupLayout() {
+        let width = view.safeAreaLayoutGuide.layoutFrame.width
         let wideMode = PersistedOptions.wideMode
         let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
         
         let key = width + (wideMode ? 1 : 0) + (forceTwoColumn ? 1 : 0)
         if lastLayoutProcessed == key {
-            log("Handlesize not needed")
+            log("setupLayout not needed")
             return
         }
         
         lastLayoutProcessed = key
         
-        log("Handlesize ran for: \(bounds)")
+        log("setupLayout ran for: \(key)")
         
         if wideMode {
             if width >= 768 {
@@ -1820,7 +1817,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         } else {
             if width <= 320 && !forceTwoColumn {
                 collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
-            } else if width >= 1366 {
+            } else if width > 1365 {
                 collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
             } else if width > 980 {
                 collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
@@ -2065,7 +2062,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @objc private func reloadExistingItems(_ notification: Notification) {
         if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
             lastLayoutProcessed = 0
-            setupLayout(for: view.bounds.size)
+            setupLayout()
             updateDataSource(animated: false)
         }
         let uuids = filter.filteredDrops.map { $0.uuid }
