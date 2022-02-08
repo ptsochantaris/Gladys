@@ -234,9 +234,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 		]
 	}
     
-    private func path(at point: CGPoint) -> IndexPath? {
+    private func path(at point: CGPoint) -> IndexPath {
         var rects = [Int: CGRect]()
-        for cell in collection.visibleCells {
+        let visibleCells = collection.visibleCells
+        if visibleCells.isEmpty {
+            return IndexPath(item: 0, section: 0)
+        }
+        var maxSection = 0
+        for cell in visibleCells {
             guard let indexPath = collection.indexPath(for: cell) else {
                 continue
             }
@@ -246,12 +251,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             } else {
                 rects[indexPath.section] = wideFrame
             }
+            maxSection = max(maxSection, indexPath.section)
         }
         if let entry = rects.first(where: { $0.value.contains(point) }) {
             let itemCount = collection.numberOfItems(inSection: entry.key)
             return IndexPath(item: itemCount, section: entry.key)
         }
-        return nil
+        let itemCount = collection.numberOfItems(inSection: maxSection)
+        return IndexPath(item: itemCount, section: maxSection)
     }
     
     private func insert(item: ArchivedItem, at destinationIndexPath: IndexPath, offset: Int = 0) {
@@ -367,9 +374,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         
         coordinator.session.progressIndicatorStyle = .none
 
-        guard let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView)) else {
-            return
-        }
+        let destinationIndexPath = coordinator.destinationIndexPath ?? path(at: coordinator.session.location(in: collectionView))
         
         var action = PostDropAction.none
         

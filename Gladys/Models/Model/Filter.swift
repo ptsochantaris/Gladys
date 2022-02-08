@@ -531,15 +531,11 @@ final class Filter {
         }
         .sorted { $0.function.displayText.localizedCaseInsensitiveCompare($1.function.displayText) == .orderedAscending }
         
-        if labelToggles.isEmpty {
-            return
-        }
-        
         if recentlyAddedCount > 0 {
             let t = newOrExistingToggle(of: .recentlyAddedItems, in: previousList, newCount: recentlyAddedCount)
             labelToggles.append(t)
         }
-        
+                
         if noLabelCount > 0 {
             let t = newOrExistingToggle(of: .unlabeledItems, in: previousList, newCount: noLabelCount)
             labelToggles.append(t)
