@@ -16,8 +16,7 @@ NSSet *_allowedClasses = nil;
 @implementation SafeArchiving
 + (NSData *)archive:(id)object {
     @try {
-        NSError *error;
-        return [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:&error];
+        return [NSKeyedArchiver archivedDataWithRootObject:object requiringSecureCoding:NO error:nil];
     } @catch (NSException *exception) {
         return nil;
     }
@@ -41,6 +40,7 @@ NSSet *_allowedClasses = nil;
                            [NSDictionary class],
                            [NSSet class],
                            [CKServerChangeToken class],
+                           [NSDate class],
                            nil
         ];
     }
@@ -48,14 +48,7 @@ NSSet *_allowedClasses = nil;
 }
 + (id)unarchive:(NSData *)data {
     @try {
-        id a = [NSKeyedUnarchiver unarchivedObjectOfClasses:[SafeArchiving allowedClasses] fromData:data error:nil];
-/*#if DEBUG
-        id b = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSObject class] fromData:data error:nil];
-        if(!(a == nil && b == nil) && ![a isEqual:b]) {
-            abort();
-        }
-#endif*/
-        return a;
+        return [NSKeyedUnarchiver unarchivedObjectOfClasses:[SafeArchiving allowedClasses] fromData:data error:nil];
     } @catch (NSException *exception) {
         return nil;
     }

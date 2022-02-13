@@ -14,20 +14,20 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		session.activate()
 	}
 
-	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		updateContext()
-	}
+	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    
+	func sessionReachabilityDidChange(_ session: WCSession) {}
 
-	func sessionDidBecomeInactive(_ session: WCSession) {}
-
-	func sessionDidDeactivate(_ session: WCSession) {}
-
-	func sessionReachabilityDidChange(_ session: WCSession) {
-		if session.isReachable && session.applicationContext.isEmpty && !Model.drops.isEmpty {
-			updateContext()
-		}
-	}
-
+    func sessionDidBecomeInactive(_ session: WCSession) {}
+    
+    func sessionDidDeactivate(_ session: WCSession) {}
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
+        DispatchQueue.main.async {
+            self.handle(message: message, replyHandler: { _ in })
+        }
+    }
+    
 	func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
 		DispatchQueue.main.async {
 			self.handle(message: message, replyHandler: replyHandler)
@@ -60,6 +60,11 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 			DispatchQueue.global(qos: .background).async {
 				replyHandler([:])
 			}
+
+        } else if let command = message["update"] as? String, command == "full" {
+            buildContext { context in
+                replyHandler(context ?? [:])
+            }
 
 		} else if let uuid = message["image"] as? String, let item = Model.item(uuid: uuid) {
 
@@ -132,26 +137,34 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 
-	fileprivate func updateContext() {
-		let session = WCSession.default
-		guard session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
+    fileprivate func buildContext(completion: @escaping ([String: Any]?) -> Void) {
         BackgroundTask.registerForBackground()
 
-		DispatchQueue.main.async {
-			let total = Model.drops.count
-			let items = Model.drops.prefix(100).map { $0.watchItem }
-			DispatchQueue.global(qos: .background).async {
-				if let compressedData = SafeArchiving.archive(items)?.data(operation: .compress) {
-					do {
-						try session.updateApplicationContext(["total": total, "dropList": compressedData])
-						log("Updated watch context")
-					} catch {
-						log("Error updating watch context: \(error.localizedDescription)")
-					}
-				}
+        DispatchQueue.main.async {
+            let total = Model.drops.count
+            let items = Model.drops.prefix(100).map { $0.watchItem }
+            DispatchQueue.global(qos: .background).async {
+                if let compressedData = SafeArchiving.archive(items)?.data(operation: .compress) {
+                    log("Built watch context")
+                    completion(["total": total, "dropList": compressedData])
+                } else {
+                    log("Failed to build watch context")
+                    completion(nil)
+                }
                 BackgroundTask.unregisterForBackground()
-			}
-		}
+            }
+        }
+    }
+
+	fileprivate func updateContext() {
+		let session = WCSession.default
+        guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
+        buildContext { context in
+            if let context = context {
+                session.transferUserInfo(context)
+                log("Updated watch context")
+            }
+        }
 	}
 }
 

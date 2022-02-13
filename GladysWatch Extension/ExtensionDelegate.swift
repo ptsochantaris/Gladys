@@ -9,6 +9,7 @@
 import WatchKit
 import WatchConnectivity
 import ClockKit
+import GladysFramework
 
 final class ImageCache {
 
@@ -63,7 +64,7 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			let reportedCount = context["total"] as? Int,
 			let compressedData = context["dropList"] as? Data,
 			let uncompressedData = compressedData.data(operation: .decompress),
-            let itemInfo = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: uncompressedData) as? [[String: Any]] {
+            let itemInfo = SafeArchiving.unarchive(uncompressedData) as? [[String: Any]] {
 
 			var count = 1
 			let list = itemInfo.map { dict -> [String: Any] in
@@ -78,37 +79,47 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 		}
 	}
     
+    private func receivedInfo(_ info: [String: Any]) {
+        let (dropList, reportedCount) = extractDropList(from: info)
+        DispatchQueue.main.sync {
+            ExtensionDelegate.reportedCount = reportedCount
+            reloadComplications()
+        }
+        if dropList.isEmpty {
+            DispatchQueue.main.sync {
+                WKInterfaceController.reloadRootPageControllers(withNames: ["EmptyController"], contexts: nil, orientation: .vertical, pageIndex: 0)
+            }
+        } else {
+            let names = [String](repeating: "ItemController", count: dropList.count)
+            let currentUUID = ExtensionDelegate.currentUUID
+            let currentPage = dropList.firstIndex { $0["u"] as? String == currentUUID } ?? 0
+            let index = min(currentPage, names.count-1)
+            DispatchQueue.main.sync {
+                WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
+            }
+        }
+        DispatchQueue.main.sync {
+            ImageCache.trimUnaccessedEntries()
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        receivedInfo(userInfo)
+    }
+    
+    private func getFullUpdate(session: WCSession) {
+        if session.activationState == .activated {
+            session.sendMessage(["update": "full"], replyHandler: { [weak self] info in
+                self?.receivedInfo(info)
+            }, errorHandler: nil)
+        }
+    }
+        
 	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-		updatePages(session.receivedApplicationContext)
-	}
+        getFullUpdate(session: session)
+    }
 
-	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-		updatePages(applicationContext)
-	}
-
-	private func updatePages(_ compressedList: [String: Any]) {
-		let (dropList, reportedCount) = extractDropList(from: compressedList)
-		DispatchQueue.main.sync {
-			ExtensionDelegate.reportedCount = reportedCount
-			reloadComplications()
-		}
-		if dropList.isEmpty {
-			DispatchQueue.main.sync {
-				WKInterfaceController.reloadRootPageControllers(withNames: ["EmptyController"], contexts: nil, orientation: .vertical, pageIndex: 0)
-			}
-		} else {
-			let names = [String](repeating: "ItemController", count: dropList.count)
-			let currentUUID = ExtensionDelegate.currentUUID
-			let currentPage = dropList.firstIndex { $0["u"] as? String == currentUUID } ?? 0
-			let index = min(currentPage, names.count-1)
-			DispatchQueue.main.sync {
-				WKInterfaceController.reloadRootPageControllers(withNames: names, contexts: dropList, orientation: .vertical, pageIndex: index)
-			}
-		}
-		DispatchQueue.main.sync {
-			ImageCache.trimUnaccessedEntries()
-		}
-	}
+	func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {}
 
 	private func reloadComplications() {
 		let s = CLKComplicationServer.sharedInstance()
@@ -116,11 +127,16 @@ final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate 
 			s.reloadTimeline(for: $0)
 		}
 	}
-
+    
     func applicationDidFinishLaunching() {
         let session = WCSession.default
         session.delegate = self
         session.activate()
+    }
+    
+    func applicationWillEnterForeground() {
+        let session = WCSession.default
+        getFullUpdate(session: session)
     }
 
 	func applicationDidEnterBackground() {
