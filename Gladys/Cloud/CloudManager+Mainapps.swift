@@ -570,16 +570,17 @@ extension CloudManager {
                     $0.parent?.recordID == recordID // takes zone into account
                 }
                 if !newTypeItemRecords.isEmpty {
+                    stats.pendingTypeItemRecords.subtract(newTypeItemRecords)
                     let uuid = newItem.uuid
-                    newItem.components.append(contentsOf: newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) })
-                    stats.pendingTypeItemRecords = stats.pendingTypeItemRecords.filter { !newTypeItemRecords.contains($0) }
+                    let newComponents = newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) }
+                    newItem.components.append(contentsOf: newComponents)
                     log("  Hooked \(newTypeItemRecords.count) pending type items")
                 }
-                if let existingShareId = record.share?.recordID, let pendingShareIndex = stats.pendingShareRecords.firstIndex(where: {
+                if let existingShareId = record.share?.recordID, let pendingShareRecord = stats.pendingShareRecords.first(where: {
                     $0.recordID == existingShareId // takes zone into account
                 }) {
-                    newItem.cloudKitShareRecord = stats.pendingShareRecords[pendingShareIndex]
-                    stats.pendingShareRecords.remove(at: pendingShareIndex)
+                    newItem.cloudKitShareRecord = pendingShareRecord
+                    stats.pendingShareRecords.remove(pendingShareRecord)
                     log("  Hooked onto pending share \((existingShareId.recordName))")
                 }
                 Model.appendDropEfficiently(newItem)
@@ -613,7 +614,7 @@ extension CloudManager {
                     stats.newTypeItemCount += 1
                 }
             } else {
-                stats.pendingTypeItemRecords.append(record)
+                stats.pendingTypeItemRecords.insert(record)
                 log("Received new type item (\(recordUUID)) to link to upcoming new item")
             }
             
@@ -642,7 +643,7 @@ extension CloudManager {
                         stats.updateCount += 1
                     }
                 } else {
-                    stats.pendingShareRecords.append(share)
+                    stats.pendingShareRecords.insert(share)
                     log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
                 }
             }
@@ -1049,6 +1050,7 @@ extension CloudManager {
         perform(deleteOperation, on: database, type: "delete share")
     }
 
+    @MainActor
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
             DispatchQueue.main.async {
@@ -1059,6 +1061,7 @@ extension CloudManager {
         }
     }
 
+    @MainActor
     static func proceedWithActivation() {
         CloudManager.activate { error in
             DispatchQueue.main.async {

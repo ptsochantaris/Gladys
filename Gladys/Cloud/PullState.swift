@@ -13,8 +13,8 @@ final class PullState {
 	
 	var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
 	var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
-	var pendingShareRecords = ContiguousArray<CKShare>()
-	var pendingTypeItemRecords = ContiguousArray<CKRecord>()
+	var pendingShareRecords = Set<CKShare>()
+	var pendingTypeItemRecords = Set<CKRecord>()
 
 	private func updateProgress() {
 		var components = [String]()
