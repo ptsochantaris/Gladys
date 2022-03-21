@@ -436,7 +436,7 @@ final class DetailController: GladysViewController,
 	private func editURL(_ component: Component, existingEdit: String?) {
 		getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString) { [weak self] newValue in
 			guard let s = self else { return }
-			if let newValue = newValue, let newURL = NSURL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
+			if let newValue = newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
 				component.replaceURL(newURL)
 				s.item.needsReIngest = true
 				s.makeIndexAndSaveItem()

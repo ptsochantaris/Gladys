@@ -51,7 +51,7 @@ extension CloudManager {
             completion(nil)
             return nil
         }
-
+        
         var sharedZonesToPush = Set<CKRecordZone.ID>()
         for item in Model.drops where item.needsCloudPush {
             let zoneID = item.parentZone
@@ -59,6 +59,7 @@ extension CloudManager {
                 sharedZonesToPush.insert(zoneID)
             }
         }
+        
         for deletionEntry in deletionQueue {
             let components = deletionEntry.components(separatedBy: ":")
             if components.count > 2 {

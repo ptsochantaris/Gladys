@@ -107,12 +107,13 @@ final class PushState {
 
 	static private func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
 		var previousSequence = CloudManager.uuidSequence
-		for localItem in currentSequence {
-			if !previousSequence.contains(localItem) { // we have a new item
-				return true
-			}
-		}
-		previousSequence = previousSequence.filter { currentSequence.contains($0) }
+
+        let currentSet = Set(currentSequence)
+        if currentSet.subtracting(previousSequence).count > 0 {
+            // we have a new item
+            return true
+        }
+		previousSequence = previousSequence.filter { currentSet.contains($0) }
 		return currentSequence != previousSequence
 	}
 

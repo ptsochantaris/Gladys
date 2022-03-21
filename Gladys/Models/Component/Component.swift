@@ -123,7 +123,7 @@ final class Component: Codable {
     #endif
 
 	// Caches
-	var encodedURLCache: (Bool, NSURL?)?
+	var encodedURLCache: (Bool, URL?)?
 	var canPreviewCache: Bool?
 
 	#if MAINAPP || MAC

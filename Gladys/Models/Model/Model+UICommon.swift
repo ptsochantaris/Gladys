@@ -376,8 +376,8 @@ extension Model {
 				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
 				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
-                    let uuidStrings = Set(allItems.map { $0.uuid.uuidString })
-                    for file in filesInDir where !uuidStrings.contains(file) && file != "uuids" { // old file
+                    let oldFiles = Set(filesInDir).subtracting(allItems.map { $0.uuid.uuidString }).subtracting(["uuids"])
+                    for file in oldFiles {
                         log("Removing save file for non-existent item: \(file)")
                         let finalPath = url.appendingPathComponent(file)
                         try? fm.removeItem(at: finalPath)

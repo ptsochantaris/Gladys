@@ -26,21 +26,20 @@ final class CKShareCacheEntry {
 let imageCache = NSCache<NSString, IMAGE>()
 let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .utility)
 
-let folderUrlCache = NSCache<NSUUID, NSURL>()
-let cloudKitDataPathCache = NSCache<NSUUID, NSURL>()
-let cloudKitShareDataPathCache = NSCache<NSUUID, NSURL>()
-let imagePathCache = NSCache<NSUUID, NSURL>()
-let bytesPathCache = NSCache<NSUUID, NSURL>()
-let cloudKitRecordCache = NSCache<NSUUID, CKRecordCacheEntry>()
-let cloudKitShareCache = NSCache<NSUUID, CKShareCacheEntry>()
+let folderUrlCache = Cache<UUID, URL>()
+let cloudKitDataPathCache = Cache<UUID, URL>()
+let cloudKitShareDataPathCache = Cache<UUID, URL>()
+let imagePathCache = Cache<UUID, URL>()
+let bytesPathCache = Cache<UUID, URL>()
+let cloudKitRecordCache = Cache<UUID, CKRecordCacheEntry>()
+let cloudKitShareCache = Cache<UUID, CKShareCacheEntry>()
 
 func clearCacheData(for uuid: UUID) {
-	let nsuuid = uuid as NSUUID
-	folderUrlCache.removeObject(forKey: nsuuid)
-	cloudKitDataPathCache.removeObject(forKey: nsuuid)
-	cloudKitShareDataPathCache.removeObject(forKey: nsuuid)
-	imagePathCache.removeObject(forKey: nsuuid)
-	bytesPathCache.removeObject(forKey: nsuuid)
-	cloudKitRecordCache.removeObject(forKey: nsuuid)
-	cloudKitShareCache.removeObject(forKey: nsuuid)
+	folderUrlCache[uuid] = nil
+	cloudKitDataPathCache[uuid] = nil
+	cloudKitShareDataPathCache[uuid] = nil
+	imagePathCache[uuid] = nil
+	bytesPathCache[uuid] = nil
+	cloudKitRecordCache[uuid] = nil
+	cloudKitShareCache[uuid] = nil
 }

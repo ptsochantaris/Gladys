@@ -476,7 +476,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		a.window.initialFirstResponder = textField
 		a.beginSheetModal(for: view.window!) { [weak self] response in
 			if response.rawValue == 1000 {
-				if let newURL = NSURL(string: textField.stringValue) {
+				if let newURL = URL(string: textField.stringValue) {
 					typeItem.replaceURL(newURL)
 					self?.item.markUpdated()
 					self?.item.needsReIngest = true

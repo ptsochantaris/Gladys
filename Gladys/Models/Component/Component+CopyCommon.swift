@@ -16,11 +16,13 @@ extension Component {
                 return Data(s.utf8)
 			} else if let s = decoded as? NSAttributedString {
 				return s.toData
-            } else if let s = decoded as? NSURL, let urlString = s.absoluteString {
+            } else if let s = decoded as? URL {
+                let urlString = s.absoluteString
                 return try? PropertyListSerialization.data(fromPropertyList: [urlString, "", ["title": urlDropTitle]], format: .binary, options: 0)
 			}
 		}
-        if !classWasWrapped, typeIdentifier == "public.url", let s = encodedUrl, let urlString = s.absoluteString {
+        if !classWasWrapped, typeIdentifier == "public.url", let s = encodedUrl {
+            let urlString = s.absoluteString
             return try? PropertyListSerialization.data(fromPropertyList: [urlString, "", ["title": urlDropTitle]], format: .binary, options: 0)
         }
 		return nil

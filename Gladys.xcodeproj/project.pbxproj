@@ -448,6 +448,14 @@
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		16FC0B3127E9287B00CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3227E929EF00CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3327E929EF00CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3427E929F000CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3527E929F100CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3627E929F300CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3727E929F300CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FC0B3827E929F400CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -898,6 +906,7 @@
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
 		16F72B35266D8232000E2C67 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
+		16FC0B3027E9287B00CF3290 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1103,6 +1112,8 @@
 				165847052376CC2400666B7B /* Model+Siri.swift */,
 				165847082376EE4A00666B7B /* Model+Importing.swift */,
 				16A42A2124C4FAA1002CBD1B /* TipJar.swift */,
+				16CA478D27E5E16100DC1ED2 /* Images.swift */,
+				16FC0B3027E9287B00CF3290 /* Cache.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2293,6 +2304,7 @@
 				16CD7D9020A111340039E6C2 /* Component+UICommon.swift in Sources */,
 				167CDF9620B62B3E00EABC0A /* Component+Preview.swift in Sources */,
 				162BDD7B220F021000A3C17B /* Logging.swift in Sources */,
+				16FC0B3827E929F400CF3290 /* Cache.swift in Sources */,
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
@@ -2332,6 +2344,7 @@
 				1605050523784961002755A2 /* Notifications.swift in Sources */,
 				16EDB3751F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16A80A102113AFE7004C72AB /* Caches.swift in Sources */,
+				16FC0B3227E929EF00CF3290 /* Cache.swift in Sources */,
 				16287AF61EFB05E4007188AE /* Component.swift in Sources */,
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
@@ -2365,6 +2378,7 @@
 				16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */,
 				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1604A3361F091D7D005A477E /* Component.swift in Sources */,
+				16FC0B3327E929EF00CF3290 /* Cache.swift in Sources */,
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -2424,6 +2438,7 @@
 				162594D720D5548F00A65E06 /* Caches.swift in Sources */,
 				16CD7D9520A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				16CD7D8C20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
+				16FC0B3627E929F300CF3290 /* Cache.swift in Sources */,
 				1657B8C01FD41E9A00EC480D /* Types.swift in Sources */,
 				166E72FA20BEE61B00DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				1602F32E2030E6310036E2B0 /* Data+Extensions.swift in Sources */,
@@ -2477,6 +2492,7 @@
 				16EDB3741F22A1C3001CC65C /* Model+Indexing.swift in Sources */,
 				16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */,
 				1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */,
+				16FC0B3127E9287B00CF3290 /* Cache.swift in Sources */,
 				167CDF9520B62B3E00EABC0A /* Component+Preview.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16CD7DB820A124390039E6C2 /* Model+UICommon.swift in Sources */,
@@ -2592,6 +2608,7 @@
 				16559C8E20A4CC55006C281D /* Global.swift in Sources */,
 				16969BAC1FB0E675007B2F77 /* ArchivedItem.swift in Sources */,
 				16969BAF1FB0E69C007B2F77 /* Types.swift in Sources */,
+				16FC0B3427E929F000CF3290 /* Cache.swift in Sources */,
 				16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 				166E72F620BEDCC100DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
@@ -2631,6 +2648,7 @@
 				16B2AA4E24DF47CA004F3FC2 /* ModelFilePresenter.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
 				16B2AA4F24DF47D3004F3FC2 /* Notifications.swift in Sources */,
+				16FC0B3727E929F300CF3290 /* Cache.swift in Sources */,
 				16B2AA5524DF4996004F3FC2 /* Component.swift in Sources */,
 				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
 				16B2AA5724DF49A6004F3FC2 /* FileManager+Extensions.swift in Sources */,
@@ -2676,6 +2694,7 @@
 				165B96C325CD863600E73E2D /* Notifications.swift in Sources */,
 				165B97AD25CD88DC00E73E2D /* Global.swift in Sources */,
 				165B97A025CD88D000E73E2D /* Caches.swift in Sources */,
+				16FC0B3527E929F100CF3290 /* Cache.swift in Sources */,
 				165B970425CD884000E73E2D /* Component+Intents.swift in Sources */,
 				165B974525CD887A00E73E2D /* Types.swift in Sources */,
 				165B96D025CD86AE00E73E2D /* Model+Lite.swift in Sources */,

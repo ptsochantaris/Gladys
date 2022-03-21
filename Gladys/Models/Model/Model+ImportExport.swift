@@ -173,8 +173,8 @@ extension Model {
 	static private func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) throws {
 
 		var bytes: Data?
-		if typeItem.isWebURL, let url = typeItem.encodedUrl, let data = url.urlFileContent {
-			bytes = data
+		if typeItem.isWebURL, let url = typeItem.encodedUrl {
+			bytes = url.urlFileContent
 
 		} else if typeItem.classWasWrapped {
 			bytes = typeItem.dataForDropping ?? typeItem.bytes

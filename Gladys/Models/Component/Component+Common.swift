@@ -81,25 +81,25 @@ extension Component: Equatable {
         return bytes?.isPlist ?? false
     }
 
-	var encodedUrl: NSURL? {
+	var encodedUrl: URL? {
 
 		if let encodedURLCache = encodedURLCache {
 			return encodedURLCache.1
 		}
 
-		var ret: NSURL?
+		var ret: URL?
 		if isURL {
 			let decoded = decode()
-			if let u = decoded as? NSURL {
+			if let u = decoded as? URL {
 				ret = u
 			} else if let array = decoded as? NSArray {
 				for item in array {
-					if let text = item as? String, let url = NSURL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+					if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
 						ret = url
 						break
 					}
 				}
-			} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = NSURL(string: s) {
+			} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = URL(string: s) {
 				ret = u
 			}
 		}
@@ -370,8 +370,7 @@ extension Component: Equatable {
 	}
     
     func getFolderUrl(createIfNeeded: Bool) -> URL {
-		let nsuuiud = uuid as NSUUID
-		if let url = folderUrlCache.object(forKey: nsuuiud) {
+		if let url = folderUrlCache[uuid] {
 			return url as URL
 		}
 
@@ -381,7 +380,7 @@ extension Component: Equatable {
             if !f.fileExists(atPath: url.path) {
                 try! f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             }
-            folderUrlCache.setObject(url as NSURL, forKey: nsuuiud)
+            folderUrlCache[uuid] = url
         }
 		return url
 	}
@@ -391,24 +390,22 @@ extension Component: Equatable {
     }
 
 	var imagePath: URL {
-		let nsuuiud = uuid as NSUUID
-		if let url = imagePathCache.object(forKey: nsuuiud) {
+		if let url = imagePathCache[uuid] {
 			return url as URL
 		}
 
 		let url = getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
-		imagePathCache.setObject(url as NSURL, forKey: nsuuiud)
+		imagePathCache[uuid] = url
 		return url
 	}
 
     func getBytesPath(createIfNeeded: Bool) -> URL {
-		let nsuuiud = uuid as NSUUID
-		if let url = bytesPathCache.object(forKey: nsuuiud) {
+		if let url = bytesPathCache[uuid] {
 			return url as URL
 		}
 
 		let url = getFolderUrl(createIfNeeded: createIfNeeded).appendingPathComponent("blob", isDirectory: false)
-		bytesPathCache.setObject(url as NSURL, forKey: nsuuiud)
+		bytesPathCache[uuid] = url
 		return url
 	}
     
@@ -417,47 +414,46 @@ extension Component: Equatable {
     }
 	
 	private var cloudKitDataPath: URL {
-		let nsuuiud = uuid as NSUUID
-		if let url = cloudKitDataPathCache.object(forKey: nsuuiud) {
+		if let url = cloudKitDataPathCache[uuid] {
 			return url as URL
 		}
 
 		let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-		cloudKitDataPathCache.setObject(url as NSURL, forKey: nsuuiud)
+		cloudKitDataPathCache[uuid] = url
 		return url
 	}
 
 	var cloudKitRecord: CKRecord? {
 		get {
-            let nsuuid = uuid as NSUUID
             let recordLocation = cloudKitDataPath
+            let uuid = uuid
             return dataAccessQueue.sync {
-                if let cachedValue = cloudKitRecordCache.object(forKey: nsuuid) {
+                if let cachedValue = cloudKitRecordCache[uuid] {
                     return cachedValue.record
                     
                 } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
-                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: record), forKey: nsuuid)
+                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
                     return record
                     
                 } else {
-                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
+                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     return nil
                 }
             }
 		}
 		set {
-            let nsuuid = uuid as NSUUID
             let recordLocation = cloudKitDataPath
+            let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
                 if let newValue = newValue {
-                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: newValue), forKey: nsuuid)
+                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
                     try? coder.encodedData.write(to: recordLocation)
                 } else {
-                    cloudKitRecordCache.setObject(CKRecordCacheEntry(record: nil), forKey: nsuuid)
+                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     let f = FileManager.default
                     if f.fileExists(atPath: recordLocation.path) {
                         try? f.removeItem(at: recordLocation)

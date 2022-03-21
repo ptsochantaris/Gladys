@@ -59,12 +59,9 @@ extension String {
 	}
 }
 
-extension NSURL {
-	var urlFileContent: Data? {
-		if let a = absoluteString {
-            return Data("[InternetShortcut]\r\nURL=\(a)\r\n".utf8)
-		}
-		return nil
+extension URL {
+	var urlFileContent: Data {
+        return Data("[InternetShortcut]\r\nURL=\(absoluteString)\r\n".utf8)
 	}
 }
 

@@ -39,8 +39,8 @@ struct CallbackSupport {
 				handle(result: result, success: success, failure: failure)
 
 			} else if let text = parameters["url"] {
-				if let url = NSURL(string: text) {
-					let result = handleCreateRequest(object: url, overrides: importOverrides)
+				if let url = URL(string: text) {
+					let result = handleCreateRequest(object: url as NSURL, overrides: importOverrides)
 					handle(result: result, success: success, failure: failure)
 
 				} else {

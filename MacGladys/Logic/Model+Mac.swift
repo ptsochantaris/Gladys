@@ -147,13 +147,13 @@ extension Model {
 
     static func importFiles(paths: [String], filterContext: Filter?) {
         let providers = paths.compactMap { path -> NSItemProvider? in
-            let url = NSURL(fileURLWithPath: path)
+            let url = URL(fileURLWithPath: path)
             var isDir: ObjCBool = false
-            FileManager.default.fileExists(atPath: url.path ?? "", isDirectory: &isDir)
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
             if isDir.boolValue {
                 return NSItemProvider(item: url, typeIdentifier: kUTTypeFileURL as String)
             } else {
-                return NSItemProvider(contentsOf: url as URL)
+                return NSItemProvider(contentsOf: url)
             }
         }
         addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
