@@ -93,8 +93,8 @@ extension ArchivedItem: Hashable {
 		return nil
 	}
     
-	var imageCacheKey: NSString {
-        return NSString(format: "%@ %f", uuid.uuidString, updatedAt.timeIntervalSinceReferenceDate)
+	var imageCacheKey: String {
+        return "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)"
 	}
 
 	var nonOverridenText: (String?, NSTextAlignment) {

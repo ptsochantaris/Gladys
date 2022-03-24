@@ -42,10 +42,10 @@ UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionView
 			self.copiedLabel.alpha = 1
 			self.itemsView.alpha = 0
         }, completion: { _ in
-            UIView.animate(withDuration: 0.1, delay: 0.8, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.1, delay: 0.8, options: .curveEaseIn) {
 				self.copiedLabel.alpha = 0
 				self.itemsView.alpha = 1
-			}, completion: nil)
+			}
 		})
 	}
 

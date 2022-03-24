@@ -254,8 +254,8 @@ final class ArchivedItemCell: UICollectionViewCell {
 	static func warmUp(for item: ArchivedItem) {
 		imageProcessingQueue.async {
 			let cacheKey = item.imageCacheKey
-			if imageCache.object(forKey: cacheKey) == nil {
-				imageCache.setObject(item.displayIcon, forKey: cacheKey)
+			if imageCache[cacheKey] == nil {
+				imageCache[cacheKey] = item.displayIcon
 			}
 		}
 	}
@@ -311,11 +311,11 @@ final class ArchivedItemCell: UICollectionViewCell {
 					if let self = self, let u1 = self.archivedDropItem?.uuid, u1 == item.uuid {
 						let cacheKey = item.imageCacheKey
                         let image: UIImage
-						if let cachedImage = imageCache.object(forKey: cacheKey) {
+						if let cachedImage = imageCache[cacheKey] {
                             image = cachedImage
 						} else {
                             image = item.displayIcon
-							imageCache.setObject(image, forKey: cacheKey)
+							imageCache[cacheKey] = image
 						}
                         DispatchQueue.main.sync { [weak self] in
                             if let self = self, let item = self.archivedDropItem, u1 == item.uuid {

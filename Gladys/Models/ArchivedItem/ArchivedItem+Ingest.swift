@@ -219,7 +219,7 @@ extension ArchivedItem {
     }
     
     private func componentIngestDone() {
-        imageCache.removeObject(forKey: imageCacheKey)
+        imageCache[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
         NotificationCenter.default.post(name: .IngestComplete, object: self)

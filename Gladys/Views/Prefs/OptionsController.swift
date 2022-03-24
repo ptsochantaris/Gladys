@@ -41,7 +41,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     
 	@IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
 		PersistedOptions.wideMode = sender.isOn
-        imageCache.removeAllObjects()
+        imageCache.reset()
         NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
 	}
 

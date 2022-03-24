@@ -40,6 +40,10 @@ final class Cache<Key: Hashable, Value> {
             self.value = value
         }
     }
+    
+    func reset() {
+        store.removeAllObjects()
+    }
             
     subscript(key: Key) -> Value? {
         get {

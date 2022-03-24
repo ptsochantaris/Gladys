@@ -106,7 +106,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         let l = sections[indexPath.section].labels[indexPath.row]
         labelText.text = l
         dirty = true
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
 	}
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -115,7 +115,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
     
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		if string == "\n" {
-			dismiss(animated: true, completion: nil)
+            dismiss(animated: true)
 			return false
 		} else {
 			dirty = true

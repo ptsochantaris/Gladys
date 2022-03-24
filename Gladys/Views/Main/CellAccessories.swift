@@ -90,8 +90,8 @@ final class MiniMapView: UIImageView {
 		guard let coordinate = coordinate else { return }
 		if bounds.isEmpty || image?.size == bounds.size { return }
 
-		let cacheKey = NSString(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
-		if let existingImage = imageCache.object(forKey: cacheKey) {
+		let cacheKey = String(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
+        if let existingImage = imageCache[cacheKey] {
 			image = existingImage
 			return
 		}
@@ -117,7 +117,7 @@ final class MiniMapView: UIImageView {
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
 				let img = snapshot.image
-				imageCache.setObject(img, forKey: cacheKey)
+                imageCache[cacheKey] = img
 				DispatchQueue.main.async { [weak self] in
 					self?.image = img
 					UIView.animate(withDuration: 0.15) {

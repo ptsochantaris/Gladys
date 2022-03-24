@@ -538,9 +538,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
 			popOver.sourceRect = cellRect
 			popOver.containerView?.setNeedsLayout()
-			UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+			UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
 				popOver.containerView?.layoutIfNeeded()
-			}, completion: nil)
+			}
 			observation = nil
 		}
 		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -1076,7 +1076,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 	private var acceptAlert: UIAlertController?
 
 	@objc private func acceptStarted() {
-		acceptAlert = genericAlert(title: "Accepting Share…", message: nil, autoDismiss: false, buttonTitle: nil, completion: nil)
+		acceptAlert = genericAlert(title: "Accepting Share…", message: nil)
 	}
 
 	@objc private func acceptEnded() {
