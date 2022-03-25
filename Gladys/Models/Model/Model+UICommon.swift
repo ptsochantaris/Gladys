@@ -231,11 +231,11 @@ extension Model {
 			needsAnotherSave = true
 		} else {
 			prepareToSave()
-			performSave()
+            proceedWithSave()
 		}
 	}
 
-	private static func performSave() {
+	private static func proceedWithSave() {
 
         let index = CSSearchableIndex.default()
 
@@ -266,6 +266,12 @@ extension Model {
             return i.uuid
 		})
         
+        #if DEBUG
+        if uuidsToEncode.count + removedUuids.count == 0 {
+            log("Warning: Save called but no changes to commit")
+        }
+        #endif
+        
         isSaving = true
         needsAnotherSave = false
 
@@ -280,7 +286,7 @@ extension Model {
 
             DispatchQueue.main.async {
 				if needsAnotherSave {
-					performSave()
+					proceedWithSave()
 				} else {
 					isSaving = false
 					if let n = nextSaveCallbacks {

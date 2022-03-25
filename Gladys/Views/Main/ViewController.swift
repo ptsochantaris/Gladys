@@ -1240,85 +1240,87 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             editButton.isEnabled = true
         }
 
-        let selected = selectedItems
-        let selectedCount = selected.count
-		let someSelected = selectedCount > 0
-
-        func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
-            let colonText = colon && collection.bounds.width > 512 ? ":" : ""
-            itemsCount.title = "\(count) \(text)\(colonText)"
-        }
-
         let filteredDrops = filter.filteredDrops
-		let currentItemCount = filteredDrops.count
-		let c = someSelected ? selectedCount : currentItemCount
-		if c > 1 {
-			if someSelected {
-				setItemCountTitle(c, "Selected", colon: true)
-			} else {
-				setItemCountTitle(c, "Items", colon: false)
-			}
-		} else if c == 1 {
-			if someSelected {
-				setItemCountTitle(1, "Selected", colon: true)
-			} else {
-				setItemCountTitle(1, "Item", colon: false)
-			}
-		} else {
-			itemsCount.title = "No Items"
-		}
 
-        totalSizeLabel.title = "…"
-        dataAccessQueue.async(flags: .barrier) {
-            let drops: ContiguousArray<ArchivedItem>
-            if someSelected {
-                drops = filteredDrops.filter { selected.contains($0) }
-            } else {
-                drops = filteredDrops
+        if isEditing {
+            let selected = selectedItems
+            let selectedCount = selected.count
+            let someSelected = selectedCount > 0
+
+            func setItemCountTitle(_ count: Int, _ text: String, colon: Bool) {
+                let colonText = colon && collection.bounds.width > 512 ? ":" : ""
+                itemsCount.title = "\(count) \(text)\(colonText)"
             }
-            let size = drops.reduce(0) { $0 + $1.sizeInBytes }
-            let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
-            DispatchQueue.main.async {
-                self.totalSizeLabel.title = sizeLabel
-            }
-        }
-		deleteButton.isEnabled = someSelected
-		editLabelsButton.isEnabled = someSelected
-		shareButton.isEnabled = someSelected
 
-		updateLabelIcon()
-        currentLabelEditor?.selectedItems = selected.map { $0.uuid }
-		collection.isAccessibilityElement = filteredDrops.isEmpty
-
-        updateEmptyView()
-        
-        if currentItemCount == 0 {
-            itemsCount.isEnabled = false
-            itemsCount.menu = nil
-        } else {
-            var actions = [UIAction]()
-            if selectedCount < currentItemCount {
-                let selectTitle: String
-                let extra = currentItemCount - selectedCount
-                if extra < currentItemCount {
-                    selectTitle = "Select \(extra) More"
+            let currentItemCount = filteredDrops.count
+            let c = someSelected ? selectedCount : currentItemCount
+            if c > 1 {
+                if someSelected {
+                    setItemCountTitle(c, "Selected", colon: true)
                 } else {
-                    selectTitle = extra > 1 ? "Select \(extra) Items" : "Select Item"
+                    setItemCountTitle(c, "Items", colon: false)
                 }
-                actions.append(UIAction(title: selectTitle, image: UIImage(systemName: "square.grid.2x2.fill")) { [weak self] _ in
-                    self?.selectAll(nil)
-                })
+            } else if c == 1 {
+                if someSelected {
+                    setItemCountTitle(1, "Selected", colon: true)
+                } else {
+                    setItemCountTitle(1, "Item", colon: false)
+                }
+            } else {
+                itemsCount.title = "No Items"
             }
-            if selectedCount > 0 {
-                let title = selectedCount > 1 ? "Deselect All Items" : "Deselect Item"
-                actions.append(UIAction(title: title, image: UIImage(systemName: "square.grid.2x2")) { [weak self] _ in
-                    self?.deselectAll()
-                })
+
+            totalSizeLabel.title = "…"
+            dataAccessQueue.async(flags: .barrier) {
+                let drops: ContiguousArray<ArchivedItem>
+                if someSelected {
+                    drops = filteredDrops.filter { selected.contains($0) }
+                } else {
+                    drops = filteredDrops
+                }
+                let size = drops.reduce(0) { $0 + $1.sizeInBytes }
+                let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
+                DispatchQueue.main.async {
+                    self.totalSizeLabel.title = sizeLabel
+                }
             }
+            deleteButton.isEnabled = someSelected
+            editLabelsButton.isEnabled = someSelected
+            shareButton.isEnabled = someSelected
             
-            itemsCount.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: actions)
-            itemsCount.isEnabled = true
+            if currentItemCount == 0 {
+                itemsCount.isEnabled = false
+                itemsCount.menu = nil
+            } else {
+                var actions = [UIAction]()
+                if selectedCount < currentItemCount {
+                    let selectTitle: String
+                    let extra = currentItemCount - selectedCount
+                    if extra < currentItemCount {
+                        selectTitle = "Select \(extra) More"
+                    } else {
+                        selectTitle = extra > 1 ? "Select \(extra) Items" : "Select Item"
+                    }
+                    actions.append(UIAction(title: selectTitle, image: UIImage(systemName: "square.grid.2x2.fill")) { [weak self] _ in
+                        self?.selectAll(nil)
+                    })
+                }
+                if selectedCount > 0 {
+                    let title = selectedCount > 1 ? "Deselect All Items" : "Deselect Item"
+                    actions.append(UIAction(title: title, image: UIImage(systemName: "square.grid.2x2")) { [weak self] _ in
+                        self?.deselectAll()
+                    })
+                }
+                
+                itemsCount.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: actions)
+                itemsCount.isEnabled = true
+            }
+            currentLabelEditor?.selectedItems = selected.map { $0.uuid }
         }
+        
+		updateLabelIcon()
+		collection.isAccessibilityElement = filteredDrops.isEmpty
+        updateEmptyView()
 	}
 
 	@IBAction private func shareButtonSelected(_ sender: UIBarButtonItem) {
