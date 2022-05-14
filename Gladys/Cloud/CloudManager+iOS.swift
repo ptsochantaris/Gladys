@@ -82,9 +82,6 @@ extension CloudManager {
     }
 
     static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) {
-        if isStartup && syncSwitchedOn {
-            UIApplication.shared.registerForRemoteNotifications()
-        }
 		if syncSwitchedOn && !syncing && (isStartup || force || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60) {
 			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
 			sync { error in

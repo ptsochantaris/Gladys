@@ -10,6 +10,7 @@ import Cocoa
 import CoreSpotlight
 import HotKey
 import CloudKit
+import UserNotifications
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
@@ -214,13 +215,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
             sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
         }
+        
+        NSApplication.shared.registerForRemoteNotifications(matching: [])
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
+            if let error = error {
+                log("Notification permissions error: \(error.localizedDescription)")
+            } else {
+                log("Notification permissions request result: \(granted)")
+            }
+        }
 
         if PersistedOptions.badgeIconWithItemCount {
             Model.updateBadge()
         }
         
         if CloudManager.syncSwitchedOn {
-            NSApplication.shared.registerForRemoteNotifications(matching: [])
             CloudManager.sync { _ in }
         }
 
@@ -249,6 +258,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
     
 	func applicationDidFinishLaunching(_ notification: Notification) {
+        
 		AppDelegate.updateHotkey()
 
 		let wn = NSWorkspace.shared.notificationCenter

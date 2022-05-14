@@ -370,11 +370,6 @@ extension CloudManager {
                 Model.removeImportedShares()
                 syncSwitchedOn = false
                 lastiCloudAccount = nil
-                #if os(iOS)
-                UIApplication.shared.unregisterForRemoteNotifications()
-                #else
-                NSApplication.shared.unregisterForRemoteNotifications()
-                #endif
                 PersistedOptions.lastPushToken = nil
                 for item in Model.drops {
                     item.removeFromCloudkit()
@@ -398,13 +393,6 @@ extension CloudManager {
             if let error = error {
                 abortActivation(error, completion: completion)
             } else {
-                DispatchQueue.main.async {
-                    #if os(iOS)
-                        UIApplication.shared.registerForRemoteNotifications()
-                    #else
-                        NSApplication.shared.registerForRemoteNotifications(matching: [])
-                    #endif
-                }
                 fetchInitialUUIDSequence(zone: zone, completion: completion)
             }
         }

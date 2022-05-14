@@ -22,6 +22,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             CloudManager.opportunisticSyncIfNeeded(isStartup: true)
         }
         
+        UIApplication.shared.registerForRemoteNotifications()
+        
 		return true
 	}
     

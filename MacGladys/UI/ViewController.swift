@@ -142,9 +142,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
     
     private func itemCollectionNeedsDisplay() {
-        updateTitle()
         collection.animator().reloadData()
         touchBarScrubber?.reloadData()
+        DispatchQueue.main.async {
+            self.updateTitle()
+        }
     }
     
 	private var optionPressed: Bool {

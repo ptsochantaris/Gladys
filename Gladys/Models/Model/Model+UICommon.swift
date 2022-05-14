@@ -189,10 +189,14 @@ extension Model {
 		}
 	}
 
-    static func updateBadge() {
+    static let badgeTimer = PopTimer(timeInterval: 0.1) {
         DispatchQueue.main.async {
             _updateBadge()
         }
+    }
+    
+    static func updateBadge() {
+        self.badgeTimer.push()
     }
 
 	///////////////////////// Migrating
