@@ -1,52 +1,50 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "CallbackURLKit",
-        "repositoryURL": "https://github.com/phimage/CallbackURLKit",
-        "state": {
-          "branch": null,
-          "revision": "28664b3d4f37bb359d5ed729aa463cbedfba5d82",
-          "version": "2.3.2"
-        }
-      },
-      {
-        "package": "DeepDiff",
-        "repositoryURL": "https://github.com/onmyway133/DeepDiff.git",
-        "state": {
-          "branch": null,
-          "revision": "2639b3a11054d666a4c5ec1b7dd2808e437f3289",
-          "version": "2.3.3"
-        }
-      },
-      {
-        "package": "Fuzi",
-        "repositoryURL": "https://github.com/cezheng/Fuzi",
-        "state": {
-          "branch": null,
-          "revision": "f08c8323da21e985f3772610753bcfc652c2103f",
-          "version": "3.1.3"
-        }
-      },
-      {
-        "package": "HotKey",
-        "repositoryURL": "https://github.com/soffes/HotKey",
-        "state": {
-          "branch": null,
-          "revision": "c13662730cb5bc28de4a799854bbb018a90649bf",
-          "version": "0.1.3"
-        }
-      },
-      {
-        "package": "ZIPFoundation",
-        "repositoryURL": "https://github.com/weichsel/ZIPFoundation.git",
-        "state": {
-          "branch": null,
-          "revision": "7254c74b49cec2cb81520523ba993c671f71b066",
-          "version": "0.9.14"
-        }
+  "pins" : [
+    {
+      "identity" : "callbackurlkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/phimage/CallbackURLKit",
+      "state" : {
+        "revision" : "28664b3d4f37bb359d5ed729aa463cbedfba5d82",
+        "version" : "2.3.2"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "deepdiff",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onmyway133/DeepDiff.git",
+      "state" : {
+        "revision" : "2639b3a11054d666a4c5ec1b7dd2808e437f3289",
+        "version" : "2.3.3"
+      }
+    },
+    {
+      "identity" : "fuzi",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cezheng/Fuzi",
+      "state" : {
+        "revision" : "f08c8323da21e985f3772610753bcfc652c2103f",
+        "version" : "3.1.3"
+      }
+    },
+    {
+      "identity" : "hotkey",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/soffes/HotKey",
+      "state" : {
+        "revision" : "c13662730cb5bc28de4a799854bbb018a90649bf",
+        "version" : "0.1.3"
+      }
+    },
+    {
+      "identity" : "zipfoundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/weichsel/ZIPFoundation.git",
+      "state" : {
+        "revision" : "7254c74b49cec2cb81520523ba993c671f71b066",
+        "version" : "0.9.14"
+      }
+    }
+  ],
+  "version" : 2
 }

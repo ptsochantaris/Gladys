@@ -12,8 +12,7 @@ final class Greetings {
     static let openLine = "Ready! Drop me stuff."
     
 	static var randomCleanLine: String {
-		let count = UInt32(cleanLines.count)
-		return cleanLines[Int(arc4random_uniform(count))]
+        return cleanLines[Int.random(in: 0 ..< cleanLines.count)]
 	}
 	private static let cleanLines = [
 		"Tidy!",
@@ -37,8 +36,7 @@ final class Greetings {
 	]
 
 	static var randomGreetLine: String {
-		let count = UInt32(greetLines.count)
-		return greetLines[Int(arc4random_uniform(count))]
+        return greetLines[Int.random(in: 0 ..< greetLines.count)]
 	}
 	private static let greetLines = [
 		"Drop me more stuff!",
