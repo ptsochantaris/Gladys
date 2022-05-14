@@ -12,15 +12,15 @@ exit 1
 fi
 
 # Upload to Dev ID
-xcodebuild -exportArchive -archivePath ~/Desktop/macgladys.xcarchive -exportPath ~/Desktop/GladysExport -exportOptionsPlist exportDevID.plist
-
-if [ $? -eq 0 ]
-then
-echo
-else
-echo "!!! Exporting failed, stopping script"
-exit 1
-fi
+#xcodebuild -exportArchive -archivePath ~/Desktop/macgladys.xcarchive -exportPath ~/Desktop/GladysExport -exportOptionsPlist exportDevID.plist
+#
+#if [ $? -eq 0 ]
+#then
+#echo
+#else
+#echo "!!! Exporting failed, stopping script"
+#exit 1
+#fi
 
 # Upload to App Store
 xcodebuild -exportArchive -archivePath ~/Desktop/macgladys.xcarchive -exportPath ~/Desktop/GladysExport -exportOptionsPlist exportMac.plist
