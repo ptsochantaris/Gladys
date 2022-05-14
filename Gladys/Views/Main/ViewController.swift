@@ -1243,7 +1243,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let filteredDrops = filter.filteredDrops
 
         if isEditing {
-            let selected = selectedItems
+            let selected = Set(selectedItems)
             let selectedCount = selected.count
             let someSelected = selectedCount > 0
 
@@ -1272,12 +1272,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             totalSizeLabel.title = "…"
             dataAccessQueue.async(flags: .barrier) {
-                let drops: ContiguousArray<ArchivedItem>
-                if someSelected {
-                    drops = filteredDrops.filter { selected.contains($0) }
-                } else {
-                    drops = filteredDrops
-                }
+                let drops = someSelected ? filteredDrops.filter { selected.contains($0) } : filteredDrops
                 let size = drops.reduce(0) { $0 + $1.sizeInBytes }
                 let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
                 DispatchQueue.main.async {
