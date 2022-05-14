@@ -163,8 +163,8 @@ final class MiniMapView: FirstMouseView {
 	private func go() {
 		guard let coordinate = coordinate else { return }
 
-		let cacheKey = NSString(format: "%f %f", coordinate.latitude, coordinate.longitude)
-		if let existingImage = imageCache.object(forKey: cacheKey) {
+		let cacheKey = "\(coordinate.latitude) \(coordinate.longitude)"
+		if let existingImage = imageCache[cacheKey] {
 			layer?.contents = existingImage
 			return
 		}
@@ -190,7 +190,7 @@ final class MiniMapView: FirstMouseView {
 		S.start { snapshot, error in
 			if let snapshot = snapshot {
 				let img = snapshot.image
-				imageCache.setObject(img, forKey: cacheKey)
+				imageCache[cacheKey] = img
 				DispatchQueue.main.async { [weak self] in
 					self?.layer?.contents = img
 				}
@@ -342,7 +342,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 				image.flatColor()
 				let cacheKey = item.imageCacheKey
-				if let cachedImage = imageCache.object(forKey: cacheKey) {
+				if let cachedImage = imageCache[cacheKey] {
 					image.layer?.contents = cachedImage
 				} else {
 					imageProcessingQueue.async { [weak self] in
@@ -355,7 +355,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 							if img.isTemplate {
                                 img = img.template(with: NSColor.g_colorTint)
 							}
-							imageCache.setObject(img, forKey: cacheKey)
+							imageCache[cacheKey] = img
 							DispatchQueue.main.sync { [weak self] in
                                 if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
 									self.image.layer?.contents = img

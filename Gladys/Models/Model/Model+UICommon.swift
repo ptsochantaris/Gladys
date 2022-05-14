@@ -23,12 +23,24 @@ extension Model {
 	private static var isSaving = false
 	private static var nextSaveCallbacks: [() -> Void]?
 
-	static var sizeInBytes: Int64 {
-		return drops.reduce(0) { $0 + $1.sizeInBytes }
+    static func sizeInBytes(completion: @escaping (Int64) -> Void) {
+        let snapshot = drops
+        DispatchQueue.global(qos: .userInitiated).async {
+            let res = snapshot.reduce(0) { $0 + $1.sizeInBytes }
+            DispatchQueue.main.async {
+                completion(res)
+            }
+        }
 	}
 
-	static func sizeForItems(uuids: [UUID]) -> Int64 {
-		return drops.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
+	static func sizeForItems(uuids: [UUID], completion: @escaping (Int64) -> Void) {
+        let snapshot = drops
+        dataAccessQueue.sync {
+            let res = snapshot.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
+            DispatchQueue.main.async {
+                completion(res)
+            }
+        }
 	}
 
 	enum SortOption {

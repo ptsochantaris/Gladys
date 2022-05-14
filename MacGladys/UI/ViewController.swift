@@ -154,6 +154,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 	}
 
 	private func updateTitle() {
+        guard let window = view.window else { return }
+        
 		var title: String
 		if filter.isFilteringLabels {
 			title = filter.enabledLabelsForTitles.joined(separator: ", ")
@@ -164,17 +166,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 		let items = collection.actionableSelectedItems
 
 		if let syncStatus = CloudManager.syncProgressString {
-			view.window?.title = "\(title) — \(syncStatus)"
+			window.title = "\(title) — \(syncStatus)"
 
 		} else if items.count > 1 {
 			let selectedItems = items.map { $0.uuid }
-			let size = Model.sizeForItems(uuids: selectedItems)
-			let sizeString = diskSizeFormatter.string(fromByteCount: size)
-			let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
-			view.window?.title = "\(title) — \(selectedReport)"
+            window.title = "…"
+            Model.sizeForItems(uuids: selectedItems) { size in
+                let sizeString = diskSizeFormatter.string(fromByteCount: size)
+                let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
+                window.title = "\(title) — \(selectedReport)"
+            }
 
 		} else {
-			view.window?.title = title
+			window.title = title
 		}
 
 		collection.updateServices()

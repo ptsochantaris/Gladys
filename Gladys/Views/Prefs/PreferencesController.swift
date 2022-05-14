@@ -234,40 +234,47 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         updateUI()
     }
     
-	@objc private func updateUI() {
-		spinner.stopAnimating()
-		exportOnlyVisibleSwitch.isEnabled = true
-
+    @objc private func updateUI() {
+        spinner.stopAnimating()
+        exportOnlyVisibleSwitch.isEnabled = true
+        
         guard let filter = view.associatedFilter else { return }
-
-		let count = filter.eligibleDropsForExport.count
-		if PersistedOptions.exportOnlyVisibleItems {
-			if count > 0 {
-                let bytes = filter.sizeOfVisibleItemsInBytes
-				let size = diskSizeFormatter.string(fromByteCount: bytes)
-				if count > 1 {
-					infoLabel.text = "\(count) Visible Items\n\(size)"
-				} else {
-					infoLabel.text = "1 Visible Item\n\(size)"
-				}
-			} else {
-				infoLabel.text = "No Visible Items"
-			}
-		} else {
-			if count > 0 {
-				let size = diskSizeFormatter.string(fromByteCount: Model.sizeInBytes)
-				if count > 1 {
-					infoLabel.text = "\(count) Items\n\(size)"
-				} else {
-					infoLabel.text = "1 Item"
-				}
-			} else {
-				infoLabel.text = "No Items"
-			}
-		}
-		deleteAll.isEnabled = count > 0
-		container.accessibilityValue = infoLabel.text
-	}
+        
+        let count = filter.eligibleDropsForExport.count
+        infoLabel.text = "…"
+        if PersistedOptions.exportOnlyVisibleItems {
+            if count > 0 {
+                filter.sizeOfVisibleItemsInBytes { [weak self] bytes in
+                    guard let self = self else { return }
+                    let size = diskSizeFormatter.string(fromByteCount: bytes)
+                    if count > 1 {
+                        self.infoLabel.text = "\(count) Visible Items\n\(size)"
+                    } else {
+                        self.infoLabel.text = "1 Visible Item\n\(size)"
+                    }
+                }
+            } else {
+               infoLabel.text = "No Visible Items"
+           }
+        
+        } else {
+            if count > 0 {
+                filter.sizeOfVisibleItemsInBytes { [weak self] bytes in
+                    guard let self = self else { return }
+                    let size = diskSizeFormatter.string(fromByteCount: bytes)
+                    if count > 1 {
+                        self.infoLabel.text = "\(count) Items\n\(size)"
+                    } else {
+                        self.infoLabel.text = "1 Item\n\(size)"
+                    }
+                }
+            } else {
+                infoLabel.text = "No Items"
+            }
+        }
+        deleteAll.isEnabled = count > 0
+        container.accessibilityValue = infoLabel.text
+    }
 
 	///////////////////////////////////
 

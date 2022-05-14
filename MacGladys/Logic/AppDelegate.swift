@@ -253,7 +253,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func interfaceModeChanged(sender: NSNotification) {
-        imageCache.removeAllObjects()
+        imageCache.reset()
         NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
     }
     

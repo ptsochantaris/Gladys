@@ -151,7 +151,7 @@ extension Model {
             var isDir: ObjCBool = false
             FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
             if isDir.boolValue {
-                return NSItemProvider(item: url, typeIdentifier: kUTTypeFileURL as String)
+                return NSItemProvider(item: url as NSURL, typeIdentifier: kUTTypeFileURL as String)
             } else {
                 return NSItemProvider(contentsOf: url)
             }

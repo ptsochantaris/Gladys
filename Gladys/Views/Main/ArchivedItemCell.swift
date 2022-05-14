@@ -307,23 +307,22 @@ final class ArchivedItemCell: UICollectionViewCell {
 				hideImage = false
 				shared = item.shareMode
 
-				imageProcessingQueue.async { [weak self] in
-					if let self = self, let u1 = self.archivedDropItem?.uuid, u1 == item.uuid {
-						let cacheKey = item.imageCacheKey
-                        let image: UIImage
-						if let cachedImage = imageCache[cacheKey] {
-                            image = cachedImage
-						} else {
-                            image = item.displayIcon
-							imageCache[cacheKey] = image
-						}
-                        DispatchQueue.main.sync { [weak self] in
-                            if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
-                                self.image.image = image
+                let cacheKey = item.imageCacheKey
+                if let cachedImage = imageCache[cacheKey] {
+                    image.image = cachedImage
+                } else {
+                    imageProcessingQueue.async { [weak self] in
+                        if let self = self, let u1 = self.archivedDropItem?.uuid, u1 == item.uuid {
+                            let image = item.displayIcon
+                            imageCache[cacheKey] = image
+                            DispatchQueue.main.sync { [weak self] in
+                                if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
+                                    self.image.image = image
+                                }
                             }
                         }
-					}
-				}
+                    }
+                }
 
 				let primaryLabel: UILabel
 				let secondaryLabel: UILabel
