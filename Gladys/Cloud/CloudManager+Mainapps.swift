@@ -1050,7 +1050,6 @@ extension CloudManager {
         perform(deleteOperation, on: database, type: "delete share")
     }
 
-    @MainActor
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
             DispatchQueue.main.async {
@@ -1061,7 +1060,6 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     static func proceedWithActivation() {
         CloudManager.activate { error in
             DispatchQueue.main.async {
