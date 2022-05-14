@@ -228,17 +228,7 @@ final class ArchivedItemCell: UICollectionViewCell {
     }
 
 	@objc private func itemModified(_ notification: Notification) {
-        guard (notification.object as? ArchivedItem) == archivedDropItem else { return }
-        if !lowMemoryMode, viewWithTag(82646) == nil, let snap = snapshotView(afterScreenUpdates: true) {
-			snap.tag = 82646
-            addSubview(snap)
-            reDecorate()
-            UIView.animate(withDuration: 0.2, delay: 0, options: [], animations: {
-                snap.alpha = 0
-            }, completion: { _ in
-                snap.removeFromSuperview()
-            })
-        } else {
+        if (notification.object as? ArchivedItem) == archivedDropItem {
             reDecorate()
         }
 	}
