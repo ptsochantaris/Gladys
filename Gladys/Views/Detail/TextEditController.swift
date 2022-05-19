@@ -118,7 +118,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
 		typeEntry.markUpdated()
 		item.markUpdated()
 		item.needsReIngest = true
-        _ = typeEntry.reIngest { _ in
+        Task {
+            try? await typeEntry.reIngest()
             Model.save()
             self.delegate?.textEditControllerMadeChanges(self)
         }
