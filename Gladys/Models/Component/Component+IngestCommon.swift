@@ -56,19 +56,15 @@ extension Component {
                 }
 
                 log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
-                Component.ingestQueue.async {
-                    s.ingest(from: url) { [weak self] error in
+                Task {
+                    do {
+                        try await s.ingest(from: url)
                         overallProgress.completedUnitCount += 10
-                        if let s = self, let error = error {
-                            let error = s.ingestFailed(error: error)
-                            DispatchQueue.main.async {
-                                andCall?(error)
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                andCall?(nil)
-                            }
-                        }
+                        andCall?(nil)
+                    } catch {
+                        overallProgress.completedUnitCount += 10
+                        let error = s.ingestFailed(error: error)
+                        andCall?(error)
                     }
                 }
 			}
@@ -94,18 +90,18 @@ extension Component {
                 }
                 
                 log(">> Received type: [\(s.typeIdentifier)]")
-                Component.ingestQueue.async {
-                    s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) { [weak self] error in
+                Task {
+                    do {
+                        try await s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true)
                         overallProgress.completedUnitCount += 10
-                        if let s = self, let error = error {
-                            let error = s.ingestFailed(error: error)
-                            DispatchQueue.main.async {
-                                andCall?(error)
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                andCall?(nil)
-                            }
+                        DispatchQueue.main.async {
+                            andCall?(nil)
+                        }
+                    } catch {
+                        overallProgress.completedUnitCount += 10
+                        let error = s.ingestFailed(error: error)
+                        DispatchQueue.main.async {
+                            andCall?(error)
                         }
                     }
                 }
@@ -126,52 +122,28 @@ extension Component {
     func cancelIngest() {
         flags.insert(.loadingAborted)
     }
-
-    static let ingestQueue = DispatchQueue(label: "build.bru.Gladys.ingestQueue", qos: .userInitiated)
     
-    private func ingest(from url: URL, completion: @escaping (Error?) -> Void) {
+    private func ingest(from url: URL) async throws {
         // in thread!
         
 		clearCachedFields()
 		representedClass = .data
 		classWasWrapped = false
         
-        Task {
-            if let scheme = url.scheme, !scheme.hasPrefix("http") {
-                do {
-                    try await handleData(emptyData, resolveUrls: false, storeBytes: true)
-                    completion(nil)
-                } catch {
-                    completion(error)
-                }
-                return
-            }
+        if let scheme = url.scheme, !scheme.hasPrefix("http") {
+            try await handleData(emptyData, resolveUrls: false, storeBytes: true)
+            return
+        }
 
-            do {
-                let (data, _) = try await WebArchiver.archiveFromUrl(url)
-                if flags.contains(.loadingAborted) {
-                    let error = ingestFailed(error: nil)
-                    DispatchQueue.main.async {
-                        completion(error)
-                    }
-                } else {
-                    do {
-                        try await handleData(data, resolveUrls: false, storeBytes: true)
-                        completion(nil)
-                    } catch {
-                        completion(error)
-                    }
-                }
-            } catch {
-                let error = ingestFailed(error: error)
-                DispatchQueue.main.async {
-                    completion(error)
-                }
-            }
-		}
+        let (data, _) = try await WebArchiver.archiveFromUrl(url)
+        if flags.contains(.loadingAborted) {
+            throw ingestFailed(error: nil)
+        }
+        
+        try await handleData(data, resolveUrls: false, storeBytes: true)
 	}
 
-    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool, completion: @escaping (Error?) -> Void) {
+    private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool) async throws {
         // in thread!
 
 		clearCachedFields()
@@ -188,9 +160,6 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
                 return
 
             } else if let item = obj as? NSAttributedString {
@@ -201,9 +170,6 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
                 return
 
             } else if let item = obj as? COLOR {
@@ -213,9 +179,6 @@ extension Component {
                 representedClass = .color
                 if storeBytes {
                     setBytes(data)
-                }
-                DispatchQueue.main.async {
-                    completion(nil)
                 }
                 return
 
@@ -242,9 +205,6 @@ extension Component {
                         setBytes(data)
                     }
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
                 return
 
             } else if let item = obj as? MKMapItem {
@@ -254,20 +214,10 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
                 return
 
             } else if let item = obj as? URL {
-                Task {
-                    do {
-                        try await handleUrl(item, data, storeBytes)
-                        completion(nil)
-                    } catch {
-                        completion(error)
-                    }
-                }
+                try await handleUrl(item, data, storeBytes)
                 return
 
             } else if let item = obj as? NSArray {
@@ -281,9 +231,6 @@ extension Component {
                 representedClass = .array
                 if storeBytes {
                     setBytes(data)
-                }
-                DispatchQueue.main.async {
-                    completion(nil)
                 }
                 return
 
@@ -299,23 +246,13 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
                 return
             }
         }
         
         log("      not a known class, storing data: \(data)")
         representedClass = .data
-        Task {
-            do {
-                try await handleData(data, resolveUrls: true, storeBytes: storeBytes)
-                completion(nil)
-            } catch {
-                completion(error)
-            }
-        }
+        try await handleData(data, resolveUrls: true, storeBytes: storeBytes)
 	}
 
 	func setTitle(from url: URL) {
@@ -600,12 +537,14 @@ extension Component {
     func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
 		let overallProgress = Progress(totalUnitCount: 3)
 		overallProgress.completedUnitCount = 1
-        Component.ingestQueue.async { [weak self] in
-            guard let s = self else { return }
-            if let bytesCopy = s.bytes {
-                overallProgress.completedUnitCount += 1
-                s.ingest(data: bytesCopy, storeBytes: false) { error in
-                    assert(Thread.isMainThread)
+        Task {
+            if let bytesCopy = bytes {
+                do {
+                    overallProgress.completedUnitCount += 1
+                    try await ingest(data: bytesCopy, storeBytes: false)
+                    overallProgress.completedUnitCount += 1
+                    andCall(nil)
+                } catch {
                     overallProgress.completedUnitCount += 1
                     andCall(error)
                 }
