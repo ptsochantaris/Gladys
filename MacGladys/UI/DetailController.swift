@@ -499,25 +499,24 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		guard let i = components.selectionIndexes.first else { return }
 		let component = item.components[i]
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
-		cell.animateArchiving = true
-
-		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
-			if let error = error {
-				DispatchQueue.main.async { [weak self] in
-					if let w = self?.view.window {
-						genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
-					}
-				}
-			} else if let data = data, let typeIdentifier = typeIdentifier {
-				DispatchQueue.main.async {
+        Task {
+            cell.animateArchiving = true
+            do {
+                let (data, typeIdentifier) = try await WebArchiver.archiveFromUrl(url)
+                await MainActor.run {
                     let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-					self.item.components.append(newTypeItem)
-					self.saveItem()
-				}
-			}
-			DispatchQueue.main.async {
-				cell.animateArchiving = false
-			}
+                    item.components.append(newTypeItem)
+                    saveItem()
+                    cell.animateArchiving = false
+                }
+            } catch {
+                await MainActor.run {
+                    if let w = view.window {
+                        genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
+                        cell.animateArchiving = false
+                    }
+                }
+            }
 		}
 	}
 
@@ -527,19 +526,20 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 		guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
 		cell.animateArchiving = true
 
-		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
-			if let image = image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
-				DispatchQueue.main.async {
+        Task {
+            let res = try? await WebArchiver.fetchWebPreview(for: url)
+            if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
+                await MainActor.run {
 					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
 					self.item.components.append(newTypeItem)
 					self.saveItem()
 				}
 			} else {
-				DispatchQueue.main.async {
+                await MainActor.run {
 					genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
 				}
 			}
-			DispatchQueue.main.async {
+            await MainActor.run {
 				cell.animateArchiving = false
 			}
 		}

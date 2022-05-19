@@ -25,7 +25,7 @@ final class WebArchiver {
     }
 
     private static func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        if #available(iOS 15.0, iOSApplicationExtension 15.0, *) {
+        if #available(iOS 15.0, iOSApplicationExtension 15.0, macOS 12.0, *) {
             let res = try await URLSession.shared.data(for: request)
             if let response = res.1 as? HTTPURLResponse {
                 return (res.0, response)
