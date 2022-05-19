@@ -852,14 +852,16 @@ extension CloudManager {
                 return
             }
 
-            fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds), stats: stats) { error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
-                    } else {
-                        stats.updatedDatabaseTokens[database.databaseScope] = newToken
+            DispatchQueue.main.async {
+                fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds), stats: stats) { error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
+                        } else {
+                            stats.updatedDatabaseTokens[database.databaseScope] = newToken
+                        }
+                        completion(error, false)
                     }
-                    completion(error, false)
                 }
             }
         }

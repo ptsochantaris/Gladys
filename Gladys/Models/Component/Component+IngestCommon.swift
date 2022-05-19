@@ -127,17 +127,17 @@ extension Component {
             return
         }
 
-		WebArchiver.archiveFromUrl(url) { [weak self] data, _, error in
-			guard let s = self else { return }
-            if s.flags.contains(.loadingAborted) {
-                s.ingestFailed(error: nil, andCall: completion)
-                return
+        Task {
+            do {
+                let (data, _) = try await WebArchiver.archiveFromUrl(url)
+                if flags.contains(.loadingAborted) {
+                    ingestFailed(error: nil, andCall: completion)
+                } else {
+                    handleData(data, resolveUrls: false, storeBytes: true, andCall: completion)
+                }
+            } catch {
+                ingestFailed(error: error, andCall: completion)
             }
-			if let data = data {
-                s.handleData(data, resolveUrls: false, storeBytes: true, andCall: completion)
-			} else {
-                s.ingestFailed(error: error, andCall: completion)
-			}
 		}
 	}
 
@@ -431,26 +431,29 @@ extension Component {
     func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
 		log("      received remote url: \(url.absoluteString)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-		if let s = url.scheme, s.hasPrefix("http") {
-			WebArchiver.fetchWebPreview(for: url) { [weak self] title, _, image, isThumbnail in
-				guard let s = self else { return }
-                if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, andCall: andCall)
+		guard let s = url.scheme, s.hasPrefix("http") else {
+            completeIngest(andCall: andCall)
+            return
+        }
+
+        Task {
+            do {
+                let res = try await WebArchiver.fetchWebPreview(for: url)
+                if flags.contains(.loadingAborted) {
+                    ingestFailed(error: nil, andCall: andCall)
                     return
                 }
-                s.accessoryTitle = title ?? s.accessoryTitle
-                if let image = image {
+                accessoryTitle = res.title ?? accessoryTitle
+                if let image = res.image {
                     if image.size.height > 100 || image.size.width > 200 {
-                        s.setDisplayIcon(image, 30, isThumbnail ? .fill : .fit)
+                        setDisplayIcon(image, 30, res.isThumbnail ? .fill : .fit)
                     } else {
-                        s.setDisplayIcon(image, 30, .center)
+                        setDisplayIcon(image, 30, .center)
                     }
                 }
-                s.completeIngest(andCall: andCall)
-			}
-		} else {
-			completeIngest(andCall: andCall)
-		}
+            }
+            completeIngest(andCall: andCall)
+        }
 	}
 
     func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, andCall: ((Error?) -> Void)?) {

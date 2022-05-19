@@ -15,6 +15,14 @@ var currentWindow: UIWindow? {
 
 weak var lastUsedWindow: UIWindow?
 
+func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false) async {
+    await withCheckedContinuation { continuation in
+        genericAlert(title: title, message: message, autoDismiss: autoDismiss, buttonTitle: buttonTitle, offerSettingsShortcut: offerSettingsShortcut) {
+            continuation.resume()
+        }
+    }
+}
+
 @discardableResult
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) -> UIAlertController {
         

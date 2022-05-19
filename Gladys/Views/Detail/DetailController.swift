@@ -834,11 +834,15 @@ final class DetailController: GladysViewController,
 
 	private func archiveWebComponent(cell: DetailCell, url: URL) {
 		let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
-		a.addAction(UIAlertAction(title: "Archive Target", style: .default) { _ in
-			self.proceedToArchiveWebComponent(cell: cell, url: url)
+		a.addAction(UIAlertAction(title: "Archive Target", style: .default) { [weak self] _ in
+            Task { [weak self] in
+                await self?.proceedToArchiveWebComponent(cell: cell, url: url)
+            }
 		})
-		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { _ in
-			self.proceedToFetchLinkThumbnail(cell: cell, url: url)
+		a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { [weak self] _ in
+            Task { [weak self] in
+                await self?.proceedToFetchLinkThumbnail(cell: cell, url: url)
+            }
 		})
 		a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		if let p = a.popoverPresentationController {
@@ -848,24 +852,25 @@ final class DetailController: GladysViewController,
 		present(a, animated: true)
 	}
 
-	private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL) {
-		cell.animateArchive(true)
-		WebArchiver.fetchWebPreview(for: url) { _, _, image, _ in
-			if let image = image, let data = image.jpegData(compressionQuality: 1) {
-				DispatchQueue.main.async {
-					let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-					self.item.components.append(newTypeItem)
-					self.handleNewTypeItem()
-				}
-			} else {
-				DispatchQueue.main.async {
-					genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
-				}
-			}
-			DispatchQueue.main.async {
-				cell.animateArchive(false)
-			}
-		}
+	private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL) async {
+        cell.animateArchive(true)
+        defer {
+            cell.animateArchive(false)
+        }
+        do {
+            let res = try await WebArchiver.fetchWebPreview(for: url)
+            if let image = res.image, let data = image.jpegData(compressionQuality: 1) {
+                await MainActor.run {
+                    let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+                    self.item.components.append(newTypeItem)
+                    self.handleNewTypeItem()
+                }
+            } else {
+                await genericAlert(title: "Image Download Failed", message: "There seems to be invalid image data.")
+            }
+        } catch {
+            await genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
+        }
 	}
 
 	private func handleNewTypeItem() {
@@ -877,25 +882,22 @@ final class DetailController: GladysViewController,
 		}
 	}
 
-	private func proceedToArchiveWebComponent(cell: DetailCell, url: URL) {
+	private func proceedToArchiveWebComponent(cell: DetailCell, url: URL) async {
 		cell.animateArchive(true)
-		
-		WebArchiver.archiveFromUrl(url) { data, typeIdentifier, error in
-			if let error = error {
-				DispatchQueue.main.async {
-					genericAlert(title: "Archiving Failed", message: error.finalDescription)
-				}
-			} else if let data = data, let typeIdentifier = typeIdentifier {
-				DispatchQueue.main.async {
-					let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-					self.item.components.append(newTypeItem)
-					self.handleNewTypeItem()
-				}
-			}
-			DispatchQueue.main.async {
-				cell.animateArchive(false)
-			}
-		}
+        defer {
+            cell.animateArchive(false)
+        }
+        
+        do {
+            let (data, typeIdentifier) = try await WebArchiver.archiveFromUrl(url)
+            await MainActor.run {
+                let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+                self.item.components.append(newTypeItem)
+                self.handleNewTypeItem()
+            }
+        } catch {
+            await genericAlert(title: "Archiving Failed", message: error.finalDescription)
+        }
 	}
 
 	private func refreshComponent(_ component: Component) {

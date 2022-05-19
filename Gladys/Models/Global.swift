@@ -22,6 +22,7 @@ enum GladysError: Int {
     case unknownIngestError
     case actionCancelled
     case mainAppFailedToOpen
+    case blankResponse
     
     var error: NSError {
         let message: String
@@ -35,6 +36,7 @@ enum GladysError: Int {
         case .actionCancelled: message = "Action cancelled."
         case .mainAppFailedToOpen: message = "Main app could not be opened."
         case .cloudAccessTemporarilyUnavailable: message = "iCloud access is temporarily unavailable, you may need to re-sign in to your iCloud account."
+        case .blankResponse: message = "The server returned an invalid response but not error"
         }
         return NSError(domain: "build.bru.Gladys.error",
                        code: self.rawValue,
