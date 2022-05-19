@@ -81,6 +81,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
             
     func sceneWillEnterForeground(_ scene: UIScene) {
+        BackgroundTask.appForegrounded()
         updateWindowCount()
         log("Scene foregrounded")
         if let vc = scene.mainController {
@@ -93,6 +94,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
+        BackgroundTask.appBackgrounded()
         updateWindowCount()
         log("Scene backgrounded")
     }

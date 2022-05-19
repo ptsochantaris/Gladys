@@ -437,19 +437,18 @@ extension Component {
         }
 
         Task {
-            do {
-                let res = try await WebArchiver.fetchWebPreview(for: url)
-                if flags.contains(.loadingAborted) {
-                    ingestFailed(error: nil, andCall: andCall)
-                    return
-                }
-                accessoryTitle = res.title ?? accessoryTitle
-                if let image = res.image {
-                    if image.size.height > 100 || image.size.width > 200 {
-                        setDisplayIcon(image, 30, res.isThumbnail ? .fill : .fit)
-                    } else {
-                        setDisplayIcon(image, 30, .center)
-                    }
+            let res = try? await WebArchiver.fetchWebPreview(for: url)
+            if flags.contains(.loadingAborted) {
+                ingestFailed(error: nil, andCall: andCall)
+                return
+            }
+            accessoryTitle = res?.title ?? accessoryTitle
+            if let image = res?.image {
+                if image.size.height > 100 || image.size.width > 200 {
+                    let thumb = res?.isThumbnail ?? false
+                    setDisplayIcon(image, 30, thumb ? .fill : .fit)
+                } else {
+                    setDisplayIcon(image, 30, .center)
                 }
             }
             completeIngest(andCall: andCall)
