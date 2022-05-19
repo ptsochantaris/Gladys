@@ -237,7 +237,6 @@ extension ArchivedItem {
 
     func reIngest(completionGroup: DispatchGroup? = nil) {
         completionGroup?.enter()
-        let group = DispatchGroup()
         NotificationCenter.default.post(name: .IngestStart, object: self)
 
 		let loadCount = components.count
@@ -246,32 +245,29 @@ extension ArchivedItem {
         } else if isLocked {
             flags.insert(.needsUnlock)
         }
-		let p = Progress(totalUnitCount: Int64(loadCount * 100))
+		let p = Progress(totalUnitCount: Int64(loadCount))
 		loadingProgress = p
         
-		if loadCount == 0 { // can happen for example when all components are removed
-            group.enter()
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                group.leave()
-			}
-		} else {
-            if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
-				components.sort { $0.order < $1.order }
-			}
-			components.forEach { i in
-                group.enter()
-                let cp = i.reIngest { _ in
-                    group.leave()
-                }
-				p.addChild(cp, withPendingUnitCount: 100)
-			}
-		}
-        
-        group.notify(queue: .main) {
-            self.componentIngestDone()
-            completionGroup?.leave()
+        if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
+            components.sort { $0.order < $1.order }
         }
-	}
+        
+        Task {
+            await withTaskGroup(of: Void.self) { group in
+                for i in components {
+                    group.addTask {
+                        try? await i.reIngest()
+                        p.completedUnitCount += 1
+                    }
+                }
+            }
+           
+            await MainActor.run {
+                self.componentIngestDone()
+                completionGroup?.leave()
+            }
+        }
+    }
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
         var extractedData: Data?

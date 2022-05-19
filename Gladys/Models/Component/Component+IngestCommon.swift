@@ -534,28 +534,10 @@ extension Component {
 		}
 	}
 
-    func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
-		let overallProgress = Progress(totalUnitCount: 3)
-		overallProgress.completedUnitCount = 1
-        Task {
-            if let bytesCopy = bytes {
-                do {
-                    overallProgress.completedUnitCount += 1
-                    try await ingest(data: bytesCopy, storeBytes: false)
-                    overallProgress.completedUnitCount += 1
-                    andCall(nil)
-                } catch {
-                    overallProgress.completedUnitCount += 1
-                    andCall(error)
-                }
-            } else {
-                overallProgress.completedUnitCount += 2
-                DispatchQueue.main.async {
-                    andCall(nil)
-                }
-            }
+    func reIngest() async throws {
+        if let bytesCopy = bytes {
+            try await ingest(data: bytesCopy, storeBytes: false)
         }
-		return overallProgress
 	}
 
 	func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
