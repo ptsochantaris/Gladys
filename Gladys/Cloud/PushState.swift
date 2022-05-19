@@ -74,8 +74,9 @@ final class PushState {
 				if CloudManager.lastSyncCompletion == .distantPast {
 					if !currentUUIDSequence.isEmpty {
 						var mergedSequence = CloudManager.uuidSequence
+                        let mergedSet = Set(mergedSequence)
 						for i in currentUUIDSequence.reversed() {
-							if !mergedSequence.contains(i) {
+							if !mergedSet.contains(i) {
 								mergedSequence.insert(i, at: 0)
 							}
 						}
