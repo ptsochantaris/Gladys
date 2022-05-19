@@ -118,15 +118,7 @@ extension Component {
             representedClass = .data
             log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
             let data = Data.forceMemoryMapped(contentsOf: item) ?? emptyData
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                handleData(data, resolveUrls: false, storeBytes: storeBytes) { error in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
-                    }
-                }
-            }
+            try await handleData(data, resolveUrls: false, storeBytes: storeBytes)
         }
     }
 

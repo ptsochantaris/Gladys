@@ -30,7 +30,10 @@ extension Component {
                 guard let s = self else { return }
                 s.flags.remove(.isTransferring)
                 if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, andCall: andCall)
+                    let error = s.ingestFailed(error: nil)
+                    DispatchQueue.main.async {
+                        andCall?(error)
+                    }
                     return
                 }
 
@@ -45,7 +48,10 @@ extension Component {
                 
                 guard let url = assignedUrl else {
                     overallProgress.completedUnitCount += 10
-                    s.ingestFailed(error: error, andCall: andCall)
+                    let error = s.ingestFailed(error: error)
+                    DispatchQueue.main.async {
+                        andCall?(error)
+                    }
                     return
                 }
 
@@ -54,7 +60,10 @@ extension Component {
                     s.ingest(from: url) { [weak self] error in
                         overallProgress.completedUnitCount += 10
                         if let s = self, let error = error {
-                            s.ingestFailed(error: error, andCall: andCall)
+                            let error = s.ingestFailed(error: error)
+                            DispatchQueue.main.async {
+                                andCall?(error)
+                            }
                         } else {
                             DispatchQueue.main.async {
                                 andCall?(nil)
@@ -68,13 +77,19 @@ extension Component {
 				guard let s = self else { return }
                 s.flags.remove(.isTransferring)
                 if s.flags.contains(.loadingAborted) {
-                    s.ingestFailed(error: nil, andCall: andCall)
+                    let error = s.ingestFailed(error: nil)
+                    DispatchQueue.main.async {
+                        andCall?(error)
+                    }
                     return
                 }
                 
                 guard let data = data else {
                     overallProgress.completedUnitCount += 10
-                    s.ingestFailed(error: error, andCall: andCall)
+                    let error = s.ingestFailed(error: error)
+                    DispatchQueue.main.async {
+                        andCall?(error)
+                    }
                     return
                 }
                 
@@ -83,7 +98,10 @@ extension Component {
                     s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true) { [weak self] error in
                         overallProgress.completedUnitCount += 10
                         if let s = self, let error = error {
-                            s.ingestFailed(error: error, andCall: andCall)
+                            let error = s.ingestFailed(error: error)
+                            DispatchQueue.main.async {
+                                andCall?(error)
+                            }
                         } else {
                             DispatchQueue.main.async {
                                 andCall?(nil)
@@ -98,13 +116,11 @@ extension Component {
 		return overallProgress
 	}
 
-    private func ingestFailed(error: Error?, andCall: ((Error?) -> Void)?) {
+    private func ingestFailed(error: Error?) -> Error {
         let error = error ?? GladysError.unknownIngestError.error
 		log(">> Error receiving item: \(error.finalDescription)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
-        DispatchQueue.main.async {
-            andCall?(error)
-        }
+        return error
 	}
 
     func cancelIngest() {
@@ -120,21 +136,37 @@ extension Component {
 		representedClass = .data
 		classWasWrapped = false
         
-        if let scheme = url.scheme, !scheme.hasPrefix("http") {
-            handleData(emptyData, resolveUrls: false, storeBytes: true, andCall: completion)
-            return
-        }
-
         Task {
+            if let scheme = url.scheme, !scheme.hasPrefix("http") {
+                do {
+                    try await handleData(emptyData, resolveUrls: false, storeBytes: true)
+                    completion(nil)
+                } catch {
+                    completion(error)
+                }
+                return
+            }
+
             do {
                 let (data, _) = try await WebArchiver.archiveFromUrl(url)
                 if flags.contains(.loadingAborted) {
-                    ingestFailed(error: nil, andCall: completion)
+                    let error = ingestFailed(error: nil)
+                    DispatchQueue.main.async {
+                        completion(error)
+                    }
                 } else {
-                    handleData(data, resolveUrls: false, storeBytes: true, andCall: completion)
+                    do {
+                        try await handleData(data, resolveUrls: false, storeBytes: true)
+                        completion(nil)
+                    } catch {
+                        completion(error)
+                    }
                 }
             } catch {
-                ingestFailed(error: error, andCall: completion)
+                let error = ingestFailed(error: error)
+                DispatchQueue.main.async {
+                    completion(error)
+                }
             }
 		}
 	}
@@ -276,7 +308,14 @@ extension Component {
         
         log("      not a known class, storing data: \(data)")
         representedClass = .data
-        handleData(data, resolveUrls: true, storeBytes: storeBytes, andCall: completion)
+        Task {
+            do {
+                try await handleData(data, resolveUrls: true, storeBytes: storeBytes)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
 	}
 
 	func setTitle(from url: URL) {
@@ -456,8 +495,7 @@ extension Component {
 
         let res = try? await WebArchiver.fetchWebPreview(for: url)
         if flags.contains(.loadingAborted) {
-            ingestFailed(error: nil) { _ in }
-            return
+            throw ingestFailed(error: nil)
         }
         accessoryTitle = res?.title ?? accessoryTitle
         if let image = res?.image {
@@ -470,7 +508,7 @@ extension Component {
         }
 	}
 
-    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool, andCall: ((Error?) -> Void)?) {
+    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool) async throws {
 		if storeBytes {
 			setBytes(data)
 		}
@@ -520,14 +558,7 @@ extension Component {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if resolveUrls, let url = encodedUrl {
-            Task {
-                do {
-                    try await handleUrl(url as URL, data, storeBytes)
-                    andCall?(nil)
-                } catch {
-                    andCall?(error)
-                }
-            }
+            try await handleUrl(url as URL, data, storeBytes)
 			return // important
 
 		} else if typeConforms(to: kUTTypeText as CFString) {
@@ -564,10 +595,6 @@ extension Component {
 		} else {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}
-
-        DispatchQueue.main.async {
-            andCall?(nil)
-        }
 	}
 
     func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
