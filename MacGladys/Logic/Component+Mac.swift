@@ -62,7 +62,7 @@ extension Component {
 		}
 	}
 
-    private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
+    private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) async throws {
         if PersistedOptions.readAndStoreFinderTagsAsLabels {
             let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
             contributedLabels = resourceValues?.tagNames
@@ -73,71 +73,76 @@ extension Component {
 		accessoryTitle = item.lastPathComponent
 		let fm = FileManager.default
 		var directory: ObjCBool = false
-		if fm.fileExists(atPath: item.path, isDirectory: &directory) {
-			do {
-				if directory.boolValue {
-					typeIdentifier = kUTTypeZipArchive as String
-					setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
-					representedClass = .data
-					let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
-					let a = Archive(url: tempURL, accessMode: .create)!
-					let dirName = item.lastPathComponent
-					let item = item.deletingLastPathComponent()
-					try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
-                    if flags.contains(.loadingAborted) {
-						log("      Cancelled zip operation since ingest was aborted")
-						return
-					}
-					try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
-					log("      zipped files at url: \(item.absoluteString)")
-                    completeIngest(andCall: andCall)
+		guard fm.fileExists(atPath: item.path, isDirectory: &directory) else {
+            if storeBytes {
+                setBytes(data)
+            }
+            representedClass = .url
+            log("      received local file url for non-existent file: \(item.absoluteString)")
+            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            return
+        }
+        
+        if directory.boolValue {
+            do {
+                typeIdentifier = kUTTypeZipArchive as String
+                setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+                representedClass = .data
+                let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
+                let a = Archive(url: tempURL, accessMode: .create)!
+                let dirName = item.lastPathComponent
+                let item = item.deletingLastPathComponent()
+                try appendDirectory(item, chain: [dirName], archive: a, fm: fm)
+                if flags.contains(.loadingAborted) {
+                    log("      Cancelled zip operation since ingest was aborted")
+                    return
+                }
+                try fm.moveAndReplaceItem(at: tempURL, to: bytesPath)
+                log("      zipped files at url: \(item.absoluteString)")
+            } catch {
+                if storeBytes {
+                    setBytes(data)
+                }
+                representedClass = .url
+                log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
+                setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            }
+            
+        } else {
+            let ext = item.pathExtension
+            if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
+                typeIdentifier = uti as String
+            } else {
+                typeIdentifier = kUTTypeData as String
+            }
+            representedClass = .data
+            log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
+            let data = Data.forceMemoryMapped(contentsOf: item) ?? emptyData
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                handleData(data, resolveUrls: false, storeBytes: storeBytes) { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
 
-				} else {
-					let ext = item.pathExtension
-					if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
-						typeIdentifier = uti as String
-					} else {
-						typeIdentifier = kUTTypeData as String
-					}
-					representedClass = .data
-					log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-                    let data = Data.forceMemoryMapped(contentsOf: item) ?? emptyData
-                    handleData(data, resolveUrls: false, storeBytes: storeBytes, andCall: andCall)
-				}
-
-			} catch {
-				if storeBytes {
-					setBytes(data)
-				}
-				representedClass = .url
-				log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
-				setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-                completeIngest(andCall: andCall)
-			}
-		} else {
-			if storeBytes {
-				setBytes(data)
-			}
-			representedClass = .url
-			log("      received local file url for non-existent file: \(item.absoluteString)")
-			setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-			completeIngest(andCall: andCall)
-		}
-	}
-
-    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
+    func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
 
 		setTitle(from: url)
 
 		if url.isFileURL {
-			handleFileUrl(url, data, storeBytes, andCall)
+			try await handleFileUrl(url, data, storeBytes)
 
 		} else {
 			if storeBytes {
 				setBytes(data)
 			}
 			representedClass = .url
-            handleRemoteUrl(url, data, storeBytes, andCall)
+            try await handleRemoteUrl(url, data, storeBytes)
 		}
 	}
 
@@ -165,7 +170,7 @@ extension Component {
 				genericAlert(title: "Can't Open", message: message)
 			}
 		} else {
-			NSWorkspace.shared.openFile(bytesPath.path)
+            NSWorkspace.shared.open(bytesPath)
 		}
 	}
 

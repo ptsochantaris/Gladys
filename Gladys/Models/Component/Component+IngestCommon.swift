@@ -56,7 +56,9 @@ extension Component {
                         if let s = self, let error = error {
                             s.ingestFailed(error: error, andCall: andCall)
                         } else {
-                            s.completeIngest(andCall: andCall)
+                            DispatchQueue.main.async {
+                                andCall?(nil)
+                            }
                         }
                     }
                 }
@@ -83,7 +85,9 @@ extension Component {
                         if let s = self, let error = error {
                             s.ingestFailed(error: error, andCall: andCall)
                         } else {
-                            s.completeIngest(andCall: andCall)
+                            DispatchQueue.main.async {
+                                andCall?(nil)
+                            }
                         }
                     }
                 }
@@ -102,12 +106,6 @@ extension Component {
             andCall?(error)
         }
 	}
-
-    func completeIngest(andCall: ((Error?) -> Void)?) {
-        DispatchQueue.main.async {
-            andCall?(nil)
-        }
-    }
 
     func cancelIngest() {
         flags.insert(.loadingAborted)
@@ -158,7 +156,9 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? NSAttributedString {
@@ -169,7 +169,9 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? COLOR {
@@ -180,7 +182,9 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? IMAGE {
@@ -206,7 +210,9 @@ extension Component {
                         setBytes(data)
                     }
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? MKMapItem {
@@ -216,11 +222,20 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? URL {
-                handleUrl(item, data, storeBytes, completion)
+                Task {
+                    do {
+                        try await handleUrl(item, data, storeBytes)
+                        completion(nil)
+                    } catch {
+                        completion(error)
+                    }
+                }
                 return
 
             } else if let item = obj as? NSArray {
@@ -235,7 +250,9 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
 
             } else if let item = obj as? NSDictionary {
@@ -250,7 +267,9 @@ extension Component {
                 if storeBytes {
                     setBytes(data)
                 }
-                completeIngest(andCall: completion)
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
                 return
             }
         }
@@ -428,30 +447,26 @@ extension Component {
 		return typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
 	}
 
-    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool, _ andCall: ((Error?) -> Void)?) {
+    func handleRemoteUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
 		log("      received remote url: \(url.absoluteString)")
 		setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
 		guard let s = url.scheme, s.hasPrefix("http") else {
-            completeIngest(andCall: andCall)
-            return
+            throw GladysError.blankResponse.error
         }
 
-        Task {
-            let res = try? await WebArchiver.fetchWebPreview(for: url)
-            if flags.contains(.loadingAborted) {
-                ingestFailed(error: nil, andCall: andCall)
-                return
+        let res = try? await WebArchiver.fetchWebPreview(for: url)
+        if flags.contains(.loadingAborted) {
+            ingestFailed(error: nil) { _ in }
+            return
+        }
+        accessoryTitle = res?.title ?? accessoryTitle
+        if let image = res?.image {
+            if image.size.height > 100 || image.size.width > 200 {
+                let thumb = res?.isThumbnail ?? false
+                setDisplayIcon(image, 30, thumb ? .fill : .fit)
+            } else {
+                setDisplayIcon(image, 30, .center)
             }
-            accessoryTitle = res?.title ?? accessoryTitle
-            if let image = res?.image {
-                if image.size.height > 100 || image.size.width > 200 {
-                    let thumb = res?.isThumbnail ?? false
-                    setDisplayIcon(image, 30, thumb ? .fill : .fit)
-                } else {
-                    setDisplayIcon(image, 30, .center)
-                }
-            }
-            completeIngest(andCall: andCall)
         }
 	}
 
@@ -505,7 +520,14 @@ extension Component {
 			setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
 		} else if resolveUrls, let url = encodedUrl {
-            handleUrl(url as URL, data, storeBytes, andCall)
+            Task {
+                do {
+                    try await handleUrl(url as URL, data, storeBytes)
+                    andCall?(nil)
+                } catch {
+                    andCall?(error)
+                }
+            }
 			return // important
 
 		} else if typeConforms(to: kUTTypeText as CFString) {
@@ -543,7 +565,9 @@ extension Component {
 			setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
 		}
 
-		completeIngest(andCall: andCall)
+        DispatchQueue.main.async {
+            andCall?(nil)
+        }
 	}
 
     func reIngest(andCall: @escaping (Error?) -> Void) -> Progress {
@@ -560,7 +584,9 @@ extension Component {
                 }
             } else {
                 overallProgress.completedUnitCount += 2
-                s.completeIngest(andCall: andCall)
+                DispatchQueue.main.async {
+                    andCall(nil)
+                }
             }
         }
 		return overallProgress
