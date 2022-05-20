@@ -204,10 +204,14 @@ extension ArchivedItem {
 		let p = Progress(totalUnitCount: Int64(loadCount))
 		loadingProgress = p
         
+        await Task.detached {
+            ArchivedItem.ingestGate.wait()
+        }.value
+
         if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
             components.sort { $0.order < $1.order }
         }
-        
+                
         await withTaskGroup(of: Void.self) { group in
             for i in components {
                 group.addTask {
@@ -216,8 +220,10 @@ extension ArchivedItem {
                 }
             }
         }
-       
+        
         self.componentIngestDone()
+        
+        ArchivedItem.ingestGate.signal()
     }
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
@@ -252,12 +258,12 @@ extension ArchivedItem {
         Task.detached { [weak self] in
             guard let self = self else { return }
             ArchivedItem.ingestGate.wait()
-            await self._startNewItemIngest(providers: providers, limitToType: limitToType)
+            await self.newItemIngest(providers: providers, limitToType: limitToType)
             ArchivedItem.ingestGate.signal()
         }
     }
     
-    private func _startNewItemIngest(providers: [NSItemProvider], limitToType: String?) async {
+    private func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
 
         var componentsThatFailed = [Component]()
         
