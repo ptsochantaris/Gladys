@@ -243,12 +243,17 @@ extension ArchivedItem {
         return extractedData
     }
 
+    private static let ingestGate = DispatchSemaphore(value: 7)
+    
 	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let progress = Progress()
         loadingProgress = progress
         NotificationCenter.default.post(name: .IngestStart, object: self)
-        Task {
-            await _startNewItemIngest(providers: providers, limitToType: limitToType)
+        Task.detached { [weak self] in
+            guard let self = self else { return }
+            ArchivedItem.ingestGate.wait()
+            await self._startNewItemIngest(providers: providers, limitToType: limitToType)
+            ArchivedItem.ingestGate.signal()
         }
     }
     
