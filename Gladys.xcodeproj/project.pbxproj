@@ -336,6 +336,9 @@
 		16B89ED52523D6BB007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED42523D6BB007FD864 /* ZIPFoundation */; };
 		16B89ED72523D6BB007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED62523D6BB007FD864 /* Fuzi */; };
 		16B89F162523D885007FD864 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89F152523D885007FD864 /* HotKey */; };
+		16BBF2242837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
+		16BBF2252837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
+		16BBF2262837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
@@ -846,6 +849,7 @@
 		16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16B534BC237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+ActivityItemSource.swift"; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
+		16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Extensions.swift"; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -1059,6 +1063,7 @@
 				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
 				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
 				1690D8502651C31A00A07744 /* UserDefault.swift */,
+				16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2320,6 +2325,7 @@
 				1661B2C8245E258800BE888E /* CloudManager+Mainapps.swift in Sources */,
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
 				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
+				16BBF2262837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */,
 				16CD7D9620A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				1690D8582651C31A00A07744 /* UserDefault.swift in Sources */,
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
@@ -2400,6 +2406,7 @@
 				16CD7D7420A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */,
 				1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */,
+				16BBF2252837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */,
 				16CD7D9320A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
 				16CD7D8920A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
@@ -2518,6 +2525,7 @@
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				1690D8512651C31A00A07744 /* UserDefault.swift in Sources */,
 				16CD7D7F20A10AF10039E6C2 /* Component+Common.swift in Sources */,
+				16BBF2242837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */,
 				1658722C1FA7E0BC006EFB15 /* CenteredPinchGestureRecognizer.swift in Sources */,
 				166B6390236A451F00115AC3 /* FileMonitor.swift in Sources */,
 				16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */,

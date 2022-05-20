@@ -297,7 +297,9 @@ extension ArchivedItem {
             self.markUpdated()
             self.needsReIngest = true
             self.flags.insert(.skipMirrorAtNextSave)
-            self.reIngest()
+            Task {
+                await self.reIngest()
+            }
         }
     }
 }

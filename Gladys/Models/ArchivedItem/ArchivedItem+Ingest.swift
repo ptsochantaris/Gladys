@@ -60,134 +60,94 @@ extension ArchivedItem {
         }
         return nil
     }
-
-    private func initialIngestComplete() {
-        components.removeAll { !$0.dataExists }
-
-        #if MAC
-        for component in components {
-            if let contributedLabels = component.contributedLabels {
-                for candidate in contributedLabels where !labels.contains(candidate) {
-                    labels.append(candidate)
-                }
-                component.contributedLabels = nil
-            }
-        }
-        #endif
-        
-        let autoText = PersistedOptions.autoGenerateLabelsFromText
-        let autoImage = PersistedOptions.autoGenerateLabelsFromImage
-        let ocrImage = PersistedOptions.autoGenerateTextFromImage
-        let transcribeAudio = PersistedOptions.transcribeSpeechFromMedia
-        if autoText || autoImage || ocrImage || transcribeAudio {
-            processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
-        } else {
-            componentIngestDone()
-        }
-	}
     
-    private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) {
+    private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) async {
         let finalTitle = displayText.0
         var transcribedText: String?
-        let img: CGImage?
-        let mediaInfo: (URL, String)?
-        #if os(macOS)
-            if #available(OSX 10.15, *) {
-                img = imageOfImageComponentIfExists
-                mediaInfo = urlOfMediaComponentIfExists
-            } else {
-                img = nil
-                mediaInfo = nil
-            }
-        #else
-            img = imageOfImageComponentIfExists
-            mediaInfo = urlOfMediaComponentIfExists
-        #endif
+        let img = imageOfImageComponentIfExists
+        let mediaInfo = urlOfMediaComponentIfExists
 
-        let group = DispatchGroup()
         var tags1 = [String]()
         var tags2 = [String]()
+        
+        var visualRequests = [VNImageBasedRequest]()
+        var speechTask: SFSpeechRecognitionTask?
 
-        if #available(OSX 10.15, *) {
+        if (autoImage || ocrImage), displayMode == .fill, let img = img {
+
+            loadingProgress?.cancellationHandler = {
+                visualRequests.forEach { $0.cancel() }
+                speechTask?.cancel()
+            }
+
+            if autoImage {
+                let r = VNClassifyImageRequest { request, _ in
+                    if let observations = request.results as? [VNClassificationObservation] {
+                        let relevant = observations.filter {
+                            $0.hasMinimumPrecision(0.7, forRecall: 0)
+                        }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
+                        tags1.append(contentsOf: relevant)
+                    }
+                }
+                visualRequests.append(r)
+            }
             
-            var ocrRequests = [VNImageBasedRequest]()
-            var speechTask: SFSpeechRecognitionTask?
-
-            if (autoImage || ocrImage), displayMode == .fill, let img = img {
-                
-                if autoImage {
-                    let r = VNClassifyImageRequest { request, _ in
-                        if let observations = request.results as? [VNClassificationObservation] {
-                            let relevant = observations.filter {
-                                $0.hasMinimumPrecision(0.7, forRecall: 0)
-                            }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                            tags1.append(contentsOf: relevant)
+            if ocrImage {
+                let r = VNRecognizeTextRequest { request, _ in
+                    if let observations = request.results as? [VNRecognizedTextObservation] {
+                        let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !detectedText.isEmpty {
+                            transcribedText = detectedText
                         }
                     }
-                    ocrRequests.append(r)
                 }
-                
-                if ocrImage {
-                    let r = VNRecognizeTextRequest { request, _ in
-                        if let observations = request.results as? [VNRecognizedTextObservation] {
-                            let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
-                            if !detectedText.isEmpty {
-                                transcribedText = detectedText
-                            }
-                        }
-                    }
-                    r.recognitionLevel = .accurate
-                    ocrRequests.append(r)
-                }
-                
-                if !ocrRequests.isEmpty {
-                    let handler = VNImageRequestHandler(cgImage: img)
-                    group.enter()
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        try? handler.perform(ocrRequests)
-                        group.leave()
-                    }
-                }
+                r.recognitionLevel = .accurate
+                visualRequests.append(r)
+            }
+            
+            if !visualRequests.isEmpty {
+                let vr = visualRequests
+                let handler = VNImageRequestHandler(cgImage: img)
+                await Task.detached {
+                    try? handler.perform(vr)
+                }.value
             }
             
             if transcribeAudio, let (mediaUrl, ext) = mediaInfo, let recognizer = SFSpeechRecognizer(), recognizer.isAvailable, recognizer.supportsOnDeviceRecognition {
-                group.enter()
                 log("Will treat media file as \(ext) file for audio transcribing")
                 let link = Model.temporaryDirectoryUrl.appendingPathComponent(self.uuid.uuidString + "-audio-detect").appendingPathExtension(ext)
                 try? FileManager.default.linkItem(at: mediaUrl, to: link)
                 let request = SFSpeechURLRecognitionRequest(url: link)
                 request.requiresOnDeviceRecognition = true
-                speechTask = recognizer.recognitionTask(with: request) { result, error in
-                    if let error = error {
-                        log("Error transcribing media: \(error.localizedDescription)")
-                        try? FileManager.default.removeItem(at: link)
-                        group.leave()
-                    } else if let result = result, result.isFinal {
-                        let detectedText = result.bestTranscription.formattedString
-                        if !detectedText.isEmpty {
-                            transcribedText = detectedText
+
+                do {
+                    let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<SFSpeechRecognitionResult, Error>) in
+                        speechTask = recognizer.recognitionTask(with: request) { result, error in
+                            if let error = error {
+                                continuation.resume(throwing: error)
+                            } else if let result = result, result.isFinal {
+                                continuation.resume(with: .success(result))
+                            }
                         }
-                        try? FileManager.default.removeItem(at: link)
-                        group.leave()
                     }
+                    let detectedText = result.bestTranscription.formattedString
+                    if !detectedText.isEmpty {
+                        transcribedText = detectedText
+                    }
+                } catch {
+                    log("Error transcribing media: \(error.localizedDescription)")
                 }
-            }
-            
-            loadingProgress?.cancellationHandler = {
-                ocrRequests.forEach { $0.cancel() }
-                speechTask?.cancel()
+                try? FileManager.default.removeItem(at: link)
             }
         }
         
-        let finalGroup = DispatchGroup()
-        finalGroup.enter()
-        group.notify(queue: .global(qos: .userInitiated)) {
-            if autoText, let finalTitle = transcribedText ?? finalTitle {
+        if autoText, let finalTitle = transcribedText ?? finalTitle {
+            let tagTask = Task.detached { () -> [String] in
                 let tagger = NLTagger(tagSchemes: [.nameType])
                 tagger.string = finalTitle
                 let range = finalTitle.startIndex ..< finalTitle.endIndex
                 let results = tagger.tags(in: range, unit: .word, scheme: .nameType, options: [.omitWhitespace, .omitOther, .omitPunctuation, .joinNames])
-                let textTags = results.compactMap { token -> String? in
+                return results.compactMap { token -> String? in
                     guard let tag = token.0 else { return nil }
                     switch tag {
                     case .placeName, .personalName, .organizationName, .noun:
@@ -196,28 +156,24 @@ extension ArchivedItem {
                         return nil
                     }
                 }
-                tags2.append(contentsOf: textTags)
-                finalGroup.leave()
-            } else {
-                finalGroup.leave()
             }
+            tags2.append(contentsOf: await tagTask.value)
         }
         
-        finalGroup.notify(queue: .main) {
-            if let t = transcribedText {
-                let data = Data(t.utf8)
-                let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
-                newComponent.accessoryTitle = t
-                self.components.insert(newComponent, at: 0)
-            }
-            let newTags = tags1 + tags2
-            for tag in newTags where !self.labels.contains(tag) {
-                self.labels.append(tag)
-            }
-            self.componentIngestDone()
+        if let t = transcribedText {
+            let data = Data(t.utf8)
+            let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
+            newComponent.accessoryTitle = t
+            self.components.insert(newComponent, at: 0)
+        }
+        
+        let newTags = tags1 + tags2
+        for tag in newTags where !self.labels.contains(tag) {
+            self.labels.append(tag)
         }
     }
     
+    @MainActor
     private func componentIngestDone() {
         imageCache[imageCacheKey] = nil
         loadingProgress = nil
@@ -234,11 +190,11 @@ extension ArchivedItem {
 	var loadingAborted: Bool {
         return components.contains { $0.flags.contains(.loadingAborted) }
 	}
-
-    func reIngest(completionGroup: DispatchGroup? = nil) {
-        completionGroup?.enter()
+    
+    @MainActor
+    func reIngest() async {
         NotificationCenter.default.post(name: .IngestStart, object: self)
-
+        
 		let loadCount = components.count
         if isTemporarilyUnlocked {
             flags.remove(.needsUnlock)
@@ -252,21 +208,16 @@ extension ArchivedItem {
             components.sort { $0.order < $1.order }
         }
         
-        Task {
-            await withTaskGroup(of: Void.self) { group in
-                for i in components {
-                    group.addTask {
-                        try? await i.reIngest()
-                        p.completedUnitCount += 1
-                    }
+        await withTaskGroup(of: Void.self) { group in
+            for i in components {
+                group.addTask {
+                    try? await i.reIngest()
+                    p.completedUnitCount += 1
                 }
             }
-           
-            await MainActor.run {
-                self.componentIngestDone()
-                completionGroup?.leave()
-            }
         }
+       
+        self.componentIngestDone()
     }
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
@@ -293,10 +244,16 @@ extension ArchivedItem {
     }
 
 	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
-        let group = DispatchGroup()
+        let progress = Progress()
+        loadingProgress = progress
         NotificationCenter.default.post(name: .IngestStart, object: self)
+        Task {
+            await _startNewItemIngest(providers: providers, limitToType: limitToType)
+        }
+    }
+    
+    private func _startNewItemIngest(providers: [NSItemProvider], limitToType: String?) async {
 
-		var progressChildren = [Progress]()
         var componentsThatFailed = [Component]()
         
 		for provider in providers {
@@ -310,8 +267,7 @@ extension ArchivedItem {
 				identifiers = [limit]
 			}
 
-			func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) {
-                
+			func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) async {
                 // replace provider if we want to convert strings to URLs
                 var finalProvider = provider
                 var finalType = type
@@ -329,42 +285,55 @@ extension ArchivedItem {
                 }
 
                 let i = Component(typeIdentifier: finalType, parentUuid: uuid, order: order)
-                group.enter()
-                let p = i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive) { error in
-                    if let error = error {
-                        componentsThatFailed.append(i)
-                        log("Import error: \(error.finalDescription)")
-                    }
-                    group.leave()
+                let p = Progress()
+                loadingProgress?.totalUnitCount += 2
+                loadingProgress?.addChild(p, withPendingUnitCount: 2)
+                do {
+                    try await i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive, progress: p)
+                } catch {
+                    componentsThatFailed.append(i)
+                    log("Import error: \(error.finalDescription)")
                 }
-				progressChildren.append(p)
-				components.append(i)
+                components.append(i)
 			}
 
 			var order = 0
 			for typeIdentifier in identifiers {
 				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
-					addTypeItem(type: "public.image", encodeUIImage: true, createWebArchive: false, order: order)
+					await addTypeItem(type: "public.image", encodeUIImage: true, createWebArchive: false, order: order)
 					order += 1
 				}
 
-				addTypeItem(type: typeIdentifier, encodeUIImage: false, createWebArchive: false, order: order)
+				await addTypeItem(type: typeIdentifier, encodeUIImage: false, createWebArchive: false, order: order)
 				order += 1
 
 				if typeIdentifier == "public.url" && shouldArchiveUrls {
-					addTypeItem(type: "com.apple.webarchive", encodeUIImage: false, createWebArchive: true, order: order)
+					await addTypeItem(type: "com.apple.webarchive", encodeUIImage: false, createWebArchive: true, order: order)
 					order += 1
 				}
 			}
 		}
-		let p = Progress(totalUnitCount: Int64(progressChildren.count * 100))
-		for c in progressChildren {
-			p.addChild(c, withPendingUnitCount: 100)
-		}
-        loadingProgress = p
         
-        group.notify(queue: .main) {
-            self.initialIngestComplete()
+        components.removeAll { !$0.dataExists }
+
+        #if MAC
+        for component in components {
+            if let contributedLabels = component.contributedLabels {
+                for candidate in contributedLabels where !labels.contains(candidate) {
+                    labels.append(candidate)
+                }
+                component.contributedLabels = nil
+            }
         }
+        #endif
+        
+        let autoText = PersistedOptions.autoGenerateLabelsFromText
+        let autoImage = PersistedOptions.autoGenerateLabelsFromImage
+        let ocrImage = PersistedOptions.autoGenerateTextFromImage
+        let transcribeAudio = PersistedOptions.transcribeSpeechFromMedia
+        if autoText || autoImage || ocrImage || transcribeAudio {
+            await processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
+        }
+        await componentIngestDone()
 	}
 }

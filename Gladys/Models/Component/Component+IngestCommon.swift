@@ -21,96 +21,54 @@ extension Component {
 
     static let iconPointSize = CGSize(width: 256, height: 256)
 
-    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, andCall: ((Error?) -> Void)?) -> Progress {
-		let overallProgress = Progress(totalUnitCount: 20)
-
-		let p: Progress
-		if createWebArchive {
-			p = provider.loadDataRepresentation(forTypeIdentifier: "public.url") { [weak self] data, error in
-                guard let s = self else { return }
-                s.flags.remove(.isTransferring)
-                if s.flags.contains(.loadingAborted) {
-                    let error = s.ingestFailed(error: nil)
-                    DispatchQueue.main.async {
-                        andCall?(error)
-                    }
-                    return
+    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, progress: Progress) async throws {
+        progress.totalUnitCount = 2
+        
+        do {
+            if createWebArchive {
+                let data = try await provider.loadDataRepresentation(for: "public.url")
+                progress.completedUnitCount += 1
+                flags.remove(.isTransferring)
+                
+                if flags.contains(.loadingAborted) {
+                    throw ingestFailed(error: nil)
                 }
-
-				var assignedUrl: URL?
-				if let data = data, let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
-					if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
-						assignedUrl = u
-					} else if let array = propertyList as? [Any], let urlString = array.first as? String, let u = URL(string: urlString) { // usually on iOS
-						assignedUrl = u
-					}
-				}
+                
+                var assignedUrl: URL?
+                if let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
+                    if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
+                        assignedUrl = u
+                    } else if let array = propertyList as? [Any], let urlString = array.first as? String, let u = URL(string: urlString) { // usually on iOS
+                        assignedUrl = u
+                    }
+                }
                 
                 guard let url = assignedUrl else {
-                    overallProgress.completedUnitCount += 10
-                    let error = s.ingestFailed(error: error)
-                    DispatchQueue.main.async {
-                        andCall?(error)
-                    }
-                    return
-                }
-
-                log(">> Resolved url to read data from: [\(s.typeIdentifier)]")
-                Task {
-                    do {
-                        try await s.ingest(from: url)
-                        overallProgress.completedUnitCount += 10
-                        andCall?(nil)
-                    } catch {
-                        overallProgress.completedUnitCount += 10
-                        let error = s.ingestFailed(error: error)
-                        andCall?(error)
-                    }
-                }
-			}
-		} else {
-			p = provider.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { [weak self] data, error in
-				guard let s = self else { return }
-                s.flags.remove(.isTransferring)
-                if s.flags.contains(.loadingAborted) {
-                    let error = s.ingestFailed(error: nil)
-                    DispatchQueue.main.async {
-                        andCall?(error)
-                    }
-                    return
+                    throw ingestFailed(error: nil)
                 }
                 
-                guard let data = data else {
-                    overallProgress.completedUnitCount += 10
-                    let error = s.ingestFailed(error: error)
-                    DispatchQueue.main.async {
-                        andCall?(error)
-                    }
-                    return
+                log(">> Resolved url to read data from: [\(typeIdentifier)]")
+                try await ingest(from: url)
+                progress.completedUnitCount += 1
+                
+            } else {
+                let data = try await provider.loadDataRepresentation(for: typeIdentifier)
+                progress.completedUnitCount += 1
+                flags.remove(.isTransferring)
+                
+                if flags.contains(.loadingAborted) {
+                    throw ingestFailed(error: nil)
                 }
                 
-                log(">> Received type: [\(s.typeIdentifier)]")
-                Task {
-                    do {
-                        try await s.ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true)
-                        overallProgress.completedUnitCount += 10
-                        DispatchQueue.main.async {
-                            andCall?(nil)
-                        }
-                    } catch {
-                        overallProgress.completedUnitCount += 10
-                        let error = s.ingestFailed(error: error)
-                        DispatchQueue.main.async {
-                            andCall?(error)
-                        }
-                    }
-                }
-			}
-		}
-
-		overallProgress.addChild(p, withPendingUnitCount: 10)
-		return overallProgress
-	}
+                log(">> Received type: [\(typeIdentifier)]")
+                try await ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true)
+                progress.completedUnitCount += 1
+            }
+        } catch {
+            flags.remove(.isTransferring)
+            throw ingestFailed(error: error)
+        }
+    }
 
     private func ingestFailed(error: Error?) -> Error {
         let error = error ?? GladysError.unknownIngestError.error

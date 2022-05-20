@@ -30,7 +30,9 @@ extension Model {
 				parent.needsReIngest = true
 				parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID)")
-				parent.reIngest()
+                Task {
+                    await parent.reIngest()
+                }
             } else {
                 log("No change detected")
             }
@@ -43,7 +45,9 @@ extension Model {
 			log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
 			item.needsReIngest = true
 			item.markUpdated()
-			item.reIngest()
+            Task {
+                await item.reIngest()
+            }
 		}
 	}
 

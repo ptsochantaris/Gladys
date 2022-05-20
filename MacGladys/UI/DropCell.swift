@@ -180,7 +180,7 @@ final class MiniMapView: FirstMouseView {
 		let O = MKMapSnapshotter.Options()
 		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
 		O.showsBuildings = true
-        O.showsPointsOfInterest = true
+        O.pointOfInterestFilter = .includingAll
 		O.size = NSSize(width: 512, height: 512)
 		snapshotOptions = O
 
