@@ -61,74 +61,34 @@ final class ColourView: UIView {}
 
 final class MiniMapView: UIImageView {
 
-	private var coordinate: CLLocationCoordinate2D?
-	private weak var snapshotter: MKMapSnapshotter?
-	private var snapshotOptions: MKMapSnapshotter.Options?
+    private var snapshotOptions = Images.SnapshotOptions(coordinate: kCLLocationCoordinate2DInvalid, range: 200, outputSize: CGSize(width: 512, height: 512))
 
 	func show(location: MKMapItem) {
 
 		let newCoordinate = location.placemark.coordinate
-		if let coordinate = coordinate,
-			newCoordinate.latitude == coordinate.latitude,
-			newCoordinate.longitude == coordinate.longitude { return }
+        if snapshotOptions.coordinate == newCoordinate { return }
+        snapshotOptions.coordinate = newCoordinate
+        
+        let cacheKey = "\(newCoordinate.latitude) \(newCoordinate.longitude)"
+        if let existingImage = imageCache[cacheKey] {
+            image = existingImage
+            return
+        }
 
-		image = nil
-		snapshotOptions = nil
-		coordinate = newCoordinate
-		setNeedsLayout()
+        image = nil
+
+        Task {
+            if let img = try? await Images.shared.mapSnapshot(with: snapshotOptions) {
+                imageCache[cacheKey] = img
+                image = img
+            }
+        }
 	}
 
 	init(at location: MKMapItem) {
 		super.init(frame: .zero)
 		contentMode = .center
 		show(location: location)
-	}
-
-	override func layoutSubviews() {
-		super.layoutSubviews()
-
-		guard let coordinate = coordinate else { return }
-		if bounds.isEmpty || image?.size == bounds.size { return }
-
-		let cacheKey = String(format: "%f %f %f %f", coordinate.latitude, coordinate.longitude, bounds.size.width, bounds.size.height)
-        if let existingImage = imageCache[cacheKey] {
-			image = existingImage
-			return
-		}
-
-		if let o = snapshotOptions, o.region.center.latitude == coordinate.latitude && o.region.center.longitude == coordinate.longitude && o.size == bounds.size {
-			return
-		}
-
-		snapshotter?.cancel()
-		snapshotter = nil
-		alpha = 0
-
-		let O = MKMapSnapshotter.Options()
-		O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 200.0, longitudinalMeters: 200.0)
-		O.showsBuildings = true
-        O.pointOfInterestFilter = .includingAll
-		O.size = bounds.size
-		snapshotOptions = O
-
-		let S = MKMapSnapshotter(options: O)
-		snapshotter = S
-
-		S.start { snapshot, error in
-			if let snapshot = snapshot {
-				let img = snapshot.image
-                imageCache[cacheKey] = img
-				DispatchQueue.main.async { [weak self] in
-					self?.image = img
-					UIView.animate(withDuration: 0.15) {
-						self?.alpha = 1
-					}
-				}
-			}
-			if let error = error {
-				log("Error taking map snapshot: \(error.finalDescription)")
-			}
-		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {

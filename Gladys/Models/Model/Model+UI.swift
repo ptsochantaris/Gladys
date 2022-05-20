@@ -99,19 +99,12 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	}
 
 	private func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage, replyHandler: @escaping ([String: Any]) -> Void) {
-		let O = MKMapSnapshotter.Options()
-		O.region = MKCoordinateRegion(center: mapItem.placemark.coordinate, latitudinalMeters: 150.0, longitudinalMeters: 150.0)
-		O.size = size
-		O.showsBuildings = true
-        O.pointOfInterestFilter = .includingAll
-		let S = MKMapSnapshotter(options: O)
-		S.start { snapshot, error in
-			if let error = error {
-				log("Error taking map snapshot: \(error.finalDescription)")
-			}
-			if let snapshot = snapshot {
-				self.proceedWithImage(snapshot.image, size: size, mode: .fill, replyHandler: replyHandler)
-			} else {
+        Task {
+            do {
+                let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
+                let img = try await Images.shared.mapSnapshot(with: options)
+                self.proceedWithImage(img, size: size, mode: .fill, replyHandler: replyHandler)
+			} catch {
 				self.proceedWithImage(fallbackIcon, size: size, mode: .center, replyHandler: replyHandler)
 			}
 		}

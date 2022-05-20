@@ -340,6 +340,11 @@
 		16BBF2252837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
 		16BBF2262837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
+		16BDAF1D28382F6300B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF1E2838347A00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF1F2838347F00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF202838347F00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF2128383A6E00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -851,6 +856,7 @@
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
 		16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Extensions.swift"; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
+		16BDAF1C28382F6300B3EEF3 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
@@ -1169,6 +1175,7 @@
 				16C3A2D520AF76A600A04F10 /* Component+BackgroundInfoObject.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
 				16906A9323C8C0C700D6C177 /* Component+iOS.swift */,
+				16BDAF1C28382F6300B3EEF3 /* Images.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -2312,6 +2319,7 @@
 				16114840209F95C3008BB332 /* WebArchiver.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718D92094D73F005ABD6C /* FileManager+Extensions.swift in Sources */,
+				16BDAF2128383A6E00B3EEF3 /* Images.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
@@ -2436,6 +2444,7 @@
 				1657B8BF1FD41E6B00EC480D /* Component.swift in Sources */,
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16C3A2D820AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
+				16BDAF1F2838347F00B3EEF3 /* Images.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
 				162BDD7A220F020F00A3C17B /* Logging.swift in Sources */,
 				1602F3272030E5F10036E2B0 /* Notifications.swift in Sources */,
@@ -2486,6 +2495,7 @@
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				16906A9423C8C0C700D6C177 /* Component+iOS.swift in Sources */,
+				16BDAF1D28382F6300B3EEF3 /* Images.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */,
 				16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */,
 				1602F3182030E4C90036E2B0 /* Data+Extensions.swift in Sources */,
@@ -2607,6 +2617,7 @@
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
+				16BDAF1E2838347A00B3EEF3 /* Images.swift in Sources */,
 				16EC10452607B21500ABE6D2 /* Color+Extensions.swift in Sources */,
 				1690D8542651C31A00A07744 /* UserDefault.swift in Sources */,
 				1602F32D2030E6240036E2B0 /* FileManager+Extensions.swift in Sources */,
@@ -2654,6 +2665,7 @@
 				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
 				16B2AA4E24DF47CA004F3FC2 /* ModelFilePresenter.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
+				16BDAF202838347F00B3EEF3 /* Images.swift in Sources */,
 				16B2AA4F24DF47D3004F3FC2 /* Notifications.swift in Sources */,
 				16FC0B3727E929F300CF3290 /* Cache.swift in Sources */,
 				16B2AA5524DF4996004F3FC2 /* Component.swift in Sources */,
