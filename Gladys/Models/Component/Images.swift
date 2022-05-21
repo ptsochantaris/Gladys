@@ -35,14 +35,7 @@ final class Images {
     private let cache = Cache<String, IMAGE>()
     
     static let shared = Images()
-    
-    func warmUp(for item: ArchivedItem) {
-        let cacheKey = item.imageCacheKey
-        if cache[cacheKey] == nil {
-            cache[cacheKey] = item.displayIcon
-        }
-    }
-    
+        
     func image(for item: ArchivedItem) -> IMAGE? {
         let cacheKey = item.imageCacheKey
         if let cachedImage = cache[cacheKey] {

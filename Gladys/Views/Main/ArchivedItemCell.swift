@@ -240,12 +240,6 @@ final class ArchivedItemCell: UICollectionViewCell {
 			decorate(with: archivedDropItem)
 		}
 	}
-
-	static func warmUp(for item: ArchivedItem) {
-        Task.detached {
-            Images.shared.warmUp(for: item)
-        }
-	}
     
     private var isFirstImport: Bool {
         guard let item = archivedDropItem else { return false }

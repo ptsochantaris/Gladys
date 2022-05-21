@@ -68,7 +68,7 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
 	from.present(a, animated: true)
 }
 
-final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
+final class ViewController: GladysViewController, UICollectionViewDelegate,
 	UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate {
     
@@ -220,16 +220,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 			return [dragItem]
 		}
 	}
-
-	func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-		for indexPath in indexPaths {
-            if let item = item(for: indexPath) {
-                ArchivedItemCell.warmUp(for: item)
-            }
-		}
-	}
-
-	func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {}
     
 	func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		let center = cell.center
