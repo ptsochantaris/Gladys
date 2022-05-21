@@ -452,35 +452,29 @@ final class DetailController: GladysViewController,
     private var shouldWaitForSync: Bool {
         return CloudManager.syncing || item.needsReIngest || item.isTransferring
     }
-    private func afterSync(completion: @escaping () -> Void) {
-        if shouldWaitForSync {
-            var keepChecking = true
-            let alert = genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") {
-                keepChecking = false
-            }
-            DispatchQueue.global(qos: .background).async {
-                while keepChecking {
-                    Thread.sleep(forTimeInterval: 0.25)
-                    DispatchQueue.main.async { [weak self] in
-                        if let s = self, s.shouldWaitForSync {
-                            // keep going
-                        } else {
-                            keepChecking = false
-                            alert.dismiss(animated: true) {
-                                completion()
-                            }
-                        }
-                    }
+    private func afterSync() async {
+        guard shouldWaitForSync else { return }
+        
+        var keepChecking = true
+        let alert = genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") {
+            keepChecking = false
+        }
+        
+        Task {
+            while keepChecking {
+                try await Task.sleep(nanoseconds: 25 * NSEC_PER_MSEC)
+                if !shouldWaitForSync {
+                    keepChecking = false
+                    alert.dismiss(animated: true)
                 }
             }
-        } else {
-            completion()
         }
     }
 
     private func removeLabel(_ label: String) {
-        afterSync { [weak self] in
-            self?._removeLabel(label)
+        Task {
+            await afterSync()
+            _removeLabel(label)
         }
     }
     
@@ -499,8 +493,9 @@ final class DetailController: GladysViewController,
     }
 
     private func removeComponent(_ component: Component) {
-        afterSync { [weak self] in
-            self?._removeComponent(component)
+        Task {
+            await afterSync()
+            _removeComponent(component)
         }
     }
     

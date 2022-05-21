@@ -26,7 +26,7 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
     private let entries = [
         Entry(title: "Shortcut Menus",
               body: """
-                    You can bring up shortcut menus for items with a force-press (or long-tap) on their icon. Tapping on an item's preview above its menu will expand it into the full Quick Look view.
+                    You can bring up shortcut menus for items with a long-press on their icon. Tapping on an item's preview above its menu will expand it into the full Quick Look view.
 
                     Shortcut menus are currently available on:
 
@@ -95,6 +95,8 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
                     The Today Widget allows fast access to recently added items from the home screen. You can tap on an item to quickly copy it to the clipboard. Tapping and holding on an item will launch Gladys and open the item's details. On iPad you can drag an item off to paste it in another app.
 
                     The iMessage app allows you to quickly search and add an item from Gladys to a message.
+                    
+                    The Keyhive keyboard extension provides access to tap and copy Gladys items when the kayboard is visible.
                     """,
               link: nil),
         
