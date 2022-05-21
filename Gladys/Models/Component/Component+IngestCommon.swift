@@ -100,9 +100,30 @@ extension Component {
         
         try await handleData(data, resolveUrls: false, storeBytes: true)
 	}
+    
+    private final actor GateKeeper {
+        private var counter = 8
+        func waitForGate() async {
+            while counter < 0 {
+                await Task.yield()
+            }
+            counter -= 1
+        }
+        func signalGate() {
+            counter += 1
+        }
+    }
+    
+    private static let gateKeeper = GateKeeper()
 
     private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool) async throws {
         // in thread!
+        await Component.gateKeeper.waitForGate()
+        defer {
+            Task {
+                await Component.gateKeeper.signalGate()
+            }
+        }
 
 		clearCachedFields()
         

@@ -23,7 +23,7 @@ final class WebArchiver {
         URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (macOS; macOS)"]
         #endif
     }
-
+    
     private static func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         if #available(iOS 15.0, iOSApplicationExtension 15.0, macOS 12.0, *) {
             let res = try await URLSession.shared.data(for: request)

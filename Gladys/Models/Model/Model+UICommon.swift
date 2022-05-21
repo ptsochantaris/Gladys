@@ -433,16 +433,12 @@ extension Model {
             delete(items: itemsToDelete) // will also save
         }
         
-        completionGroup?.enter()
-        Task {
-            await withTaskGroup(of: Void.self) { group in
-                for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
-                    group.addTask {
-                        await drop.reIngest()
-                    }
-                }
+        for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+            completionGroup?.enter()
+            Task {
+                await drop.reIngest()
+                completionGroup?.leave()
             }
-            completionGroup?.leave()
         }
     }
     

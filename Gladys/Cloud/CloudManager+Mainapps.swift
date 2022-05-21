@@ -26,6 +26,17 @@ extension CloudManager {
         database.add(operation)
     }
     
+    private static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
+            operation.qualityOfService = .userInitiated
+            database.add(operation)
+            operation.completionBlock = {
+                continuation.resume()
+            }
+        }
+    }
+
     static var showNetwork: Bool = false {
         didSet {
             Model.updateBadge()
@@ -41,15 +52,14 @@ extension CloudManager {
                 log(">>> Sync updates done")
             }
             #endif
+            assert(Thread.isMainThread)
             NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
         }
     }
 
-    @discardableResult
-    private static func sendUpdatesUp(completion: @escaping (Error?) -> Void) -> Progress? {
+    private static func sendUpdatesUp() async throws {
         if !syncSwitchedOn {
-            completion(nil)
-            return nil
+            return
         }
         
         var sharedZonesToPush = Set<CKRecordZone.ID>()
@@ -73,37 +83,32 @@ extension CloudManager {
         let privatePushState = PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
         let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
 
-        let doneOperation = BlockOperation {
-            let firstError = privatePushState.latestError ?? sharedPushStates.first(where: { $0.latestError != nil })?.latestError
-            completion(firstError)
-        }
-
         let operations = sharedPushStates.reduce(privatePushState.operations) { (existingOperations, pushState) -> [CKDatabaseOperation] in
             return existingOperations + pushState.operations
         }
+        
         if operations.isEmpty {
             log("No changes to push up")
-        } else {
-            operations.forEach {
-                doneOperation.addDependency($0)
-                perform($0, on: $0.database!, type: "sync upload")
+            return
+        }
+
+        await withTaskGroup(of: Void.self) { group in
+            for operation in operations {
+                group.addTask {
+                    await perform(operation, on: operation.database!, type: "sync upload")
+                }
             }
         }
-        OperationQueue.main.addOperation(doneOperation)
-
-        let overallProgress = Progress(totalUnitCount: Int64(1+sharedPushStates.count) * 10)
-        overallProgress.addChild(privatePushState.progress, withPendingUnitCount: 10)
-        for pushState in sharedPushStates {
-            overallProgress.addChild(pushState.progress, withPendingUnitCount: 10)
+        if let firstError = privatePushState.latestError ?? sharedPushStates.first(where: { $0.latestError != nil })?.latestError {
+            throw firstError
         }
-
-        return overallProgress
     }
 
     static var syncTransitioning = false {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
+                assert(Thread.isMainThread)
                 NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
             }
         }
@@ -114,6 +119,7 @@ extension CloudManager {
             if syncTransitioning != oldValue {
                 syncProgressString = syncing ? "Pausing" : nil
                 showNetwork = false
+                assert(Thread.isMainThread)
                 NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
             }
         }
@@ -124,6 +130,7 @@ extension CloudManager {
             if syncing != oldValue {
                 syncProgressString = syncing ? "Syncing" : nil
                 showNetwork = syncing || syncTransitioning
+                assert(Thread.isMainThread)
                 NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
             }
         }
@@ -326,6 +333,18 @@ extension CloudManager {
             }
         }
         perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
+    }
+    
+    private static func deactivate(force: Bool, deactivatingShares: Bool = true) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            deactivate(force: true) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
     }
 
     private static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
@@ -668,7 +687,7 @@ extension CloudManager {
         }
     }
 
-    static private func fetchDatabaseChanges(scope: CKDatabase.Scope?, completion: @escaping (Error?) -> Void) {
+    static private func fetchDatabaseChanges(scope: CKDatabase.Scope?) async throws {
         syncProgressString = "Checking…"
         let stats = PullState()
         var finalError: Error?
@@ -696,16 +715,26 @@ extension CloudManager {
             fetchDBChanges(database: container.sharedCloudDatabase, stats: stats, completion: changeCallback)
         }
 
-        group.notify(queue: DispatchQueue.main) {
-            if finalError == nil && shouldCommitTokens {
-                fetchMissingShareRecords { error in
-                    stats.processChanges(commitTokens: shouldCommitTokens) {
-                        completion(error)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            group.notify(queue: DispatchQueue.main) {
+                if finalError == nil && shouldCommitTokens {
+                    fetchMissingShareRecords { error in
+                        stats.processChanges(commitTokens: shouldCommitTokens) {
+                            if let error = error {
+                                continuation.resume(throwing: error)
+                            } else {
+                                continuation.resume()
+                            }
+                        }
                     }
-                }
-            } else {
-                stats.processChanges(commitTokens: shouldCommitTokens) {
-                    completion(finalError)
+                } else {
+                    stats.processChanges(commitTokens: shouldCommitTokens) {
+                        if let error = finalError {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume()
+                        }
+                    }
                 }
             }
         }
@@ -913,34 +942,35 @@ extension CloudManager {
         perform(operation, on: database, type: "fetch zone changes")
     }
 
-    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false, completion: @escaping (Error?) -> Void) {
+    @MainActor
+    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
 
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
             if !l.isEqual(newToken) {
                 // shutdown
-                deactivate(force: true) { _ in
-                    completion(nil)
-                }
                 if newToken == nil {
-                    genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
+                    await genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
                 } else {
-                    genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
+                    await genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
                 }
+                try? await deactivate(force: true)
                 return
             }
         }
 
-        attemptSync(scope: scope, force: force, overridingUserPreference: overridingUserPreference) { error in
+        do {
+            try await attemptSync(scope: scope, force: force, overridingUserPreference: overridingUserPreference)
+        } catch {
             if let ckError = error as? CKError {
-                reactToCkError(ckError, force: force, overridingUserPreference: overridingUserPreference, completion: completion)
+                try await reactToCkError(ckError, force: force, overridingUserPreference: overridingUserPreference)
             } else {
-                completion(error)
+                throw error
             }
         }
     }
 
-    private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
+    private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool) async throws {
         switch ckError.code {
 
         case .accountTemporarilyUnavailable:
@@ -951,31 +981,28 @@ extension CloudManager {
              .userDeletedZone, .badDatabase, .badContainer:
 
             // shutdown-worthy failure
-            genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
-            deactivate(force: true) { _ in
-                completion(nil)
-            }
-
+            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
+            try? await deactivate(force: true)
+            
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
 
             // retry
             let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 6.0
             syncRateLimited = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeToRetry) {
-                syncRateLimited = false
-                attemptSync(scope: nil, force: force, overridingUserPreference: overridingUserPreference, completion: completion)
-            }
+            try? await Task.sleep(nanoseconds: UInt64(timeToRetry * Double(NSEC_PER_SEC)))
+            syncRateLimited = false
+            try await attemptSync(scope: nil, force: force, overridingUserPreference: overridingUserPreference)
 
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .permissionFailure,
              .participantMayNeedVerification, .quotaExceeded, .referenceViolation, .serverRejectedRequest, .tooManyParticipants, .operationCancelled,
              .resultsTruncated, .unknownItem, .serverRecordChanged, .networkFailure, .networkUnavailable, .partialFailure:
 
             // regular failure
-            completion(ckError)
+            throw ckError
 
         @unknown default:
             // not handled, let's assume it's important
-            completion(ckError)
+            throw ckError
         }
     }
 
@@ -1010,7 +1037,8 @@ extension CloudManager {
             return
         }
         NotificationCenter.default.post(name: .AcceptStarting, object: nil)
-        sync { _ in // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
+        Task {
+            try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
             showNetwork = true
             let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
             acceptShareOperation.acceptSharesCompletionBlock = { error in
@@ -1020,7 +1048,8 @@ extension CloudManager {
                         NotificationCenter.default.post(name: .AcceptEnding, object: nil)
                         genericAlert(title: "Could not accept shared item", message: error.finalDescription)
                     } else {
-                        sync { _ in
+                        Task {
+                            try? await sync()
                             NotificationCenter.default.post(name: .AcceptEnding, object: nil)
                         }
                     }
@@ -1068,9 +1097,11 @@ extension CloudManager {
                 if let error = error {
                     genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
                 } else {
-                    sync(force: true, overridingUserPreference: true) { error in
-                        if let error = error {
-                            genericAlert(title: "Initial sync failed", message: error.finalDescription)
+                    Task {
+                        do {
+                            try await sync(force: true, overridingUserPreference: true)
+                        } catch {
+                            await genericAlert(title: "Initial sync failed", message: error.finalDescription)
                         }
                     }
                 }
@@ -1078,9 +1109,9 @@ extension CloudManager {
         }
     }
 
-    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool, completion: @escaping (Error?) -> Void) {
+    @MainActor
+    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
         if !syncSwitchedOn {
-            completion(nil)
             return
         }
 
@@ -1088,12 +1119,10 @@ extension CloudManager {
         if !force && !overridingUserPreference {
             if syncContextSetting == .wifiOnly && reachability.status != .reachableViaWiFi {
                 log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
-                completion(nil)
                 return
             }
             if syncContextSetting == .manualOnly {
                 log("Skipping auto sync because user selected manual sync only")
-                completion(nil)
                 return
             }
         }
@@ -1102,50 +1131,35 @@ extension CloudManager {
         if syncing && !force {
             log("Sync already running, but need another one. Marked to retry at the end of this.")
             syncDirty = true
-            completion(nil)
             return
         }
 
         #if os(iOS)
         BackgroundTask.registerForBackground()
+        defer {
+            BackgroundTask.unregisterForBackground()
+        }
         #endif
 
         syncing = true
         syncDirty = false
 
-        sendUpdatesUp { error in
-            if let error = error {
-                attemptSyncDone(error: error, completion: completion)
-                return
+        do {
+            try await sendUpdatesUp()
+            try await fetchDatabaseChanges(scope: scope)
+            if syncDirty {
+                try await attemptSync(scope: nil, force: true, overridingUserPreference: overridingUserPreference)
+            } else {
+                lastSyncCompletion = Date()
+                syncing = false
             }
-
-            fetchDatabaseChanges(scope: scope) { error in
-                if let error = error {
-                    attemptSyncDone(error: error, completion: completion)
-                } else if syncDirty {
-                    attemptSync(scope: nil, force: true, overridingUserPreference: overridingUserPreference, completion: completion)
-                    #if os(iOS)
-                    BackgroundTask.unregisterForBackground()
-                    #endif
-                } else {
-                    lastSyncCompletion = Date()
-                    attemptSyncDone(error: nil, completion: completion)
-                }
-            }
+        } catch {
+            log("Sync failure: \(error.finalDescription)")
+            syncing = false
+            throw error
         }
     }
     
-    private static func attemptSyncDone(error: Error?, completion: @escaping (Error?) -> Void) {
-        syncing = false
-        if let e = error {
-            log("Sync failure: \(e.finalDescription)")
-        }
-        completion(error)
-        #if os(iOS)
-        BackgroundTask.unregisterForBackground()
-        #endif
-    }
-
     static func apnsUpdate(_ newToken: Data?) {
         if newToken == PersistedOptions.lastPushToken && PersistedOptions.migratedSubscriptions7 {
             return

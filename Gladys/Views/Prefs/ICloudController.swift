@@ -94,13 +94,13 @@ final class ICloudController: GladysViewController {
     }
         
 	@IBAction private func syncNowSelected(_ sender: UIBarButtonItem) {
-		CloudManager.sync { error in
-			DispatchQueue.main.async {
-				if let error = error {
-					genericAlert(title: "Sync Error", message: error.finalDescription)
-				}
-			}
-		}
+        Task {
+            do {
+                try await CloudManager.sync()
+            } catch {
+                await genericAlert(title: "Sync Error", message: error.finalDescription)
+            }
+        }
 	}
 
 	@objc private func icloudSwitchChanged() {

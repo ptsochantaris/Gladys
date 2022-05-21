@@ -190,7 +190,7 @@ extension ArchivedItem {
 	var loadingAborted: Bool {
         return components.contains { $0.flags.contains(.loadingAborted) }
 	}
-    
+
     @MainActor
     func reIngest() async {
         NotificationCenter.default.post(name: .IngestStart, object: self)
@@ -204,10 +204,6 @@ extension ArchivedItem {
 		let p = Progress(totalUnitCount: Int64(loadCount))
 		loadingProgress = p
         
-        await Task.detached {
-            ArchivedItem.ingestGate.wait()
-        }.value
-
         if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
             components.sort { $0.order < $1.order }
         }
@@ -221,9 +217,7 @@ extension ArchivedItem {
             }
         }
         
-        self.componentIngestDone()
-        
-        ArchivedItem.ingestGate.signal()
+        componentIngestDone()
     }
     
     private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
@@ -244,18 +238,13 @@ extension ArchivedItem {
         }
         return extractedData
     }
-
-    private static let ingestGate = DispatchSemaphore(value: 7)
     
 	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let progress = Progress()
         loadingProgress = progress
         NotificationCenter.default.post(name: .IngestStart, object: self)
-        Task.detached { [weak self] in
-            guard let self = self else { return }
-            ArchivedItem.ingestGate.wait()
+        Task {
             await self.newItemIngest(providers: providers, limitToType: limitToType)
-            ArchivedItem.ingestGate.signal()
         }
     }
     

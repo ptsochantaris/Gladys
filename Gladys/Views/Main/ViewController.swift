@@ -1091,11 +1091,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	@objc private func refreshControlChanged(_ sender: UIRefreshControl) {
 		guard let r = collection.refreshControl else { return }
 		if r.isRefreshing && !CloudManager.syncing {
-			CloudManager.sync(overridingUserPreference: true) { error in
-				if let error = error {
-					genericAlert(title: "Sync Error", message: error.finalDescription)
-				}
-			}
+            Task {
+                do {
+                    try await CloudManager.sync(overridingUserPreference: true)
+                } catch {
+                    await genericAlert(title: "Sync Error", message: error.finalDescription)
+                }
+            }
 			lastSyncUpdate()
 		}
 	}

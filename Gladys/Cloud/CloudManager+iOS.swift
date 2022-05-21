@@ -34,14 +34,15 @@ extension CloudManager {
 				completionHandler?(.newData)
 				return
 			}
-			sync(scope: scope) { error in
-				if let error = error {
+            Task {
+                do {
+                    try await sync(scope: scope)
+                    completionHandler?(.newData)
+                } catch {
                     log("Sync from push failed: \(error.localizedDescription)")
-					completionHandler?(.failed)
-				} else {
-					completionHandler?(.newData)
-				}
-			}
+                    completionHandler?(.failed)
+                }
+            }
 		case .public:
 			break
 		@unknown default:
@@ -74,8 +75,10 @@ extension CloudManager {
         
         if !go { return }
         
-        CloudManager.sync { error in
-            if let error = error {
+        Task {
+            do {
+                try await CloudManager.sync()
+            } catch {
                 log("Error in sync after save: \(error.finalDescription)")
             }
         }
@@ -84,11 +87,13 @@ extension CloudManager {
     static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) {
 		if syncSwitchedOn && !syncing && (isStartup || force || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60) {
 			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
-			sync { error in
-				if let error = error {
-					log("Error in foregrounding sync: \(error.finalDescription)")
-				}
-			}
+            Task {
+                do {
+                    try await sync()
+                } catch {
+                    log("Error in foregrounding sync: \(error.finalDescription)")
+                }
+            }
 		}
 	}
 }
