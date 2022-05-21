@@ -111,7 +111,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 	}
 
 	private func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType, replyHandler: @escaping ([String: Any]) -> Void) {
-		imageProcessingQueue.async {
+        Task.detached {
 			let data: Data
 			if let size = size {
 				if mode == .center || mode == .circle {
@@ -124,9 +124,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 			} else {
 				data = icon.pngData()!
 			}
-            DispatchQueue.global(qos: .default).async {
-                replyHandler(["image": data])
-            }
+            replyHandler(["image": data])
 		}
 	}
 

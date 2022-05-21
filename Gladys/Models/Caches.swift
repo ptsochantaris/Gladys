@@ -23,9 +23,6 @@ final class CKShareCacheEntry {
 	}
 }
 
-let imageCache = Cache<String, IMAGE>()
-let imageProcessingQueue = DispatchQueue(label: "build.bru.Gladys.imageProcessing", qos: .utility)
-
 let folderUrlCache = Cache<UUID, URL>()
 let cloudKitDataPathCache = Cache<UUID, URL>()
 let cloudKitShareDataPathCache = Cache<UUID, URL>()

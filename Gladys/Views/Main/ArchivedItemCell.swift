@@ -242,12 +242,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 	}
 
 	static func warmUp(for item: ArchivedItem) {
-		imageProcessingQueue.async {
-			let cacheKey = item.imageCacheKey
-			if imageCache[cacheKey] == nil {
-				imageCache[cacheKey] = item.displayIcon
-			}
-		}
+        Task.detached {
+            Images.shared.warmUp(for: item)
+        }
 	}
     
     private var isFirstImport: Bool {
@@ -298,17 +295,16 @@ final class ArchivedItemCell: UICollectionViewCell {
 				shared = item.shareMode
 
                 let cacheKey = item.imageCacheKey
-                if let cachedImage = imageCache[cacheKey] {
+                if let cachedImage = Images.shared[cacheKey] {
                     image.image = cachedImage
                 } else {
-                    imageProcessingQueue.async { [weak self] in
-                        if let self = self, let u1 = self.archivedDropItem?.uuid, u1 == item.uuid {
-                            let image = item.displayIcon
-                            imageCache[cacheKey] = image
-                            DispatchQueue.main.sync { [weak self] in
-                                if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
-                                    self.image.image = image
-                                }
+                    let u1 = item.uuid
+                    Task.detached {
+                        let img = item.displayIcon
+                        Images.shared[cacheKey] = img
+                        await MainActor.run { [weak self] in
+                            if let self = self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
+                                self.image.image = img
                             }
                         }
                     }

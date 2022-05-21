@@ -31,7 +31,7 @@ extension CGSize: Hashable {
     }
 }
 
-final actor Images {
+final class Images {
     private let cache = Cache<String, IMAGE>()
     
     static let shared = Images()
@@ -54,18 +54,15 @@ final actor Images {
         }
     }
     
-    func setCachedImage(_ image: IMAGE, for cacheKey: String) {
-        cache[cacheKey] = image
+    subscript(key: String) -> IMAGE? {
+        get {
+            return cache[key]
+        }
+        set {
+            cache[key] = newValue
+        }
     }
-    
-    func cachedImage(for cacheKey: String) -> IMAGE? {
-        return cache[cacheKey]
-    }
-    
-    func removeImage(for cacheKey: String) {
-        cache[cacheKey] = nil
-    }
-    
+        
     func reset() {
         cache.reset()
     }

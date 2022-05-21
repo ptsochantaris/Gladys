@@ -345,6 +345,7 @@
 		16BDAF1F2838347F00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16BDAF202838347F00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16BDAF2128383A6E00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF22283844B900B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -2395,6 +2396,7 @@
 				162BDD76220F020800A3C17B /* Logging.swift in Sources */,
 				16EC10442607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */,
+				16BDAF22283844B900B3EEF3 /* Images.swift in Sources */,
 				16559C8C20A4CC55006C281D /* Global.swift in Sources */,
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedItem.swift in Sources */,

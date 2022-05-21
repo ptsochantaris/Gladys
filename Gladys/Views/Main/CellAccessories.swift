@@ -70,7 +70,7 @@ final class MiniMapView: UIImageView {
         snapshotOptions.coordinate = newCoordinate
         
         let cacheKey = "\(newCoordinate.latitude) \(newCoordinate.longitude)"
-        if let existingImage = imageCache[cacheKey] {
+        if let existingImage = Images.shared[cacheKey] {
             image = existingImage
             return
         }
@@ -79,7 +79,7 @@ final class MiniMapView: UIImageView {
 
         Task {
             if let img = try? await Images.shared.mapSnapshot(with: snapshotOptions) {
-                imageCache[cacheKey] = img
+                Images.shared[cacheKey] = img
                 image = img
             }
         }

@@ -175,7 +175,7 @@ extension ArchivedItem {
     
     @MainActor
     private func componentIngestDone() {
-        imageCache[imageCacheKey] = nil
+        Images.shared[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
         NotificationCenter.default.post(name: .IngestComplete, object: self)

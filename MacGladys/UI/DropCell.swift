@@ -146,7 +146,7 @@ final class MiniMapView: FirstMouseView {
         snapshotOptions.coordinate = newCoordinate
 
         let cacheKey = "\(newCoordinate.latitude) \(newCoordinate.longitude)"
-        if let existingImage = imageCache[cacheKey] {
+        if let existingImage = Images.shared[cacheKey] {
             layer?.contents = existingImage
             return
         }
@@ -155,7 +155,7 @@ final class MiniMapView: FirstMouseView {
 
         Task {
             if let snapshot = try? await Images.shared.mapSnapshot(with: snapshotOptions) {
-                imageCache[cacheKey] = snapshot
+                Images.shared[cacheKey] = snapshot
                 layer?.contents = snapshot
             }
         }
@@ -309,28 +309,21 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
 				image.flatColor()
 				let cacheKey = item.imageCacheKey
-				if let cachedImage = imageCache[cacheKey] {
+                if let cachedImage = Images.shared[cacheKey] {
 					image.layer?.contents = cachedImage
 				} else {
-					imageProcessingQueue.async { [weak self] in
-                        var u1: UUID?
-                        DispatchQueue.main.sync {
-                            u1 = self?.archivedDropItem?.uuid
+                    let u1 = item.uuid
+                    Task.detached {
+                        let img = item.displayIcon
+                        let final = img.isTemplate ? img.template(with: NSColor.g_colorTint) : img
+                        Images.shared[cacheKey] = final
+                        await MainActor.run { [weak self] in
+                            if let self = self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
+                                self.image.layer?.contents = final
+                                self.image.updateLayer()
+                            }
                         }
-						if u1 == item.uuid {
-							var img = item.displayIcon
-							if img.isTemplate {
-                                img = img.template(with: NSColor.g_colorTint)
-							}
-							imageCache[cacheKey] = img
-							DispatchQueue.main.sync { [weak self] in
-                                if let self = self, let item = self.archivedDropItem, u1 == item.uuid {
-									self.image.layer?.contents = img
-									self.image.updateLayer()
-								}
-							}
-						}
-					}
+                    }
 				}
 
 				let primaryLabel: NSTextField
