@@ -395,15 +395,17 @@ final class Preferences: NSViewController {
 	}
 
 	@IBAction private func syncNowSelected(_ sender: NSButton) {
-		CloudManager.sync { [weak self] error in
-			if let error = error, let s = self {
-				let a = NSAlert()
-				a.alertStyle = .warning
-				a.messageText = "Sync Failed"
-				a.informativeText = error.finalDescription
-				a.beginSheetModal(for: s.view.window!) { _ in }
-			}
-		}
+        Task {
+            do {
+                try await CloudManager.sync()
+            } catch {
+                let a = NSAlert()
+                a.alertStyle = .warning
+                a.messageText = "Sync Failed"
+                a.informativeText = error.finalDescription
+                a.beginSheetModal(for: view.window!) { _ in }
+            }
+        }
 	}
 
 	@IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {

@@ -230,7 +230,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
         
         if CloudManager.syncSwitchedOn {
-            CloudManager.sync { _ in }
+            Task {
+                try? await CloudManager.sync()
+            }
         }
 
         setupClipboardSnooping()

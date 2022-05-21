@@ -28,11 +28,13 @@ extension CloudManager {
 				log("We'll be syncing in a moment anyway, ignoring the push")
 				return
 			}
-			sync(scope: scope) { error in
-				if let error = error {
-					log("Notification-triggered sync error: \(error.finalDescription)")
-				}
-			}
+            Task {
+                do {
+                    try await sync(scope: scope)
+                } catch {
+                    log("Notification-triggered sync error: \(error.finalDescription)")
+                }
+            }
 		case .public:
 			break
 		@unknown default:
@@ -42,11 +44,13 @@ extension CloudManager {
 
 	static func opportunisticSyncIfNeeded() {
 		if syncSwitchedOn && !syncing && lastSyncCompletion.timeIntervalSinceNow < -60 {
-			sync { error in
-				if let error = error {
-					log("Error in waking sync: \(error.finalDescription)")
-				}
-			}
+            Task {
+                do {
+                    try await sync()
+                } catch {
+                    log("Error in waking sync: \(error.finalDescription)")
+                }
+            }
 		}
 	}
 }

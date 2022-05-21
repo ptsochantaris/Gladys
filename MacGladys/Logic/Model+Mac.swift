@@ -61,11 +61,13 @@ extension Model {
             } else {
                 log("Will sync up after a local save")
             }
-			CloudManager.sync { error in
-				if let error = error {
-					log("Error in sync after save: \(error.finalDescription)")
-				}
-			}
+            Task {
+                do {
+                    try await CloudManager.sync()
+                } catch {
+                    log("Error in sync after save: \(error.finalDescription)")
+                }
+            }
 		}
 	}
     

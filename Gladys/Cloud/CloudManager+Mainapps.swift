@@ -57,6 +57,7 @@ extension CloudManager {
         }
     }
 
+    @MainActor
     private static func sendUpdatesUp() async throws {
         if !syncSwitchedOn {
             return
@@ -687,6 +688,7 @@ extension CloudManager {
         }
     }
 
+    @MainActor
     static private func fetchDatabaseChanges(scope: CKDatabase.Scope?) async throws {
         syncProgressString = "Checking…"
         let stats = PullState()
