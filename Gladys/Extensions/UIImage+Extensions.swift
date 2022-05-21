@@ -139,32 +139,25 @@ extension UIImage {
     
     private static let sharedCiContext = CIContext()
     
-    final func desaturated(darkMode: Bool, completion: @escaping (UIImage?) -> Void) {
-        DispatchQueue.global(qos: .utility).async {
-            guard let ciImage = CIImage(image: self) else {
-                DispatchQueue.main.async {
-                    completion(self)
-                }
-                return
-            }
-            let p1 = darkMode ? "inputColor0" : "inputColor1"
-            let p2 = darkMode ? "inputColor1" : "inputColor0"
-            let a: CGFloat = darkMode ? 0.05 : 0.2
-            let blackAndWhiteImage = ciImage
-                .applyingFilter("CIFalseColor", parameters: [
-                    p1: CIColor(color: .systemBackground),
-                    p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
-                ])
+    final func desaturated(darkMode: Bool) async -> UIImage {
+        guard let ciImage = CIImage(image: self) else {
+            return self
+        }
+        let p1 = darkMode ? "inputColor0" : "inputColor1"
+        let p2 = darkMode ? "inputColor1" : "inputColor0"
+        let a: CGFloat = darkMode ? 0.05 : 0.2
+        let blackAndWhiteImage = ciImage
+            .applyingFilter("CIFalseColor", parameters: [
+                p1: CIColor(color: .systemBackground),
+                p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
+            ])
+        return await Task.detached {
             if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
                 let img = UIImage(cgImage: cgImage)
-                DispatchQueue.main.async {
-                    completion(img)
-                }
+                return img
             } else {
-                DispatchQueue.main.async {
-                    completion(self)
-                }
+                return self
             }
-        }
+        }.value
     }
 }

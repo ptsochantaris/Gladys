@@ -346,6 +346,8 @@
 		16BDAF202838347F00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16BDAF2128383A6E00B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16BDAF22283844B900B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
+		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
+		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -858,6 +860,8 @@
 		16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSItemProvider+Extensions.swift"; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16BDAF1C28382F6300B3EEF3 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		16BDAF24283893FB00B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
+		16BDAF27283895B600B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Detail.storyboard; sourceTree = "<group>"; };
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
@@ -1060,6 +1064,7 @@
 		1602F3192030E4D70036E2B0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */,
 				1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */,
 				1602F3172030E4C90036E2B0 /* Data+Extensions.swift */,
 				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
@@ -1523,9 +1528,10 @@
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+				16BDAF26283895B600B3EEF3 /* Detail.storyboard */,
+				16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */,
 				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
-				16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */,
 				16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */,
 				16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */,
 			);
@@ -2151,9 +2157,11 @@
 				16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */,
 				1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */,
 				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
+				16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
 				16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */,
 				162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */,
+				16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
 				16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */,
 			);
@@ -2869,6 +2877,22 @@
 			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
+		16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16BDAF24283893FB00B3EEF3 /* Base */,
+			);
+			name = Preferences.storyboard;
+			sourceTree = "<group>";
+		};
+		16BDAF26283895B600B3EEF3 /* Detail.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				16BDAF27283895B600B3EEF3 /* Base */,
+			);
+			name = Detail.storyboard;
+			sourceTree = "<group>";
+		};
 		16D2C7141EF5A744009B97F9 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3206,7 +3230,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1042;
+				CURRENT_PROJECT_VERSION = 1043;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -3356,7 +3380,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMPRESS_PNG_FILES = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1042;
+				CURRENT_PROJECT_VERSION = 1043;
 				ENABLE_BITCODE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_FAST_MATH = YES;

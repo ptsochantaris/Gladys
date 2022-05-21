@@ -226,26 +226,22 @@ extension ArchivedItem {
         ArchivedItem.ingestGate.signal()
     }
     
-    private func extractUrlData(from provider: NSItemProvider, for type: String) -> Data? {
+    private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
         var extractedData: Data?
-        let sem = DispatchSemaphore(value: 0)
-        provider.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
-            if let data = data, data.count < 16384 {
-                var extractedText: String?
-                if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
-                    extractedText = text
-                    
-                } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
-                    extractedText = text
-                }
+        let data = try? await provider.loadDataRepresentation(for: type)
+        if let data = data, data.count < 16384 {
+            var extractedText: String?
+            if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
+                extractedText = text
                 
-                if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
-                    extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
-                }
+            } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                extractedText = text
             }
-            sem.signal()
+            
+            if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
+                extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
+            }
         }
-        sem.wait()
         return extractedData
     }
 
@@ -285,7 +281,7 @@ extension ArchivedItem {
                 if !alreadyHasUrl,
                     UTTypeConformsTo(type as CFString, kUTTypeText),
                     PersistedOptions.automaticallyDetectAndConvertWebLinks,
-                    let extractedLinkData = extractUrlData(from: provider, for: type) {
+                    let extractedLinkData = await extractUrlData(from: provider, for: type) {
                     
                     finalType = kUTTypeURL as String
                     finalProvider = NSItemProvider()

@@ -123,12 +123,10 @@ final class DetailCell: UITableViewCell {
         if component.displayIconContentMode == .fill, let icon = component.componentIcon {
             hasImage = true
             let darkMode = traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
-            icon.desaturated(darkMode: darkMode) { [weak self] img in
-                guard let self = self else {
-                    return
-                }
-                if self.handlingComponentId == component.uuid {
-                    self.imageHolder.image = img
+            Task {
+                let img = await icon.desaturated(darkMode: darkMode)
+                if handlingComponentId == component.uuid {
+                    imageHolder.image = img
                 }
             }
         }
