@@ -32,7 +32,7 @@ final class PullState {
 		}
 	}
 
-    func processChanges(commitTokens: Bool, completion: @escaping () -> Void) {
+    func processChanges(commitTokens: Bool) async {
 		CloudManager.syncProgressString = "Updating…"
 		log("Changes fetch complete, processing")
 
@@ -48,48 +48,42 @@ final class PullState {
 		}
 		
 		let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
-		
+
 		if itemsModified {
 			// need to save stuff that's been modified
-            Model.queueNextSaveCallback {
-                if commitTokens {
-                    self.commitNewTokens()
+            let task = Task {
+                await withCheckedContinuation { continuation in
+                    Model.queueNextSaveCallback {
+                        continuation.resume()
+                    }
                 }
-                completion()
             }
 			Model.saveIsDueToSyncFetch = true
 			Model.save()
-            
+            await task.value
+
 		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
                 Model.saveIsDueToSyncFetch = true
                 Model.saveIndexOnly()
 			}
-			if commitTokens {
-				commitNewTokens()
-			}
-            completion()
             
 		} else {
 			log("No updates available")
-			if commitTokens {
-				commitNewTokens()
-			}
-            completion()
 		}
-	}
-
-	private func commitNewTokens() {
-        if !updatedZoneTokens.isEmpty || !updatedDatabaseTokens.isEmpty {
-			log("Committing change tokens")
-		}
-		for (zoneId, zoneToken) in updatedZoneTokens {
-			PullState.setZoneToken(zoneToken, for: zoneId)
-		}
-		for (databaseId, databaseToken) in updatedDatabaseTokens {
-			PullState.setDatabaseToken(databaseToken, for: databaseId)
-		}
+        
+        if commitTokens {
+            if !updatedZoneTokens.isEmpty || !updatedDatabaseTokens.isEmpty {
+                log("Committing change tokens")
+            }
+            for (zoneId, zoneToken) in updatedZoneTokens {
+                PullState.setZoneToken(zoneToken, for: zoneId)
+            }
+            for (databaseId, databaseToken) in updatedDatabaseTokens {
+                PullState.setDatabaseToken(databaseToken, for: databaseId)
+            }
+        }
 	}
 
 	private static var legacyZoneChangeToken: CKServerChangeToken? {

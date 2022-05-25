@@ -721,7 +721,8 @@ extension CloudManager {
             group.notify(queue: DispatchQueue.main) {
                 if finalError == nil && shouldCommitTokens {
                     fetchMissingShareRecords { error in
-                        stats.processChanges(commitTokens: shouldCommitTokens) {
+                        Task {
+                            await stats.processChanges(commitTokens: shouldCommitTokens)
                             if let error = error {
                                 continuation.resume(throwing: error)
                             } else {
@@ -730,7 +731,8 @@ extension CloudManager {
                         }
                     }
                 } else {
-                    stats.processChanges(commitTokens: shouldCommitTokens) {
+                    Task {
+                        await stats.processChanges(commitTokens: shouldCommitTokens)
                         if let error = finalError {
                             continuation.resume(throwing: error)
                         } else {
@@ -952,9 +954,9 @@ extension CloudManager {
             if !l.isEqual(newToken) {
                 // shutdown
                 if newToken == nil {
-                    await genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
+                    genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
                 } else {
-                    await genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
+                    genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
                 }
                 try? await deactivate(force: true)
                 return
@@ -983,7 +985,7 @@ extension CloudManager {
              .userDeletedZone, .badDatabase, .badContainer:
 
             // shutdown-worthy failure
-            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
+            genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
             try? await deactivate(force: true)
             
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
@@ -1103,7 +1105,7 @@ extension CloudManager {
                         do {
                             try await sync(force: true, overridingUserPreference: true)
                         } catch {
-                            await genericAlert(title: "Initial sync failed", message: error.finalDescription)
+                            genericAlert(title: "Initial sync failed", message: error.finalDescription)
                         }
                     }
                 }
