@@ -111,7 +111,9 @@ final class ICloudController: GladysViewController {
 
 		if icloudSwitch.isOn && !CloudManager.syncSwitchedOn {
 			if Model.drops.isEmpty {
-                CloudManager.proceedWithActivation()
+                Task {
+                    await CloudManager.startActivation()
+                }
 			} else {
                 Model.sizeInBytes { [weak self] contentSize in
                     guard let self = self else { return }
@@ -119,7 +121,9 @@ final class ICloudController: GladysViewController {
                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
                                  action: "Proceed", cancel: "Cancel") { confirmed in
                         if confirmed {
-                            CloudManager.proceedWithActivation()
+                            Task {
+                                await CloudManager.startActivation()
+                            }
                         } else {
                             self.icloudSwitch.setOn(false, animated: true)
                         }

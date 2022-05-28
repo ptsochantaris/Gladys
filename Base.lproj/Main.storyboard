@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView autoresizesSubviews="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="colorPaper"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GOE-Ci-zLW">
@@ -91,7 +91,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Labels" id="rde-vn-hL8">
-                                <imageReference key="image" image="line.horizontal.3.circle" catalog="system"/>
+                                <imageReference key="image" image="line.3.horizontal.circle" catalog="system"/>
                                 <connections>
                                     <segue destination="kOO-aA-zkg" kind="popoverPresentation" identifier="showLabels" popoverAnchorBarButtonItem="rde-vn-hL8" id="3Sr-mY-zeU">
                                         <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -178,7 +178,7 @@
             <objects>
                 <viewController id="XPV-LI-EHc" customClass="LabelSelector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9l2-YE-hbb" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9At-u8-ZrJ">
@@ -296,7 +296,7 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="kiZ-3T-dZQ" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Wk5-yt-ach" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z5b-ii-Xc2">
@@ -324,7 +324,6 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController storyboardIdentifier="Central" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -332,7 +331,6 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Xv4-HG-X2o">
-                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -350,7 +348,6 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JPd-vO-wga">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -372,7 +369,6 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8VE-3P-ayT">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -392,7 +388,7 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="QMf-pW-MMr" customClass="LabelEditorController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="onX-EX-zET" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Ju-bV-ySp">
@@ -519,7 +515,7 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="7B8-TI-m45" customClass="NotesEditorViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a6B-br-fDc" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hec-cI-C3I">
@@ -581,17 +577,17 @@ Selecting them will show only items that contain these labels.</string>
     </scenes>
     <color key="tintColor" name="colorTint"/>
     <resources>
-        <image name="arrow.down.doc" catalog="system" width="115" height="128"/>
-        <image name="arrow.up.arrow.down.circle" catalog="system" width="128" height="121"/>
-        <image name="checkmark.circle" catalog="system" width="128" height="121"/>
-        <image name="checkmark.circle.fill" catalog="system" width="128" height="121"/>
-        <image name="ellipsis.circle" catalog="system" width="128" height="121"/>
-        <image name="line.horizontal.3.circle" catalog="system" width="128" height="121"/>
-        <image name="list.bullet" catalog="system" width="128" height="88"/>
-        <image name="slider.horizontal.3" catalog="system" width="128" height="100"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
-        <image name="square.grid.3x3" catalog="system" width="128" height="112"/>
-        <image name="xmark.bin" catalog="system" width="128" height="93"/>
+        <image name="arrow.down.doc" catalog="system" width="32" height="32"/>
+        <image name="arrow.up.arrow.down.circle" catalog="system" width="32" height="32"/>
+        <image name="checkmark.circle" catalog="system" width="32" height="32"/>
+        <image name="checkmark.circle.fill" catalog="system" width="32" height="32"/>
+        <image name="ellipsis.circle" catalog="system" width="32" height="32"/>
+        <image name="line.3.horizontal.circle" catalog="system" width="32" height="32"/>
+        <image name="list.bullet" catalog="system" width="32" height="32"/>
+        <image name="slider.horizontal.3" catalog="system" width="32" height="32"/>
+        <image name="square.and.arrow.up" catalog="system" width="32" height="32"/>
+        <image name="square.grid.3x3" catalog="system" width="32" height="32"/>
+        <image name="xmark.bin" catalog="system" width="32" height="32"/>
         <namedColor name="colorComponentLabel">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

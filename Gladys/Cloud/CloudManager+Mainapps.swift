@@ -271,42 +271,41 @@ extension CloudManager {
         }
     }
 
-    static private func activate(completion: @escaping (Error?) -> Void) {
-
+    @MainActor
+    static private func activate() async throws {
         if syncSwitchedOn {
-            completion(nil)
             return
         }
 
         syncTransitioning = true
-        container.accountStatus { status, error in
-            DispatchQueue.main.async {
-                switch status {
-                case .available:
-                    log("User has iCloud, can activate cloud sync")
-                    proceedWithActivation { error in
-                        completion(error)
-                        syncTransitioning = false
+        defer {
+            syncTransitioning = false
+        }
+
+        switch try await container.accountStatus() {
+        case .available:
+            log("User has iCloud, can activate cloud sync")
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                proceedWithActivationNow { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
                     }
-                case .couldNotDetermine:
-                    activationFailure(error: GladysError.cloudAccountRetirevalFailed.error, completion: completion)
-                case .noAccount:
-                    activationFailure(error: GladysError.cloudLoginRequired.error, completion: completion)
-                case .restricted:
-                    activationFailure(error: GladysError.cloudAccessRestricted.error, completion: completion)
-                case .temporarilyUnavailable:
-                    activationFailure(error: GladysError.cloudAccessTemporarilyUnavailable.error, completion: completion)
-                @unknown default:
-                    activationFailure(error: GladysError.cloudAccessNotSupported.error, completion: completion)
                 }
             }
+            return
+        case .couldNotDetermine:
+            throw GladysError.cloudAccountRetirevalFailed.error
+        case .noAccount:
+            throw GladysError.cloudLoginRequired.error
+        case .restricted:
+            throw GladysError.cloudAccessRestricted.error
+        case .temporarilyUnavailable:
+            throw GladysError.cloudAccessTemporarilyUnavailable.error
+        @unknown default:
+            throw GladysError.cloudAccessNotSupported.error
         }
-    }
-
-    static private func activationFailure(error: NSError, completion: (Error?) -> Void) {
-        syncTransitioning = false
-        log("Activation failure, reason: \(error.localizedDescription)")
-        completion(error)
     }
 
     static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
@@ -338,7 +337,7 @@ extension CloudManager {
     
     private static func deactivate(force: Bool, deactivatingShares: Bool = true) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            deactivate(force: true) { error in
+            deactivate(force: force) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -406,7 +405,7 @@ extension CloudManager {
         OperationQueue.main.addOperation(doneOperation)
     }
 
-    private static func proceedWithActivation(completion: @escaping (Error?) -> Void) {
+    private static func proceedWithActivationNow(completion: @escaping (Error?) -> Void) {
 
         let zone = CKRecordZone(zoneID: privateZoneId)
         let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
@@ -954,9 +953,9 @@ extension CloudManager {
             if !l.isEqual(newToken) {
                 // shutdown
                 if newToken == nil {
-                    genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
+                    await genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
                 } else {
-                    genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
+                    await genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
                 }
                 try? await deactivate(force: true)
                 return
@@ -985,7 +984,7 @@ extension CloudManager {
              .userDeletedZone, .badDatabase, .badContainer:
 
             // shutdown-worthy failure
-            genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
+            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
             try? await deactivate(force: true)
             
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
@@ -1095,21 +1094,17 @@ extension CloudManager {
         }
     }
 
-    static func proceedWithActivation() {
-        CloudManager.activate { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
-                } else {
-                    Task {
-                        do {
-                            try await sync(force: true, overridingUserPreference: true)
-                        } catch {
-                            genericAlert(title: "Initial sync failed", message: error.finalDescription)
-                        }
-                    }
-                }
-            }
+    @MainActor
+    static func startActivation() async {
+        do {
+            try await CloudManager.activate()
+        } catch {
+            await genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
+        }
+        do {
+            try await sync(force: true, overridingUserPreference: true)
+        } catch {
+            await genericAlert(title: "Initial sync failed", message: error.finalDescription)
         }
     }
 
