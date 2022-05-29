@@ -10,7 +10,12 @@ final class Model {
             uuidindex = nil
         }
     }
-    
+
+    @MainActor
+    static func appendDropEfficientlyAsync(_ newDrop: ArchivedItem) {
+        appendDropEfficiently(newDrop)
+    }
+
     static func appendDropEfficiently(_ newDrop: ArchivedItem) {
         uuidindex?[newDrop.uuid] = drops.count
 
@@ -35,6 +40,7 @@ final class Model {
     }
     
     static func firstItem(with uuid: UUID) -> ArchivedItem? {
+        assert(Thread.isMainThread)
         if let i = firstIndexOfItem(with: uuid) {
             return drops[i]
         }
@@ -59,7 +65,7 @@ final class Model {
             }
         }
     }
-
+    
     ////////////////////////////////////////
     
 	static var brokenMode = false
@@ -250,6 +256,11 @@ final class Model {
 		return url
 	}()
 
+    @MainActor
+    static func itemAsync(uuid: String) -> ArchivedItem? {
+        return item(uuid: uuid)
+    }
+    
 	static func item(uuid: String) -> ArchivedItem? {
         if let uuidData = UUID(uuidString: uuid) {
             return item(uuid: uuidData)
@@ -262,6 +273,11 @@ final class Model {
         return firstItem(with: uuid)
 	}
 
+    @MainActor
+    static func itemAsync(shareId: String) -> ArchivedItem? {
+        return item(shareId: shareId)
+    }
+    
 	static func item(shareId: String) -> ArchivedItem? {
 		return drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
 	}
@@ -277,6 +293,11 @@ final class Model {
             return nil
         }
 	}
+
+    @MainActor
+    static func componentAsync(uuid: String) -> Component? {
+        return component(uuid: uuid)
+    }
 
 	static func modificationDate(for url: URL) -> Date? {
 		return (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date

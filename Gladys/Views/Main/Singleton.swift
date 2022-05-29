@@ -16,8 +16,6 @@ final class Singleton {
 
     func setup() {
 
-        PullState.checkMigrations()
-
         Model.setup()
 
         CallbackSupport.setupCallbackSupport()

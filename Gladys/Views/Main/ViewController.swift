@@ -1173,7 +1173,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 	}
     
     @objc private func itemCreated(_ notification: Notification) {
-        filter.updateFilter(signalUpdate: .animated)
+        DispatchQueue.main.async {
+            self.filter.updateFilter(signalUpdate: .animated)
+        }
     }
     
     @objc private func modelDataUpdate(_ notification: Notification) {

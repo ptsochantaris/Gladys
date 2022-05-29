@@ -24,6 +24,11 @@ extension Component {
 		cloudKitRecord = record
 	}
 
+    @MainActor
+    var parentZoneAsync: CKRecordZone.ID {
+        return parent?.parentZone ?? privateZoneId
+    }
+
 	var parentZone: CKRecordZone.ID {
 		return parent?.parentZone ?? privateZoneId
 	}

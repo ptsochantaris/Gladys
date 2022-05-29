@@ -1,7 +1,7 @@
 import CloudKit
 import GladysFramework
 
-final class PullState {
+final actor PullState {
 	var updatedSequence = false
     var newDropCount = 0 { didSet { updateProgress() } }
 	var newTypeItemCount = 0 { didSet { updateProgress() } }
@@ -16,7 +16,13 @@ final class PullState {
 	var pendingShareRecords = Set<CKShare>()
 	var pendingTypeItemRecords = Set<CKRecord>()
 
-	private func updateProgress() {
+    private func updateProgress() {
+        Task {
+            await _updateProgress()
+        }
+    }
+    
+	private func _updateProgress() async {
 		var components = [String]()
 		
 		if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
@@ -26,25 +32,18 @@ final class PullState {
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
 		
 		if components.isEmpty {
-            CloudManager.syncProgressString = "Fetching"
+            await CloudManager.setSyncProgressString("Fetching")
 		} else {
-            CloudManager.syncProgressString = "Fetched " + components.joined(separator: ", ")
+            await CloudManager.setSyncProgressString("Fetched " + components.joined(separator: ", "))
 		}
 	}
 
     func processChanges(commitTokens: Bool) async {
-		CloudManager.syncProgressString = "Updating…"
+		await CloudManager.setSyncProgressString("Updating…")
 		log("Changes fetch complete, processing")
 
         if updatedSequence || newDropCount > 0 {
-			let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
-			if !sequence.isEmpty {
-				Model.drops.sort { i1, i2 in
-					let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
-					let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
-					return p1 < p2
-				}
-			}
+            await Model.sortDrops()
 		}
 		
 		let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
@@ -58,15 +57,19 @@ final class PullState {
                     }
                 }
             }
-			Model.saveIsDueToSyncFetch = true
-			Model.save()
+            await MainActor.run {
+                Model.saveIsDueToSyncFetch = true
+                Model.save()
+            }
             await task.value
 
 		} else if !updatedZoneTokens.isEmpty {
 			// a position record, most likely?
 			if updatedSequence {
-                Model.saveIsDueToSyncFetch = true
-                Model.saveIndexOnly()
+                await MainActor.run {
+                    Model.saveIsDueToSyncFetch = true
+                    Model.saveIndexOnly()
+                }
 			}
             
 		} else {
@@ -78,53 +81,31 @@ final class PullState {
                 log("Committing change tokens")
             }
             for (zoneId, zoneToken) in updatedZoneTokens {
-                PullState.setZoneToken(zoneToken, for: zoneId)
+                setZoneToken(zoneToken, for: zoneId)
             }
             for (databaseId, databaseToken) in updatedDatabaseTokens {
-                PullState.setDatabaseToken(databaseToken, for: databaseId)
+                setDatabaseToken(databaseToken, for: databaseId)
             }
         }
-	}
-
-	private static var legacyZoneChangeToken: CKServerChangeToken? {
-		get {
-			if let data = PersistedOptions.defaults.data(forKey: "zoneChangeToken"), !data.isEmpty {
-                return SafeArchiving.unarchive(data) as? CKServerChangeToken
-			} else {
-				return nil
-			}
-		}
-		set {
-			if let n = newValue {
-                if let data = SafeArchiving.archive(n) {
-                    PersistedOptions.defaults.set(data, forKey: "zoneChangeToken")
-                }
-			} else {
-				PersistedOptions.defaults.set(emptyData, forKey: "zoneChangeToken")
-			}
-		}
-	}
-
-	static func checkMigrations() {
-		if let token = legacyZoneChangeToken {
-			setZoneToken(token, for: privateZoneId)
-			legacyZoneChangeToken = nil
-		}
 	}
 
 	///////////////////////////////////////
 
     @UserDefault(key: "zoneTokens", defaultValue: [String: Data]())
-    private static var zoneTokens: [String: Data]
+    private var zoneTokens: [String: Data]
 
-	static func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
+    static func wipeZoneTokens() {
+        PersistedOptions.defaults.removeObject(forKey: "zoneTokens")
+    }
+
+	private func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
 		if let data = zoneTokens[zoneId.ownerName + ":" + zoneId.zoneName] {
             return SafeArchiving.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}
 
-	static func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
+    private func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
 		let key = zoneId.ownerName + ":" + zoneId.zoneName
 		if let n = token {
 			zoneTokens[key] = SafeArchiving.archive(n)
@@ -133,32 +114,356 @@ final class PullState {
 		}
 	}
 
-	static func wipeZoneTokens() {
-        zoneTokens = [String: Data]()
-		legacyZoneChangeToken = nil
-	}
-
 	///////////////////////////////////////
 
     @UserDefault(key: "databaseTokens", defaultValue: [String: Data]())
-    private static var databaseTokens: [String: Data]
+    private var databaseTokens: [String: Data]
 
-	static func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
+    static func wipeDatabaseTokens() {
+        PersistedOptions.defaults.removeObject(forKey: "databaseTokens")
+    }
+
+	private func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
 		if let data = databaseTokens[database.keyName] {
             return SafeArchiving.unarchive(data) as? CKServerChangeToken
 		}
 		return nil
 	}
 
-	private static func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
+	private func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
 		if let n = token {
             databaseTokens[database.keyName] = SafeArchiving.archive(n)
 		} else {
             databaseTokens[database.keyName] = nil
 		}
 	}
+    
+    private func recordDeleted(recordId: CKRecord.ID, recordType: CloudManager.RecordType) async {
+        let itemUUID = recordId.recordName
+        switch recordType {
+        case .item:
+            if let item = await Model.itemAsync(uuid: itemUUID) {
+                if item.parentZone != recordId.zoneID {
+                    log("Ignoring delete for item \(itemUUID) from a different zone")
+                } else {
+                    log("Item deletion: \(itemUUID)")
+                    item.needsDeletion = true
+                    item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+                    item.cloudKitShareRecord = nil // get rid of useless file
+                    deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent item record \(itemUUID), ignoring")
+            }
+        case .component:
+            if let component = await Model.componentAsync(uuid: itemUUID) {
+                if component.parentZone != recordId.zoneID {
+                    log("Ignoring delete for component \(itemUUID) from a different zone")
+                } else {
+                    log("Component deletion: \(itemUUID)")
+                    component.needsDeletion = true
+                    component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+                    deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent component record \(itemUUID), ignoring")
+            }
+        case .share:
+            if let associatedItem = await Model.itemAsync(shareId: itemUUID) {
+                if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+                    log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
+                } else {
+                    log("Share record deleted for item \(associatedItem.uuid)")
+                    associatedItem.cloudKitShareRecord = nil
+                    deletionCount += 1
+                }
+            } else {
+                log("Received delete for non-existent share record \(itemUUID), ignoring")
+            }
+        case .positionList:
+            log("Positionlist record deletion detected")
+        case .extensionUpdate:
+            log("Extension record deletion detected")
+        }
+    }
+    
+    private func zoneFetchDone(zoneId: CKRecordZone.ID, token: CKServerChangeToken?, error: Error?) -> Bool {
+        if (error as? CKError)?.code == .changeTokenExpired {
+            setZoneToken(nil, for: zoneId)
+            Task {
+                await CloudManager.setSyncProgressString("Fetching Full Update…")
+            }
+            log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
+            return true
+        } else {
+            updatedZoneTokens[zoneId] = token
+            return false
+        }
+    }
 
-	static func wipeDatabaseTokens() {
-        databaseTokens = [String: Data]()
-	}
+    private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
+
+        log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
+
+        typealias ZoneConfig = CKFetchRecordZoneChangesOperation.ZoneConfiguration
+
+        var needsRetry = false
+        var configurationsByRecordZoneID = [CKRecordZone.ID: ZoneConfig]()
+        for zoneID in zoneIDs {
+            let options = ZoneConfig()
+            options.previousServerChangeToken = zoneToken(for: zoneID)
+            configurationsByRecordZoneID[zoneID] = options
+        }
+
+        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)
+
+        operation.recordWithIDWasDeletedBlock = { recordId, recordType in
+            if let type = CloudManager.RecordType(rawValue: recordType) {
+                Task {
+                    await self.recordDeleted(recordId: recordId, recordType: type)
+                }
+            }
+        }
+        operation.recordChangedBlock = { record in
+            if let type = CloudManager.RecordType(rawValue: record.recordType) {
+                Task {
+                    await self.recordChanged(record: record, recordType: type)
+                }
+            }
+        }
+        operation.recordZoneFetchCompletionBlock = { zoneId, token, _, _, error in
+            needsRetry = self.zoneFetchDone(zoneId: zoneId, token: token, error: error)
+        }
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            operation.fetchRecordZoneChangesCompletionBlock = { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+
+            CloudManager.perform(operation, on: database, type: "fetch zone changes")
+        }
+        
+        if needsRetry {
+            try await self.fetchZoneChanges(database: database, zoneIDs: zoneIDs)
+        }
+    }
+    
+    private func fetchDBChanges(database: CKDatabase) async throws -> Bool {
+
+        var changedZoneIds = Set<CKRecordZone.ID>()
+        var deletedZoneIds = Set<CKRecordZone.ID>()
+        let databaseToken = databaseToken(for: database.databaseScope)
+        let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
+        operation.recordZoneWithIDChangedBlock = { changedZoneIds.insert($0) }
+        operation.recordZoneWithIDWasPurgedBlock = {
+            deletedZoneIds.insert($0)
+            log("Detected zone purging in \(database.databaseScope.logName) database: \($0)")
+        }
+        operation.recordZoneWithIDWasDeletedBlock = {
+            deletedZoneIds.insert($0)
+            log("Detected zone deletion in \(database.databaseScope.logName) database: \($0)")
+        }
+        
+        let newToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKServerChangeToken, Error>) in
+            operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
+                if let newToken = newToken {
+                    continuation.resume(returning: newToken)
+                    return
+                }
+                let err = error ?? GladysError.blankResponse.error
+                log("\(database.databaseScope.logName) database fetch operation failed: \(err.finalDescription)")
+                continuation.resume(throwing: err)
+            }
+            CloudManager.perform(operation, on: database, type: "fetch database changes")
+        }
+
+        if deletedZoneIds.contains(privateZoneId) {
+            if database.databaseScope == .private {
+                log("Private zone has been deleted, sync must be disabled.")
+                await genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
+                try await CloudManager.deactivate(force: true)
+                return true
+            } else {
+                log("Private zone has been signaled as deleted in \(database.databaseScope.logName) database, ignoring this")
+                deletedZoneIds.remove(privateZoneId)
+            }
+        }
+
+        for deletedZoneId in deletedZoneIds {
+            log("Handling zone deletion in \(database.databaseScope.logName) database: \(deletedZoneId)")
+            await Model.removeItemsFromZone(deletedZoneId)
+            setZoneToken(nil, for: deletedZoneId)
+        }
+
+        if changedZoneIds.isEmpty {
+            log("No database changes detected in \(database.databaseScope.logName) database")
+            updatedDatabaseTokens[database.databaseScope] = newToken
+            return false
+        }
+
+        do {
+            try await fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds))
+            updatedDatabaseTokens[database.databaseScope] = newToken
+        } catch {
+            log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
+        }
+        return false
+    }
+    
+    func fetchDatabaseChanges(scope: CKDatabase.Scope?) async throws {
+        await CloudManager.setSyncProgressString("Checking…")
+
+        do {
+            let skipCommits = try await withThrowingTaskGroup(of: Bool.self, returning: Bool.self) { group in
+                if scope == nil || scope == .private {
+                    group.addTask {
+                        return try await self.fetchDBChanges(database: CloudManager.container.privateCloudDatabase)
+                    }
+                }
+
+                if scope == nil || scope == .shared {
+                    group.addTask {
+                        return try await self.fetchDBChanges(database: CloudManager.container.sharedCloudDatabase)
+                    }
+                }
+                
+                return try await group.contains { $0 == true }
+            }
+
+            try? await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                CloudManager.fetchMissingShareRecords { error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+            await processChanges(commitTokens: !skipCommits)
+
+        } catch {
+            await processChanges(commitTokens: false)
+            throw error
+        }
+    }
+
+    private func recordChanged(record: CKRecord, recordType: CloudManager.RecordType) async {
+        let recordID = record.recordID
+        let zoneID = recordID.zoneID
+        let recordUUID = recordID.recordName
+        switch recordType {
+        case .item:
+            if let item = await Model.itemAsync(uuid: recordUUID) {
+                if item.parentZone != zoneID {
+                    log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
+                } else {
+                    switch RecordChangeCheck(localRecord: item.cloudKitRecord, remoteRecord: record) {
+                    case .changed:
+                        log("Will update existing local item for cloud record \(recordUUID)")
+                        item.cloudKitUpdate(from: record)
+                        updateCount += 1
+                    case .tagOnly:
+                        log("Update but no changes to item record (\(recordUUID)) apart from tag")
+                        item.cloudKitRecord = record
+                    case .none:
+                        log("Update but no changes to item record (\(recordUUID))")
+                    }
+                }
+                    
+            } else {
+                log("Will create new local item for cloud record (\(recordUUID))")
+                let newItem = ArchivedItem(from: record)
+                let newTypeItemRecords = pendingTypeItemRecords.filter {
+                    $0.parent?.recordID == recordID // takes zone into account
+                }
+                if !newTypeItemRecords.isEmpty {
+                    pendingTypeItemRecords.subtract(newTypeItemRecords)
+                    let uuid = newItem.uuid
+                    let newComponents = newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) }
+                    newItem.components.append(contentsOf: newComponents)
+                    log("  Hooked \(newTypeItemRecords.count) pending type items")
+                }
+                if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareRecords.first(where: {
+                    $0.recordID == existingShareId // takes zone into account
+                }) {
+                    newItem.cloudKitShareRecord = pendingShareRecord
+                    pendingShareRecords.remove(pendingShareRecord)
+                    log("  Hooked onto pending share \((existingShareId.recordName))")
+                }
+                await Model.appendDropEfficientlyAsync(newItem)
+                NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
+                newDropCount += 1
+            }
+            
+        case .component:
+            if let typeItem = await Model.componentAsync(uuid: recordUUID) {
+                if (await typeItem.parentZoneAsync) != zoneID {
+                    log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
+                } else {
+                    switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
+                    case .changed:
+                        log("Will update existing local type data: (\(recordUUID))")
+                        typeItem.cloudKitUpdate(from: record)
+                        typeUpdateCount += 1
+                    case .tagOnly:
+                        log("Update but no changes to item type data record (\(recordUUID)) apart from tag")
+                        typeItem.cloudKitRecord = record
+                    case .none:
+                        log("Update but no changes to item type data record (\(recordUUID))")
+                    }
+                }
+            } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = await Model.itemAsync(uuid: parentId) {
+                if existingParent.parentZone != zoneID {
+                    log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
+                } else {
+                    log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
+                    existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
+                    newTypeItemCount += 1
+                }
+            } else {
+                pendingTypeItemRecords.insert(record)
+                log("Received new type item (\(recordUUID)) to link to upcoming new item")
+            }
+            
+        case .positionList:
+            let change = RecordChangeCheck(localRecord: await CloudManager.getUuidSequenceRecordAsync(), remoteRecord: record)
+            if change == .changed || CloudManager.lastSyncCompletion == .distantPast {
+                log("Received an updated position list record")
+                let newList = (record["positionList"] as? [String]) ?? []
+                await CloudManager.setUuidSequenceAsync(newList)
+                updatedSequence = true
+                await CloudManager.setUuidSequenceRecordAsync(record)
+            } else if change == .tagOnly {
+                log("Received non-updated position list record, updated tag")
+                await CloudManager.setUuidSequenceRecordAsync(record)
+            } else {
+                log("Received non-updated position list record")
+            }
+            
+        case .share:
+            if let share = record as? CKShare {
+                if let associatedItem = await Model.itemAsync(shareId: recordUUID) {
+                    if associatedItem.parentZone != zoneID {
+                        log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
+                    } else {
+                        log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
+                        associatedItem.cloudKitShareRecord = share
+                        updateCount += 1
+                    }
+                } else {
+                    pendingShareRecords.insert(share)
+                    log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
+                }
+            }
+            
+        case .extensionUpdate:
+            log("Received an extension update record")
+            PersistedOptions.extensionRequestedSync = false
+        }
+    }
+
 }

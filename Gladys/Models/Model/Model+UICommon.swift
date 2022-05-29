@@ -159,6 +159,7 @@ extension Model {
         delete(items: toDelete)
 	}
 
+    @MainActor
 	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
 		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
 		for item in itemsRelatedToZone {
@@ -209,6 +210,18 @@ extension Model {
     
     static func updateBadge() {
         self.badgeTimer.push()
+    }
+    
+    @MainActor
+    static func sortDrops() {
+        let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
+        if !sequence.isEmpty {
+            drops.sort { i1, i2 in
+                let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
+                let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
+                return p1 < p2
+            }
+        }
     }
 
 	///////////////////////// Migrating

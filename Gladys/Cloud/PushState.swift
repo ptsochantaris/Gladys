@@ -124,7 +124,10 @@ final class PushState {
 		if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
 		let deletionCount = recordsToDelete.count
 		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-        CloudManager.syncProgressString = "Sending" + (components.isEmpty ? "" : (" " + components.joined(separator: ", ")))
+        let cs = components
+        Task {
+            await CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
+        }
 	}
 
 	var progress: Progress {

@@ -197,8 +197,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Model.setup()
         
         CallbackSupport.setupCallbackSupport()
-
-        PullState.checkMigrations()
     }
                 
 	func applicationWillFinishLaunching(_ notification: Notification) {
