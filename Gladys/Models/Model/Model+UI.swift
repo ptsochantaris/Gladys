@@ -128,7 +128,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
 		}
 	}
 
-    fileprivate func buildContext(completion: @escaping ([String: Any]?) -> Void) {
+    private func buildContext(completion: @escaping ([String: Any]?) -> Void) {
         BackgroundTask.registerForBackground()
 
         DispatchQueue.main.async {
@@ -147,7 +147,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-	fileprivate func updateContext() {
+    fileprivate func updateContext() {
 		let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
         buildContext { context in
