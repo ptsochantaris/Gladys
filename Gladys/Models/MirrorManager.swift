@@ -38,15 +38,15 @@ final class MirrorManager {
         }
     }
     
-    static func removeMirrorIfNeeded(completion: @escaping () -> Void) {
-        coordinateWrite(types: [.forDeleting]) {
-            log("Deleting file mirror")
-            let f = FileManager.default
-            if f.fileExists(atPath: mirrorBase.path) {
-                try? f.removeItem(at: mirrorBase)
-            }
-            DispatchQueue.main.async {
-                completion()
+    static func removeMirrorIfNeeded() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            coordinateWrite(types: [.forDeleting]) {
+                log("Deleting file mirror")
+                let f = FileManager.default
+                if f.fileExists(atPath: mirrorBase.path) {
+                    try? f.removeItem(at: mirrorBase)
+                }
+                continuation.resume()
             }
         }
     }
@@ -79,20 +79,24 @@ final class MirrorManager {
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
             if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), let typeItem = Model.component(uuid: uuid) {
-                typeItem.parent?.assimilateMirrorChanges()
+                DispatchQueue.main.async {
+                    typeItem.parent?.assimilateMirrorChanges()
+                }
             }
         }
     }
     
-    static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>, completion: @escaping () -> Void) {
-        coordinateRead(type: []) {
-            let start = Date()
-            for item in items {
-                item.assimilateMirrorChanges()
-            }
-            log("Mirror scan done \(-start.timeIntervalSinceNow)s")
-            DispatchQueue.main.async {
-                completion()
+    static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            coordinateRead(type: []) {
+                let start = Date()
+                for item in items {
+                    DispatchQueue.main.async {
+                        item.assimilateMirrorChanges()
+                    }
+                }
+                log("Mirror scan done \(-start.timeIntervalSinceNow)s")
+                continuation.resume()
             }
         }
     }
@@ -106,50 +110,50 @@ final class MirrorManager {
         }
     }
     
-    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool, completion: @escaping () -> Void) {
-        coordinateWrite(types: [.forDeleting, .forMerging]) {
-            
-            do {
-                let start = Date()
-                let f = FileManager.default
-                let baseDir = mirrorBase.path
+    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            coordinateWrite(types: [.forDeleting, .forMerging]) {
+                do {
+                    let start = Date()
+                    let f = FileManager.default
+                    let baseDir = mirrorBase.path
 
-                var pathsExamined = Set<String>()
-                pathsExamined.reserveCapacity(drops.count)
+                    var pathsExamined = Set<String>()
+                    pathsExamined.reserveCapacity(drops.count)
 
-                if !f.fileExists(atPath: baseDir) {
-                    log("Creating mirror directory \(baseDir)")
-                    try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
-                }
-                
-                for drop in drops.filter({ $0.eligibleForExternalUpdateCheck }) {
-                    if let examinedPath = try drop.mirrorToFiles(using: f, pathsExamined: pathsExamined) {
-                        pathsExamined.insert(examinedPath)
+                    if !f.fileExists(atPath: baseDir) {
+                        log("Creating mirror directory \(baseDir)")
+                        try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
                     }
-                }
-
-                if andPruneOthers {
-                    let prefix = baseDir + "/"
-                    try f.contentsOfDirectory(atPath: baseDir).forEach {
-                        let p = prefix + $0
-                        if !pathsExamined.contains(p) {
-                            log("Pruning \(p)")
-                            try f.removeItem(atPath: p)
+                    
+                    for drop in drops.filter({ $0.eligibleForExternalUpdateCheck }) {
+                        if let examinedPath = try drop.mirrorToFiles(using: f, pathsExamined: pathsExamined) {
+                            pathsExamined.insert(examinedPath)
                         }
                     }
+
+                    if andPruneOthers {
+                        let prefix = baseDir + "/"
+                        try f.contentsOfDirectory(atPath: baseDir).forEach {
+                            let p = prefix + $0
+                            if !pathsExamined.contains(p) {
+                                log("Pruning \(p)")
+                                try f.removeItem(atPath: p)
+                            }
+                        }
+                    }
+
+                    log("Mirroring done \(-start.timeIntervalSinceNow)s")
+
+                } catch {
+                    log("Error while mirroring: \(error.localizedDescription)")
                 }
-
-                log("Mirroring done \(-start.timeIntervalSinceNow)s")
-
-            } catch {
-                log("Error while mirroring: \(error.localizedDescription)")
+                continuation.resume()
             }
-
-            DispatchQueue.main.async {
-                for drop in drops where drop.flags.contains(.skipMirrorAtNextSave) {
-                    drop.flags.remove(.skipMirrorAtNextSave)
-                }
-                completion()
+        }
+        await MainActor.run {
+            for drop in drops where drop.flags.contains(.skipMirrorAtNextSave) {
+                drop.flags.remove(.skipMirrorAtNextSave)
             }
         }
     }
@@ -306,6 +310,7 @@ extension ArchivedItem {
 
 extension Component {
     
+    // TODO renaming item keeps the old file
     fileprivate func mirror(to path: String, using f: FileManager) throws -> Bool {
         
         if !f.fileExists(atPath: bytesPath.path) {

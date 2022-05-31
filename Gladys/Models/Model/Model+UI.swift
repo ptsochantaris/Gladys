@@ -238,7 +238,8 @@ extension Model {
             saveOverlap -= 1
             if saveOverlap == 0 {
                 if PersistedOptions.mirrorFilesToDocuments {
-                    updateMirror {
+                    Task {
+                        await updateMirror()
                         saveDone()
                     }
                 } else {
@@ -292,37 +293,35 @@ extension Model {
 		NSFileCoordinator.removeFilePresenter(filePresenter)
 	}
     
-    static func createMirror(completion: @escaping () -> Void) {
+    static func createMirror() async {
         log("Creating file mirror")
         drops.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
-        runMirror(completion: completion)
+        await runMirror()
     }
 
-    static func updateMirror(completion: @escaping () -> Void) {
+    static func updateMirror() async {
         log("Updating file mirror")
-        runMirror(completion: completion)
+        await runMirror()
     }
 
-    private static func runMirror(completion: @escaping () -> Void) {
+    @MainActor
+    private static func runMirror() async {
         let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
         BackgroundTask.registerForBackground()
-        MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true) {
-            completion()
-            BackgroundTask.unregisterForBackground()
-        }
+        await MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true)
+        BackgroundTask.unregisterForBackground()
     }
     
-    static func scanForMirrorChanges(completion: @escaping () -> Void) {
+    @MainActor
+    static func scanForMirrorChanges() async {
         BackgroundTask.registerForBackground()
         let itemsToMirror: ContiguousArray = drops.filter { $0.goodToSave }
-        MirrorManager.scanForMirrorChanges(items: itemsToMirror) {
-            completion()
-            BackgroundTask.unregisterForBackground()
-        }
+        await MirrorManager.scanForMirrorChanges(items: itemsToMirror)
+        BackgroundTask.unregisterForBackground()
     }
     
-    static func deleteMirror(completion: @escaping () -> Void) {
-        MirrorManager.removeMirrorIfNeeded(completion: completion)
+    static func deleteMirror() async {
+        await MirrorManager.removeMirrorIfNeeded()
     }
     
     static func _updateBadge() {

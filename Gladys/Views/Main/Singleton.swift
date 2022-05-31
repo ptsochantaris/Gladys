@@ -28,7 +28,9 @@ final class Singleton {
         
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
-            Model.scanForMirrorChanges {}
+            Task {
+                await Model.scanForMirrorChanges()
+            }
         }
 
         let n = NotificationCenter.default
@@ -47,7 +49,9 @@ final class Singleton {
             // foregrounding, not including app launch
             log("App foregrounded")
             if PersistedOptions.mirrorFilesToDocuments {
-                Model.scanForMirrorChanges {}
+                Task {
+                    await Model.scanForMirrorChanges()
+                }
             }
             CloudManager.opportunisticSyncIfNeeded()
         }
