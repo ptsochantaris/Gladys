@@ -10,7 +10,6 @@ import CloudKit
 import UIKit
 
 extension CloudManager {
-
     private static func getDeviceId() -> Data {
         guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return emptyData }
         var uuidBytes = [UInt8](repeating: 0, count: 16)
@@ -20,9 +19,9 @@ extension CloudManager {
 
     static func signalExtensionUpdate() {
         guard syncSwitchedOn else { return }
-        
+
         PersistedOptions.extensionRequestedSync = true
-        
+
         let deviceUUID = "\(getDeviceId().base64EncodedString())/\(UUID().uuidString)"
         log("Updating extension update record: \(deviceUUID)")
 
@@ -39,7 +38,7 @@ extension CloudManager {
                 log("Extension update posted")
             }
         }
-        
+
         container.privateCloudDatabase.add(operation)
     }
 }

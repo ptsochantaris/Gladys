@@ -8,6 +8,4 @@
 
 import WatchKit
 
-final class InterfaceController: WKInterfaceController {
-
-}
+final class InterfaceController: WKInterfaceController {}

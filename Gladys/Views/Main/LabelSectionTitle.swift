@@ -21,44 +21,43 @@ final class PassthroughStackView: UIStackView {
 }
 
 final class ScrollFadeView: UICollectionReusableView {
-    
     private weak var viewController: ViewController?
     private var toggle: Filter.Toggle?
-    
+
     private var sectionCount: Int {
         guard let viewController = viewController, let toggle = toggle else {
             return 0
         }
         return viewController.filter.countItems(for: toggle)
     }
-    
+
     func configure(with toggle: Filter.Toggle, viewController: ViewController) {
         self.toggle = toggle
         self.viewController = viewController
         updateColor()
     }
-    
+
     override class var layerClass: AnyClass {
-        return CAGradientLayer.self
+        CAGradientLayer.self
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
         NotificationCenter.default.addObserver(self, selector: #selector(updateColor), name: .ModelDataUpdated, object: nil)
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColor()
     }
-    
+
     @objc private func updateColor() {
-        let g = self.layer as! CAGradientLayer
+        let g = layer as! CAGradientLayer
         if let count = viewController?.currentColumnCount, sectionCount > count {
             g.startPoint = CGPoint(x: 0, y: 0)
             g.endPoint = CGPoint(x: 1, y: 0)
@@ -70,26 +69,26 @@ final class ScrollFadeView: UICollectionReusableView {
             g.isHidden = true
         }
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 final class LabelSectionTitle: UICollectionReusableView {
-    
     static let height: CGFloat = 50
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
-    
+
     private let label = UILabel()
     private let indicator = UIImageView()
     private let showAllButton = UIButton(type: .custom)
@@ -108,14 +107,14 @@ final class LabelSectionTitle: UICollectionReusableView {
         isUserInteractionEnabled = true
         addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
-        
+
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
             guard let self = self else { return }
-            if context.state == .activated && self.mode == .collapsed {
+            if context.state == .activated, self.mode == .collapsed {
                 NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
             }
         })
-        
+
         layer.cornerRadius = 15
 
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
@@ -123,7 +122,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
@@ -133,7 +132,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        
+
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
@@ -142,7 +141,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
-        
+
         let stack = PassthroughStackView(arrangedSubviews: [label, showAllButton, indicator])
         stack.axis = .horizontal
         stack.alignment = .fill
@@ -161,7 +160,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         addSubview(topLine)
         addSubview(bottomLine)
         addSubview(stack)
-        
+
         NSLayoutConstraint.activate([
             selectionButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             selectionButton.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -172,35 +171,35 @@ final class LabelSectionTitle: UICollectionReusableView {
             stack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -2),
             stack.topAnchor.constraint(equalTo: topAnchor),
             stack.bottomAnchor.constraint(equalTo: bottomAnchor),
-                        
+
             topLine.heightAnchor.constraint(equalToConstant: pixelSize),
             topLine.topAnchor.constraint(equalTo: topAnchor),
             topLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             topLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44),
-            
+
             bottomLine.heightAnchor.constraint(equalToConstant: pixelSize),
             bottomLine.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(setNeedsLayout), name: .ModelDataUpdated, object: nil)
     }
-    
+
     func reset() {
         layoutForColumnCount = 0
         setNeedsLayout()
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-        
+
     func configure(with toggle: Filter.Toggle, firstSection: Bool, viewController: ViewController, menuOptions: [UIMenuElement]) {
         self.viewController = viewController
         self.menuOptions = menuOptions
         self.toggle = toggle
-        
+
         mode = toggle.currentDisplayMode
         label.text = toggle.function.displayText
         let labelFont = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
@@ -237,17 +236,17 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.isHidden = true
             showAllButton.setTitle("Less", for: .normal)
         }
-        
+
         updateMoreButton()
     }
-    
+
     override func layoutSubviews() {
         if let viewController = viewController, layoutForColumnCount != viewController.currentColumnCount {
             updateMoreButton()
         }
         super.layoutSubviews()
     }
-    
+
     private func updateMoreButton() {
         guard let viewController = viewController else {
             return
@@ -256,26 +255,26 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.isHidden = mode == .collapsed || sectionCount <= current
         layoutForColumnCount = current
     }
-    
+
     private var sectionCount: Int {
         guard let viewController = viewController, let toggle = toggle else {
             return 0
         }
         return viewController.filter.countItems(for: toggle)
     }
-    
+
     private var previewRect: CGRect {
-        return CGRect(x: 0, y: 0, width: 280, height: LabelSectionTitle.height * 2)
+        CGRect(x: 0, y: 0, width: 280, height: LabelSectionTitle.height * 2)
     }
-    
+
     private func createLabelView() -> UIView {
         let labelView = UILabel(frame: .zero)
-        labelView.text = self.toggle?.function.displayText
+        labelView.text = toggle?.function.displayText
         labelView.font = UIFont.preferredFont(forTextStyle: .headline)
         labelView.textColor = UIColor.g_colorTint
         labelView.textAlignment = .center
         labelView.setContentHuggingPriority(.required, for: .vertical)
-        
+
         let n = NumberFormatter()
         n.numberStyle = .decimal
         let number = n.string(for: sectionCount) ?? ""
@@ -303,7 +302,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         holder.frame = previewRect
         return holder
     }
-    
+
     private func dragParams() -> UIDragPreviewParameters {
         let params = UIDragPreviewParameters()
         params.visiblePath = UIBezierPath(roundedRect: previewRect, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 15, height: 15))
@@ -312,15 +311,15 @@ final class LabelSectionTitle: UICollectionReusableView {
 }
 
 extension LabelSectionTitle: UIContextMenuInteractionDelegate {
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        var myOptions = self.menuOptions
-        if UIApplication.shared.supportsMultipleScenes, let scene = self.window?.windowScene {
+    func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
+        var myOptions = menuOptions
+        if UIApplication.shared.supportsMultipleScenes, let scene = window?.windowScene {
             let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
                 self?.toggle?.function.openInWindow(from: scene)
             }
             myOptions.append(windowOption)
         }
-        
+
         return UIContextMenuConfiguration(identifier: nil) {
             let vc = UIViewController()
             let labelView = self.createLabelView()
@@ -328,16 +327,16 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
             vc.view.addSubview(labelView)
             return vc
         } actionProvider: { _ in
-            return UIMenu(title: "All Sections", image: nil, identifier: nil, options: [], children: myOptions)
+            UIMenu(title: "All Sections", image: nil, identifier: nil, options: [], children: myOptions)
         }
     }
 }
 
 extension LabelSectionTitle: UIDragInteractionDelegate {
-    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+    func dragInteraction(_: UIDragInteraction, itemsForBeginning _: UIDragSession) -> [UIDragItem] {
         if let toggle = toggle, let label = toggle.function.dragItem {
             label.previewProvider = {
-                return UIDragPreview(view: self.createLabelView(), parameters: self.dragParams())
+                UIDragPreview(view: self.createLabelView(), parameters: self.dragParams())
             }
             return [label]
         } else {

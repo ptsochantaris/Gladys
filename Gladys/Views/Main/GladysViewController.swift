@@ -23,36 +23,36 @@ final class GladysView: UIView {
 }
 
 class GladysViewController: UIViewController, GladysViewDelegate {
+    enum ActionLocation {
+        case none, left, right
+    }
 
-	enum ActionLocation {
-		case none, left, right
-	}
-	var doneButtonLocation = ActionLocation.none
+    var doneButtonLocation = ActionLocation.none
     var windowButtonLocation = ActionLocation.none
     var dismissOnNewWindow = true
     var autoConfigureButtons = false
     var firstAppearance = true
 
-	var initialAccessibilityElement: UIView {
-		return navigationController?.navigationBar ?? view
-	}
+    var initialAccessibilityElement: UIView {
+        navigationController?.navigationBar ?? view
+    }
 
-	func focusInitialAccessibilityElement() {
-		UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
-	}
+    func focusInitialAccessibilityElement() {
+        UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
+    }
 
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         firstAppearance = false
-		if popoverPresenter != nil {
-			UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
-		}
-	}
-    
-	private var popoverPresenter: UIViewController? {
-		return popoverPresentationController?.presentingViewController ?? navigationController?.popoverPresentationController?.presentingViewController
-	}
-    
+        if popoverPresenter != nil {
+            UIAccessibility.post(notification: .layoutChanged, argument: initialAccessibilityElement)
+        }
+    }
+
+    private var popoverPresenter: UIViewController? {
+        popoverPresentationController?.presentingViewController ?? navigationController?.popoverPresentationController?.presentingViewController
+    }
+
     override func viewDidLoad() {
         autoConfigureButtons = isAccessoryWindow
         super.viewDidLoad()
@@ -60,55 +60,55 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         n.addObserver(self, selector: #selector(multipleWindowModeChange), name: .MultipleWindowModeChange, object: nil)
         (view as? GladysView)?.delegate = self
     }
-    
+
     @objc private func multipleWindowModeChange() {
         updateButtons(newTraitCollection: view.traitCollection)
     }
-    
+
     func movedToWindow() {
         updateButtons(newTraitCollection: view.traitCollection)
     }
-    
-	private weak var vcToFocusAfterDismissal: UIViewController?
 
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		if navigationController?.isBeingDismissed ?? isBeingDismissed, let v = popoverPresenter {
-			if let v = v as? UINavigationController {
-				vcToFocusAfterDismissal = v.viewControllers.last
-			} else {
-				vcToFocusAfterDismissal = v
-			}
-		}
-	}
+    private weak var vcToFocusAfterDismissal: UIViewController?
 
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewDidDisappear(animated)
-		if let v = vcToFocusAfterDismissal {
-			if let v = v as? GladysViewController {
-				UIAccessibility.post(notification: .layoutChanged, argument: v.initialAccessibilityElement)
-			} else {
-				UIAccessibility.post(notification: .layoutChanged, argument: v.view)
-			}
-		}
-	}
-    
-	@objc func done() {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if navigationController?.isBeingDismissed ?? isBeingDismissed, let v = popoverPresenter {
+            if let v = v as? UINavigationController {
+                vcToFocusAfterDismissal = v.viewControllers.last
+            } else {
+                vcToFocusAfterDismissal = v
+            }
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let v = vcToFocusAfterDismissal {
+            if let v = v as? GladysViewController {
+                UIAccessibility.post(notification: .layoutChanged, argument: v.initialAccessibilityElement)
+            } else {
+                UIAccessibility.post(notification: .layoutChanged, argument: v.view)
+            }
+        }
+    }
+
+    @objc func done() {
         NotificationCenter.default.removeObserver(self) // avoid any notifications while being dismissed or if we stick around for a short while
-        if (isAccessoryWindow || self is ViewController), let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
+        if isAccessoryWindow || self is ViewController, let session = (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.session {
             let options = UIWindowSceneDestructionRequestOptions()
             options.windowDismissalAnimation = .standard
             UIApplication.shared.requestSceneSessionDestruction(session, options: options, errorHandler: nil)
         } else {
             dismiss(animated: true)
         }
-	}
-                
+    }
+
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
         updateButtons(newTraitCollection: newCollection)
     }
-    
+
     @objc private func newWindowSelected() {
         let activity = userActivity
         if dismissOnNewWindow {
@@ -130,7 +130,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         }
     }
 
-	private func showDone(_ show: Bool) {
+    private func showDone(_ show: Bool) {
         #if targetEnvironment(macCatalyst)
             if doneButtonLocation != ActionLocation.right {
                 showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
@@ -138,8 +138,8 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         #else
             showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
         #endif
-	}
-    
+    }
+
     private func showWindow(_ show: Bool) {
         showButton(show && isAccessoryWindow, location: windowButtonLocation, button: mainWindowButton, priority: false)
         showButton(show && !isAccessoryWindow, location: windowButtonLocation, button: newWindowButton, priority: false)
@@ -150,7 +150,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         switch location {
         case .left:
             var leftItems = navigationItem.leftBarButtonItems ?? []
-            if show && !leftItems.contains(where: { $0.tag == tag }) {
+            if show, !leftItems.contains(where: { $0.tag == tag }) {
                 if priority {
                     leftItems.insert(button, at: 0)
                 } else {
@@ -162,7 +162,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             }
         case .right:
             var rightItems = navigationItem.rightBarButtonItems ?? []
-            if show && !rightItems.contains(where: { $0.tag == tag }) {
+            if show, !rightItems.contains(where: { $0.tag == tag }) {
                 if priority {
                     rightItems.insert(button, at: 0)
                 } else {
@@ -178,7 +178,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         }
         navigationController?.navigationBar.setNeedsLayout()
     }
-    
+
     private func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if Singleton.shared.openCount > 1 {
@@ -189,13 +189,13 @@ class GladysViewController: UIViewController, GladysViewDelegate {
                 windowButtonLocation = .right
             }
         }
-                
+
         if doneButtonLocation == .none {
             showDone(false)
 
         } else if UIAccessibility.isVoiceOverRunning || isAccessoryWindow {
             showDone(true)
-            
+
         } else if isHovering { // hovering
             if newTraitCollection.horizontalSizeClass == .compact {
                 showDone(false)
@@ -203,54 +203,54 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             } else {
                 showDone(newTraitCollection.verticalSizeClass == .compact)
             }
-            
+
         } else { // full window?
             showDone(popoverPresentationController == nil || phoneMode)
         }
-        
+
         let w = windowButtonLocation != .none && UIApplication.shared.supportsMultipleScenes
         showWindow(w)
     }
-    
-	private lazy var doneButton: UIBarButtonItem = {
+
+    private lazy var doneButton: UIBarButtonItem = {
         let b = makeDoneButton(target: self, action: #selector(done))
         b.tag = 10925
         return b
-	}()
-    
+    }()
+
     private lazy var mainWindowButton: UIBarButtonItem = {
         let b = UIBarButtonItem(title: "Main Window", style: .plain, target: self, action: #selector(mainWindowSelected))
         b.image = UIImage(systemName: "square.grid.2x2")
         b.tag = 10924
         return b
     }()
-    
+
     private lazy var newWindowButton: UIBarButtonItem = {
         let b = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
         b.image = UIImage(systemName: "uiwindow.split.2x1")
         b.tag = 10923
         return b
     }()
-    
+
     // MARK: scrolling
-    
+
     private final class ScrollInfo {
         let scrollLink: CADisplayLink
         let scrollView: UIScrollView
-        
+
         init(scrollView: UIScrollView, target: AnyObject, selector: Selector) {
             self.scrollView = scrollView
             scrollLink = CADisplayLink(target: target, selector: selector)
             scrollLink.add(to: RunLoop.main, forMode: .common)
         }
-        
+
         deinit {
             scrollLink.invalidate()
         }
     }
-    
+
     private var scrollInfo: ScrollInfo?
-    
+
     var explicitScrolling = false
 
     override var keyCommands: [UIKeyCommand]? {
@@ -271,7 +271,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         if itemsToCheck.contains(mainWindowButton) {
             a.append(UIKeyCommand(title: "Main Window", action: #selector(mainWindowSelected), input: "n", modifierFlags: .command))
         }
-        if self.popoverPresenter != nil {
+        if popoverPresenter != nil {
             let esc = UIKeyCommand.makeCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(done), title: "Close Popup")
             a.insert(esc, at: 0)
         }
@@ -306,7 +306,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         }
         return false
     }
-    
+
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         if explicitScrolling, let scr = view.subviews.compactMap({ $0 as? UIScrollView }).lazy.first {
             let code = presses.first?.key?.keyCode
@@ -332,7 +332,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             super.pressesCancelled(presses, with: event)
         }
     }
-    
+
     @objc private func scrollLineUp() {
         if let firstScrollView = scrollInfo?.scrollView {
             var newPos = firstScrollView.contentOffset

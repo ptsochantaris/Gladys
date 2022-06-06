@@ -10,38 +10,38 @@ import UIKit
 
 final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
     override class func contentViewInsets() -> UIEdgeInsets {
-        return .zero
+        .zero
     }
-    
+
     private let arrowRectangle = Arrow(frame: CGRect(x: 0, y: 0, width: 44, height: 12))
 
     override class func arrowBase() -> CGFloat {
-        return 44
+        44
     }
-    
+
     override class func arrowHeight() -> CGFloat {
-        return 12
+        12
     }
-    
+
     override class var wantsDefaultContentAppearance: Bool {
-        return true
+        true
     }
-    
+
     private var _arrowDirection: UIPopoverArrowDirection = .unknown
     override var arrowDirection: UIPopoverArrowDirection {
         get {
-            return _arrowDirection
+            _arrowDirection
         }
         set {
             _arrowDirection = newValue
             setNeedsLayout()
         }
     }
-    
+
     private var _arrowOffset: CGFloat = 0
     override var arrowOffset: CGFloat {
         get {
-            return _arrowOffset
+            _arrowOffset
         }
         set {
             _arrowOffset = newValue
@@ -62,9 +62,12 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
             super.init(frame: frame)
             isOpaque = false
         }
-        required init?(coder: NSCoder) {
+
+        @available(*, unavailable)
+        required init?(coder _: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
+
         override func draw(_ rect: CGRect) {
             super.draw(rect)
 
@@ -78,40 +81,41 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
             path.fill()
         }
     }
-        
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(containerRectangle)
         addSubview(arrowRectangle)
-        
+
         updateColors()
     }
-    
+
     private var darkMode: Bool {
-        return traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
+        traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
     }
-    
+
     private func updateColors() {
         layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.75 : 0.25).cgColor
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateColors()
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         let arrowHeight = GladysPopoverBackgroundView.arrowHeight()
         var backgroundFrame = frame
         let arrowCenter: CGPoint
         let arrowTransformInRadians: CGFloat
-        
+
         switch arrowDirection {
         case .up:
             backgroundFrame.origin.y += arrowHeight
@@ -131,7 +135,7 @@ final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
             backgroundFrame.size.width -= arrowHeight
             arrowTransformInRadians = CGFloat.pi * 0.5
             arrowCenter = CGPoint(x: backgroundFrame.size.width + arrowHeight * 0.5, y: backgroundFrame.size.height * 0.5 + arrowOffset)
-        case .unknown, .any:
+        case .any, .unknown:
             return // doesn't apply here
         default:
             return

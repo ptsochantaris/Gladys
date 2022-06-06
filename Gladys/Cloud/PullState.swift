@@ -2,54 +2,54 @@ import CloudKit
 import GladysFramework
 
 final actor PullState {
-	var updatedSequence = false
+    var updatedSequence = false
     var newDropCount = 0 { didSet { updateProgress() } }
-	var newTypeItemCount = 0 { didSet { updateProgress() } }
+    var newTypeItemCount = 0 { didSet { updateProgress() } }
 
-	var typeUpdateCount = 0 { didSet { updateProgress() } }
-	var deletionCount = 0 { didSet { updateProgress() } }
-	var updateCount = 0 { didSet { updateProgress() } }
-	var newTypesAppended = 0
-	
-	var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
-	var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
-	var pendingShareRecords = Set<CKShare>()
-	var pendingTypeItemRecords = Set<CKRecord>()
+    var typeUpdateCount = 0 { didSet { updateProgress() } }
+    var deletionCount = 0 { didSet { updateProgress() } }
+    var updateCount = 0 { didSet { updateProgress() } }
+    var newTypesAppended = 0
+
+    var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
+    var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
+    var pendingShareRecords = Set<CKShare>()
+    var pendingTypeItemRecords = Set<CKRecord>()
 
     private func updateProgress() {
         Task {
             await _updateProgress()
         }
     }
-    
-	private func _updateProgress() async {
-		var components = [String]()
-		
-		if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
+
+    private func _updateProgress() async {
+        var components = [String]()
+
+        if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
         if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
-		if newTypeItemCount > 0 { components.append(newTypeItemCount == 1 ? "1 Component" : "\(newTypeItemCount) Components") }
-		if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
-		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-		
-		if components.isEmpty {
+        if newTypeItemCount > 0 { components.append(newTypeItemCount == 1 ? "1 Component" : "\(newTypeItemCount) Components") }
+        if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
+        if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+
+        if components.isEmpty {
             await CloudManager.setSyncProgressString("Fetching")
-		} else {
+        } else {
             await CloudManager.setSyncProgressString("Fetched " + components.joined(separator: ", "))
-		}
-	}
+        }
+    }
 
     func processChanges(commitTokens: Bool) async {
-		await CloudManager.setSyncProgressString("Updating…")
-		log("Changes fetch complete, processing")
+        await CloudManager.setSyncProgressString("Updating…")
+        log("Changes fetch complete, processing")
 
         if updatedSequence || newDropCount > 0 {
             await Model.sortDrops()
-		}
-		
-		let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
+        }
 
-		if itemsModified {
-			// need to save stuff that's been modified
+        let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
+
+        if itemsModified {
+            // need to save stuff that's been modified
             let task = Task {
                 await withCheckedContinuation { continuation in
                     Model.queueNextSaveCallback {
@@ -63,19 +63,19 @@ final actor PullState {
             }
             await task.value
 
-		} else if !updatedZoneTokens.isEmpty {
-			// a position record, most likely?
-			if updatedSequence {
+        } else if !updatedZoneTokens.isEmpty {
+            // a position record, most likely?
+            if updatedSequence {
                 await MainActor.run {
                     Model.saveIsDueToSyncFetch = true
                     Model.saveIndexOnly()
                 }
-			}
-            
-		} else {
-			log("No updates available")
-		}
-        
+            }
+
+        } else {
+            log("No updates available")
+        }
+
         if commitTokens {
             if !updatedZoneTokens.isEmpty || !updatedDatabaseTokens.isEmpty {
                 log("Committing change tokens")
@@ -87,9 +87,9 @@ final actor PullState {
                 setDatabaseToken(databaseToken, for: databaseId)
             }
         }
-	}
+    }
 
-	///////////////////////////////////////
+    ///////////////////////////////////////
 
     @UserDefault(key: "zoneTokens", defaultValue: [String: Data]())
     private var zoneTokens: [String: Data]
@@ -98,23 +98,23 @@ final actor PullState {
         PersistedOptions.defaults.removeObject(forKey: "zoneTokens")
     }
 
-	private func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
-		if let data = zoneTokens[zoneId.ownerName + ":" + zoneId.zoneName] {
+    private func zoneToken(for zoneId: CKRecordZone.ID) -> CKServerChangeToken? {
+        if let data = zoneTokens[zoneId.ownerName + ":" + zoneId.zoneName] {
             return SafeArchiving.unarchive(data) as? CKServerChangeToken
-		}
-		return nil
-	}
+        }
+        return nil
+    }
 
     private func setZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
-		let key = zoneId.ownerName + ":" + zoneId.zoneName
-		if let n = token {
-			zoneTokens[key] = SafeArchiving.archive(n)
-		} else {
+        let key = zoneId.ownerName + ":" + zoneId.zoneName
+        if let n = token {
+            zoneTokens[key] = SafeArchiving.archive(n)
+        } else {
             zoneTokens[key] = nil
-		}
-	}
+        }
+    }
 
-	///////////////////////////////////////
+    ///////////////////////////////////////
 
     @UserDefault(key: "databaseTokens", defaultValue: [String: Data]())
     private var databaseTokens: [String: Data]
@@ -123,21 +123,21 @@ final actor PullState {
         PersistedOptions.defaults.removeObject(forKey: "databaseTokens")
     }
 
-	private func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
-		if let data = databaseTokens[database.keyName] {
+    private func databaseToken(for database: CKDatabase.Scope) -> CKServerChangeToken? {
+        if let data = databaseTokens[database.keyName] {
             return SafeArchiving.unarchive(data) as? CKServerChangeToken
-		}
-		return nil
-	}
+        }
+        return nil
+    }
 
-	private func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
-		if let n = token {
+    private func setDatabaseToken(_ token: CKServerChangeToken?, for database: CKDatabase.Scope) {
+        if let n = token {
             databaseTokens[database.keyName] = SafeArchiving.archive(n)
-		} else {
+        } else {
             databaseTokens[database.keyName] = nil
-		}
-	}
-    
+        }
+    }
+
     private func recordDeleted(recordId: CKRecord.ID, recordType: CloudManager.RecordType) async {
         let itemUUID = recordId.recordName
         switch recordType {
@@ -186,7 +186,7 @@ final actor PullState {
             log("Extension record deletion detected")
         }
     }
-    
+
     private func zoneFetchDone(zoneId: CKRecordZone.ID, token: CKServerChangeToken?, error: Error?) -> Bool {
         if (error as? CKError)?.code == .changeTokenExpired {
             setZoneToken(nil, for: zoneId)
@@ -202,7 +202,6 @@ final actor PullState {
     }
 
     private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
-
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
         typealias ZoneConfig = CKFetchRecordZoneChangesOperation.ZoneConfiguration
@@ -246,14 +245,13 @@ final actor PullState {
 
             CloudManager.perform(operation, on: database, type: "fetch zone changes")
         }
-        
+
         if needsRetry {
-            try await self.fetchZoneChanges(database: database, zoneIDs: zoneIDs)
+            try await fetchZoneChanges(database: database, zoneIDs: zoneIDs)
         }
     }
-    
-    private func fetchDBChanges(database: CKDatabase) async throws -> Bool {
 
+    private func fetchDBChanges(database: CKDatabase) async throws -> Bool {
         var changedZoneIds = Set<CKRecordZone.ID>()
         var deletedZoneIds = Set<CKRecordZone.ID>()
         let databaseToken = databaseToken(for: database.databaseScope)
@@ -267,7 +265,7 @@ final actor PullState {
             deletedZoneIds.insert($0)
             log("Detected zone deletion in \(database.databaseScope.logName) database: \($0)")
         }
-        
+
         let newToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKServerChangeToken, Error>) in
             operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
                 if let newToken = newToken {
@@ -313,7 +311,7 @@ final actor PullState {
         }
         return false
     }
-    
+
     func fetchDatabaseChanges(scope: CKDatabase.Scope?) async throws {
         await CloudManager.setSyncProgressString("Checking…")
 
@@ -321,16 +319,16 @@ final actor PullState {
             let skipCommits = try await withThrowingTaskGroup(of: Bool.self, returning: Bool.self) { group in
                 if scope == nil || scope == .private {
                     group.addTask {
-                        return try await self.fetchDBChanges(database: CloudManager.container.privateCloudDatabase)
+                        try await self.fetchDBChanges(database: CloudManager.container.privateCloudDatabase)
                     }
                 }
 
                 if scope == nil || scope == .shared {
                     group.addTask {
-                        return try await self.fetchDBChanges(database: CloudManager.container.sharedCloudDatabase)
+                        try await self.fetchDBChanges(database: CloudManager.container.sharedCloudDatabase)
                     }
                 }
-                
+
                 return try await group.contains { $0 == true }
             }
 
@@ -373,7 +371,7 @@ final actor PullState {
                         log("Update but no changes to item record (\(recordUUID))")
                     }
                 }
-                    
+
             } else {
                 log("Will create new local item for cloud record (\(recordUUID))")
                 let newItem = ArchivedItem(from: record)
@@ -392,13 +390,13 @@ final actor PullState {
                 }) {
                     newItem.cloudKitShareRecord = pendingShareRecord
                     pendingShareRecords.remove(pendingShareRecord)
-                    log("  Hooked onto pending share \((existingShareId.recordName))")
+                    log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
                 await Model.appendDropEfficientlyAsync(newItem)
                 NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
                 newDropCount += 1
             }
-            
+
         case .component:
             if let typeItem = await Model.componentAsync(uuid: recordUUID) {
                 if (await typeItem.parentZoneAsync) != zoneID {
@@ -428,7 +426,7 @@ final actor PullState {
                 pendingTypeItemRecords.insert(record)
                 log("Received new type item (\(recordUUID)) to link to upcoming new item")
             }
-            
+
         case .positionList:
             let change = RecordChangeCheck(localRecord: await CloudManager.getUuidSequenceRecordAsync(), remoteRecord: record)
             if change == .changed || CloudManager.lastSyncCompletion == .distantPast {
@@ -443,7 +441,7 @@ final actor PullState {
             } else {
                 log("Received non-updated position list record")
             }
-            
+
         case .share:
             if let share = record as? CKShare {
                 if let associatedItem = await Model.itemAsync(shareId: recordUUID) {
@@ -459,11 +457,10 @@ final actor PullState {
                     log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
                 }
             }
-            
+
         case .extensionUpdate:
             log("Received an extension update record")
             PersistedOptions.extensionRequestedSync = false
         }
     }
-
 }

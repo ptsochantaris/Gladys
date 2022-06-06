@@ -1,16 +1,15 @@
 import Foundation
 #if os(iOS)
-import MobileCoreServices
+    import MobileCoreServices
 #endif
 import GladysFramework
 import NaturalLanguage
-import Vision
 import Speech
+import Vision
 
 extension ArchivedItem {
-    
     var mostRelevantTypeItem: Component? {
-        return components.max { $0.contentPriority < $1.contentPriority }
+        components.max { $0.contentPriority < $1.contentPriority }
     }
 
     var mostRelevantTypeItemImage: Component? {
@@ -22,27 +21,27 @@ extension ArchivedItem {
     }
 
     var mostRelevantTypeItemMedia: Component? {
-        return components.filter { $0.typeConforms(to: kUTTypeVideo) || $0.typeConforms(to: kUTTypeAudio) }.max { $0.contentPriority < $1.contentPriority }
+        components.filter { $0.typeConforms(to: kUTTypeVideo) || $0.typeConforms(to: kUTTypeAudio) }.max { $0.contentPriority < $1.contentPriority }
     }
-    
-	static func sanitised(_ ids: [String]) -> [String] {
+
+    static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
-		var identifiers = ids.filter { typeIdentifier in
-			#if os(OSX)
-            if typeIdentifier.hasPrefix("dyn.") {
-                return false
-            }
-			let cfid = typeIdentifier as CFString
-			if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
-			#endif
-			return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
-		}
+        var identifiers = ids.filter { typeIdentifier in
+            #if os(OSX)
+                if typeIdentifier.hasPrefix("dyn.") {
+                    return false
+                }
+                let cfid = typeIdentifier as CFString
+                if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
+            #endif
+            return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
+        }
         if identifiers.contains("com.apple.mail.email") {
             identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
         }
         return identifiers
-	}
-    
+    }
+
     private var imageOfImageComponentIfExists: CGImage? {
         if let firstImageComponent = mostRelevantTypeItemImage, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
             #if os(macOS)
@@ -53,14 +52,14 @@ extension ArchivedItem {
         }
         return nil
     }
-    
+
     private var urlOfMediaComponentIfExists: (URL, String)? {
         if let component = mostRelevantTypeItemMedia, let ext = component.fileExtension {
             return (component.bytesPath, ext)
         }
         return nil
     }
-    
+
     private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) async {
         let finalTitle = displayText.0
         var transcribedText: String?
@@ -69,12 +68,11 @@ extension ArchivedItem {
 
         var tags1 = [String]()
         var tags2 = [String]()
-        
+
         var visualRequests = [VNImageBasedRequest]()
         var speechTask: SFSpeechRecognitionTask?
 
-        if (autoImage || ocrImage), displayMode == .fill, let img = img {
-
+        if autoImage || ocrImage, displayMode == .fill, let img = img {
             loadingProgress?.cancellationHandler = {
                 visualRequests.forEach { $0.cancel() }
                 speechTask?.cancel()
@@ -91,7 +89,7 @@ extension ArchivedItem {
                 }
                 visualRequests.append(r)
             }
-            
+
             if ocrImage {
                 let r = VNRecognizeTextRequest { request, _ in
                     if let observations = request.results as? [VNRecognizedTextObservation] {
@@ -104,7 +102,7 @@ extension ArchivedItem {
                 r.recognitionLevel = .accurate
                 visualRequests.append(r)
             }
-            
+
             if !visualRequests.isEmpty {
                 let vr = visualRequests
                 let handler = VNImageRequestHandler(cgImage: img)
@@ -112,10 +110,10 @@ extension ArchivedItem {
                     try? handler.perform(vr)
                 }.value
             }
-            
+
             if transcribeAudio, let (mediaUrl, ext) = mediaInfo, let recognizer = SFSpeechRecognizer(), recognizer.isAvailable, recognizer.supportsOnDeviceRecognition {
                 log("Will treat media file as \(ext) file for audio transcribing")
-                let link = Model.temporaryDirectoryUrl.appendingPathComponent(self.uuid.uuidString + "-audio-detect").appendingPathExtension(ext)
+                let link = Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString + "-audio-detect").appendingPathExtension(ext)
                 try? FileManager.default.linkItem(at: mediaUrl, to: link)
                 let request = SFSpeechURLRecognitionRequest(url: link)
                 request.requiresOnDeviceRecognition = true
@@ -140,7 +138,7 @@ extension ArchivedItem {
                 try? FileManager.default.removeItem(at: link)
             }
         }
-        
+
         if autoText, let finalTitle = transcribedText ?? finalTitle {
             let tagTask = Task.detached { () -> [String] in
                 let tagger = NLTagger(tagSchemes: [.nameType])
@@ -150,7 +148,7 @@ extension ArchivedItem {
                 return results.compactMap { token -> String? in
                     guard let tag = token.0 else { return nil }
                     switch tag {
-                    case .placeName, .personalName, .organizationName, .noun:
+                    case .noun, .organizationName, .personalName, .placeName:
                         return String(finalTitle[token.1])
                     default:
                         return nil
@@ -159,20 +157,20 @@ extension ArchivedItem {
             }
             tags2.append(contentsOf: await tagTask.value)
         }
-        
+
         if let t = transcribedText {
             let data = Data(t.utf8)
-            let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: self.uuid, data: data, order: 0)
+            let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: uuid, data: data, order: 0)
             newComponent.accessoryTitle = t
-            self.components.insert(newComponent, at: 0)
+            components.insert(newComponent, at: 0)
         }
-        
+
         let newTags = tags1 + tags2
-        for tag in newTags where !self.labels.contains(tag) {
+        for tag in newTags where !labels.contains(tag) {
             self.labels.append(tag)
         }
     }
-    
+
     @MainActor
     private func componentIngestDone() {
         Images.shared[imageCacheKey] = nil
@@ -181,33 +179,33 @@ extension ArchivedItem {
         NotificationCenter.default.post(name: .IngestComplete, object: self)
     }
 
-	func cancelIngest() {
+    func cancelIngest() {
         loadingProgress?.cancel()
-		components.forEach { $0.cancelIngest() }
+        components.forEach { $0.cancelIngest() }
         log("Item \(uuid.uuidString) ingest cancelled by user")
-	}
+    }
 
-	var loadingAborted: Bool {
-        return components.contains { $0.flags.contains(.loadingAborted) }
-	}
+    var loadingAborted: Bool {
+        components.contains { $0.flags.contains(.loadingAborted) }
+    }
 
     @MainActor
     func reIngest() async {
         NotificationCenter.default.post(name: .IngestStart, object: self)
-        
-		let loadCount = components.count
+
+        let loadCount = components.count
         if isTemporarilyUnlocked {
             flags.remove(.needsUnlock)
         } else if isLocked {
             flags.insert(.needsUnlock)
         }
-		let p = Progress(totalUnitCount: Int64(loadCount))
-		loadingProgress = p
-        
-        if loadCount > 1 && components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
+        let p = Progress(totalUnitCount: Int64(loadCount))
+        loadingProgress = p
+
+        if loadCount > 1, components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
             components.sort { $0.order < $1.order }
         }
-                
+
         await withTaskGroup(of: Void.self) { group in
             for i in components {
                 group.addTask {
@@ -216,10 +214,10 @@ extension ArchivedItem {
                 }
             }
         }
-        
+
         componentIngestDone()
     }
-    
+
     private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
         var extractedData: Data?
         let data = try? await provider.loadDataRepresentation(for: type)
@@ -227,19 +225,19 @@ extension ArchivedItem {
             var extractedText: String?
             if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
                 extractedText = text
-                
+
             } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
                 extractedText = text
             }
-            
+
             if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
                 extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
             }
         }
         return extractedData
     }
-    
-	func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
+
+    func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let progress = Progress()
         loadingProgress = progress
         NotificationCenter.default.post(name: .IngestStart, object: self)
@@ -247,31 +245,28 @@ extension ArchivedItem {
             await self.newItemIngest(providers: providers, limitToType: limitToType)
         }
     }
-    
+
     private func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
-
         var componentsThatFailed = [Component]()
-        
-		for provider in providers {
 
-			var identifiers = ArchivedItem.sanitised(provider.registeredTypeIdentifiers)
-			let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
-			let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
+        for provider in providers {
+            var identifiers = ArchivedItem.sanitised(provider.registeredTypeIdentifiers)
+            let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
+            let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
             let alreadyHasUrl = identifiers.contains("public.url")
-            
-			if let limit = limitToType {
-				identifiers = [limit]
-			}
 
-			func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) async {
+            if let limit = limitToType {
+                identifiers = [limit]
+            }
+
+            func addTypeItem(type: String, encodeUIImage: Bool, createWebArchive: Bool, order: Int) async {
                 // replace provider if we want to convert strings to URLs
                 var finalProvider = provider
                 var finalType = type
                 if !alreadyHasUrl,
-                    UTTypeConformsTo(type as CFString, kUTTypeText),
-                    PersistedOptions.automaticallyDetectAndConvertWebLinks,
-                    let extractedLinkData = await extractUrlData(from: provider, for: type) {
-                    
+                   UTTypeConformsTo(type as CFString, kUTTypeText),
+                   PersistedOptions.automaticallyDetectAndConvertWebLinks,
+                   let extractedLinkData = await extractUrlData(from: provider, for: type) {
                     finalType = kUTTypeURL as String
                     finalProvider = NSItemProvider()
                     finalProvider.registerDataRepresentation(forTypeIdentifier: finalType, visibility: .all) { provide -> Progress? in
@@ -291,38 +286,38 @@ extension ArchivedItem {
                     log("Import error: \(error.finalDescription)")
                 }
                 components.append(i)
-			}
+            }
 
-			var order = 0
-			for typeIdentifier in identifiers {
-				if typeIdentifier == "public.image" && shouldCreateEncodedImage {
-					await addTypeItem(type: "public.image", encodeUIImage: true, createWebArchive: false, order: order)
-					order += 1
-				}
+            var order = 0
+            for typeIdentifier in identifiers {
+                if typeIdentifier == "public.image", shouldCreateEncodedImage {
+                    await addTypeItem(type: "public.image", encodeUIImage: true, createWebArchive: false, order: order)
+                    order += 1
+                }
 
-				await addTypeItem(type: typeIdentifier, encodeUIImage: false, createWebArchive: false, order: order)
-				order += 1
+                await addTypeItem(type: typeIdentifier, encodeUIImage: false, createWebArchive: false, order: order)
+                order += 1
 
-				if typeIdentifier == "public.url" && shouldArchiveUrls {
-					await addTypeItem(type: "com.apple.webarchive", encodeUIImage: false, createWebArchive: true, order: order)
-					order += 1
-				}
-			}
-		}
-        
+                if typeIdentifier == "public.url", shouldArchiveUrls {
+                    await addTypeItem(type: "com.apple.webarchive", encodeUIImage: false, createWebArchive: true, order: order)
+                    order += 1
+                }
+            }
+        }
+
         components.removeAll { !$0.dataExists }
 
         #if MAC
-        for component in components {
-            if let contributedLabels = component.contributedLabels {
-                for candidate in contributedLabels where !labels.contains(candidate) {
-                    labels.append(candidate)
+            for component in components {
+                if let contributedLabels = component.contributedLabels {
+                    for candidate in contributedLabels where !labels.contains(candidate) {
+                        labels.append(candidate)
+                    }
+                    component.contributedLabels = nil
                 }
-                component.contributedLabels = nil
             }
-        }
         #endif
-        
+
         let autoText = PersistedOptions.autoGenerateLabelsFromText
         let autoImage = PersistedOptions.autoGenerateLabelsFromImage
         let ocrImage = PersistedOptions.autoGenerateTextFromImage
@@ -331,5 +326,5 @@ extension ArchivedItem {
             await processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
         }
         await componentIngestDone()
-	}
+    }
 }

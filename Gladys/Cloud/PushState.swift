@@ -1,220 +1,218 @@
 import CloudKit
 
 final class PushState {
+    var latestError: Error?
 
-	var latestError: Error?
+    private var dataItemsToPush: Int
+    private var dropsToPush: Int
 
-	private var dataItemsToPush: Int
-	private var dropsToPush: Int
+    private let database: CKDatabase
+    private let uuid2progress = [String: Progress]()
+    private let recordsToDelete: [[CKRecord.ID]]
+    private let payloadsToPush: [[CKRecord]]
+    private let currentUUIDSequence: [String]
 
-	private let database: CKDatabase
-	private let uuid2progress = [String: Progress]()
-	private let recordsToDelete: [[CKRecord.ID]]
-	private let payloadsToPush: [[CKRecord]]
-	private let currentUUIDSequence: [String]
+    init(zoneId: CKRecordZone.ID, database: CKDatabase) {
+        self.database = database
 
-	init(zoneId: CKRecordZone.ID, database: CKDatabase) {
-		self.database = database
+        let drops = Model.drops
 
-		let drops = Model.drops
+        var idsToPush = [String]()
 
-		var idsToPush = [String]()
+        var _dropsToPush = 0
+        var _dataItemsToPush = 0
+        var _uuid2progress = [String: Progress]()
+        var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
+            guard let itemRecord = item.populatedCloudKitRecord else { return nil }
+            if itemRecord.recordID.zoneID != zoneId {
+                return nil
+            }
+            _dataItemsToPush += item.components.count
+            _dropsToPush += 1
+            var payload = item.components.compactMap(\.populatedCloudKitRecord)
+            payload.append(itemRecord)
 
-		var _dropsToPush = 0
-		var _dataItemsToPush = 0
-		var _uuid2progress = [String: Progress]()
-		var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
-			guard let itemRecord = item.populatedCloudKitRecord else { return nil }
-			if itemRecord.recordID.zoneID != zoneId {
-				return nil
-			}
-			_dataItemsToPush += item.components.count
-			_dropsToPush += 1
-			var payload = item.components.compactMap { $0.populatedCloudKitRecord }
-			payload.append(itemRecord)
+            let itemId = item.uuid.uuidString
+            idsToPush.append(itemId)
+            idsToPush.append(contentsOf: item.components.map(\.uuid.uuidString))
+            _uuid2progress[itemId] = Progress(totalUnitCount: 100)
+            item.components.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
 
-			let itemId = item.uuid.uuidString
-			idsToPush.append(itemId)
-			idsToPush.append(contentsOf: item.components.map { $0.uuid.uuidString })
-			_uuid2progress[itemId] = Progress(totalUnitCount: 100)
-			item.components.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
+            return payload
+        }.flatBunch(minSize: 10)
 
-			return payload
-		}.flatBunch(minSize: 10)
+        var newQueue = CloudManager.deletionQueue
+        if !idsToPush.isEmpty {
+            let previousCount = newQueue.count
+            newQueue = newQueue.filter { !idsToPush.contains($0) }
+            if newQueue.count != previousCount {
+                CloudManager.deletionQueue = newQueue
+            }
+        }
+        recordsToDelete = newQueue.compactMap {
+            let components = $0.components(separatedBy: ":")
+            if components.count > 2 {
+                if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
+                    return CKRecord.ID(recordName: components[2], zoneID: zoneId)
+                } else {
+                    return nil
+                }
+            } else if zoneId == privateZoneId {
+                return CKRecord.ID(recordName: components[0], zoneID: zoneId)
+            } else {
+                return nil
+            }
+        }.bunch(maxSize: 100)
 
-		var newQueue = CloudManager.deletionQueue
-		if !idsToPush.isEmpty {
-			let previousCount = newQueue.count
-			newQueue = newQueue.filter { !idsToPush.contains($0) }
-			if newQueue.count != previousCount {
-				CloudManager.deletionQueue = newQueue
-			}
-		}
-		recordsToDelete = newQueue.compactMap {
-			let components = $0.components(separatedBy: ":")
-			if components.count > 2 {
-				if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
-					return CKRecord.ID(recordName: components[2], zoneID: zoneId)
-				} else {
-					return nil
-				}
-			} else if zoneId == privateZoneId {
-				return CKRecord.ID(recordName: components[0], zoneID: zoneId)
-			} else {
-				return nil
-			}
-		}.bunch(maxSize: 100)
+        if zoneId == privateZoneId {
+            currentUUIDSequence = drops.map(\.uuid.uuidString)
+            if PushState.sequenceNeedsUpload(currentUUIDSequence) {
+                var sequenceToSend: [String]?
 
-		if zoneId == privateZoneId {
-			currentUUIDSequence = drops.map { $0.uuid.uuidString }
-			if PushState.sequenceNeedsUpload(currentUUIDSequence) {
-
-				var sequenceToSend: [String]?
-
-				if CloudManager.lastSyncCompletion == .distantPast {
-					if !currentUUIDSequence.isEmpty {
-						var mergedSequence = CloudManager.uuidSequence
+                if CloudManager.lastSyncCompletion == .distantPast {
+                    if !currentUUIDSequence.isEmpty {
+                        var mergedSequence = CloudManager.uuidSequence
                         let mergedSet = Set(mergedSequence)
-						for i in currentUUIDSequence.reversed() {
-							if !mergedSet.contains(i) {
-								mergedSequence.insert(i, at: 0)
-							}
-						}
-						sequenceToSend = mergedSequence
-					}
-				} else {
-					sequenceToSend = currentUUIDSequence
-				}
+                        for i in currentUUIDSequence.reversed() {
+                            if !mergedSet.contains(i) {
+                                mergedSequence.insert(i, at: 0)
+                            }
+                        }
+                        sequenceToSend = mergedSequence
+                    }
+                } else {
+                    sequenceToSend = currentUUIDSequence
+                }
 
-				if let sequenceToSend = sequenceToSend {
+                if let sequenceToSend = sequenceToSend {
                     let recordType = CloudManager.RecordType.positionList.rawValue
-					let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: zoneId))
-					record["positionList"] = sequenceToSend as NSArray
-					if _payloadsToPush.isEmpty {
+                    let record = CloudManager.uuidSequenceRecord ?? CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: zoneId))
+                    record["positionList"] = sequenceToSend as NSArray
+                    if _payloadsToPush.isEmpty {
                         _payloadsToPush.append([record])
-					} else {
+                    } else {
                         _payloadsToPush[0].insert(record, at: 0)
-					}
-				}
-			}
-		} else {
-			currentUUIDSequence = []
-		}
+                    }
+                }
+            }
+        } else {
+            currentUUIDSequence = []
+        }
 
-		dataItemsToPush = _dataItemsToPush
-		dropsToPush = _dropsToPush
-		payloadsToPush = _payloadsToPush
-	}
+        dataItemsToPush = _dataItemsToPush
+        dropsToPush = _dropsToPush
+        payloadsToPush = _payloadsToPush
+    }
 
-	static private func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
-		var previousSequence = CloudManager.uuidSequence
+    private static func sequenceNeedsUpload(_ currentSequence: [String]) -> Bool {
+        var previousSequence = CloudManager.uuidSequence
 
         let currentSet = Set(currentSequence)
         if currentSet.subtracting(previousSequence).count > 0 {
             // we have a new item
             return true
         }
-		previousSequence = previousSequence.filter { currentSet.contains($0) }
-		return currentSequence != previousSequence
-	}
+        previousSequence = previousSequence.filter { currentSet.contains($0) }
+        return currentSequence != previousSequence
+    }
 
-	func updateSyncMessage() {
-		var components = [String]()
-		if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
-		if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
-		let deletionCount = recordsToDelete.count
-		if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+    func updateSyncMessage() {
+        var components = [String]()
+        if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
+        if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
+        let deletionCount = recordsToDelete.count
+        if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
         let cs = components
         Task {
             await CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
         }
-	}
+    }
 
-	var progress: Progress {
-		let progress = Progress(totalUnitCount: Int64(dropsToPush + dataItemsToPush) * 100)
-		for v in uuid2progress.values {
-			progress.addChild(v, withPendingUnitCount: 100)
-		}
-		let deleteCount = recordsToDelete.count
-		let pushCount = payloadsToPush.count
-		if deleteCount + pushCount > 0 {
-			log("Pushing up \(deleteCount) item deletion blocks, \(pushCount) item blocks")
-			updateSyncMessage()
-		}
-		return progress
-	}
+    var progress: Progress {
+        let progress = Progress(totalUnitCount: Int64(dropsToPush + dataItemsToPush) * 100)
+        for v in uuid2progress.values {
+            progress.addChild(v, withPendingUnitCount: 100)
+        }
+        let deleteCount = recordsToDelete.count
+        let pushCount = payloadsToPush.count
+        if deleteCount + pushCount > 0 {
+            log("Pushing up \(deleteCount) item deletion blocks, \(pushCount) item blocks")
+            updateSyncMessage()
+        }
+        return progress
+    }
 
-	private var deletionOperations: [CKDatabaseOperation] {
-		return recordsToDelete.map { recordIdList in
-			let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
-			operation.database = database
-			operation.savePolicy = .allKeys
-			operation.modifyRecordsCompletionBlock = { _, deletedRecordIds, error in
+    private var deletionOperations: [CKDatabaseOperation] {
+        recordsToDelete.map { recordIdList in
+            let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
+            operation.database = database
+            operation.savePolicy = .allKeys
+            operation.modifyRecordsCompletionBlock = { _, deletedRecordIds, error in
 
-				let requestedDeletionUUIDs = recordIdList.map { $0.recordName }
-				let deletedUUIDs = deletedRecordIds?.map { $0.recordName } ?? []
-				for uuid in requestedDeletionUUIDs {
-					if deletedUUIDs.contains(uuid) {
-						log("Confirmed deletion of item (\(uuid))")
-					} else {
-						log("Didn't need to delete item (\(uuid))")
-					}
-				}
+                let requestedDeletionUUIDs = recordIdList.map(\.recordName)
+                let deletedUUIDs = deletedRecordIds?.map(\.recordName) ?? []
+                for uuid in requestedDeletionUUIDs {
+                    if deletedUUIDs.contains(uuid) {
+                        log("Confirmed deletion of item (\(uuid))")
+                    } else {
+                        log("Didn't need to delete item (\(uuid))")
+                    }
+                }
 
-				DispatchQueue.main.async {
-					if let error = error {
-						self.latestError = error
-						log("Error deleting items: \(error.finalDescription)")
-						CloudManager.commitDeletion(for: deletedUUIDs) // play it safe
-					} else {
-						CloudManager.commitDeletion(for: requestedDeletionUUIDs)
-					}
-					self.updateSyncMessage()
-				}
-			}
-			return operation
-		}
-	}
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.latestError = error
+                        log("Error deleting items: \(error.finalDescription)")
+                        CloudManager.commitDeletion(for: deletedUUIDs) // play it safe
+                    } else {
+                        CloudManager.commitDeletion(for: requestedDeletionUUIDs)
+                    }
+                    self.updateSyncMessage()
+                }
+            }
+            return operation
+        }
+    }
 
-	private var pushOperations: [CKDatabaseOperation] {
-		return payloadsToPush.map { recordList in
-			let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
-			operation.database = database
-			operation.savePolicy = .allKeys
-			operation.perRecordProgressBlock = { record, progress in
-				DispatchQueue.main.async {
-					let recordProgress = self.uuid2progress[record.recordID.recordName]
-					recordProgress?.completedUnitCount = Int64(progress * 100.0)
-				}
-			}
-			operation.modifyRecordsCompletionBlock = { updatedRecords, _, error in
-				DispatchQueue.main.async {
-					if let error = error {
-						log("Error updating cloud records: \(error.finalDescription)")
-						self.latestError = error
-					}
-					for record in updatedRecords ?? [] {
-						let itemUUID = record.recordID.recordName
+    private var pushOperations: [CKDatabaseOperation] {
+        payloadsToPush.map { recordList in
+            let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
+            operation.database = database
+            operation.savePolicy = .allKeys
+            operation.perRecordProgressBlock = { record, progress in
+                DispatchQueue.main.async {
+                    let recordProgress = self.uuid2progress[record.recordID.recordName]
+                    recordProgress?.completedUnitCount = Int64(progress * 100.0)
+                }
+            }
+            operation.modifyRecordsCompletionBlock = { updatedRecords, _, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        log("Error updating cloud records: \(error.finalDescription)")
+                        self.latestError = error
+                    }
+                    for record in updatedRecords ?? [] {
+                        let itemUUID = record.recordID.recordName
                         if itemUUID == CloudManager.RecordType.positionList.rawValue {
-							CloudManager.uuidSequence = self.currentUUIDSequence
-							CloudManager.uuidSequenceRecord = record
-						} else if let item = Model.item(uuid: itemUUID) {
-							item.cloudKitRecord = record
-							self.dropsToPush -= 1
-						} else if let typeItem = Model.component(uuid: itemUUID) {
-							typeItem.cloudKitRecord = record
-							self.dataItemsToPush -= 1
-						}
-						log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
-					}
-					self.updateSyncMessage()
-				}
-			}
-			return operation
-		}
-	}
+                            CloudManager.uuidSequence = self.currentUUIDSequence
+                            CloudManager.uuidSequenceRecord = record
+                        } else if let item = Model.item(uuid: itemUUID) {
+                            item.cloudKitRecord = record
+                            self.dropsToPush -= 1
+                        } else if let typeItem = Model.component(uuid: itemUUID) {
+                            typeItem.cloudKitRecord = record
+                            self.dataItemsToPush -= 1
+                        }
+                        log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
+                    }
+                    self.updateSyncMessage()
+                }
+            }
+            return operation
+        }
+    }
 
-	var operations: [CKDatabaseOperation] {
-		return deletionOperations + pushOperations
-	}
+    var operations: [CKDatabaseOperation] {
+        deletionOperations + pushOperations
+    }
 }

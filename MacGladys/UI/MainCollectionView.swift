@@ -18,7 +18,7 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
     }
 
     var actionableSelectedItems: [ArchivedItem] {
-        return selectionIndexPaths.compactMap {
+        selectionIndexPaths.compactMap {
             if let item = window?.gladysController?.filter.filteredDrops[$0.item] {
                 return item.flags.contains(.needsUnlock) ? nil : item
             } else {
@@ -48,11 +48,11 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
         NSApplication.shared.registerServicesMenuSendTypes(Array(sendTypes), returnTypes: [])
     }
 
-    func readSelection(from pboard: NSPasteboard) -> Bool {
-        return false
+    func readSelection(from _: NSPasteboard) -> Bool {
+        false
     }
 
-    func writeSelection(to pboard: NSPasteboard, types: [NSPasteboard.PasteboardType]) -> Bool {
+    func writeSelection(to pboard: NSPasteboard, types _: [NSPasteboard.PasteboardType]) -> Bool {
         let objectsToWrite = actionableSelectedItems.compactMap { $0.pasteboardItem(forDrag: false) }
         if objectsToWrite.isEmpty {
             return false

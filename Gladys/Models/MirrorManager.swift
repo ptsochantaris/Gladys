@@ -1,20 +1,17 @@
 import Foundation
 
 final class MirrorManager {
-    
-    static fileprivate let mirrorUuidKey = "build.bru.Gladys.fileMirrorUuidKey"
-    
+    fileprivate static let mirrorUuidKey = "build.bru.Gladys.fileMirrorUuidKey"
+
     private static let mirrorQueue: OperationQueue = {
         let o = OperationQueue()
         o.qualityOfService = .background
         o.maxConcurrentOperationCount = 1
         return o
     }()
-    
-    fileprivate static let mirrorBase: URL = {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
-    }()
-    
+
+    fileprivate static let mirrorBase: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
+
     private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         let intents = types.map { NSFileAccessIntent.writingIntent(with: mirrorBase, options: $0) }
@@ -26,7 +23,7 @@ final class MirrorManager {
             perform()
         }
     }
-    
+
     private static func coordinateRead(type: NSFileCoordinator.ReadingOptions, perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         coordinator.coordinate(with: [.readingIntent(with: mirrorBase, options: type)], queue: mirrorQueue) { error in
@@ -37,7 +34,7 @@ final class MirrorManager {
             perform()
         }
     }
-    
+
     static func removeMirrorIfNeeded() async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coordinateWrite(types: [.forDeleting]) {
@@ -50,10 +47,10 @@ final class MirrorManager {
             }
         }
     }
-    
+
     static func removeItems(items: Set<ArchivedItem>) {
         if items.isEmpty { return }
-        let paths = items.map { $0.fileMirrorPath }
+        let paths = items.map(\.fileMirrorPath)
         coordinateWrite(types: [.forDeleting]) {
             let f = FileManager.default
             for path in paths {
@@ -63,9 +60,9 @@ final class MirrorManager {
             }
         }
     }
-            
+
     private static var monitor: FileMonitor?
-    
+
     static func startMirrorMonitoring() {
         mirrorQueue.addOperation {
             if monitor == nil {
@@ -75,7 +72,7 @@ final class MirrorManager {
             }
         }
     }
-        
+
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
             if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), let typeItem = Model.component(uuid: uuid) {
@@ -85,7 +82,7 @@ final class MirrorManager {
             }
         }
     }
-    
+
     static func scanForMirrorChanges(items: ContiguousArray<ArchivedItem>) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coordinateRead(type: []) {
@@ -100,7 +97,7 @@ final class MirrorManager {
             }
         }
     }
-    
+
     static func stopMirrorMonitoring() {
         mirrorQueue.addOperation {
             if let m = monitor {
@@ -109,7 +106,7 @@ final class MirrorManager {
             }
         }
     }
-    
+
     static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coordinateWrite(types: [.forDeleting, .forMerging]) {
@@ -125,8 +122,8 @@ final class MirrorManager {
                         log("Creating mirror directory \(baseDir)")
                         try f.createDirectory(atPath: baseDir, withIntermediateDirectories: true, attributes: nil)
                     }
-                    
-                    for drop in drops.filter({ $0.eligibleForExternalUpdateCheck }) {
+
+                    for drop in drops.filter(\.eligibleForExternalUpdateCheck) {
                         if let examinedPath = try drop.mirrorToFiles(using: f, pathsExamined: pathsExamined) {
                             pathsExamined.insert(examinedPath)
                         }
@@ -157,14 +154,14 @@ final class MirrorManager {
             }
         }
     }
-            
-    fileprivate static func modificationDate(for url: URL, using f: FileManager) throws -> Date? {
-        return try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
+
+    fileprivate static func modificationDate(for url: URL, using _: FileManager) throws -> Date? {
+        try? url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
     }
 }
 
-extension ArchivedItem {
-    fileprivate var fileMirrorPath: String {
+private extension ArchivedItem {
+    var fileMirrorPath: String {
         var name = displayTitleOrUuid.dropFilenameSafe.truncate(limit: 32)
         if name.isEmpty {
             name = uuid.uuidString
@@ -177,8 +174,8 @@ extension ArchivedItem {
         }
         return base
     }
-    
-    fileprivate func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
+
+    func mirrorToFiles(using f: FileManager, pathsExamined: Set<String>) throws -> String? {
         let mirrorPath = fileMirrorPath
         if components.isEmpty || flags.contains(.skipMirrorAtNextSave) {
             return mirrorPath
@@ -197,23 +194,22 @@ extension ArchivedItem {
         }
         return mirrorPath
     }
-    
+
     private func mirrorFolder(to path: String, using f: FileManager) throws -> Bool {
-        
         if !f.fileExists(atPath: path) {
             let url = URL(fileURLWithPath: path)
             do {
                 try f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             } catch {
                 let nsError = (error as NSError)
-                if nsError.domain == NSCocoaErrorDomain && nsError.code == 4 { // exists, but case conflict
+                if nsError.domain == NSCocoaErrorDomain, nsError.code == 4 { // exists, but case conflict
                     return false
                 } else {
                     throw error
                 }
             }
         }
-        
+
         var mirrored = false
         for child in components {
             var childPath = path + "/" + child.filenameTypeIdentifier
@@ -224,16 +220,15 @@ extension ArchivedItem {
                 mirrored = true
             }
         }
-        
+
         return mirrored
     }
-        
-    fileprivate func assimilateMirrorChanges() {
 
+    func assimilateMirrorChanges() {
         if flags.contains(.needsSaving) || isTransferring || needsDeletion || needsReIngest || components.isEmpty {
             return
         }
-        
+
         let fmp = fileMirrorPath
         let f = FileManager.default
         guard f.fileExists(atPath: fmp) else {
@@ -243,28 +238,26 @@ extension ArchivedItem {
         var assimilated = false
 
         if components.count == 1, let child = components.first {
-                        
             guard f.fileExists(atPath: fmp) else {
                 return
             }
-            
+
             let itemUrl = URL(fileURLWithPath: fmp)
             if child.uuid != f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: itemUrl) {
                 return
             }
-            
+
             if let fileDate = try? MirrorManager.modificationDate(for: itemUrl, using: f), fileDate <= updatedAt {
                 return
             }
-            
+
             log("Assimilating mirror changes into component \(child.uuid.uuidString)")
             _ = try? f.copyAndReplaceItem(at: itemUrl, to: child.bytesPath)
             child.markUpdated()
             assimilated = true
-            
+
         } else { // multiple items
             for child in components {
-                
                 let path: String
                 let t = child.filenameTypeIdentifier
                 if let ext = child.fileExtension {
@@ -272,7 +265,7 @@ extension ArchivedItem {
                 } else {
                     path = fmp + "/" + t
                 }
-                
+
                 guard f.fileExists(atPath: path) else {
                     continue
                 }
@@ -281,7 +274,7 @@ extension ArchivedItem {
                 if child.uuid != f.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: componentUrl) {
                     continue
                 }
-                
+
                 if let fileDate = try? MirrorManager.modificationDate(for: componentUrl, using: f), fileDate <= updatedAt {
                     continue
                 }
@@ -292,11 +285,11 @@ extension ArchivedItem {
                 assimilated = true
             }
         }
-        
+
         if !assimilated {
             return
         }
-                    
+
         DispatchQueue.main.async {
             self.markUpdated()
             self.needsReIngest = true
@@ -308,17 +301,15 @@ extension ArchivedItem {
     }
 }
 
-extension Component {
-    
-    // TODO renaming item keeps the old file
-    fileprivate func mirror(to path: String, using f: FileManager) throws -> Bool {
-        
+private extension Component {
+    // TODO: renaming item keeps the old file
+    func mirror(to path: String, using f: FileManager) throws -> Bool {
         if !f.fileExists(atPath: bytesPath.path) {
             return false
         }
-        
+
         var url = URL(fileURLWithPath: path)
-        
+
         if f.fileExists(atPath: path) {
             if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
@@ -334,7 +325,7 @@ extension Component {
         v.creationDate = createdAt
         v.contentModificationDate = updatedAt
         try url.setResourceValues(v)
-        
+
         return true
     }
 }

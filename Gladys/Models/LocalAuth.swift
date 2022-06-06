@@ -10,7 +10,7 @@ import LocalAuthentication
 
 final class LocalAuth {
     static var canUseLocalAuth: Bool {
-        return LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
 
     static func attempt(label: String, completion: @escaping (Bool) -> Void) {
@@ -19,7 +19,7 @@ final class LocalAuth {
             completion(false)
             return
         }
-        
+
         auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label) { success, error in
             if (error as NSError?)?.code == -2 { return } // cancelled
             DispatchQueue.main.async {

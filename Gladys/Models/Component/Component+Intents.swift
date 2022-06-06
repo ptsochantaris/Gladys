@@ -6,36 +6,36 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import UIKit
 import Intents
+import UIKit
 
 extension Component {
-	func copyToPasteboard(donateShortcut: Bool = true) {
-		UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
-		if donateShortcut {
-			donateCopyIntent()
-		}
-	}
+    func copyToPasteboard(donateShortcut: Bool = true) {
+        UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
+        if donateShortcut {
+            donateCopyIntent()
+        }
+    }
 
-	var itemProvider: NSItemProvider {
-		let p = NSItemProvider()
-		p.suggestedName = trimmedSuggestedName
+    var itemProvider: NSItemProvider {
+        let p = NSItemProvider()
+        p.suggestedName = trimmedSuggestedName
         if PersistedOptions.requestInlineDrops {
             p.preferredPresentationStyle = .inline
         }
-		register(with: p)
-		return p
-	}
+        register(with: p)
+        return p
+    }
 
-	var trimmedName: String {
-		return oneTitle.truncateWithEllipses(limit: 32)
-	}
+    var trimmedName: String {
+        oneTitle.truncateWithEllipses(limit: 32)
+    }
 
-	var trimmedSuggestedName: String {
-		return oneTitle.truncateWithEllipses(limit: 128)
-	}
+    var trimmedSuggestedName: String {
+        oneTitle.truncateWithEllipses(limit: 128)
+    }
 
-	private func donateCopyIntent() {
+    private func donateCopyIntent() {
         let intent = CopyComponentIntent()
         let trimmed = trimmedName
         intent.suggestedInvocationPhrase = "Copy '\(trimmed)' from Gladys"
@@ -49,9 +49,9 @@ extension Component {
                 log("Donated copy shortcut")
             }
         }
-	}
+    }
 
-	func removeIntents() {
+    func removeIntents() {
         INInteraction.delete(with: ["copy-\(uuid.uuidString)"]) { error in
             if let error = error {
                 log("Copy intent for component could not be removed: \(error.localizedDescription)")
@@ -59,5 +59,5 @@ extension Component {
                 log("Copy intent for component removed")
             }
         }
-	}
+    }
 }

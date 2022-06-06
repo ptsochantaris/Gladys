@@ -6,22 +6,22 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import CoreSpotlight
 import CloudKit
+import CoreSpotlight
 #if os(iOS)
-import Foundation
-import CoreAudioKit
+    import CoreAudioKit
+    import Foundation
 #else
-import Cocoa
+    import Cocoa
 #endif
 
 extension Model {
-	static var saveIsDueToSyncFetch = false
+    static var saveIsDueToSyncFetch = false
 
-	static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
-	private static var needsAnotherSave = false
-	private static var isSaving = false
-	private static var nextSaveCallbacks: [() -> Void]?
+    static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
+    private static var needsAnotherSave = false
+    private static var isSaving = false
+    private static var nextSaveCallbacks: [() -> Void]?
 
     static func sizeInBytes(completion: @escaping (Int64) -> Void) {
         let snapshot = drops
@@ -31,9 +31,9 @@ extension Model {
                 completion(res)
             }
         }
-	}
+    }
 
-	static func sizeForItems(uuids: [UUID], completion: @escaping (Int64) -> Void) {
+    static func sizeForItems(uuids: [UUID], completion: @escaping (Int64) -> Void) {
         let snapshot = drops
         dataAccessQueue.sync {
             let res = snapshot.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
@@ -41,74 +41,77 @@ extension Model {
                 completion(res)
             }
         }
-	}
+    }
 
-	enum SortOption {
-		case dateAdded, dateModified, title, note, size, label
-		var ascendingTitle: String {
-			switch self {
-			case .dateAdded: return "Oldest Item First"
-			case .dateModified: return "Oldest Update First"
-			case .title: return "Title (A-Z)"
-			case .note: return "Note (A-Z)"
-			case .label: return "First Label (A-Z)"
-			case .size: return "Smallest First"
-			}
-		}
-		var descendingTitle: String {
-			switch self {
-			case .dateAdded: return "Newest Item First"
-			case .dateModified: return "Newest Update First"
-			case .title: return "Title (Z-A)"
-			case .note: return "Note (Z-A)"
-			case .label: return "First Label (Z-A)"
-			case .size: return "Largest First"
-			}
-		}
-		private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
-			var itemIndexes = [Int]()
+    enum SortOption {
+        case dateAdded, dateModified, title, note, size, label
+        var ascendingTitle: String {
+            switch self {
+            case .dateAdded: return "Oldest Item First"
+            case .dateModified: return "Oldest Update First"
+            case .title: return "Title (A-Z)"
+            case .note: return "Note (A-Z)"
+            case .label: return "First Label (A-Z)"
+            case .size: return "Smallest First"
+            }
+        }
+
+        var descendingTitle: String {
+            switch self {
+            case .dateAdded: return "Newest Item First"
+            case .dateModified: return "Newest Update First"
+            case .title: return "Title (Z-A)"
+            case .note: return "Note (Z-A)"
+            case .label: return "First Label (Z-A)"
+            case .size: return "Largest First"
+            }
+        }
+
+        private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
+            var itemIndexes = [Int]()
             let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
-			let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
-				if let index = Model.firstIndexOfItem(with: item.uuid) {
-					itemIndexes.append(index)
-					return item
-				}
-				return nil
-			}
-			assert(actualItemsToSort.count == itemIndexes.count)
-			return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
-		}
-		func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
-			var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
-			let sortType = self
-			return {
-				switch sortType {
-				case .dateAdded:
-					if ascending {
-						actualItemsToSort.sort { $0.createdAt < $1.createdAt }
-					} else {
-						actualItemsToSort.sort { $0.createdAt > $1.createdAt }
-					}
-				case .dateModified:
-					if ascending {
-						actualItemsToSort.sort { $0.updatedAt < $1.updatedAt }
-					} else {
-						actualItemsToSort.sort { $0.updatedAt > $1.updatedAt }
-					}
-				case .title:
-					if ascending {
+            let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
+                if let index = Model.firstIndexOfItem(with: item.uuid) {
+                    itemIndexes.append(index)
+                    return item
+                }
+                return nil
+            }
+            assert(actualItemsToSort.count == itemIndexes.count)
+            return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
+        }
+
+        func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
+            var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
+            let sortType = self
+            return {
+                switch sortType {
+                case .dateAdded:
+                    if ascending {
+                        actualItemsToSort.sort { $0.createdAt < $1.createdAt }
+                    } else {
+                        actualItemsToSort.sort { $0.createdAt > $1.createdAt }
+                    }
+                case .dateModified:
+                    if ascending {
+                        actualItemsToSort.sort { $0.updatedAt < $1.updatedAt }
+                    } else {
+                        actualItemsToSort.sort { $0.updatedAt > $1.updatedAt }
+                    }
+                case .title:
+                    if ascending {
                         actualItemsToSort.sort { $0.displayTitleOrUuid.localizedCaseInsensitiveCompare($1.displayTitleOrUuid) == .orderedAscending }
-					} else {
-						actualItemsToSort.sort { $0.displayTitleOrUuid.localizedCaseInsensitiveCompare($1.displayTitleOrUuid) == .orderedDescending }
-					}
-				case .note:
-					if ascending {
+                    } else {
+                        actualItemsToSort.sort { $0.displayTitleOrUuid.localizedCaseInsensitiveCompare($1.displayTitleOrUuid) == .orderedDescending }
+                    }
+                case .note:
+                    if ascending {
                         actualItemsToSort.sort { $0.note.localizedCaseInsensitiveCompare($1.note) == .orderedAscending }
-					} else {
+                    } else {
                         actualItemsToSort.sort { $0.note.localizedCaseInsensitiveCompare($1.note) == .orderedDescending }
-					}
-				case .label:
-					if ascending {
+                    }
+                case .label:
+                    if ascending {
                         actualItemsToSort.sort {
                             // treat empty as after Z
                             guard let l1 = $0.labels.first else {
@@ -119,7 +122,7 @@ extension Model {
                             }
                             return l1.localizedCaseInsensitiveCompare(l2) == .orderedAscending
                         }
-					} else {
+                    } else {
                         actualItemsToSort.sort {
                             // treat empty as after Z
                             guard let l1 = $0.labels.first else {
@@ -130,88 +133,89 @@ extension Model {
                             }
                             return l1.localizedCaseInsensitiveCompare(l2) == .orderedDescending
                         }
-					}
-				case .size:
-					if ascending {
-						actualItemsToSort.sort { $0.sizeInBytes < $1.sizeInBytes }
-					} else {
-						actualItemsToSort.sort { $0.sizeInBytes > $1.sizeInBytes }
-					}
-				}
-				for pos in 0 ..< itemIndexes.count {
-					let itemIndex = itemIndexes[pos]
-					let item = actualItemsToSort[pos]
+                    }
+                case .size:
+                    if ascending {
+                        actualItemsToSort.sort { $0.sizeInBytes < $1.sizeInBytes }
+                    } else {
+                        actualItemsToSort.sort { $0.sizeInBytes > $1.sizeInBytes }
+                    }
+                }
+                for pos in 0 ..< itemIndexes.count {
+                    let itemIndex = itemIndexes[pos]
+                    let item = actualItemsToSort[pos]
                     Model.drops[itemIndex] = item
-				}
+                }
                 Model.saveIndexOnly()
-			}
-		}
-		static var options: [SortOption] { return [SortOption.title, SortOption.dateAdded, SortOption.dateModified, SortOption.note, SortOption.label, SortOption.size] }
-	}
+            }
+        }
 
-	static func resetEverything() {
+        static var options: [SortOption] { [SortOption.title, SortOption.dateAdded, SortOption.dateModified, SortOption.note, SortOption.label, SortOption.size] }
+    }
+
+    static func resetEverything() {
         let toDelete = drops.filter { !$0.isImportedShare }
         delete(items: toDelete)
-	}
+    }
 
-	static func removeImportedShares() {
-        let toDelete = drops.filter { $0.isImportedShare }
+    static func removeImportedShares() {
+        let toDelete = drops.filter(\.isImportedShare)
         delete(items: toDelete)
-	}
+    }
 
     @MainActor
-	static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
-		let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
-		for item in itemsRelatedToZone {
-			item.removeFromCloudkit()
-		}
-		delete(items: itemsRelatedToZone)
-	}
+    static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
+        let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
+        for item in itemsRelatedToZone {
+            item.removeFromCloudkit()
+        }
+        delete(items: itemsRelatedToZone)
+    }
 
-	static var sharingMyItems: Bool {
-		return drops.contains { $0.shareMode == .sharing }
-	}
+    static var sharingMyItems: Bool {
+        drops.contains { $0.shareMode == .sharing }
+    }
 
-	static var containsImportedShares: Bool {
-		return drops.contains { $0.isImportedShare }
-	}
+    static var containsImportedShares: Bool {
+        drops.contains { $0.isImportedShare }
+    }
 
-	static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
-		return drops.filter { $0.shareMode == .sharing }
-	}
+    static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
+        drops.filter { $0.shareMode == .sharing }
+    }
 
-	static func duplicate(item: ArchivedItem) {
-		if let previousIndex = firstIndexOfItem(with: item.uuid) {
-			let newItem = ArchivedItem(cloning: item)
-			drops.insert(newItem, at: previousIndex+1)
+    static func duplicate(item: ArchivedItem) {
+        if let previousIndex = firstIndexOfItem(with: item.uuid) {
+            let newItem = ArchivedItem(cloning: item)
+            drops.insert(newItem, at: previousIndex + 1)
             save()
-		}
-	}
+        }
+    }
 
     static func delete(items: [ArchivedItem]) {
         for item in items {
             item.delete()
         }
         save()
-	}
+    }
 
-	static func lockUnlockedItems() {
+    static func lockUnlockedItems() {
         for item in drops where item.isTemporarilyUnlocked {
             item.flags.insert(.needsUnlock)
-			item.postModified()
-		}
-	}
+            item.postModified()
+        }
+    }
 
     static let badgeTimer = PopTimer(timeInterval: 0.1) {
         DispatchQueue.main.async {
             _updateBadge()
         }
     }
-    
+
     static func updateBadge() {
-        self.badgeTimer.push()
+        badgeTimer.push()
     }
-    
+
     @MainActor
     static func sortDrops() {
         let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
@@ -224,140 +228,139 @@ extension Model {
         }
     }
 
-	///////////////////////// Migrating
+    ///////////////////////// Migrating
 
-	static func setup() {
+    static func setup() {
         reloadDataIfNeeded()
         setupIndexDelegate()
-        
+
         // migrate if needed
-		let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-		if PersistedOptions.lastRanVersion != currentBuild {
-            if CloudManager.syncSwitchedOn && CloudManager.lastiCloudAccount == nil {
+        let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+        if PersistedOptions.lastRanVersion != currentBuild {
+            if CloudManager.syncSwitchedOn, CloudManager.lastiCloudAccount == nil {
                 CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
             }
             Model.searchableIndex(CSSearchableIndex.default()) {
                 PersistedOptions.lastRanVersion = currentBuild
             }
-		}
-	}
+        }
+    }
 
-	//////////////////////// Saving
+    //////////////////////// Saving
 
-	static func queueNextSaveCallback(_ callback: @escaping () -> Void) {
-		if nextSaveCallbacks == nil {
-			nextSaveCallbacks = [()->Void]()
-		}
-		nextSaveCallbacks!.append(callback)
-	}
+    static func queueNextSaveCallback(_ callback: @escaping () -> Void) {
+        if nextSaveCallbacks == nil {
+            nextSaveCallbacks = [() -> Void]()
+        }
+        nextSaveCallbacks!.append(callback)
+    }
 
-	static func save() {
-		if isSaving {
-			needsAnotherSave = true
-		} else {
-			prepareToSave()
+    static func save() {
+        if isSaving {
+            needsAnotherSave = true
+        } else {
+            prepareToSave()
             proceedWithSave()
-		}
-	}
+        }
+    }
 
-	private static func proceedWithSave() {
-
+    private static func proceedWithSave() {
         let index = CSSearchableIndex.default()
 
-        let itemsToDelete = Set(drops.filter { $0.needsDeletion })
+        let itemsToDelete = Set(drops.filter(\.needsDeletion))
         #if MAINAPP
-        MirrorManager.removeItems(items: itemsToDelete)
+            MirrorManager.removeItems(items: itemsToDelete)
         #endif
 
-        let removedUuids = itemsToDelete.map { $0.uuid }
-        index.deleteSearchableItems(withIdentifiers: removedUuids.map { $0.uuidString }) { error in
+        let removedUuids = itemsToDelete.map(\.uuid)
+        index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString)) { error in
             if let error = error {
                 log("Error while deleting search indexes \(error.localizedDescription)")
             }
         }
-        
+
         drops.removeAll { $0.needsDeletion }
 
-        let saveableItems: ContiguousArray = drops.filter { $0.goodToSave }
+        let saveableItems: ContiguousArray = drops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
-            let searchableItems = itemsToWrite.map { $0.searchableItem }
+            let searchableItems = itemsToWrite.map(\.searchableItem)
             reIndex(items: searchableItems, in: index)
         }
-        
-		let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
+
+        let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
             i.flags.remove(.isBeingCreatedBySync)
             i.flags.remove(.needsSaving)
             return i.uuid
-		})
-        
+        })
+
         #if DEBUG
-        if uuidsToEncode.count + removedUuids.count == 0 {
-            log("Warning: Save called but no changes to commit")
-        }
+            if uuidsToEncode.count + removedUuids.count == 0 {
+                log("Warning: Save called but no changes to commit")
+            }
         #endif
-        
+
         isSaving = true
         needsAnotherSave = false
 
         NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
 
-		saveQueue.async {
-			do {
-				try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
-			} catch {
-				log("Saving Error: \(error.finalDescription)")
-			}
+        saveQueue.async {
+            do {
+                try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
+            } catch {
+                log("Saving Error: \(error.finalDescription)")
+            }
 
             DispatchQueue.main.async {
-				if needsAnotherSave {
-					proceedWithSave()
-				} else {
-					isSaving = false
-					if let n = nextSaveCallbacks {
-						for callback in n {
-							callback()
-						}
-						nextSaveCallbacks = nil
-					}
-					trimTemporaryDirectory()
+                if needsAnotherSave {
+                    proceedWithSave()
+                } else {
+                    isSaving = false
+                    if let n = nextSaveCallbacks {
+                        for callback in n {
+                            callback()
+                        }
+                        nextSaveCallbacks = nil
+                    }
+                    trimTemporaryDirectory()
                     saveComplete(wasIndexOnly: false)
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
     static func saveIndexOnly() {
-        let itemsToSave: ContiguousArray = drops.filter { $0.goodToSave }
+        let itemsToSave: ContiguousArray = drops.filter(\.goodToSave)
         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-		saveQueue.async {
-			do {
-				_ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
-				log("Saved index only")
-			} catch {
-				log("Warning: Error while committing index to disk: (\(error.finalDescription))")
-			}
-			DispatchQueue.main.async {
+        saveQueue.async {
+            do {
+                _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
+                log("Saved index only")
+            } catch {
+                log("Warning: Error while committing index to disk: (\(error.finalDescription))")
+            }
+            DispatchQueue.main.async {
                 saveComplete(wasIndexOnly: true)
-			}
-		}
-	}
+            }
+        }
+    }
 
     private static var commitQueue = ContiguousArray<ArchivedItem>()
-	static func commitItem(item: ArchivedItem) {
+    static func commitItem(item: ArchivedItem) {
         item.flags.remove(.isBeingCreatedBySync)
         item.flags.remove(.needsSaving)
         commitQueue.append(item)
-        
+
         reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
-		
+
         saveQueue.async {
             var nextItemUUIDs = Set<UUID>()
             var itemsToSave = ContiguousArray<ArchivedItem>()
             DispatchQueue.main.sync {
-                nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map { $0.uuid })
+                nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map(\.uuid))
                 commitQueue.removeAll()
-                itemsToSave = drops.filter { $0.goodToSave }
+                itemsToSave = drops.filter(\.goodToSave)
             }
             if nextItemUUIDs.isEmpty {
                 return
@@ -368,28 +371,28 @@ extension Model {
             } catch {
                 log("Warning: Error while committing item to disk: (\(error.finalDescription))")
             }
-		}
-	}
-    
-	private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
-		if brokenMode {
-			log("Ignoring save, model is broken, app needs restart.")
-			return
-		}
-		var closureError: NSError?
-		var coordinationError: NSError?
-		coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
-			let start = Date()
-			log("Saving: \(allItems.count) uuids, \(dirtyUuids.count) updated data files")
-			do {
-				let fm = FileManager.default
+        }
+    }
+
+    private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
+        if brokenMode {
+            log("Ignoring save, model is broken, app needs restart.")
+            return
+        }
+        var closureError: NSError?
+        var coordinationError: NSError?
+        coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
+            let start = Date()
+            log("Saving: \(allItems.count) uuids, \(dirtyUuids.count) updated data files")
+            do {
+                let fm = FileManager.default
                 let p = url.path
-				if !fm.fileExists(atPath: p) {
-					try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
-				}
+                if !fm.fileExists(atPath: p) {
+                    try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
+                }
 
                 let allCount = allItems.count
-				var uuidData = Data(count: allCount * 16)
+                var uuidData = Data(count: allCount * 16)
                 let encoder = saveEncoder
                 uuidData.withUnsafeMutableBytes { unsafeMutableRawBufferPointer in
                     let uuidArray = unsafeMutableRawBufferPointer.bindMemory(to: uuid_t.self)
@@ -404,35 +407,35 @@ extension Model {
                         }
                     }
                 }
-				try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
+                try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
-				if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
-                    let oldFiles = Set(filesInDir).subtracting(allItems.map { $0.uuid.uuidString }).subtracting(["uuids"])
+                if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
+                    let oldFiles = Set(filesInDir).subtracting(allItems.map(\.uuid.uuidString)).subtracting(["uuids"])
                     for file in oldFiles {
                         log("Removing save file for non-existent item: \(file)")
                         let finalPath = url.appendingPathComponent(file)
                         try? fm.removeItem(at: finalPath)
                     }
-				}
+                }
 
-				if let dataModified = modificationDate(for: url) {
-					dataFileLastModified = dataModified
-				}
+                if let dataModified = modificationDate(for: url) {
+                    dataFileLastModified = dataModified
+                }
 
-				log("Saved: \(-start.timeIntervalSinceNow) seconds")
+                log("Saved: \(-start.timeIntervalSinceNow) seconds")
 
-			} catch {
-				closureError = error as NSError
-			}
-		}
-		if let e = coordinationError ?? closureError {
-			throw e
-		}
-	}
-    
+            } catch {
+                closureError = error as NSError
+            }
+        }
+        if let e = coordinationError ?? closureError {
+            throw e
+        }
+    }
+
     static func detectExternalChanges(completionGroup: DispatchGroup? = nil) {
         for item in drops where !item.needsDeletion { // partial deletes
-            let componentsToDelete = item.components.filter { $0.needsDeletion }
+            let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {
                 item.components.removeAll { $0.needsDeletion }
                 for c in componentsToDelete {
@@ -441,11 +444,11 @@ extension Model {
                 item.needsReIngest = true
             }
         }
-        let itemsToDelete = drops.filter { $0.needsDeletion }
+        let itemsToDelete = drops.filter(\.needsDeletion)
         if !itemsToDelete.isEmpty {
             delete(items: itemsToDelete) // will also save
         }
-        
+
         for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
             completionGroup?.enter()
             Task {
@@ -454,12 +457,12 @@ extension Model {
             }
         }
     }
-    
+
     static func sendToTop(items: [ArchivedItem]) {
-        let uuids = Set(items.map { $0.uuid })
+        let uuids = Set(items.map(\.uuid))
         let cut = drops.filter { uuids.contains($0.uuid) }
         if cut.isEmpty { return }
-        
+
         drops.removeAll { uuids.contains($0.uuid) }
         drops.insert(contentsOf: cut, at: 0)
 

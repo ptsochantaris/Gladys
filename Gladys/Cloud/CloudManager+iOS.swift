@@ -10,30 +10,29 @@ import CloudKit
 import UIKit
 
 extension CloudManager {
-
     enum SyncPermissionContext: Int {
         case always, wifiOnly, manualOnly
     }
-    
+
     @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
     static var syncContextSetting: SyncPermissionContext
 
-	static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
+    static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         Model.updateBadge()
-		if !syncSwitchedOn { return }
+        if !syncSwitchedOn { return }
 
-		guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
-		let scope = notification.databaseScope
-		log("Received \(scope.logName) DB change push")
-		switch scope {
-		case .private, .shared:
-			if UIApplication.shared.applicationState == .background {
-				Model.reloadDataIfNeeded()
-			} else if !Model.doneIngesting {
-				log("We'll be syncing in a moment anyway, ignoring the push for now")
-				completionHandler?(.newData)
-				return
-			}
+        guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
+        let scope = notification.databaseScope
+        log("Received \(scope.logName) DB change push")
+        switch scope {
+        case .private, .shared:
+            if UIApplication.shared.applicationState == .background {
+                Model.reloadDataIfNeeded()
+            } else if !Model.doneIngesting {
+                log("We'll be syncing in a moment anyway, ignoring the push for now")
+                completionHandler?(.newData)
+                return
+            }
             Task {
                 do {
                     try await sync(scope: scope)
@@ -43,19 +42,19 @@ extension CloudManager {
                     completionHandler?(.failed)
                 }
             }
-		case .public:
-			break
-		@unknown default:
-			break
-		}
-	}
-    
+        case .public:
+            break
+        @unknown default:
+            break
+        }
+    }
+
     static func syncAfterSaveIfNeeded() {
         if !syncSwitchedOn {
             log("Sync switched off, no need to sync after save")
             return
         }
-        
+
         let go: Bool
         switch CloudManager.syncContextSetting {
         case .always:
@@ -72,9 +71,9 @@ extension CloudManager {
             go = false
             log("Won't sync after save, as manual sync is selected")
         }
-        
+
         if !go { return }
-        
+
         Task {
             do {
                 try await CloudManager.sync()
@@ -85,8 +84,8 @@ extension CloudManager {
     }
 
     static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) {
-		if syncSwitchedOn && !syncing && (isStartup || force || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60) {
-			// If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
+        if syncSwitchedOn, !syncing, isStartup || force || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60 {
+            // If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
             Task {
                 do {
                     try await sync()
@@ -94,6 +93,6 @@ extension CloudManager {
                     log("Error in foregrounding sync: \(error.finalDescription)")
                 }
             }
-		}
-	}
+        }
+    }
 }

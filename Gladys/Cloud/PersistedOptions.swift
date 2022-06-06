@@ -9,28 +9,27 @@
 import Foundation
 
 enum DefaultTapAction: Int {
-	case infoPanel = 0, preview, open, copy, none
+    case infoPanel = 0, preview, open, copy, none
 }
 
-final class PersistedOptions {
-
+enum PersistedOptions {
     static let defaults = UserDefaults(suiteName: groupName)!
 
-	private static var wideModeCache: Bool?
-	static var wideMode: Bool {
-		get {
-			if let c = wideModeCache {
-				return c
-			}
+    private static var wideModeCache: Bool?
+    static var wideMode: Bool {
+        get {
+            if let c = wideModeCache {
+                return c
+            }
             let w = _wideMode
-			wideModeCache = w
-			return w
-		}
-		set {
-			wideModeCache = newValue
+            wideModeCache = w
+            return w
+        }
+        set {
+            wideModeCache = newValue
             _wideMode = newValue
-		}
-	}
+        }
+    }
 
     @UserDefault(key: "wideMode", defaultValue: false)
     private static var _wideMode: Bool
@@ -43,10 +42,10 @@ final class PersistedOptions {
 
     @UserDefault(key: "autoGenerateLabelsFromImage", defaultValue: false)
     static var autoGenerateLabelsFromImage: Bool
-    
+
     @UserDefault(key: "transcribeSpeechFromMedia", defaultValue: false)
     static var transcribeSpeechFromMedia: Bool
-    
+
     @UserDefault(key: "includeUrlImagesInMlLogic", defaultValue: false)
     static var includeUrlImagesInMlLogic: Bool
 
@@ -54,80 +53,80 @@ final class PersistedOptions {
     static var autoGenerateTextFromImage: Bool
 
     @UserDefault(key: "setLabelsWhenActioning", defaultValue: false)
-	static var setLabelsWhenActioning: Bool
+    static var setLabelsWhenActioning: Bool
 
     @UserDefault(key: "fullScreenPreviews", defaultValue: false)
-	static var fullScreenPreviews: Bool
+    static var fullScreenPreviews: Bool
 
     @UserDefault(key: "showCopyMoveSwitchSelector", defaultValue: false)
-	static var showCopyMoveSwitchSelector: Bool
+    static var showCopyMoveSwitchSelector: Bool
 
     @UserDefault(key: "displayNotesInMainView", defaultValue: false)
-	static var displayNotesInMainView: Bool
+    static var displayNotesInMainView: Bool
 
     @UserDefault(key: "displayLabelsInMainView", defaultValue: false)
-	static var displayLabelsInMainView: Bool
+    static var displayLabelsInMainView: Bool
 
     @UserDefault(key: "removeItemsWhenDraggedOut", defaultValue: false)
-	static var removeItemsWhenDraggedOut: Bool
-    
+    static var removeItemsWhenDraggedOut: Bool
+
     @UserDefault(key: "mirrorFilesToDocuments", defaultValue: false)
     static var mirrorFilesToDocuments: Bool
 
     @UserDefault(key: "dontAutoLabelNewItems", defaultValue: false)
-	static var dontAutoLabelNewItems: Bool
+    static var dontAutoLabelNewItems: Bool
 
     @UserDefault(key: "exportOnlyVisibleItems", defaultValue: false)
-	static var exportOnlyVisibleItems: Bool
+    static var exportOnlyVisibleItems: Bool
 
     @UserDefault(key: "separateItemPreference", defaultValue: false)
-	static var separateItemPreference: Bool
+    static var separateItemPreference: Bool
 
     @UserDefault(key: "forceTwoColumnPreference", defaultValue: false)
-	static var forceTwoColumnPreference: Bool
+    static var forceTwoColumnPreference: Bool
 
     @UserDefault(key: "pasteShortcutAutoDonated", defaultValue: false)
-	static var pasteShortcutAutoDonated: Bool
+    static var pasteShortcutAutoDonated: Bool
 
     @UserDefault(key: "exclusiveMultipleLabels", defaultValue: false)
-	static var exclusiveMultipleLabels: Bool
+    static var exclusiveMultipleLabels: Bool
 
     @UserDefault(key: "autoArchiveUrlComponents", defaultValue: false)
-	static var autoArchiveUrlComponents: Bool
+    static var autoArchiveUrlComponents: Bool
 
     @EnumUserDefault(key: "actionOnTap", defaultValue: .infoPanel)
-	static var actionOnTap: DefaultTapAction
+    static var actionOnTap: DefaultTapAction
 
     @EnumUserDefault(key: "actionOnTouchbar", defaultValue: .infoPanel)
     static var actionOnTouchbar: DefaultTapAction
-    
+
     @UserDefault(key: "lastSelectedPreferencesTab", defaultValue: 0)
-	static var lastSelectedPreferencesTab: Int
-    
+    static var lastSelectedPreferencesTab: Int
+
     @OptionalUserDefault(key: "lastPushToken", emptyValue: emptyData)
-	static var lastPushToken: Data?
+    static var lastPushToken: Data?
 
     @UserDefault(key: "inclusiveSearchTerms", defaultValue: false)
-	static var inclusiveSearchTerms: Bool
+    static var inclusiveSearchTerms: Bool
 
     @OptionalUserDefault(key: "LastRanVersion", emptyValue: nil)
-	static var lastRanVersion: String?
-    
+    static var lastRanVersion: String?
+
     @UserDefault(key: "AutomaticallyConvertWebLinks", defaultValue: false)
     static var automaticallyDetectAndConvertWebLinks: Bool
-    
+
     @UserDefault(key: "ReadAndStoreFinderTagsAsLabels", defaultValue: false)
     static var readAndStoreFinderTagsAsLabels: Bool
-    
+
     @UserDefault(key: "BlockGladysUrlRequests", defaultValue: false)
     static var blockGladysUrlRequests: Bool
-    
+
     @UserDefault(key: "badgeIconWithItemCount", defaultValue: false)
     static var badgeIconWithItemCount: Bool
-    
+
     @UserDefault(key: "migratedSubscriptions7", defaultValue: false)
     static var migratedSubscriptions7: Bool
-    
+
     @UserDefault(key: "requestInlineDrops", defaultValue: false)
     static var requestInlineDrops: Bool
 }

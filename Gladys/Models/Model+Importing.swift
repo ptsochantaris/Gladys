@@ -15,18 +15,17 @@ extension Model {
 
     @discardableResult
     static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
-        
         if providers.isEmpty {
             return .noData
         }
-        
+
         let currentFilter = currentWindow?.associatedFilter
 
         var uuids = Set<UUID>()
         var addedStuff = false
         for provider in providers { // separate item for each provider in the pasteboard
             for item in ArchivedItem.importData(providers: [provider], overrides: overrides) {
-                if let currentFilter = currentFilter, currentFilter.isFilteringLabels && !PersistedOptions.dontAutoLabelNewItems {
+                if let currentFilter = currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
                 Model.drops.insert(item, at: 0)
@@ -34,11 +33,11 @@ extension Model {
                 addedStuff = true
             }
         }
-        
+
         if addedStuff {
             currentFilter?.updateFilter(signalUpdate: .animated)
         }
-        
+
         return .success
     }
 }

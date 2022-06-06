@@ -1,14 +1,14 @@
-import UIKit
-import MapKit
+import CloudKit
 import Contacts
 import ContactsUI
-import CloudKit
+import MapKit
 import QuickLook
+import UIKit
 
-final class NavBarHiderNavigationController: UINavigationController {    
+final class NavBarHiderNavigationController: UINavigationController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.navigationBar.isHidden = true
+        navigationBar.isHidden = true
     }
 }
 
@@ -19,31 +19,30 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
         super.init(rootViewController: rootViewController)
         transitioningDelegate = self
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .g_colorPaper
         view.tintColor = .g_colorTint
     }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return sourceItemView == nil ? nil : self
+
+    func animationController(forDismissed _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        sourceItemView == nil ? nil : self
     }
 
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return sourceItemView == nil ? nil : self
+    func animationController(forPresented _: UIViewController, presenting _: UIViewController, source _: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        sourceItemView == nil ? nil : self
     }
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.25
+    func transitionDuration(using _: UIViewControllerContextTransitioning?) -> TimeInterval {
+        0.25
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-
         let container = transitionContext.containerView
 
         var snapInfo: (UIView, CGRect)?
@@ -117,91 +116,91 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
 
 final class GladysPreviewController: GladysViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
     private var typeItem: Component
-    
+
     init(item: Component) {
-        self.typeItem = item
+        typeItem = item
         super.init(nibName: nil, bundle: nil)
         title = item.oneTitle
         doneButtonLocation = .right
         windowButtonLocation = .right
     }
-    
+
     override func loadView() {
         view = GladysView()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let currentWindowSize = currentWindow?.bounds.size else { return }
         popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, currentWindowSize.width), height: currentWindowSize.height)
     }
-    
+
     private lazy var qlNav: UINavigationController = {
         let ql = QLPreviewController()
         ql.dataSource = self
         ql.delegate = self
         return NavBarHiderNavigationController(rootViewController: ql)
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         addChildController(qlNav, to: view)
-        
+
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
         userActivity?.needsSave = true
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
         if let relatedItem = typeItem.parent {
             ArchivedItem.updateUserActivity(activity, from: relatedItem, child: typeItem, titled: "Quick look")
         }
     }
-    
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
-        return 1
+
+    func numberOfPreviewItems(in _: QLPreviewController) -> Int {
+        1
     }
 
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
-        return Component.PreviewItem(typeItem: typeItem)
+    func previewController(_: QLPreviewController, previewItemAt _: Int) -> QLPreviewItem {
+        Component.PreviewItem(typeItem: typeItem)
     }
-        
-    func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
-        return .disabled
+
+    func previewController(_: QLPreviewController, editingModeFor _: QLPreviewItem) -> QLPreviewItemEditingMode {
+        .disabled
     }
 }
 
 extension Component {
-
-	var dragItem: UIDragItem {
-		let i = UIDragItem(itemProvider: itemProvider)
-		i.localObject = self
-		return i
-	}
+    var dragItem: UIDragItem {
+        let i = UIDragItem(itemProvider: itemProvider)
+        i.localObject = self
+        return i
+    }
 
     func quickLook() -> GladysPreviewController? {
-        return canPreview ? GladysPreviewController(item: self) : nil
-	}
-    
-	var canPreview: Bool {
-		if let canPreviewCache = canPreviewCache {
-			return canPreviewCache
-		}
+        canPreview ? GladysPreviewController(item: self) : nil
+    }
+
+    var canPreview: Bool {
+        if let canPreviewCache = canPreviewCache {
+            return canPreviewCache
+        }
         let res: Bool
         #if targetEnvironment(macCatalyst)
             res = isWebArchive || QLPreviewController.canPreviewItem(PreviewItem(typeItem: self))
         #else
             res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
         #endif
-		canPreviewCache = res
-		return res
-	}
-    
+        canPreviewCache = res
+        return res
+    }
+
     var canOpen: Bool {
         let item = objectForShare
         if item is MKMapItem {
@@ -214,7 +213,7 @@ extension Component {
 
         return false
     }
-    
+
     func tryOpen(in viewController: UINavigationController?) {
         let item = objectForShare
         if let item = item as? MKMapItem {

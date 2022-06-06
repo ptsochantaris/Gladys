@@ -1,19 +1,18 @@
 import UIKit
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-
     @IBOutlet private var notesText: UITextField!
     @IBOutlet private var labelText: UITextField!
-	@IBOutlet private var table: UITableView!
+    @IBOutlet private var table: UITableView!
 
-	@IBOutlet private var headerView: UIView!
-	@IBOutlet private var headerLabel: UILabel!
-    
-	private var allToggles = [String]()
-	private var availableToggles = [String]()
+    @IBOutlet private var headerView: UIView!
+    @IBOutlet private var headerLabel: UILabel!
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    private var allToggles = [String]()
+    private var availableToggles = [String]()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
         dataAccessQueue.async(flags: .barrier) {
             self.allToggles = Model.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
             DispatchQueue.main.async { [weak self] in
@@ -21,133 +20,132 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
                 self?.updateFilter(nil)
             }
         }
-        
+
         notesText.text = ActionRequestViewController.noteToApply
-                
+
         NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
         itemIngested(nil)
-	}
-        
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         commitNote()
     }
-    
-    @objc private func itemIngested(_ notification: Notification?) {
+
+    @objc private func itemIngested(_: Notification?) {
         guard Model.doneIngesting else { return }
-        
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in
             guard let self = self else { return }
             self.commitNote()
             NotificationCenter.default.post(name: .DoneSelected, object: nil)
         })
     }
-    
+
     private func commitNote() {
         ActionRequestViewController.noteToApply = notesText.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
-	func numberOfSections(in tableView: UITableView) -> Int {
-		return min(1, availableToggles.count)
-	}
+    func numberOfSections(in _: UITableView) -> Int {
+        min(1, availableToggles.count)
+    }
 
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return availableToggles.count
-	}
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        availableToggles.count
+    }
 
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelEditorCell", for: indexPath) as! LabelEditorCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LabelEditorCell", for: indexPath) as! LabelEditorCell
 
-		let toggle = availableToggles[indexPath.row]
-		cell.labelName.text = toggle
-		cell.accessibilityLabel = toggle
+        let toggle = availableToggles[indexPath.row]
+        cell.labelName.text = toggle
+        cell.accessibilityLabel = toggle
 
         if ActionRequestViewController.labelsToApply.contains(toggle) {
-			cell.tick.isHidden = false
-			cell.tick.isHighlighted = true
+            cell.tick.isHidden = false
+            cell.tick.isHighlighted = true
             cell.labelName.textColor = UIColor.label
-			cell.accessibilityValue = "Selected"
-		} else {
-			cell.tick.isHidden = true
-			cell.tick.isHighlighted = false
+            cell.accessibilityValue = "Selected"
+        } else {
+            cell.tick.isHidden = true
+            cell.tick.isHighlighted = false
             cell.labelName.textColor = UIColor.secondaryLabel
-			cell.accessibilityValue = nil
-		}
-		return cell
-	}
+            cell.accessibilityValue = nil
+        }
+        return cell
+    }
 
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let toggle = availableToggles[indexPath.row]
-		if let i = ActionRequestViewController.labelsToApply.firstIndex(of: toggle) {
-			ActionRequestViewController.labelsToApply.remove(at: i)
-		} else {
-			ActionRequestViewController.labelsToApply.append(toggle)
-		}
-		tableView.reloadRows(at: [indexPath], with: .none)
-	}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let toggle = availableToggles[indexPath.row]
+        if let i = ActionRequestViewController.labelsToApply.firstIndex(of: toggle) {
+            ActionRequestViewController.labelsToApply.remove(at: i)
+        } else {
+            ActionRequestViewController.labelsToApply.append(toggle)
+        }
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
 
-	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		return 40
-	}
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
+        40
+    }
 
-	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		return headerView
-	}
+    func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
+        headerView
+    }
 
-	private func updateFilter(_ text: String?) {
-		let filter = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-		if filter.isEmpty {
-			availableToggles = allToggles
-		} else {
-			availableToggles = allToggles.filter { $0.localizedCaseInsensitiveContains(filter) }
-		}
-		table.reloadData()
-	}
+    private func updateFilter(_ text: String?) {
+        let filter = text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if filter.isEmpty {
+            availableToggles = allToggles
+        } else {
+            availableToggles = allToggles.filter { $0.localizedCaseInsensitiveContains(filter) }
+        }
+        table.reloadData()
+    }
 
-	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string != "\n" {
+            if let oldText = textField.text, !oldText.isEmpty, let r = Range(range, in: oldText) {
+                let newText = oldText.replacingCharacters(in: r, with: string)
+                updateFilter(newText)
+            } else {
+                updateFilter(nil)
+            }
+            return true
+        }
 
-		if string != "\n" {
-			if let oldText = textField.text, !oldText.isEmpty, let r = Range(range, in: oldText) {
-				let newText = oldText.replacingCharacters(in: r, with: string)
-				updateFilter(newText)
-			} else {
-				updateFilter(nil)
-			}
-			return true
-		}
+        textField.resignFirstResponder()
 
-		textField.resignFirstResponder()
+        guard let newTag = textField.text, !newTag.isEmpty else {
+            return false
+        }
 
-		guard let newTag = textField.text, !newTag.isEmpty else {
-			return false
-		}
+        textField.text = nil
+        if !allToggles.contains(newTag) {
+            allToggles.append(newTag)
+            allToggles.sort()
+        }
+        updateFilter(nil)
+        if let i = allToggles.firstIndex(of: newTag) {
+            let existingToggle = allToggles[i]
+            let ip = IndexPath(row: i, section: 0)
+            if !ActionRequestViewController.labelsToApply.contains(existingToggle) {
+                tableView(table, didSelectRowAt: ip)
+            }
+            table.scrollToRow(at: ip, at: .middle, animated: true)
+        }
+        return false
+    }
 
-		textField.text = nil
-		if !allToggles.contains(newTag) {
-			allToggles.append(newTag)
-			allToggles.sort()
-		}
-		updateFilter(nil)
-		if let i = allToggles.firstIndex(of: newTag) {
-			let existingToggle = allToggles[i]
-			let ip = IndexPath(row: i, section: 0)
-			if !ActionRequestViewController.labelsToApply.contains(existingToggle) {
-				tableView(table, didSelectRowAt: ip)
-			}
-			table.scrollToRow(at: ip, at: .middle, animated: true)
-		}
-		return false
-	}
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if UIAccessibility.isVoiceOverRunning, labelText.isFirstResponder { // weird hack for word mode
+            let left = -scrollView.adjustedContentInset.left
+            if scrollView.contentOffset.x < left {
+                let top = -scrollView.adjustedContentInset.top
+                scrollView.contentOffset = CGPoint(x: left, y: top)
+            }
+        }
 
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if UIAccessibility.isVoiceOverRunning && labelText.isFirstResponder { // weird hack for word mode
-			let left = -scrollView.adjustedContentInset.left
-			if scrollView.contentOffset.x < left {
-				let top = -scrollView.adjustedContentInset.top
-				scrollView.contentOffset = CGPoint(x: left, y: top)
-			}
-		}
-
-		headerLabel.alpha = 1.0 - min(1, max(0, scrollView.contentOffset.y / 8.0))
-	}
+        headerLabel.alpha = 1.0 - min(1, max(0, scrollView.contentOffset.y / 8.0))
+    }
 }

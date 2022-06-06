@@ -9,61 +9,59 @@
 import Cocoa
 
 final class ShareViewController: NSViewController {
-
     override var nibName: NSNib.Name? {
-        return NSNib.Name("ShareViewController")
+        NSNib.Name("ShareViewController")
     }
 
-	@IBOutlet private var spinner: NSProgressIndicator!
-	@IBOutlet private var cancelButton: NSButton!
-	@IBOutlet private var status: NSTextField!
+    @IBOutlet private var spinner: NSProgressIndicator!
+    @IBOutlet private var cancelButton: NSButton!
+    @IBOutlet private var status: NSTextField!
 
-	private var cancelled = false
-	private var progresses = [Progress]()
-	private let importGroup = DispatchGroup()
-	private let pasteboard = NSPasteboard(name: sharingPasteboard)
-	private var pasteboardItems = [NSPasteboardWriting]()
+    private var cancelled = false
+    private var progresses = [Progress]()
+    private let importGroup = DispatchGroup()
+    private let pasteboard = NSPasteboard(name: sharingPasteboard)
+    private var pasteboardItems = [NSPasteboardWriting]()
 
-	@IBAction private func cancelButtonSelected(_ sender: NSButton) {
-		cancelled = true
-		for p in progresses where !p.isFinished {
-			p.cancel()
-			importGroup.leave()
-		}
-		progresses.removeAll()
-	}
-    
+    @IBAction private func cancelButtonSelected(_: NSButton) {
+        cancelled = true
+        for p in progresses where !p.isFinished {
+            p.cancel()
+            importGroup.leave()
+        }
+        progresses.removeAll()
+    }
+
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         importGroup.enter() // released after load
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         importGroup.enter() // released after load
     }
-    
-	override func awakeFromNib() {
-		super.awakeFromNib()
-		DistributedNotificationCenter.default().addObserver(self, selector: #selector(pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
-	}
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        DistributedNotificationCenter.default().addObserver(self, selector: #selector(pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
+    }
 
-		status.stringValue = "Loading data…"
-		spinner.startAnimation(nil)
-		pasteboardItems.removeAll()
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-		guard let extensionContext = extensionContext else { return }
+        status.stringValue = "Loading data…"
+        spinner.startAnimation(nil)
+        pasteboardItems.removeAll()
 
-		for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
+        guard let extensionContext = extensionContext else { return }
 
+        for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
             var attachments = inputItem.attachments ?? []
 
             if attachments.count == 2, // detect Safari PDF preview getting attached
-                attachments[0].registeredTypeIdentifiers == ["public.url"],
-                attachments[1].registeredTypeIdentifiers == ["com.adobe.pdf"] {
+               attachments[0].registeredTypeIdentifiers == ["public.url"],
+               attachments[1].registeredTypeIdentifiers == ["com.adobe.pdf"] {
                 log("Safari PDF found, stripping it")
                 attachments.removeAll { $0.registeredTypeIdentifiers == ["com.adobe.pdf"] }
             }
@@ -84,7 +82,7 @@ final class ShareViewController: NSViewController {
                 let newItem = NSPasteboardItem()
                 pasteboardItems.append(newItem)
                 var identifiers = attachment.registeredTypeIdentifiers
-                if identifiers.contains("public.file-url") && identifiers.contains("public.url") { // finder is sharing
+                if identifiers.contains("public.file-url"), identifiers.contains("public.url") { // finder is sharing
                     log("> Removing Finder redundant URL data")
                     identifiers.removeAll { $0 == "public.file-url" || $0 == "public.url" }
                 }
@@ -100,50 +98,49 @@ final class ShareViewController: NSViewController {
                     }
                     progresses.append(p)
                 }
-			}
-		}
-        
+            }
+        }
+
         importGroup.leave() // from the one in awakeFromNib
-	}
+    }
 
-	override func viewDidAppear() {
-		super.viewDidAppear()
+    override func viewDidAppear() {
+        super.viewDidAppear()
 
-		guard let extensionContext = extensionContext else { return }
+        guard let extensionContext = extensionContext else { return }
 
-		importGroup.notify(queue: DispatchQueue.main) { [weak self] in
-			guard let s = self else { return }
+        importGroup.notify(queue: DispatchQueue.main) { [weak self] in
+            guard let s = self else { return }
 
-			if s.cancelled {
+            if s.cancelled {
                 let error = GladysError.actionCancelled.error
                 log(error.localizedDescription)
                 extensionContext.cancelRequest(withError: error)
-				return
-			}
+                return
+            }
 
-			log("Writing data to parent app…")
-			s.cancelButton.isHidden = true
-			s.pasteboard.clearContents()
-			s.pasteboard.writeObjects(s.pasteboardItems)
-			s.status.stringValue = "Saving…"
-			if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
+            log("Writing data to parent app…")
+            s.cancelButton.isHidden = true
+            s.pasteboard.clearContents()
+            s.pasteboard.writeObjects(s.pasteboardItems)
+            s.status.stringValue = "Saving…"
+            if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
                 let error = GladysError.mainAppFailedToOpen.error
                 log(error.localizedDescription)
                 extensionContext.cancelRequest(withError: error)
-			}
-		}
-	}
+            }
+        }
+    }
 
-	deinit {
-		DistributedNotificationCenter.default().removeObserver(self)
-	}
+    deinit {
+        DistributedNotificationCenter.default().removeObserver(self)
+    }
 
-	@objc private func pasteDone() {
-		log("Main app ingest done.")
-		status.stringValue = "Done"
-		pasteboard.clearContents()
-		spinner.stopAnimation(nil)
-		extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
-	}
-
+    @objc private func pasteDone() {
+        log("Main app ingest done.")
+        status.stringValue = "Done"
+        pasteboard.clearContents()
+        spinner.stopAnimation(nil)
+        extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+    }
 }

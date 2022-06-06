@@ -6,14 +6,14 @@
 //  Copyright © 2022 Paul Tsochantaris. All rights reserved.
 //
 
-import MapKit
 import CoreLocation
+import MapKit
 
 extension CLLocationCoordinate2D: Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+        lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(latitude)
         hasher.combine(longitude)
@@ -22,9 +22,9 @@ extension CLLocationCoordinate2D: Hashable {
 
 extension CGSize: Hashable {
     public static func == (lhs: CGSize, rhs: CGSize) -> Bool {
-        return lhs.width == rhs.width && lhs.height == rhs.height
+        lhs.width == rhs.width && lhs.height == rhs.height
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(width)
         hasher.combine(height)
@@ -33,9 +33,9 @@ extension CGSize: Hashable {
 
 final class Images {
     private let cache = Cache<String, IMAGE>()
-    
+
     static let shared = Images()
-        
+
     func image(for item: ArchivedItem) -> IMAGE? {
         let cacheKey = item.imageCacheKey
         if let cachedImage = cache[cacheKey] {
@@ -46,26 +46,26 @@ final class Images {
             return image
         }
     }
-    
+
     subscript(key: String) -> IMAGE? {
         get {
-            return cache[key]
+            cache[key]
         }
         set {
             cache[key] = newValue
         }
     }
-        
+
     func reset() {
         cache.reset()
     }
-    
+
     struct SnapshotOptions: Hashable {
         var coordinate: CLLocationCoordinate2D?
         var range: CLLocationDistance = 0
         var outputSize = CGSize.zero
     }
-    
+
     func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
         guard let coordinate = options.coordinate else {
             throw GladysError.noData.error

@@ -2,98 +2,100 @@ import Cocoa
 import ServiceManagement
 
 extension PersistedOptions {
+    static var hotkeyCmd: Bool {
+        get {
+            defaults.bool(forKey: "hotkeyCmd")
+        }
+        set {
+            defaults.set(newValue, forKey: "hotkeyCmd")
+        }
+    }
 
-	static var hotkeyCmd: Bool {
-		get {
-			return defaults.bool(forKey: "hotkeyCmd")
-		}
-		set {
-			defaults.set(newValue, forKey: "hotkeyCmd")
-		}
-	}
-	static var hotkeyOption: Bool {
-		get {
-			return defaults.bool(forKey: "hotkeyOption")
-		}
-		set {
-			defaults.set(newValue, forKey: "hotkeyOption")
-		}
-	}
-	static var hotkeyShift: Bool {
-		get {
-			return defaults.bool(forKey: "hotkeyShift")
-		}
-		set {
-			defaults.set(newValue, forKey: "hotkeyShift")
-		}
-	}
-	static var hotkeyCtrl: Bool {
-		get {
-			return defaults.bool(forKey: "hotkeyCtrl")
-		}
-		set {
-			defaults.set(newValue, forKey: "hotkeyCtrl")
-		}
-	}
-	static var hotkeyChar: Int {
-		get {
+    static var hotkeyOption: Bool {
+        get {
+            defaults.bool(forKey: "hotkeyOption")
+        }
+        set {
+            defaults.set(newValue, forKey: "hotkeyOption")
+        }
+    }
 
-			return defaults.integer(forKey: "hotkeyChar")
-		}
-		set {
-			defaults.set(newValue, forKey: "hotkeyChar")
-		}
-	}
+    static var hotkeyShift: Bool {
+        get {
+            defaults.bool(forKey: "hotkeyShift")
+        }
+        set {
+            defaults.set(newValue, forKey: "hotkeyShift")
+        }
+    }
 
-	static var unconfirmedDeletes: Bool {
-		get {
-			return defaults.bool(forKey: "unconfirmedDeletes")
-		}
-		set {
-			defaults.set(newValue, forKey: "unconfirmedDeletes")
-		}
-	}
+    static var hotkeyCtrl: Bool {
+        get {
+            defaults.bool(forKey: "hotkeyCtrl")
+        }
+        set {
+            defaults.set(newValue, forKey: "hotkeyCtrl")
+        }
+    }
 
-	static var hideMainWindowAtStartup: Bool {
-		get {
-			return defaults.bool(forKey: "hideMainWindowAtStartup")
-		}
-		set {
-			defaults.set(newValue, forKey: "hideMainWindowAtStartup")
-		}
-	}
+    static var hotkeyChar: Int {
+        get {
+            defaults.integer(forKey: "hotkeyChar")
+        }
+        set {
+            defaults.set(newValue, forKey: "hotkeyChar")
+        }
+    }
 
-	static var launchAtLogin: Bool {
-		get {
-			return defaults.bool(forKey: "launchAtLogin")
-		}
-		set {
-			defaults.set(newValue, forKey: "launchAtLogin")
-			SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
-		}
-	}
+    static var unconfirmedDeletes: Bool {
+        get {
+            defaults.bool(forKey: "unconfirmedDeletes")
+        }
+        set {
+            defaults.set(newValue, forKey: "unconfirmedDeletes")
+        }
+    }
 
-	static var defaultsVersion: Int {
-		get {
-			return defaults.integer(forKey: "defaultsVersion")
-		}
-		set {
-			defaults.set(newValue, forKey: "defaultsVersion")
-		}
-	}
+    static var hideMainWindowAtStartup: Bool {
+        get {
+            defaults.bool(forKey: "hideMainWindowAtStartup")
+        }
+        set {
+            defaults.set(newValue, forKey: "hideMainWindowAtStartup")
+        }
+    }
 
-	static var menubarIconMode: Bool {
-		get {
-			return defaults.bool(forKey: "menubarIconMode")
-		}
-		set {
-			defaults.set(newValue, forKey: "menubarIconMode")
-		}
-	}
-    
+    static var launchAtLogin: Bool {
+        get {
+            defaults.bool(forKey: "launchAtLogin")
+        }
+        set {
+            defaults.set(newValue, forKey: "launchAtLogin")
+            SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
+        }
+    }
+
+    static var defaultsVersion: Int {
+        get {
+            defaults.integer(forKey: "defaultsVersion")
+        }
+        set {
+            defaults.set(newValue, forKey: "defaultsVersion")
+        }
+    }
+
+    static var menubarIconMode: Bool {
+        get {
+            defaults.bool(forKey: "menubarIconMode")
+        }
+        set {
+            defaults.set(newValue, forKey: "menubarIconMode")
+        }
+    }
+
     static var clipboardSnooping: Bool {
         get {
-            return defaults.bool(forKey: "clipboardSnooping")
+            defaults.bool(forKey: "clipboardSnooping")
         }
         set {
             defaults.set(newValue, forKey: "clipboardSnooping")
@@ -102,31 +104,31 @@ extension PersistedOptions {
 
     static var clipboardSnoopingAll: Bool {
         get {
-            return defaults.bool(forKey: "clipboardSnoopingAll")
+            defaults.bool(forKey: "clipboardSnoopingAll")
         }
         set {
             defaults.set(newValue, forKey: "clipboardSnoopingAll")
         }
     }
 
-	static var alwaysOnTop: Bool {
-		get {
-			return defaults.bool(forKey: "alwaysOnTop")
-		}
-		set {
-			defaults.set(newValue, forKey: "alwaysOnTop")
-		}
-	}
+    static var alwaysOnTop: Bool {
+        get {
+            defaults.bool(forKey: "alwaysOnTop")
+        }
+        set {
+            defaults.set(newValue, forKey: "alwaysOnTop")
+        }
+    }
 
-	static var hideTitlebar: Bool {
-		get {
-			return defaults.bool(forKey: "hideTitlebar")
-		}
-		set {
-			defaults.set(newValue, forKey: "hideTitlebar")
-		}
-	}
-    
+    static var hideTitlebar: Bool {
+        get {
+            defaults.bool(forKey: "hideTitlebar")
+        }
+        set {
+            defaults.set(newValue, forKey: "hideTitlebar")
+        }
+    }
+
     private static var _autoShowWhenDragging: Bool?
     static var autoShowWhenDragging: Bool {
         get {
@@ -167,10 +169,10 @@ extension PersistedOptions {
             }
         }
     }
-    
+
     static var autoHideAfter: Int {
         get {
-            return defaults.integer(forKey: "autoHideAfter")
+            defaults.integer(forKey: "autoHideAfter")
         }
         set {
             defaults.set(newValue, forKey: "autoHideAfter")

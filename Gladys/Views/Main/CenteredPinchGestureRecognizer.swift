@@ -2,7 +2,7 @@ import UIKit
 
 final class CenteredPinchGestureRecognizer: UIPinchGestureRecognizer {
     var startPoint: CGPoint?
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         if let view = view {
             startPoint = location(in: view)
@@ -14,7 +14,7 @@ final class CenteredPinchGestureRecognizer: UIPinchGestureRecognizer {
         if let start = startPoint, let view = view {
             let newPoint = location(in: view)
             let distance = sqrt(pow(newPoint.x - start.x, 2) + pow(newPoint.y - start.y, 2))
-            if distance > 44 && velocity < 1 {
+            if distance > 44, velocity < 1 {
                 state = .failed
                 return
             }

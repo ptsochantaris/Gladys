@@ -7,25 +7,24 @@
 //
 
 #if os(iOS)
-import UIKit
+    import UIKit
 #else
-import Cocoa
+    import Cocoa
 #endif
 import CloudKit
 import GladysFramework
 
 extension CloudManager {
-    
     static let privateDatabaseSubscriptionId = "private-changes"
     static let sharedDatabaseSubscriptionId = "shared-changes"
     static var syncDirty = false
-    
+
     static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
-    
+
     static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
@@ -37,26 +36,26 @@ extension CloudManager {
         }
     }
 
-    static var showNetwork: Bool = false {
+    static var showNetwork = false {
         didSet {
             Model.updateBadge()
         }
     }
 
-    private (set) static var syncProgressString: String?
-    
+    private(set) static var syncProgressString: String?
+
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
         assert(Thread.isMainThread)
         #if DEBUG
-        if let s = syncProgressString {
-            log(">>> Sync label updated: \(s)")
-        } else {
-            log(">>> Sync label cleared")
-        }
+            if let s = syncProgressString {
+                log(">>> Sync label updated: \(s)")
+            } else {
+                log(">>> Sync label cleared")
+            }
         #endif
         NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
     }
-    
+
     @MainActor static func setSyncProgressString(_ newString: String?) {
         syncProgressString = newString
         syncProgressDebouncer.push()
@@ -67,7 +66,7 @@ extension CloudManager {
         if !syncSwitchedOn {
             return
         }
-        
+
         var sharedZonesToPush = Set<CKRecordZone.ID>()
         for item in Model.drops where item.needsCloudPush {
             let zoneID = item.parentZone
@@ -75,7 +74,7 @@ extension CloudManager {
                 sharedZonesToPush.insert(zoneID)
             }
         }
-        
+
         for deletionEntry in deletionQueue {
             let components = deletionEntry.components(separatedBy: ":")
             if components.count > 2 {
@@ -89,10 +88,10 @@ extension CloudManager {
         let privatePushState = PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
         let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
 
-        let operations = sharedPushStates.reduce(privatePushState.operations) { (existingOperations, pushState) -> [CKDatabaseOperation] in
-            return existingOperations + pushState.operations
+        let operations = sharedPushStates.reduce(privatePushState.operations) { existingOperations, pushState -> [CKDatabaseOperation] in
+            existingOperations + pushState.operations
         }
-        
+
         if operations.isEmpty {
             log("No changes to push up")
             return
@@ -180,20 +179,20 @@ extension CloudManager {
             }
         }
     }
-    
+
     @MainActor
     static func getUuidSequenceAsync() -> [String] {
-        return uuidSequence
+        uuidSequence
     }
 
     @MainActor
     static func setUuidSequenceAsync(_ newList: [String]) {
         uuidSequence = newList
     }
-    
+
     @MainActor
     static func getUuidSequenceRecordAsync() -> CKRecord? {
-        return uuidSequenceRecord
+        uuidSequenceRecord
     }
 
     @MainActor
@@ -202,7 +201,7 @@ extension CloudManager {
     }
 
     static var uuidSequenceRecordPath: URL {
-        return Model.appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
+        Model.appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
     }
 
     static var uuidSequenceRecord: CKRecord? {
@@ -232,7 +231,7 @@ extension CloudManager {
     }
 
     static var deleteQueuePath: URL {
-        return Model.appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
+        Model.appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
     }
 
     static var deletionQueue: Set<String> {
@@ -303,7 +302,7 @@ extension CloudManager {
     }
 
     @MainActor
-    static private func activate() async throws {
+    private static func activate() async throws {
         if syncSwitchedOn {
             return
         }
@@ -339,7 +338,7 @@ extension CloudManager {
         }
     }
 
-    static private func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
+    private static func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
         let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
         modifyOperation.savePolicy = .allKeys
         modifyOperation.perRecordCompletionBlock = { record, _ in
@@ -365,9 +364,9 @@ extension CloudManager {
         }
         perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
-    
+
     @MainActor
-    static func deactivate(force: Bool, deactivatingShares: Bool = true) async throws {
+    static func deactivate(force: Bool, deactivatingShares _: Bool = true) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             deactivate(force: force) { error in
                 if let error = error {
@@ -438,7 +437,6 @@ extension CloudManager {
     }
 
     private static func proceedWithActivationNow(completion: @escaping (Error?) -> Void) {
-
         let zone = CKRecordZone(zoneID: privateZoneId)
         let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
         createZone.modifyRecordZonesCompletionBlock = { _, _, error in
@@ -452,7 +450,6 @@ extension CloudManager {
     }
 
     private static func updateSubscriptions(completion: @escaping (Error?) -> Void) {
-        
         func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
             let notificationInfo = CKSubscription.NotificationInfo()
             notificationInfo.shouldSendContentAvailable = true
@@ -476,7 +473,7 @@ extension CloudManager {
             group.leave()
         }
         perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
-        
+
         group.enter()
         let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
         subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
@@ -492,7 +489,7 @@ extension CloudManager {
         }
     }
 
-    static private func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
+    private static func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
         DispatchQueue.main.async {
             log("Activation aborted: \(error)")
             completion(error)
@@ -500,7 +497,7 @@ extension CloudManager {
         }
     }
 
-    static private func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?) -> Void) {
+    private static func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?) -> Void) {
         let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
         let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
         fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
@@ -543,7 +540,6 @@ extension CloudManager {
     }
 
     static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
-
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
         for item in Model.drops {
@@ -628,7 +624,6 @@ extension CloudManager {
 
     @MainActor
     static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
-
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
             if !l.isEqual(newToken) {
@@ -656,18 +651,17 @@ extension CloudManager {
 
     private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool) async throws {
         switch ckError.code {
-
         case .accountTemporarilyUnavailable:
             log("iCloud account temporarily unavailable")
             fallthrough
 
-        case .notAuthenticated, .assetNotAvailable, .managedAccountRestricted, .missingEntitlement, .zoneNotFound, .incompatibleVersion,
-             .userDeletedZone, .badDatabase, .badContainer:
+        case .assetNotAvailable, .badContainer, .badDatabase, .incompatibleVersion, .managedAccountRestricted, .missingEntitlement,
+             .notAuthenticated, .userDeletedZone, .zoneNotFound:
 
             // shutdown-worthy failure
             await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
             try? await deactivate(force: true)
-            
+
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
 
             // retry
@@ -677,9 +671,9 @@ extension CloudManager {
             syncRateLimited = false
             try await attemptSync(scope: nil, force: force, overridingUserPreference: overridingUserPreference)
 
-        case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .permissionFailure,
-             .participantMayNeedVerification, .quotaExceeded, .referenceViolation, .serverRejectedRequest, .tooManyParticipants, .operationCancelled,
-             .resultsTruncated, .unknownItem, .serverRecordChanged, .networkFailure, .networkUnavailable, .partialFailure:
+        case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .networkFailure,
+             .networkUnavailable, .operationCancelled, .partialFailure, .participantMayNeedVerification, .permissionFailure, .quotaExceeded,
+             .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem:
 
             // regular failure
             throw ckError
@@ -696,11 +690,11 @@ extension CloudManager {
         let icon = item.displayIcon
         let scaledIcon = icon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
         #if os(iOS)
-        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
+            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #else
-        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
+            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
         #endif
-        let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap { $0.populatedCloudKitRecord }
+        let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap(\.populatedCloudKitRecord)
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
         let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
         operation.savePolicy = .allKeys
@@ -796,29 +790,29 @@ extension CloudManager {
         }
 
         #if os(iOS)
-        if !force && !overridingUserPreference {
-            if syncContextSetting == .wifiOnly && reachability.status != .reachableViaWiFi {
-                log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
-                return
+            if !force, !overridingUserPreference {
+                if syncContextSetting == .wifiOnly, reachability.status != .reachableViaWiFi {
+                    log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
+                    return
+                }
+                if syncContextSetting == .manualOnly {
+                    log("Skipping auto sync because user selected manual sync only")
+                    return
+                }
             }
-            if syncContextSetting == .manualOnly {
-                log("Skipping auto sync because user selected manual sync only")
-                return
-            }
-        }
         #endif
 
-        if syncing && !force {
+        if syncing, !force {
             log("Sync already running, but need another one. Marked to retry at the end of this.")
             syncDirty = true
             return
         }
 
         #if os(iOS)
-        BackgroundTask.registerForBackground()
-        defer {
-            BackgroundTask.unregisterForBackground()
-        }
+            BackgroundTask.registerForBackground()
+            defer {
+                BackgroundTask.unregisterForBackground()
+            }
         #endif
 
         syncing = true
@@ -839,18 +833,18 @@ extension CloudManager {
             throw error
         }
     }
-    
+
     static func apnsUpdate(_ newToken: Data?) {
-        if newToken == PersistedOptions.lastPushToken && PersistedOptions.migratedSubscriptions7 {
+        if newToken == PersistedOptions.lastPushToken, PersistedOptions.migratedSubscriptions7 {
             return
         }
-        
+
         guard let newToken = newToken else {
             PersistedOptions.migratedSubscriptions7 = true
             PersistedOptions.lastPushToken = nil
             return
         }
-        
+
         log("New APNS token or push migration needed, will update subscriptions")
         updateSubscriptions { error in
             if let error = error {

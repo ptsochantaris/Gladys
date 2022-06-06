@@ -6,16 +6,15 @@
 //  Copyright © 2020 Paul Tsochantaris. All rights reserved.
 //
 
-import UIKit
 import CoreSpotlight
+import UIKit
 
 final class Singleton {
     static let shared = Singleton()
-    
+
     var componentDropActiveFromDetailView: DetailController?
 
     func setup() {
-
         Model.setup()
 
         CallbackSupport.setupCallbackSupport()
@@ -25,7 +24,7 @@ final class Singleton {
         if !PersistedOptions.pasteShortcutAutoDonated {
             Model.donatePasteIntent()
         }
-        
+
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
             Task {
@@ -43,7 +42,7 @@ final class Singleton {
         Model.beginMonitoringChanges() // will reload data as well
         Model.detectExternalChanges()
     }
-    
+
     @objc private func foregrounded() {
         if UIApplication.shared.applicationState == .background {
             // foregrounding, not including app launch
@@ -56,12 +55,12 @@ final class Singleton {
             CloudManager.opportunisticSyncIfNeeded()
         }
     }
-    
+
     @objc private func backgrounded() {
         log("App backgrounded")
         Model.lockUnlockedItems()
     }
-    
+
     @objc private func modelDataUpdate() {
         let group = DispatchGroup()
         Model.detectExternalChanges(completionGroup: group)
@@ -76,15 +75,15 @@ final class Singleton {
             }
         }
     }
-    
+
     private var ingestRunning = false
-    @objc private func ingestStart(_ notification: Notification) {
+    @objc private func ingestStart(_: Notification) {
         if !ingestRunning {
             ingestRunning = true
             BackgroundTask.registerForBackground()
         }
     }
-    
+
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
         if Model.doneIngesting {
@@ -100,9 +99,9 @@ final class Singleton {
 
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {
         guard let scene = scene as? UIWindowScene else { return }
-        
+
         scene.session.stateRestorationActivity = userActivity
-        
+
         switch userActivity?.activityType {
         case kGladysMainListActivity:
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
@@ -114,7 +113,7 @@ final class Singleton {
             } else {
                 legacyLabelList = nil
             }
-            
+
             var labels: [Filter.Toggle]?
             if let labelData = userActivity?.userInfo?[kGladysMainViewSections] as? Data, let labelList = try? JSONDecoder().decode([Filter.Toggle].self, from: labelData) {
                 labels = labelList
@@ -128,14 +127,13 @@ final class Singleton {
                 let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-
                 guard let item = Model.item(uuid: uuidString) else {
                     showMainWindow(in: scene) { _ in
                         genericAlert(title: "Not Found", message: "This item was not found")
                     }
                     return
                 }
-                
+
                 let child: Component?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
                     child = Model.component(uuid: childUuid)
@@ -148,7 +146,7 @@ final class Singleton {
                         NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
                     }
                     return
-                    
+
                 } else if let child = child {
                     if let q = child.quickLook() {
                         let n = GladysNavController(rootViewController: q)
@@ -163,7 +161,6 @@ final class Singleton {
                 let userActivity = userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-
                 guard let item = Model.item(uuid: uuidString) else {
                     showMainWindow(in: scene) { _ in
                         genericAlert(title: "Not Found", message: "This item was not found")
@@ -184,7 +181,7 @@ final class Singleton {
                 }
                 return
             }
-            
+
         case kGladysStartPasteShortcutActivity:
             showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
             return
@@ -210,13 +207,13 @@ final class Singleton {
             showMainWindow(in: scene)
             return
         }
-        
+
         if UIApplication.shared.supportsMultipleScenes {
             log("Could not process current activity, ignoring")
             UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil, errorHandler: nil)
         }
     }
-    
+
     private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [Filter.Toggle]? = nil, legacyLabelList: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
         let s = scene.session
         let v: ViewController
@@ -229,15 +226,15 @@ final class Singleton {
             v = n.viewControllers.first as! ViewController
             replacing = true
         }
-        
+
         let filter = s.associatedFilter
         if let labelList = labelList {
             filter.applyLabelConfig(from: labelList)
-            
+
         } else if let legacyLabelList = legacyLabelList {
             filter.enableLabelsByName(legacyLabelList)
         }
-        
+
         if let search = restoringSearch, !search.isEmpty {
             filter.text = search
         }
@@ -253,7 +250,7 @@ final class Singleton {
             completion?(v)
         }
     }
-    
+
     func boot(with activity: NSUserActivity?, in scene: UIScene?) {
         if UIApplication.shared.supportsMultipleScenes {
             let centralSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
@@ -268,24 +265,23 @@ final class Singleton {
             // in theory this should never happen, leave the UI as-is
         }
     }
-    
+
     var openCount = 0 {
         didSet {
-            if openCount == 1 && oldValue != 1 {
+            if openCount == 1, oldValue != 1 {
                 NotificationCenter.default.post(name: .MultipleWindowModeChange, object: true)
-            } else if openCount != 1 && oldValue == 1 {
+            } else if openCount != 1, oldValue == 1 {
                 NotificationCenter.default.post(name: .MultipleWindowModeChange, object: false)
             }
         }
     }
-        
+
     func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
-        
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)
             activity.addUserInfoEntries(from: [CSSearchableItemActivityIdentifier: itemId])
             Singleton.shared.boot(with: activity, in: scene)
-        
+
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
@@ -306,7 +302,7 @@ final class Singleton {
                 a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                 presenter.present(a, animated: true)
             }
-            
+
         } else if !PersistedOptions.blockGladysUrlRequests {
             CallbackSupport.handlePossibleCallbackURL(url: url)
         }

@@ -11,7 +11,7 @@ import UIKit
 extension Component {
     var componentIcon: UIImage? {
         get {
-            return UIImage.fromFile(imagePath, template: displayIconTemplate)
+            UIImage.fromFile(imagePath, template: displayIconTemplate)
         }
         set {
             let ipath = imagePath
@@ -21,5 +21,5 @@ extension Component {
                 try? FileManager.default.removeItem(at: ipath)
             }
         }
-    }    
+    }
 }

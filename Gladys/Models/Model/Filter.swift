@@ -6,10 +6,10 @@
 //  Copyright © 2021 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import CoreSpotlight
+import Foundation
 #if os(iOS)
-import UIKit
+    import UIKit
 #endif
 
 struct SectionIdentifier: Hashable {
@@ -26,18 +26,17 @@ protocol FilterDelegate: AnyObject {
 }
 
 final class Filter {
-    
     enum UpdateType {
         case none, instant, animated
     }
-    
+
     enum DisplayMode: Int, Codable {
         case collapsed, scrolling, full
     }
-    
+
     enum GroupingMode: Int {
         case flat, byLabel
-        
+
         var imageName: String {
             switch self {
             case .flat:
@@ -47,9 +46,9 @@ final class Filter {
             }
         }
     }
-    
+
     weak var delegate: FilterDelegate?
-    
+
     var groupingMode = GroupingMode.flat
     var isFilteringText = false
 
@@ -63,7 +62,7 @@ final class Filter {
     func sizeOfVisibleItemsInBytes(completion: @escaping (Int64) -> Void) {
         let snapshot = filteredDrops
         dataAccessQueue.sync {
-            let res = snapshot.reduce(0, { $0 + $1.sizeInBytes })
+            let res = snapshot.reduce(0) { $0 + $1.sizeInBytes }
             DispatchQueue.main.async {
                 completion(res)
             }
@@ -71,11 +70,11 @@ final class Filter {
     }
 
     var isFilteringLabels: Bool {
-        return labelToggles.contains { $0.active }
+        labelToggles.contains { $0.active }
     }
 
     var isFiltering: Bool {
-        return isFilteringText || isFilteringLabels
+        isFilteringText || isFilteringLabels
     }
 
     var filteredDrops: ContiguousArray<ArchivedItem> {
@@ -87,7 +86,7 @@ final class Filter {
 
     var text: String? {
         get {
-            return modelFilter
+            modelFilter
         }
         set {
             let v = newValue == "" ? nil : newValue
@@ -97,12 +96,12 @@ final class Filter {
             }
         }
     }
-    
+
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
                 if let closestItem = filteredDrops.last, let i = Model.firstIndexOfItem(with: closestItem.uuid) {
-                    let ret = i+1
+                    let ret = i + 1
                     if checkForWeirdness, ret >= filteredDrops.count {
                         return -1
                     } else {
@@ -121,7 +120,7 @@ final class Filter {
             return index
         }
     }
-    
+
     func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?, setAsPreference: Bool) {
         if let names = names {
             labelToggles = labelToggles.map {
@@ -148,11 +147,11 @@ final class Filter {
             }
         }
     }
-    
+
     func labels(for displayMode: DisplayMode) -> [Toggle] {
-        return labelToggles.filter { $0.currentDisplayMode == displayMode }
+        labelToggles.filter { $0.currentDisplayMode == displayMode }
     }
-    
+
     func enableLabelsByName(_ names: Set<String>) {
         labelToggles = labelToggles.map {
             var newToggle = $0
@@ -160,8 +159,8 @@ final class Filter {
             return newToggle
         }
     }
-    
-    static private func terms(for text: String?) -> [String]? {
+
+    private static func terms(for text: String?) -> [String]? {
         guard let text = text?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
 
         var terms = [String]()
@@ -179,11 +178,11 @@ final class Filter {
         }
         return terms
     }
-    
+
     func countItems(for toggle: Toggle) -> Int {
-        return filteredDrops.reduce(0) {
+        filteredDrops.reduce(0) {
             switch toggle.function {
-            case .userLabel(let text):
+            case let .userLabel(text):
                 if $1.labels.contains(text) {
                     return $0 + 1
                 }
@@ -202,16 +201,15 @@ final class Filter {
 
     @discardableResult
     func updateFilter(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
-        
         let previousFilteredDrops = filteredDrops
-        
+
         // label pass
-        
-        let enabledToggles = labelToggles.filter { $0.active }
+
+        let enabledToggles = labelToggles.filter(\.active)
         let postLabelDrops: ContiguousArray<ArchivedItem>
         if enabledToggles.isEmpty {
             postLabelDrops = Model.drops
-            
+
         } else if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count
             postLabelDrops = Model.drops.filter { item in
@@ -220,25 +218,25 @@ final class Filter {
                     switch toggle.function {
                     case .unlabeledItems: if item.labels.isEmpty { matchCount += 1 }
                     case .recentlyAddedItems: if item.isRecentlyAdded { matchCount += 1 }
-                    case .userLabel(let text): if item.labels.contains(text) { matchCount += 1 }
+                    case let .userLabel(text): if item.labels.contains(text) { matchCount += 1 }
                     }
                 }
                 return matchCount == expectedCount
             }
-            
+
         } else {
             postLabelDrops = Model.drops.filter { item in
                 for toggle in enabledToggles {
                     switch toggle.function {
                     case .unlabeledItems: if item.labels.isEmpty { return true }
                     case .recentlyAddedItems: if item.isRecentlyAdded { return true }
-                    case .userLabel(let text): if item.labels.contains(text) { return true }
+                    case let .userLabel(text): if item.labels.contains(text) { return true }
                     }
                 }
                 return false
             }
         }
-        
+
         // text pass
 
         if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
@@ -284,33 +282,32 @@ final class Filter {
         if changesToVisibleItems {
             Model.updateBadge()
             if signalUpdate != .none {
-
-                self.delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
+                delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
                 #if os(iOS)
-                if isFilteringText && UIAccessibility.isVoiceOverRunning {
-                    let resultString: String
-                    let c = filteredDrops.count
-                    if c == 0 {
-                        resultString = "No results"
-                    } else if c == 1 {
-                        resultString = "One result"
-                    } else {
-                        resultString = "\(filteredDrops.count) results"
+                    if isFilteringText, UIAccessibility.isVoiceOverRunning {
+                        let resultString: String
+                        let c = filteredDrops.count
+                        if c == 0 {
+                            resultString = "No results"
+                        } else if c == 1 {
+                            resultString = "One result"
+                        } else {
+                            resultString = "\(filteredDrops.count) results"
+                        }
+                        UIAccessibility.post(notification: .announcement, argument: resultString)
                     }
-                    UIAccessibility.post(notification: .announcement, argument: resultString)
-                }
                 #endif
             }
         }
 
         return changesToVisibleItems
     }
-        
+
     var enabledLabelsForItems: [String] {
-        return labelToggles.compactMap {
+        labelToggles.compactMap {
             if $0.active {
-                if case .userLabel(let name) = $0.function {
+                if case let .userLabel(name) = $0.function {
                     return name
                 }
             }
@@ -319,16 +316,16 @@ final class Filter {
     }
 
     var enabledLabelsForTitles: [String] {
-        return labelToggles.compactMap { $0.active ? $0.function.displayText : nil }
+        labelToggles.compactMap { $0.active ? $0.function.displayText : nil }
     }
-    
+
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
         let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.drops // copy
-        return items.filter { $0.goodToSave }
+        return items.filter(\.goodToSave)
     }
-    
+
     var labelToggles = [Toggle]()
-    
+
     func applyLabelConfig(from newToggles: [Toggle]) {
         labelToggles = labelToggles.map { existingToggle in
             if let newToggle = newToggles.first(where: { $0.function == existingToggle.function }) {
@@ -340,14 +337,13 @@ final class Filter {
     }
 
     struct Toggle: Hashable, Codable {
-        
         enum Section {
             case recent(labels: [String], title: String)
             case filtered(labels: [String], title: String)
-            
+
             static var latestLabels: [String] {
                 get {
-                    return UserDefaults.standard.object(forKey: "latestLabels") as? [String] ?? []
+                    UserDefaults.standard.object(forKey: "latestLabels") as? [String] ?? []
                 }
                 set {
                     UserDefaults.standard.set(newValue, forKey: "latestLabels")
@@ -356,19 +352,19 @@ final class Filter {
 
             var labels: [String] {
                 switch self {
-                case .filtered(let labels, _), .recent(let labels, _):
+                case let .filtered(labels, _), let .recent(labels, _):
                     return labels
                 }
             }
 
             var title: String {
                 switch self {
-                case .filtered(_, let title), .recent(_, let title):
+                case let .filtered(_, title), let .recent(_, title):
                     return title
                 }
             }
         }
-        
+
         enum Function: Hashable, Codable {
             case userLabel(String)
             case recentlyAddedItems
@@ -376,9 +372,9 @@ final class Filter {
 
             static func == (lhs: Function, rhs: Function) -> Bool {
                 switch lhs {
-                case .userLabel(let leftText):
+                case let .userLabel(leftText):
                     switch rhs {
-                    case .userLabel(let rightText):
+                    case let .userLabel(rightText):
                         return leftText.localizedCaseInsensitiveCompare(rightText) == .orderedSame
                     case .recentlyAddedItems, .unlabeledItems:
                         return false
@@ -389,28 +385,28 @@ final class Filter {
                     if case .unlabeledItems = rhs { return true } else { return false }
                 }
             }
-            
+
             var displayText: String {
                 switch self {
-                case .userLabel(let name): return name
+                case let .userLabel(name): return name
                 case .unlabeledItems: return "Items with no labels"
                 case .recentlyAddedItems: return "Recently added"
                 }
             }
         }
-        
+
         let function: Function
         let count: Int
         var active: Bool
         var currentDisplayMode: DisplayMode
         var preferredDisplayMode: DisplayMode
-        
+
         static func == (lhs: Toggle, rhs: Toggle) -> Bool {
-            return lhs.function == rhs.function
-            && lhs.active == rhs.active
-            && lhs.currentDisplayMode == rhs.currentDisplayMode
+            lhs.function == rhs.function
+                && lhs.active == rhs.active
+                && lhs.currentDisplayMode == rhs.currentDisplayMode
         }
-        
+
         func hash(into hasher: inout Hasher) {
             hasher.combine(function)
             hasher.combine(active)
@@ -429,7 +425,7 @@ final class Filter {
         }
 
         func toggleState(across uuids: [UUID]?) -> State {
-            guard case .userLabel(let name) = function else {
+            guard case let .userLabel(name) = function else {
                 return .none
             }
             let n = uuids?.reduce(0) { total, uuid -> Int in
@@ -437,34 +433,34 @@ final class Filter {
                     return total + 1
                 }
                 return total
-                } ?? 0
+            } ?? 0
             if n == (uuids?.count ?? -1) {
                 return .all
             }
             return n > 0 ? .some : .none
         }
     }
-    
+
     var enabledToggles: [Toggle] {
         var res: [Filter.Toggle]
         if isFilteringLabels {
-            res = labelToggles.filter { $0.active }
+            res = labelToggles.filter(\.active)
         } else {
             res = labelToggles
         }
-        
+
         if let i = res.firstIndex(where: { $0.function == .unlabeledItems }), i != 0 {
             let item = res.remove(at: i)
             res.insert(item, at: 0)
         }
-        
+
         if let i = res.firstIndex(where: { $0.function == .recentlyAddedItems }), i != 0 {
             let item = res.remove(at: i)
             res.insert(item, at: 0)
         }
         return res
     }
-    
+
     func disableAllLabels() {
         labelToggles = labelToggles.map {
             if $0.active {
@@ -476,10 +472,10 @@ final class Filter {
             }
         }
     }
-    
+
     func rebuildRecentlyAdded() -> Bool {
         let count = Model.drops.reduce(0) {
-            return $0 + ($1.isRecentlyAdded ? 1 : 0)
+            $0 + ($1.isRecentlyAdded ? 1 : 0)
         }
         let recentlyAddedIndex = labelToggles.firstIndex(where: { $0.function == .recentlyAddedItems })
         if count == 0 {
@@ -510,7 +506,7 @@ final class Filter {
         for item in Model.drops {
             item.labels.forEach {
                 if let c = counts[$0] {
-                    counts[$0] = c+1
+                    counts[$0] = c + 1
                 } else {
                     counts[$0] = 1
                 }
@@ -524,7 +520,7 @@ final class Filter {
         }
 
         let previousList = labelToggles
-        labelToggles = counts.map { (labelText, count) in
+        labelToggles = counts.map { labelText, count in
             let function = Toggle.Function.userLabel(labelText)
             if let previousItem = previousList.first(where: { $0.function == function }) {
                 let previousEnabled = previousItem.active
@@ -536,18 +532,18 @@ final class Filter {
             }
         }
         .sorted { $0.function.displayText.localizedCaseInsensitiveCompare($1.function.displayText) == .orderedAscending }
-        
+
         if recentlyAddedCount > 0 {
             let t = newOrExistingToggle(of: .recentlyAddedItems, in: previousList, newCount: recentlyAddedCount)
             labelToggles.append(t)
         }
-                
+
         if noLabelCount > 0 {
             let t = newOrExistingToggle(of: .unlabeledItems, in: previousList, newCount: noLabelCount)
             labelToggles.append(t)
         }
     }
-    
+
     private func newOrExistingToggle(of function: Toggle.Function, in list: [Toggle], newCount: Int) -> Toggle {
         if let previousItem = list.first(where: { $0.function == function }) {
             let previousEnabled = previousItem.active
@@ -568,7 +564,7 @@ final class Filter {
 
     func renameLabel(_ oldName: String, to newName: String) {
         let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
-        
+
         Model.drops.forEach { i in
             if let oldIndex = i.labels.firstIndex(of: oldName) {
                 if i.labels.contains(newName) {
@@ -582,18 +578,18 @@ final class Filter {
         }
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
-        
+
         if wasEnabled, let i = labelToggles.firstIndex(where: { $0.function == .userLabel(newName) }) {
             var l = labelToggles[i]
             l.active = true
             labelToggles[i] = l
         }
-        
+
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-        
+
         Model.save()
     }
-    
+
     func removeLabel(_ label: String) {
         Model.drops.forEach { i in
             if i.labels.contains(label) {
@@ -602,7 +598,7 @@ final class Filter {
                 i.flags.insert(.needsSaving)
             }
         }
-        
+
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
         Model.save()

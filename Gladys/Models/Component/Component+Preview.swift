@@ -9,13 +9,12 @@
 import Foundation
 
 #if os(iOS)
-import QuickLook
+    import QuickLook
 #else
-import Quartz
+    import Quartz
 #endif
 
 extension Component {
-
     var previewTempPath: URL {
         let path = Model.temporaryDirectoryUrl.appendingPathComponent(uuid.uuidString, isDirectory: false)
         if isWebURL {
@@ -27,25 +26,23 @@ extension Component {
         }
     }
 
-	final class PreviewItem: NSObject, QLPreviewItem {
-		let previewItemURL: URL?
-		let previewItemTitle: String?
-		let needsCleanup: Bool
-		let parentUuid: UUID
-		let uuid: UUID
+    final class PreviewItem: NSObject, QLPreviewItem {
+        let previewItemURL: URL?
+        let previewItemTitle: String?
+        let needsCleanup: Bool
+        let parentUuid: UUID
+        let uuid: UUID
 
-		init(typeItem: Component) {
+        init(typeItem: Component) {
+            parentUuid = typeItem.parentUuid
+            uuid = typeItem.uuid
 
-			parentUuid = typeItem.parentUuid
-			uuid = typeItem.uuid
+            let blobPath = typeItem.bytesPath
+            let tempPath = typeItem.previewTempPath
 
-			let blobPath = typeItem.bytesPath
-			let tempPath = typeItem.previewTempPath
+            needsCleanup = blobPath != tempPath
 
-			needsCleanup = blobPath != tempPath
-
-			if needsCleanup {
-                
+            if needsCleanup {
                 let currentCount = PreviewItem.previewUrls[tempPath] ?? 0
                 PreviewItem.previewUrls[tempPath] = currentCount + 1
 
@@ -64,20 +61,20 @@ extension Component {
                         }
                     }
                 }
-				previewItemURL = tempPath
-			} else {
-				previewItemURL = blobPath
-			}
+                previewItemURL = tempPath
+            } else {
+                previewItemURL = blobPath
+            }
 
-			previewItemTitle = typeItem.oneTitle
-		}
+            previewItemTitle = typeItem.oneTitle
+        }
 
-		deinit {
-			if needsCleanup, let previewItemURL = previewItemURL {
+        deinit {
+            if needsCleanup, let previewItemURL = previewItemURL {
                 PreviewItem.cleanupUrl(previewItemURL: previewItemURL)
-			}
-		}
-        
+            }
+        }
+
         static var previewUrls = [URL: Int]()
         fileprivate static func cleanupUrl(previewItemURL: URL) {
             let currentCount = previewUrls[previewItemURL] ?? 0
@@ -92,5 +89,5 @@ extension Component {
                 previewUrls[previewItemURL] = currentCount - 1
             }
         }
-	}
+    }
 }

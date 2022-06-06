@@ -10,8 +10,9 @@ import UIKit
 
 extension UISceneSession {
     var isAccessoryWindow: Bool {
-        return !isMainWindow
+        !isMainWindow
     }
+
     var isMainWindow: Bool {
         if stateRestorationActivity?.activityType == kGladysMainListActivity {
             return true
@@ -25,9 +26,10 @@ extension UISceneSession {
 
 extension UIWindowScene {
     var isAccessoryWindow: Bool {
-        return session.isAccessoryWindow
+        session.isAccessoryWindow
     }
+
     var isMainWindow: Bool {
-        return session.isMainWindow
+        session.isMainWindow
     }
 }

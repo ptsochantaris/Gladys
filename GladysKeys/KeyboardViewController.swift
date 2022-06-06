@@ -13,30 +13,29 @@ private var selectedLabel: String?
 
 final class SimpleLabelToggleCell: UITableViewCell {
     @IBOutlet var labelName: UILabel!
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
+
+    override func setSelected(_ selected: Bool, animated _: Bool) {
         accessoryType = selected ? .checkmark : .none
         labelName.textColor = selected ? .label : .g_colorComponentLabel
     }
 }
 
 final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
     @IBOutlet private var table: UITableView!
     @IBOutlet private var emptyLabel: UILabel!
-    
+
     var changeCallback: (() -> Void)?
-        
+
     let labels: [String] = {
-        return Model.visibleDrops
+        Model.visibleDrops
             .reduce(Set<String>()) { $0.union($1.labels) }
             .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         (view as? UIInputView)?.allowsSelfSizing = true
-        
+
         var count = 1
         if let selected = selectedLabel {
             for toggle in labels {
@@ -57,7 +56,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
 
         table.tableFooterView = UIView()
     }
-        
+
     private var firstAppearance = true
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -78,8 +77,8 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
         }
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return labels.count + 1
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        labels.count + 1
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -92,7 +91,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let selected = selectedLabel {
             if indexPath.row > 0 {
                 cell.setSelected(labels[indexPath.row - 1] == selected, animated: false)
@@ -103,8 +102,8 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
             cell.setSelected(indexPath.row == 0, animated: false)
         }
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             selectedLabel = nil
         } else {
@@ -118,12 +117,11 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
 
 extension UIInputView: UIInputViewAudioFeedback {
     public var enableInputClicksWhenVisible: Bool {
-        return true
+        true
     }
 }
 
 final class KeyboardViewController: UIInputViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIPopoverPresentationControllerDelegate {
-
     @IBOutlet private var emptyLabel: UILabel!
     @IBOutlet private var itemsView: UICollectionView!
     @IBOutlet private var nextKeyboardButton: UIButton!
@@ -135,13 +133,13 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBOutlet private var labelsButton: UIButton!
     @IBOutlet private var settingsButton: UIButton!
     @IBOutlet private var emptyStack: UIStackView!
-    
+
     @IBOutlet private var topDivider: UIView!
     @IBOutlet private var topDividerHeight: NSLayoutConstraint!
     @IBOutlet private var bottomDividerHeight: NSLayoutConstraint!
-    
+
     private var filteredDrops = ContiguousArray<ArchivedItem>()
-    
+
     private func itemsPerRow(for size: CGSize) -> Int {
         if size.width <= 414 {
             return 3
@@ -156,16 +154,16 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         guard size.width > 0 else { return }
         guard let layout = itemsView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
         let columnCount = CGFloat(itemsPerRow(for: size))
-        
+
         let extras = layout.minimumInteritemSpacing * (columnCount - 1) + layout.sectionInset.left + layout.sectionInset.right
         let side = ((size.width - extras) / columnCount).rounded(.down)
-        
+
         layout.itemSize = CGSize(width: side, height: side)
         layout.invalidateLayout()
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredDrops.count
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        filteredDrops.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -174,32 +172,32 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         return cell
     }
 
-    @IBAction private func closeTapped(_ sender: UIButton) {
+    @IBAction private func closeTapped(_: UIButton) {
         dismissKeyboard()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         UIDevice.current.playInputClick()
         let drop = filteredDrops[indexPath.item]
         let (text, url) = drop.textForMessage
         textDocumentProxy.insertText(url?.absoluteString ?? text)
         updateReturn()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+
+    func collectionView(_: UICollectionView, itemsForBeginning _: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let drop = filteredDrops[indexPath.item]
         return [drop.dragItem]
     }
-                
-    func collectionView(_ collectionView: UICollectionView, dragSessionWillBegin session: UIDragSession) {
+
+    func collectionView(_: UICollectionView, dragSessionWillBegin _: UIDragSession) {
         dragCompletionGroup.enter()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+
+    func collectionView(_: UICollectionView, dragSessionDidEnd _: UIDragSession) {
         dragCompletionGroup.leave()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
+
+    func collectionView(_: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
         if let cell = itemsView.cellForItem(at: indexPath) as? KeyboardCell, let b = cell.backgroundView {
             let corner = b.layer.cornerRadius
             let params = UIDragPreviewParameters()
@@ -210,28 +208,28 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
     }
 
-    @IBAction private func returnSelected(_ sender: UIButton) {
+    @IBAction private func returnSelected(_: UIButton) {
         UIDevice.current.playInputClick()
         textDocumentProxy.insertText("\n")
         updateReturn()
     }
-    
-    @IBAction private func spaceSelected(_ sender: UIButton) {
+
+    @IBAction private func spaceSelected(_: UIButton) {
         UIDevice.current.playInputClick()
         textDocumentProxy.insertText(" ")
         updateReturn()
     }
-    
+
     private weak var backspaceTimer: Timer?
-    
-    @IBAction private func deleteStarted(_ sender: UIButton) {
+
+    @IBAction private func deleteStarted(_: UIButton) {
         UIDevice.current.playInputClick()
         textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             self?.startRapidBackspace()
         }
     }
-    
+
     private func startRapidBackspace() {
         textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] _ in
@@ -239,11 +237,11 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
     }
 
-    @IBAction private func deleteEnded(_ sender: UIButton) {
+    @IBAction private func deleteEnded(_: UIButton) {
         backspaceTimer?.invalidate()
         backspaceTimer = nil
     }
-    
+
     private func updateFilteredItems() {
         if let f = selectedLabel, !f.isEmpty {
             filteredDrops = Model.visibleDrops.filter { $0.labels.contains(f) }
@@ -272,7 +270,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if hasFullAccess {
             Model.reloadDataIfNeeded()
             emptyLabel.text = "The items in your collection will appear here."
@@ -282,7 +280,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             settingsButton.isHidden = false
             return
         }
-        
+
         if filePresenter == nil {
             filePresenter = ModelFilePresenter()
             NSFileCoordinator.addFilePresenter(filePresenter!)
@@ -292,12 +290,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         itemsView.contentOffset = latestOffset
         updateReturn()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateReturn()
     }
-    
+
     private func updateReturn() {
         switch textDocumentProxy.returnKeyType {
         case .continue:
@@ -318,7 +316,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         default:
             break
         }
-        
+
         let enabled: Bool
         if textDocumentProxy.enablesReturnKeyAutomatically == true {
             enabled = textDocumentProxy.hasText
@@ -328,9 +326,9 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         enterButton.isEnabled = enabled
         enterButton.alpha = enabled ? 1 : 0.4
     }
-        
+
     private let dragCompletionGroup = DispatchGroup()
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         dragCompletionGroup.notify(queue: .main) {
@@ -345,7 +343,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.updateItemSize(for: size)
+        updateItemSize(for: size)
         coordinator.animate { _ in
             self.view.layoutIfNeeded()
         }
@@ -360,11 +358,11 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         itemsView.dragInteractionEnabled = UIDevice.current.userInterfaceIdiom == .pad
 
         topDivider.isHidden = UIDevice.current.userInterfaceIdiom == .phone
-        
+
         let pixelHeight: CGFloat = 1 / UIScreen.main.scale
         topDividerHeight.constant = pixelHeight
         bottomDividerHeight.constant = pixelHeight
-        
+
         height.constant = min(400, UIScreen.main.bounds.height * 0.5)
 
         let config: UIImage.SymbolConfiguration
@@ -379,25 +377,25 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             b?.layer.cornerRadius = 5
             b?.setPreferredSymbolConfiguration(config, forImageIn: .normal)
         }
-        
+
         dismissButton.backgroundColor = UIColor.g_colorKeyboardGray
-        
+
         spaceButton.backgroundColor = UIColor.g_colorKeyboardBright
-        
+
         backspaceButton.backgroundColor = UIColor.g_colorKeyboardGray
-        
+
         labelsButton.backgroundColor = UIColor.g_colorKeyboardGray
-        
+
         nextKeyboardButton.backgroundColor = UIColor.g_colorKeyboardGray
         nextKeyboardButton.isHidden = !needsInputModeSwitchKey
     }
-    
+
     override func textDidChange(_ textInput: UITextInput?) {
         super.textDidChange(textInput)
         updateReturn()
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         guard let d = segue.destination as? SimpleLabelPicker else {
             return
         }
@@ -406,8 +404,8 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             self?.externalDataUpdated()
         }
     }
-    
-    @IBAction private func settingsSelected(_ sender: UIButton) {
+
+    @IBAction private func settingsSelected(_: UIButton) {
         let url = URL(string: UIApplication.openSettingsURLString)!
 
         let selector = sel_registerName("openURL:")
@@ -417,12 +415,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
         _ = responder?.perform(selector, with: url)
     }
-    
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
+
+    func adaptivePresentationStyle(for _: UIPresentationController) -> UIModalPresentationStyle {
+        .none
     }
-    
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+
+    func collectionView(_: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
         let item = filteredDrops[indexPath.item]
 
         return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSString, previewProvider: nil) { _ in
@@ -442,15 +440,15 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             return UIMenu(title: title, image: nil, identifier: nil, options: [], children: [typeAction, copyAction])
         }
     }
-        
-    func collectionView(_ collectionView: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        return previewForContextMenu(of: configuration)
+
+    func collectionView(_: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(of: configuration)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
-        return previewForContextMenu(of: configuration)
+
+    func collectionView(_: UICollectionView, previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
+        previewForContextMenu(of: configuration)
     }
-                
+
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if
             let uuid = configuration.identifier as? String,
@@ -461,5 +459,4 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
         return nil
     }
-
 }

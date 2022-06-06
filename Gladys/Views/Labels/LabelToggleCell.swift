@@ -9,11 +9,11 @@
 import UIKit
 
 final class LabelToggleCell: UITableViewCell {
-	@IBOutlet private var labelCount: UILabel!
-	@IBOutlet private var labelName: UILabel!
-    
+    @IBOutlet private var labelCount: UILabel!
+    @IBOutlet private var labelName: UILabel!
+
     weak var parent: LabelSelector?
-        
+
     var toggle: Filter.Toggle? {
         didSet {
             guard let toggle = toggle else { return }
@@ -23,8 +23,8 @@ final class LabelToggleCell: UITableViewCell {
         }
     }
 
-	override func setSelected(_ selected: Bool, animated: Bool) {
-		accessoryType = selected ? .checkmark : .none
+    override func setSelected(_ selected: Bool, animated _: Bool) {
+        accessoryType = selected ? .checkmark : .none
         labelName.textColor = selected ? .label : .g_colorComponentLabel
-	}    
+    }
 }

@@ -9,19 +9,18 @@
 import UIKit
 
 protocol AddLabelControllerDelegate: AnyObject {
-	func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?)
+    func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?)
 }
 
 final class AddLabelController: GladysViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+    @IBOutlet private var labelText: UITextField!
+    @IBOutlet private var table: UITableView!
 
-	@IBOutlet private var labelText: UITextField!
-	@IBOutlet private var table: UITableView!
-
-	var label: String?
+    var label: String?
     var exclude = Set<String>()
 
-	weak var delegate: AddLabelControllerDelegate?
-        
+    weak var delegate: AddLabelControllerDelegate?
+
     private var sections = [Filter.Toggle.Section]()
 
     private var dirty = false
@@ -33,32 +32,31 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         }
     }
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		labelText.text = label
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        labelText.text = label
         update()
-        
+
         if #available(iOS 15.0, *) {
             table.allowsFocus = true
             table.remembersLastFocusedIndexPath = true
             table.focusGroupIdentifier = "build.bru.gladys.tablefocus"
             labelText.focusGroupIdentifier = "build.bru.gladys.labelfocus"
         }
-	}
-    
+    }
+
     var modelFilter: Filter!
 
     private func update() {
-        
         sections.removeAll()
-        
+
         if filter.isEmpty {
             let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
             if !recent.isEmpty {
                 sections.append(Filter.Toggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
             let s = modelFilter.labelToggles.compactMap { toggle -> String? in
-                if case .userLabel(let text) = toggle.function {
+                if case let .userLabel(text) = toggle.function {
                     return text
                 }
                 return nil
@@ -66,7 +64,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
             sections.append(Filter.Toggle.Section.filtered(labels: s, title: "All Labels"))
         } else {
             let s = modelFilter.labelToggles.compactMap { toggle -> String? in
-                if case .userLabel(let text) = toggle.function {
+                if case let .userLabel(text) = toggle.function {
                     return text.localizedCaseInsensitiveContains(filter) ? text : nil
                 }
                 return nil
@@ -74,61 +72,61 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
             sections.append(Filter.Toggle.Section.filtered(labels: s, title: "Suggested Labels"))
         }
     }
-    
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		navigationController?.setNavigationBarHidden(true, animated: false)
 
-		let h: CGFloat = modelFilter.labelToggles.isEmpty ? 67 : 320
-		preferredContentSize = CGSize(width: preferredContentSize.width, height: h)
-	}
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
 
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		labelText.becomeFirstResponder()
-	}
+        let h: CGFloat = modelFilter.labelToggles.isEmpty ? 67 : 320
+        preferredContentSize = CGSize(width: preferredContentSize.width, height: h)
+    }
 
-	func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-	}
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        labelText.becomeFirstResponder()
+    }
 
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].labels.count
-	}
+    func numberOfSections(in _: UITableView) -> Int {
+        sections.count
+    }
 
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "LabelListCell") as! LabelListCell
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].labels.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LabelListCell") as! LabelListCell
         cell.labelName.text = sections[indexPath.section].labels[indexPath.row]
-		return cell
-	}
+        return cell
+    }
 
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let l = sections[indexPath.section].labels[indexPath.row]
         labelText.text = l
         dirty = true
         dismiss(animated: true)
-	}
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title
     }
-    
-	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-		if string == "\n" {
+
+    func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].title
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string == "\n" {
             dismiss(animated: true)
-			return false
-		} else {
-			dirty = true
+            return false
+        } else {
+            dirty = true
             if let t = textField.text, let r = Range(range, in: t) {
                 filter = t.replacingCharacters(in: r, with: string)
             }
-			return true
-		}
-	}
+            return true
+        }
+    }
 
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
         if let result = result, !result.isEmpty {
             var latest = Filter.Toggle.Section.latestLabels
             if let i = latest.firstIndex(of: result) {
@@ -137,19 +135,19 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
             latest.insert(result, at: 0)
             Filter.Toggle.Section.latestLabels = Array(latest.prefix(10))
         }
-		dirty = false
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			self.delegate?.addLabelController(self, didEnterLabel: result)
-		}
-	}
+        dirty = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.delegate?.addLabelController(self, didEnterLabel: result)
+        }
+    }
 
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if UIAccessibility.isVoiceOverRunning && labelText.isFirstResponder { // weird hack for word mode
-			let left = -scrollView.adjustedContentInset.left
-			if scrollView.contentOffset.x < left {
-				let top = -scrollView.adjustedContentInset.top
-				scrollView.contentOffset = CGPoint(x: left, y: top)
-			}
-		}
-	}    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if UIAccessibility.isVoiceOverRunning, labelText.isFirstResponder { // weird hack for word mode
+            let left = -scrollView.adjustedContentInset.left
+            if scrollView.contentOffset.x < left {
+                let top = -scrollView.adjustedContentInset.top
+                scrollView.contentOffset = CGPoint(x: left, y: top)
+            }
+        }
+    }
 }

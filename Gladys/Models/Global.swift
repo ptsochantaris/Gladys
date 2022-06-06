@@ -1,11 +1,11 @@
-import Foundation
 import CommonCrypto
+import Foundation
 
 #if os(iOS)
-let groupName = "group.build.bru.Gladys"
-let syncSchedulingRequestId = "build.bru.Gladys.scheduled.sync"
+    let groupName = "group.build.bru.Gladys"
+    let syncSchedulingRequestId = "build.bru.Gladys.scheduled.sync"
 #else
-let groupName = "X727JSJUGJ.build.bru.MacGladys"
+    let groupName = "X727JSJUGJ.build.bru.MacGladys"
 #endif
 
 let GladysFileUTI = "build.bru.gladys.archive"
@@ -24,7 +24,7 @@ enum GladysError: Int {
     case mainAppFailedToOpen
     case blankResponse
     case noData
-    
+
     var error: NSError {
         let message: String
         switch self {
@@ -41,13 +41,13 @@ enum GladysError: Int {
         case .noData: message = "Data for this item could not be loaded"
         }
         return NSError(domain: "build.bru.Gladys.error",
-                       code: self.rawValue,
+                       code: rawValue,
                        userInfo: [NSLocalizedDescriptionKey: message])
     }
 }
 
 func sha1(_ input: String) -> Data {
-    return input.utf8CString.withUnsafeBytes { bytes -> Data in
+    input.utf8CString.withUnsafeBytes { bytes -> Data in
         let len = Int(CC_SHA1_DIGEST_LENGTH)
         var digest = [UInt8](repeating: 0, count: len)
         CC_SHA1(bytes.baseAddress, CC_LONG(bytes.count), &digest)

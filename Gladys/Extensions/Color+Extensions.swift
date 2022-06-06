@@ -1,10 +1,10 @@
 #if os(iOS)
-import UIKit
-typealias COLORCLASS = UIColor
+    import UIKit
+    typealias COLORCLASS = UIColor
 #else
-import Foundation
-import AppKit
-typealias COLORCLASS = NSColor
+    import AppKit
+    import Foundation
+    typealias COLORCLASS = NSColor
 #endif
 
 extension COLORCLASS {

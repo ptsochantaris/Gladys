@@ -2,18 +2,16 @@
 //  Created by Lee Morgan on 7/17/15.
 //  Copyright © 2015 Lee Morgan. All rights reserved.
 
-import Foundation
 import Compression
+import Foundation
 
 extension Data {
-
     enum CompressionOperation {
         case compress
         case decompress
     }
 
     func data(operation: CompressionOperation) -> Data? {
-
         guard !isEmpty else {
             return nil
         }
@@ -22,7 +20,7 @@ extension Data {
         defer {
             streamPtr.deallocate()
         }
-        
+
         let flags: Int32
         let op: compression_stream_operation
         switch operation {

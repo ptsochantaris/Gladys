@@ -6,74 +6,72 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import Contacts
+import Foundation
 import MapKit
 #if os(iOS)
-import MobileCoreServices
+    import MobileCoreServices
 #endif
 
 extension Component {
+    var sizeDescription: String? {
+        diskSizeFormatter.string(fromByteCount: sizeInBytes)
+    }
 
-	var sizeDescription: String? {
-		return diskSizeFormatter.string(fromByteCount: sizeInBytes)
-	}
+    func deleteFromStorage() {
+        CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
+        let fm = FileManager.default
+        if fm.fileExists(atPath: folderUrl.path) {
+            log("Removing component storage at: \(folderUrl.path)")
+            try? fm.removeItem(at: folderUrl)
+        }
+        clearCacheData(for: uuid)
+        removeIntents()
+    }
 
-	func deleteFromStorage() {
-		CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
-		let fm = FileManager.default
-		if fm.fileExists(atPath: folderUrl.path) {
-			log("Removing component storage at: \(folderUrl.path)")
-			try? fm.removeItem(at: folderUrl)
-		}
-		clearCacheData(for: uuid)
-		removeIntents()
-	}
+    var objectForShare: Any? {
+        if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
+            return item
+        }
 
-	var objectForShare: Any? {
+        if typeConforms(to: kUTTypeVCard), let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+            return contact
+        }
 
-		if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
-			return item
-		}
+        if let url = encodedUrl {
+            return url
+        }
 
-		if typeConforms(to: kUTTypeVCard), let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
-			return contact
-		}
+        return decode()
+    }
 
-		if let url = encodedUrl {
-			return url
-		}
+    func prepareFilename(name: String, directory: String?) -> String {
+        var name = name
 
-		return decode()
-	}
+        if let ext = fileExtension {
+            if ext == "jpeg", name.hasSuffix(".jpg") {
+                name = String(name.dropLast(4))
 
-	func prepareFilename(name: String, directory: String?) -> String {
-		var name = name
+            } else if ext == "mpeg", name.hasSuffix(".mpg") {
+                name = String(name.dropLast(4))
 
-		if let ext = fileExtension {
-			if ext == "jpeg", name.hasSuffix(".jpg") {
-				name = String(name.dropLast(4))
+            } else if ext == "html", name.hasSuffix(".htm") {
+                name = String(name.dropLast(4))
 
-			} else if ext == "mpeg", name.hasSuffix(".mpg") {
-				name = String(name.dropLast(4))
+            } else if name.hasSuffix("." + ext) {
+                name = String(name.dropLast(ext.count + 1))
+            }
 
-			} else if ext == "html", name.hasSuffix(".htm") {
-				name = String(name.dropLast(4))
+            name = name.truncate(limit: 255 - (ext.count + 1)) + "." + ext
+        } else {
+            name = name.truncate(limit: 255)
+        }
 
-			} else if name.hasSuffix("." + ext) {
-				name = String(name.dropLast(ext.count + 1))
-			}
+        if let directory = directory {
+            name = directory.truncate(limit: 255) + "/" + name
+        }
 
-			name = name.truncate(limit: 255 - (ext.count + 1)) + "." + ext
-		} else {
-			name = name.truncate(limit: 255)
-		}
-
-		if let directory = directory {
-			name = directory.truncate(limit: 255) + "/" + name
-		}
-
-		// for now, remove in a few weeks
-		return name.replacingOccurrences(of: "\0", with: "")
-	}
+        // for now, remove in a few weeks
+        return name.replacingOccurrences(of: "\0", with: "")
+    }
 }

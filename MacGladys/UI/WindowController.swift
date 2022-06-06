@@ -9,18 +9,18 @@
 import Cocoa
 
 var allFilters: [Filter] {
-    return NSApp.orderedWindows.compactMap {
+    NSApp.orderedWindows.compactMap {
         ($0.contentViewController as? ViewController)?.filter
     }
 }
 
 var keyGladysControllerIfExists: ViewController? {
-    return NSApp.keyWindow?.contentViewController as? ViewController
+    NSApp.keyWindow?.contentViewController as? ViewController
 }
 
 extension NSWindow {
     var gladysController: ViewController? {
-        return contentViewController as? ViewController
+        contentViewController as? ViewController
     }
 }
 
@@ -31,43 +31,43 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         super.init(window: window)
         WindowController.strongRefs.append(self)
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         WindowController.strongRefs.append(self)
     }
-        
+
     var gladysController: ViewController {
-        return contentViewController as! ViewController
+        contentViewController as! ViewController
     }
-    
-    func windowWillClose(_ notification: Notification) {
+
+    func windowWillClose(_: Notification) {
         Model.lockUnlockedItems()
         WindowController.strongRefs.removeAll { $0 === self }
         WindowController.storeStates()
     }
-    
-    func windowDidBecomeKey(_ notification: Notification) {
+
+    func windowDidBecomeKey(_: Notification) {
         gladysController.isKey()
         Model.updateBadge()
     }
 
-    func windowDidMove(_ notification: Notification) {
+    func windowDidMove(_: Notification) {
         if window?.isVisible == true {
             WindowController.storeStates()
         }
     }
-    
-    func windowWillStartLiveResize(_ notification: Notification) {
+
+    func windowWillStartLiveResize(_: Notification) {
         gladysController.hideLabels()
     }
-    
-    func windowDidEndLiveResize(_ notification: Notification) {
+
+    func windowDidEndLiveResize(_: Notification) {
         if window?.isVisible == true {
             WindowController.storeStates()
         }
     }
-    
+
     struct State: Codable {
         let frame: NSRect
         let search: String?
@@ -77,7 +77,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     static func storeStates() {
         let windowsToStore = NSApp.orderedWindows.compactMap { window -> State? in
             if let c = window.contentViewController as? ViewController {
-                let labels = c.filter.labelToggles.filter { $0.active }.map { $0.function.displayText }
+                let labels = c.filter.labelToggles.filter(\.active).map(\.function.displayText)
                 return State(frame: window.frame, search: c.filter.text, labels: labels)
             }
             return nil
@@ -107,7 +107,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
                 }
             }
         }
-        
+
         var restoredAtLeastOneWindow = false
         if let data = lastWindowStates, let states = try? JSONDecoder().decode([State].self, from: data) {
             for state in states {
@@ -119,7 +119,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         }
         return restoredAtLeastOneWindow
     }
-    
+
     static func openRecentWindow() -> Bool {
         let sb = NSStoryboard(name: "Main", bundle: nil)
         let id = NSStoryboard.SceneIdentifier("windowController")
@@ -133,15 +133,14 @@ final class WindowController: NSWindowController, NSWindowDelegate {
         }
         return false
     }
-    
-    static var visibleItemWindows: [NSWindow] {
-        return NSApp.orderedWindows.filter { $0.isVisible && ($0.contentViewController is ViewController) }
-    }
-    
-    @OptionalUserDefault(key: "lastWindowStates", emptyValue: nil)
-    static private var lastWindowStates: Data?
-    
-    @OptionalUserDefault(key: "lastWindowPosition", emptyValue: nil)
-    static private var lastWindowPosition: NSDictionary?
 
+    static var visibleItemWindows: [NSWindow] {
+        NSApp.orderedWindows.filter { $0.isVisible && ($0.contentViewController is ViewController) }
+    }
+
+    @OptionalUserDefault(key: "lastWindowStates", emptyValue: nil)
+    private static var lastWindowStates: Data?
+
+    @OptionalUserDefault(key: "lastWindowPosition", emptyValue: nil)
+    private static var lastWindowPosition: NSDictionary?
 }

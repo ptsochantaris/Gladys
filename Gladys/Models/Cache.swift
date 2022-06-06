@@ -12,18 +12,18 @@ import Foundation
 
 final class Cache<Key: Hashable, Value> {
     private let store = NSCache<WrappedKey, Entry>()
-    
+
     final class WrappedKey: NSObject {
         let key: Key
-        
+
         init(_ key: Key) {
             self.key = key
         }
-        
+
         override var hash: Int {
-            return key.hashValue
+            key.hashValue
         }
-        
+
         override func isEqual(_ object: Any?) -> Bool {
             if let value = object as? WrappedKey {
                 return value.key == key
@@ -32,22 +32,22 @@ final class Cache<Key: Hashable, Value> {
             }
         }
     }
-    
+
     final class Entry {
         let value: Value
-        
+
         init(value: Value) {
             self.value = value
         }
     }
-    
+
     func reset() {
         store.removeAllObjects()
     }
-            
+
     subscript(key: Key) -> Value? {
         get {
-            return store.object(forKey: WrappedKey(key))?.value
+            store.object(forKey: WrappedKey(key))?.value
         }
         set {
             if let value = newValue {

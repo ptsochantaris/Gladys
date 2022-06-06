@@ -10,7 +10,7 @@ import Cocoa
 
 extension NSPasteboard {
     var typesAreSensitive: Bool {
-        guard let t = self.types else {
+        guard let t = types else {
             return false
         }
 

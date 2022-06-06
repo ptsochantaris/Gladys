@@ -15,7 +15,7 @@ struct UserDefault<Value> {
 
     var wrappedValue: Value {
         get {
-            return PersistedOptions.defaults.object(forKey: key) as? Value ?? defaultValue
+            PersistedOptions.defaults.object(forKey: key) as? Value ?? defaultValue
         }
         set {
             PersistedOptions.defaults.set(newValue, forKey: key)
@@ -30,7 +30,7 @@ struct OptionalUserDefault<Value> {
 
     var wrappedValue: Value? {
         get {
-            return PersistedOptions.defaults.object(forKey: key) as? Value
+            PersistedOptions.defaults.object(forKey: key) as? Value
         }
         set {
             if let newValue = newValue {
@@ -60,5 +60,4 @@ struct EnumUserDefault<Value: RawRepresentable> {
             PersistedOptions.defaults.set(newValue.rawValue, forKey: key)
         }
     }
-
 }

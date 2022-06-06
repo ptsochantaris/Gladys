@@ -7,23 +7,22 @@ import UniformTypeIdentifiers
 
 /// Archiver
 final class WebArchiver {
-    
     /// Error type
     enum ArchiveErrorType: Error {
         case FailToInitHTMLDocument
         case FetchResourceFailed
         case PlistSerializeFailed
     }
-    
+
     static func setup() {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
         #if os(iOS)
-        URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (iOS; iOS)"]
+            URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (iOS; iOS)"]
         #else
-        URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (macOS; macOS)"]
+            URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (macOS; macOS)"]
         #endif
     }
-    
+
     private static func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         if #available(iOS 15.0, iOSApplicationExtension 15.0, macOS 12.0, *) {
             let res = try await URLSession.shared.data(for: request)
@@ -64,7 +63,6 @@ final class WebArchiver {
     }
 
     private static func archiveWebpageFromUrl(url: URL, data: Data, response: URLResponse) async throws -> (Data, String) {
-
         let (r, error) = resourcePathsFromUrl(url: url, data: data, response: response)
         guard let resources = r else {
             log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
@@ -81,7 +79,7 @@ final class WebArchiver {
                         log("Download failed: \(path)")
                         return nil
                     }
-                    
+
                     var resource: [AnyHashable: Any] = [
                         "WebResourceURL": path
                     ]
@@ -102,23 +100,23 @@ final class WebArchiver {
             }
             return info
         }
-        
+
         var mainResource: [AnyHashable: Any] = [
             "WebResourceFrameName": "",
             "WebResourceMIMEType": response.mimeType ?? "text/html",
             "WebResourceURL": url.absoluteString,
             "WebResourceData": data
         ]
-        
+
         if let encoding = response.textEncodingName {
             mainResource["WebResourceTextEncodingName"] = encoding
         }
-        
+
         let webarchive: [AnyHashable: Any] = [
             "WebSubresources": (resourceInfo as NSDictionary).allValues,
             "WebMainResource": mainResource
         ]
-        
+
         do {
             let webarchiveData = try PropertyListSerialization.data(fromPropertyList: webarchive, format: .binary, options: 0)
             return (webarchiveData, "com.apple.webarchive")
@@ -127,9 +125,8 @@ final class WebArchiver {
             throw ArchiveErrorType.PlistSerializeFailed
         }
     }
-    
-    private static func resourcePathsFromUrl(url: URL, data htmlData: Data, response: URLResponse) -> ([String]?, ArchiveErrorType?) {
-                
+
+    private static func resourcePathsFromUrl(url: URL, data htmlData: Data, response _: URLResponse) -> ([String]?, ArchiveErrorType?) {
         guard let doc = try? HTMLDocument(data: htmlData) else {
             log("Init html doc error")
             return (nil, .FailToInitHTMLDocument)
@@ -151,17 +148,17 @@ final class WebArchiver {
         }
 
         let imagePaths = doc.xpath("//img[@src]").compactMap {
-            return resoucePathFilter($0["src"])
+            resoucePathFilter($0["src"])
         }
         resources += imagePaths
 
         let jsPaths = doc.xpath("//script[@src]").compactMap {
-            return resoucePathFilter($0["src"])
+            resoucePathFilter($0["src"])
         }
         resources += jsPaths
 
         let cssPaths = doc.xpath("//link[@rel='stylesheet'][@href]").compactMap {
-            return resoucePathFilter($0["href"])
+            resoucePathFilter($0["href"])
         }
         resources += cssPaths
 
@@ -189,14 +186,14 @@ final class WebArchiver {
             log("Content for this isn't HTML, never mind")
             throw GladysError.blankResponse.error
         }
-        
+
         log("Fetching HTML from URL: \(url.absoluteString)")
         request.httpMethod = "GET"
 
         let (data, _) = try await getData(for: request)
-        
+
         let htmlDoc = try HTMLDocument(data: data)
-        
+
         var title: String?
         if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:title\"]") {
             for node in metaTags {
@@ -207,16 +204,15 @@ final class WebArchiver {
                 }
             }
         }
-        
+
         if (title ?? "").isEmpty {
             log("Falling back to libXML title")
             title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
         }
-        
+
         if (title ?? "").isEmpty,
            let htmlText = NSString(data: data, encoding: htmlDoc.encoding.rawValue),
            let regex = try? NSRegularExpression(pattern: "\\<title\\>(.+)\\<\\/title\\>", options: .caseInsensitive) {
-            
             log("Attempting to parse TITLE tag")
             if let match = regex.firstMatch(in: htmlText as String, options: [], range: NSRange(location: 0, length: htmlText.length)), match.numberOfRanges > 1 {
                 let r1 = match.range(at: 1)
@@ -224,15 +220,15 @@ final class WebArchiver {
                 title = String(titleString.utf8)
             }
         }
-        
+
         if let title = title {
             log("Title located at URL: \(title)")
         } else {
             log("No title located at URL")
         }
-        
+
         let description: String? = nil
-        /*if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
+        /* if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
          for node in metaTags {
          if let content = node.attr("content") {
          log("Found og summary: \(content)")
@@ -240,10 +236,10 @@ final class WebArchiver {
          break
          }
          }
-         }*/
-        
+         } */
+
         func fetchFavIcon() async throws -> WebPreviewResult {
-            let favIconUrl = self.repair(path: self.getFavIconPath(from: htmlDoc), using: url)
+            let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: url)
             if let iconUrl = favIconUrl {
                 log("Fetching favicon image for site icon: \(iconUrl)")
                 let newImage = try await fetchImage(url: iconUrl)
@@ -252,12 +248,12 @@ final class WebArchiver {
                 return WebPreviewResult(title: title, description: description, image: nil, isThumbnail: false)
             }
         }
-        
-        let thumbnailUrl = self.repair(path: self.getThumbnailPath(from: htmlDoc), using: url)
+
+        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: url)
         guard let iconUrl = thumbnailUrl else {
             return try await fetchFavIcon()
         }
-        
+
         log("Fetching thumbnail image for site icon: \(iconUrl)")
         if let newImage = try await fetchImage(url: iconUrl) {
             return WebPreviewResult(title: title, description: description, image: newImage, isThumbnail: true)
@@ -325,7 +321,7 @@ final class WebArchiver {
             if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                 c.path = path
                 var url = c.url
-                if url == nil && (!(path.hasPrefix("/") || path.hasPrefix("."))) {
+                if url == nil, !(path.hasPrefix("/") || path.hasPrefix(".")) {
                     path = "/" + path
                     c.path = path
                     url = c.url

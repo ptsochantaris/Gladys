@@ -6,358 +6,353 @@
 //  Copyright © 2018 Paul Tsochantaris. All rights reserved.
 //
 
-import Foundation
 import CloudKit
+import Foundation
 #if os(iOS)
-import MobileCoreServices
+    import MobileCoreServices
 #endif
 import GladysFramework
 
 extension Component: Equatable {
-
-	func setBytes(_ data: Data?) {
+    func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
-		dataAccessQueue.async(flags: .barrier) {
+        dataAccessQueue.async(flags: .barrier) {
             if data == nil || self.flags.contains(.loadingAborted) {
-				let f = FileManager.default
-				if f.fileExists(atPath: byteLocation.path) {
+                let f = FileManager.default
+                if f.fileExists(atPath: byteLocation.path) {
                     try? f.removeItem(at: byteLocation)
-				}
-			} else {
-				try? data?.write(to: byteLocation)
-				#if MAC
-                self.lastGladysBlobUpdate = Date()
-				#endif
-			}
-		}
-	}
-
-	static func == (lhs: Component, rhs: Component) -> Bool {
-		return lhs.uuid == rhs.uuid
-	}
-
-	var filenameTypeIdentifier: String {
-		return typeIdentifier.replacingOccurrences(of: ".", with: "-")
-	}
-
-	var oneTitle: String {
-		return accessoryTitle ?? displayTitle ?? filenameTypeIdentifier
-	}
-
-	func markUpdated() {
-		updatedAt = Date()
-	}
-
-	func decode() -> Any? {
-		guard let bytes = bytes else { return nil }
-
-		// Do not do this because there may be a URL hidden there
-		// if representedClass == "NSData" {
-		// return bytes
-		// }
-
-		if classWasWrapped, let unarchived = SafeArchiving.unarchive(bytes) {
-			return unarchived
-		} else if isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
-			return propertyList
-		} else {
-			return bytes
-		}
-	}
-
-	var bytes: Data? {
-		return dataAccessQueue.sync {
-            return Data.forceMemoryMapped(contentsOf: bytesPath)
-		}
-	}
-    
-    var hasBytes: Bool {
-        return dataAccessQueue.sync {
-            return FileManager.default.fileExists(atPath: bytesPath.path)
+                }
+            } else {
+                try? data?.write(to: byteLocation)
+                #if MAC
+                    self.lastGladysBlobUpdate = Date()
+                #endif
+            }
         }
     }
-    
-    var isPlist: Bool {
-        return bytes?.isPlist ?? false
+
+    static func == (lhs: Component, rhs: Component) -> Bool {
+        lhs.uuid == rhs.uuid
     }
 
-	var encodedUrl: URL? {
+    var filenameTypeIdentifier: String {
+        typeIdentifier.replacingOccurrences(of: ".", with: "-")
+    }
 
-		if let encodedURLCache = encodedURLCache {
-			return encodedURLCache.1
-		}
+    var oneTitle: String {
+        accessoryTitle ?? displayTitle ?? filenameTypeIdentifier
+    }
 
-		var ret: URL?
-		if isURL {
-			let decoded = decode()
-			if let u = decoded as? URL {
-				ret = u
-			} else if let array = decoded as? NSArray {
-				for item in array {
-					if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
-						ret = url
-						break
-					}
-				}
-			} else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = URL(string: s) {
-				ret = u
-			}
-		}
+    func markUpdated() {
+        updatedAt = Date()
+    }
 
-		encodedURLCache = (true, ret)
-		return ret
-	}
+    func decode() -> Any? {
+        guard let bytes = bytes else { return nil }
 
-	var fileExtension: String? {
-		let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
-		if let tag = tag {
-			let t = tag as String
-			if !t.isEmpty {
-				return t
-			}
-		}
-		if isURL {
-			return "url"
-		}
-		if typeIdentifier.hasSuffix("-plain-text") {
-			return "txt"
-		}
-		return nil
-	}
+        // Do not do this because there may be a URL hidden there
+        // if representedClass == "NSData" {
+        // return bytes
+        // }
 
-	var isURL: Bool {
-		return typeConforms(to: kUTTypeURL)
-	}
+        if classWasWrapped, let unarchived = SafeArchiving.unarchive(bytes) {
+            return unarchived
+        } else if isPlist, let propertyList = (try? PropertyListSerialization.propertyList(from: bytes, options: [], format: nil)) {
+            return propertyList
+        } else {
+            return bytes
+        }
+    }
 
-	var isWebURL: Bool {
-		if let e = encodedUrl {
-			return e.scheme != "file"
-		}
-		return false
-	}
+    var bytes: Data? {
+        dataAccessQueue.sync {
+            Data.forceMemoryMapped(contentsOf: bytesPath)
+        }
+    }
 
-	var isFileURL: Bool {
-		if let e = encodedUrl {
-			return e.scheme == "file"
-		}
-		return false
-	}
+    var hasBytes: Bool {
+        dataAccessQueue.sync {
+            FileManager.default.fileExists(atPath: bytesPath.path)
+        }
+    }
 
-	var isWebArchive: Bool {
-		return typeIdentifier == "com.apple.webarchive"
-	}
+    var isPlist: Bool {
+        bytes?.isPlist ?? false
+    }
 
-	var typeDescription: String {
+    var encodedUrl: URL? {
+        if let encodedURLCache = encodedURLCache {
+            return encodedURLCache.1
+        }
 
-		if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
-			let t = desc as String
-			if !t.isEmpty {
-				return t.capitalized
-			}
-		}
+        var ret: URL?
+        if isURL {
+            let decoded = decode()
+            if let u = decoded as? URL {
+                ret = u
+            } else if let array = decoded as? NSArray {
+                for item in array {
+                    if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+                        ret = url
+                        break
+                    }
+                }
+            } else if let d = decoded as? Data, let s = String(bytes: d, encoding: .utf8), let u = URL(string: s) {
+                ret = u
+            }
+        }
 
-		let id = typeIdentifier.lowercased()
+        encodedURLCache = (true, ret)
+        return ret
+    }
 
-		switch id {
-		case "public.item": return "Item"
-		case "public.content": return "Content"
-		case "public.composite-content": return "Mixed Content"
-		case "com.apple.application": return "Application"
-		case "public.message": return "Message"
-		case "public.contact": return "Contact"
-		case "public.archive": return "Archive"
-		case "public.disk-image": return "Disk Image"
-		case "public.data": return "Data"
-		case "public.directory": return "Directory"
-		case "com.apple.resolvable": return "Alias"
-		case "public.symlink": return "Symbolic Link"
-		case "com.apple.mount-point": return "Mount Point"
-		case "com.apple.alias-file": return "Alias File"
-		case "public.url": return "Link"
-		case "public.file-url": return "File Link"
-		case "public.text": return "Text"
-		case "public.plain-text": return "Plain Text"
-		case "public.utf8-plain-text": return "Unicode Plain Text"
-		case "public.utf16-external-plain-text": return "Unicode-16 Plain Text"
-		case "public.utf16-plain-text": return "Unicode-16 Plain Text"
-		case "public.rtf": return "Rich Text"
-		case "public.html": return "HTML"
-		case "public.xml": return "XML"
-		case "public.xhtml": return "XHTML"
-		case "com.adobe.pdf": return "Adobe PDF"
-		case "com.apple.rtfd": return "Rich Text With Attachments Directory"
-		case "com.apple.flat-rtfd": return "Rich Text With Attachments"
-		case "com.apple.webarchive": return "Web Archive"
-		case "com.adobe.postscript": return "PostScript"
-		case "com.adobe.encapsulated-postscript": return "Encapsulated PostScript"
-		case "public.presentation": return "Presentation"
-		case "public.image": return "Image"
-		case "public.jpeg": return "JPEG Image"
-		case "public.jpeg-2000": return "JPEG-2000 Image"
-		case "public.tiff": return "TIFF Image"
-		case "com.apple.pict": return "Quickdraw PICT"
-		case "com.compuserve.gif": return "GIF Image"
-		case "public.png": return "PNG Image"
-		case "com.apple.quicktime-image": return "QuickTime Image"
-		case "com.apple.icns": return "Apple Icon Data"
-		case "com.microsoft.bmp": return "BMP Image"
-		case "com.microsoft.ico": return "ICO Image"
-		case "public.fax": return "Fax"
-		case "com.apple.macpaint-image": return "MacPaint Image"
-		case "public.svg-image": return "SVG Image"
-		case "public.xbitmap-image": return "XBMP Image"
-		case "public.camera-raw-image": return "Camera Raw Image"
-		case "com.adobe.photoshop-image": return "Photoshop Image"
-		case "com.adobe.illustrator.ai-image": return "Illustrator document"
-		case "com.truevision.tga-image": return "TGA image"
-		case "com.sgi.sgi-image": return "Silicon Graphics Image"
-		case "com.ilm.openexr-image": return "OpenEXR Image"
-		case "com.kodak.flashpix-image": return "FlashPix Image"
-		case "com.adobe.raw-image": return "Adobe Raw Image"
-		case "com.canon.crw-raw-image": return "CRW Raw image"
-		case "com.canon.cr2-raw-image": return "CR2 Raw Image"
-		case "com.canon.tif-raw-image": return "TIF Raw Image"
-		case "com.nikon.raw-image": return "Nikon Raw image"
-		case "com.olympus.raw-image": return "Olympus Raw image"
-		case "com.fuji.raw-image": return "Fuji Raw image"
-		case "com.sony.raw-image": return "Sony Raw image"
-		case "com.sony.arw-raw-image": return "Sony ARW Raw image"
-		case "com.konicaminolta.raw-image": return "Minolta Raw image"
-		case "com.kodak.raw-image": return "Kodak Raw image"
-		case "com.panasonic.raw-image": return "Panasonic Raw image"
-		case "com.pentax.raw-image": return "Pentax Raw image"
-		case "com.leafamerica.raw-image": return "Leaf Raw image"
-		case "com.leica.raw-image": return "Leica Raw image"
-		case "com.hasselblad.fff-raw-image": return "Hasselblad FFF Raw image"
-		case "com.hasselblad.3fr-raw-image": return "Hasselblad 3FR Raw image"
-		case "public.audiovisual-content": return "AV Content"
-		case "public.movie": return "Movie"
-		case "public.video": return "Video"
-		case "public.audio": return "Audio"
-		case "com.apple.quicktime-movie": return "QuickTime Movie"
-		case "public.mpeg": return "MPEG Movie"
-		case "public.mpeg-4": return "MPEG-4 Movie"
-		case "public.mp3": return "MP3 Audio"
-		case "public.mpeg-4-audio": return "MPEG-4 Audio"
-		case "com.apple.protected-mpeg-4-audio": return "Apple MPEG-4 Audio"
-		case "public.mpeg-2-video": return "MPEG-2 Video"
-		case "com.apple.protected-mpeg-4-video": return "Apple MPEG-4 Video"
-		case "public.dv-movie": return "DV Movie"
-		case "public.avi": return "AVI Movie"
-		case "public.3gpp": return "3GPP Movie"
-		case "public.3gpp2": return "3GPP2 Movie"
-		case "com.microsoft.windows-media-wm": return "Windows Media"
-		case "com.microsoft.windows-media-wmv": return "Windows Media"
-		case "com.microsoft.windows-media-wmp": return "Windows Media"
-		case "com.microsoft.windows-media-wma": return "Windows Media Audio"
-		case "com.real.realmedia": return "RealMedia"
-		case "com.real.realaudio": return "RealMedia Audio"
-		case "public.ulaw-audio": return "uLaw Audio"
-		case "public.au-audio": return "AU Audio"
-		case "public.aifc-audio": return "AIFF-C Audio"
-		case "public.aiff-audio": return "AIFF Audio"
-		case "public.midi-audio": return "MIDI Audio"
-		case "public.downloadable-sound": return "Downloadable Sound"
-		case "com.apple.coreaudio-format": return "Apple CoreAudio"
-		case "public.ac3-audio": return "AC-3 Audio"
-		case "com.digidesign.sd2-audio": return "Sound Designer II Audio"
-		case "com.microsoft.waveform-audio": return "Waveform Audio"
-		case "com.soundblaster.soundfont": return "SoundFont Audio"
-		case "public.folder": return "Folder"
-		case "public.volume": return "Storage Volume"
-		case "com.apple.package": return "File Package"
-		case "com.apple.bundle": return "File Bundle"
-		case "com.apple.application-bundle": return "Application Bundle"
-		case "com.apple.application-file": return "Application"
-		case "public.vcard": return "Contact Card"
-		case "org.gnu.gnu-tar-archive": return "GNU tar Archive"
-		case "public.tar-archive": return "tar Archive"
-		case "org.gnu.gnu-zip-archive": return "GZip Archive"
-		case "org.gnu.gnu-zip-tar-archive": return "gzip TAR Archive"
-		case "public.bzip2-archive": return "Bzip2 Archive"
-		case "public.tar-bzip2-archive": return "Bzip2 Compressed tar Archive"
-		case "com.apple.binhex-archive": return "BinHex Archive"
-		case "com.apple.macbinary-archive": return "MacBinary Archive"
-		case "com.allume.stuffit-archive": return "Stuffit Archive"
-		case "public.zip-archive": return "Zip Archive"
-		case "com.pkware.zip-archive": return "PKZip Archive"
-		case "com.microsoft.word.doc": return "Microsoft Word Document"
-		case "com.microsoft.excel.xls": return "Microsoft Excel Workbook"
-		case "com.microsoft.powerpoint.ppt": return "Microsoft PowerPoint Presentation"
-		case "com.microsoft.word.wordml": return "Microsoft Word 2003 XML Document"
-		case "com.apple.keynote.key": return "Keynote Document"
-		case "com.apple.iwork.Keynote.key": return "Keynote Document"
-		case "com.apple.keynote.kth": return "Keynote Document"
-		case "com.apple.iwork.Keynote.kth": return "Keynote Theme"
-		case "org.openxmlformats.openxml": return "Office Open XML"
-		case "org.openxmlformats.wordprocessingml.document": return "Office Open XML Word Processor Document"
-		case "org.openxmlformats.wordprocessingml.document.macroenabled": return "Office Open XML Word Processor Document (+macros)"
-		case "org.openxmlformats.wordprocessingml.template": return "Office Open XML Word Processor Template"
-		case "org.openxmlformats.wordprocessingml.template.macroenabled": return "Office Open XML Word Processor Template (+macros)"
-		case "org.openxmlformats.spreadsheetml.sheet": return "Office Open XML Spreadsheet"
-		case "org.openxmlformats.spreadsheetml.sheet.macroenabled": return "Office Open XML Spreadsheet (+macros)"
-		case "org.openxmlformats.spreadsheetml.template": return "Office Open XML Spreadsheet Template"
-		case "org.openxmlformats.spreadsheetml.template.macroenabled": return "Office Open XML Spreadsheet Template (+macros)"
-		case "org.openxmlformats.presentationml.presentation": return "Office Open XML Presentation"
-		case "org.openxmlformats.presentationml.presentation.macroenabled": return "Office Open XML Presentation (+macros)"
-		case "org.openxmlformats.presentationml.slideshow": return "Office Open XML Slide Show"
-		case "org.openxmlformats.presentationml.slideshow.macroenabled": return "Office Open XML Slide Show (macros enabled)"
-		case "org.openxmlformats.presentationml.template": return "Office Open XML Presentation Template"
-		case "org.openxmlformats.presentationml.template.macroenabled": return "Office Open XML Presentation Template (+macros)"
-		case "org.oasis-open.opendocument": return "Open Document"
-		case "org.oasis-open.opendocument.text": return "Open Document Text"
-		case "org.oasis-open.opendocument.text-template": return "Open Document Text Template"
-		case "org.oasis-open.opendocument.graphics": return "Open Document Graphics"
-		case "org.oasis-open.opendocument.graphics-template": return "Open Document Graphics Template"
-		case "org.oasis-open.opendocument.presentation": return "Open Document Presentation"
-		case "org.oasis-open.opendocument.presentation-template": return "Open Document Presentation Template"
-		case "org.oasis-open.opendocument.spreadsheet": return "Open Document Spreadsheet"
-		case "org.oasis-open.opendocument.spreadsheet-template": return "Open Document Spreadsheet Template"
-		case "org.oasis-open.opendocument.chart": return "Open Document Chart"
-		case "org.oasis-open.opendocument.chart-template": return "Open Document Chart Template"
-		case "org.oasis-open.opendocument.image": return "Open Document Image"
-		case "org.oasis-open.opendocument.image-template": return "Open Document Image Template"
-		case "org.oasis-open.opendocument.formula": return "Open Document Formula"
-		case "org.oasis-open.opendocument.formula-template": return "Open Document Formula Template"
-		case "org.oasis-open.opendocument.text-master": return "Open Document Text Master"
-		case "org.oasis-open.opendocument.text-web": return "Open Document HTML Template"
-		default: break
-		}
+    var fileExtension: String? {
+        let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
+        if let tag = tag {
+            let t = tag as String
+            if !t.isEmpty {
+                return t
+            }
+        }
+        if isURL {
+            return "url"
+        }
+        if typeIdentifier.hasSuffix("-plain-text") {
+            return "txt"
+        }
+        return nil
+    }
 
-		if id.hasSuffix("-source") && id.hasPrefix("public."),
-			let lastComponent = id.components(separatedBy: ".").last,
-			let lang = lastComponent.components(separatedBy: "-").first {
-			return lang.capitalized + " Source"
-		}
+    var isURL: Bool {
+        typeConforms(to: kUTTypeURL)
+    }
 
-		if id.hasPrefix("com.apple.") {
-			if id.contains(".iwork.") {
-				if id.contains(".numbers") { return "Numbers Document" }
-				if id.contains(".pages") { return "Pages Document" }
-				if id.contains(".keynote") { return "Keynote Document" }
-			}
-		}
+    var isWebURL: Bool {
+        if let e = encodedUrl {
+            return e.scheme != "file"
+        }
+        return false
+    }
 
-		if id.hasSuffix(".markdown") {
-			return "Markdown Text"
-		}
+    var isFileURL: Bool {
+        if let e = encodedUrl {
+            return e.scheme == "file"
+        }
+        return false
+    }
 
-		return representedClass.description
-	}
+    var isWebArchive: Bool {
+        typeIdentifier == "com.apple.webarchive"
+    }
 
-	func typeConforms(to parent: CFString) -> Bool {
-		return UTTypeConformsTo(typeIdentifier as CFString, parent)
-	}
+    var typeDescription: String {
+        if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
+            let t = desc as String
+            if !t.isEmpty {
+                return t.capitalized
+            }
+        }
 
-	var sizeInBytes: Int64 {
+        let id = typeIdentifier.lowercased()
 
+        switch id {
+        case "public.item": return "Item"
+        case "public.content": return "Content"
+        case "public.composite-content": return "Mixed Content"
+        case "com.apple.application": return "Application"
+        case "public.message": return "Message"
+        case "public.contact": return "Contact"
+        case "public.archive": return "Archive"
+        case "public.disk-image": return "Disk Image"
+        case "public.data": return "Data"
+        case "public.directory": return "Directory"
+        case "com.apple.resolvable": return "Alias"
+        case "public.symlink": return "Symbolic Link"
+        case "com.apple.mount-point": return "Mount Point"
+        case "com.apple.alias-file": return "Alias File"
+        case "public.url": return "Link"
+        case "public.file-url": return "File Link"
+        case "public.text": return "Text"
+        case "public.plain-text": return "Plain Text"
+        case "public.utf8-plain-text": return "Unicode Plain Text"
+        case "public.utf16-external-plain-text": return "Unicode-16 Plain Text"
+        case "public.utf16-plain-text": return "Unicode-16 Plain Text"
+        case "public.rtf": return "Rich Text"
+        case "public.html": return "HTML"
+        case "public.xml": return "XML"
+        case "public.xhtml": return "XHTML"
+        case "com.adobe.pdf": return "Adobe PDF"
+        case "com.apple.rtfd": return "Rich Text With Attachments Directory"
+        case "com.apple.flat-rtfd": return "Rich Text With Attachments"
+        case "com.apple.webarchive": return "Web Archive"
+        case "com.adobe.postscript": return "PostScript"
+        case "com.adobe.encapsulated-postscript": return "Encapsulated PostScript"
+        case "public.presentation": return "Presentation"
+        case "public.image": return "Image"
+        case "public.jpeg": return "JPEG Image"
+        case "public.jpeg-2000": return "JPEG-2000 Image"
+        case "public.tiff": return "TIFF Image"
+        case "com.apple.pict": return "Quickdraw PICT"
+        case "com.compuserve.gif": return "GIF Image"
+        case "public.png": return "PNG Image"
+        case "com.apple.quicktime-image": return "QuickTime Image"
+        case "com.apple.icns": return "Apple Icon Data"
+        case "com.microsoft.bmp": return "BMP Image"
+        case "com.microsoft.ico": return "ICO Image"
+        case "public.fax": return "Fax"
+        case "com.apple.macpaint-image": return "MacPaint Image"
+        case "public.svg-image": return "SVG Image"
+        case "public.xbitmap-image": return "XBMP Image"
+        case "public.camera-raw-image": return "Camera Raw Image"
+        case "com.adobe.photoshop-image": return "Photoshop Image"
+        case "com.adobe.illustrator.ai-image": return "Illustrator document"
+        case "com.truevision.tga-image": return "TGA image"
+        case "com.sgi.sgi-image": return "Silicon Graphics Image"
+        case "com.ilm.openexr-image": return "OpenEXR Image"
+        case "com.kodak.flashpix-image": return "FlashPix Image"
+        case "com.adobe.raw-image": return "Adobe Raw Image"
+        case "com.canon.crw-raw-image": return "CRW Raw image"
+        case "com.canon.cr2-raw-image": return "CR2 Raw Image"
+        case "com.canon.tif-raw-image": return "TIF Raw Image"
+        case "com.nikon.raw-image": return "Nikon Raw image"
+        case "com.olympus.raw-image": return "Olympus Raw image"
+        case "com.fuji.raw-image": return "Fuji Raw image"
+        case "com.sony.raw-image": return "Sony Raw image"
+        case "com.sony.arw-raw-image": return "Sony ARW Raw image"
+        case "com.konicaminolta.raw-image": return "Minolta Raw image"
+        case "com.kodak.raw-image": return "Kodak Raw image"
+        case "com.panasonic.raw-image": return "Panasonic Raw image"
+        case "com.pentax.raw-image": return "Pentax Raw image"
+        case "com.leafamerica.raw-image": return "Leaf Raw image"
+        case "com.leica.raw-image": return "Leica Raw image"
+        case "com.hasselblad.fff-raw-image": return "Hasselblad FFF Raw image"
+        case "com.hasselblad.3fr-raw-image": return "Hasselblad 3FR Raw image"
+        case "public.audiovisual-content": return "AV Content"
+        case "public.movie": return "Movie"
+        case "public.video": return "Video"
+        case "public.audio": return "Audio"
+        case "com.apple.quicktime-movie": return "QuickTime Movie"
+        case "public.mpeg": return "MPEG Movie"
+        case "public.mpeg-4": return "MPEG-4 Movie"
+        case "public.mp3": return "MP3 Audio"
+        case "public.mpeg-4-audio": return "MPEG-4 Audio"
+        case "com.apple.protected-mpeg-4-audio": return "Apple MPEG-4 Audio"
+        case "public.mpeg-2-video": return "MPEG-2 Video"
+        case "com.apple.protected-mpeg-4-video": return "Apple MPEG-4 Video"
+        case "public.dv-movie": return "DV Movie"
+        case "public.avi": return "AVI Movie"
+        case "public.3gpp": return "3GPP Movie"
+        case "public.3gpp2": return "3GPP2 Movie"
+        case "com.microsoft.windows-media-wm": return "Windows Media"
+        case "com.microsoft.windows-media-wmv": return "Windows Media"
+        case "com.microsoft.windows-media-wmp": return "Windows Media"
+        case "com.microsoft.windows-media-wma": return "Windows Media Audio"
+        case "com.real.realmedia": return "RealMedia"
+        case "com.real.realaudio": return "RealMedia Audio"
+        case "public.ulaw-audio": return "uLaw Audio"
+        case "public.au-audio": return "AU Audio"
+        case "public.aifc-audio": return "AIFF-C Audio"
+        case "public.aiff-audio": return "AIFF Audio"
+        case "public.midi-audio": return "MIDI Audio"
+        case "public.downloadable-sound": return "Downloadable Sound"
+        case "com.apple.coreaudio-format": return "Apple CoreAudio"
+        case "public.ac3-audio": return "AC-3 Audio"
+        case "com.digidesign.sd2-audio": return "Sound Designer II Audio"
+        case "com.microsoft.waveform-audio": return "Waveform Audio"
+        case "com.soundblaster.soundfont": return "SoundFont Audio"
+        case "public.folder": return "Folder"
+        case "public.volume": return "Storage Volume"
+        case "com.apple.package": return "File Package"
+        case "com.apple.bundle": return "File Bundle"
+        case "com.apple.application-bundle": return "Application Bundle"
+        case "com.apple.application-file": return "Application"
+        case "public.vcard": return "Contact Card"
+        case "org.gnu.gnu-tar-archive": return "GNU tar Archive"
+        case "public.tar-archive": return "tar Archive"
+        case "org.gnu.gnu-zip-archive": return "GZip Archive"
+        case "org.gnu.gnu-zip-tar-archive": return "gzip TAR Archive"
+        case "public.bzip2-archive": return "Bzip2 Archive"
+        case "public.tar-bzip2-archive": return "Bzip2 Compressed tar Archive"
+        case "com.apple.binhex-archive": return "BinHex Archive"
+        case "com.apple.macbinary-archive": return "MacBinary Archive"
+        case "com.allume.stuffit-archive": return "Stuffit Archive"
+        case "public.zip-archive": return "Zip Archive"
+        case "com.pkware.zip-archive": return "PKZip Archive"
+        case "com.microsoft.word.doc": return "Microsoft Word Document"
+        case "com.microsoft.excel.xls": return "Microsoft Excel Workbook"
+        case "com.microsoft.powerpoint.ppt": return "Microsoft PowerPoint Presentation"
+        case "com.microsoft.word.wordml": return "Microsoft Word 2003 XML Document"
+        case "com.apple.keynote.key": return "Keynote Document"
+        case "com.apple.iwork.Keynote.key": return "Keynote Document"
+        case "com.apple.keynote.kth": return "Keynote Document"
+        case "com.apple.iwork.Keynote.kth": return "Keynote Theme"
+        case "org.openxmlformats.openxml": return "Office Open XML"
+        case "org.openxmlformats.wordprocessingml.document": return "Office Open XML Word Processor Document"
+        case "org.openxmlformats.wordprocessingml.document.macroenabled": return "Office Open XML Word Processor Document (+macros)"
+        case "org.openxmlformats.wordprocessingml.template": return "Office Open XML Word Processor Template"
+        case "org.openxmlformats.wordprocessingml.template.macroenabled": return "Office Open XML Word Processor Template (+macros)"
+        case "org.openxmlformats.spreadsheetml.sheet": return "Office Open XML Spreadsheet"
+        case "org.openxmlformats.spreadsheetml.sheet.macroenabled": return "Office Open XML Spreadsheet (+macros)"
+        case "org.openxmlformats.spreadsheetml.template": return "Office Open XML Spreadsheet Template"
+        case "org.openxmlformats.spreadsheetml.template.macroenabled": return "Office Open XML Spreadsheet Template (+macros)"
+        case "org.openxmlformats.presentationml.presentation": return "Office Open XML Presentation"
+        case "org.openxmlformats.presentationml.presentation.macroenabled": return "Office Open XML Presentation (+macros)"
+        case "org.openxmlformats.presentationml.slideshow": return "Office Open XML Slide Show"
+        case "org.openxmlformats.presentationml.slideshow.macroenabled": return "Office Open XML Slide Show (macros enabled)"
+        case "org.openxmlformats.presentationml.template": return "Office Open XML Presentation Template"
+        case "org.openxmlformats.presentationml.template.macroenabled": return "Office Open XML Presentation Template (+macros)"
+        case "org.oasis-open.opendocument": return "Open Document"
+        case "org.oasis-open.opendocument.text": return "Open Document Text"
+        case "org.oasis-open.opendocument.text-template": return "Open Document Text Template"
+        case "org.oasis-open.opendocument.graphics": return "Open Document Graphics"
+        case "org.oasis-open.opendocument.graphics-template": return "Open Document Graphics Template"
+        case "org.oasis-open.opendocument.presentation": return "Open Document Presentation"
+        case "org.oasis-open.opendocument.presentation-template": return "Open Document Presentation Template"
+        case "org.oasis-open.opendocument.spreadsheet": return "Open Document Spreadsheet"
+        case "org.oasis-open.opendocument.spreadsheet-template": return "Open Document Spreadsheet Template"
+        case "org.oasis-open.opendocument.chart": return "Open Document Chart"
+        case "org.oasis-open.opendocument.chart-template": return "Open Document Chart Template"
+        case "org.oasis-open.opendocument.image": return "Open Document Image"
+        case "org.oasis-open.opendocument.image-template": return "Open Document Image Template"
+        case "org.oasis-open.opendocument.formula": return "Open Document Formula"
+        case "org.oasis-open.opendocument.formula-template": return "Open Document Formula Template"
+        case "org.oasis-open.opendocument.text-master": return "Open Document Text Master"
+        case "org.oasis-open.opendocument.text-web": return "Open Document HTML Template"
+        default: break
+        }
+
+        if id.hasSuffix("-source"), id.hasPrefix("public."),
+           let lastComponent = id.components(separatedBy: ".").last,
+           let lang = lastComponent.components(separatedBy: "-").first {
+            return lang.capitalized + " Source"
+        }
+
+        if id.hasPrefix("com.apple.") {
+            if id.contains(".iwork.") {
+                if id.contains(".numbers") { return "Numbers Document" }
+                if id.contains(".pages") { return "Pages Document" }
+                if id.contains(".keynote") { return "Keynote Document" }
+            }
+        }
+
+        if id.hasSuffix(".markdown") {
+            return "Markdown Text"
+        }
+
+        return representedClass.description
+    }
+
+    func typeConforms(to parent: CFString) -> Bool {
+        UTTypeConformsTo(typeIdentifier as CFString, parent)
+    }
+
+    var sizeInBytes: Int64 {
         let fm = FileManager.default
 
         var isDir: ObjCBool = false
         let url = getBytesPath(createIfNeeded: false)
         let path = url.path
         if fm.fileExists(atPath: path, isDirectory: &isDir) {
-
             if isDir.boolValue {
                 return fm.contentSizeOfDirectory(at: url)
             } else {
@@ -367,14 +362,14 @@ extension Component: Equatable {
             }
         }
         return 0
-	}
-    
-    func getFolderUrl(createIfNeeded: Bool) -> URL {
-		if let url = folderUrlCache[uuid] {
-			return url as URL
-		}
+    }
 
-		let url = Model.appStorageUrl.appendingPathComponent(parentUuid.uuidString).appendingPathComponent(uuid.uuidString)
+    func getFolderUrl(createIfNeeded: Bool) -> URL {
+        if let url = folderUrlCache[uuid] {
+            return url as URL
+        }
+
+        let url = Model.appStorageUrl.appendingPathComponent(parentUuid.uuidString).appendingPathComponent(uuid.uuidString)
         if createIfNeeded {
             let f = FileManager.default
             if !f.fileExists(atPath: url.path) {
@@ -382,68 +377,68 @@ extension Component: Equatable {
             }
             folderUrlCache[uuid] = url
         }
-		return url
-	}
-    
-    var folderUrl: URL {
-        return getFolderUrl(createIfNeeded: true)
+        return url
     }
 
-	var imagePath: URL {
-		if let url = imagePathCache[uuid] {
-			return url as URL
-		}
+    var folderUrl: URL {
+        getFolderUrl(createIfNeeded: true)
+    }
 
-		let url = getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
-		imagePathCache[uuid] = url
-		return url
-	}
+    var imagePath: URL {
+        if let url = imagePathCache[uuid] {
+            return url as URL
+        }
+
+        let url = getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
+        imagePathCache[uuid] = url
+        return url
+    }
 
     func getBytesPath(createIfNeeded: Bool) -> URL {
-		if let url = bytesPathCache[uuid] {
-			return url as URL
-		}
+        if let url = bytesPathCache[uuid] {
+            return url as URL
+        }
 
-		let url = getFolderUrl(createIfNeeded: createIfNeeded).appendingPathComponent("blob", isDirectory: false)
-		bytesPathCache[uuid] = url
-		return url
-	}
-    
-    var bytesPath: URL {
-        return getBytesPath(createIfNeeded: true)
+        let url = getFolderUrl(createIfNeeded: createIfNeeded).appendingPathComponent("blob", isDirectory: false)
+        bytesPathCache[uuid] = url
+        return url
     }
-	
-	private var cloudKitDataPath: URL {
-		if let url = cloudKitDataPathCache[uuid] {
-			return url as URL
-		}
 
-		let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-		cloudKitDataPathCache[uuid] = url
-		return url
-	}
+    var bytesPath: URL {
+        getBytesPath(createIfNeeded: true)
+    }
 
-	var cloudKitRecord: CKRecord? {
-		get {
+    private var cloudKitDataPath: URL {
+        if let url = cloudKitDataPathCache[uuid] {
+            return url as URL
+        }
+
+        let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+        cloudKitDataPathCache[uuid] = url
+        return url
+    }
+
+    var cloudKitRecord: CKRecord? {
+        get {
             let recordLocation = cloudKitDataPath
             let uuid = uuid
             return dataAccessQueue.sync {
                 if let cachedValue = cloudKitRecordCache[uuid] {
                     return cachedValue.record
-                    
+
                 } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
                     return record
-                    
+
                 } else {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     return nil
                 }
             }
-		}
-		set {
+        }
+        set {
             let recordLocation = cloudKitDataPath
             let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
@@ -460,15 +455,15 @@ extension Component: Equatable {
                     }
                 }
             }
-		}
-	}
+        }
+    }
 
-	func clearCachedFields() {
-		encodedURLCache = nil
-		canPreviewCache = nil
-	}
+    func clearCachedFields() {
+        encodedURLCache = nil
+        canPreviewCache = nil
+    }
 
-	var parent: ArchivedItem? {
-		return Model.item(uuid: parentUuid)
-	}
+    var parent: ArchivedItem? {
+        Model.item(uuid: parentUuid)
+    }
 }

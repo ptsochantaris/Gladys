@@ -8,241 +8,240 @@
 
 import CloudKit
 #if os(iOS)
-import UIKit
-typealias IMAGE = UIImage
-typealias COLOR = UIColor
+    import UIKit
+    typealias IMAGE = UIImage
+    typealias COLOR = UIColor
 #else
-import Cocoa
-typealias IMAGE = NSImage
-typealias COLOR = NSColor
+    import Cocoa
+    typealias IMAGE = NSImage
+    typealias COLOR = NSColor
 #endif
 
 struct ImportOverrides {
-	let title: String?
-	let note: String?
-	let labels: [String]?
+    let title: String?
+    let note: String?
+    let labels: [String]?
 }
 
 let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
 extension ArchivedItem: Hashable {
+    static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
+        lhs.uuid == rhs.uuid
+    }
 
-	static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
-		return lhs.uuid == rhs.uuid
-	}
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+    }
 
-	func hash(into hasher: inout Hasher) {
-		hasher.combine(uuid)
-	}
-    
-	var trimmedName: String {
-		return displayTitleOrUuid.truncateWithEllipses(limit: 32)
-	}
+    var trimmedName: String {
+        displayTitleOrUuid.truncateWithEllipses(limit: 32)
+    }
 
-	var trimmedSuggestedName: String {
-		return displayTitleOrUuid.truncateWithEllipses(limit: 128)
-	}
-	
-	var sizeInBytes: Int64 {
-		return components.reduce(0) { $0 + $1.sizeInBytes }
-	}
+    var trimmedSuggestedName: String {
+        displayTitleOrUuid.truncateWithEllipses(limit: 128)
+    }
 
-	var imagePath: URL? {
-		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-		return highestPriorityIconItem?.imagePath
-	}
+    var sizeInBytes: Int64 {
+        components.reduce(0) { $0 + $1.sizeInBytes }
+    }
 
-	var displayIcon: IMAGE {
-		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-		return highestPriorityIconItem?.componentIcon ?? #imageLiteral(resourceName: "iconStickyNote")
-	}
+    var imagePath: URL? {
+        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        return highestPriorityIconItem?.imagePath
+    }
 
-	var dominantTypeDescription: String? {
-		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-		return highestPriorityIconItem?.typeDescription
-	}
+    var displayIcon: IMAGE {
+        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        return highestPriorityIconItem?.componentIcon ?? #imageLiteral(resourceName: "iconStickyNote")
+    }
 
-	var displayMode: ArchivedDropItemDisplayType {
-		let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-		return highestPriorityIconItem?.displayIconContentMode ?? .center
-	}
+    var dominantTypeDescription: String? {
+        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        return highestPriorityIconItem?.typeDescription
+    }
 
-	var displayText: (String?, NSTextAlignment) {
-		guard titleOverride.isEmpty else { return (titleOverride, .center) }
-		return nonOverridenText
-	}
+    var displayMode: ArchivedDropItemDisplayType {
+        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        return highestPriorityIconItem?.displayIconContentMode ?? .center
+    }
 
-	var displayTitleOrUuid: String {
-		return displayText.0 ?? uuid.uuidString
-	}
+    var displayText: (String?, NSTextAlignment) {
+        guard titleOverride.isEmpty else { return (titleOverride, .center) }
+        return nonOverridenText
+    }
 
-	var isLocked: Bool {
-		return lockPassword != nil
-	}
+    var displayTitleOrUuid: String {
+        displayText.0 ?? uuid.uuidString
+    }
 
-	var isTemporarilyUnlocked: Bool {
-        return isLocked && !flags.contains(.needsUnlock)
-	}
+    var isLocked: Bool {
+        lockPassword != nil
+    }
 
-	var associatedWebURL: URL? {
-		for i in components {
-			if let u = i.encodedUrl, !u.isFileURL {
-				return u as URL
-			}
-		}
-		return nil
-	}
-    
-	var imageCacheKey: String {
-        return "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)"
-	}
+    var isTemporarilyUnlocked: Bool {
+        isLocked && !flags.contains(.needsUnlock)
+    }
 
-	var nonOverridenText: (String?, NSTextAlignment) {
-		if let a = components.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
+    var associatedWebURL: URL? {
+        for i in components {
+            if let u = i.encodedUrl, !u.isFileURL {
+                return u as URL
+            }
+        }
+        return nil
+    }
 
-		let highestPriorityItem = components.max { $0.displayTitlePriority < $1.displayTitlePriority }
-		if let title = highestPriorityItem?.displayTitle {
-			let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
-			return (title, alignment)
-		} else {
-			return (suggestedName, .center)
-		}
-	}
+    var imageCacheKey: String {
+        "\(uuid.uuidString) \(updatedAt.timeIntervalSinceReferenceDate)"
+    }
 
-	func bytes(for type: String) -> Data? {
-		return components.first { $0.typeIdentifier == type }?.bytes
-	}
+    var nonOverridenText: (String?, NSTextAlignment) {
+        if let a = components.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
-	func url(for type: String) -> URL? {
-		return components.first { $0.typeIdentifier == type }?.encodedUrl
-	}
+        let highestPriorityItem = components.max { $0.displayTitlePriority < $1.displayTitlePriority }
+        if let title = highestPriorityItem?.displayTitle {
+            let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
+            return (title, alignment)
+        } else {
+            return (suggestedName, .center)
+        }
+    }
 
-	var isVisible: Bool {
-		return !needsDeletion && lockPassword == nil && !needsReIngest
-	}
+    func bytes(for type: String) -> Data? {
+        components.first { $0.typeIdentifier == type }?.bytes
+    }
 
-	func markUpdated() {
-		updatedAt = Date()
-		needsCloudPush = true
-	}
+    func url(for type: String) -> URL? {
+        components.first { $0.typeIdentifier == type }?.encodedUrl
+    }
 
-	var folderUrl: URL {
-		if let url = folderUrlCache[uuid] {
-			return url as URL
-		}
+    var isVisible: Bool {
+        !needsDeletion && lockPassword == nil && !needsReIngest
+    }
 
-		let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
-		let f = FileManager.default
+    func markUpdated() {
+        updatedAt = Date()
+        needsCloudPush = true
+    }
+
+    var folderUrl: URL {
+        if let url = folderUrlCache[uuid] {
+            return url as URL
+        }
+
+        let url = Model.appStorageUrl.appendingPathComponent(uuid.uuidString)
+        let f = FileManager.default
         let path = url.path
-		if !f.fileExists(atPath: path) {
-			try! f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
-		}
-		folderUrlCache[uuid] = url
-		return url
-	}
+        if !f.fileExists(atPath: path) {
+            try! f.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+        }
+        folderUrlCache[uuid] = url
+        return url
+    }
 
-	private var cloudKitDataPath: URL {
-		if let url = cloudKitDataPathCache[uuid] {
-			return url as URL
-		}
-		let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
-		cloudKitDataPathCache[uuid] = url
-		return url
-	}
+    private var cloudKitDataPath: URL {
+        if let url = cloudKitDataPathCache[uuid] {
+            return url as URL
+        }
+        let url = folderUrl.appendingPathComponent("ck-record", isDirectory: false)
+        cloudKitDataPathCache[uuid] = url
+        return url
+    }
 
-	private var cloudKitShareDataPath: URL {
-		if let url = cloudKitShareDataPathCache[uuid] {
-			return url as URL
-		}
-		let url = folderUrl.appendingPathComponent("ck-share", isDirectory: false)
-		cloudKitShareDataPathCache[uuid] = url
-		return url
-	}
+    private var cloudKitShareDataPath: URL {
+        if let url = cloudKitShareDataPathCache[uuid] {
+            return url as URL
+        }
+        let url = folderUrl.appendingPathComponent("ck-share", isDirectory: false)
+        cloudKitShareDataPathCache[uuid] = url
+        return url
+    }
 
-	private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
-	var needsCloudPush: Bool {
+    private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
+    var needsCloudPush: Bool {
         get {
             let path = cloudKitDataPath
             return dataAccessQueue.sync {
                 FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
             }
         }
-		set {
+        set {
             let path = cloudKitDataPath
             dataAccessQueue.async(flags: .barrier) {
                 FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
             }
-		}
-	}
-
-	enum ShareMode {
-		case none, elsewhereReadOnly, elsewhereReadWrite, sharing
-	}
-    
-    var isRecentlyAdded: Bool {
-        return self.createdAt.timeIntervalSinceNow > -86400 // 24h
+        }
     }
 
-	var shareMode: ShareMode {
-		if let shareRecord = cloudKitShareRecord {
-			if shareRecord.recordID.zoneID == privateZoneId {
-				return .sharing
-			} else if let permission = cloudKitShareRecord?.currentUserParticipant?.permission, permission == .readWrite {
-				return .elsewhereReadWrite
-			} else {
-				return .elsewhereReadOnly
-			}
-		} else {
-			return .none
-		}
-	}
+    enum ShareMode {
+        case none, elsewhereReadOnly, elsewhereReadWrite, sharing
+    }
 
-	var isShareWithOnlyOwner: Bool {
-		if let shareRecord = cloudKitShareRecord {
-			return shareRecord.participants.count == 1
-				&& shareRecord.participants[0].userIdentity.userRecordID?.recordName == CKCurrentUserDefaultName
-		}
-		return false
-	}
+    var isRecentlyAdded: Bool {
+        createdAt.timeIntervalSinceNow > -86400 // 24h
+    }
 
-	var isPrivateShareWithOnlyOwner: Bool {
-		if let shareRecord = cloudKitShareRecord {
-			return shareRecord.participants.count == 1
-				&& shareRecord.publicPermission == .none
-				&& shareRecord.participants[0].userIdentity.userRecordID?.recordName == CKCurrentUserDefaultName
-		}
-		return false
-	}
+    var shareMode: ShareMode {
+        if let shareRecord = cloudKitShareRecord {
+            if shareRecord.recordID.zoneID == privateZoneId {
+                return .sharing
+            } else if let permission = cloudKitShareRecord?.currentUserParticipant?.permission, permission == .readWrite {
+                return .elsewhereReadWrite
+            } else {
+                return .elsewhereReadOnly
+            }
+        } else {
+            return .none
+        }
+    }
 
-	var isImportedShare: Bool {
-		switch shareMode {
-		case .elsewhereReadOnly, .elsewhereReadWrite:
-			return true
-		case .none, .sharing:
-			return false
-		}
-	}
+    var isShareWithOnlyOwner: Bool {
+        if let shareRecord = cloudKitShareRecord {
+            return shareRecord.participants.count == 1
+                && shareRecord.participants[0].userIdentity.userRecordID?.recordName == CKCurrentUserDefaultName
+        }
+        return false
+    }
 
-	var cloudKitRecord: CKRecord? {
-		get {
+    var isPrivateShareWithOnlyOwner: Bool {
+        if let shareRecord = cloudKitShareRecord {
+            return shareRecord.participants.count == 1
+                && shareRecord.publicPermission == .none
+                && shareRecord.participants[0].userIdentity.userRecordID?.recordName == CKCurrentUserDefaultName
+        }
+        return false
+    }
+
+    var isImportedShare: Bool {
+        switch shareMode {
+        case .elsewhereReadOnly, .elsewhereReadWrite:
+            return true
+        case .none, .sharing:
+            return false
+        }
+    }
+
+    var cloudKitRecord: CKRecord? {
+        get {
             let recordLocation = cloudKitDataPath
             return dataAccessQueue.sync {
                 if let cachedValue = cloudKitRecordCache[uuid] {
                     return cachedValue.record
-                    
+
                 } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
                     return record
-                    
+
                 } else {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     return nil
                 }
             }
-		}
-		set {
+        }
+        set {
             let recordLocation = cloudKitDataPath
             let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
@@ -263,31 +262,31 @@ extension ArchivedItem: Hashable {
                     }
                 }
             }
-		}
-	}
+        }
+    }
 
-	var cloudKitShareRecord: CKShare? {
-		get {
+    var cloudKitShareRecord: CKShare? {
+        get {
             let uuid = uuid
             return dataAccessQueue.sync {
                 if let cachedValue = cloudKitShareCache[uuid] {
                     return cachedValue.share
-                    
+
                 } else if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let share = CKShare(coder: coder)
                     coder.finishDecoding()
                     cloudKitShareCache[uuid] = CKShareCacheEntry(share: share)
                     return share
-                    
+
                 } else {
                     cloudKitShareCache[uuid] = CKShareCacheEntry(share: nil)
                     return nil
                 }
             }
-		}
-		set {
+        }
+        set {
             let recordLocation = cloudKitShareDataPath
-                        let uuid = uuid
+            let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
                 if let newValue = newValue {
                     cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
@@ -304,6 +303,6 @@ extension ArchivedItem: Hashable {
                     }
                 }
             }
-		}
-	}
+        }
+    }
 }

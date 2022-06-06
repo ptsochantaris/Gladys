@@ -9,38 +9,38 @@
 import Foundation
 
 extension FileManager {
-	func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
-		var contentSize: Int64 = 0
-		if let e = enumerator(at: directoryURL, includingPropertiesForKeys: [.fileSizeKey]) {
-			for itemURL in e {
-				if let itemURL = itemURL as? URL {
-					let s = (try? itemURL.resourceValues(forKeys: [.fileSizeKey]))?.fileSize
-					contentSize += Int64(s ?? 0)
-				}
-			}
-		}
-		return contentSize
-	}
+    func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
+        var contentSize: Int64 = 0
+        if let e = enumerator(at: directoryURL, includingPropertiesForKeys: [.fileSizeKey]) {
+            for itemURL in e {
+                if let itemURL = itemURL as? URL {
+                    let s = (try? itemURL.resourceValues(forKeys: [.fileSizeKey]))?.fileSize
+                    contentSize += Int64(s ?? 0)
+                }
+            }
+        }
+        return contentSize
+    }
 
-	func moveAndReplaceItem(at: URL, to: URL) throws {
-		if fileExists(atPath: to.path) {
-			try removeItem(at: to)
-		}
-		try moveItem(at: at, to: to)
-	}
+    func moveAndReplaceItem(at: URL, to: URL) throws {
+        if fileExists(atPath: to.path) {
+            try removeItem(at: to)
+        }
+        try moveItem(at: at, to: to)
+    }
 
-	func copyAndReplaceItem(at: URL, to: URL) throws {
-		if fileExists(atPath: to.path) {
-			try removeItem(at: to)
-		}
-		try copyItem(at: at, to: to)
-	}
-    
+    func copyAndReplaceItem(at: URL, to: URL) throws {
+        if fileExists(atPath: to.path) {
+            try removeItem(at: to)
+        }
+        try copyItem(at: at, to: to)
+    }
+
     func getDateAttribute(_ attributeName: String, from url: URL) -> Date? {
         guard fileExists(atPath: url.path) else {
             return nil
         }
-        
+
         return url.withUnsafeFileSystemRepresentation { fileSystemPath in
             let length = getxattr(fileSystemPath, attributeName, nil, 0, 0, 0)
             if length > 0 {
@@ -53,12 +53,12 @@ extension FileManager {
             return nil
         }
     }
-    
+
     func setDateAttribute(_ attributeName: String, at url: URL, to date: Date?) {
         guard fileExists(atPath: url.path) else {
             return
         }
-        
+
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if let newValue = date {
                 String(newValue.timeIntervalSinceReferenceDate).utf8CString.withUnsafeBytes { bytes in
@@ -71,7 +71,7 @@ extension FileManager {
             }
         }
     }
-    
+
     func setBoolAttribute(_ attributeName: String, at url: URL, to newValue: Bool) {
         guard fileExists(atPath: url.path) else {
             return
@@ -88,7 +88,7 @@ extension FileManager {
             }
         }
     }
-    
+
     func getBoolAttribute(_ attributeName: String, from url: URL) -> Bool? {
         guard fileExists(atPath: url.path) else {
             return nil
@@ -98,12 +98,12 @@ extension FileManager {
             return length > 0
         }
     }
-    
+
     func getUUIDAttribute(_ attributeName: String, from url: URL) -> UUID? {
         guard fileExists(atPath: url.path) else {
             return nil
         }
-        
+
         return url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if getxattr(fileSystemPath, attributeName, nil, 0, 0, 0) == 16 {
                 var d = [UInt8](repeating: 0, count: 16)
@@ -115,12 +115,12 @@ extension FileManager {
             return nil
         }
     }
-    
+
     func setUUIDAttribute(_ attributeName: String, at url: URL, to uuid: UUID?) {
         guard fileExists(atPath: url.path) else {
             return
         }
-        
+
         url.withUnsafeFileSystemRepresentation { fileSystemPath in
             if let u = uuid?.uuid {
                 var bytes = [u.0, u.1, u.2, u.3, u.4, u.5, u.6, u.7, u.8, u.9, u.10, u.11, u.12, u.13, u.14, u.15]

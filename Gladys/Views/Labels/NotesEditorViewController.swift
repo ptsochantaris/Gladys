@@ -9,29 +9,28 @@
 import UIKit
 
 protocol NotesEditorViewControllerDelegate: AnyObject {
-	func newNoteSaved(note: String)
+    func newNoteSaved(note: String)
 }
 
 final class NotesEditorViewController: GladysViewController {
+    var startupNote: String?
+    weak var delegate: NotesEditorViewControllerDelegate?
 
-	var startupNote: String?
-	weak var delegate: NotesEditorViewControllerDelegate?
+    @IBOutlet private var textView: UITextView!
 
-	@IBOutlet private var textView: UITextView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        textView.text = startupNote
+    }
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		textView.text = startupNote
-	}
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        textView.becomeFirstResponder()
+    }
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		textView.becomeFirstResponder()
-	}
-
-	@IBAction private func saveSelected(_ sender: UIBarButtonItem) {
-		let text = textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-		delegate?.newNoteSaved(note: text)
-		navigationController?.popViewController(animated: true)
-	}
+    @IBAction private func saveSelected(_: UIBarButtonItem) {
+        let text = textView.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        delegate?.newNoteSaved(note: text)
+        navigationController?.popViewController(animated: true)
+    }
 }

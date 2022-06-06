@@ -18,7 +18,7 @@ extension UIViewController {
             view.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
             view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
             view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
-            ])
+        ])
         vc.didMove(toParent: self)
     }
 
@@ -33,17 +33,17 @@ extension UIViewController {
         vc.view.removeFromSuperview()
         vc.removeFromParent()
     }
-    
+
     var phoneMode: Bool {
         guard let t = (viewIfLoaded ?? navigationController?.viewIfLoaded)?.window?.traitCollection else { return false }
         return t.horizontalSizeClass == .compact || t.verticalSizeClass == .compact
     }
-    
+
     var isHovering: Bool {
-        return (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1
+        (popoverPresentationController?.adaptivePresentationStyle.rawValue ?? 0) == -1
     }
 
     var isAccessoryWindow: Bool {
-        return (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
+        (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
     }
 }

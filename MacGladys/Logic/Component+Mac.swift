@@ -1,20 +1,19 @@
 import Cocoa
-import ZIPFoundation
-import MapKit
 import Contacts
 import ContactsUI
+import MapKit
+import ZIPFoundation
 
 extension Component {
+    var isArchivable: Bool {
+        if let e = encodedUrl, !e.isFileURL, e.host != nil, let s = e.scheme, s.hasPrefix("http") {
+            return true
+        } else {
+            return false
+        }
+    }
 
-	var isArchivable: Bool {
-		if let e = encodedUrl, !e.isFileURL, e.host != nil, let s = e.scheme, s.hasPrefix("http") {
-			return true
-		} else {
-			return false
-		}
-	}
-    
-	var componentIcon: NSImage? {
+    var componentIcon: NSImage? {
         get {
             guard let d = try? Data(contentsOf: imagePath), let i = NSImage(data: d) else {
                 return nil
@@ -28,39 +27,39 @@ extension Component {
             }
             return i
         }
-		set {
+        set {
             let ipath = imagePath
             if let n = newValue, let data = n.tiffRepresentation {
                 try? data.write(to: ipath)
             } else if FileManager.default.fileExists(atPath: ipath.path) {
                 try? FileManager.default.removeItem(at: ipath)
             }
-		}
-	}
+        }
+    }
 
-	private func appendDirectory(_ baseURL: URL, chain: [String], archive: Archive, fm: FileManager) throws {
-		let joinedChain = chain.joined(separator: "/")
-		let dirURL = baseURL.appendingPathComponent(joinedChain)
-		for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
+    private func appendDirectory(_ baseURL: URL, chain: [String], archive: Archive, fm: FileManager) throws {
+        let joinedChain = chain.joined(separator: "/")
+        let dirURL = baseURL.appendingPathComponent(joinedChain)
+        for file in try fm.contentsOfDirectory(atPath: dirURL.path) {
             if flags.contains(.loadingAborted) {
-				log("      Interrupted zip operation since ingest was aborted")
-				break
-			}
-			let newURL = dirURL.appendingPathComponent(file)
-			var directory: ObjCBool = false
-			if fm.fileExists(atPath: newURL.path, isDirectory: &directory) {
-				if directory.boolValue {
-					var newChain = chain
-					newChain.append(file)
-					try appendDirectory(baseURL, chain: newChain, archive: archive, fm: fm)
-				} else {
-					log("      Compressing \(newURL.path)")
-					let path = joinedChain + "/" + file
-					try archive.addEntry(with: path, relativeTo: baseURL)
-				}
-			}
-		}
-	}
+                log("      Interrupted zip operation since ingest was aborted")
+                break
+            }
+            let newURL = dirURL.appendingPathComponent(file)
+            var directory: ObjCBool = false
+            if fm.fileExists(atPath: newURL.path, isDirectory: &directory) {
+                if directory.boolValue {
+                    var newChain = chain
+                    newChain.append(file)
+                    try appendDirectory(baseURL, chain: newChain, archive: archive, fm: fm)
+                } else {
+                    log("      Compressing \(newURL.path)")
+                    let path = joinedChain + "/" + file
+                    try archive.addEntry(with: path, relativeTo: baseURL)
+                }
+            }
+        }
+    }
 
     private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) async throws {
         if PersistedOptions.readAndStoreFinderTagsAsLabels {
@@ -70,10 +69,10 @@ extension Component {
             contributedLabels = nil
         }
 
-		accessoryTitle = item.lastPathComponent
-		let fm = FileManager.default
-		var directory: ObjCBool = false
-		guard fm.fileExists(atPath: item.path, isDirectory: &directory) else {
+        accessoryTitle = item.lastPathComponent
+        let fm = FileManager.default
+        var directory: ObjCBool = false
+        guard fm.fileExists(atPath: item.path, isDirectory: &directory) else {
             if storeBytes {
                 setBytes(data)
             }
@@ -82,7 +81,7 @@ extension Component {
             setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             return
         }
-        
+
         if directory.boolValue {
             do {
                 typeIdentifier = kUTTypeZipArchive as String
@@ -107,7 +106,7 @@ extension Component {
                 log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
                 setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             }
-            
+
         } else {
             let ext = item.pathExtension
             if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
@@ -123,124 +122,123 @@ extension Component {
     }
 
     func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
+        setTitle(from: url)
 
-		setTitle(from: url)
+        if url.isFileURL {
+            try await handleFileUrl(url, data, storeBytes)
 
-		if url.isFileURL {
-			try await handleFileUrl(url, data, storeBytes)
-
-		} else {
-			if storeBytes {
-				setBytes(data)
-			}
-			representedClass = .url
+        } else {
+            if storeBytes {
+                setBytes(data)
+            }
+            representedClass = .url
             try await handleRemoteUrl(url, data, storeBytes)
-		}
-	}
+        }
+    }
 
-	func removeIntents() {}
+    func removeIntents() {}
 
-	func tryOpen(from viewController: NSViewController) {
-		let shareItem = objectForShare
+    func tryOpen(from viewController: NSViewController) {
+        let shareItem = objectForShare
 
-		if let shareItem = shareItem as? MKMapItem {
-			shareItem.openInMaps(launchOptions: [:])
+        if let shareItem = shareItem as? MKMapItem {
+            shareItem.openInMaps(launchOptions: [:])
 
-		} else if let contact = shareItem as? CNContact {
-			let c = CNContactViewController(nibName: nil, bundle: nil)
-			c.contact = contact
-			viewController.presentAsModalWindow(c)
+        } else if let contact = shareItem as? CNContact {
+            let c = CNContactViewController(nibName: nil, bundle: nil)
+            c.contact = contact
+            viewController.presentAsModalWindow(c)
 
-		} else if let item = shareItem as? URL {
-			if !NSWorkspace.shared.open(item) {
-				let message: String
-				if item.isFileURL {
-					message = "macOS does not recognise the type of this file"
-				} else {
-					message = "macOS does not recognise the type of this link"
-				}
-				genericAlert(title: "Can't Open", message: message)
-			}
-		} else {
+        } else if let item = shareItem as? URL {
+            if !NSWorkspace.shared.open(item) {
+                let message: String
+                if item.isFileURL {
+                    message = "macOS does not recognise the type of this file"
+                } else {
+                    message = "macOS does not recognise the type of this link"
+                }
+                genericAlert(title: "Can't Open", message: message)
+            }
+        } else {
             NSWorkspace.shared.open(bytesPath)
-		}
-	}
+        }
+    }
 
-	func add(to pasteboardItem: NSPasteboardItem) {
-		guard hasBytes else { return }
+    func add(to pasteboardItem: NSPasteboardItem) {
+        guard hasBytes else { return }
 
-		if let s = encodedUrl?.absoluteString {
+        if let s = encodedUrl?.absoluteString {
             let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
             pasteboardItem.setString(s, forType: tid)
 
-		} else if classWasWrapped, typeConforms(to: kUTTypePlainText), isPlist, let s = decode() as? String {
-			let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
-			pasteboardItem.setString(s, forType: tid)
-            
-		} else {
-			let tid = NSPasteboard.PasteboardType(typeIdentifier)
-			pasteboardItem.setData(bytes ?? emptyData, forType: tid)
-		}
-	}
+        } else if classWasWrapped, typeConforms(to: kUTTypePlainText), isPlist, let s = decode() as? String {
+            let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
+            pasteboardItem.setString(s, forType: tid)
 
-	func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting {
-		if forDrag {
+        } else {
+            let tid = NSPasteboard.PasteboardType(typeIdentifier)
+            pasteboardItem.setData(bytes ?? emptyData, forType: tid)
+        }
+    }
+
+    func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting {
+        if forDrag {
             return GladysFilePromiseProvider.provider(for: self, with: oneTitle, extraItems: [self], tags: parent?.labels)
-		} else {
-			let pi = NSPasteboardItem()
-			add(to: pi)
-			return pi
-		}
-	}
+        } else {
+            let pi = NSPasteboardItem()
+            add(to: pi)
+            return pi
+        }
+    }
 
-	var quickLookItem: PreviewItem {
-		return PreviewItem(typeItem: self)
-	}
+    var quickLookItem: PreviewItem {
+        PreviewItem(typeItem: self)
+    }
 
-	var canPreview: Bool {
-		if let canPreviewCache = canPreviewCache {
-			return canPreviewCache
-		}
+    var canPreview: Bool {
+        if let canPreviewCache = canPreviewCache {
+            return canPreviewCache
+        }
         let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
-		canPreviewCache = res
-		return res
-	}
+        canPreviewCache = res
+        return res
+    }
 
-	func scanForBlobChanges() -> Bool {
-		var detectedChange = false
-		dataAccessQueue.sync(flags: .barrier) {
-			let recordLocation = bytesPath
-			let fm = FileManager.default
-			guard fm.fileExists(atPath: recordLocation.path) else { return }
+    func scanForBlobChanges() -> Bool {
+        var detectedChange = false
+        dataAccessQueue.sync(flags: .barrier) {
+            let recordLocation = bytesPath
+            let fm = FileManager.default
+            guard fm.fileExists(atPath: recordLocation.path) else { return }
 
-			if let fileModification = Model.modificationDate(for: recordLocation) {
-				if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
-					if recordedModification < fileModification { // is the file modified after we stamped it?
-						lastGladysBlobUpdate = fileModification
-						detectedChange = true
+            if let fileModification = Model.modificationDate(for: recordLocation) {
+                if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
+                    if recordedModification < fileModification { // is the file modified after we stamped it?
+                        lastGladysBlobUpdate = fileModification
+                        detectedChange = true
                     }
-				} else {
-					lastGladysBlobUpdate = fileModification // have modification date but no stamp
-				}
-			} else {
-				let now = Date()
-				try? fm.setAttributes([FileAttributeKey.modificationDate: now], ofItemAtPath: recordLocation.path)
-				lastGladysBlobUpdate = now // no modification date, no stamp
-			}
-		}
-		return detectedChange
-	}
+                } else {
+                    lastGladysBlobUpdate = fileModification // have modification date but no stamp
+                }
+            } else {
+                let now = Date()
+                try? fm.setAttributes([FileAttributeKey.modificationDate: now], ofItemAtPath: recordLocation.path)
+                lastGladysBlobUpdate = now // no modification date, no stamp
+            }
+        }
+        return detectedChange
+    }
 
-	private static let lastModificationKey = "build.bru.Gladys.lastGladysModification"
-	var lastGladysBlobUpdate: Date? { // be sure to protect with dataAccessQueue
-		get {
-            return FileManager.default.getDateAttribute(Component.lastModificationKey, from: bytesPath)
-		}
-		set {
+    private static let lastModificationKey = "build.bru.Gladys.lastGladysModification"
+    var lastGladysBlobUpdate: Date? { // be sure to protect with dataAccessQueue
+        get {
+            FileManager.default.getDateAttribute(Component.lastModificationKey, from: bytesPath)
+        }
+        set {
             FileManager.default.setDateAttribute(Component.lastModificationKey, at: bytesPath, to: newValue)
-		}
-	}
-    
+        }
+    }
+
     var itemProviderForSharing: NSItemProvider {
         let p = NSItemProvider()
         registerForSharing(with: p)
