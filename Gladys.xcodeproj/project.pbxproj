@@ -2236,7 +2236,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "swiftlint\n";
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nfi\n";
 		};
 		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2254,7 +2254,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "swiftlint\n";
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
