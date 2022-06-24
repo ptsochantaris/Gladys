@@ -1634,6 +1634,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 161718D32094D334005ABD6C /* Build configuration list for PBXNativeTarget "MacGladys" */;
 			buildPhases = (
+				165529CA2866758100FC52F2 /* Format */,
 				16CFDC4C23E5E59000FA4F00 /* Lint */,
 				161718C02094D333005ABD6C /* Sources */,
 				161718C12094D333005ABD6C /* Frameworks */,
@@ -1755,6 +1756,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1678F9DF1EF475FF005697CB /* Build configuration list for PBXNativeTarget "Gladys" */;
 			buildPhases = (
+				165529CB286675C700FC52F2 /* Format */,
 				16CFDC4B23E5CD9A00FA4F00 /* Lint */,
 				1678F9C91EF475FE005697CB /* Sources */,
 				1678F9CA1EF475FE005697CB /* Frameworks */,
@@ -2220,8 +2222,47 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		165529CA2866758100FC52F2 /* Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Format;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftformat >/dev/null; then\n  swiftformat . --swiftversion 5.6\nfi\n";
+		};
+		165529CB286675C700FC52F2 /* Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Format;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftformat >/dev/null; then\n  swiftformat . --swiftversion 5.6\nfi\n";
+		};
 		16CFDC4B23E5CD9A00FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -2240,6 +2281,7 @@
 		};
 		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
