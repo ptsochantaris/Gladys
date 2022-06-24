@@ -1262,13 +1262,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
 
             totalSizeLabel.title = "…"
-            dataAccessQueue.async(flags: .barrier) {
+            Task {
                 let drops = someSelected ? filteredDrops.filter { selected.contains($0) } : filteredDrops
-                let size = drops.reduce(0) { $0 + $1.sizeInBytes }
+                let size = await Model.sizeForItems(uuids: drops.map(\.uuid))
                 let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
-                DispatchQueue.main.async {
-                    self.totalSizeLabel.title = sizeLabel
-                }
+                totalSizeLabel.title = sizeLabel
             }
             deleteButton.isEnabled = someSelected
             editLabelsButton.isEnabled = someSelected

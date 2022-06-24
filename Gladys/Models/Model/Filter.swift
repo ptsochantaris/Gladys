@@ -59,14 +59,11 @@ final class Filter {
         rebuildLabels()
     }
 
-    func sizeOfVisibleItemsInBytes(completion: @escaping (Int64) -> Void) {
+    func sizeOfVisibleItemsInBytes() async -> Int64 {
         let snapshot = filteredDrops
-        dataAccessQueue.sync {
-            let res = snapshot.reduce(0) { $0 + $1.sizeInBytes }
-            DispatchQueue.main.async {
-                completion(res)
-            }
-        }
+        return await Task.detached {
+            snapshot.reduce(0) { $0 + $1.sizeInBytes }
+        }.value
     }
 
     var isFilteringLabels: Bool {

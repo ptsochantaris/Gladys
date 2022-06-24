@@ -170,12 +170,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         } else if items.count > 1 {
             let selectedItems = items.map(\.uuid)
             window.title = "…"
-            Model.sizeForItems(uuids: selectedItems) { size in
+            Task {
+                let size = await Model.sizeForItems(uuids: selectedItems)
                 let sizeString = diskSizeFormatter.string(fromByteCount: size)
                 let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
                 window.title = "\(title) — \(selectedReport)"
             }
-
         } else {
             window.title = title
         }

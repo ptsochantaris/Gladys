@@ -243,13 +243,13 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         infoLabel.text = "…"
         if PersistedOptions.exportOnlyVisibleItems {
             if count > 0 {
-                filter.sizeOfVisibleItemsInBytes { [weak self] bytes in
-                    guard let self = self else { return }
+                Task {
+                    let bytes = await filter.sizeOfVisibleItemsInBytes()
                     let size = diskSizeFormatter.string(fromByteCount: bytes)
                     if count > 1 {
-                        self.infoLabel.text = "\(count) Visible Items\n\(size)"
+                        infoLabel.text = "\(count) Visible Items\n\(size)"
                     } else {
-                        self.infoLabel.text = "1 Visible Item\n\(size)"
+                        infoLabel.text = "1 Visible Item\n\(size)"
                     }
                 }
             } else {
@@ -258,13 +258,13 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
         } else {
             if count > 0 {
-                filter.sizeOfVisibleItemsInBytes { [weak self] bytes in
-                    guard let self = self else { return }
+                Task {
+                    let bytes = await filter.sizeOfVisibleItemsInBytes()
                     let size = diskSizeFormatter.string(fromByteCount: bytes)
                     if count > 1 {
-                        self.infoLabel.text = "\(count) Items\n\(size)"
+                        infoLabel.text = "\(count) Items\n\(size)"
                     } else {
-                        self.infoLabel.text = "1 Item\n\(size)"
+                        infoLabel.text = "1 Item\n\(size)"
                     }
                 }
             } else {
