@@ -922,8 +922,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             filter.updateFilter(signalUpdate: .instant)
         }
         if let text = windowState.search, !text.isEmpty {
-            showSearch = true
-            searchBar.stringValue = text
+            startSearch(initialText: text)
         }
         if let w = view.window {
             w.setFrame(windowState.frame, display: false, animate: false)
