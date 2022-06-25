@@ -10,19 +10,6 @@ extension CloudManager {
     @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
     static var syncContextSetting: SyncPermissionContext
 
-    @MainActor
-    static func backgroundRefresh(task: BGAppRefreshTask) async {
-        Model.reloadDataIfNeeded()
-        do {
-            if syncSwitchedOn, !syncing {
-                try await sync()
-            }
-            task.setTaskCompleted(success: true)
-        } catch {
-            task.setTaskCompleted(success: false)
-        }
-    }
-
     static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         Model.updateBadge()
         if !syncSwitchedOn { return }

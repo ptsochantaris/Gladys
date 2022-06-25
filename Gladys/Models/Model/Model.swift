@@ -34,12 +34,31 @@ final class Model {
     }
 
     static func firstIndexOfItem(with uuid: UUID) -> Int? {
+        if Thread.isMainThread {
+            return _firstIndexOfItem(with: uuid)
+        } else {
+            return DispatchQueue.main.sync {
+                return _firstIndexOfItem(with: uuid)
+            }
+        }
+    }
+    
+    private static func _firstIndexOfItem(with uuid: UUID) -> Int? {
         rebuildIndexIfNeeded()
         return uuidindex?[uuid]
     }
 
     static func firstItem(with uuid: UUID) -> ArchivedItem? {
-        assert(Thread.isMainThread)
+        if Thread.isMainThread {
+            return _firstItem(with: uuid)
+        } else {
+            return DispatchQueue.main.sync {
+                return _firstItem(with: uuid)
+            }
+        }
+    }
+    
+    private static func _firstItem(with uuid: UUID) -> ArchivedItem? {
         if let i = firstIndexOfItem(with: uuid) {
             return drops[i]
         }
