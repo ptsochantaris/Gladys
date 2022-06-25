@@ -26,12 +26,6 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         zipImage.isHidden = show
     }
 
-    private func alertOnMainThread(error: Error) {
-        DispatchQueue.main.async {
-            genericAlert(title: "Error", message: error.localizedDescription)
-        }
-    }
-
     private var archiveDragItems: [UIDragItem] {
         guard let filter = view.associatedFilter else { return [] }
 
@@ -46,7 +40,9 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 if let url = url {
                     try? FileManager.default.removeItem(at: url)
                 } else if let error = error {
-                    self.alertOnMainThread(error: error)
+                    Task { @MainActor in
+                        await genericAlert(title: "Error", message: error.localizedDescription)
+                    }
                 }
                 DispatchQueue.main.async {
                     self.showExportActivity(false)
@@ -70,7 +66,9 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 if let url = url {
                     try? FileManager.default.removeItem(at: url)
                 } else if let error = error {
-                    self.alertOnMainThread(error: error)
+                    Task { @MainActor in
+                        await genericAlert(title: "Error", message: error.localizedDescription)
+                    }
                 }
                 DispatchQueue.main.async {
                     self.showZipActivity(false)
@@ -108,11 +106,11 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                         self.importArchive(from: url)
                     }
                 } else {
-                    DispatchQueue.main.async {
+                    Task { @MainActor in
                         if let e = error {
-                            genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)")
+                            await genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)")
                         } else {
-                            genericAlert(title: "Could not import data", message: "The data transfer failed")
+                            await genericAlert(title: "Could not import data", message: "The data transfer failed")
                         }
                         self.updateUI()
                     }
@@ -314,14 +312,18 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         do {
             try Model.importArchive(from: url, removingOriginal: true)
         } catch {
-            alertOnMainThread(error: error)
+            Task { @MainActor in
+                await genericAlert(title: "Error", message: error.localizedDescription)
+            }
         }
         updateUI()
     }
 
     private func completeOperation(to url: URL?, error: Error?) {
         if let error = error {
-            alertOnMainThread(error: error)
+            Task { @MainActor in
+                await genericAlert(title: "Error", message: error.localizedDescription)
+            }
             return
         }
         guard let url = url else { return }

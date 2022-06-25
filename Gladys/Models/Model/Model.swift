@@ -176,19 +176,21 @@ final class Model {
             }
         }
 
-        if var e = loadingError {
+        if let e = loadingError {
             brokenMode = true
             log("Error in loading: \(e)")
             #if MAINAPP || MAC
+                let finalError: NSError
                 if let underlyingError = e.userInfo[NSUnderlyingErrorKey] as? NSError {
-                    e = underlyingError
+                    finalError = underlyingError
+                } else {
+                    finalError = e
                 }
-                DispatchQueue.main.async {
-                    genericAlert(title: "Loading Error (code \(e.code))",
-                                 message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                 buttonTitle: "Quit") {
-                        abort()
-                    }
+                Task {
+                    await genericAlert(title: "Loading Error (code \(finalError.code))",
+                                       message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       buttonTitle: "Quit")
+                    abort()
                 }
                 return
             #else
@@ -198,18 +200,20 @@ final class Model {
                 }
             #endif
 
-        } else if var e = coordinationError {
+        } else if let e = coordinationError {
             log("Error in file coordinator: \(e)")
             #if MAINAPP || MAC
+                let finalError: NSError
                 if let underlyingError = e.userInfo[NSUnderlyingErrorKey] as? NSError {
-                    e = underlyingError
+                    finalError = underlyingError
+                } else {
+                    finalError = e
                 }
-                DispatchQueue.main.async {
-                    genericAlert(title: "Loading Error (code \(e.code))",
-                                 message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                 buttonTitle: "Quit") {
-                        abort()
-                    }
+                Task {
+                    await genericAlert(title: "Loading Error (code \(finalError.code))",
+                                       message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       buttonTitle: "Quit")
+                    abort()
                 }
                 return
             #else

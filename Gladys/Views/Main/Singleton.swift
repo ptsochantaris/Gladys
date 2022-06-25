@@ -129,7 +129,9 @@ final class Singleton {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
                     showMainWindow(in: scene) { _ in
-                        genericAlert(title: "Not Found", message: "This item was not found")
+                        Task {
+                            await genericAlert(title: "Not Found", message: "This item was not found")
+                        }
                     }
                     return
                 }
@@ -163,7 +165,9 @@ final class Singleton {
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
                     showMainWindow(in: scene) { _ in
-                        genericAlert(title: "Not Found", message: "This item was not found")
+                        Task {
+                            await genericAlert(title: "Not Found", message: "This item was not found")
+                        }
                     }
                     return
                 }
@@ -293,7 +297,9 @@ final class Singleton {
                     do {
                         try Model.importArchive(from: url, removingOriginal: !options.openInPlace)
                     } catch {
-                        genericAlert(title: "Could not import data", message: error.finalDescription)
+                        Task {
+                            await genericAlert(title: "Could not import data", message: error.finalDescription)
+                        }
                     }
                     if securityScoped {
                         url.stopAccessingSecurityScopedResource()

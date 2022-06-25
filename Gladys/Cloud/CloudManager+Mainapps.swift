@@ -706,7 +706,9 @@ extension CloudManager {
 
     static func acceptShare(_ metadata: CKShare.Metadata) {
         if !syncSwitchedOn {
-            genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
+            Task {
+                await genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
+            }
             return
         }
         if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
@@ -720,16 +722,14 @@ extension CloudManager {
             showNetwork = true
             let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
             acceptShareOperation.acceptSharesCompletionBlock = { error in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     showNetwork = false
                     if let error = error {
                         NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-                        genericAlert(title: "Could not accept shared item", message: error.finalDescription)
+                        await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
                     } else {
-                        Task {
-                            try? await sync()
-                            NotificationCenter.default.post(name: .AcceptEnding, object: nil)
-                        }
+                        try? await sync()
+                        NotificationCenter.default.post(name: .AcceptEnding, object: nil)
                     }
                 }
             }
@@ -747,7 +747,9 @@ extension CloudManager {
         deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
             DispatchQueue.main.async {
                 if let error = error, !error.itemDoesNotExistOnServer {
-                    genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                    Task {
+                        await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                    }
                     completion(error)
                 } else { // our local record must be stale, let's refresh it just in case
                     item.cloudKitShareRecord = nil
@@ -761,9 +763,9 @@ extension CloudManager {
 
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
-            DispatchQueue.main.async {
+            Task {
                 if let error = error {
-                    genericAlert(title: "Could not deactivate", message: error.finalDescription)
+                    await genericAlert(title: "Could not deactivate", message: error.finalDescription)
                 }
             }
         }

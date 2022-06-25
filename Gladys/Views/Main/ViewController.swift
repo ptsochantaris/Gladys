@@ -15,15 +15,15 @@ var currentWindow: UIWindow? {
 
 weak var lastUsedWindow: UIWindow?
 
+@MainActor
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false) async {
     await withCheckedContinuation { continuation in
-        genericAlert(title: title, message: message, autoDismiss: autoDismiss, buttonTitle: buttonTitle, offerSettingsShortcut: offerSettingsShortcut) {
+        _ = genericAlert(title: title, message: message, autoDismiss: autoDismiss, buttonTitle: buttonTitle, offerSettingsShortcut: offerSettingsShortcut) {
             continuation.resume()
         }
     }
 }
 
-@discardableResult
 func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) -> UIAlertController {
     let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
     if let buttonTitle = buttonTitle {
@@ -51,7 +51,10 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
     return a
 }
 
-func getInput(from: UIViewController, title: String, action: String, previousValue: String?, completion: @escaping (String?) -> Void) {
+@MainActor
+func getInput(from: UIViewController, title: String, action: String, previousValue: String?) async -> String? {
+    var continuation: CheckedContinuation<String?, Never>?
+
     let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
     a.addTextField { textField in
         textField.placeholder = title
@@ -59,12 +62,16 @@ func getInput(from: UIViewController, title: String, action: String, previousVal
     }
     a.addAction(UIAlertAction(title: action, style: .default) { _ in
         let result = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        completion(result)
+        continuation?.resume(returning: result)
     })
     a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        completion(nil)
+        continuation?.resume(returning: nil)
     })
     from.present(a, animated: true)
+
+    return await withCheckedContinuation { (c: CheckedContinuation<String?, Never>) in
+        continuation = c
+    }
 }
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
@@ -616,7 +623,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         case .copy:
             item.copyToPasteboard()
-            genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+            Task {
+                await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+            }
 
         case .open:
             item.tryOpen(in: nil) { [weak self] success in
@@ -971,9 +980,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
 
-        if #available(iOS 15.0, *) {
-            // nothing to do here, will use delegate method to detect pinch
-        } else {
+        if #unavailable(iOS 15.0) {
             let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
             for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
                 r.require(toFail: p)
@@ -1133,7 +1140,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     @IBAction private func pasteSelected(_: UIBarButtonItem) {
         Model.donatePasteIntent()
         if Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) == .noData {
-            genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
+            Task {
+                await genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
+            }
         }
     }
 
@@ -2266,7 +2275,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     func cloudSharingController(_: UICloudSharingController, failedToSaveShareWithError error: Error) {
-        genericAlert(title: "Could not share this item", message: error.finalDescription)
+        Task {
+            await genericAlert(title: "Could not share this item", message: error.finalDescription)
+        }
     }
 
     func itemTitle(for _: UICloudSharingController) -> String? {

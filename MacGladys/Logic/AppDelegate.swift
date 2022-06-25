@@ -452,24 +452,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     private func proceedWithImport(from url: URL) {
         startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
-        DispatchQueue.main.async { // give UI a chance to update
+        Task { @MainActor in // give UI a chance to update
             do {
                 try Model.importArchive(from: url, removingOriginal: false)
                 self.endProgress()
             } catch {
                 self.endProgress()
-                self.alertOnMainThread(error: error)
+                genericAlert(title: "Operation Failed", message: error.finalDescription)
             }
-        }
-    }
-
-    private func alertOnMainThread(error: Error) {
-        DispatchQueue.main.async {
-            let a = NSAlert()
-            a.alertStyle = .warning
-            a.messageText = "Operation Failed"
-            a.informativeText = error.finalDescription
-            a.runModal()
         }
     }
 
@@ -571,7 +561,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         guard let createdUrl = createdUrl else {
             if let error = error {
-                alertOnMainThread(error: error)
+                Task {
+                    await genericAlert(title: "Operation Failed", message: error.finalDescription)
+                }
             }
             return
         }
@@ -582,7 +574,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
             NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
         } catch {
-            alertOnMainThread(error: error)
+            Task {
+                await genericAlert(title: "Operation Failed", message: error.finalDescription)
+            }
         }
     }
 

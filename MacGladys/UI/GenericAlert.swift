@@ -9,14 +9,6 @@
 import Cocoa
 
 @MainActor
-func genericAlert(title: String, message: String?, windowOverride: NSWindow? = nil, buttonTitle: String = "OK", offerSettingsShortcut: Bool = false) async {
-    await withCheckedContinuation { continuation in
-        genericAlert(title: title, message: message, windowOverride: windowOverride, buttonTitle: buttonTitle, offerSettingsShortcut: offerSettingsShortcut) {
-            continuation.resume()
-        }
-    }
-}
-
 func genericAlert(title: String, message: String?, windowOverride _: NSWindow? = nil, buttonTitle: String = "OK", offerSettingsShortcut _: Bool = false, completion: (() -> Void)? = nil) {
     let a = NSAlert()
     a.messageText = title

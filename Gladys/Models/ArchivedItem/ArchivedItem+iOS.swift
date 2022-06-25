@@ -134,8 +134,10 @@ extension ArchivedItem {
                 self?.flags.remove(.needsUnlock)
                 completion(true)
             } else {
-                genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
-                completion(false)
+                Task {
+                    await genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
+                    completion(false)
+                }
             }
         }
     }
@@ -222,7 +224,9 @@ extension ArchivedItem {
                     } else {
                         message = "iOS does not recognise the type of this link"
                     }
-                    genericAlert(title: "Can't Open", message: message)
+                    Task {
+                        await genericAlert(title: "Can't Open", message: message)
+                    }
                 }
                 completion(success)
             }

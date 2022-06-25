@@ -143,25 +143,21 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func transcribeSpeechInMediaSelected(_ sender: UISwitch) {
         if sender.isOn {
             SFSpeechRecognizer.requestAuthorization { status in
-                switch status {
-                case .authorized:
-                    DispatchQueue.main.async {
+                Task { @MainActor in
+                    switch status {
+                    case .authorized:
                         if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
                             PersistedOptions.transcribeSpeechFromMedia = true
-                            genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
+                            await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
                         } else {
                             sender.isOn = false
                             PersistedOptions.transcribeSpeechFromMedia = false
-                            genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                            await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
                         }
-                    }
-                case .denied, .notDetermined, .restricted:
-                    DispatchQueue.main.async {
+                    case .denied, .notDetermined, .restricted:
                         sender.isOn = false
                         PersistedOptions.transcribeSpeechFromMedia = false
-                    }
-                @unknown default:
-                    DispatchQueue.main.async {
+                    @unknown default:
                         sender.isOn = false
                         PersistedOptions.transcribeSpeechFromMedia = false
                     }
@@ -185,7 +181,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
         badgeIconSwitch.isEnabled = false
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.badgeIconSwitch.isEnabled = true
                 if granted {
                     log("Got provisional badging permission")
@@ -193,7 +189,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
                     Model.updateBadge()
                 } else if let error = error {
                     self.badgeIconSwitch.isOn = false
-                    genericAlert(title: "Error", message: "Could not obtain permission to display badges, you may need to manually allow Gladys to display badges from settings.", offerSettingsShortcut: true)
+                    await genericAlert(title: "Error", message: "Could not obtain permission to display badges, you may need to manually allow Gladys to display badges from settings.", offerSettingsShortcut: true)
                     log("Error requesting badge permission: \(error.localizedDescription)")
                 }
             }

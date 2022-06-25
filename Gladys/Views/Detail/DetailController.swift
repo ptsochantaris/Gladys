@@ -167,7 +167,9 @@ final class DetailController: GladysViewController,
 
     @objc private func copySelected() {
         item.copyToPasteboard()
-        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+        Task {
+            await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+        }
     }
 
     @objc private func keyboardHiding(_ notification: Notification) {
@@ -311,7 +313,9 @@ final class DetailController: GladysViewController,
                 var children = [
                     UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
                         UIPasteboard.general.string = text
-                        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                        Task {
+                            await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                        }
                     }
                 ]
 
@@ -337,7 +341,9 @@ final class DetailController: GladysViewController,
                 var children = [
                     UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
                         component.copyToPasteboard()
-                        genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                        Task {
+                            await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                        }
                     },
 
                     UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { [weak self] _ in
@@ -432,17 +438,16 @@ final class DetailController: GladysViewController,
     }
 
     private func editURL(_ component: Component, existingEdit: String?) {
-        getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString) { [weak self] newValue in
-            guard let s = self else { return }
+        Task {
+            let newValue = await getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString)
             if let newValue = newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
                 component.replaceURL(newURL)
-                s.item.needsReIngest = true
-                s.makeIndexAndSaveItem()
-                s.refreshComponent(component)
+                item.needsReIngest = true
+                makeIndexAndSaveItem()
+                refreshComponent(component)
             } else if let newValue = newValue {
-                genericAlert(title: "This is not a valid URL", message: newValue) {
-                    s.editURL(component, existingEdit: newValue)
-                }
+                await genericAlert(title: "This is not a valid URL", message: newValue)
+                editURL(component, existingEdit: newValue)
             }
         }
     }

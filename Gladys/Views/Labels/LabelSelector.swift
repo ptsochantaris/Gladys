@@ -132,7 +132,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
                 },
                 UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
                     UIPasteboard.general.string = toggle.function.displayText
-                    genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                    Task {
+                        await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
+                    }
                 },
                 UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
                     self.delete(toggle: toggle)

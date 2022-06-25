@@ -240,7 +240,9 @@ extension Component {
                     } else {
                         message = "iOS does not recognise the type of this link"
                     }
-                    genericAlert(title: "Can't Open", message: message)
+                    Task {
+                        await genericAlert(title: "Can't Open", message: message)
+                    }
                 }
             }
         }

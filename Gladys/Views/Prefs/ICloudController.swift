@@ -32,7 +32,9 @@ final class ICloudController: GladysViewController {
 
     @IBAction private func eraseiCloudDataSelected(_: UIButton) {
         if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
-            genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
+            Task {
+                await genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
+            }
         } else {
             let a = UIAlertController(title: "Are you sure?", message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.", preferredStyle: .alert)
             a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive) { [weak self] _ in
@@ -51,10 +53,12 @@ final class ICloudController: GladysViewController {
         CloudManager.eraseZoneIfNeeded { error in
             self.eraseAlliCloudData.isEnabled = true
             self.icloudSwitch.isEnabled = true
-            if let error = error {
-                genericAlert(title: "Error", message: error.finalDescription)
-            } else {
-                genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
+            Task {
+                if let error = error {
+                    await genericAlert(title: "Error", message: error.finalDescription)
+                } else {
+                    await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
+                }
             }
         }
     }
@@ -86,7 +90,9 @@ final class ICloudController: GladysViewController {
         if let newPolicy = CloudManager.SyncPermissionContext(rawValue: sender.selectedSegmentIndex) {
             CloudManager.syncContextSetting = newPolicy
             if newPolicy == .manualOnly {
-                genericAlert(title: "Manual sync warning", message: "This is an advanced setting that disables all syncing unless explicitly requested. Best used as a temporary setting if items with large sizes need to be temporarily added without triggering long syncs.")
+                Task {
+                    await genericAlert(title: "Manual sync warning", message: "This is an advanced setting that disables all syncing unless explicitly requested. Best used as a temporary setting if items with large sizes need to be temporarily added without triggering long syncs.")
+                }
             }
         }
     }
@@ -116,8 +122,8 @@ final class ICloudController: GladysViewController {
                 Task {
                     let contentSize = await Model.sizeInBytes()
                     confirm(title: "Upload Existing Items?",
-                                 message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
-                                 action: "Proceed", cancel: "Cancel") { confirmed in
+                            message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+                            action: "Proceed", cancel: "Cancel") { confirmed in
                         if confirmed {
                             Task {
                                 await CloudManager.startActivation()
