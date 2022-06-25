@@ -113,47 +113,46 @@ final class ICloudController: GladysViewController {
             return
         }
 
-        if icloudSwitch.isOn, !CloudManager.syncSwitchedOn {
-            if Model.drops.isEmpty {
-                Task {
+        Task {
+            if icloudSwitch.isOn, !CloudManager.syncSwitchedOn {
+                if Model.drops.isEmpty {
                     await CloudManager.startActivation()
-                }
-            } else {
-                Task {
+                } else {
                     let contentSize = await Model.sizeInBytes()
-                    confirm(title: "Upload Existing Items?",
-                            message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
-                            action: "Proceed", cancel: "Cancel") { confirmed in
-                        if confirmed {
-                            Task {
-                                await CloudManager.startActivation()
-                            }
-                        } else {
-                            self.icloudSwitch.setOn(false, animated: true)
-                        }
+                    let confirmed = await confirm(title: "Upload Existing Items?",
+                                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+                                                  action: "Proceed", cancel: "Cancel")
+                    if confirmed {
+                        await CloudManager.startActivation()
+                    } else {
+                        icloudSwitch.setOn(false, animated: true)
                     }
                 }
-            }
-        } else if !icloudSwitch.isOn, CloudManager.syncSwitchedOn {
-            let sharingOwn = Model.sharingMyItems
-            let importing = Model.containsImportedShares
-            if sharingOwn, importing {
-                confirm(title: "You have shared items",
-                        message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
-            } else if sharingOwn {
-                confirm(title: "You are sharing items",
-                        message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
-            } else if importing {
-                confirm(title: "You have items that are shared from others",
-                        message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { [weak self] confirmed in if confirmed { self?.deactivate() } else { self?.icloudSwitch.setOn(true, animated: true) } }
-            } else {
-                CloudManager.proceedWithDeactivation()
+            } else if !icloudSwitch.isOn, CloudManager.syncSwitchedOn {
+                let sharingOwn = Model.sharingMyItems
+                let importing = Model.containsImportedShares
+                if sharingOwn, importing {
+                    let confirmed = await confirm(title: "You have shared items",
+                                                  message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+
+                } else if sharingOwn {
+                    let confirmed = await confirm(title: "You are sharing items",
+                                                  message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                } else if importing {
+                    let confirmed = await confirm(title: "You have items that are shared from others",
+                                                  message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                } else {
+                    CloudManager.proceedWithDeactivation()
+                }
             }
         }
     }
@@ -163,14 +162,20 @@ final class ICloudController: GladysViewController {
         updateiCloudControls()
     }
 
-    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
+    private func confirm(title: String, message: String, action: String, cancel: String) async -> Bool {
+        var continuation: CheckedContinuation<Bool, Never>?
+
         let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
         a.addAction(UIAlertAction(title: action, style: .default) { _ in
-            completion(true)
+            continuation?.resume(returning: true)
         })
         a.addAction(UIAlertAction(title: cancel, style: .cancel) { _ in
-            completion(false)
+            continuation?.resume(returning: false)
         })
         present(a, animated: true)
+
+        return await withCheckedContinuation { (c: CheckedContinuation<Bool, Never>) in
+            continuation = c
+        }
     }
 }

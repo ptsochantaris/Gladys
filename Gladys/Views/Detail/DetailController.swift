@@ -469,7 +469,7 @@ final class DetailController: GladysViewController,
                 try await Task.sleep(nanoseconds: 25 * NSEC_PER_MSEC)
                 if !shouldWaitForSync {
                     keepChecking = false
-                    alert.dismiss(animated: true)
+                    await alert.dismiss(animated: true)
                 }
             }
         }

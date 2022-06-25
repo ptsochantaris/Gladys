@@ -78,7 +78,8 @@ extension Model {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                try createArchiveThread(progress: p, eligibleItems: eligibleItems, completion: completion)
+                let url = try createArchiveThread(progress: p, eligibleItems: eligibleItems)
+                completion(url, nil)
             } catch {
                 completion(nil, error)
             }
@@ -87,7 +88,7 @@ extension Model {
         return p
     }
 
-    private static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>, completion: @escaping (URL?, Error?) -> Void) throws {
+    private static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
         let fm = FileManager()
         let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -114,7 +115,7 @@ extension Model {
         try data.write(to: finalPath)
         p.completedUnitCount += 1
 
-        completion(tempPath, nil)
+        return tempPath
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +128,8 @@ extension Model {
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                try createZipThread(dropsCopy: dropsCopy, progress: p, completion: completion)
+                let url = try createZipThread(dropsCopy: dropsCopy, progress: p)
+                completion(url, nil)
             } catch {
                 completion(nil, error)
             }
@@ -136,7 +138,7 @@ extension Model {
         return p
     }
 
-    static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress, completion: @escaping (URL?, Error?) -> Void) throws {
+    static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) throws -> URL {
         let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default
@@ -163,7 +165,7 @@ extension Model {
             }
         }
 
-        completion(tempPath, nil)
+        return tempPath
     }
 
     private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) throws {

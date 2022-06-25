@@ -46,10 +46,6 @@ final class AboutController: GladysViewController {
     private var tipJar: TipJar?
     private var tipItems: [SKProduct]?
 
-    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        super.dismiss(animated: flag, completion: completion)
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

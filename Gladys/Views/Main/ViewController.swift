@@ -427,18 +427,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     func collectionView(_: UICollectionView, dropSessionDidEnter session: UIDropSession) {
         showDragModeOverlay(false)
-        resetForDragEntry(session: session)
+        Task {
+            await resetForDragEntry(session: session)
+        }
     }
-
+    
     func collectionView(_: UICollectionView, dropSessionDidEnd _: UIDropSession) {
         showDragModeOverlay(false)
     }
 
-    func resetForDragEntry(session: UIDropSession) {
+    func resetForDragEntry(session: UIDropSession) async {
         if currentPreferencesView != nil && !session.hasItemsConforming(toTypeIdentifiers: [GladysFileUTI, "public.zip-archive"]) {
-            dismissAnyPopOver()
+            await dismissAnyPopOver()
         } else if (Singleton.shared.componentDropActiveFromDetailView == nil && currentDetailView != nil) || currentLabelSelector != nil {
-            dismissAnyPopOver()
+            await dismissAnyPopOver()
         }
     }
 
@@ -1036,13 +1038,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             return
         }
         if !filter.isFilteringText {
-            resetSearch(andLabels: false)
+            Task {
+                await resetSearch(andLabels: false)
+            }
         }
     }
 
     @objc private func resetSearchRequest() {
         if searchActive || filter.isFiltering {
-            resetSearch(andLabels: true)
+            Task {
+                await resetSearch(andLabels: true)
+            }
         }
     }
 
@@ -1178,6 +1184,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func modelDataUpdate(_ notification: Notification) {
+        Task {
+            await _modelDataUpdate(notification)
+        }
+    }
+    
+    private func _modelDataUpdate(_ notification: Notification) async {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
 
         let previous = filter.enabledToggles
@@ -1209,13 +1221,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if removedItems || ipsInsered || ipsMoved {
             if !phoneMode, let vc = (currentDetailView ?? currentPreviewView) {
-                vc.dismiss(animated: false)
+                await vc.dismiss(animated: false)
             }
 
             if removedItems {
                 if filter.filteredDrops.isEmpty {
                     if filter.isFiltering {
-                        resetSearch(andLabels: true)
+                        await resetSearch(andLabels: true)
                     }
 
                     setEditing(false, animated: true)
@@ -1632,7 +1644,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 if let detail = s.currentDetailView {
                     detail.performSegue(withIdentifier: "toSiriShortcuts", sender: nil)
                 } else {
-                    s.dismissAnyPopOver {
+                    Task {
+                        await s.dismissAnyPopOver()
                         s.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
                     }
                 }
@@ -1643,7 +1656,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
                     guard let s = self else { return }
-                    s.dismissAnyPopOver {
+                    Task {
+                        await s.dismissAnyPopOver()
                         s.addInvites(to: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
@@ -1651,7 +1665,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             } else {
                 children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
                     guard let s = self else { return }
-                    s.dismissAnyPopOver {
+                    Task {
+                        await s.dismissAnyPopOver()
                         if item.isPrivateShareWithOnlyOwner {
                             s.shareOptionsPrivate(for: item, at: indexPath)
                         } else if item.isShareWithOnlyOwner {
@@ -1670,7 +1685,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     return
                 }
 
-                s.dismissAnyPopOver {
+                Task {
+                    await s.dismissAnyPopOver()
                     s.mostRecentIndexPathActioned = indexPath
                     let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
                     s.present(a, animated: true)
@@ -1918,32 +1934,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func dismissAnyPopoverRequested() {
-        dismissAnyPopOver()
+        Task {
+            await  dismissAnyPopOver()
+        }
     }
 
-    private func dismissAnyPopOver(completion: (() -> Void)? = nil) {
+    private func dismissAnyPopOver() async {
         let firstPresentedAlertController = (navigationController?.presentedViewController ?? presentedViewController) as? UIAlertController
-        firstPresentedAlertController?.dismiss(animated: true) {
-            completion?()
-        }
-        let vc = firstPresentedNavigationController?.viewControllers.first
-        vc?.dismiss(animated: true) {
-            completion?()
-        }
-        if firstPresentedAlertController == nil, vc == nil {
-            completion?()
-        }
+        await firstPresentedAlertController?.dismiss(animated: true)
+        await firstPresentedNavigationController?.viewControllers.first?.dismiss(animated: true)
     }
 
-    func dismissAnyPopOverOrModal(completion: (() -> Void)? = nil) {
-        dismissAnyPopOver {
-            if let p = self.navigationItem.searchController?.presentedViewController ?? self.navigationController?.presentedViewController {
-                p.dismiss(animated: true) {
-                    completion?()
-                }
-            } else {
-                completion?()
-            }
+    func dismissAnyPopOverOrModal() async {
+        await dismissAnyPopOver()
+        if let p = navigationItem.searchController?.presentedViewController ?? navigationController?.presentedViewController {
+            await p.dismiss(animated: true)
         }
     }
 
@@ -1974,8 +1979,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
     }
 
-    func resetSearch(andLabels: Bool) {
-        dismissAnyPopOverOrModal()
+    func resetSearch(andLabels: Bool) async {
+        await dismissAnyPopOverOrModal()
 
         guard let s = navigationItem.searchController else { return }
         s.searchBar.text = nil
@@ -1993,13 +1998,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     @objc private func highlightItem(_ notification: Notification) {
         guard let request = notification.object as? HighlightRequest, let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
-            dismissAnyPopOverOrModal {
-                self.highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
+            Task {
+                await dismissAnyPopOverOrModal()
+                highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
             }
         } else if Model.firstIndexOfItem(with: request.uuid) != nil {
-            resetSearch(andLabels: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
+            Task {
+                await resetSearch(andLabels: true)
+                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+                highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
             }
         }
     }
@@ -2047,7 +2054,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     func willDismissSearchController(_: UISearchController) {
-        resetSearch(andLabels: false)
+        Task {
+            await resetSearch(andLabels: false)
+        }
     }
 
     private var searchTimer: PopTimer!
@@ -2078,8 +2087,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     ///////////////////////////// Quick actions
 
     @objc private func forcePaste() {
-        resetSearch(andLabels: true)
-        pasteSelected(pasteButton)
+        Task {
+            await resetSearch(andLabels: true)
+            pasteSelected(pasteButton)
+        }
     }
 
     ///////////////////////////// Accessibility
@@ -2119,11 +2130,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func resetLabels() {
-        resetSearch(andLabels: true)
+        Task {
+            await resetSearch(andLabels: true)
+        }
     }
 
     @objc private func resetSearchTerms() {
-        resetSearch(andLabels: false)
+        Task {
+            await resetSearch(andLabels: false)
+        }
     }
 
     @objc private func toggleEdit() {

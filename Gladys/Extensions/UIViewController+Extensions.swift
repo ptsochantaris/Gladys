@@ -46,4 +46,12 @@ extension UIViewController {
     var isAccessoryWindow: Bool {
         (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
     }
+    
+    func dismiss(animated: Bool) async {
+        await withCheckedContinuation { continuation in
+            dismiss(animated: animated) {
+                continuation.resume()
+            }
+        }
+    }
 }
