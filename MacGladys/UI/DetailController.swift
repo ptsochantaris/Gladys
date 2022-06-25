@@ -607,6 +607,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     //////////////////////////////////////////////////// Quicklook
 
+    @MainActor
     override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
         if let currentItem = selectedItem {
             return currentItem.canPreview

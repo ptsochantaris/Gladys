@@ -12,6 +12,8 @@ extension Model {
     }
 
     private static var eventMonitor: FileMonitor?
+
+    @MainActor
     static func startMonitoringForExternalChangesToBlobs() {
         syncWithExternalUpdates()
 
@@ -71,6 +73,7 @@ extension Model {
     }
 
     @discardableResult
+    @MainActor
     static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
         guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
 
@@ -126,6 +129,7 @@ extension Model {
     }
 
     @discardableResult
+    @MainActor
     static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
         var inserted = false
         for provider in itemProviders {
@@ -150,6 +154,7 @@ extension Model {
         return inserted
     }
 
+    @MainActor
     static func importFiles(paths: [String], filterContext: Filter?) {
         let providers = paths.compactMap { path -> NSItemProvider? in
             let url = URL(fileURLWithPath: path)

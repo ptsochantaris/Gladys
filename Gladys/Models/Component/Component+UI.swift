@@ -183,10 +183,12 @@ extension Component {
         return i
     }
 
+    @MainActor
     func quickLook() -> GladysPreviewController? {
         canPreview ? GladysPreviewController(item: self) : nil
     }
 
+    @MainActor
     var canPreview: Bool {
         if let canPreviewCache = canPreviewCache {
             return canPreviewCache

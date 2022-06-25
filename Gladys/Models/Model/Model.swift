@@ -25,7 +25,6 @@ final class Model {
 
     private static func rebuildIndexIfNeeded() {
         if uuidindex == nil {
-            // assert(Thread.isMainThread)
             let d = drops // copy
             let z = zip(d.map(\.uuid), 0 ..< d.count)
             uuidindex = Dictionary(z) { one, _ in one }
@@ -33,38 +32,21 @@ final class Model {
         }
     }
 
+    @MainActor
     static func firstIndexOfItem(with uuid: UUID) -> Int? {
-        if Thread.isMainThread {
-            return _firstIndexOfItem(with: uuid)
-        } else {
-            return DispatchQueue.main.sync {
-                return _firstIndexOfItem(with: uuid)
-            }
-        }
-    }
-    
-    private static func _firstIndexOfItem(with uuid: UUID) -> Int? {
         rebuildIndexIfNeeded()
         return uuidindex?[uuid]
     }
 
+    @MainActor
     static func firstItem(with uuid: UUID) -> ArchivedItem? {
-        if Thread.isMainThread {
-            return _firstItem(with: uuid)
-        } else {
-            return DispatchQueue.main.sync {
-                return _firstItem(with: uuid)
-            }
-        }
-    }
-    
-    private static func _firstItem(with uuid: UUID) -> ArchivedItem? {
         if let i = firstIndexOfItem(with: uuid) {
             return drops[i]
         }
         return nil
     }
 
+    @MainActor
     static func firstIndexOfItem(with uuid: String) -> Int? {
         if let uuidData = UUID(uuidString: uuid) {
             return firstIndexOfItem(with: uuidData)
@@ -72,6 +54,7 @@ final class Model {
         return nil
     }
 
+    @MainActor
     static func contains(uuid: UUID) -> Bool {
         firstIndexOfItem(with: uuid) != nil
     }
@@ -276,10 +259,6 @@ final class Model {
     }()
 
     @MainActor
-    static func itemAsync(uuid: String) -> ArchivedItem? {
-        item(uuid: uuid)
-    }
-
     static func item(uuid: String) -> ArchivedItem? {
         if let uuidData = UUID(uuidString: uuid) {
             return item(uuid: uuidData)
@@ -288,13 +267,9 @@ final class Model {
         }
     }
 
+    @MainActor
     static func item(uuid: UUID) -> ArchivedItem? {
         firstItem(with: uuid)
-    }
-
-    @MainActor
-    static func itemAsync(shareId: String) -> ArchivedItem? {
-        item(shareId: shareId)
     }
 
     static func item(shareId: String) -> ArchivedItem? {

@@ -137,12 +137,17 @@ final actor PullState {
             databaseTokens[database.keyName] = nil
         }
     }
+    
+    private func incrementDeletionCount() {
+        deletionCount += 1
+    }
 
+    @MainActor
     private func recordDeleted(recordId: CKRecord.ID, recordType: CloudManager.RecordType) async {
         let itemUUID = recordId.recordName
         switch recordType {
         case .item:
-            if let item = await Model.itemAsync(uuid: itemUUID) {
+            if let item = Model.item(uuid: itemUUID) {
                 if item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
@@ -150,32 +155,32 @@ final actor PullState {
                     item.needsDeletion = true
                     item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
                     item.cloudKitShareRecord = nil // get rid of useless file
-                    deletionCount += 1
+                    await incrementDeletionCount()
                 }
             } else {
                 log("Received delete for non-existent item record \(itemUUID), ignoring")
             }
         case .component:
-            if let component = await Model.componentAsync(uuid: itemUUID) {
+            if let component = Model.componentAsync(uuid: itemUUID) {
                 if component.parentZone != recordId.zoneID {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
                 } else {
                     log("Component deletion: \(itemUUID)")
                     component.needsDeletion = true
                     component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-                    deletionCount += 1
+                    await incrementDeletionCount()
                 }
             } else {
                 log("Received delete for non-existent component record \(itemUUID), ignoring")
             }
         case .share:
-            if let associatedItem = await Model.itemAsync(shareId: itemUUID) {
+            if let associatedItem = Model.item(shareId: itemUUID) {
                 if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
                     log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
                 } else {
                     log("Share record deleted for item \(associatedItem.uuid)")
                     associatedItem.cloudKitShareRecord = nil
-                    deletionCount += 1
+                    await incrementDeletionCount()
                 }
             } else {
                 log("Received delete for non-existent share record \(itemUUID), ignoring")
@@ -355,7 +360,7 @@ final actor PullState {
         let recordUUID = recordID.recordName
         switch recordType {
         case .item:
-            if let item = await Model.itemAsync(uuid: recordUUID) {
+            if let item = await Model.item(uuid: recordUUID) {
                 if item.parentZone != zoneID {
                     log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
                 } else {
@@ -399,7 +404,7 @@ final actor PullState {
 
         case .component:
             if let typeItem = await Model.componentAsync(uuid: recordUUID) {
-                if (await typeItem.parentZoneAsync) != zoneID {
+                if (await typeItem.parentZone) != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
                 } else {
                     switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
@@ -414,7 +419,7 @@ final actor PullState {
                         log("Update but no changes to item type data record (\(recordUUID))")
                     }
                 }
-            } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = await Model.itemAsync(uuid: parentId) {
+            } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = await Model.item(uuid: parentId) {
                 if existingParent.parentZone != zoneID {
                     log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
                 } else {
@@ -444,7 +449,7 @@ final actor PullState {
 
         case .share:
             if let share = record as? CKShare {
-                if let associatedItem = await Model.itemAsync(shareId: recordUUID) {
+                if let associatedItem = await Model.item(shareId: recordUUID) {
                     if associatedItem.parentZone != zoneID {
                         log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
                     } else {

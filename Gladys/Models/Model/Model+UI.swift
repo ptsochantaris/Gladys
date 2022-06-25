@@ -33,6 +33,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
+    @MainActor
     private func handle(message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
         if let uuid = message["view"] as? String {
             let request = HighlightRequest(uuid: uuid, open: true)

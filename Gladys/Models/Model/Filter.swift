@@ -86,6 +86,7 @@ final class Filter {
         }
     }
 
+    @MainActor
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
@@ -413,6 +414,7 @@ final class Filter {
             }
         }
 
+        @MainActor
         func toggleState(across uuids: [UUID]?) -> State {
             guard case let .userLabel(name) = function else {
                 return .none

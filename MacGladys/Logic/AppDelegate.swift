@@ -127,7 +127,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 proceedWithImport(from: url)
             }
         } else {
-            Model.importFiles(paths: filenames, filterContext: keyGladysControllerIfExists?.filter)
+            Task { @MainActor in
+                Model.importFiles(paths: filenames, filterContext: keyGladysControllerIfExists?.filter)
+            }
         }
     }
 
@@ -135,7 +137,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         var urlEventBeforeLaunch = false
 
         @objc func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
-            Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
+            Task { @MainActor in
+                Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
+            }
         }
 
         @objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent _: NSAppleEventDescriptor) {
@@ -186,7 +190,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         Model.setup()
 
-        CallbackSupport.setupCallbackSupport()
+        Task {
+            await CallbackSupport.setupCallbackSupport()
+        }
     }
 
     func applicationWillFinishLaunching(_: Notification) {
@@ -255,7 +261,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
 
         Model.detectExternalChanges()
-        Model.startMonitoringForExternalChangesToBlobs()
+        Task {
+            await Model.startMonitoringForExternalChangesToBlobs()
+        }
 
         if WindowController.restoreStates() {
             if PersistedOptions.hideMainWindowAtStartup || PersistedOptions.autoShowFromEdge > 0 {
@@ -410,8 +418,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 }
                 s.pasteboardObservationCount = newCount
                 if let text = pasteboard.string(forType: .string), PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive {
-                    let i = NSItemProvider(object: text as NSItemProviderWriting)
-                    Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
+                    Task {
+                        let i = NSItemProvider(object: text as NSItemProviderWriting)
+                        await Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
+                    }
                 }
             }
             timer.tolerance = 0.5
@@ -573,7 +583,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func application(_: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShare.Metadata) {
-        CloudManager.acceptShare(metadata)
+        Task { @MainActor in
+            CloudManager.acceptShare(metadata)
+        }
     }
 
     ////////////////////////////////////////////// Sorting
@@ -581,6 +593,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     @IBOutlet var sortAscendingMenu: NSMenu!
     @IBOutlet var sortDescendingMenu: NSMenu!
 
+    @MainActor
     @objc private func sortOptionSelected(_ sender: NSMenu) {
         guard let controller = keyGladysControllerIfExists else { return }
         let selectedItems = ContiguousArray(controller.selectedItems)
@@ -605,6 +618,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedItem>) {
         if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
             let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)

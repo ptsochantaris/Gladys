@@ -89,6 +89,7 @@ final class Singleton {
         }
     }
 
+    @MainActor
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {
         guard let scene = scene as? UIWindowScene else { return }
 
@@ -247,6 +248,7 @@ final class Singleton {
         }
     }
 
+    @MainActor
     func boot(with activity: NSUserActivity?, in scene: UIScene?) {
         if UIApplication.shared.supportsMultipleScenes {
             let centralSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
@@ -272,6 +274,7 @@ final class Singleton {
         }
     }
 
+    @MainActor
     func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)

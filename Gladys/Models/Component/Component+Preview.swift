@@ -25,6 +25,7 @@ extension Component {
         let parentUuid: UUID
         let uuid: UUID
 
+        @MainActor
         init(typeItem: Component) {
             parentUuid = typeItem.parentUuid
             uuid = typeItem.uuid

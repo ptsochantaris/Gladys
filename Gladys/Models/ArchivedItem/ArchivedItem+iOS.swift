@@ -156,10 +156,12 @@ extension ArchivedItem {
         return ["u": uuid.uuidString, "t": displayTitleOrUuid, "d": imageDate]
     }
 
+    @MainActor
     var canPreview: Bool {
         components.contains { $0.canPreview }
     }
 
+    @MainActor
     @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
         var itemToPreview: Component?
         if let childUuid = childUuid {

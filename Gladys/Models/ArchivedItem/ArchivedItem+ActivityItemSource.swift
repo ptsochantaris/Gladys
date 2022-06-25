@@ -4,6 +4,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     private let component: Component
     private let previewItem: Component.PreviewItem
 
+    @MainActor
     init(component: Component) {
         self.component = component
         previewItem = Component.PreviewItem(typeItem: component)
@@ -51,6 +52,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
 }
 
 extension Component {
+    @MainActor
     var sharingActivitySource: ArchivedDropItemActivitySource {
         ArchivedDropItemActivitySource(component: self)
     }

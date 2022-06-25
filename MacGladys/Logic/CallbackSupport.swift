@@ -13,6 +13,7 @@ struct CallbackSupport {
         }
     }
 
+    @MainActor
     static func setupCallbackSupport() {
         let m = Manager.shared
         m.callbackURLScheme = Manager.urlSchemes?.first
@@ -66,6 +67,7 @@ struct CallbackSupport {
     }
 
     @discardableResult
+    @MainActor
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> Bool {
         let p = NSItemProvider()
         p.registerDataRepresentation(forTypeIdentifier: kUTTypeData as String, visibility: .all) { completion -> Progress? in
@@ -76,6 +78,7 @@ struct CallbackSupport {
     }
 
     @discardableResult
+    @MainActor
     static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Bool {
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
@@ -83,6 +86,7 @@ struct CallbackSupport {
     }
 
     @discardableResult
+    @MainActor
     static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Bool {
         let p = NSItemProvider(object: object)
         return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)

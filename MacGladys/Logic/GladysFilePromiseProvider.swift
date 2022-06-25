@@ -43,6 +43,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         return super.writingOptions(forType: type, pasteboard: pasteboard)
     }
 
+    @MainActor
     override public func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
         let T = type.rawValue
         switch T {
@@ -82,6 +83,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
         title
     }
 
+    @MainActor
     func filePromiseProvider(_: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
         do {
             let fm = FileManager.default
@@ -100,6 +102,7 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 }
 
 private extension Component {
+    @MainActor
     func writeBytes(to destinationUrl: URL, tags: [String]?) throws {
         Model.trimTemporaryDirectory()
 

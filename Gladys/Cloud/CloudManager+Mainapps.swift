@@ -696,6 +696,7 @@ extension CloudManager {
         perform(operation, on: container.privateCloudDatabase, type: "share item")
     }
 
+    @MainActor
     static func acceptShare(_ metadata: CKShare.Metadata) {
         if !syncSwitchedOn {
             Task {

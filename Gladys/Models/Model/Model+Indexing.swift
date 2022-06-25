@@ -10,10 +10,12 @@ extension Model {
             Model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
         }
 
+        @MainActor
         func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
             try Model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
+        @MainActor
         func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
             try Model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
         }
@@ -40,6 +42,7 @@ extension Model {
         reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
     }
 
+    @MainActor
     static func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
         if let item = Model.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
             return data
@@ -47,6 +50,7 @@ extension Model {
         return emptyData
     }
 
+    @MainActor
     static func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
         if let item = Model.item(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
             return url as URL

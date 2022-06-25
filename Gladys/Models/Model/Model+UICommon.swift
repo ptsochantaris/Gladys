@@ -53,6 +53,7 @@ extension Model {
             }
         }
 
+        @MainActor
         private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
             var itemIndexes = [Int]()
             let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
@@ -67,6 +68,7 @@ extension Model {
             return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
         }
 
+        @MainActor
         func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
             var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
             let sortType = self
@@ -170,6 +172,7 @@ extension Model {
         drops.filter { $0.shareMode == .sharing }
     }
 
+    @MainActor
     static func duplicate(item: ArchivedItem) {
         if let previousIndex = firstIndexOfItem(with: item.uuid) {
             let newItem = ArchivedItem(cloning: item)

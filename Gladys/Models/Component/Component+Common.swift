@@ -457,6 +457,7 @@ extension Component: Equatable {
         canPreviewCache = nil
     }
 
+    @MainActor
     var parent: ArchivedItem? {
         Model.item(uuid: parentUuid)
     }

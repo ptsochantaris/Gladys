@@ -54,8 +54,10 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/Gladys">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "16A4E7DF1FBB844A00D60596"
@@ -63,7 +65,7 @@
             BlueprintName = "GladysWatch"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -71,8 +73,10 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/Gladys">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "16A4E7DF1FBB844A00D60596"
@@ -80,7 +84,16 @@
             BlueprintName = "GladysWatch"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "16A4E7DF1FBB844A00D60596"
+            BuildableName = "GladysWatch.app"
+            BlueprintName = "GladysWatch"
+            ReferencedContainer = "container:Gladys.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

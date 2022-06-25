@@ -22,6 +22,7 @@ extension Model {
         return true
     }
 
+    @MainActor
     static func importArchive(from url: URL, removingOriginal: Bool) throws {
         let fm = FileManager.default
         defer {
@@ -118,9 +119,9 @@ extension Model {
         let itemCount = Int64(1 + dropsCopy.count)
         let p = Progress(totalUnitCount: itemCount)
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        Task.detached {
             do {
-                let url = try createZipThread(dropsCopy: dropsCopy, progress: p)
+                let url = try await createZipThread(dropsCopy: dropsCopy, progress: p)
                 completion(url, nil)
             } catch {
                 completion(nil, error)
@@ -130,7 +131,7 @@ extension Model {
         return p
     }
 
-    static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) throws -> URL {
+    static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
         let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default
@@ -146,11 +147,11 @@ extension Model {
                 let dir = item.displayTitleOrUuid.filenameSafe
 
                 if item.components.count == 1, let typeItem = item.components.first {
-                    try addZipItem(typeItem, directory: nil, name: dir, in: archive)
+                    try await addZipItem(typeItem, directory: nil, name: dir, in: archive)
 
                 } else {
                     for typeItem in item.components {
-                        try addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
+                        try await addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
                     }
                 }
                 p.completedUnitCount += 1
@@ -160,13 +161,13 @@ extension Model {
         return tempPath
     }
 
-    private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) throws {
+    private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) async throws {
         var bytes: Data?
         if typeItem.isWebURL, let url = typeItem.encodedUrl {
             bytes = url.urlFileContent
 
         } else if typeItem.classWasWrapped {
-            bytes = typeItem.dataForDropping ?? typeItem.bytes
+            bytes = (await typeItem.dataForDropping) ?? typeItem.bytes
         }
         if let B = bytes ?? typeItem.bytes {
             let timmedName = typeItem.prepareFilename(name: name, directory: directory)

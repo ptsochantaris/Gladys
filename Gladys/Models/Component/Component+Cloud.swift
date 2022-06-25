@@ -16,14 +16,11 @@ extension Component {
     }
 
     @MainActor
-    var parentZoneAsync: CKRecordZone.ID {
-        parent?.parentZone ?? privateZoneId
-    }
-
     var parentZone: CKRecordZone.ID {
         parent?.parentZone ?? privateZoneId
     }
 
+    @MainActor
     var populatedCloudKitRecord: CKRecord? {
         let record = cloudKitRecord
             ?? CKRecord(recordType: "ArchivedDropItemType",

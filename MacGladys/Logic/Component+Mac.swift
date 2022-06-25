@@ -183,6 +183,7 @@ extension Component {
         }
     }
 
+    @MainActor
     func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting {
         if forDrag {
             return GladysFilePromiseProvider.provider(for: self, with: oneTitle, extraItems: [self], tags: parent?.labels)
@@ -193,10 +194,12 @@ extension Component {
         }
     }
 
+    @MainActor
     var quickLookItem: PreviewItem {
         PreviewItem(typeItem: self)
     }
 
+    @MainActor
     var canPreview: Bool {
         if let canPreviewCache = canPreviewCache {
             return canPreviewCache
@@ -253,7 +256,7 @@ extension Component {
         } else {
             provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
                 let p = Progress(totalUnitCount: 1)
-                DispatchQueue.global(qos: .background).async {
+                Task { @MainActor in
                     let response = self.dataForDropping ?? self.bytes
                     p.completedUnitCount = 1
                     completion(response, nil)

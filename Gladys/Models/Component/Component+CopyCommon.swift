@@ -1,17 +1,8 @@
 import Foundation
 
 extension Component {
+    @MainActor
     var dataForDropping: Data? {
-        if Thread.isMainThread {
-            return _dataForDropping
-        } else {
-            return DispatchQueue.main.sync {
-                return _dataForDropping
-            }
-        }
-    }
-
-    private var _dataForDropping: Data? {
         if classWasWrapped, typeIdentifier.hasPrefix("public.") {
             let decoded = decode()
             if let s = decoded as? String {
@@ -30,6 +21,7 @@ extension Component {
         return nil
     }
 
+    @MainActor
     private var urlDropTitle: String {
         parent?.trimmedSuggestedName ?? oneTitle
     }

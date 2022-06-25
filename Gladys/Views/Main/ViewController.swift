@@ -2200,8 +2200,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         activity.addUserInfoEntries(from: userInfo)
     }
 
-    // MARK:
-
     private weak var itemToBeShared: ArchivedItem?
 
     func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
