@@ -1,11 +1,3 @@
-//
-//  DataInspector.swift
-//  FEFF
-//
-//  Created by Paul Tsochantaris on 02/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class DataInspector: GladysViewController {

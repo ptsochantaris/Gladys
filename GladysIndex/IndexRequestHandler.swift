@@ -1,11 +1,3 @@
-//
-//  IndexRequestHandler.swift
-//  GladysIndex
-//
-//  Created by Paul Tsochantaris on 21/06/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import CoreSpotlight
 
 final class IndexRequestHandler: CSIndexExtensionRequestHandler {

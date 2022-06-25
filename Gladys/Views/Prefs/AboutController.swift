@@ -1,11 +1,3 @@
-//
-//  AboutController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 05/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import GladysFramework
 import StoreKit
 import UIKit

@@ -1,11 +1,3 @@
-//
-//  CallbackSupport.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 10/04/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import CallbackURLKit
 import MobileCoreServices
 import UIKit

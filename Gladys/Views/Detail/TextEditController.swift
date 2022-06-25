@@ -1,11 +1,3 @@
-//
-//  TextEditController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 23/04/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import GladysFramework
 import MobileCoreServices
 import UIKit

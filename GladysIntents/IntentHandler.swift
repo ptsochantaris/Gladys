@@ -1,11 +1,3 @@
-//
-//  IntentHandler.swift
-//  GladysIntents
-//
-//  Created by Paul Tsochantaris on 30/09/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Intents
 import UIKit
 

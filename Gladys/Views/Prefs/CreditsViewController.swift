@@ -1,11 +1,3 @@
-//
-//  CreditsViewController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 25/04/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class CreditsViewController: GladysViewController {

@@ -1,11 +1,3 @@
-//
-//  CloudManager.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 21/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import CloudKit
 
 let diskSizeFormatter = ByteCountFormatter()

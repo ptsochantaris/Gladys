@@ -1,11 +1,3 @@
-//
-//  ActionRequestHandler.swift
-//  GladysAction
-//
-//  Created by Paul Tsochantaris on 02/07/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 extension Notification.Name {
@@ -190,7 +182,8 @@ final class ActionRequestViewController: UIViewController {
 
         Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
 
-        CloudManager.signalExtensionUpdate()
+        // CloudManager.signalExtensionUpdate()
+        CloudManager.scheduleSync()
 
         dismiss(animated: true) {
             self.reset(ingestOnNextAppearance: true)

@@ -1,11 +1,3 @@
-//
-//  Component+CopyCommon.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 08/05/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 extension Component {

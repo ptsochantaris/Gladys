@@ -1,11 +1,3 @@
-//
-//  Component+Preview.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 03/12/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 #if os(iOS)

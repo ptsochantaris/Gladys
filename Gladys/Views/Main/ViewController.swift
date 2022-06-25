@@ -431,7 +431,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             await resetForDragEntry(session: session)
         }
     }
-    
+
     func collectionView(_: UICollectionView, dropSessionDidEnd _: UIDropSession) {
         showDragModeOverlay(false)
     }
@@ -1188,7 +1188,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             await _modelDataUpdate(notification)
         }
     }
-    
+
     private func _modelDataUpdate(_ notification: Notification) async {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
 
@@ -1935,7 +1935,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     @objc private func dismissAnyPopoverRequested() {
         Task {
-            await  dismissAnyPopOver()
+            await dismissAnyPopOver()
         }
     }
 

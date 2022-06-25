@@ -1,11 +1,3 @@
-//
-//  Singleton.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 08/05/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import CoreSpotlight
 import UIKit
 

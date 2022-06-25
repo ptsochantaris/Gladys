@@ -1,11 +1,3 @@
-//
-//  HighlightLabel.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 13/05/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import CoreText
 import UIKit
 

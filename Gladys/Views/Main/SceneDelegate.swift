@@ -1,11 +1,3 @@
-//
-//  SceneDelegate.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 03/11/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import CloudKit
 import UIKit
 

@@ -1,11 +1,3 @@
-//
-//  CKDatabase+Extensions.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 12/06/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import CloudKit
 
 enum RecordChangeCheck {

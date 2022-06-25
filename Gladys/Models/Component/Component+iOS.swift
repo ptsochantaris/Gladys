@@ -1,11 +1,3 @@
-//
-//  Component+iOS.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 10/01/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 extension Component {

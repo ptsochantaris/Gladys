@@ -1,11 +1,3 @@
-//
-//  ArchivedItem+ActivityItemSource.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 13/11/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {

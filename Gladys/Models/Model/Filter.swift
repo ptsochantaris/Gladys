@@ -1,11 +1,3 @@
-//
-//  Filter.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 25/04/2021.
-//  Copyright © 2021 Paul Tsochantaris. All rights reserved.
-//
-
 import CoreSpotlight
 import Foundation
 #if os(iOS)

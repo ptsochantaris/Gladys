@@ -1,11 +1,3 @@
-//
-//  NewLabelController.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 05/05/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 protocol NewLabelControllerDelegate: AnyObject {

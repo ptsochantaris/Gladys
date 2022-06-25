@@ -1,11 +1,3 @@
-//
-//  Component+Messages.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 12/12/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 import MobileCoreServices
 

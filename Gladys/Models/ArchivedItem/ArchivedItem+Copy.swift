@@ -1,11 +1,3 @@
-//
-//  ArchivedItem+Copy.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 06/11/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 #if MAINAPP
     import Intents

@@ -1,11 +1,3 @@
-//
-//  NotesEditorViewController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 02/12/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 protocol NotesEditorViewControllerDelegate: AnyObject {

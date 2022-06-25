@@ -1,11 +1,3 @@
-//
-//  Component+Intents.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 02/10/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Intents
 import UIKit
 

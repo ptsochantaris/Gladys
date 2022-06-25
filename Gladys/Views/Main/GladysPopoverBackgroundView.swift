@@ -1,11 +1,3 @@
-//
-//  GladysPopoverBackgroundView.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 17/01/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class GladysPopoverBackgroundView: UIPopoverBackgroundView {

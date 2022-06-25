@@ -1,11 +1,3 @@
-//
-//  PlistEditor.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 25/11/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import GladysFramework
 import MobileCoreServices
 import UIKit

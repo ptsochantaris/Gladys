@@ -1,11 +1,3 @@
-//
-//  ProgressViewController.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 02/06/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 final class ProgressViewController: NSViewController {

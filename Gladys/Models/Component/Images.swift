@@ -1,11 +1,3 @@
-//
-//  Images.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 19/03/2022.
-//  Copyright © 2022 Paul Tsochantaris. All rights reserved.
-//
-
 import CoreLocation
 import MapKit
 

@@ -1,11 +1,3 @@
-//
-//  DropCell.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 29/04/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 import MapKit
 

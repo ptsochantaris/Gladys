@@ -1,11 +1,3 @@
-//
-//  KeyboardViewController.swift
-//  GladysKeys
-//
-//  Created by Paul Tsochantaris on 08/08/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 private var latestOffset = CGPoint.zero

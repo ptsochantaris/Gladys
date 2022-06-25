@@ -1,11 +1,3 @@
-//
-//  UserDefault.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 16/05/2021.
-//  Copyright © 2021 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 @propertyWrapper

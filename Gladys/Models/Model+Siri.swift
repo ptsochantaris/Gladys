@@ -1,11 +1,3 @@
-//
-//  Model+Siri.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 09/11/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 import Intents
 

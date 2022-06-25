@@ -1,11 +1,3 @@
-//
-//  ArchivedItem+Cloud.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 27/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import CloudKit
 
 extension ArchivedItem {

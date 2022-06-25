@@ -1,11 +1,3 @@
-//
-//  WindowController.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 24/04/2021.
-//  Copyright © 2021 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 var allFilters: [Filter] {

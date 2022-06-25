@@ -1,11 +1,4 @@
-//
-//  AppDelegate.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 16/06/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
+import BackgroundTasks
 import CloudKit
 import CoreSpotlight
 import UIKit
@@ -22,6 +15,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         UIApplication.shared.registerForRemoteNotifications()
+
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: syncSchedulingRequestId, using: nil) { task in
+            guard let task = task as? BGAppRefreshTask else { return }
+            Task {
+                await CloudManager.backgroundRefresh(task: task)
+            }
+        }
 
         return true
     }

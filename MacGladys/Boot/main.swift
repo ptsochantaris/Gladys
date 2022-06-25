@@ -1,11 +1,3 @@
-//
-//  main.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 09/09/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 for app in NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier!) where app != NSRunningApplication.current {

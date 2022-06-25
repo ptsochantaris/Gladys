@@ -1,11 +1,3 @@
-//
-//  UIViewController+Extensions.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 07/11/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 extension UIViewController {
@@ -46,7 +38,7 @@ extension UIViewController {
     var isAccessoryWindow: Bool {
         (navigationController?.viewIfLoaded ?? viewIfLoaded)?.window?.windowScene?.isAccessoryWindow ?? false
     }
-    
+
     func dismiss(animated: Bool) async {
         await withCheckedContinuation { continuation in
             dismiss(animated: animated) {

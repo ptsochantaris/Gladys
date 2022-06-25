@@ -1,11 +1,3 @@
-//
-//  Greetings.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 07/05/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 final class Greetings {

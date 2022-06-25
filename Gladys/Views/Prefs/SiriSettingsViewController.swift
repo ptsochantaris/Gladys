@@ -1,11 +1,3 @@
-//
-//  SiriSettingsViewController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 10/02/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import IntentsUI
 import UIKit
 

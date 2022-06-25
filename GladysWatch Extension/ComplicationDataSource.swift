@@ -1,11 +1,3 @@
-//
-//  ComplicationDataSource.swift
-//  GladysWatch Extension
-//
-//  Created by Paul Tsochantaris on 09/02/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import ClockKit
 import WatchKit
 

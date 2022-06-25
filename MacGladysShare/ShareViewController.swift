@@ -1,11 +1,3 @@
-//
-//  ShareViewController.swift
-//  MacGladysShare
-//
-//  Created by Paul Tsochantaris on 30/05/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 final class ShareViewController: NSViewController {

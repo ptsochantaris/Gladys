@@ -1,11 +1,3 @@
-//
-//  RoundedBackground.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 06/06/2021.
-//  Copyright © 2021 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 struct BackgroundSelectionEvent {

@@ -1,11 +1,4 @@
-//
-//  CloudManager+MainApp.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 27/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
+import BackgroundTasks
 import CloudKit
 import UIKit
 
@@ -16,6 +9,19 @@ extension CloudManager {
 
     @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
     static var syncContextSetting: SyncPermissionContext
+
+    @MainActor
+    static func backgroundRefresh(task: BGAppRefreshTask) async {
+        Model.reloadDataIfNeeded()
+        do {
+            if syncSwitchedOn, !syncing {
+                try await sync()
+            }
+            task.setTaskCompleted(success: true)
+        } catch {
+            task.setTaskCompleted(success: false)
+        }
+    }
 
     static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         Model.updateBadge()

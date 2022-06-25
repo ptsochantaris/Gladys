@@ -1,11 +1,3 @@
-//
-//  Cache.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 21/03/2022.
-//  Copyright © 2022 Paul Tsochantaris. All rights reserved.
-//
-
 // From: https://www.swiftbysundell.com/articles/caching-in-swift/
 
 import Foundation

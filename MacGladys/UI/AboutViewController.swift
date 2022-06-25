@@ -1,11 +1,3 @@
-//
-//  AboutViewController.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 25/07/2020.
-//  Copyright © 2020 Paul Tsochantaris. All rights reserved.
-//
-
 import AppKit
 import StoreKit
 

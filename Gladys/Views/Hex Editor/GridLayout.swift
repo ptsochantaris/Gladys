@@ -1,11 +1,3 @@
-//
-//  GridLayout.swift
-//  FEFF
-//
-//  Created by Paul Tsochantaris on 01/10/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class GridLayout: UICollectionViewLayout {

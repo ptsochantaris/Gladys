@@ -1,11 +1,3 @@
-//
-//  LabelEditor.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 19/12/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import UIKit
 
 final class LabelEditorController: GladysViewController, NotesEditorViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {

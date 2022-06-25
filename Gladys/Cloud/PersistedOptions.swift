@@ -1,11 +1,3 @@
-//
-//  PersistedOptions.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 15/11/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 enum DefaultTapAction: Int {

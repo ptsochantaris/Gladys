@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 28/04/2018.
-//  Copyright © 2018 Paul Tsochantaris. All rights reserved.
-//
-
 import CloudKit
 import Cocoa
 import CoreSpotlight

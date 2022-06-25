@@ -1,11 +1,3 @@
-//
-//  OptionsController.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 04/11/2017.
-//  Copyright © 2017 Paul Tsochantaris. All rights reserved.
-//
-
 import Speech
 import UIKit
 

@@ -1,11 +1,3 @@
-//
-//  NSItemProvider+Extensions.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 20/05/2022.
-//  Copyright © 2022 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
 
 extension NSItemProvider {

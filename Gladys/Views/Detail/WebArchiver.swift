@@ -1,6 +1,3 @@
-// Heavily modified from BiblioArchiver
-// Created by huangluyang on 16/5/19.
-
 import Foundation
 import Fuzi
 import UniformTypeIdentifiers

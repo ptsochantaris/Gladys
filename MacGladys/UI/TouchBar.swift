@@ -1,11 +1,3 @@
-//
-//  TouchBar.swift
-//  MacGladys
-//
-//  Created by Paul Tsochantaris on 26/09/2019.
-//  Copyright © 2019 Paul Tsochantaris. All rights reserved.
-//
-
 import Cocoa
 
 extension ViewController {
