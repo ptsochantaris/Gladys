@@ -510,25 +510,27 @@ extension Component {
     }
 
     func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
-        guard priority >= displayIconPriority else {
-            return
-        }
+        Task { @ComponentActor in
+            guard priority >= displayIconPriority else {
+                return
+            }
 
-        let result: IMAGE
-        if contentMode == .center || contentMode == .circle {
-            result = icon
-        } else if contentMode == .fit {
-            result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
-        } else {
-            result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
+            let result: IMAGE
+            if contentMode == .center || contentMode == .circle {
+                result = icon
+            } else if contentMode == .fit {
+                result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+            } else {
+                result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
+            }
+            displayIconPriority = priority
+            displayIconContentMode = contentMode
+            #if os(iOS)
+                displayIconTemplate = icon.renderingMode == .alwaysTemplate
+            #else
+                displayIconTemplate = icon.isTemplate
+            #endif
+            componentIcon = result
         }
-        displayIconPriority = priority
-        displayIconContentMode = contentMode
-        #if os(iOS)
-            displayIconTemplate = icon.renderingMode == .alwaysTemplate
-        #else
-            displayIconTemplate = icon.isTemplate
-        #endif
-        componentIcon = result
     }
 }

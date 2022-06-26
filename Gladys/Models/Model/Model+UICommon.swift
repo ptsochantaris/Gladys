@@ -141,11 +141,13 @@ extension Model {
         static var options: [SortOption] { [SortOption.title, SortOption.dateAdded, SortOption.dateModified, SortOption.note, SortOption.label, SortOption.size] }
     }
 
+    @MainActor
     static func resetEverything() {
         let toDelete = drops.filter { !$0.isImportedShare }
         delete(items: toDelete)
     }
 
+    @MainActor
     static func removeImportedShares() {
         let toDelete = drops.filter(\.isImportedShare)
         delete(items: toDelete)
@@ -181,6 +183,7 @@ extension Model {
         }
     }
 
+    @MainActor
     static func delete(items: [ArchivedItem]) {
         for item in items {
             item.delete()
@@ -244,6 +247,7 @@ extension Model {
         nextSaveCallbacks!.append(callback)
     }
 
+    @MainActor
     static func save() {
         if isSaving {
             needsAnotherSave = true
@@ -422,7 +426,8 @@ extension Model {
         }
     }
 
-    static func detectExternalChanges(completionGroup: DispatchGroup? = nil) {
+    @MainActor
+    static func detectExternalChanges() async {
         for item in drops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {
@@ -438,11 +443,11 @@ extension Model {
             delete(items: itemsToDelete) // will also save
         }
 
-        for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
-            completionGroup?.enter()
-            Task {
-                await drop.reIngest()
-                completionGroup?.leave()
+        await withTaskGroup(of: Void.self) { group in
+            for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+                group.addTask {
+                    await drop.reIngest()
+                }
             }
         }
     }

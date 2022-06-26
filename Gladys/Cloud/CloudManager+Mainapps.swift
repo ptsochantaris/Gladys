@@ -370,6 +370,7 @@ extension CloudManager {
         }
     }
 
+    @MainActor
     private static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
         syncTransitioning = true
 
@@ -754,6 +755,7 @@ extension CloudManager {
         perform(deleteOperation, on: database, type: "delete share")
     }
 
+    @MainActor
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
             Task {

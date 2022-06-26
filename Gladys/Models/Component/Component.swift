@@ -5,6 +5,12 @@
 #endif
 import CloudKit
 
+@globalActor
+enum ComponentActor {
+    actor ActorType {}
+    static let shared = ActorType()
+}
+
 final class Component: Codable {
     private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
     private static let componentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue", attributes: .concurrent)
@@ -39,6 +45,7 @@ final class Component: Codable {
         case order
     }
 
+    @ComponentActor
     func encode(to encoder: Encoder) throws {
         var v = encoder.container(keyedBy: CodingKeys.self)
         try v.encode(typeIdentifier, forKey: .typeIdentifier)

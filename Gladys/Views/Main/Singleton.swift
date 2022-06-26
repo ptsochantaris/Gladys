@@ -25,14 +25,17 @@ final class Singleton {
         }
 
         let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(ingestStart(_:)), name: .IngestStart, object: nil)
-        n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
         n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
 
+        n.addObserver(self, selector: #selector(ingestStart), name: .IngestStart, object: nil)
+        n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
+
         Model.beginMonitoringChanges() // will reload data as well
-        Model.detectExternalChanges()
+        Task {
+            await Model.detectExternalChanges()
+        }
     }
 
     @objc private func foregrounded() {
@@ -54,12 +57,11 @@ final class Singleton {
     }
 
     @objc private func modelDataUpdate() {
-        let group = DispatchGroup()
-        Model.detectExternalChanges(completionGroup: group)
-        group.notify(queue: .main) {
-            let openSessions = UIApplication.shared.openSessions
-            for session in openSessions where session.scene?.activationState == .background {
-                UIApplication.shared.requestSceneSessionRefresh(session)
+        let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
+        Task {
+            await Model.detectExternalChanges()
+            for session in backgroundSessions {
+                await UIApplication.shared.requestSceneSessionRefresh(session)
             }
             if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
                 PersistedOptions.extensionRequestedSync = false
@@ -69,23 +71,28 @@ final class Singleton {
     }
 
     private var ingestRunning = false
-    @objc private func ingestStart(_: Notification) {
-        if !ingestRunning {
-            ingestRunning = true
-            BackgroundTask.registerForBackground()
+    
+    @objc private func ingestStart() {
+        Task { @MainActor in
+            if !ingestRunning {
+                ingestRunning = true
+                BackgroundTask.registerForBackground()
+            }
         }
     }
 
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
-        if Model.doneIngesting {
-            Model.save()
-            if ingestRunning {
-                BackgroundTask.unregisterForBackground()
-                ingestRunning = false
+        Task { @MainActor in
+            if Model.doneIngesting {
+                Model.save()
+                if ingestRunning {
+                    BackgroundTask.unregisterForBackground()
+                    ingestRunning = false
+                }
+            } else {
+                Model.commitItem(item: item)
             }
-        } else {
-            Model.commitItem(item: item)
         }
     }
 

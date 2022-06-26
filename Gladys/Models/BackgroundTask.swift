@@ -17,8 +17,8 @@ final class BackgroundTask {
         endTask()
     }
 
+    @MainActor
     static func appBackgrounded() {
-        assert(Thread.isMainThread)
         appInBackground = true
         if globalBackgroundCount != 0, bgTask == .invalid {
             log("BG Task starting")
@@ -28,40 +28,28 @@ final class BackgroundTask {
         }
     }
 
+    @MainActor
     static func appForegrounded() {
-        assert(Thread.isMainThread)
         endTimer.abort()
         appInBackground = false
         endTask()
     }
 
-    private static func onMainThread(completion: () -> Void) {
-        if Thread.isMainThread {
-            completion()
-        } else {
-            DispatchQueue.main.sync {
-                completion()
-            }
-        }
-    }
-
+    @MainActor
     static func registerForBackground() {
-        onMainThread {
-            endTimer.abort()
-            let count = globalBackgroundCount
-            globalBackgroundCount = count + 1
-            if appInBackground, bgTask == .invalid, count == 0 {
-                appBackgrounded()
-            }
+        endTimer.abort()
+        let count = globalBackgroundCount
+        globalBackgroundCount = count + 1
+        if appInBackground, bgTask == .invalid, count == 0 {
+            appBackgrounded()
         }
     }
 
+    @MainActor
     static func unregisterForBackground() {
-        onMainThread {
-            globalBackgroundCount -= 1
-            if globalBackgroundCount == 0, bgTask != .invalid {
-                endTimer.push()
-            }
+        globalBackgroundCount -= 1
+        if globalBackgroundCount == 0, bgTask != .invalid {
+            endTimer.push()
         }
     }
 }

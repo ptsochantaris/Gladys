@@ -75,9 +75,10 @@ final class MirrorManager {
 
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
-            if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url), let typeItem = Model.component(uuid: uuid) {
-                DispatchQueue.main.async {
-                    typeItem.parent?.assimilateMirrorChanges()
+            if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
+                Task { @MainActor in
+                    let typeItem = Model.component(uuid: uuid)
+                    typeItem?.parent?.assimilateMirrorChanges()
                 }
             }
         }

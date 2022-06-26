@@ -61,7 +61,8 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
             }
 
         } else if let command = message["update"] as? String, command == "full" {
-            buildContext { context in
+            Task {
+                let context = await buildContext()
                 replyHandler(context ?? [:])
             }
 
@@ -126,33 +127,33 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private func buildContext(completion: @escaping ([String: Any]?) -> Void) {
+    @MainActor
+    private func buildContext() async -> [String: Any]? {
         BackgroundTask.registerForBackground()
-
-        DispatchQueue.main.async {
-            let total = Model.drops.count
-            let items = Model.drops.prefix(100).map(\.watchItem)
-            DispatchQueue.global(qos: .background).async {
-                if let compressedData = SafeArchiving.archive(items)?.data(operation: .compress) {
-                    log("Built watch context")
-                    completion(["total": total, "dropList": compressedData])
-                } else {
-                    log("Failed to build watch context")
-                    completion(nil)
-                }
-                BackgroundTask.unregisterForBackground()
+        defer {
+            BackgroundTask.unregisterForBackground()
+        }
+        
+        let total = Model.drops.count
+        let items = Model.drops.prefix(100).map(\.watchItem)
+        let task = Task<[String: Any]?, Never>.detached {
+            if let compressedData = SafeArchiving.archive(items)?.data(operation: .compress) {
+                log("Built watch context")
+                return ["total": total, "dropList": compressedData]
+            } else {
+                log("Failed to build watch context")
+                return nil
             }
         }
+        return await task.value
     }
 
-    fileprivate func updateContext() {
+    fileprivate func updateContext() async {
         let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
-        buildContext { context in
-            if let context = context {
-                session.transferUserInfo(context)
-                log("Updated watch context")
-            }
+        if let context = await buildContext() {
+            session.transferUserInfo(context)
+            log("Updated watch context")
         }
     }
 }
@@ -212,12 +213,12 @@ extension Model {
         NSFileCoordinator(filePresenter: filePresenter)
     }
 
+    @MainActor
     static func prepareToSave() {
         saveOverlap += 1
         if !registeredForBackground {
             registeredForBackground = true
             BackgroundTask.registerForBackground()
-            // log("Starting save queue background task")
         }
     }
 
@@ -248,7 +249,11 @@ extension Model {
     }
 
     private static func saveDone() {
-        watchDelegate?.updateContext()
+        if let wd = watchDelegate {
+            Task {
+                await wd.updateContext()
+            }
+        }
 
         if saveIsDueToSyncFetch, !CloudManager.syncDirty {
             saveIsDueToSyncFetch = false
@@ -262,7 +267,9 @@ extension Model {
 
         if registeredForBackground {
             registeredForBackground = false
-            BackgroundTask.unregisterForBackground()
+            Task {
+                await BackgroundTask.unregisterForBackground()
+            }
         }
     }
 

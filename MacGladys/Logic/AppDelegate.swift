@@ -240,7 +240,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func modelDataUpdate() {
-        Model.detectExternalChanges()
+        Task { @MainActor in
+            await Model.detectExternalChanges()
+        }
     }
 
     @objc private func acceptShareStarted() {
@@ -260,8 +262,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
 
-        Model.detectExternalChanges()
         Task {
+            await Model.detectExternalChanges()
             await Model.startMonitoringForExternalChangesToBlobs()
         }
 
@@ -375,7 +377,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func applicationWillResignActive(_: Notification) {
-        Model.clearCaches()
+        Task { @MainActor in
+            Model.clearCaches()
+        }
     }
 
     func applicationWillTerminate(_: Notification) {

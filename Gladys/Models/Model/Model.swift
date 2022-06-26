@@ -15,6 +15,7 @@ final class Model {
         appendDropEfficiently(newDrop)
     }
 
+    @MainActor
     static func appendDropEfficiently(_ newDrop: ArchivedItem) {
         uuidindex?[newDrop.uuid] = drops.count
 
@@ -23,6 +24,7 @@ final class Model {
         uuidindex = previousIndex
     }
 
+    @MainActor
     private static func rebuildIndexIfNeeded() {
         if uuidindex == nil {
             let d = drops // copy
@@ -59,6 +61,7 @@ final class Model {
         firstIndexOfItem(with: uuid) != nil
     }
 
+    @MainActor
     static func clearCaches() {
         for drop in drops {
             for component in drop.components {
@@ -74,6 +77,7 @@ final class Model {
 
     private static var isStarted = false
 
+    @MainActor
     static func reset() {
         drops.removeAll(keepingCapacity: false)
         clearCaches()
@@ -272,14 +276,17 @@ final class Model {
         firstItem(with: uuid)
     }
 
+    @MainActor
     static func item(shareId: String) -> ArchivedItem? {
         drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
     }
 
+    @MainActor
     static func component(uuid: UUID) -> Component? {
         Component.lookup(uuid: uuid)
     }
 
+    @MainActor
     static func component(uuid: String) -> Component? {
         if let uuidData = UUID(uuidString: uuid) {
             return component(uuid: uuidData)

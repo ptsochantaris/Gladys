@@ -578,7 +578,9 @@ final class Filter {
 
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
 
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     func removeLabel(_ label: String) {
@@ -592,6 +594,8 @@ final class Filter {
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 }
