@@ -78,14 +78,14 @@ extension Component {
             }
             representedClass = .url
             log("      received local file url for non-existent file: \(item.absoluteString)")
-            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             return
         }
 
         if directory.boolValue {
             do {
                 typeIdentifier = kUTTypeZipArchive as String
-                setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
                 representedClass = .data
                 let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
                 let a = Archive(url: tempURL, accessMode: .create)!
@@ -104,7 +104,7 @@ extension Component {
                 }
                 representedClass = .url
                 log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
-                setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             }
 
         } else {
