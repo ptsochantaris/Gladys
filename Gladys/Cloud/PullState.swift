@@ -409,7 +409,7 @@ final actor PullState {
                 } else {
                     switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
                     case .changed:
-                        log("Will update existing local type data: (\(recordUUID))")
+                        log("Will update existing component: (\(recordUUID))")
                         typeItem.cloudKitUpdate(from: record)
                         typeUpdateCount += 1
                     case .tagOnly:
@@ -423,7 +423,7 @@ final actor PullState {
                 if existingParent.parentZone != zoneID {
                     log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
                 } else {
-                    log("Will create new local type data (\(recordUUID)) for parent (\(parentId))")
+                    log("Will create new component (\(recordUUID)) for parent (\(parentId))")
                     existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
                     newTypeItemCount += 1
                 }
