@@ -190,8 +190,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         Model.setup()
 
-        Task {
-            await CallbackSupport.setupCallbackSupport()
+        Task { @MainActor in
+            CallbackSupport.setupCallbackSupport()
         }
     }
 
