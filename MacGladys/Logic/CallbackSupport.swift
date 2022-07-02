@@ -67,7 +67,7 @@ struct CallbackSupport {
             let pasteboard = NSPasteboard(name: sharingPasteboard)
             Task { @MainActor in
                 Model.addItems(from: pasteboard, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
-                try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
+                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
                 DistributedNotificationCenter.default().postNotificationName(.SharingPasteboardPasted, object: "build.bru.MacGladys", userInfo: nil, deliverImmediately: true)
             }
             success(nil)
