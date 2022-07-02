@@ -137,7 +137,7 @@ final actor PullState {
             databaseTokens[database.keyName] = nil
         }
     }
-    
+
     private func incrementDeletionCount() {
         deletionCount += 1
     }

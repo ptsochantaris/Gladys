@@ -190,9 +190,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         Model.setup()
 
-        Task { @MainActor in
-            CallbackSupport.setupCallbackSupport()
-        }
+        CallbackSupport.setupCallbackSupport()
     }
 
     func applicationWillFinishLaunching(_: Notification) {

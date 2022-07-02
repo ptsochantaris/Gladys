@@ -71,7 +71,7 @@ final class Singleton {
     }
 
     private var ingestRunning = false
-    
+
     @objc private func ingestStart() {
         Task { @MainActor in
             if !ingestRunning {

@@ -133,7 +133,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
         defer {
             BackgroundTask.unregisterForBackground()
         }
-        
+
         let total = Model.drops.count
         let items = Model.drops.prefix(100).map(\.watchItem)
         let task = Task<[String: Any]?, Never>.detached {
