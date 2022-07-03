@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-final class Model {
+enum Model {
     private static var uuidindex: [UUID: Int]?
 
     static var drops = ContiguousArray<ArchivedItem>() {
@@ -180,8 +180,8 @@ final class Model {
                     finalError = e
                 }
                 _ = genericAlert(title: "Loading Error (code \(finalError.code))",
-                                   message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                   buttonTitle: "Quit")
+                                 message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                 buttonTitle: "Quit")
                 abort()
             #else
                 // still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
@@ -199,9 +199,9 @@ final class Model {
                 } else {
                     finalError = e
                 }
-            _ = genericAlert(title: "Loading Error (code \(finalError.code))",
-                                   message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                   buttonTitle: "Quit")
+                _ = genericAlert(title: "Loading Error (code \(finalError.code))",
+                                 message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                 buttonTitle: "Quit")
                 abort()
             #else
                 exit(0)
@@ -275,7 +275,7 @@ final class Model {
         component(uuid: uuid)
     }
 
-    static nonisolated func modificationDate(for url: URL) -> Date? {
+    nonisolated static func modificationDate(for url: URL) -> Date? {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 

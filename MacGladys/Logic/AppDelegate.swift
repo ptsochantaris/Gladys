@@ -366,7 +366,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         return false
     }
-    
+
     @MainActor
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         log("APNS ready: \(deviceToken.base64EncodedString())")
@@ -464,10 +464,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Task { @MainActor in // give UI a chance to update
             do {
                 try Model.importArchive(from: url, removingOriginal: false)
-                self.endProgress()
+                endProgress()
             } catch {
-                self.endProgress()
-                genericAlert(title: "Operation Failed", message: error.finalDescription)
+                endProgress()
+                await genericAlert(title: "Operation Failed", message: error.finalDescription)
             }
         }
     }

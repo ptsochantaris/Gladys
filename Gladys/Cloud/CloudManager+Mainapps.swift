@@ -11,12 +11,12 @@ extension CloudManager {
     static let sharedDatabaseSubscriptionId = "shared-changes"
     static var syncDirty = false
 
-    static nonisolated func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+    nonisolated static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         Task {
             await _perform(operation, on: database, type: type)
         }
     }
-    
+
     private static func _perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
@@ -529,12 +529,12 @@ extension CloudManager {
         perform(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
     }
 
-    static nonisolated func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
+    nonisolated static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         Task {
             await _fetchMissingShareRecords(completion: completion)
         }
     }
-    
+
     private static func _fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 

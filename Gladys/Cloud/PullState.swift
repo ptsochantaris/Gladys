@@ -15,7 +15,7 @@ final actor PullState {
     var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
     var pendingShareRecords = Set<CKShare>()
     var pendingTypeItemRecords = Set<CKRecord>()
-    
+
     private func updateProgress() {
         Task {
             await _updateProgress()
@@ -217,7 +217,7 @@ final actor PullState {
             options.previousServerChangeToken = zoneToken(for: zoneID)
             configurationsByRecordZoneID[zoneID] = options
         }
-        
+
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
 
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)

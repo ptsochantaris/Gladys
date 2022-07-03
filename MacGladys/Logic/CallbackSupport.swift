@@ -3,7 +3,7 @@ import CallbackURLKit
 import Foundation
 
 @MainActor
-struct CallbackSupport {
+enum CallbackSupport {
     private static func handle(result: Bool, success: @escaping SuccessCallback, failure: @escaping FailureCallback) async {
         try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
         if result {
