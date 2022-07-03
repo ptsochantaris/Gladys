@@ -2,10 +2,12 @@ import CoreSpotlight
 
 extension Model {
     private final class IndexProxy: NSObject, CSSearchableIndexDelegate {
+        @MainActor
         func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
             Model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
         }
 
+        @MainActor
         func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
             Model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
         }
@@ -42,7 +44,6 @@ extension Model {
         reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
     }
 
-    @MainActor
     static func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
         if let item = Model.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
             return data
@@ -50,7 +51,6 @@ extension Model {
         return emptyData
     }
 
-    @MainActor
     static func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
         if let item = Model.item(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
             return url as URL

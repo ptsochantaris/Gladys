@@ -10,6 +10,7 @@ extension Component {
         diskSizeFormatter.string(fromByteCount: sizeInBytes)
     }
 
+    @MainActor
     func deleteFromStorage() {
         CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
         let fm = FileManager.default

@@ -2,6 +2,7 @@ import CallbackURLKit
 import MobileCoreServices
 import UIKit
 
+@MainActor
 struct CallbackSupport {
     private static func handle(result: Model.PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

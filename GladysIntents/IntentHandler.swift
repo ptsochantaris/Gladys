@@ -2,6 +2,7 @@ import Intents
 import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
+    @MainActor
     func handle(intent: CopyComponentIntent, completion: @escaping (CopyComponentIntentResponse) -> Void) {
         guard let uuidString = intent.component?.identifier else {
             completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
@@ -19,6 +20,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
 
     /////////////////////////////
 
+    @MainActor
     func handle(intent: CopyItemIntent, completion: @escaping (CopyItemIntentResponse) -> Void) {
         guard let uuidString = intent.item?.identifier, let uuid = UUID(uuidString: uuidString) else {
             completion(CopyItemIntentResponse(code: .failure, userActivity: nil))

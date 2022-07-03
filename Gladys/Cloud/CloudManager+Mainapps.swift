@@ -11,7 +11,13 @@ extension CloudManager {
     static let sharedDatabaseSubscriptionId = "shared-changes"
     static var syncDirty = false
 
-    static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+    static nonisolated func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+        Task {
+            await _perform(operation, on: database, type: type)
+        }
+    }
+    
+    private static func _perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
         database.add(operation)
@@ -37,7 +43,6 @@ extension CloudManager {
     private(set) static var syncProgressString: String?
 
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
-        assert(Thread.isMainThread)
         #if DEBUG
             if let s = syncProgressString {
                 log(">>> Sync label updated: \(s)")
@@ -48,12 +53,11 @@ extension CloudManager {
         NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
     }
 
-    @MainActor static func setSyncProgressString(_ newString: String?) {
+    static func setSyncProgressString(_ newString: String?) {
         syncProgressString = newString
         syncProgressDebouncer.push()
     }
 
-    @MainActor
     private static func sendUpdatesUp() async throws {
         if !syncSwitchedOn {
             return
@@ -115,7 +119,7 @@ extension CloudManager {
         didSet {
             if syncTransitioning != oldValue {
                 Task {
-                    await setSyncProgressString(syncing ? "Pausing" : nil)
+                    setSyncProgressString(syncing ? "Pausing" : nil)
                 }
                 showNetwork = false
                 assert(Thread.isMainThread)
@@ -128,7 +132,7 @@ extension CloudManager {
         didSet {
             if syncing != oldValue {
                 Task {
-                    await setSyncProgressString(syncing ? "Syncing" : nil)
+                    setSyncProgressString(syncing ? "Syncing" : nil)
                 }
                 showNetwork = syncing || syncTransitioning
                 assert(Thread.isMainThread)
@@ -172,22 +176,18 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     static func getUuidSequenceAsync() -> [String] {
         uuidSequence
     }
 
-    @MainActor
     static func setUuidSequenceAsync(_ newList: [String]) {
         uuidSequence = newList
     }
 
-    @MainActor
     static func getUuidSequenceRecordAsync() -> CKRecord? {
         uuidSequenceRecord
     }
 
-    @MainActor
     static func setUuidSequenceRecordAsync(_ newRecord: CKRecord?) {
         uuidSequenceRecord = newRecord
     }
@@ -293,7 +293,6 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     private static func activate() async throws {
         if syncSwitchedOn {
             return
@@ -357,7 +356,6 @@ extension CloudManager {
         perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
 
-    @MainActor
     static func deactivate(force: Bool, deactivatingShares _: Bool = true) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             deactivate(force: force) { error in
@@ -370,7 +368,6 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     private static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
         syncTransitioning = true
 
@@ -532,7 +529,13 @@ extension CloudManager {
         perform(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
     }
 
-    static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
+    static nonisolated func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
+        Task {
+            await _fetchMissingShareRecords(completion: completion)
+        }
+    }
+    
+    private static func _fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
         for item in Model.drops {
@@ -615,7 +618,6 @@ extension CloudManager {
         perform(fetch, on: database, type: "fetching individual cloud record")
     }
 
-    @MainActor
     static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
@@ -697,11 +699,10 @@ extension CloudManager {
         perform(operation, on: container.privateCloudDatabase, type: "share item")
     }
 
-    @MainActor
     static func acceptShare(_ metadata: CKShare.Metadata) {
         if !syncSwitchedOn {
             Task {
-                await genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
+                genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
             }
             return
         }
@@ -742,7 +743,7 @@ extension CloudManager {
             DispatchQueue.main.async {
                 if let error = error, !error.itemDoesNotExistOnServer {
                     Task {
-                        await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                        genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
                     }
                     completion(error)
                 } else { // our local record must be stale, let's refresh it just in case
@@ -755,7 +756,6 @@ extension CloudManager {
         perform(deleteOperation, on: database, type: "delete share")
     }
 
-    @MainActor
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
             Task {
@@ -766,7 +766,6 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     static func startActivation() async {
         do {
             try await CloudManager.activate()
@@ -780,7 +779,6 @@ extension CloudManager {
         }
     }
 
-    @MainActor
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
         if !syncSwitchedOn {
             return

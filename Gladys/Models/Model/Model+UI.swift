@@ -130,9 +130,6 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
     @MainActor
     private func buildContext() async -> [String: Any]? {
         BackgroundTask.registerForBackground()
-        defer {
-            BackgroundTask.unregisterForBackground()
-        }
 
         let total = Model.drops.count
         let items = Model.drops.prefix(100).map(\.watchItem)
@@ -145,7 +142,9 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
                 return nil
             }
         }
-        return await task.value
+        let res = await task.value
+        BackgroundTask.unregisterForBackground()
+        return res
     }
 
     fileprivate func updateContext() async {
@@ -213,7 +212,6 @@ extension Model {
         NSFileCoordinator(filePresenter: filePresenter)
     }
 
-    @MainActor
     static func prepareToSave() {
         saveOverlap += 1
         if !registeredForBackground {
@@ -267,9 +265,7 @@ extension Model {
 
         if registeredForBackground {
             registeredForBackground = false
-            Task {
-                await BackgroundTask.unregisterForBackground()
-            }
+            BackgroundTask.unregisterForBackground()
         }
     }
 
@@ -309,7 +305,6 @@ extension Model {
         await runMirror()
     }
 
-    @MainActor
     private static func runMirror() async {
         let itemsToMirror: ContiguousArray = drops.filter(\.goodToSave)
         BackgroundTask.registerForBackground()
@@ -317,7 +312,6 @@ extension Model {
         BackgroundTask.unregisterForBackground()
     }
 
-    @MainActor
     static func scanForMirrorChanges() async {
         BackgroundTask.registerForBackground()
         let itemsToMirror: ContiguousArray = drops.filter(\.goodToSave)

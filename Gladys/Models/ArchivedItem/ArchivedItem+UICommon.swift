@@ -28,6 +28,7 @@ extension ArchivedItem {
         return f.string(from: p)
     }
 
+    @MainActor
     func delete() {
         if shouldDisplayLoading {
             cancelIngest()

@@ -133,13 +133,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     final class ServicesProvider: NSObject {
         var urlEventBeforeLaunch = false
 
         @objc func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
-            Task { @MainActor in
-                Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
-            }
+            Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
         }
 
         @objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent _: NSAppleEventDescriptor) {
@@ -179,6 +178,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)
     }
 
+    @MainActor
     override init() {
         super.init()
 
@@ -193,6 +193,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         CallbackSupport.setupCallbackSupport()
     }
 
+    @MainActor
     func applicationWillFinishLaunching(_: Notification) {
         let s = NSAppleEventManager.shared()
         s.setEventHandler(servicesProvider,
@@ -280,6 +281,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     func applicationDidResignActive(_: Notification) {
         updateMenubarIconMode(showing: false, forceUpdateMenu: false)
         Model.trimTemporaryDirectory()
@@ -297,6 +299,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     func application(_: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
         CloudManager.received(notificationInfo: userInfo)
     }
@@ -363,12 +366,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         return false
     }
-
+    
+    @MainActor
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         log("APNS ready: \(deviceToken.base64EncodedString())")
         CloudManager.apnsUpdate(deviceToken)
     }
 
+    @MainActor
     func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         log("Warning: APNS registration failed: \(error.finalDescription)")
         CloudManager.apnsUpdate(nil)
@@ -536,6 +541,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(aboutSelected(_:))
             || menuItem.action == #selector(newWindowSelected(_:))

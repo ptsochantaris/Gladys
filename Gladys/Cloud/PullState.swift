@@ -15,7 +15,7 @@ final actor PullState {
     var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
     var pendingShareRecords = Set<CKShare>()
     var pendingTypeItemRecords = Set<CKRecord>()
-
+    
     private func updateProgress() {
         Task {
             await _updateProgress()
@@ -51,16 +51,19 @@ final actor PullState {
         if itemsModified {
             // need to save stuff that's been modified
             let task = Task {
-                await withCheckedContinuation { continuation in
-                    Model.queueNextSaveCallback {
-                        continuation.resume()
-                    }
+                while !Task.isCancelled {
+                    try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
                 }
             }
-            await MainActor.run {
+            await Model.queueNextSaveCallback {
+                task.cancel()
+            }
+
+            Task { @MainActor in
                 Model.saveIsDueToSyncFetch = true
                 Model.save()
             }
+
             await task.value
 
         } else if !updatedZoneTokens.isEmpty {
@@ -138,16 +141,11 @@ final actor PullState {
         }
     }
 
-    private func incrementDeletionCount() {
-        deletionCount += 1
-    }
-
-    @MainActor
     private func recordDeleted(recordId: CKRecord.ID, recordType: CloudManager.RecordType) async {
         let itemUUID = recordId.recordName
         switch recordType {
         case .item:
-            if let item = Model.item(uuid: itemUUID) {
+            if let item = (await MainActor.run { Model.item(uuid: itemUUID) }) {
                 if item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
@@ -155,32 +153,33 @@ final actor PullState {
                     item.needsDeletion = true
                     item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
                     item.cloudKitShareRecord = nil // get rid of useless file
-                    await incrementDeletionCount()
+                    deletionCount += 1
                 }
             } else {
                 log("Received delete for non-existent item record \(itemUUID), ignoring")
             }
         case .component:
-            if let component = Model.componentAsync(uuid: itemUUID) {
-                if component.parentZone != recordId.zoneID {
+            if let component = (await MainActor.run { Model.componentAsync(uuid: itemUUID) }) {
+                let componentParentZone = await component.parentZone
+                if componentParentZone != recordId.zoneID {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
                 } else {
                     log("Component deletion: \(itemUUID)")
                     component.needsDeletion = true
                     component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-                    await incrementDeletionCount()
+                    deletionCount += 1
                 }
             } else {
                 log("Received delete for non-existent component record \(itemUUID), ignoring")
             }
         case .share:
-            if let associatedItem = Model.item(shareId: itemUUID) {
+            if let associatedItem = (await MainActor.run { Model.item(shareId: itemUUID) }) {
                 if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
                     log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
                 } else {
                     log("Share record deleted for item \(associatedItem.uuid)")
                     associatedItem.cloudKitShareRecord = nil
-                    await incrementDeletionCount()
+                    deletionCount += 1
                 }
             } else {
                 log("Received delete for non-existent share record \(itemUUID), ignoring")
@@ -218,6 +217,8 @@ final actor PullState {
             options.previousServerChangeToken = zoneToken(for: zoneID)
             configurationsByRecordZoneID[zoneID] = options
         }
+        
+        let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
 
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)
 
@@ -231,7 +232,7 @@ final actor PullState {
         operation.recordChangedBlock = { record in
             if let type = CloudManager.RecordType(rawValue: record.recordType) {
                 Task {
-                    await self.recordChanged(record: record, recordType: type)
+                    await self.recordChanged(record: record, recordType: type, neverSynced: neverSynced)
                 }
             }
         }
@@ -354,7 +355,7 @@ final actor PullState {
         }
     }
 
-    private func recordChanged(record: CKRecord, recordType: CloudManager.RecordType) async {
+    private func recordChanged(record: CKRecord, recordType: CloudManager.RecordType, neverSynced: Bool) async {
         let recordID = record.recordID
         let zoneID = recordID.zoneID
         let recordUUID = recordID.recordName
@@ -434,7 +435,7 @@ final actor PullState {
 
         case .positionList:
             let change = RecordChangeCheck(localRecord: await CloudManager.getUuidSequenceRecordAsync(), remoteRecord: record)
-            if change == .changed || CloudManager.lastSyncCompletion == .distantPast {
+            if change == .changed || neverSynced {
                 log("Received an updated position list record")
                 let newList = (record["positionList"] as? [String]) ?? []
                 await CloudManager.setUuidSequenceAsync(newList)

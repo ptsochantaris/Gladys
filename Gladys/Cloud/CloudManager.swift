@@ -46,6 +46,7 @@ extension Error {
     }
 }
 
+@MainActor
 enum CloudManager {
     enum RecordType: String {
         case item = "ArchivedDropItem"

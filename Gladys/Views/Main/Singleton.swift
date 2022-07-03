@@ -1,6 +1,7 @@
 import CoreSpotlight
 import UIKit
 
+@MainActor
 final class Singleton {
     static let shared = Singleton()
 
@@ -61,7 +62,7 @@ final class Singleton {
         Task {
             await Model.detectExternalChanges()
             for session in backgroundSessions {
-                await UIApplication.shared.requestSceneSessionRefresh(session)
+                UIApplication.shared.requestSceneSessionRefresh(session)
             }
             if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
                 PersistedOptions.extensionRequestedSync = false

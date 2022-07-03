@@ -1,5 +1,6 @@
 import CloudKit
 
+@MainActor
 final class PushState {
     var latestError: Error?
 
@@ -123,9 +124,7 @@ final class PushState {
         let deletionCount = recordsToDelete.count
         if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
         let cs = components
-        Task {
-            await CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
-        }
+        CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
     }
 
     var progress: Progress {

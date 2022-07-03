@@ -29,6 +29,7 @@ extension Model {
         }.value
     }
 
+    @MainActor
     enum SortOption {
         case dateAdded, dateModified, title, note, size, label
         var ascendingTitle: String {
@@ -53,7 +54,6 @@ extension Model {
             }
         }
 
-        @MainActor
         private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
             var itemIndexes = [Int]()
             let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
@@ -68,7 +68,6 @@ extension Model {
             return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
         }
 
-        @MainActor
         func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
             var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
             let sortType = self
@@ -141,19 +140,16 @@ extension Model {
         static var options: [SortOption] { [SortOption.title, SortOption.dateAdded, SortOption.dateModified, SortOption.note, SortOption.label, SortOption.size] }
     }
 
-    @MainActor
     static func resetEverything() {
         let toDelete = drops.filter { !$0.isImportedShare }
         delete(items: toDelete)
     }
 
-    @MainActor
     static func removeImportedShares() {
         let toDelete = drops.filter(\.isImportedShare)
         delete(items: toDelete)
     }
 
-    @MainActor
     static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
         let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
         for item in itemsRelatedToZone {
@@ -174,7 +170,6 @@ extension Model {
         drops.filter { $0.shareMode == .sharing }
     }
 
-    @MainActor
     static func duplicate(item: ArchivedItem) {
         if let previousIndex = firstIndexOfItem(with: item.uuid) {
             let newItem = ArchivedItem(cloning: item)
@@ -183,7 +178,6 @@ extension Model {
         }
     }
 
-    @MainActor
     static func delete(items: [ArchivedItem]) {
         for item in items {
             item.delete()
@@ -208,7 +202,6 @@ extension Model {
         badgeTimer.push()
     }
 
-    @MainActor
     static func sortDrops() {
         let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
         if !sequence.isEmpty {
@@ -247,7 +240,6 @@ extension Model {
         nextSaveCallbacks!.append(callback)
     }
 
-    @MainActor
     static func save() {
         if isSaving {
             needsAnotherSave = true
@@ -426,7 +418,6 @@ extension Model {
         }
     }
 
-    @MainActor
     static func detectExternalChanges() async {
         for item in drops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)

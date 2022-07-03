@@ -17,6 +17,7 @@ protocol FilterDelegate: AnyObject {
     func modelFilterContextChanged(_ modelFilterContext: Filter, animate: Bool)
 }
 
+@MainActor
 final class Filter {
     enum UpdateType {
         case none, instant, animated
@@ -86,7 +87,6 @@ final class Filter {
         }
     }
 
-    @MainActor
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
@@ -577,10 +577,7 @@ final class Filter {
         }
 
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-
-        Task {
-            await Model.save()
-        }
+        Model.save()
     }
 
     func removeLabel(_ label: String) {
@@ -594,8 +591,6 @@ final class Filter {
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
-        Task {
-            await Model.save()
-        }
+        Model.save()
     }
 }

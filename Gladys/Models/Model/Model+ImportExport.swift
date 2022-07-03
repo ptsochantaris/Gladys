@@ -22,7 +22,6 @@ extension Model {
         return true
     }
 
-    @MainActor
     static func importArchive(from url: URL, removingOriginal: Bool) throws {
         let fm = FileManager.default
         defer {
@@ -167,7 +166,7 @@ extension Model {
             bytes = url.urlFileContent
 
         } else if typeItem.classWasWrapped {
-            bytes = (await typeItem.dataForDropping) ?? typeItem.bytes
+            bytes = typeItem.dataForDropping ?? typeItem.bytes
         }
         if let B = bytes ?? typeItem.bytes {
             let timmedName = typeItem.prepareFilename(name: name, directory: directory)

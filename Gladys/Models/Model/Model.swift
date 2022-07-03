@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 final class Model {
     private static var uuidindex: [UUID: Int]?
 
@@ -10,12 +11,10 @@ final class Model {
         }
     }
 
-    @MainActor
     static func appendDropEfficientlyAsync(_ newDrop: ArchivedItem) {
         appendDropEfficiently(newDrop)
     }
 
-    @MainActor
     static func appendDropEfficiently(_ newDrop: ArchivedItem) {
         uuidindex?[newDrop.uuid] = drops.count
 
@@ -24,7 +23,6 @@ final class Model {
         uuidindex = previousIndex
     }
 
-    @MainActor
     private static func rebuildIndexIfNeeded() {
         if uuidindex == nil {
             let d = drops // copy
@@ -34,13 +32,11 @@ final class Model {
         }
     }
 
-    @MainActor
     static func firstIndexOfItem(with uuid: UUID) -> Int? {
         rebuildIndexIfNeeded()
         return uuidindex?[uuid]
     }
 
-    @MainActor
     static func firstItem(with uuid: UUID) -> ArchivedItem? {
         if let i = firstIndexOfItem(with: uuid) {
             return drops[i]
@@ -48,7 +44,6 @@ final class Model {
         return nil
     }
 
-    @MainActor
     static func firstIndexOfItem(with uuid: String) -> Int? {
         if let uuidData = UUID(uuidString: uuid) {
             return firstIndexOfItem(with: uuidData)
@@ -56,12 +51,10 @@ final class Model {
         return nil
     }
 
-    @MainActor
     static func contains(uuid: UUID) -> Bool {
         firstIndexOfItem(with: uuid) != nil
     }
 
-    @MainActor
     static func clearCaches() {
         for drop in drops {
             for component in drop.components {
@@ -77,7 +70,6 @@ final class Model {
 
     private static var isStarted = false
 
-    @MainActor
     static func reset() {
         drops.removeAll(keepingCapacity: false)
         clearCaches()
@@ -152,26 +144,21 @@ final class Model {
                     }
 
                     var newDrops = ContiguousArray<ArchivedItem>()
-                    let loadQueue = DispatchQueue(label: "build.bru.Gladys.loadDecoderQueue", autoreleaseFrequency: .never)
-                    loadQueue.async {
-                        newDrops.reserveCapacity(itemCount)
-                    }
+                    newDrops.reserveCapacity(itemCount)
                     d.withUnsafeBytes { pointer in
                         let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
                         uuidSequence.forEach { u in
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
                             if let data = try? Data(contentsOf: dataPath) {
-                                loadQueue.async {
-                                    if let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
-                                        newDrops.append(item)
-                                    }
+                                if let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
+                                    newDrops.append(item)
                                 }
                             }
                         }
                     }
 
-                    drops = loadQueue.sync { newDrops }
+                    drops = newDrops
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
                     log("No need to reload data")
@@ -192,13 +179,10 @@ final class Model {
                 } else {
                     finalError = e
                 }
-                Task {
-                    await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                       message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                       buttonTitle: "Quit")
-                    abort()
-                }
-                return
+                _ = genericAlert(title: "Loading Error (code \(finalError.code))",
+                                   message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                   buttonTitle: "Quit")
+                abort()
             #else
                 // still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -215,13 +199,10 @@ final class Model {
                 } else {
                     finalError = e
                 }
-                Task {
-                    await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                       message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                       buttonTitle: "Quit")
-                    abort()
-                }
-                return
+            _ = genericAlert(title: "Loading Error (code \(finalError.code))",
+                                   message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                   buttonTitle: "Quit")
+                abort()
             #else
                 exit(0)
             #endif
@@ -262,7 +243,6 @@ final class Model {
         return url
     }()
 
-    @MainActor
     static func item(uuid: String) -> ArchivedItem? {
         if let uuidData = UUID(uuidString: uuid) {
             return item(uuid: uuidData)
@@ -271,22 +251,18 @@ final class Model {
         }
     }
 
-    @MainActor
     static func item(uuid: UUID) -> ArchivedItem? {
         firstItem(with: uuid)
     }
 
-    @MainActor
     static func item(shareId: String) -> ArchivedItem? {
         drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
     }
 
-    @MainActor
     static func component(uuid: UUID) -> Component? {
         Component.lookup(uuid: uuid)
     }
 
-    @MainActor
     static func component(uuid: String) -> Component? {
         if let uuidData = UUID(uuidString: uuid) {
             return component(uuid: uuidData)
@@ -295,12 +271,11 @@ final class Model {
         }
     }
 
-    @MainActor
     static func componentAsync(uuid: String) -> Component? {
         component(uuid: uuid)
     }
 
-    static func modificationDate(for url: URL) -> Date? {
+    static nonisolated func modificationDate(for url: URL) -> Date? {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 
