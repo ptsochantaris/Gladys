@@ -90,7 +90,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
                 saveDone()
             } else {
                 a.loadData(withTypeIdentifier: typeEntry.typeIdentifier) { data, _ in
-                    DispatchQueue.main.async { [weak self] in
+                    Task { @MainActor [weak self] in
                         self?.typeEntry.setBytes(data)
                         self?.saveDone()
                     }

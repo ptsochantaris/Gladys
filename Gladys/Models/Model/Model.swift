@@ -179,13 +179,16 @@ enum Model {
                 } else {
                     finalError = e
                 }
-                _ = genericAlert(title: "Loading Error (code \(finalError.code))",
-                                 message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                 buttonTitle: "Quit")
-                abort()
+                Task {
+                    await genericAlert(title: "Loading Error (code \(finalError.code))",
+                                       message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       buttonTitle: "Quit")
+                    abort()
+                }
             #else
                 // still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 2000 * NSEC_PER_MSEC)
                     exit(0)
                 }
             #endif
@@ -199,17 +202,19 @@ enum Model {
                 } else {
                     finalError = e
                 }
-                _ = genericAlert(title: "Loading Error (code \(finalError.code))",
-                                 message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                 buttonTitle: "Quit")
-                abort()
+                Task {
+                    await genericAlert(title: "Loading Error (code \(finalError.code))",
+                                       message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       buttonTitle: "Quit")
+                    abort()
+                }
             #else
                 exit(0)
             #endif
         }
 
         if !brokenMode {
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if isStarted {
                     if didLoad {
                         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)

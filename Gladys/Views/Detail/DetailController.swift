@@ -460,17 +460,17 @@ final class DetailController: GladysViewController,
         guard shouldWaitForSync else { return }
 
         var keepChecking = true
-        let alert = genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") {
+        var alert: UIAlertController?
+        Task {
+            await genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel", alertController: { alert = $0 })
             keepChecking = false
         }
 
-        Task {
-            while keepChecking {
-                try await Task.sleep(nanoseconds: 25 * NSEC_PER_MSEC)
-                if !shouldWaitForSync {
-                    keepChecking = false
-                    await alert.dismiss(animated: true)
-                }
+        while keepChecking {
+            try? await Task.sleep(nanoseconds: 25 * NSEC_PER_MSEC)
+            if !shouldWaitForSync {
+                keepChecking = false
+                await alert?.dismiss(animated: true)
             }
         }
     }
@@ -682,7 +682,7 @@ final class DetailController: GladysViewController,
                     if existingLabel == nil {
                         _ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, _ in
                             if let newLabel = newLabel {
-                                DispatchQueue.main.async {
+                                Task { @MainActor in
                                     self.item.labels[destinationIndexPath.row] = newLabel
                                     tableView.performBatchUpdates({
                                         tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
@@ -780,7 +780,7 @@ final class DetailController: GladysViewController,
             }
 
         case 1:
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.performSegue(withIdentifier: "addLabel", sender: indexPath)
             }
 
@@ -843,19 +843,18 @@ final class DetailController: GladysViewController,
         present(a, animated: true)
     }
 
+    @MainActor
     private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL) async {
         cell.animateArchive(true)
         defer {
             cell.animateArchive(false)
         }
         do {
-            let res = try await WebArchiver.fetchWebPreview(for: url)
+            let res = try await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res.image, let data = image.jpegData(compressionQuality: 1) {
-                await MainActor.run {
-                    let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-                    self.item.components.append(newTypeItem)
-                    self.handleNewTypeItem()
-                }
+                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+                item.components.append(newTypeItem)
+                handleNewTypeItem()
             } else {
                 await genericAlert(title: "Image Download Failed", message: "There seems to be invalid image data.")
             }
@@ -873,6 +872,7 @@ final class DetailController: GladysViewController,
         }
     }
 
+    @MainActor
     private func proceedToArchiveWebComponent(cell: DetailCell, url: URL) async {
         cell.animateArchive(true)
         defer {
@@ -880,12 +880,10 @@ final class DetailController: GladysViewController,
         }
 
         do {
-            let (data, typeIdentifier) = try await WebArchiver.archiveFromUrl(url)
-            await MainActor.run {
-                let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-                self.item.components.append(newTypeItem)
-                self.handleNewTypeItem()
-            }
+            let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url)
+            let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+            item.components.append(newTypeItem)
+            handleNewTypeItem()
         } catch {
             await genericAlert(title: "Archiving Failed", message: error.finalDescription)
         }

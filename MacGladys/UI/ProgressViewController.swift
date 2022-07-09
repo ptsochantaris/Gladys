@@ -33,7 +33,7 @@ final class ProgressViewController: NSViewController {
         let current = p.completedUnitCount
         let total = p.totalUnitCount
         let progress = (Double(current) * 1000.0) / Double(total)
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.progressIndicator.doubleValue = progress
             self.titleLabel.stringValue = "Completed \(current) of \(total) items"
         }

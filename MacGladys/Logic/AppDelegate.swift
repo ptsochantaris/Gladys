@@ -66,7 +66,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if NSApp.activationPolicy() != .accessory {
                 log("Changing activation policy to accessory mode")
                 NSApp.setActivationPolicy(.accessory)
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     NSApp.activate(ignoringOtherApps: true)
                     NSMenu.setMenuBarVisible(true)
                 }
@@ -104,7 +104,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 NSStatusBar.system.removeStatusItem(s)
                 statusItem = nil
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 NSApp.activate(ignoringOtherApps: true)
                 NSMenu.setMenuBarVisible(true)
             }
@@ -293,7 +293,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func systemDidWake() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             AppDelegate.updateHotkey()
             CloudManager.opportunisticSyncIfNeeded()
         }
@@ -565,7 +566,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
         // thread
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.endProgress()
         }
 

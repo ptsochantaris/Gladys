@@ -14,7 +14,7 @@ final class LocalAuth {
 
         auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label) { success, error in
             if (error as NSError?)?.code == -2 { return } // cancelled
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 completion(success)
             }
         }

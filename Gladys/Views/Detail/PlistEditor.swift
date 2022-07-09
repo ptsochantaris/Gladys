@@ -226,7 +226,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.sizeWindow()
         }
     }

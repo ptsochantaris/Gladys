@@ -9,31 +9,29 @@ extension UIKeyCommand {
     }
 }
 
+@MainActor
 var currentWindow: UIWindow? {
     UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
 }
 
+@MainActor
 weak var lastUsedWindow: UIWindow?
 
 @MainActor
-func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false) async {
-    await withCheckedContinuation { continuation in
-        _ = genericAlert(title: title, message: message, autoDismiss: autoDismiss, buttonTitle: buttonTitle, offerSettingsShortcut: offerSettingsShortcut) {
-            continuation.resume()
-        }
-    }
-}
+func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
+    var continuation: CheckedContinuation<Void, Never>?
 
-func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, completion: (() -> Void)? = nil) -> UIAlertController {
     let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
     if let buttonTitle = buttonTitle {
-        a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in completion?() })
+        a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in
+            continuation?.resume()
+        })
     }
 
     if offerSettingsShortcut {
         a.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:]) { _ in
-                completion?()
+                continuation?.resume()
             }
         })
     }
@@ -43,12 +41,18 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
     }
 
     if buttonTitle == nil, autoDismiss {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            a.dismiss(animated: true, completion: completion)
+        Task {
+            try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
+            await a.dismiss(animated: true)
+            continuation?.resume()
         }
     }
 
-    return a
+    alertController?(a)
+
+    await withCheckedContinuation { (awaitedContinuation: CheckedContinuation<Void, Never>) in
+        continuation = awaitedContinuation
+    }
 }
 
 @MainActor
@@ -544,7 +548,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
             observation = nil
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             if observation != nil { // keep it around
                 observation = nil
             }
@@ -1077,7 +1082,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private var acceptAlert: UIAlertController?
 
     @objc private func acceptStarted() {
-        acceptAlert = genericAlert(title: "Accepting Share…", message: nil)
+        Task {
+            await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
+                self?.acceptAlert = alert
+            })
+        }
     }
 
     @objc private func acceptEnded() {
@@ -1178,7 +1187,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func itemCreated(_: Notification) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.filter.updateFilter(signalUpdate: .animated)
         }
     }
@@ -1405,7 +1414,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 l.widthAnchor.constraint(equalTo: e.widthAnchor)
             ])
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 6000 * NSEC_PER_MSEC)
                 UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {
                     l.alpha = 0
                 }, completion: { _ in
@@ -1718,7 +1728,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         if UIAccessibility.isVoiceOverRunning,
            let indexPath = configuration.identifier as? IndexPath,
            let cell = collectionView.cellForItem(at: indexPath) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
                 UIAccessibility.post(notification: .layoutChanged, argument: cell)
             }
         }
@@ -2036,13 +2047,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         collection.scrollToItem(at: ip, at: .centeredVertically, animated: false)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let cell = self.collection.cellForItem(at: ip) as? ArchivedItemCell {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
+            if let cell = collection.cellForItem(at: ip) as? ArchivedItemCell {
                 cell.flash()
                 if let item = cell.archivedDropItem, !item.shouldDisplayLoading {
                     if andOpen {
-                        self.mostRecentIndexPathActioned = ip
-                        self.performSegue(withIdentifier: "showDetail", sender: item)
+                        mostRecentIndexPathActioned = ip
+                        performSegue(withIdentifier: "showDetail", sender: item)
 
                     } else if andPreview, let presenter = self.view.window?.alertPresenter {
                         item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
@@ -2213,7 +2225,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let wasImported = i.isImportedShare
         i.cloudKitShareRecord = nil
         if wasImported {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
                 Model.delete(items: [i])
             }
         } else {

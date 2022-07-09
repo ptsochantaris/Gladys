@@ -583,8 +583,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             case .copy:
                 copySelected()
                 copiedLabel.animator().isHidden = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-                    self?.copiedLabel.animator().isHidden = true
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
+                    copiedLabel.animator().isHidden = true
                 }
             case .infoPanel:
                 infoSelected()

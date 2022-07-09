@@ -11,7 +11,7 @@ final class ModelFilePresenter: NSObject, NSFilePresenter {
     }
 
     func presentedItemDidChange() {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             if Model.doneIngesting {
                 Model.reloadDataIfNeeded()
             }

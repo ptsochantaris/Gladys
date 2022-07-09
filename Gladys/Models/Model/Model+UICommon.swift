@@ -193,7 +193,7 @@ extension Model {
     }
 
     static let badgeTimer = PopTimer(timeInterval: 0.1) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             _updateBadge()
         }
     }
@@ -297,7 +297,7 @@ extension Model {
                 log("Saving Error: \(error.finalDescription)")
             }
 
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if needsAnotherSave {
                     proceedWithSave()
                 } else {
@@ -325,7 +325,7 @@ extension Model {
             } catch {
                 log("Warning: Error while committing index to disk: (\(error.finalDescription))")
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 saveComplete(wasIndexOnly: true)
             }
         }

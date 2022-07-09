@@ -46,7 +46,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             navigationItem.searchController = searchController
 
             if let t = searchController.searchBar.subviews.first?.subviews.first(where: { $0 is UITextField }) as? UITextField {
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     t.textColor = .darkText
                 }
             }
@@ -226,7 +226,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
                 let indexPath = IndexPath(row: i, section: 0)
                 s.table.deleteRows(at: [indexPath], with: .automatic)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
                 s.sizeWindow()
             }
         })
@@ -289,16 +290,18 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     }
 
     func didDismissSearchController(_: UISearchController) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.sizeWindow()
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+            sizeWindow()
         }
     }
 
     func updateSearchResults(for searchController: UISearchController) {
         LabelSelector.filter = (searchController.searchBar.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         table.reloadData()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.sizeWindow()
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+            sizeWindow()
         }
     }
 }

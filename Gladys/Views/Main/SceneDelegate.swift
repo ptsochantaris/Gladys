@@ -107,7 +107,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func windowScene(_: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        DispatchQueue.main.async { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
+        Task { @MainActor in // need to wait for the UI to show up first, if the app is being launched and not foregrounded
             CloudManager.acceptShare(cloudKitShareMetadata)
         }
     }

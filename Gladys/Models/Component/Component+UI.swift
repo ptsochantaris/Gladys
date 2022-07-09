@@ -216,6 +216,7 @@ extension Component {
         return false
     }
 
+    @MainActor
     func tryOpen(in viewController: UINavigationController?) {
         let item = objectForShare
         if let item = item as? MKMapItem {

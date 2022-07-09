@@ -147,7 +147,8 @@ final class ActionRequestViewController: UIViewController {
                     self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
                 }
             } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 200 * NSEC_PER_MSEC)
                     self.signalDone()
                 }
             }

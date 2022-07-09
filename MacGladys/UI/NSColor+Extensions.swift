@@ -14,26 +14,21 @@ extension NSColor {
 }
 
 extension NSImage {
-    func desaturated(completion: @escaping (NSImage?) -> Void) {
-        DispatchQueue.global(qos: .utility).async {
+    func desaturated() async -> NSImage? {
+        return await Task.detached {
             guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-                return
+                return nil
             }
             let blackAndWhiteImage = CIImage(cgImage: cgImage).applyingFilter("CIColorControls", parameters: [
                 "inputSaturation": 0,
                 "inputContrast": 0.35,
                 "inputBrightness": -0.3
             ])
-
+            
             let rep = NSCIImageRep(ciImage: blackAndWhiteImage)
             let img = NSImage(size: rep.size)
             img.addRepresentation(rep)
-            DispatchQueue.main.async {
-                completion(img)
-            }
-        }
+            return img
+        }.value
     }
 }

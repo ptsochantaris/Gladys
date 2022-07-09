@@ -7,7 +7,7 @@ import CloudKit
 
 @globalActor
 enum ComponentActor {
-    actor ActorType {}
+    final actor ActorType {}
     static let shared = ActorType()
 }
 

@@ -89,7 +89,7 @@ final class MirrorManager {
             coordinateRead(type: []) {
                 let start = Date()
                 for item in items {
-                    DispatchQueue.main.async {
+                    Task { @MainActor in
                         item.assimilateMirrorChanges()
                     }
                 }
@@ -291,7 +291,7 @@ private extension ArchivedItem {
             return
         }
 
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.markUpdated()
             self.needsReIngest = true
             self.flags.insert(.skipMirrorAtNextSave)

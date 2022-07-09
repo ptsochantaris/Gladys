@@ -135,7 +135,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func itemCollectionNeedsDisplay() {
         collection.animator().reloadData()
         touchBarScrubber?.reloadData()
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.updateTitle()
         }
     }
@@ -304,7 +304,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
         let f = cell.view.frame
         let centerFrame = NSRect(origin: CGPoint(x: f.midX - 1, y: f.midY - 1), size: CGSize(width: 2, height: 2))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             p.show(relativeTo: centerFrame, of: self.collection, preferredEdge: .minY)
         }
     }
@@ -326,12 +327,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     @IBAction func findSelected(_: NSMenuItem?) {
         if showSearch {
             resetSearch(andLabels: false)
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.view.window?.makeFirstResponder(self.collection)
             }
         } else {
             showSearch = true
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.view.window?.makeFirstResponder(self.searchBar)
             }
         }
@@ -386,13 +387,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private func updateScrollviewInsets() {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             guard let scrollView = self.collection.enclosingScrollView else { return }
             let offset = scrollView.contentView.bounds.origin.y
             let topHeight = self.topBackground.frame.size.height
             scrollView.contentInsets = NSEdgeInsets(top: topHeight, left: 0, bottom: 0, right: 0)
             if offset <= 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
                     scrollView.documentView?.scroll(CGPoint(x: 0, y: -topHeight))
                 }
             }
@@ -940,8 +942,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         emptyLabel.alphaValue = 0
         emptyLabel.stringValue = text
         emptyLabel.animator().alphaValue = 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6) { [weak self] in
-            self?.emptyLabel.animator().alphaValue = 0
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 6000 * NSEC_PER_MSEC)
+            emptyLabel.animator().alphaValue = 0
         }
     }
 

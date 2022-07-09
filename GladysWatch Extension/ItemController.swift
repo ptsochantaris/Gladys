@@ -128,14 +128,14 @@ final class ItemController: WKInterfaceController {
                 if i != nil {
                     ImageCache.setImageData(r, for: cacheKey)
                 }
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.image.setImage(i)
                     self.fetchingImage = false
                     self.gotImage = true
                 }
             }
         }, errorHandler: { _ in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.image.setImage(nil)
                 self.fetchingImage = false
                 self.gotImage = false
@@ -198,11 +198,11 @@ final class ItemController: WKInterfaceController {
         if let uuid = uuid {
             opening = true
             WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.opening = false
                 }
             }, errorHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.opening = false
                 }
             })
@@ -214,11 +214,11 @@ final class ItemController: WKInterfaceController {
         if let uuid = uuid {
             copying = true
             WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.copying = false
                 }
             }, errorHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.copying = false
                 }
             })
@@ -230,11 +230,11 @@ final class ItemController: WKInterfaceController {
         if let uuid = uuid {
             topping = true
             WCSession.default.sendMessage(["moveToTop": uuid], replyHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.topping = false
                 }
             }, errorHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.topping = false
                 }
             })
@@ -246,11 +246,11 @@ final class ItemController: WKInterfaceController {
         if let uuid = uuid {
             deleting = true
             WCSession.default.sendMessage(["delete": uuid], replyHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.deleting = false
                 }
             }, errorHandler: { _ in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.deleting = false
                 }
             })
@@ -282,8 +282,9 @@ final class ItemController: WKInterfaceController {
             animate(withDuration: 0.2) {
                 self.menuView.setAlpha(0)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.menuView.setHidden(true)
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 200 * NSEC_PER_MSEC)
+                menuView.setHidden(true)
             }
         }
     }

@@ -32,7 +32,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let i = NSItemProvider()
         i.suggestedName = "Gladys Archive.gladysArchive"
         i.registerFileRepresentation(forTypeIdentifier: GladysFileUTI, fileOptions: [], visibility: .all) { completion -> Progress? in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.showExportActivity(true)
             }
             return Model.createArchive(using: filter) { url, error in
@@ -44,7 +44,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
                 }
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.showExportActivity(false)
                 }
             }
@@ -58,7 +58,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let i = NSItemProvider()
         i.suggestedName = "Gladys.zip"
         i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.showZipActivity(true)
             }
             return Model.createZip(using: filter) { url, error in
@@ -70,7 +70,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
                 }
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.showZipActivity(false)
                 }
             }
@@ -96,7 +96,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             var cancelled = false
             let progress = p.loadFileRepresentation(forTypeIdentifier: GladysFileUTI) { url, error in
                 if cancelled {
-                    DispatchQueue.main.async {
+                    Task { @MainActor in
                         self.updateUI()
                     }
                     return
@@ -118,7 +118,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             }
             progress.cancellationHandler = {
                 cancelled = true
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.updateUI()
                 }
             }
@@ -291,12 +291,12 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     private func exportSelected() {
         guard let filter = view.associatedFilter else { return }
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.showExportActivity(true)
         }
         Model.createArchive(using: filter) { url, error in
             self.completeOperation(to: url, error: error)
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.showExportActivity(false)
             }
         }
@@ -327,7 +327,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             return
         }
         guard let url = url else { return }
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.exportingFileURL = url
             let p = UIDocumentPickerViewController(forExporting: [url])
             p.delegate = self
@@ -338,12 +338,12 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     @objc private func zipSelected() {
         guard let filter = view.associatedFilter else { return }
 
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.showZipActivity(true)
         }
         Model.createZip(using: filter) { url, error in
             self.completeOperation(to: url, error: error)
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.showZipActivity(false)
             }
         }
@@ -368,7 +368,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     private func manualExportDone() {
         if let e = exportingFileURL {
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 try? FileManager.default.removeItem(at: e)
             }
             exportingFileURL = nil

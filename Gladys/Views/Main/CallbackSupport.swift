@@ -5,7 +5,8 @@ import UIKit
 @MainActor
 enum CallbackSupport {
     private static func handle(result: Model.PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             switch result {
             case .success:
                 success(nil)
@@ -37,7 +38,8 @@ enum CallbackSupport {
                     handle(result: result, success: success, failure: failure)
 
                 } else {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    Task { @MainActor in
+                        try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
                         failure(NSError.error(code: 4, failureReason: "Invalid URL."))
                     }
                 }
@@ -52,7 +54,8 @@ enum CallbackSupport {
                 }
 
             } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
                     failure(NSError.error(code: 3, failureReason: "One of 'text', 'url', or 'base64data' parameters is required."))
                 }
             }

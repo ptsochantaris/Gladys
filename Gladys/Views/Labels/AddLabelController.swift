@@ -128,8 +128,9 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
             Filter.Toggle.Section.latestLabels = Array(latest.prefix(10))
         }
         dirty = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.delegate?.addLabelController(self, didEnterLabel: result)
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+            delegate?.addLabelController(self, didEnterLabel: result)
         }
     }
 

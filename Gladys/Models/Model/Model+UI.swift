@@ -22,13 +22,13 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
     func sessionDidDeactivate(_: WCSession) {}
 
     func session(_: WCSession, didReceiveMessage message: [String: Any]) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.handle(message: message, replyHandler: { _ in })
         }
     }
 
     func session(_: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.handle(message: message, replyHandler: replyHandler)
         }
     }
@@ -38,25 +38,25 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
         if let uuid = message["view"] as? String {
             let request = HighlightRequest(uuid: uuid, open: true)
             NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
-            DispatchQueue.global(qos: .background).async {
+            Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
         } else if let uuid = message["moveToTop"] as? String, let item = Model.item(uuid: uuid) {
             Model.sendToTop(items: [item])
-            DispatchQueue.global(qos: .background).async {
+            Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
         } else if let uuid = message["delete"] as? String, let item = Model.item(uuid: uuid) {
             Model.delete(items: [item])
-            DispatchQueue.global(qos: .background).async {
+            Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
         } else if let uuid = message["copy"] as? String, let item = Model.item(uuid: uuid) {
             item.copyToPasteboard()
-            DispatchQueue.global(qos: .background).async {
+            Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
@@ -91,7 +91,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
             }
 
         } else {
-            DispatchQueue.global(qos: .background).async {
+            Task.detached(priority: .background) {
                 replyHandler([:])
             }
         }

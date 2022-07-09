@@ -56,6 +56,7 @@ extension ArchivedItem {
         return Filter.Toggle.Function.userLabel(text).dragItem
     }
 
+    @MainActor
     private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?) -> Void) {
         let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
         a.addTextField { textField in
@@ -88,6 +89,7 @@ extension ArchivedItem {
         currentWindow?.alertPresenter?.present(a, animated: true)
     }
 
+    @MainActor
     func lock(completion: @escaping (Data?, String?) -> Void) {
         let message: String
         if LocalAuth.canUseLocalAuth {
@@ -111,8 +113,9 @@ extension ArchivedItem {
             return
         }
         ArchivedItem.unlockingItemsBlock.insert(uuid)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            ArchivedItem.unlockingItemsBlock.remove(self.uuid)
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
+            ArchivedItem.unlockingItemsBlock.remove(uuid)
         }
 
         LocalAuth.attempt(label: label) { [weak self] success in
@@ -120,11 +123,14 @@ extension ArchivedItem {
                 self?.flags.remove(.needsUnlock)
                 completion(true)
             } else {
-                self?.unlockWithPassword(label: label, action: action, completion: completion)
+                Task { @MainActor [weak self] in
+                    self?.unlockWithPassword(label: label, action: action, completion: completion)
+                }
             }
         }
     }
 
+    @MainActor
     private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool) -> Void) {
         getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
             guard let password = password else {
@@ -201,6 +207,7 @@ extension ArchivedItem {
         return true
     }
 
+    @MainActor
     func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool) -> Void) {
         let item = mostRelevantTypeItem?.objectForShare
         if let item = item as? MKMapItem {

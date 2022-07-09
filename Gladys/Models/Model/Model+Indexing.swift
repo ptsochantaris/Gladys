@@ -2,24 +2,38 @@ import CoreSpotlight
 
 extension Model {
     private final class IndexProxy: NSObject, CSSearchableIndexDelegate {
-        @MainActor
         func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-            Model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
+            Task { @MainActor in
+                Model.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
+            }
         }
 
-        @MainActor
         func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-            Model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
+            Task { @MainActor in
+                Model.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
+            }
         }
 
-        @MainActor
+        @MainActor // lie, but taking care of that in the method
         func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            try Model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+            if Thread.isMainThread {
+                return try Model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+            } else {
+                return try DispatchQueue.main.sync {
+                    try Model.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+                }
+            }
         }
 
-        @MainActor
+        @MainActor // lie, but taking care of that in the method
         func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
-            try Model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+            if Thread.isMainThread {
+                return try Model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+            } else {
+                return try DispatchQueue.main.sync {
+                    try Model.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+                }
+            }
         }
     }
 
@@ -66,7 +80,7 @@ extension Model {
                 log("\(items.count) item(s) indexed")
             }
             if let c = completion {
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     c()
                 }
             }

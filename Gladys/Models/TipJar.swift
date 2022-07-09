@@ -50,16 +50,16 @@ final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObs
     }
 
     func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
-        DispatchQueue.main.async { [weak self] in
+        Task { @MainActor in
             let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
-            self?.completion(items, nil)
+            completion(items, nil)
         }
     }
 
     func request(_: SKRequest, didFailWithError error: Error) {
         log("Error fetching IAP items: \(error.localizedDescription)")
-        DispatchQueue.main.async { [weak self] in
-            self?.completion(nil, error)
+        Task { @MainActor in
+            completion(nil, error)
         }
     }
 
@@ -103,7 +103,7 @@ final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObs
     }
 
     func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        DispatchQueue.main.async { [weak self] in
+        Task { @MainActor in
             for t in transactions {
                 let prefix: String
                 #if MAC
@@ -115,10 +115,10 @@ final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObs
                     switch t.transactionState {
                     case .failed:
                         SKPaymentQueue.default().finishTransaction(t)
-                        self?.displayFailure(error: t.error)
+                        displayFailure(error: t.error)
                     case .purchased, .restored:
                         SKPaymentQueue.default().finishTransaction(t)
-                        self?.displaySuccess()
+                        displaySuccess()
                     case .deferred, .purchasing:
                         break
                     @unknown default:

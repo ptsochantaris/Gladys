@@ -85,7 +85,7 @@ extension Component {
             return
         }
 
-        let (data, _) = try await WebArchiver.archiveFromUrl(url)
+        let (data, _) = try await WebArchiver.shared.archiveFromUrl(url)
         if flags.contains(.loadingAborted) {
             try await ingestFailed(error: nil)
         }
@@ -400,7 +400,7 @@ extension Component {
             throw GladysError.blankResponse.error
         }
 
-        let res = try? await WebArchiver.fetchWebPreview(for: url)
+        let res = try? await WebArchiver.shared.fetchWebPreview(for: url)
         if flags.contains(.loadingAborted) {
             try await ingestFailed(error: nil)
         }

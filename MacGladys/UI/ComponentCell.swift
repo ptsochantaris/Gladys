@@ -146,8 +146,8 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         if showPreview, let icon = typeEntry.componentIcon {
-            icon.desaturated { img in
-                self.centreBlock.layer?.contents = img
+            Task {
+                centreBlock.layer?.contents = await icon.desaturated()
             }
         } else {
             centreBlock.layer?.contents = nil

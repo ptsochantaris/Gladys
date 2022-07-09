@@ -439,7 +439,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
         let f = cell.view.frame
         let centerFrame = NSRect(origin: CGPoint(x: f.midX - 1, y: f.midY - 1), size: CGSize(width: 2, height: 2))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             p.show(relativeTo: centerFrame, of: self.components, preferredEdge: .minY)
         }
     }
@@ -470,8 +471,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                     self?.item.needsReIngest = true
                     self?.saveItem()
                 } else if let s = self {
-                    genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: s.view.window!)
-                    s.editCurrent(sender)
+                    Task { @MainActor in
+                        await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: s.view.window!)
+                        s.editCurrent(sender)
+                    }
                 }
             }
         }
@@ -487,22 +490,18 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         guard let i = components.selectionIndexes.first else { return }
         let component = item.components[i]
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
-        Task {
+        Task { @MainActor in
             cell.animateArchiving = true
             do {
-                let (data, typeIdentifier) = try await WebArchiver.archiveFromUrl(url)
-                await MainActor.run {
-                    let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
-                    item.components.append(newTypeItem)
-                    saveItem()
-                    cell.animateArchiving = false
-                }
+                let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url)
+                let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+                item.components.append(newTypeItem)
+                saveItem()
+                cell.animateArchiving = false
             } catch {
-                await MainActor.run {
-                    if let w = view.window {
-                        genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
-                        cell.animateArchiving = false
-                    }
+                if let w = view.window {
+                    await genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
+                    cell.animateArchiving = false
                 }
             }
         }
@@ -514,22 +513,16 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
         cell.animateArchiving = true
 
-        Task {
-            let res = try? await WebArchiver.fetchWebPreview(for: url)
+        Task { @MainActor in
+            let res = try? await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
-                await MainActor.run {
-                    let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
-                    self.item.components.append(newTypeItem)
-                    self.saveItem()
-                }
+                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
+                self.item.components.append(newTypeItem)
+                self.saveItem()
             } else {
-                await MainActor.run {
-                    genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
-                }
+                await genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
             }
-            await MainActor.run {
-                cell.animateArchiving = false
-            }
+            cell.animateArchiving = false
         }
     }
 

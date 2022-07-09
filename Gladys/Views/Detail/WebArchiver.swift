@@ -3,7 +3,9 @@ import Fuzi
 import UniformTypeIdentifiers
 
 /// Archiver
-final class WebArchiver {
+final actor WebArchiver {
+    static let shared = WebArchiver()
+
     /// Error type
     enum ArchiveErrorType: Error {
         case FailToInitHTMLDocument
@@ -11,7 +13,7 @@ final class WebArchiver {
         case PlistSerializeFailed
     }
 
-    static func setup() {
+    func setup() {
         let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
         #if os(iOS)
             URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (iOS; iOS)"]
@@ -20,7 +22,7 @@ final class WebArchiver {
         #endif
     }
 
-    private static func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    private func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         if #available(iOS 15.0, iOSApplicationExtension 15.0, macOS 12.0, *) {
             let res = try await URLSession.shared.data(for: request)
             if let response = res.1 as? HTTPURLResponse {
@@ -42,11 +44,11 @@ final class WebArchiver {
         }
     }
 
-    private static func getData(from url: URL) async throws -> (Data, HTTPURLResponse) {
+    private func getData(from url: URL) async throws -> (Data, HTTPURLResponse) {
         return try await getData(for: URLRequest(url: url))
     }
 
-    static func archiveFromUrl(_ url: URL) async throws -> (Data, String) {
+    func archiveFromUrl(_ url: URL) async throws -> (Data, String) {
         let (data, response) = try await getData(from: url)
         if response.mimeType == "text/html" {
             return try await archiveWebpageFromUrl(url: url, data: data, response: response)
@@ -59,7 +61,7 @@ final class WebArchiver {
         }
     }
 
-    private static func archiveWebpageFromUrl(url: URL, data: Data, response: URLResponse) async throws -> (Data, String) {
+    private func archiveWebpageFromUrl(url: URL, data: Data, response: URLResponse) async throws -> (Data, String) {
         let (r, error) = resourcePathsFromUrl(url: url, data: data, response: response)
         guard let resources = r else {
             log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
@@ -71,8 +73,8 @@ final class WebArchiver {
                 guard let resourceUrl = URL(string: path) else {
                     continue
                 }
-                group.addTask {
-                    guard let (data, response) = try? await getData(from: resourceUrl), response.statusCode == 200 else {
+                group.addTask { [weak self] in
+                    guard let (data, response) = try? await self?.getData(from: resourceUrl), response.statusCode == 200 else {
                         log("Download failed: \(path)")
                         return nil
                     }
@@ -123,7 +125,7 @@ final class WebArchiver {
         }
     }
 
-    private static func resourcePathsFromUrl(url: URL, data htmlData: Data, response _: URLResponse) -> ([String]?, ArchiveErrorType?) {
+    private func resourcePathsFromUrl(url: URL, data htmlData: Data, response _: URLResponse) -> ([String]?, ArchiveErrorType?) {
         guard let doc = try? HTMLDocument(data: htmlData) else {
             log("Init html doc error")
             return (nil, .FailToInitHTMLDocument)
@@ -171,7 +173,7 @@ final class WebArchiver {
         let isThumbnail: Bool
     }
 
-    static func fetchWebPreview(for url: URL) async throws -> WebPreviewResult {
+    func fetchWebPreview(for url: URL) async throws -> WebPreviewResult {
         var request = URLRequest(url: url)
         log("Investigating possible HTML title from this URL: \(url.absoluteString)")
         request.httpMethod = "HEAD"
@@ -260,7 +262,7 @@ final class WebArchiver {
         }
     }
 
-    private static func getThumbnailPath(from htmlDoc: HTMLDocument) -> String? {
+    private func getThumbnailPath(from htmlDoc: HTMLDocument) -> String? {
         var thumbnailPath: String?
 
         if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
@@ -285,7 +287,7 @@ final class WebArchiver {
         return thumbnailPath
     }
 
-    private static func getFavIconPath(from htmlDoc: HTMLDocument) -> String? {
+    private func getFavIconPath(from htmlDoc: HTMLDocument) -> String? {
         var favIconPath = "/favicon.ico"
         if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
             var imageRank = 0
@@ -309,7 +311,7 @@ final class WebArchiver {
         return favIconPath
     }
 
-    private static func repair(path: String?, using url: URL) -> URL? {
+    private func repair(path: String?, using url: URL) -> URL? {
         guard var path = path else { return nil }
         var iconUrl: URL?
         if let i = URL(string: path), i.scheme != nil {
@@ -331,7 +333,7 @@ final class WebArchiver {
 
     ////////////////////////////////////////////
 
-    private static func fetchImage(url: URL?) async throws -> IMAGE? {
+    private func fetchImage(url: URL?) async throws -> IMAGE? {
         guard let url = url else { return nil }
         let req = URLRequest(url: url)
         let (data, _) = try await getData(for: req)

@@ -334,7 +334,7 @@ extension CloudManager {
         modifyOperation.savePolicy = .allKeys
         modifyOperation.perRecordCompletionBlock = { record, _ in
             let recordUUID = record.recordID.recordName
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if let item = Model.item(shareId: recordUUID) {
                     item.cloudKitShareRecord = nil
                     log("Shut down sharing for item \(item.uuid) before deactivation")
@@ -343,7 +343,7 @@ extension CloudManager {
             }
         }
         modifyOperation.modifyRecordsCompletionBlock = { _, _, error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if !force, let error = error {
                     completion(error)
                     log("Cloud sync deactivation failed, could not deactivate current shares")
@@ -480,7 +480,7 @@ extension CloudManager {
     }
 
     private static func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             log("Activation aborted: \(error)")
             completion(error)
             deactivate(force: true, completion: { _ in })
@@ -491,7 +491,7 @@ extension CloudManager {
         let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
         let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
         fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if let error = error, (error as? CKError)?.code != CKError.partialFailure {
                     log("Error while activating: \(error.finalDescription)")
                     abortActivation(error, completion: completion)
@@ -521,7 +521,7 @@ extension CloudManager {
             if let error = error {
                 log("Error while deleting zone: \(error.finalDescription)")
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 showNetwork = false
                 completion(error)
             }
@@ -568,7 +568,7 @@ extension CloudManager {
             guard let fetchGroup = fetchGroups[zoneId] else { continue }
             let fetch = CKFetchRecordsOperation(recordIDs: fetchGroup)
             fetch.perRecordCompletionBlock = { record, recordID, error in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     if let error = error {
                         if error.itemDoesNotExistOnServer, let recordID = recordID {
                             // this share record does not exist. Our local data is wrong
@@ -598,19 +598,19 @@ extension CloudManager {
         let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
         fetch.perRecordCompletionBlock = { record, _, error in
             if let record = record {
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     log("Replaced local cloud record with latest copy from server (\(itemNeedingCloudPull.uuid))")
                     itemNeedingCloudPull.cloudKitRecord = record
                     itemNeedingCloudPull.postModified()
                 }
             } else if let error = error, error.itemDoesNotExistOnServer {
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(itemNeedingCloudPull.uuid))")
                     itemNeedingCloudPull.removeFromCloudkit()
                     itemNeedingCloudPull.postModified()
                 }
             }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 completion?(error)
             }
         }
@@ -702,7 +702,8 @@ extension CloudManager {
     static func acceptShare(_ metadata: CKShare.Metadata) {
         if !syncSwitchedOn {
             Task {
-                genericAlert(title: "Could not accept shared item", message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
+                await genericAlert(title: "Could not accept shared item",
+                                   message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
             }
             return
         }
@@ -740,11 +741,9 @@ extension CloudManager {
         }
         let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
         deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 if let error = error, !error.itemDoesNotExistOnServer {
-                    Task {
-                        genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
-                    }
+                    await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
                     completion(error)
                 } else { // our local record must be stale, let's refresh it just in case
                     item.cloudKitShareRecord = nil

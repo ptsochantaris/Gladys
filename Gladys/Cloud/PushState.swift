@@ -158,7 +158,7 @@ final class PushState {
                     }
                 }
 
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     if let error = error {
                         self.latestError = error
                         log("Error deleting items: \(error.finalDescription)")
@@ -179,13 +179,13 @@ final class PushState {
             operation.database = database
             operation.savePolicy = .allKeys
             operation.perRecordProgressBlock = { record, progress in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     let recordProgress = self.uuid2progress[record.recordID.recordName]
                     recordProgress?.completedUnitCount = Int64(progress * 100.0)
                 }
             }
             operation.modifyRecordsCompletionBlock = { updatedRecords, _, error in
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     if let error = error {
                         log("Error updating cloud records: \(error.finalDescription)")
                         self.latestError = error

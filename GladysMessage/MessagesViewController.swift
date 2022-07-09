@@ -113,7 +113,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         updateItemSize(for: view.bounds.size)
         searchBar.text = lastFilter
         itemsView.reloadData()
-        DispatchQueue.main.async {
+        Task { @MainActor in
             self.itemsView.contentOffset = messagesCurrentOffset
         }
     }
@@ -142,7 +142,8 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         if presentationStyle != .expanded {
             requestPresentationStyle(.expanded)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
                 searchBar.becomeFirstResponder()
             }
         }

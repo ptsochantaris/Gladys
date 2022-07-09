@@ -231,23 +231,23 @@ final class Preferences: NSViewController {
                 SFSpeechRecognizer.requestAuthorization { status in
                     switch status {
                     case .authorized:
-                        DispatchQueue.main.async {
+                        Task { @MainActor in
                             if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
                                 PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
-                                genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                                await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
                             } else {
                                 sender.integerValue = 0
                                 PersistedOptions.transcribeSpeechFromMedia = false
-                                genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                                await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
                             }
                         }
                     case .denied, .notDetermined, .restricted:
-                        DispatchQueue.main.async {
+                        Task { @MainActor in
                             sender.integerValue = 0
                             PersistedOptions.transcribeSpeechFromMedia = false
                         }
                     @unknown default:
-                        DispatchQueue.main.async {
+                        Task { @MainActor in
                             sender.integerValue = 0
                             PersistedOptions.transcribeSpeechFromMedia = false
                         }
@@ -493,7 +493,9 @@ final class Preferences: NSViewController {
 
     @IBAction private func eraseiCloudDataSelected(_: NSButton) {
         if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
-            genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
+            Task { @MainActor in
+                await genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
+            }
         } else {
             confirm(title: "Are you sure?",
                     message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
@@ -527,10 +529,12 @@ final class Preferences: NSViewController {
             s.eraseAlliCloudDataButton.isEnabled = true
             s.syncSwitch.isEnabled = true
             s.syncSwitch.isEnabled = true
-            if let error = error {
-                genericAlert(title: "Error", message: error.finalDescription)
-            } else {
-                genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
+            Task {
+                if let error = error {
+                    await genericAlert(title: "Error", message: error.finalDescription)
+                } else {
+                    await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
+                }
             }
         }
     }
