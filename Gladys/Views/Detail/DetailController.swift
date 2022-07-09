@@ -852,7 +852,7 @@ final class DetailController: GladysViewController,
         do {
             let res = try await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res.image, let data = image.jpegData(compressionQuality: 1) {
-                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: item.uuid, data: data, order: item.components.count)
                 item.components.append(newTypeItem)
                 handleNewTypeItem()
             } else {
@@ -881,7 +881,7 @@ final class DetailController: GladysViewController,
 
         do {
             let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url)
-            let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
+            let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: item.uuid, data: data, order: item.components.count)
             item.components.append(newTypeItem)
             handleNewTypeItem()
         } catch {

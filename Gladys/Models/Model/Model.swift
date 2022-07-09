@@ -187,8 +187,8 @@ enum Model {
                 }
             #else
                 // still boot the item, so it doesn't block others, but keep blank contents and abort after a second or two
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 2000 * NSEC_PER_MSEC)
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 2000 * NSEC_PER_MSEC)
                     exit(0)
                 }
             #endif

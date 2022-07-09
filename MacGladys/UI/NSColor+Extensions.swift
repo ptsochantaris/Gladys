@@ -15,7 +15,7 @@ extension NSColor {
 
 extension NSImage {
     func desaturated() async -> NSImage? {
-        return await Task.detached {
+        await Task.detached {
             guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
                 return nil
             }
@@ -24,7 +24,7 @@ extension NSImage {
                 "inputContrast": 0.35,
                 "inputBrightness": -0.3
             ])
-            
+
             let rep = NSCIImageRep(ciImage: blackAndWhiteImage)
             let img = NSImage(size: rep.size)
             img.addRepresentation(rep)
