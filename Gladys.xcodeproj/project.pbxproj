@@ -1126,8 +1126,6 @@
 				168C42F4233F5CA700050E82 /* LocalAuth.swift */,
 				1619E8161EFF3745000087DD /* MirrorManager.swift */,
 				166B638F236A451F00115AC3 /* FileMonitor.swift */,
-				165847052376CC2400666B7B /* Model+Siri.swift */,
-				165847082376EE4A00666B7B /* Model+Importing.swift */,
 				16A42A2124C4FAA1002CBD1B /* TipJar.swift */,
 				16FC0B3027E9287B00CF3290 /* Cache.swift */,
 			);
@@ -1491,6 +1489,8 @@
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 				16EC2934219D5F11004174C3 /* Model+Lite.swift */,
+				165847052376CC2400666B7B /* Model+Siri.swift */,
+				165847082376EE4A00666B7B /* Model+Importing.swift */,
 				165FC62B2635A8BA003F9268 /* Filter.swift */,
 			);
 			path = Model;
