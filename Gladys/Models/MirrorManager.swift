@@ -77,7 +77,7 @@ final class MirrorManager {
         coordinateRead(type: []) {
             if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
                 Task { @MainActor in
-                    let typeItem = Model.component(uuid: uuid)
+                    let typeItem = await Model.component(uuid: uuid)
                     typeItem?.parent?.assimilateMirrorChanges()
                 }
             }

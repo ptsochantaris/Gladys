@@ -718,7 +718,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         dragModePanel.alpha = 0
     }
 
-    var onLoad: ((ViewController) -> Void)?
+    var onLoadTask: TaskLock? = TaskLock(preLocked: true)
 
     private func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
@@ -961,12 +961,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
         n.addObserver(self, selector: #selector(acceptEnded), name: .AcceptEnding, object: nil)
         n.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
-        n.addObserver(self, selector: #selector(highlightItem(_:)), name: .HighlightItemRequested, object: nil)
+        n.addObserver(self, selector: #selector(highlightItemNotification(_:)), name: .HighlightItemRequested, object: nil)
         n.addObserver(self, selector: #selector(uiRequest(_:)), name: .UIRequest, object: nil)
         n.addObserver(self, selector: #selector(dismissAnyPopoverRequested), name: .DismissPopoversRequest, object: nil)
         n.addObserver(self, selector: #selector(resetSearchRequest), name: .ResetSearchRequest, object: nil)
-        n.addObserver(self, selector: #selector(startSearch(_:)), name: .StartSearchRequest, object: nil)
-        n.addObserver(self, selector: #selector(forcePaste), name: .ForcePasteRequest, object: nil)
         n.addObserver(self, selector: #selector(keyboardHiding), name: UIApplication.keyboardWillHideNotification, object: nil)
         n.addObserver(self, selector: #selector(sectionHeaderSelected), name: .SectionHeaderTapped, object: nil)
         n.addObserver(self, selector: #selector(sectionShowAllTapped), name: .SectionShowAllTapped, object: nil)
@@ -1029,9 +1027,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         super.viewDidAppear(animated)
 
-        if let o = onLoad {
-            o(self)
-            onLoad = nil
+        if let taskLock = onLoadTask {
+            onLoadTask = nil
+            Task {
+                await taskLock.unlock()
+            }
         }
     }
 
@@ -1980,14 +1980,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     //////////////////////////
 
-    @objc private func startSearch(_ notification: Notification) {
-        if let s = navigationItem.searchController {
-            if let initialText = notification.object as? String {
-                s.searchBar.text = initialText
-            }
-            s.isActive = true
-            s.searchBar.becomeFirstResponder()
+    func startSearch(_ initialText: String?) {
+        guard let s = navigationItem.searchController else { return }
+        if let initialText = initialText {
+            s.searchBar.text = initialText
         }
+        s.searchBar.becomeFirstResponder()
     }
 
     func resetSearch(andLabels: Bool) async {
@@ -2005,20 +2003,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             updateLabelIcon()
         }
     }
+    
+    @objc private func highlightItemNotification(_ notification: Notification) {
+        guard let request = notification.object as? HighlightRequest else { return }
+        Task {
+            await highlightItem(request)
+        }
+    }
 
-    @objc private func highlightItem(_ notification: Notification) {
-        guard let request = notification.object as? HighlightRequest, let uuid = UUID(uuidString: request.uuid) else { return }
+    func highlightItem(_ request: HighlightRequest) async {
+        guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
-            Task {
-                await dismissAnyPopOverOrModal()
-                highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
-            }
+            await dismissAnyPopOverOrModal()
+            highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
         } else if Model.firstIndexOfItem(with: request.uuid) != nil {
-            Task {
-                await resetSearch(andLabels: true)
-                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-                highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
-            }
+            await resetSearch(andLabels: true)
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+            highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
         }
     }
 
@@ -2098,11 +2099,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     ///////////////////////////// Quick actions
 
-    @objc private func forcePaste() {
-        Task {
-            await resetSearch(andLabels: true)
-            pasteSelected(pasteButton)
-        }
+    func forcePaste() async {
+        await resetSearch(andLabels: true)
+        pasteSelected(pasteButton)
     }
 
     ///////////////////////////// Accessibility

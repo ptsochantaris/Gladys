@@ -6,7 +6,6 @@ enum Model {
 
     static var drops = ContiguousArray<ArchivedItem>() {
         didSet {
-            assert(Thread.isMainThread)
             uuidindex = nil
         }
     }
@@ -21,8 +20,7 @@ enum Model {
 
     private static func rebuildIndexIfNeeded() {
         if uuidindex == nil {
-            let d = drops // copy
-            let z = zip(d.map(\.uuid), 0 ..< d.count)
+            let z = zip(drops.map(\.uuid), 0 ..< drops.count)
             uuidindex = Dictionary(z) { one, _ in one }
             log("Rebuilt drop index")
         }
@@ -260,20 +258,16 @@ enum Model {
         drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
     }
 
-    static func component(uuid: UUID) -> Component? {
-        Component.lookup(uuid: uuid)
+    static func component(uuid: UUID) async -> Component? {
+        await ComponentLookup.shared.lookup(uuid: uuid)
     }
 
-    static func component(uuid: String) -> Component? {
+    static func component(uuid: String) async -> Component? {
         if let uuidData = UUID(uuidString: uuid) {
-            return component(uuid: uuidData)
+            return await component(uuid: uuidData)
         } else {
             return nil
         }
-    }
-
-    static func componentAsync(uuid: String) -> Component? {
-        component(uuid: uuid)
     }
 
     nonisolated static func modificationDate(for url: URL) -> Date? {

@@ -37,8 +37,8 @@ extension Notification.Name {
     static let AcceptEnding = Notification.Name("AcceptEnding")
     static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
     static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
-    static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
     static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
+    static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
 }
 
 #if MAINAPP
@@ -57,8 +57,6 @@ extension Notification.Name {
         static let UIRequest = Notification.Name("UIRequest")
         static let DismissPopoversRequest = Notification.Name("DismissPopoversRequest")
         static let ResetSearchRequest = Notification.Name("ResetSearchRequest")
-        static let StartSearchRequest = Notification.Name("StartSearchRequest")
-        static let ForcePasteRequest = Notification.Name("ForcePasteRequest")
         static let MultipleWindowModeChange = Notification.Name("MainWindowCloseStateChange")
         static let PreferencesOpen = Notification.Name("PreferencesOpen")
         static let SectionHeaderTapped = Notification.Name("SectionHeaderTapped")

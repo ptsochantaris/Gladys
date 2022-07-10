@@ -74,31 +74,26 @@ final class Singleton {
     private var ingestRunning = false
 
     @objc private func ingestStart() {
-        Task { @MainActor in
-            if !ingestRunning {
-                ingestRunning = true
-                BackgroundTask.registerForBackground()
-            }
+        if !ingestRunning {
+            ingestRunning = true
+            BackgroundTask.registerForBackground()
         }
     }
 
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
-        Task { @MainActor in
-            if Model.doneIngesting {
-                Model.save()
-                if ingestRunning {
-                    BackgroundTask.unregisterForBackground()
-                    ingestRunning = false
-                }
-            } else {
-                Model.commitItem(item: item)
+        if Model.doneIngesting {
+            Model.save()
+            if ingestRunning {
+                BackgroundTask.unregisterForBackground()
+                ingestRunning = false
             }
+        } else {
+            Model.commitItem(item: item)
         }
     }
 
-    @MainActor
-    func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {
+    func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) async {
         guard let scene = scene as? UIWindowScene else { return }
 
         scene.session.stateRestorationActivity = userActivity
@@ -120,7 +115,7 @@ final class Singleton {
                 labels = labelList
             }
 
-            showMainWindow(in: scene, restoringSearch: searchText, restoringDisplayMode: displayMode, labelList: labels, legacyLabelList: legacyLabelList)
+            await showMainWindow(in: scene, restoringSearch: searchText, restoringDisplayMode: displayMode, labelList: labels, legacyLabelList: legacyLabelList)
             return
 
         case kGladysQuicklookActivity:
@@ -129,25 +124,21 @@ final class Singleton {
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
-                    showMainWindow(in: scene) { _ in
-                        Task {
-                            await genericAlert(title: "Not Found", message: "This item was not found")
-                        }
-                    }
+                    await showMainWindow(in: scene)
+                    await genericAlert(title: "Not Found", message: "This item was not found")
                     return
                 }
 
                 let child: Component?
                 if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                    child = Model.component(uuid: childUuid)
+                    child = await Model.component(uuid: childUuid)
                 } else {
                     child = item.previewableTypeItem
                 }
                 if forceMainWindow {
-                    showMainWindow(in: scene) { _ in
-                        let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
-                        NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
-                    }
+                    let v = await showMainWindow(in: scene)
+                    let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
+                    await v.highlightItem(request)
                     return
 
                 } else if let child = child {
@@ -165,19 +156,16 @@ final class Singleton {
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
-                    showMainWindow(in: scene) { _ in
-                        Task {
-                            await genericAlert(title: "Not Found", message: "This item was not found")
-                        }
-                    }
+                    await showMainWindow(in: scene)
+                    await genericAlert(title: "Not Found", message: "This item was not found")
                     return
                 }
 
                 if forceMainWindow {
-                    showMainWindow(in: scene) { _ in
-                        let request = HighlightRequest(uuid: uuidString, open: true)
-                        NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
-                    }
+                    let v = await showMainWindow(in: scene)
+                    let request = HighlightRequest(uuid: uuidString, open: true)
+                    await v.highlightItem(request)
+
                 } else {
                     let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
                     let d = n.viewControllers.first as! DetailController
@@ -188,28 +176,32 @@ final class Singleton {
             }
 
         case kGladysStartPasteShortcutActivity:
-            showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .ForcePasteRequest, object: nil) }
+            let v = await showMainWindow(in: scene)
+            await v.forcePaste()
             return
 
         case kGladysStartSearchShortcutActivity:
-            showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: nil) }
+            let v = await showMainWindow(in: scene)
+            v.startSearch(nil)
             return
 
         case CSSearchableItemActionType:
             if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier)
-                showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .HighlightItemRequested, object: request) }
+                let v = await showMainWindow(in: scene)
+                await v.highlightItem(request)
                 return
             }
 
         case CSQueryContinuationActionType:
             if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
-                showMainWindow(in: scene) { _ in NotificationCenter.default.post(name: .StartSearchRequest, object: searchQuery) }
+                let v = await showMainWindow(in: scene)
+                v.startSearch(searchQuery)
                 return
             }
 
         default:
-            showMainWindow(in: scene)
+            await showMainWindow(in: scene)
             return
         }
 
@@ -219,7 +211,8 @@ final class Singleton {
         }
     }
 
-    private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [Filter.Toggle]? = nil, legacyLabelList: Set<String>? = nil, completion: ((ViewController) -> Void)? = nil) {
+    @discardableResult
+    private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [Filter.Toggle]? = nil, legacyLabelList: Set<String>? = nil) async -> ViewController {
         let s = scene.session
         let v: ViewController
         let replacing: Bool
@@ -246,18 +239,17 @@ final class Singleton {
         if let modeNumber = restoringDisplayMode, let mode = Filter.GroupingMode(rawValue: modeNumber) {
             filter.groupingMode = mode
         }
+
         v.filter = filter
         filter.delegate = v
         if replacing {
-            v.onLoad = completion
             scene.windows.first?.rootViewController = v.navigationController
-        } else {
-            completion?(v)
+            await v.onLoadTask?.wait()
         }
+        return v
     }
 
-    @MainActor
-    func boot(with activity: NSUserActivity?, in scene: UIScene?) {
+    func boot(with activity: NSUserActivity?, in scene: UIScene?) async {
         if UIApplication.shared.supportsMultipleScenes {
             let centralSession = UIApplication.shared.openSessions.first { $0.isMainWindow }
             let options = UIScene.ActivationRequestOptions()
@@ -266,13 +258,12 @@ final class Singleton {
                 log("Error requesting new scene: \(error)")
             }
         } else if let scene = scene {
-            handleActivity(activity, in: scene, forceMainWindow: true)
+            await handleActivity(activity, in: scene, forceMainWindow: true)
         } else {
             // in theory this should never happen, leave the UI as-is
         }
     }
 
-    @MainActor
     var openCount = 0 {
         didSet {
             if openCount == 1, oldValue != 1 {
@@ -283,12 +274,13 @@ final class Singleton {
         }
     }
 
-    @MainActor
     func openUrl(_ url: URL, options: UIScene.OpenURLOptions, in scene: UIWindowScene) {
         if let c = url.host, c == "inspect-item", let itemId = url.pathComponents.last {
             let activity = NSUserActivity(activityType: CSSearchableItemActionType)
             activity.addUserInfoEntries(from: [CSSearchableItemActivityIdentifier: itemId])
-            Singleton.shared.boot(with: activity, in: scene)
+            Task {
+                await Singleton.shared.boot(with: activity, in: scene)
+            }
 
         } else if url.host == nil { // just opening
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {

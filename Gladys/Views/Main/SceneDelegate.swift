@@ -33,26 +33,36 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         let forceMainWindow = !UIApplication.shared.supportsMultipleScenes
-        Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, forceMainWindow: forceMainWindow)
-        updateWindowCount()
+        Task {
+            if let shortcut = connectionOptions.shortcutItem, let scene = scene as? UIWindowScene {
+                _ = await windowScene(scene, performActionFor: shortcut)
+            } else {
+                await Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, forceMainWindow: forceMainWindow)
+                updateWindowCount()
+            }
+        }
     }
 
     func sceneDidDisconnect(_: UIScene) {
         updateWindowCount()
     }
-
-    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+    
+    func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
         if shortcutItem.type.hasSuffix(".Search") {
-            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
+            await Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
+            return true
 
         } else if shortcutItem.type.hasSuffix(".Paste") {
-            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
+            await Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
+            return true
         }
-        completionHandler(true)
+        return false
     }
-
+    
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)
+        Task {
+            await Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)
+        }
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -107,7 +117,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func windowScene(_: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
-        Task { @MainActor in // need to wait for the UI to show up first, if the app is being launched and not foregrounded
+        Task { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             CloudManager.acceptShare(cloudKitShareMetadata)
         }
     }

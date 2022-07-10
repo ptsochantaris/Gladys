@@ -11,20 +11,21 @@ enum ComponentActor {
     static let shared = ActorType()
 }
 
-final class Component: Codable {
-    private static let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
-    private static let componentLookupQueue = DispatchQueue(label: "build.bru.Gladys.parentLookupQueue", attributes: .concurrent)
-    static func register(_ component: Component) {
-        componentLookupQueue.async(flags: .barrier) {
-            componentLookup.setObject(component, forKey: component.uuid as NSUUID)
-        }
+final actor ComponentLookup {
+    static let shared = ComponentLookup()
+    
+    private let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
+
+    func register(_ component: Component) {
+        componentLookup.setObject(component, forKey: component.uuid as NSUUID)
     }
 
-    static func lookup(uuid: UUID) -> Component? {
-        componentLookupQueue.sync {
-            componentLookup.object(forKey: uuid as NSUUID)
-        }
+    func lookup(uuid: UUID) -> Component? {
+        componentLookup.object(forKey: uuid as NSUUID)
     }
+}
+
+final class Component: Codable {
 
     private enum CodingKeys: String, CodingKey {
         case typeIdentifier
@@ -95,7 +96,9 @@ final class Component: Codable {
 
         flags = []
 
-        Component.register(self)
+        Task {
+            await ComponentLookup.shared.register(self)
+        }
     }
 
     var typeIdentifier: String
@@ -155,7 +158,9 @@ final class Component: Codable {
             representedClass = item.representedClass
             setBytes(item.bytes)
 
-            Component.register(self)
+            Task {
+                await ComponentLookup.shared.register(self)
+            }
         }
     #endif
 
@@ -180,7 +185,9 @@ final class Component: Codable {
             representedClass = .data
             setBytes(data)
 
-            Component.register(self)
+            Task {
+                await ComponentLookup.shared.register(self)
+            }
         }
 
         init(typeIdentifier: String, parentUuid: UUID, order: Int) {
@@ -202,7 +209,9 @@ final class Component: Codable {
             representedClass = .unknown(name: "")
             flags = [.isTransferring]
 
-            Component.register(self)
+            Task {
+                await ComponentLookup.shared.register(self)
+            }
         }
     #endif
 
@@ -234,7 +243,9 @@ final class Component: Codable {
         }
         cloudKitRecord = record
 
-        Component.register(self)
+        Task {
+            await ComponentLookup.shared.register(self)
+        }
     }
 
     init(from typeItem: Component, newParent: ArchivedItem) {
@@ -259,7 +270,9 @@ final class Component: Codable {
         accessoryTitle = typeItem.accessoryTitle
         setBytes(typeItem.bytes)
 
-        Component.register(self)
+        Task {
+            await ComponentLookup.shared.register(self)
+        }
     }
 
     var dataExists: Bool {
