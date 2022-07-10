@@ -20,7 +20,9 @@ final class Reachability {
         let changeCallback: SCNetworkReachabilityCallBack = { _, flags, _ in
             let newStatus = Reachability.status(from: flags)
             log("Rechability changed: \(newStatus.name)")
-            NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
+            Task { @MainActor in
+                NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
+            }
         }
 
         var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)

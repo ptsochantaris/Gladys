@@ -65,7 +65,9 @@ extension ArchivedItem {
     }
 
     func postModified() {
-        NotificationCenter.default.post(name: .ItemModified, object: self)
+        Task { @MainActor in
+            NotificationCenter.default.post(name: .ItemModified, object: self)
+        }
     }
 
     var addedString: String {

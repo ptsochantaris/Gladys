@@ -237,6 +237,7 @@ extension ArchivedItem {
         return extractedData
     }
 
+    @MainActor
     func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let progress = Progress()
         loadingProgress = progress

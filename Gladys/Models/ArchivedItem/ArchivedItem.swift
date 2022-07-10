@@ -177,7 +177,9 @@ final class ArchivedItem: Codable {
             components = ContiguousArray<Component>()
             flags = .needsSaving
 
-            startNewItemIngest(providers: providers, limitToType: limitToType)
+            Task { @MainActor in
+                startNewItemIngest(providers: providers, limitToType: limitToType)
+            }
         }
 
         var isTransferring: Bool {

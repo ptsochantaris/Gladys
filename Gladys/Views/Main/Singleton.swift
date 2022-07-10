@@ -272,6 +272,7 @@ final class Singleton {
         }
     }
 
+    @MainActor
     var openCount = 0 {
         didSet {
             if openCount == 1, oldValue != 1 {

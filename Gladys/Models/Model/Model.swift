@@ -11,10 +11,6 @@ enum Model {
         }
     }
 
-    static func appendDropEfficientlyAsync(_ newDrop: ArchivedItem) {
-        appendDropEfficiently(newDrop)
-    }
-
     static func appendDropEfficiently(_ newDrop: ArchivedItem) {
         uuidindex?[newDrop.uuid] = drops.count
 

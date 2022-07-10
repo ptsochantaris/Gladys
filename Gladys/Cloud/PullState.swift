@@ -398,9 +398,11 @@ final actor PullState {
                     pendingShareRecords.remove(pendingShareRecord)
                     log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
-                await Model.appendDropEfficientlyAsync(newItem)
-                NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
+                await Model.appendDropEfficiently(newItem)
                 newDropCount += 1
+                Task { @MainActor in
+                    NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
+                }
             }
 
         case .component:
