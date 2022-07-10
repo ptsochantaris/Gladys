@@ -996,8 +996,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func previewPanel(_: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect _: UnsafeMutablePointer<NSRect>!) -> Any! {
         let visibleCells = collection.visibleItems()
         if let qlItem = item as? Component.PreviewItem,
-           let parentUuid = Model.component(uuid: qlItem.uuid)?.parentUuid,
-           let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == parentUuid }) {
+           let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == qlItem.parentUuid }) {
             return (visibleCells[cellIndex] as? DropCell)?.previewImage
         }
         return nil
