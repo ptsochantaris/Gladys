@@ -436,7 +436,7 @@ final actor PullState {
             }
 
         case .positionList:
-            let change = RecordChangeCheck(localRecord: await CloudManager.getUuidSequenceRecordAsync(), remoteRecord: record)
+            let change = RecordChangeCheck(localRecord: await CloudManager.uuidSequenceRecord, remoteRecord: record)
             if change == .changed || neverSynced {
                 log("Received an updated position list record")
                 let newList = (record["positionList"] as? [String]) ?? []

@@ -81,11 +81,19 @@ extension CloudManager {
             }
         }
 
-        let privatePushState = PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
-        let sharedPushStates = sharedZonesToPush.map { PushState(zoneId: $0, database: container.sharedCloudDatabase) }
+        let privatePushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 
-        let operations = sharedPushStates.reduce(privatePushState.operations) { existingOperations, pushState -> [CKDatabaseOperation] in
-            existingOperations + pushState.operations
+        var _sharedPushStates = [PushState]()
+        _sharedPushStates.reserveCapacity(sharedZonesToPush.count)
+        for sharedZoneId in sharedZonesToPush {
+            let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
+            _sharedPushStates.append(pushState)
+        }
+        let sharedPushStates = _sharedPushStates
+
+        var operations = await privatePushState.operations
+        for sharedPushState in sharedPushStates {
+            operations.append(contentsOf: await sharedPushState.operations)
         }
 
         if operations.isEmpty {
@@ -100,8 +108,15 @@ extension CloudManager {
                 }
             }
         }
-        if let firstError = privatePushState.latestError ?? sharedPushStates.first(where: { $0.latestError != nil })?.latestError {
-            throw firstError
+
+        if let error = await privatePushState.latestError {
+            throw error
+        }
+
+        for pushState in sharedPushStates {
+            if let error = await pushState.latestError {
+                throw error
+            }
         }
     }
 
@@ -161,7 +176,6 @@ extension CloudManager {
 
     static var uuidSequence: [String] {
         get {
-            assert(Thread.isMainThread)
             if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
                 return SafeArchiving.unarchive(data) as? [String] ?? []
             } else {
@@ -169,23 +183,14 @@ extension CloudManager {
             }
         }
         set {
-            assert(Thread.isMainThread)
             if let data = SafeArchiving.archive(newValue) {
                 PersistedOptions.defaults.set(data, forKey: "uuidSequence")
             }
         }
     }
 
-    static func getUuidSequenceAsync() -> [String] {
-        uuidSequence
-    }
-
     static func setUuidSequenceAsync(_ newList: [String]) {
         uuidSequence = newList
-    }
-
-    static func getUuidSequenceRecordAsync() -> CKRecord? {
-        uuidSequenceRecord
     }
 
     static func setUuidSequenceRecordAsync(_ newRecord: CKRecord?) {
@@ -237,6 +242,10 @@ extension CloudManager {
         set {
             try? SafeArchiving.archive(newValue)?.write(to: deleteQueuePath)
         }
+    }
+
+    static func setDeletionQueueAsync(_ newQueue: Set<String>) {
+        deletionQueue = newQueue
     }
 
     private static func deletionTag(for recordName: String, cloudKitRecord: CKRecord?) -> String {
