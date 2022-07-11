@@ -1,5 +1,3 @@
-// From: https://www.swiftbysundell.com/articles/caching-in-swift/
-
 import Foundation
 
 final class Cache<Key: Hashable, Value> {

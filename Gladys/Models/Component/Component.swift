@@ -13,7 +13,7 @@ enum ComponentActor {
 
 final actor ComponentLookup {
     static let shared = ComponentLookup()
-    
+
     private let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
 
     func register(_ component: Component) {
@@ -26,7 +26,6 @@ final actor ComponentLookup {
 }
 
 final class Component: Codable {
-
     private enum CodingKeys: String, CodingKey {
         case typeIdentifier
         case representedClass

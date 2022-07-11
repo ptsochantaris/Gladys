@@ -46,7 +46,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidDisconnect(_: UIScene) {
         updateWindowCount()
     }
-    
+
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
         if shortcutItem.type.hasSuffix(".Search") {
             await Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
@@ -58,7 +58,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         return false
     }
-    
+
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         Task {
             await Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)

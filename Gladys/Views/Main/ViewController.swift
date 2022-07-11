@@ -2003,7 +2003,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             updateLabelIcon()
         }
     }
-    
+
     @objc private func highlightItemNotification(_ notification: Notification) {
         guard let request = notification.object as? HighlightRequest else { return }
         Task {

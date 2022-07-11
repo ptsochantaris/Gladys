@@ -198,7 +198,7 @@ final actor PushState {
         }
         updateSyncMessage()
     }
-    
+
     private func progress(record: CKRecord, progress: Double) {
         let recordProgress = uuid2progress[record.recordID.recordName]
         recordProgress?.completedUnitCount = Int64(progress * 100.0)
