@@ -161,6 +161,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     func modelFilterContextChanged(_: Filter, animate: Bool) {
         updateDataSource(animated: animate)
         updateLabelIcon()
+        updateEmptyView()
     }
 
     @IBAction private func dragModeButtonSelected(_: UIButton) {
@@ -397,7 +398,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
 
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-            filter.updateFilter(signalUpdate: .animated)
+            filter.update(signalUpdate: .animated)
             mostRecentIndexPathActioned = destinationIndexPath
         }
 
@@ -970,11 +971,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         n.addObserver(self, selector: #selector(sectionShowAllTapped), name: .SectionShowAllTapped, object: nil)
 
         if filter.isFilteringLabels { // in case we're restored with active labels
-            filter.updateFilter(signalUpdate: .none)
+            filter.update(signalUpdate: .none)
         }
 
         updateUI()
-        emptyView?.alpha = 1
         blurb(Greetings.openLine)
 
         cloudStatusChanged()
@@ -1187,9 +1187,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func itemCreated(_: Notification) {
-        Task { @MainActor in
-            self.filter.updateFilter(signalUpdate: .animated)
-        }
+        filter.update(signalUpdate: .animated)
     }
 
     @objc private func modelDataUpdate(_ notification: Notification) {
@@ -1198,24 +1196,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
     }
 
+    @MainActor
     private func _modelDataUpdate(_ notification: Notification) async {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
 
         let previous = filter.enabledToggles
         filter.rebuildLabels()
         let forceAnnounce = previous != filter.enabledToggles
-        filter.updateFilter(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+        filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let oldSet = Set(oldUUIDs)
 
         let parameters = notification.object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
             reloadCells(for: uuidsToReload)
-        }
-
-        if !Model.drops.isEmpty && Model.drops.allSatisfy(\.shouldDisplayLoading) {
-            updateEmptyView()
-            return
         }
 
         let newUUIDs = filter.filteredDrops.map(\.uuid)
@@ -1250,7 +1244,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         updateUI()
     }
 
-    private var emptyView: UIImageView?
     @objc private func updateUI() {
         if Model.drops.isEmpty {
             editButton.isEnabled = false
@@ -1366,13 +1359,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         } else {
             let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
             sortMethod()
-            filter.updateFilter(signalUpdate: .none)
+            filter.update(signalUpdate: .none)
             Model.save()
         }
     }
 
     @objc private func labelSelectionChanged() {
-        filter.updateFilter(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+        filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
         updateLabelIcon()
         userActivity?.needsSave = true
     }
@@ -1425,8 +1418,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
     }
 
+    private var emptyView: UIImageView?
+    
     private func updateEmptyView() {
-        if Model.drops.isEmpty, emptyView == nil {
+        let isEmpty = Model.drops.isEmpty
+        if isEmpty, emptyView == nil {
             let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
             e.isAccessibilityElement = false
             e.contentMode = .scaleAspectFit
@@ -1442,7 +1438,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 e.alpha = 1
             })
 
-        } else if let e = emptyView, !Model.drops.isEmpty {
+        } else if let e = emptyView, !isEmpty {
             emptyView = nil
             UIView.animate(animations: {
                 e.alpha = 0

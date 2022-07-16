@@ -71,26 +71,18 @@ final class Singleton {
         }
     }
 
-    private var ingestRunning = false
-
     @objc private func ingestStart() {
-        if !ingestRunning {
-            ingestRunning = true
-            BackgroundTask.registerForBackground()
-        }
+        BackgroundTask.registerForBackground()
     }
 
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
         if Model.doneIngesting {
             Model.save()
-            if ingestRunning {
-                BackgroundTask.unregisterForBackground()
-                ingestRunning = false
-            }
         } else {
             Model.commitItem(item: item)
         }
+        BackgroundTask.unregisterForBackground()
     }
 
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) async {

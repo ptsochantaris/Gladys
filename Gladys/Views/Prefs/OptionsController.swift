@@ -38,7 +38,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.inclusiveSearchTerms = sender.isOn
-        view.associatedFilter?.updateFilter(signalUpdate: .instant)
+        view.associatedFilter?.update(signalUpdate: .instant)
     }
 
     @IBAction private func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
@@ -64,7 +64,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.exclusiveMultipleLabels = sender.isOn
-        view.associatedFilter?.updateFilter(signalUpdate: .instant)
+        view.associatedFilter?.update(signalUpdate: .instant)
     }
 
     @IBAction private func autoArchiveSwitchSelected(_ sender: UISwitch) {

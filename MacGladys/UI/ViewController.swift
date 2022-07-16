@@ -99,7 +99,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
             self?.collection.deselectAll(nil)
-            self?.filter.updateFilter(signalUpdate: .animated)
+            self?.filter.update(signalUpdate: .animated)
             self?.updateTitle()
         }
 
@@ -122,7 +122,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
 
         let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] _ in
-            self?.filter.updateFilter(signalUpdate: .animated)
+            self?.filter.update(signalUpdate: .animated)
         }
 
         observers = [a1, a3, a4, a5, a8, a9, a11, a12, a13]
@@ -480,7 +480,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         var ipsToReload = Set<IndexPath>()
         collection.animator().performBatchUpdates({
             let oldUUIDs = filter.filteredDrops.map(\.uuid)
-            filter.updateFilter(signalUpdate: .animated)
+            filter.update(signalUpdate: .animated)
             if Model.drops.allSatisfy(\.shouldDisplayLoading) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
@@ -913,7 +913,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
-            filter.updateFilter(signalUpdate: .instant)
+            filter.update(signalUpdate: .instant)
         }
         if let text = windowState.search, !text.isEmpty {
             startSearch(initialText: text)

@@ -260,7 +260,7 @@ final class ItemController: WKInterfaceController {
     private static var hidden = false
     @IBAction private func tapped(_: WKTapGestureRecognizer) {
         ItemController.hidden = !ItemController.hidden
-        sendNotification(name: .GroupsUpdated, object: nil)
+        NotificationCenter.default.post(name: .GroupsUpdated, object: nil)
     }
 
     private func updateGroups() {

@@ -82,7 +82,7 @@ final class Filter {
             let v = newValue == "" ? nil : newValue
             if modelFilter != v {
                 modelFilter = v
-                updateFilter(signalUpdate: .animated)
+                update(signalUpdate: .animated)
             }
         }
     }
@@ -190,7 +190,7 @@ final class Filter {
     }
 
     @discardableResult
-    func updateFilter(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
+    func update(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
         let previousFilteredDrops = filteredDrops
 
         // label pass

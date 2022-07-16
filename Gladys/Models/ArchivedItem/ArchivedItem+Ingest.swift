@@ -237,17 +237,9 @@ extension ArchivedItem {
         return extractedData
     }
 
-    @MainActor
-    func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
-        let progress = Progress()
-        loadingProgress = progress
-        sendNotification(name: .IngestStart, object: self)
-        Task {
-            await newItemIngest(providers: providers, limitToType: limitToType)
-        }
-    }
+    func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
+        await sendNotification(name: .IngestStart, object: self)
 
-    private func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
         var componentsThatFailed = [Component]()
 
         for provider in providers {

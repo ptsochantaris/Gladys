@@ -176,9 +176,10 @@ final class ArchivedItem: Codable {
             labels = overrides?.labels ?? []
             components = ContiguousArray<Component>()
             flags = .needsSaving
-
-            Task { @MainActor in
-                startNewItemIngest(providers: providers, limitToType: limitToType)
+            loadingProgress = Progress()
+            
+            Task {
+                await newItemIngest(providers: providers, limitToType: limitToType)
             }
         }
 
