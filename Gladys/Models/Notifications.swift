@@ -41,6 +41,11 @@ extension Notification.Name {
     static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
 }
 
+@MainActor
+func sendNotification(name: Notification.Name, object: Any?) {
+    NotificationCenter.default.post(name: name, object: object)
+}
+
 #if MAINAPP
     import UIKit
 

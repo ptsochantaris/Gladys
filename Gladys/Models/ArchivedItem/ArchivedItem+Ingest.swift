@@ -176,7 +176,7 @@ extension ArchivedItem {
         Images.shared[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
-        NotificationCenter.default.post(name: .IngestComplete, object: self)
+        sendNotification(name: .IngestComplete, object: self)
     }
 
     func cancelIngest() {
@@ -191,7 +191,7 @@ extension ArchivedItem {
 
     @MainActor
     func reIngest() async {
-        NotificationCenter.default.post(name: .IngestStart, object: self)
+        sendNotification(name: .IngestStart, object: self)
 
         let loadCount = components.count
         if isTemporarilyUnlocked {
@@ -241,9 +241,9 @@ extension ArchivedItem {
     func startNewItemIngest(providers: [NSItemProvider], limitToType: String?) {
         let progress = Progress()
         loadingProgress = progress
-        NotificationCenter.default.post(name: .IngestStart, object: self)
+        sendNotification(name: .IngestStart, object: self)
         Task {
-            await self.newItemIngest(providers: providers, limitToType: limitToType)
+            await newItemIngest(providers: providers, limitToType: limitToType)
         }
     }
 

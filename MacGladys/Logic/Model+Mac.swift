@@ -13,7 +13,6 @@ extension Model {
 
     private static var eventMonitor: FileMonitor?
 
-    @MainActor
     static func startMonitoringForExternalChangesToBlobs() {
         syncWithExternalUpdates()
 

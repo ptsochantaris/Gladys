@@ -715,7 +715,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             } else {
                 let uuid = item.uuid
                 if DetailController.showingUUIDs.contains(uuid) {
-                    NotificationCenter.default.post(name: .ForegroundDisplayedItem, object: uuid)
+                    sendNotification(name: .ForegroundDisplayedItem, object: uuid)
                 } else {
                     performSegue(withIdentifier: NSStoryboardSegue.Identifier("showDetail"), sender: item)
                 }

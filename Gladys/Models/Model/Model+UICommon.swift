@@ -193,7 +193,7 @@ extension Model {
     }
 
     static let badgeTimer = PopTimer(timeInterval: 0.1) {
-        Task { @MainActor in
+        Task {
             _updateBadge()
         }
     }
@@ -288,7 +288,7 @@ extension Model {
         isSaving = true
         needsAnotherSave = false
 
-        NotificationCenter.default.post(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
+        sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
 
         saveQueue.async {
             do {

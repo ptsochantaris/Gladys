@@ -576,7 +576,7 @@ final class Filter {
             labelToggles[i] = l
         }
 
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
         Model.save()
     }
 
@@ -590,7 +590,7 @@ final class Filter {
         }
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
         Model.save()
     }
 }

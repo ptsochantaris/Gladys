@@ -50,7 +50,7 @@ extension CloudManager {
                 log(">>> Sync label cleared")
             }
         #endif
-        NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+        sendNotification(name: .CloudManagerStatusChanged, object: nil)
     }
 
     static func setSyncProgressString(_ newString: String?) {
@@ -124,8 +124,7 @@ extension CloudManager {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
-                assert(Thread.isMainThread)
-                NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+                sendNotification(name: .CloudManagerStatusChanged, object: nil)
             }
         }
     }
@@ -137,8 +136,7 @@ extension CloudManager {
                     setSyncProgressString(syncing ? "Pausing" : nil)
                 }
                 showNetwork = false
-                assert(Thread.isMainThread)
-                NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+                sendNotification(name: .CloudManagerStatusChanged, object: nil)
             }
         }
     }
@@ -150,8 +148,7 @@ extension CloudManager {
                     setSyncProgressString(syncing ? "Syncing" : nil)
                 }
                 showNetwork = syncing || syncTransitioning
-                assert(Thread.isMainThread)
-                NotificationCenter.default.post(name: .CloudManagerStatusChanged, object: nil)
+                sendNotification(name: .CloudManagerStatusChanged, object: nil)
             }
         }
     }
@@ -718,10 +715,10 @@ extension CloudManager {
         }
         if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
             let request = HighlightRequest(uuid: existingItem.uuid.uuidString)
-            NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+            sendNotification(name: .HighlightItemRequested, object: request)
             return
         }
-        NotificationCenter.default.post(name: .AcceptStarting, object: nil)
+        sendNotification(name: .AcceptStarting, object: nil)
         Task {
             try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
             showNetwork = true
@@ -730,11 +727,11 @@ extension CloudManager {
                 Task { @MainActor in
                     showNetwork = false
                     if let error = error {
-                        NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+                        sendNotification(name: .AcceptEnding, object: nil)
                         await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
                     } else {
                         try? await sync()
-                        NotificationCenter.default.post(name: .AcceptEnding, object: nil)
+                        sendNotification(name: .AcceptEnding, object: nil)
                     }
                 }
             }

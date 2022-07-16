@@ -267,9 +267,9 @@ final class Singleton {
     var openCount = 0 {
         didSet {
             if openCount == 1, oldValue != 1 {
-                NotificationCenter.default.post(name: .MultipleWindowModeChange, object: true)
+                sendNotification(name: .MultipleWindowModeChange, object: true)
             } else if openCount != 1, oldValue == 1 {
-                NotificationCenter.default.post(name: .MultipleWindowModeChange, object: false)
+                sendNotification(name: .MultipleWindowModeChange, object: false)
             }
         }
     }

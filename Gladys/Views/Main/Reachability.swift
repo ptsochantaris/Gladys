@@ -21,7 +21,7 @@ final class Reachability {
             let newStatus = Reachability.status(from: flags)
             log("Rechability changed: \(newStatus.name)")
             Task { @MainActor in
-                NotificationCenter.default.post(name: .ReachabilityChanged, object: newStatus)
+                sendNotification(name: .ReachabilityChanged, object: newStatus)
             }
         }
 

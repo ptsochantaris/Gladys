@@ -222,7 +222,7 @@ extension ArchivedItem {
             } else {
                 let scene = currentWindow?.windowScene
                 let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true, sourceScene: scene)
-                NotificationCenter.default.post(name: .UIRequest, object: request)
+                sendNotification(name: .UIRequest, object: request)
             }
             completion(false)
         } else if let item = item as? URL {

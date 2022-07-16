@@ -55,7 +55,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         var item = filteredLabels[row]
         item.active = (object as? Int == 1)
         presentingGladysVc.filter.updateLabel(item)
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
         labelsUpdated()
     }
 
@@ -65,7 +65,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
 
     @IBAction private func clearAllSelected(_: NSButton) {
         presentingGladysVc.filter.disableAllLabels()
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
         labelsUpdated()
     }
 

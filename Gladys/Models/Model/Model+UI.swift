@@ -37,7 +37,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
     private func handle(message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
         if let uuid = message["view"] as? String {
             let request = HighlightRequest(uuid: uuid, open: true)
-            NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+            sendNotification(name: .HighlightItemRequested, object: request)
             Task.detached(priority: .background) {
                 replyHandler([:])
             }

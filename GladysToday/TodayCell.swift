@@ -47,7 +47,7 @@ final class TodayCell: UICollectionViewCell {
     @objc private func longPress(_ longPressRecognizer: UILongPressGestureRecognizer) {
         if longPressRecognizer.state == .began, let uuid = dropItem?.uuid.uuidString, let url = URL(string: "gladys://inspect-item/\(uuid)") {
             longPressRecognizer.state = .ended
-            NotificationCenter.default.post(name: .OpenParentApp, object: url)
+            sendNotification(name: .OpenParentApp, object: url)
         }
     }
 

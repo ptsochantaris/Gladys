@@ -158,7 +158,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             filter.groupingMode = .byLabel
         }
         updates() // also causes the user activity to save
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: view.window?.windowScene)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: view.window?.windowScene)
         updateModeButton()
     }
 
@@ -167,7 +167,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     }
 
     private func updates() {
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
         clearAllButton.isEnabled = filter.isFilteringLabels
     }
 

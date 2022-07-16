@@ -103,7 +103,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
             guard let self = self else { return }
             if context.state == .activated, self.mode == .collapsed {
-                NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+                sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
             }
         })
 
@@ -111,7 +111,7 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
             guard let self = self else { return }
-            NotificationCenter.default.post(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -128,7 +128,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
             guard let self = self else { return }
-            NotificationCenter.default.post(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         }, for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)

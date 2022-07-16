@@ -201,7 +201,7 @@ final class DetailController: GladysViewController,
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if navigationController?.isBeingDismissed ?? false {
-            NotificationCenter.default.post(name: .DetailViewClosing, object: nil, userInfo: nil)
+            sendNotification(name: .DetailViewClosing, object: nil, userInfo: nil)
         }
     }
 

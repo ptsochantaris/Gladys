@@ -249,8 +249,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func interfaceModeChanged(sender _: NSNotification) {
-        Images.shared.reset()
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
+        Task { @MainActor in
+            Images.shared.reset()
+            sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
+        }
     }
 
     func applicationDidFinishLaunching(_: Notification) {
@@ -332,7 +334,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 focus()
                 let request = HighlightRequest(uuid: itemIdentifier, open: false)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                Task { @MainActor in
+                    sendNotification(name: .HighlightItemRequested, object: request)
+                }
             }
             return true
 
@@ -347,11 +351,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
                 focus()
                 let request = HighlightRequest(uuid: uuid.uuidString, open: true)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                Task { @MainActor in
+                    sendNotification(name: .HighlightItemRequested, object: request)
+                }
             } else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
                 focus()
                 let request = HighlightRequest(uuid: uuidString, open: true)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                Task { @MainActor in
+                    sendNotification(name: .HighlightItemRequested, object: request)
+                }
             }
             return true
 
@@ -360,7 +368,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 focus()
                 let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
                 let request = HighlightRequest(uuid: uuidString, preview: true, focusOnChildUuid: childUuid)
-                NotificationCenter.default.post(name: .HighlightItemRequested, object: request)
+                Task { @MainActor in
+                    sendNotification(name: .HighlightItemRequested, object: request)
+                }
             }
             return true
         }

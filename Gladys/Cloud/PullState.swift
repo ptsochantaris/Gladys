@@ -401,7 +401,7 @@ final actor PullState {
                 await Model.appendDropEfficiently(newItem)
                 newDropCount += 1
                 Task { @MainActor in
-                    NotificationCenter.default.post(name: .ItemAddedBySync, object: newItem)
+                    sendNotification(name: .ItemAddedBySync, object: newItem)
                 }
             }
 

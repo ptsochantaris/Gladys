@@ -172,7 +172,7 @@ final class ActionRequestViewController: UIViewController {
     }
 
     @objc private func signalDone() {
-        NotificationCenter.default.post(name: .DoneSelected, object: nil)
+        sendNotification(name: .DoneSelected, object: nil)
     }
 
     @objc private func done() {

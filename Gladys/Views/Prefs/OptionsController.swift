@@ -33,7 +33,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.wideMode = sender.isOn
         Images.shared.reset()
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
     }
 
     @IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
@@ -47,7 +47,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.displayLabelsInMainView = sender.isOn
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
     }
 
     @IBAction private func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
@@ -91,7 +91,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.forceTwoColumnPreference = sender.isOn
         if phoneMode {
-            NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: true)
+            sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
         }
     }
 
@@ -101,7 +101,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func displayNotesInMainViewSelected(_ sender: UISwitch) {
         PersistedOptions.displayNotesInMainView = sender.isOn
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
     }
 
     @IBAction private func fullScreenPreviewsSelected(_ sender: UISwitch) {

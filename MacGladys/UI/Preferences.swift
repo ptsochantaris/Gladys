@@ -188,12 +188,12 @@ final class Preferences: NSViewController {
 
     @IBAction private func exclusiveMultipleLabelsSwitchChanged(_ sender: NSButton) {
         PersistedOptions.exclusiveMultipleLabels = sender.integerValue == 1
-        NotificationCenter.default.post(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged, object: nil)
     }
 
     @IBAction func clipboardSnoopingSelected(_ sender: NSButton) {
         PersistedOptions.clipboardSnooping = sender.integerValue == 1
-        NotificationCenter.default.post(name: .ClipboardSnoopingChanged, object: nil)
+        sendNotification(name: .ClipboardSnoopingChanged, object: nil)
     }
 
     @IBAction func clipboardSnoopingAllSelected(_ sender: NSButton) {
@@ -288,7 +288,7 @@ final class Preferences: NSViewController {
 
     @IBAction private func alawysOnTopSwitchChanged(_ sender: NSButton) {
         PersistedOptions.alwaysOnTop = sender.integerValue == 1
-        NotificationCenter.default.post(name: .AlwaysOnTopChanged, object: nil)
+        sendNotification(name: .AlwaysOnTopChanged, object: nil)
     }
 
     @objc private func hotkeyCharChanged() {
@@ -401,12 +401,12 @@ final class Preferences: NSViewController {
 
     @IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayNotesInMainView = sender.integerValue == 1
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
     }
 
     @IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
-        NotificationCenter.default.post(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
     }
 
     @IBAction private func multipleSwitchChanged(_ sender: NSButton) {

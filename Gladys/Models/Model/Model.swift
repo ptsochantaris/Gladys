@@ -208,15 +208,15 @@ enum Model {
         }
 
         if !brokenMode {
-            Task { @MainActor in
-                if isStarted {
-                    if didLoad {
-                        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
+            if isStarted {
+                if didLoad {
+                    Task { @MainActor in
+                        sendNotification(name: .ModelDataUpdated, object: nil)
                     }
-                } else {
-                    isStarted = true
-                    startupComplete()
                 }
+            } else {
+                isStarted = true
+                startupComplete()
             }
         }
     }

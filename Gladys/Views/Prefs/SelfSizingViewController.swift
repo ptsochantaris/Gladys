@@ -10,8 +10,8 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
         }
         delegate = self
 
+        sendNotification(name: .PreferencesOpen, object: nil)
         let n = NotificationCenter.default
-        n.post(name: .PreferencesOpen, object: nil)
         n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
     }
 
