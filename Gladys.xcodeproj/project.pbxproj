@@ -189,6 +189,7 @@
 		1661B2C7245E258800BE888E /* CloudManager+Mainapps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1661B2C6245E258800BE888E /* CloudManager+Mainapps.swift */; };
 		1661B2C8245E258800BE888E /* CloudManager+Mainapps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1661B2C6245E258800BE888E /* CloudManager+Mainapps.swift */; };
 		1661B2C9245E264700BE888E /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EEE9B21F9BA1AC008AD9DB /* CloudManager.swift */; };
+		1661B964288C7E1000034959 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162BDD73220F01FA00A3C17B /* Logging.swift */; };
 		166B6390236A451F00115AC3 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166B638F236A451F00115AC3 /* FileMonitor.swift */; };
 		166B6391236A451F00115AC3 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166B638F236A451F00115AC3 /* FileMonitor.swift */; };
 		166E72F520BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166E72F420BEDC8C00DBAB52 /* NSAttributedString+Extensions.swift */; };
@@ -2659,6 +2660,7 @@
 				168DFB1020B85F84002C603D /* LauncherCommon.swift in Sources */,
 				168DFB0120B85F3D002C603D /* AppDelegate.swift in Sources */,
 				16F063FC20B895CD00ABF32A /* main.swift in Sources */,
+				1661B964288C7E1000034959 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

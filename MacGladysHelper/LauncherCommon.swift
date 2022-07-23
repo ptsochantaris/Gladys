@@ -23,8 +23,20 @@ enum LauncherCommon {
 
     static func launchMainApp() {
         if isMainAppRunning { return }
-        let path = "/" + Bundle.main.bundlePath.split(separator: "/").dropLast(3).joined(separator: "/") + "/MacOS/Gladys"
+        var finalPathComponents = [String.SubSequence]()
+        for component in Bundle.main.bundlePath.split(separator: "/") {
+            finalPathComponents.append(component)
+            if component.hasSuffix(".app") {
+                break
+            }
+        }
+        let path = "/" + finalPathComponents.joined(separator: "/")
         let config = NSWorkspace.OpenConfiguration()
-        NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: path), configuration: config)
+        log("Will launch Gladys at \(path)")
+        NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: path), configuration: config) { _, error in
+            if let error = error {
+                log("Error launching Gladys: \(error.localizedDescription)")
+            }
+        }
     }
 }
