@@ -73,10 +73,8 @@ final actor PushState {
                     if !currentUUIDSequence.isEmpty {
                         var mergedSequence = await CloudManager.uuidSequence
                         let mergedSet = Set(mergedSequence)
-                        for i in currentUUIDSequence.reversed() {
-                            if !mergedSet.contains(i) {
-                                mergedSequence.insert(i, at: 0)
-                            }
+                        for i in currentUUIDSequence.reversed() where !mergedSet.contains(i) {
+                            mergedSequence.insert(i, at: 0)
                         }
                         sequenceToSend = mergedSequence
                     }

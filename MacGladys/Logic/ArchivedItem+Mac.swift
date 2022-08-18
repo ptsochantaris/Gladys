@@ -25,10 +25,8 @@ extension ArchivedItem {
 
     func scanForBlobChanges() -> Bool {
         var someHaveChanged = false
-        for component in components { // intended: iterate over all over them, not just until the first one
-            if component.scanForBlobChanges() {
-                someHaveChanged = true
-            }
+        for component in components where component.scanForBlobChanges() { // intended: iterate over all over them, not just until the first one
+            someHaveChanged = true
         }
         return someHaveChanged
     }

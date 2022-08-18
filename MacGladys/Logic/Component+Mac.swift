@@ -162,7 +162,16 @@ extension Component {
                 }
             }
         } else {
-            NSWorkspace.shared.open(bytesPath)
+            let previewPath = previewTempPath
+            let fm = FileManager.default
+            if fm.fileExists(atPath: previewPath.path) {
+                try? fm.removeItem(at: previewPath)
+            }
+            try? fm.linkItem(at: bytesPath, to: previewPath)
+            let now = Date()
+            try? (previewPath as NSURL).setResourceValues([.contentAccessDateKey: now, .contentModificationDateKey: now]) // so the file is kept around in the temp directory for an hour
+            fm.setDateAttribute(Component.lastModificationKey, at: previewPath, to: now)
+            NSWorkspace.shared.open(previewPath)
         }
     }
 

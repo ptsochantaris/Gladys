@@ -760,10 +760,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     @objc func duplicateItem(_: Any?) {
-        for item in collection.actionableSelectedItems {
-            if Model.contains(uuid: item.uuid) { // sanity check
-                Model.duplicate(item: item)
-            }
+        for item in collection.actionableSelectedItems where Model.contains(uuid: item.uuid) {
+            Model.duplicate(item: item)
         }
     }
 

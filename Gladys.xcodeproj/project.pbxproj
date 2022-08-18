@@ -332,11 +332,6 @@
 		16B89E9B2523D545007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E9A2523D545007FD864 /* Fuzi */; };
 		16B89EA92523D5A0007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89EA82523D5A0007FD864 /* Fuzi */; };
 		16B89EB72523D5AE007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89EB62523D5AE007FD864 /* Fuzi */; };
-		16B89ED12523D6BB007FD864 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED02523D6BB007FD864 /* DeepDiff */; };
-		16B89ED32523D6BB007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED22523D6BB007FD864 /* CallbackURLKit */; };
-		16B89ED52523D6BB007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED42523D6BB007FD864 /* ZIPFoundation */; };
-		16B89ED72523D6BB007FD864 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89ED62523D6BB007FD864 /* Fuzi */; };
-		16B89F162523D885007FD864 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89F152523D885007FD864 /* HotKey */; };
 		16BBF2242837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
 		16BBF2252837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
 		16BBF2262837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBF2232837534F00248BB0 /* NSItemProvider+Extensions.swift */; };
@@ -350,6 +345,11 @@
 		16BDAF22283844B900B3EEF3 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BDAF1C28382F6300B3EEF3 /* Images.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
+		16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBB28AE48F300E9EB04 /* CallbackURLKit */; };
+		16C12FBE28AE48F800E9EB04 /* Fuzi in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBD28AE48F800E9EB04 /* Fuzi */; };
+		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
+		16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC128AE495600E9EB04 /* ZIPFoundation */; };
+		16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC328AE497000E9EB04 /* DeepDiff */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -946,14 +946,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16B89ED32523D6BB007FD864 /* CallbackURLKit in Frameworks */,
+				16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
-				16B89F162523D885007FD864 /* HotKey in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
+				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
 				16118D28236478E200454326 /* GladysFramework.framework in Frameworks */,
-				16B89ED72523D6BB007FD864 /* Fuzi in Frameworks */,
-				16B89ED12523D6BB007FD864 /* DeepDiff in Frameworks */,
-				16B89ED52523D6BB007FD864 /* ZIPFoundation in Frameworks */,
+				16C12FBE28AE48F800E9EB04 /* Fuzi in Frameworks */,
+				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
+				16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1656,11 +1656,11 @@
 			);
 			name = MacGladys;
 			packageProductDependencies = (
-				16B89ED02523D6BB007FD864 /* DeepDiff */,
-				16B89ED22523D6BB007FD864 /* CallbackURLKit */,
-				16B89ED42523D6BB007FD864 /* ZIPFoundation */,
-				16B89ED62523D6BB007FD864 /* Fuzi */,
-				16B89F152523D885007FD864 /* HotKey */,
+				16C12FBB28AE48F300E9EB04 /* CallbackURLKit */,
+				16C12FBD28AE48F800E9EB04 /* Fuzi */,
+				16C12FBF28AE494C00E9EB04 /* HotKey */,
+				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
+				16C12FC328AE497000E9EB04 /* DeepDiff */,
 			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
@@ -3951,30 +3951,30 @@
 			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
 			productName = Fuzi;
 		};
-		16B89ED02523D6BB007FD864 /* DeepDiff */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
-			productName = DeepDiff;
-		};
-		16B89ED22523D6BB007FD864 /* CallbackURLKit */ = {
+		16C12FBB28AE48F300E9EB04 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
 			productName = CallbackURLKit;
 		};
-		16B89ED42523D6BB007FD864 /* ZIPFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
-			productName = ZIPFoundation;
-		};
-		16B89ED62523D6BB007FD864 /* Fuzi */ = {
+		16C12FBD28AE48F800E9EB04 /* Fuzi */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */;
 			productName = Fuzi;
 		};
-		16B89F152523D885007FD864 /* HotKey */ = {
+		16C12FBF28AE494C00E9EB04 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */;
 			productName = HotKey;
+		};
+		16C12FC128AE495600E9EB04 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+		16C12FC328AE497000E9EB04 /* DeepDiff */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
+			productName = DeepDiff;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

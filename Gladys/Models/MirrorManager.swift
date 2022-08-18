@@ -53,10 +53,8 @@ final class MirrorManager {
         let paths = items.map(\.fileMirrorPath)
         coordinateWrite(types: [.forDeleting]) {
             let f = FileManager.default
-            for path in paths {
-                if f.fileExists(atPath: path) {
-                    try? f.removeItem(atPath: path)
-                }
+            for path in paths where f.fileExists(atPath: path) {
+                try? f.removeItem(atPath: path)
             }
         }
     }

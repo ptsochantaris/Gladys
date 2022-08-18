@@ -789,10 +789,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     private func anyPath(in frame: CGRect) -> IndexPath? {
-        for cell in collection.visibleCells {
-            if frame.contains(cell.frame) {
-                return collection.indexPath(for: cell)
-            }
+        if let cell = collection.visibleCells.first({ frame.contains($0.frame) }) {
+            return collection.indexPath(for: cell)
         }
         return nil
     }

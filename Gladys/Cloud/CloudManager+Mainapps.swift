@@ -262,15 +262,13 @@ extension CloudManager {
     static func commitDeletion(for recordNames: [String]) {
         if recordNames.isEmpty { return }
 
-        let newQueue = CloudManager.deletionQueue.filter { deletionTag in
-            for recordName in recordNames {
-                if deletionTag.components(separatedBy: ":").last == recordName {
-                    return false
-                }
+        CloudManager.deletionQueue = CloudManager.deletionQueue.filter {
+            if let lastPartOfTag = $0.components(separatedBy: ":").last {
+                return !recordNames.contains(lastPartOfTag)
+            } else {
+                return true
             }
-            return true
         }
-        CloudManager.deletionQueue = newQueue
     }
 
     private static let agoFormatter: DateComponentsFormatter = {
