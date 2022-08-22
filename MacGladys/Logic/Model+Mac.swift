@@ -81,6 +81,7 @@ extension Model {
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
             let extractor = NSItemProvider()
             var count = 0
+            let utis = Set(pasteboardItem.types.compactMap { $0.rawValue })
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 let destinationUrl = Model.temporaryDirectoryUrl
@@ -89,6 +90,9 @@ extension Model {
                         continue
                     }
                     let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
+                    if utis.contains(uti) { // No need to fetch the file, the data exists as a solid block in the pasteboard
+                        continue
+                    }
                     count += 1
                     importGroup.enter()
 
