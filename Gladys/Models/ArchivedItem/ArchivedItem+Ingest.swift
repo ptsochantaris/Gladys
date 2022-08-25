@@ -69,14 +69,9 @@ extension ArchivedItem {
         var tags1 = [String]()
         var tags2 = [String]()
 
-        var visualRequests = [VNImageBasedRequest]()
-        var speechTask: SFSpeechRecognitionTask?
-
         if autoImage || ocrImage, displayMode == .fill, let img = img {
-            loadingProgress?.cancellationHandler = {
-                visualRequests.forEach { $0.cancel() }
-                speechTask?.cancel()
-            }
+            var visualRequests = [VNImageBasedRequest]()
+            var speechTask: SFSpeechRecognitionTask?
 
             if autoImage {
                 let r = VNClassifyImageRequest { request, _ in
@@ -137,6 +132,13 @@ extension ArchivedItem {
                 }
                 try? FileManager.default.removeItem(at: link)
             }
+            
+            let vr = visualRequests
+            let st = speechTask
+            loadingProgress?.cancellationHandler = {
+                vr.forEach { $0.cancel() }
+                st?.cancel()
+            }
         }
 
         if autoText, let finalTitle = transcribedText ?? finalTitle {
@@ -167,7 +169,7 @@ extension ArchivedItem {
 
         let newTags = tags1 + tags2
         for tag in newTags where !labels.contains(tag) {
-            self.labels.append(tag)
+            labels.append(tag)
         }
     }
 

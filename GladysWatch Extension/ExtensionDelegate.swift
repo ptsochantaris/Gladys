@@ -45,7 +45,8 @@ final class ImageCache {
     }
 }
 
-final class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
+@main
+final class ExtensionDelegate: NSObject, WKApplicationDelegate, WCSessionDelegate {
     static var currentUUID = ""
     static var reportedCount = 0
 

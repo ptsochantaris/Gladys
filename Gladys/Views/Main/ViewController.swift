@@ -1766,9 +1766,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let sectionLeft = view.safeAreaInsets.left + spacing
         let sectionRight = view.safeAreaInsets.right + spacing
+        
+        let topSpace: CGFloat
+        if view.traitCollection.horizontalSizeClass == .regular {
+            topSpace = spacing * 0.5
+        } else {
+            topSpace = 0
+        }
 
         if filter.groupingMode == .flat {
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
+            section.contentInsets = NSDirectionalEdgeInsets(top: topSpace, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
             return UICollectionViewCompositionalLayout(section: section)
         }
 
@@ -1778,13 +1785,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
             switch dataSource.itemIdentifier(for: IndexPath(item: 0, section: index))?.label?.currentDisplayMode {
             case .collapsed, .none:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
+                section.contentInsets = NSDirectionalEdgeInsets(top: topSpace, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
                 section.orthogonalScrollingBehavior = .none
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SectionBackground")]
                 section.boundarySupplementaryItems = [sectionTitle]
 
             case .scrolling:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight + 50)
+                section.contentInsets = NSDirectionalEdgeInsets(top: topSpace, leading: sectionLeft, bottom: spacing, trailing: sectionRight + 50)
                 section.orthogonalScrollingBehavior = .continuous
                 let fadeSize = NSCollectionLayoutSize(widthDimension: .absolute(50), heightDimension: .absolute(fixedHeight + spacing * 2))
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
@@ -1793,7 +1800,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 section.boundarySupplementaryItems = [fader, sectionTitle]
 
             case .full:
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
+                section.contentInsets = NSDirectionalEdgeInsets(top: topSpace, leading: sectionLeft, bottom: spacing, trailing: sectionRight)
                 section.orthogonalScrollingBehavior = .none
                 section.decorationItems = [NSCollectionLayoutDecorationItem.background(elementKind: "SquareBackground")]
                 section.boundarySupplementaryItems = [sectionTitle]
