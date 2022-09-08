@@ -99,7 +99,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
             self?.collection.deselectAll(nil)
-            self?.filter.update(signalUpdate: .animated)
+            _ = self?.filter.update(signalUpdate: .animated)
             self?.updateTitle()
         }
 
@@ -122,7 +122,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
 
         let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] _ in
-            self?.filter.update(signalUpdate: .animated)
+            _ = self?.filter.update(signalUpdate: .animated)
         }
 
         observers = [a1, a3, a4, a5, a8, a9, a11, a12, a13]
@@ -480,7 +480,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         var ipsToReload = Set<IndexPath>()
         collection.animator().performBatchUpdates({
             let oldUUIDs = filter.filteredDrops.map(\.uuid)
-            filter.update(signalUpdate: .animated)
+            _ = filter.update(signalUpdate: .animated)
             if Model.drops.allSatisfy(\.shouldDisplayLoading) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
@@ -797,7 +797,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     @objc func paste(_: Any?) {
-        Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filter)
+        _ = Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filter)
     }
 
     var lockableSelectedItems: [ArchivedItem] {
@@ -911,7 +911,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
-            filter.update(signalUpdate: .instant)
+            _ = filter.update(signalUpdate: .instant)
         }
         if let text = windowState.search, !text.isEmpty {
             startSearch(initialText: text)

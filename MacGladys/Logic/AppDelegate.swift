@@ -133,19 +133,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @MainActor
     final class ServicesProvider: NSObject {
         var urlEventBeforeLaunch = false
 
+        @MainActor
         @objc func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
-            Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
+            _ = Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
         }
 
+        @MainActor
         @objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent _: NSAppleEventDescriptor) {
             if PersistedOptions.blockGladysUrlRequests { return }
             if let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue, let url = URL(string: urlString) {
                 urlEventBeforeLaunch = true
-                CallbackSupport.handlePossibleCallbackURL(url: url)
+                _ = CallbackSupport.handlePossibleCallbackURL(url: url)
             }
         }
     }
@@ -438,7 +439,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 if let text = pasteboard.string(forType: .string), PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive {
                     Task {
                         let i = NSItemProvider(object: text as NSItemProviderWriting)
-                        await Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
+                        _ = await Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
                     }
                 }
             }
@@ -622,9 +623,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             let a = NSAlert()
             a.messageText = "Sort selected items?"
             a.informativeText = "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?"
-            a.addButton(withTitle: "Sort Selected")
-            a.addButton(withTitle: "Sort All")
-            a.addButton(withTitle: "Cancel")
+            _ = a.addButton(withTitle: "Sort Selected")
+            _ = a.addButton(withTitle: "Sort All")
+            _ = a.addButton(withTitle: "Cancel")
             let response = a.runModal()
             switch response.rawValue {
             case 1000:
