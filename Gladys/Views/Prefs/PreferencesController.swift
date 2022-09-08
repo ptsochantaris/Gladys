@@ -294,7 +294,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         Task { @MainActor in
             self.showExportActivity(true)
         }
-        Model.createArchive(using: filter) { url, error in
+        _ = Model.createArchive(using: filter) { url, error in
             self.completeOperation(to: url, error: error)
             Task { @MainActor in
                 self.showExportActivity(false)
@@ -341,7 +341,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         Task { @MainActor in
             self.showZipActivity(true)
         }
-        Model.createZip(using: filter) { url, error in
+        _ = Model.createZip(using: filter) { url, error in
             self.completeOperation(to: url, error: error)
             Task { @MainActor in
                 self.showZipActivity(false)

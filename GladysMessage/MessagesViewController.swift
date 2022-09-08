@@ -144,7 +144,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
             requestPresentationStyle(.expanded)
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
-                searchBar.becomeFirstResponder()
+                _ = searchBar.becomeFirstResponder()
             }
         }
         return true

@@ -398,7 +398,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
 
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-            filter.update(signalUpdate: .animated)
+            _ = filter.update(signalUpdate: .animated)
             mostRecentIndexPathActioned = destinationIndexPath
         }
 
@@ -666,14 +666,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             item.canPreview,
             !item.flags.contains(.needsUnlock),
             let presenter = view.window?.alertPresenter {
-            item.tryPreview(in: presenter, from: cell)
+            _ = item.tryPreview(in: presenter, from: cell)
             pinchRecognizer.state = .ended
         }
     }
 
     @objc private func quickLookFocusedItem() {
         if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem {
-            item.tryPreview(in: self, from: focusedCell)
+            _ = item.tryPreview(in: self, from: focusedCell)
         }
     }
 
@@ -969,7 +969,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         n.addObserver(self, selector: #selector(sectionShowAllTapped), name: .SectionShowAllTapped, object: nil)
 
         if filter.isFilteringLabels { // in case we're restored with active labels
-            filter.update(signalUpdate: .none)
+            _ = filter.update(signalUpdate: .none)
         }
 
         updateUI()
@@ -1185,7 +1185,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func itemCreated(_: Notification) {
-        filter.update(signalUpdate: .animated)
+        _ = filter.update(signalUpdate: .animated)
     }
 
     @objc private func modelDataUpdate(_ notification: Notification) {
@@ -1201,7 +1201,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let previous = filter.enabledToggles
         filter.rebuildLabels()
         let forceAnnounce = previous != filter.enabledToggles
-        filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+        _ = filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let oldSet = Set(oldUUIDs)
 
@@ -1357,13 +1357,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         } else {
             let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
             sortMethod()
-            filter.update(signalUpdate: .none)
+            _ = filter.update(signalUpdate: .none)
             Model.save()
         }
     }
 
     @objc private func labelSelectionChanged() {
-        filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+        _ = filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
         updateLabelIcon()
         userActivity?.needsSave = true
     }
@@ -1523,7 +1523,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         animator.preferredCommitStyle = .pop
         if let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell {
             animator.addCompletion {
-                item.tryPreview(in: self, from: cell, forceFullscreen: false)
+                _ = item.tryPreview(in: self, from: cell, forceFullscreen: false)
             }
         }
     }
@@ -2059,7 +2059,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                         performSegue(withIdentifier: "showDetail", sender: item)
 
                     } else if andPreview, let presenter = self.view.window?.alertPresenter {
-                        item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
+                        _ = item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
                     }
                 }
             }

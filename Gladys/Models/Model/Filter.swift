@@ -82,7 +82,7 @@ final class Filter {
             let v = newValue == "" ? nil : newValue
             if modelFilter != v {
                 modelFilter = v
-                update(signalUpdate: .animated)
+                _ = update(signalUpdate: .animated)
             }
         }
     }

@@ -1,6 +1,8 @@
 import CloudKit
 import Foundation
 
+extension NSItemProvider: @unchecked Sendable {}
+
 final class ArchivedItem: Codable {
     let suggestedName: String?
     let uuid: UUID

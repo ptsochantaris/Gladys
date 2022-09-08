@@ -107,7 +107,7 @@ final class Singleton {
                 labels = labelList
             }
 
-            await showMainWindow(in: scene, restoringSearch: searchText, restoringDisplayMode: displayMode, labelList: labels, legacyLabelList: legacyLabelList)
+            _ = await showMainWindow(in: scene, restoringSearch: searchText, restoringDisplayMode: displayMode, labelList: labels, legacyLabelList: legacyLabelList)
             return
 
         case kGladysQuicklookActivity:
@@ -116,7 +116,7 @@ final class Singleton {
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
-                    await showMainWindow(in: scene)
+                    _ = await showMainWindow(in: scene)
                     await genericAlert(title: "Not Found", message: "This item was not found")
                     return
                 }
@@ -148,7 +148,7 @@ final class Singleton {
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
-                    await showMainWindow(in: scene)
+                    _ = await showMainWindow(in: scene)
                     await genericAlert(title: "Not Found", message: "This item was not found")
                     return
                 }
@@ -193,7 +193,7 @@ final class Singleton {
             }
 
         default:
-            await showMainWindow(in: scene)
+            _ = await showMainWindow(in: scene)
             return
         }
 
@@ -298,7 +298,7 @@ final class Singleton {
             }
 
         } else if !PersistedOptions.blockGladysUrlRequests {
-            CallbackSupport.handlePossibleCallbackURL(url: url)
+            _ = CallbackSupport.handlePossibleCallbackURL(url: url)
         }
     }
 }

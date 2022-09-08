@@ -27,7 +27,7 @@ extension Model {
         }
 
         if addedStuff {
-            currentFilter?.update(signalUpdate: .animated)
+            _ = currentFilter?.update(signalUpdate: .animated)
         }
 
         return .success
