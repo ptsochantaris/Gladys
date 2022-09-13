@@ -983,7 +983,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
 
-        if #unavailable(iOS 15.0) {
+        if #unavailable(iOS 15) {
             let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
             for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
                 r.require(toFail: p)
@@ -1152,7 +1152,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     @IBAction private func pasteSelected(_: UIBarButtonItem) {
         Model.donatePasteIntent()
-        if Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) == .noData {
+        if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) {
             Task {
                 await genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
             }
@@ -2016,16 +2016,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
             await dismissAnyPopOverOrModal()
-            highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
         } else if Model.firstIndexOfItem(with: request.uuid) != nil {
             await resetSearch(andLabels: true)
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-            highlightItem(with: uuid, andOpen: request.open, andPreview: request.preview, focusOnChild: request.focusOnChildUuid)
         }
-    }
 
-    private func highlightItem(with uuid: UUID, andOpen: Bool, andPreview: Bool, focusOnChild childUuid: String?) {
-        if filter.groupingMode == .byLabel, let item = Model.item(uuid: uuid) {
+        if filter.groupingMode == .byLabel, let item = Model.item(uuid: request.uuid) {
             let labelList = item.labels
             let labels = Set(labelList)
             let fullLabels = labels.subtracting(filter.labels(for: .full).map(\.function.displayText))
@@ -2050,20 +2046,27 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         collection.scrollToItem(at: ip, at: .centeredVertically, animated: false)
 
         Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
+            try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             if let cell = collection.cellForItem(at: ip) as? ArchivedItemCell {
                 cell.flash()
                 if let item = cell.archivedDropItem, !item.shouldDisplayLoading {
-                    if andOpen {
+                    switch request.extraAction {
+                    case .none:
+                        break
+                    case .detail:
                         mostRecentIndexPathActioned = ip
                         performSegue(withIdentifier: "showDetail", sender: item)
-
-                    } else if andPreview, let presenter = self.view.window?.alertPresenter {
-                        _ = item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
+                    case .open:
+                        mostRecentIndexPathActioned = ip
+                        item.tryOpen(in: navigationController) { _ in }
+                    case let .preview(childUuid):
+                        if let presenter = view.window?.alertPresenter {
+                            _ = item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
+                        }
                     }
                 }
             }
-            self.collection.isUserInteractionEnabled = true
+            collection.isUserInteractionEnabled = true
         }
     }
 

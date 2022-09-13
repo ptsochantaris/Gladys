@@ -2,7 +2,7 @@ import UIKit
 
 extension Model {
     enum PasteResult {
-        case success, noData
+        case success([ArchivedItem]), noData
     }
 
     @discardableResult
@@ -13,7 +13,7 @@ extension Model {
 
         let currentFilter = currentWindow?.associatedFilter
 
-        var uuids = Set<UUID>()
+        var items = [ArchivedItem]()
         var addedStuff = false
         for provider in providers { // separate item for each provider in the pasteboard
             for item in ArchivedItem.importData(providers: [provider], overrides: overrides) {
@@ -21,7 +21,7 @@ extension Model {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
                 Model.drops.insert(item, at: 0)
-                uuids.insert(item.uuid)
+                items.append(item)
                 addedStuff = true
             }
         }
@@ -30,6 +30,6 @@ extension Model {
             _ = currentFilter?.update(signalUpdate: .animated)
         }
 
-        return .success
+        return .success(items)
     }
 }

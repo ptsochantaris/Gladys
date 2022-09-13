@@ -207,6 +207,11 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if #available(iOS 16.0, *) {
+            // we use an app intent for this
+            siriSettingsButton.isHidden = true
+        }
+        
         explicitScrolling = true
         doneButtonLocation = .right
 

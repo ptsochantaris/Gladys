@@ -77,9 +77,6 @@ enum PersistedOptions {
     @UserDefault(key: "forceTwoColumnPreference", defaultValue: false)
     static var forceTwoColumnPreference: Bool
 
-    @UserDefault(key: "pasteShortcutAutoDonated", defaultValue: false)
-    static var pasteShortcutAutoDonated: Bool
-
     @UserDefault(key: "exclusiveMultipleLabels", defaultValue: false)
     static var exclusiveMultipleLabels: Bool
 

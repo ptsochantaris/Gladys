@@ -712,7 +712,7 @@ extension CloudManager {
             return
         }
         if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
-            let request = HighlightRequest(uuid: existingItem.uuid.uuidString)
+            let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
             sendNotification(name: .HighlightItemRequested, object: request)
             return
         }

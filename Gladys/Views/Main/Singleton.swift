@@ -14,10 +14,6 @@ final class Singleton {
 
         log("Initial reachability status: \(reachability.status.name)")
 
-        if !PersistedOptions.pasteShortcutAutoDonated {
-            Model.donatePasteIntent()
-        }
-
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
             Task {
@@ -129,7 +125,7 @@ final class Singleton {
                 }
                 if forceMainWindow {
                     let v = await showMainWindow(in: scene)
-                    let request = HighlightRequest(uuid: uuidString, open: false, preview: true, focusOnChildUuid: child?.uuid.uuidString)
+                    let request = HighlightRequest(uuid: uuidString, extraAction: .preview(child?.uuid.uuidString))
                     await v.highlightItem(request)
                     return
 
@@ -155,7 +151,7 @@ final class Singleton {
 
                 if forceMainWindow {
                     let v = await showMainWindow(in: scene)
-                    let request = HighlightRequest(uuid: uuidString, open: true)
+                    let request = HighlightRequest(uuid: uuidString, extraAction: .open)
                     await v.highlightItem(request)
 
                 } else {
@@ -179,7 +175,7 @@ final class Singleton {
 
         case CSSearchableItemActionType:
             if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-                let request = HighlightRequest(uuid: itemIdentifier)
+                let request = HighlightRequest(uuid: itemIdentifier, extraAction: .none)
                 let v = await showMainWindow(in: scene)
                 await v.highlightItem(request)
                 return

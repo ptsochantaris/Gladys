@@ -1,16 +1,16 @@
 import Foundation
 
 struct HighlightRequest {
+    enum Action {
+        case none, detail, open, preview(String?)
+    }
+    
     let uuid: String
-    let open: Bool
-    let preview: Bool
-    let focusOnChildUuid: String?
+    let extraAction: Action
 
-    init(uuid: String, open: Bool = false, preview: Bool = false, focusOnChildUuid: String? = nil) {
-        self.uuid = uuid
-        self.open = open
-        self.preview = preview
-        self.focusOnChildUuid = focusOnChildUuid
+    @MainActor
+    var itemExists: Bool {
+        return Model.item(uuid: uuid) != nil
     }
 }
 
