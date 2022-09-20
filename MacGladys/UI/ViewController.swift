@@ -369,12 +369,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             let ip = IndexPath(item: i, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: i)
-            if request.open {
+            switch request.extraAction {
+            case .open:
+                
+                // TODO
+                break
+            case .detail:
                 info(nil)
-            } else if request.preview {
+            case .preview:
                 if !(previewPanel?.isVisible ?? false) {
                     toggleQuickLookPreviewPanel(self)
                 }
+            case .none:
+                break
             }
         }
     }

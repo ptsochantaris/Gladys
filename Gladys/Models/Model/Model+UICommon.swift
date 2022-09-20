@@ -225,7 +225,9 @@ extension Model {
             if CloudManager.syncSwitchedOn, CloudManager.lastiCloudAccount == nil {
                 CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
             }
+            #if os(iOS)
             Model.clearLegacyIntents()
+            #endif
             Model.searchableIndex(CSSearchableIndex.default()) {
                 PersistedOptions.lastRanVersion = currentBuild
             }

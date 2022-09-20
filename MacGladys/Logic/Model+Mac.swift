@@ -89,8 +89,7 @@ extension Model {
                     guard let promiseType = promise.fileTypes.first else {
                         continue
                     }
-                    let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, promiseType as CFString, nil)?.takeRetainedValue() as String? ?? "public.data"
-                    if utis.contains(uti) { // No need to fetch the file, the data exists as a solid block in the pasteboard
+                    if utis.contains(promiseType) { // No need to fetch the file, the data exists as a solid block in the pasteboard
                         continue
                     }
                     count += 1
@@ -101,7 +100,7 @@ extension Model {
                             log("Warning, loading error in file drop: \(error.localizedDescription)")
                         } else {
                             let dropData = try? Data(contentsOf: url)
-                            extractor.registerDataRepresentation(forTypeIdentifier: uti, visibility: .all) { callback -> Progress? in
+                            extractor.registerDataRepresentation(forTypeIdentifier: promiseType, visibility: .all) { callback -> Progress? in
                                 callback(dropData, nil)
                                 return nil
                             }
@@ -113,8 +112,8 @@ extension Model {
 
             for type in pasteboardItem.types {
                 count += 1
-                let data = pasteboardItem.data(forType: type)
                 extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
+                    let data = pasteboardItem.data(forType: type)
                     callback(data, nil)
                     return nil
                 }
@@ -151,7 +150,7 @@ extension Model {
 
         if inserted {
             allFilters.forEach {
-                $0.update(signalUpdate: .animated)
+                _ = $0.update(signalUpdate: .animated)
             }
         }
         return inserted
@@ -169,7 +168,7 @@ extension Model {
                 return NSItemProvider(contentsOf: url)
             }
         }
-        addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
+        _ = addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
     }
 
     static func _updateBadge() {

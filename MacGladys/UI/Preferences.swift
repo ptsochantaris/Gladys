@@ -420,7 +420,7 @@ final class Preferences: NSViewController {
     @IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSButton) {
         PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
         allFilters.forEach {
-            $0.update(signalUpdate: .instant)
+            _ = $0.update(signalUpdate: .instant)
         }
     }
 
