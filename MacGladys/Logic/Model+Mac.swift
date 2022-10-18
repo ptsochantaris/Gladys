@@ -86,7 +86,7 @@ extension Model {
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 let destinationUrl = Model.temporaryDirectoryUrl
                 for promise in filePromises {
-                    guard let promiseType = promise.fileTypes.first else {
+                    guard let promiseType = promise.fileTypes.first, !promise.fileNames.isEmpty else {
                         continue
                     }
                     if utis.contains(promiseType) { // No need to fetch the file, the data exists as a solid block in the pasteboard
@@ -95,7 +95,9 @@ extension Model {
                     count += 1
                     importGroup.enter()
 
+                    // log("Waiting for promise: \(promiseType)")
                     promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                        // log("Completed promise: \(promiseType)")
                         if let error = error {
                             log("Warning, loading error in file drop: \(error.localizedDescription)")
                         } else {
