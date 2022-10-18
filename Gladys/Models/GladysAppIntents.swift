@@ -6,6 +6,8 @@
 //  Copyright © 2022 Paul Tsochantaris. All rights reserved.
 //
 
+#if canImport(AppIntents)
+
 import Foundation
 import AppIntents
 import UniformTypeIdentifiers
@@ -42,31 +44,31 @@ enum GladysAppIntents {
         
         var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: title) }
     }
-    
+
     struct OpenGladys: AppIntent {
         @Parameter(title: "Item")
         var entity: ArchivedItemEntity?
 
-        @Parameter(title: "Action", optionsProvider: Action.Provider())
-        var action: Action?
-
         enum Action: String, AppEnum {
             case highlight, details, tryQuicklook, tryOpen
             static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Action" }
-            static var caseDisplayRepresentations: [Action: DisplayRepresentation] = [
-                .highlight: "Highlight",
-                .details: "Info",
-                .tryOpen: "Open",
-                .tryQuicklook: "Quicklook"
+            static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
+                .highlight: DisplayRepresentation(stringLiteral: "Highlight"),
+                .details: DisplayRepresentation(stringLiteral: "Info"),
+                .tryQuicklook: DisplayRepresentation(stringLiteral: "Quicklook"),
+                .tryOpen: DisplayRepresentation(stringLiteral: "Open")
             ]
-            
-            struct Provider: DynamicOptionsProvider {
-                func results() async throws -> [Action] {
-                    [.highlight, .details, .tryOpen, .tryQuicklook]
-                }
+        }
+
+        struct Provider: DynamicOptionsProvider {
+            func results() async throws -> [Action] {
+                [.highlight, .details, .tryOpen, .tryQuicklook]
             }
         }
-        
+
+        @Parameter(title: "Action", optionsProvider: Provider())
+        var action: Action
+
         static var title: LocalizedStringResource { "Open" }
         
         static var openAppWhenRun = true
@@ -81,7 +83,7 @@ enum GladysAppIntents {
                             
             let request: HighlightRequest
             switch action {
-            case .highlight, .none:
+            case .highlight:
                 request = HighlightRequest(uuid: itemUUID, extraAction: .none)
             case .tryQuicklook:
                 request = HighlightRequest(uuid: itemUUID, extraAction: .preview(nil))
@@ -209,3 +211,5 @@ enum GladysAppIntents {
         }
     }
 }
+
+#endif
