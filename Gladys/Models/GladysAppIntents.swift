@@ -6,8 +6,6 @@
 //  Copyright © 2022 Paul Tsochantaris. All rights reserved.
 //
 
-#if canImport(AppIntents)
-
 import Foundation
 import AppIntents
 import UniformTypeIdentifiers
@@ -211,5 +209,3 @@ enum GladysAppIntents {
         }
     }
 }
-
-#endif
