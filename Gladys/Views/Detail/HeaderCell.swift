@@ -94,7 +94,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
         previousText = nil
 
-        guard let item = item else { return }
+        guard let item else { return }
 
         if newText.isEmpty || newText == item.nonOverridenText.0 {
             item.titleOverride = ""

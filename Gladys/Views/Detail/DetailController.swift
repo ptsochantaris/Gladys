@@ -71,7 +71,7 @@ final class DetailController: GladysViewController,
     }
 
     private func updateMenuButton() {
-        if let m = menuButton, let v = view.window?.windowScene?.mainController, let sourceIndexPath = sourceIndexPath {
+        if let m = menuButton, let v = view.window?.windowScene?.mainController, let sourceIndexPath {
             m.menu = v.createShortcutActions(for: item, mainView: false, indexPath: sourceIndexPath)
         }
     }
@@ -88,7 +88,7 @@ final class DetailController: GladysViewController,
 
     override func updateUserActivityState(_ activity: NSUserActivity) {
         super.updateUserActivityState(activity)
-        if let item = item { // check for very weird corner case where item may be nil
+        if let item { // check for very weird corner case where item may be nil
             ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Info of")
         }
     }
@@ -264,7 +264,7 @@ final class DetailController: GladysViewController,
                 sizeWindow()
             }
         }
-        if let caretRect = caretRect {
+        if let caretRect {
             table.scrollRectToVisible(caretRect, animated: false)
         } else if let section = table.indexPath(for: cell)?.section {
             table.scrollToRow(at: IndexPath(row: 0, section: section), at: .top, animated: false)
@@ -440,12 +440,12 @@ final class DetailController: GladysViewController,
     private func editURL(_ component: Component, existingEdit: String?) {
         Task {
             let newValue = await getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString)
-            if let newValue = newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
+            if let newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
                 component.replaceURL(newURL)
                 item.needsReIngest = true
                 makeIndexAndSaveItem()
                 refreshComponent(component)
-            } else if let newValue = newValue {
+            } else if let newValue {
                 await genericAlert(title: "This is not a valid URL", message: newValue)
                 editURL(component, existingEdit: newValue)
             }
@@ -681,7 +681,7 @@ final class DetailController: GladysViewController,
 
                     if existingLabel == nil {
                         _ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, _ in
-                            if let newLabel = newLabel {
+                            if let newLabel {
                                 Task { @MainActor in
                                     self.item.labels[destinationIndexPath.row] = newLabel
                                     tableView.performBatchUpdates({
@@ -807,7 +807,7 @@ final class DetailController: GladysViewController,
         guard let indexPath = table.indexPathForSelectedRow else { return }
         table.deselectRow(at: indexPath, animated: true)
 
-        guard let didEnterLabel = didEnterLabel, !didEnterLabel.isEmpty else { return }
+        guard let didEnterLabel, !didEnterLabel.isEmpty else { return }
 
         if indexPath.row < item.labels.count {
             item.labels[indexPath.row] = didEnterLabel

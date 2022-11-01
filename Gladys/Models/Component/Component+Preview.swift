@@ -63,7 +63,7 @@ extension Component {
         }
 
         deinit {
-            if needsCleanup, let previewItemURL = previewItemURL {
+            if needsCleanup, let previewItemURL {
                 PreviewItem.cleanupUrl(previewItemURL: previewItemURL)
             }
         }

@@ -179,7 +179,7 @@ final class ArchivedItem: Codable {
             components = ContiguousArray<Component>()
             flags = .needsSaving
             loadingProgress = Progress()
-            
+
             Task {
                 await newItemIngest(providers: providers, limitToType: limitToType)
             }

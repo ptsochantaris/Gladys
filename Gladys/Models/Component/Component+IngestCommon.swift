@@ -286,7 +286,7 @@ extension Component {
     func setTitleInfo(_ text: String?, _ priority: Int) {
         let alignment: NSTextAlignment
         let finalText: String?
-        if let text = text, text.count > 200 {
+        if let text, text.count > 200 {
             alignment = .justified
             finalText = text.replacingOccurrences(of: "\n", with: " ")
         } else {
@@ -303,7 +303,7 @@ extension Component {
         if let document = CGPDFDocument(bytesPath as CFURL), let info = document.info {
             var titleStringRef: CGPDFStringRef?
             CGPDFDictionaryGetString(info, "Title", &titleStringRef)
-            if let titleStringRef = titleStringRef, let s = CGPDFStringCopyTextString(titleStringRef), !(s as String).isEmpty {
+            if let titleStringRef, let s = CGPDFStringCopyTextString(titleStringRef), !(s as String).isEmpty {
                 return s as String
             }
         }

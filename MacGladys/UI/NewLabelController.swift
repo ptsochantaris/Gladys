@@ -22,7 +22,7 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     }
 
     private func update() {
-        guard let associatedFilter = associatedFilter else { return }
+        guard let associatedFilter else { return }
 
         sections.removeAll()
 

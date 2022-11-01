@@ -12,7 +12,7 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
         super.viewDidLoad()
 
         let detailShortcutButton = INUIAddVoiceShortcutButton(style: .black)
-        if let sourceItem = sourceItem {
+        if let sourceItem {
             let activity = NSUserActivity(activityType: kGladysDetailViewingActivity)
             ArchivedItem.updateUserActivity(activity, from: sourceItem, child: nil, titled: "Info of")
             detailShortcutButton.shortcut = INShortcut(userActivity: activity)
@@ -21,14 +21,14 @@ final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShort
         openItemDetailContainer.cover(with: detailShortcutButton)
 
         let copyItemShortcutButton = INUIAddVoiceShortcutButton(style: .black)
-        if let sourceItem = sourceItem {
+        if let sourceItem {
             copyItemShortcutButton.shortcut = INShortcut(intent: sourceItem.copyIntent)
         }
         copyItemShortcutButton.delegate = self
         copyItemContainer.cover(with: copyItemShortcutButton)
 
         let quickLookShortcutButton = INUIAddVoiceShortcutButton(style: .black)
-        if let sourceItem = sourceItem {
+        if let sourceItem {
             let previewActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
             ArchivedItem.updateUserActivity(previewActivity, from: sourceItem, child: nil, titled: "Quick look")
             quickLookShortcutButton.shortcut = INShortcut(userActivity: previewActivity)

@@ -17,7 +17,7 @@ extension Model {
         var addedStuff = false
         for provider in providers { // separate item for each provider in the pasteboard
             for item in ArchivedItem.importData(providers: [provider], overrides: overrides) {
-                if let currentFilter = currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
+                if let currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
                 Model.drops.insert(item, at: 0)

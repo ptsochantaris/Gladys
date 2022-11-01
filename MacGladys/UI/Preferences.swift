@@ -530,7 +530,7 @@ final class Preferences: NSViewController {
             s.syncSwitch.isEnabled = true
             s.syncSwitch.isEnabled = true
             Task {
-                if let error = error {
+                if let error {
                     await genericAlert(title: "Error", message: error.finalDescription)
                 } else {
                     await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")

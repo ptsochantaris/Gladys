@@ -51,7 +51,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
             return super.pasteboardPropertyList(forType: type)
         default:
             let item = extraItems?.first { $0.typeIdentifier == T }
-            if item == nil, T == "public.file-url", let component = component, let tempPath = tempPath {
+            if item == nil, T == "public.file-url", let component, let tempPath {
                 do {
                     try component.writeBytes(to: tempPath, tags: tags)
                 } catch {
@@ -123,13 +123,13 @@ private extension Component {
             bytesToWrite = dataForDropping
         }
 
-        if let bytesToWrite = bytesToWrite {
+        if let bytesToWrite {
             try bytesToWrite.write(to: destinationUrl)
         } else {
             try fm.copyItem(at: bytesPath, to: destinationUrl)
         }
 
-        if let tags = tags, !tags.isEmpty, PersistedOptions.readAndStoreFinderTagsAsLabels {
+        if let tags, !tags.isEmpty, PersistedOptions.readAndStoreFinderTagsAsLabels {
             try? (destinationUrl as NSURL).setResourceValue(tags, forKey: .tagNamesKey)
         }
     }

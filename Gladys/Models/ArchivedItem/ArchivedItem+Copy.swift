@@ -41,19 +41,19 @@ extension ArchivedItem {
 
     func donateCopyIntent() {
         #if MAINAPP
-        if #available(iOS 16, *) {
-            log("Will not donate SiriKit copy shortcut")
-        } else {
-            let interaction = INInteraction(intent: copyIntent, response: nil)
-            interaction.identifier = "copy-\(uuid.uuidString)"
-            interaction.donate { error in
-                if let error = error {
-                    log("Error donating copy shortcut: \(error.localizedDescription)")
-                } else {
-                    log("Donated copy shortcut")
+            if #available(iOS 16, *) {
+                log("Will not donate SiriKit copy shortcut")
+            } else {
+                let interaction = INInteraction(intent: copyIntent, response: nil)
+                interaction.identifier = "copy-\(uuid.uuidString)"
+                interaction.donate { error in
+                    if let error {
+                        log("Error donating copy shortcut: \(error.localizedDescription)")
+                    } else {
+                        log("Donated copy shortcut")
+                    }
                 }
             }
-        }
         #endif
     }
 

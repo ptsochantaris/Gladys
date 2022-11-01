@@ -88,7 +88,7 @@ final class DataInspector: GladysViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let currentWindow = currentWindow else { return }
+        guard let currentWindow else { return }
         signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: currentWindow)
         endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: currentWindow)
         decimalAccessibility.accessibilityActivationPoint = view.convert(decimalSwitch.center, to: currentWindow)
@@ -147,7 +147,7 @@ final class DataInspector: GladysViewController {
         decimalAccessibility.accessibilityValue = decimalSwitch.selectedSegmentIndex == 1 ? "Hexadecimal" : "Decimal"
     }
 
-    private func resultToText<T: FixedWidthInteger>(resultType: T.Type, buffer: [UInt8]) -> String {
+    private func resultToText(resultType: (some FixedWidthInteger).Type, buffer: [UInt8]) -> String {
         let value = buffer.withUnsafeBytes { bufferPointer in
             bufferPointer.bindMemory(to: resultType).baseAddress?.pointee
         }
@@ -170,7 +170,7 @@ final class DataInspector: GladysViewController {
         DataInspector.littleEndianSwitchOn = littleEndianSwitch.selectedSegmentIndex == 1
     }
 
-    private func calculate<T: FixedWidthInteger>(_ type: T.Type) -> String {
+    private func calculate(_ type: (some FixedWidthInteger).Type) -> String {
         let byteCount = type.bitWidth / 8
         let maxLength = min(byteCount, bytes.count)
         var buffer = Array(bytes[..<maxLength])

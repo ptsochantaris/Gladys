@@ -210,7 +210,7 @@ extension CloudManager {
         }
         set {
             let recordLocation = uuidSequenceRecordPath
-            if let newValue = newValue {
+            if let newValue {
                 let coder = NSKeyedArchiver(requiringSecureCoding: true)
                 newValue.encodeSystemFields(with: coder)
                 try? coder.encodedData.write(to: recordLocation)
@@ -312,7 +312,7 @@ extension CloudManager {
             log("User has iCloud, can activate cloud sync")
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 proceedWithActivationNow { error in
-                    if let error = error {
+                    if let error {
                         continuation.resume(throwing: error)
                     } else {
                         continuation.resume()
@@ -348,7 +348,7 @@ extension CloudManager {
         }
         modifyOperation.modifyRecordsCompletionBlock = { _, _, error in
             Task { @MainActor in
-                if !force, let error = error {
+                if !force, let error {
                     completion(error)
                     log("Cloud sync deactivation failed, could not deactivate current shares")
                     syncTransitioning = false
@@ -363,7 +363,7 @@ extension CloudManager {
     static func deactivate(force: Bool, deactivatingShares _: Bool = true) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             deactivate(force: force) { error in
-                if let error = error {
+                if let error {
                     continuation.resume(throwing: error)
                 } else {
                     continuation.resume()
@@ -387,7 +387,7 @@ extension CloudManager {
 
         let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
         ss.modifySubscriptionsCompletionBlock = { _, _, error in
-            if let error = error {
+            if let error {
                 finalError = error
             }
         }
@@ -395,14 +395,14 @@ extension CloudManager {
 
         let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
         ms.modifySubscriptionsCompletionBlock = { _, _, error in
-            if let error = error {
+            if let error {
                 finalError = error
             }
         }
         perform(ms, on: container.privateCloudDatabase, type: "delete subscription")
 
         let doneOperation = BlockOperation {
-            if let finalError = finalError, !force {
+            if let finalError, !force {
                 log("Cloud sync deactivation failed")
                 completion(finalError)
             } else {
@@ -434,7 +434,7 @@ extension CloudManager {
         let zone = CKRecordZone(zoneID: privateZoneId)
         let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
         createZone.modifyRecordZonesCompletionBlock = { _, _, error in
-            if let error = error {
+            if let error {
                 abortActivation(error, completion: completion)
             } else {
                 fetchInitialUUIDSequence(zone: zone, completion: completion)
@@ -496,7 +496,7 @@ extension CloudManager {
         let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
         fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
             Task { @MainActor in
-                if let error = error, (error as? CKError)?.code != CKError.partialFailure {
+                if let error, (error as? CKError)?.code != CKError.partialFailure {
                     log("Error while activating: \(error.finalDescription)")
                     abortActivation(error, completion: completion)
                 } else {
@@ -522,7 +522,7 @@ extension CloudManager {
         showNetwork = true
         let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: [privateZoneId])
         deleteZone.modifyRecordZonesCompletionBlock = { _, _, error in
-            if let error = error {
+            if let error {
                 log("Error while deleting zone: \(error.finalDescription)")
             }
             Task { @MainActor in
@@ -562,7 +562,7 @@ extension CloudManager {
         var finalError: Error?
 
         let doneOperation = BlockOperation {
-            if let finalError = finalError {
+            if let finalError {
                 log("Error fetching missing share records: \(finalError.finalDescription)")
             }
             completion(finalError)
@@ -573,8 +573,8 @@ extension CloudManager {
             let fetch = CKFetchRecordsOperation(recordIDs: fetchGroup)
             fetch.perRecordCompletionBlock = { record, recordID, error in
                 Task { @MainActor in
-                    if let error = error {
-                        if error.itemDoesNotExistOnServer, let recordID = recordID {
+                    if let error {
+                        if error.itemDoesNotExistOnServer, let recordID {
                             // this share record does not exist. Our local data is wrong
                             if let itemWithShare = Model.item(shareId: recordID.recordName) {
                                 log("Warning: Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
@@ -601,13 +601,13 @@ extension CloudManager {
         guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
         let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
         fetch.perRecordCompletionBlock = { record, _, error in
-            if let record = record {
+            if let record {
                 Task { @MainActor in
                     log("Replaced local cloud record with latest copy from server (\(itemNeedingCloudPull.uuid))")
                     itemNeedingCloudPull.cloudKitRecord = record
                     itemNeedingCloudPull.postModified()
                 }
-            } else if let error = error, error.itemDoesNotExistOnServer {
+            } else if let error, error.itemDoesNotExistOnServer {
                 Task { @MainActor in
                     log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(itemNeedingCloudPull.uuid))")
                     itemNeedingCloudPull.removeFromCloudkit()
@@ -724,7 +724,7 @@ extension CloudManager {
             acceptShareOperation.acceptSharesCompletionBlock = { error in
                 Task { @MainActor in
                     showNetwork = false
-                    if let error = error {
+                    if let error {
                         sendNotification(name: .AcceptEnding, object: nil)
                         await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
                     } else {
@@ -746,7 +746,7 @@ extension CloudManager {
         let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
         deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
             Task { @MainActor in
-                if let error = error, !error.itemDoesNotExistOnServer {
+                if let error, !error.itemDoesNotExistOnServer {
                     await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
                     completion(error)
                 } else { // our local record must be stale, let's refresh it just in case
@@ -762,7 +762,7 @@ extension CloudManager {
     static func proceedWithDeactivation() {
         CloudManager.deactivate(force: false) { error in
             Task {
-                if let error = error {
+                if let error {
                     await genericAlert(title: "Could not deactivate", message: error.finalDescription)
                 }
             }
@@ -837,7 +837,7 @@ extension CloudManager {
             return
         }
 
-        guard let newToken = newToken else {
+        guard let newToken else {
             PersistedOptions.migratedSubscriptions7 = true
             PersistedOptions.lastPushToken = nil
             return
@@ -845,7 +845,7 @@ extension CloudManager {
 
         log("New APNS token or push migration needed, will update subscriptions")
         updateSubscriptions { error in
-            if let error = error {
+            if let error {
                 log("Subscription update failed: \(error)")
             } else {
                 log("Subscriptions updated successfully, storing new token")

@@ -3780,7 +3780,7 @@
 			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.1;
+				minimumVersion = 2.3.3;
 			};
 		};
 		16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */ = {
@@ -3796,7 +3796,7 @@
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.11;
+				minimumVersion = 0.9.15;
 			};
 		};
 		16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */ = {
@@ -3804,7 +3804,7 @@
 			repositoryURL = "https://github.com/cezheng/Fuzi";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.2;
+				minimumVersion = 3.1.3;
 			};
 		};
 		16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */ = {

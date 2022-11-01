@@ -17,7 +17,7 @@ final class ScrollFadeView: UICollectionReusableView {
     private var toggle: Filter.Toggle?
 
     private var sectionCount: Int {
-        guard let viewController = viewController, let toggle = toggle else {
+        guard let viewController, let toggle else {
             return 0
         }
         return viewController.filter.countItems(for: toggle)
@@ -101,7 +101,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         addInteraction(UIContextMenuInteraction(delegate: self))
 
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
-            guard let self = self else { return }
+            guard let self else { return }
             if context.state == .activated, self.mode == .collapsed {
                 sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
             }
@@ -110,7 +110,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         layer.cornerRadius = 15
 
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
@@ -127,7 +127,7 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
         }, for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -233,14 +233,14 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
 
     override func layoutSubviews() {
-        if let viewController = viewController, layoutForColumnCount != viewController.currentColumnCount {
+        if let viewController, layoutForColumnCount != viewController.currentColumnCount {
             updateMoreButton()
         }
         super.layoutSubviews()
     }
 
     private func updateMoreButton() {
-        guard let viewController = viewController else {
+        guard let viewController else {
             return
         }
         let current = viewController.currentColumnCount
@@ -249,7 +249,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
 
     private var sectionCount: Int {
-        guard let viewController = viewController, let toggle = toggle else {
+        guard let viewController, let toggle else {
             return 0
         }
         return viewController.filter.countItems(for: toggle)
@@ -326,7 +326,7 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
 
 extension LabelSectionTitle: UIDragInteractionDelegate {
     func dragInteraction(_: UIDragInteraction, itemsForBeginning _: UIDragSession) -> [UIDragItem] {
-        if let toggle = toggle, let label = toggle.function.dragItem {
+        if let toggle, let label = toggle.function.dragItem {
             label.previewProvider = {
                 UIDragPreview(view: self.createLabelView(), parameters: self.dragParams())
             }

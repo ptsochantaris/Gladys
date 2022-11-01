@@ -20,7 +20,7 @@ final class ProgressViewController: NSViewController {
         } else {
             progressIndicator.isIndeterminate = true
         }
-        if let titleOverride = titleOverride {
+        if let titleOverride {
             titleLabel.stringValue = titleOverride
         }
     }

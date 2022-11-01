@@ -16,7 +16,7 @@ final class MirrorManager {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         let intents = types.map { NSFileAccessIntent.writingIntent(with: mirrorBase, options: $0) }
         coordinator.coordinate(with: intents, queue: mirrorQueue) { error in
-            if let error = error {
+            if let error {
                 log("Error while trying to coordinate mirror: \(error.localizedDescription)")
                 return
             }
@@ -27,7 +27,7 @@ final class MirrorManager {
     private static func coordinateRead(type: NSFileCoordinator.ReadingOptions, perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
         coordinator.coordinate(with: [.readingIntent(with: mirrorBase, options: type)], queue: mirrorQueue) { error in
-            if let error = error {
+            if let error {
                 log("Error while trying to coordinate mirror: \(error.localizedDescription)")
                 return
             }

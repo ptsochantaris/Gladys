@@ -98,7 +98,7 @@ extension ArchivedItem {
             message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
         }
         getPassword(title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
-            guard let password = password else {
+            guard let password else {
                 completion(nil, nil)
                 return
             }
@@ -133,7 +133,7 @@ extension ArchivedItem {
     @MainActor
     private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool) -> Void) {
         getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
-            guard let password = password else {
+            guard let password else {
                 completion(false)
                 return
             }
@@ -156,7 +156,7 @@ extension ArchivedItem {
     var watchItem: [String: Any] {
         var imageDate = updatedAt
         dataAccessQueue.sync {
-            if let imagePath = imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
+            if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
                 imageDate = max(imageDate, id)
             }
         }
@@ -171,7 +171,7 @@ extension ArchivedItem {
     @MainActor
     @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
         var itemToPreview: Component?
-        if let childUuid = childUuid {
+        if let childUuid {
             itemToPreview = components.first { $0.uuid.uuidString == childUuid }
         }
         itemToPreview = itemToPreview ?? previewableTypeItem
@@ -191,13 +191,13 @@ extension ArchivedItem {
         } else {
             let n = GladysNavController(rootViewController: ql)
             n.modalPresentationStyle = .popover
-            if let p = n.popoverPresentationController, let cell = cell {
+            if let p = n.popoverPresentationController, let cell {
                 p.sourceView = cell
                 p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
                 p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
             }
             viewController.present(n, animated: true)
-            if let p = n.popoverPresentationController, let cell = cell, p.sourceView == nil { // sanity check, iOS versions get confused about this
+            if let p = n.popoverPresentationController, let cell, p.sourceView == nil { // sanity check, iOS versions get confused about this
                 p.sourceView = cell
                 p.sourceRect = cell.contentView.bounds.insetBy(dx: 6, dy: 6)
                 p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
@@ -217,7 +217,7 @@ extension ArchivedItem {
             let c = CNContactViewController(forUnknownContact: contact)
             c.contactStore = CNContactStore()
             c.hidesBottomBarWhenPushed = true
-            if let viewController = viewController {
+            if let viewController {
                 viewController.pushViewController(c, animated: true)
             } else {
                 let scene = currentWindow?.windowScene

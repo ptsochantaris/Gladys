@@ -50,7 +50,7 @@ final class AboutViewController: NSViewController {
 
         supportStack.isHidden = true
         tipJar = TipJar { [weak self] items, _ in
-            guard let s = self, let items = items, items.count > 4 else { return }
+            guard let s = self, let items, items.count > 4 else { return }
 
             s.tipItems = items
             s.l1.stringValue = " " + (items[0].regularPrice ?? "") + " "
@@ -75,7 +75,7 @@ final class AboutViewController: NSViewController {
     }
 
     private func purchase(sender: NSView, index: Int) {
-        guard let tipJar = tipJar, let items = tipItems else { return }
+        guard let tipJar, let items = tipItems else { return }
 
         let f = [f1!, f2!, f3!, f4!, f5!]
         let prev = f[index].stringValue

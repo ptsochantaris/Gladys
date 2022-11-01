@@ -36,7 +36,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
         guard Model.doneIngesting else { return }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.commitNote()
             sendNotification(name: .DoneSelected, object: nil)
         })

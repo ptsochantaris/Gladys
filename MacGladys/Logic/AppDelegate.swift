@@ -211,7 +211,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         NSApplication.shared.registerForRemoteNotifications(matching: [])
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
-            if let error = error {
+            if let error {
                 log("Notification permissions error: \(error.localizedDescription)")
             } else {
                 log("Notification permissions request result: \(granted)")
@@ -581,8 +581,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             self.endProgress()
         }
 
-        guard let createdUrl = createdUrl else {
-            if let error = error {
+        guard let createdUrl else {
+            if let error {
                 Task {
                     await genericAlert(title: "Operation Failed", message: error.finalDescription)
                 }

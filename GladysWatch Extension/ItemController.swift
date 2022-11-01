@@ -45,7 +45,7 @@ final class ItemController: WKInterfaceController {
     }
 
     deinit {
-        if let observer = observer {
+        if let observer {
             NotificationCenter.default.removeObserver(observer)
         }
     }
@@ -65,7 +65,7 @@ final class ItemController: WKInterfaceController {
     override func willActivate() {
         super.willActivate()
 
-        if active || ExtensionDelegate.currentUUID.isEmpty, let uuid = uuid {
+        if active || ExtensionDelegate.currentUUID.isEmpty, let uuid {
             ExtensionDelegate.currentUUID = uuid
         }
 
@@ -107,7 +107,7 @@ final class ItemController: WKInterfaceController {
     }
 
     private func fetchImage() {
-        guard let uuid = uuid else { return }
+        guard let uuid else { return }
 
         let cacheKey = uuid + String(itemDate.timeIntervalSinceReferenceDate) + ".dat"
         if let data = ImageCache.imageData(for: cacheKey), let i = UIImage(data: data) {
@@ -195,7 +195,7 @@ final class ItemController: WKInterfaceController {
 
     @IBAction private func viewOnDeviceSelected() {
         showMenu(false)
-        if let uuid = uuid {
+        if let uuid {
             opening = true
             WCSession.default.sendMessage(["view": uuid], replyHandler: { _ in
                 Task { @MainActor in
@@ -211,7 +211,7 @@ final class ItemController: WKInterfaceController {
 
     @IBAction private func copySelected() {
         showMenu(false)
-        if let uuid = uuid {
+        if let uuid {
             copying = true
             WCSession.default.sendMessage(["copy": uuid], replyHandler: { _ in
                 Task { @MainActor in
@@ -227,7 +227,7 @@ final class ItemController: WKInterfaceController {
 
     @IBAction private func moveToTopSelected() {
         showMenu(false)
-        if let uuid = uuid {
+        if let uuid {
             topping = true
             WCSession.default.sendMessage(["moveToTop": uuid], replyHandler: { _ in
                 Task { @MainActor in
@@ -243,7 +243,7 @@ final class ItemController: WKInterfaceController {
 
     @IBAction private func deleteSelected() {
         showMenu(false)
-        if let uuid = uuid {
+        if let uuid {
             deleting = true
             WCSession.default.sendMessage(["delete": uuid], replyHandler: { _ in
                 Task { @MainActor in

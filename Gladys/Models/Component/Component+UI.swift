@@ -61,7 +61,7 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
             vcSnap.alpha = 0
             container.addSubview(vcSnap)
 
-            if let snapInfo = snapInfo {
+            if let snapInfo {
                 snapInfo.0.frame = snapInfo.1
                 vcSnap.frame = snapInfo.1
                 container.addSubview(snapInfo.0)
@@ -72,7 +72,7 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
             UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
                 vcSnap.alpha = 1
                 vcSnap.frame = finalFrame
-                if let snapInfo = snapInfo {
+                if let snapInfo {
                     snapInfo.0.frame = finalFrame
                     snapInfo.0.alpha = 0
                 }
@@ -90,7 +90,7 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
             container.addSubview(vcSnap)
 
             let finalFrame: CGRect
-            if let snapInfo = snapInfo {
+            if let snapInfo {
                 finalFrame = snapInfo.1
                 snapInfo.0.frame = vcSnap.frame
                 snapInfo.0.alpha = 0
@@ -102,7 +102,7 @@ final class GladysNavController: UINavigationController, UIViewControllerAnimate
             UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut, animations: {
                 vcSnap.frame = finalFrame
                 vcSnap.alpha = 0
-                if let snapInfo = snapInfo {
+                if let snapInfo {
                     snapInfo.0.frame = finalFrame
                     snapInfo.0.alpha = 1
                 }
@@ -190,7 +190,7 @@ extension Component {
 
     @MainActor
     var canPreview: Bool {
-        if let canPreviewCache = canPreviewCache {
+        if let canPreviewCache {
             return canPreviewCache
         }
         let res: Bool
@@ -226,7 +226,7 @@ extension Component {
             let c = CNContactViewController(forUnknownContact: contact)
             c.contactStore = CNContactStore()
             c.hidesBottomBarWhenPushed = true
-            if let viewController = viewController {
+            if let viewController {
                 viewController.pushViewController(c, animated: true)
             } else {
                 let scene = currentWindow?.windowScene

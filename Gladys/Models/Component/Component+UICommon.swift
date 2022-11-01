@@ -27,7 +27,7 @@ extension Component {
             return item
         }
 
-        if typeConforms(to: kUTTypeVCard), let bytes = bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+        if typeConforms(to: kUTTypeVCard), let bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
             return contact
         }
 
@@ -60,7 +60,7 @@ extension Component {
             name = name.truncate(limit: 255)
         }
 
-        if let directory = directory {
+        if let directory {
             name = directory.truncate(limit: 255) + "/" + name
         }
 

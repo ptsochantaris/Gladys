@@ -71,7 +71,7 @@ final class ActionRequestViewController: UIViewController {
                 index += 1
             }
             // If all are URLs, find the weird link, if any, and trim it
-            if count == inputItems.count, hasSafariFlag, let weirdIndex = weirdIndex {
+            if count == inputItems.count, hasSafariFlag, let weirdIndex {
                 inputItems.remove(at: weirdIndex)
             }
         }

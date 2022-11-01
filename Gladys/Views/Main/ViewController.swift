@@ -22,7 +22,7 @@ func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, bu
     var continuation: CheckedContinuation<Void, Never>?
 
     let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    if let buttonTitle = buttonTitle {
+    if let buttonTitle {
         a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in
             continuation?.resume()
         })
@@ -116,7 +116,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             return
         }
 
-        guard let filter = filter else {
+        guard let filter else {
             scene.title = nil
             return
         }
@@ -295,7 +295,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         switch filter.groupingMode {
         case .byLabel:
-            if let sourceIndexPath = sourceIndexPath,
+            if let sourceIndexPath,
                let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function,
                let sourceSectionLabel = dataSource.itemIdentifier(for: sourceIndexPath)?.label?.function,
                sourceSectionLabel != destinationSectionLabel {
@@ -309,7 +309,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 existingItem.markUpdated()
                 return .saveDB
 
-            } else if let sourceIndexPath = sourceIndexPath {
+            } else if let sourceIndexPath {
                 // drag inside same section
                 if sourceIndexPath.item <= destinationIndexPath.item {
                     insert(item: existingItem, at: destinationIndexPath, offset: 1)
@@ -333,7 +333,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         case .flat:
             // gladys-to-gladys
-            if let sourceIndexPath = sourceIndexPath, sourceIndexPath.item < destinationIndexPath.item {
+            if let sourceIndexPath, sourceIndexPath.item < destinationIndexPath.item {
                 insert(item: existingItem, at: destinationIndexPath, offset: 1)
             } else {
                 // also covers case of another window
@@ -803,7 +803,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
         }
 
-        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
+        guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
         switch toggle.currentDisplayMode {
         case .collapsed, .scrolling:
             filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
@@ -822,7 +822,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
         }
 
-        guard let name = name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
+        guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
         switch toggle.currentDisplayMode {
         case .collapsed:
             filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
@@ -872,24 +872,24 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let headerMenuOptions = [
             UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.filter.setDisplayMode(to: .collapsed, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             },
             UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2")) { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             },
             UIAction(title: "Fully Expand All", image: UIImage(systemName: "square")) { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
                 self.updateDataSource(animated: true)
             }
         ]
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
-            guard let self = self else { return }
+            guard let self else { return }
             let sid: SectionIdentifier?
             if #available(iOS 15.0, *) {
                 sid = self.dataSource.sectionIdentifier(for: indexPath.section)
@@ -902,7 +902,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         let faderRegistration = UICollectionView.SupplementaryRegistration<ScrollFadeView>(elementKind: "ScrollFadeView") { [weak self] view, _, indexPath in
-            guard let self = self else { return }
+            guard let self else { return }
             let sid: SectionIdentifier?
             if #available(iOS 15.0, *) {
                 sid = self.dataSource.sectionIdentifier(for: indexPath.section)
@@ -995,13 +995,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let descendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil) { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sortRequested(option, ascending: false, button: self.sortAscendingButton)
             }
         }
         let ascendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil) { [weak self] _ in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.sortRequested(option, ascending: true, button: self.sortAscendingButton)
             }
         }
@@ -1417,7 +1417,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     private var emptyView: UIImageView?
-    
+
     private func updateEmptyView() {
         let isEmpty = Model.drops.isEmpty
         if isEmpty, emptyView == nil {
@@ -1559,7 +1559,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func passwordUpdate(_ newPassword: Data?, hint: String?, for item: ArchivedItem) {
         item.lockPassword = newPassword
-        if let hint = hint, !hint.isEmpty {
+        if let hint, !hint.isEmpty {
             item.lockHint = hint
         } else {
             item.lockHint = nil
@@ -1573,7 +1573,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         func makeAction(title: String, callback: @escaping () -> Void, style: UIAction.Attributes, iconName: String?) -> UIAction {
             let a = UIAction(title: title) { _ in callback() }
             a.attributes = style
-            if let iconName = iconName {
+            if let iconName {
                 a.image = UIImage(systemName: iconName)
             }
             return a
@@ -1766,7 +1766,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let sectionLeft = view.safeAreaInsets.left + spacing
         let sectionRight = view.safeAreaInsets.right + spacing
-        
+
         let topSpace: CGFloat
         if view.traitCollection.horizontalSizeClass == .regular {
             topSpace = spacing * 0.5
@@ -1983,7 +1983,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     func startSearch(_ initialText: String?) {
         guard let s = navigationItem.searchController else { return }
-        if let initialText = initialText {
+        if let initialText {
             s.searchBar.text = initialText
         }
         s.searchBar.becomeFirstResponder()
@@ -2117,7 +2117,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         if count == 0 {
             return nil
         }
-        guard let mostRecentIndexPathActioned = mostRecentIndexPathActioned else { return nil }
+        guard let mostRecentIndexPathActioned else { return nil }
         if count > mostRecentIndexPathActioned.item {
             return mostRecentIndexPathActioned
         }

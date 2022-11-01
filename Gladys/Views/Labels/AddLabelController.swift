@@ -119,7 +119,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
-        if let result = result, !result.isEmpty {
+        if let result, !result.isEmpty {
             var latest = Filter.Toggle.Section.latestLabels
             if let i = latest.firstIndex(of: result) {
                 latest.remove(at: i)

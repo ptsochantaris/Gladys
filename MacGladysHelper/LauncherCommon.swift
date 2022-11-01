@@ -34,7 +34,7 @@ enum LauncherCommon {
         let config = NSWorkspace.OpenConfiguration()
         log("Will launch Gladys at \(path)")
         NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: path), configuration: config) { _, error in
-            if let error = error {
+            if let error {
                 log("Error launching Gladys: \(error.localizedDescription)")
             }
         }

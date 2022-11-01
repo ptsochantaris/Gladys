@@ -63,18 +63,18 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         let drop = filteredDrops[indexPath.row]
         let (text, url) = drop.textForMessage
         var finalString = text
-        if let url = url {
+        if let url {
             finalString += " " + url.absoluteString
         }
         a.insertText(finalString) { error in
-            if let error = error {
+            if let error {
                 log("Error adding text: \(error.finalDescription)")
             }
         }
         if url == nil, let attachableType = drop.attachableTypeItem {
             let link = attachableType.sharedLink
             a.insertAttachment(link, withAlternateFilename: link.lastPathComponent) { error in
-                if let error = error {
+                if let error {
                     log("Error adding attachment: \(error.finalDescription)")
                 }
             }

@@ -82,7 +82,7 @@ final actor PushState {
                     sequenceToSend = currentUUIDSequence
                 }
 
-                if let sequenceToSend = sequenceToSend {
+                if let sequenceToSend {
                     let recordType = CloudManager.RecordType.positionList.rawValue
                     let record = await CloudManager.uuidSequenceRecord ?? CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: zoneId))
                     record["positionList"] = sequenceToSend as NSArray
@@ -151,7 +151,7 @@ final actor PushState {
             }
         }
 
-        if let error = error {
+        if let error {
             latestError = error
             log("Error deleting items: \(error.finalDescription)")
             await CloudManager.commitDeletion(for: deletedUUIDs) // play it safe
@@ -176,7 +176,7 @@ final actor PushState {
     }
 
     private func recordsModified(updatedRecords: [CKRecord]?, error: Error?) async {
-        if let error = error {
+        if let error {
             log("Error updating cloud records: \(error.finalDescription)")
             latestError = error
         }

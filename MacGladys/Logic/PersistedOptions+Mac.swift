@@ -132,7 +132,7 @@ extension PersistedOptions {
     private static var _autoShowWhenDragging: Bool?
     static var autoShowWhenDragging: Bool {
         get {
-            if let _autoShowWhenDragging = _autoShowWhenDragging {
+            if let _autoShowWhenDragging {
                 return _autoShowWhenDragging
             }
             _autoShowWhenDragging = defaults.bool(forKey: "autoShowWhenDragging")
@@ -147,7 +147,7 @@ extension PersistedOptions {
     private static var _autoShowFromEdge: Int?
     static var autoShowFromEdge: Int {
         get {
-            if let _autoShowFromEdge = _autoShowFromEdge {
+            if let _autoShowFromEdge {
                 return _autoShowFromEdge
             }
             _autoShowFromEdge = defaults.integer(forKey: "autoShowFromEdge")

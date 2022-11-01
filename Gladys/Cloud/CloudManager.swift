@@ -22,7 +22,7 @@ extension Array {
     }
 }
 
-extension Array where Element == [CKRecord] {
+extension [[CKRecord]] {
     func flatBunch(minSize: Int) -> [[CKRecord]] {
         var result = [[CKRecord]]()
         var newChild = [CKRecord]()

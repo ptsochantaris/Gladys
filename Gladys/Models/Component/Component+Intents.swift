@@ -38,7 +38,7 @@ extension Component {
             let interaction = INInteraction(intent: intent, response: nil)
             interaction.identifier = "copy-\(uuid.uuidString)"
             interaction.donate { error in
-                if let error = error {
+                if let error {
                     log("Error donating component copy shortcut: \(error.localizedDescription)")
                 } else {
                     log("Donated copy shortcut")

@@ -49,7 +49,7 @@ final class AboutController: GladysViewController {
             testFlightStack.isHidden = true
 
             tipJar = TipJar { [weak self] items, _ in
-                guard let s = self, let items = items, items.count > 4 else { return }
+                guard let s = self, let items, items.count > 4 else { return }
 
                 s.tipItems = items
                 s.l1.text = items[0].regularPrice
@@ -117,7 +117,7 @@ final class AboutController: GladysViewController {
     }
 
     private func purchase(index: Int) {
-        guard let tipJar = tipJar, let items = tipItems else { return }
+        guard let tipJar, let items = tipItems else { return }
 
         let t = [t1!, t2!, t3!, t4!, t5!]
         let prev = t[index].text

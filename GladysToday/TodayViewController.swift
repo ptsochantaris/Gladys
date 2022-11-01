@@ -94,7 +94,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
         let columnCount = CGFloat(itemsPerRow)
 
         guard columnCount > 0,
-              let extensionContext = extensionContext,
+              let extensionContext,
               let layout = itemsView.collectionViewLayout as? UICollectionViewFlowLayout
         else {
             cellSize = .zero

@@ -10,7 +10,7 @@ final class NotesEditor: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let commonNote = commonNote {
+        if let commonNote {
             noteField.stringValue = commonNote
             if commonNote.isEmpty {
                 topLabel.stringValue = "Create a note for the selected items."

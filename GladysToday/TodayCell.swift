@@ -53,7 +53,7 @@ final class TodayCell: UICollectionViewCell {
 
     var dropItem: ArchivedItem? {
         didSet {
-            guard let dropItem = dropItem else { return }
+            guard let dropItem else { return }
             topLabel.text = dropItem.displayText.0
             bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
             let size: CGFloat

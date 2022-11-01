@@ -69,7 +69,7 @@ extension ArchivedItem {
         var tags1 = [String]()
         var tags2 = [String]()
 
-        if autoImage || ocrImage, displayMode == .fill, let img = img {
+        if autoImage || ocrImage, displayMode == .fill, let img {
             var visualRequests = [VNImageBasedRequest]()
             var speechTask: SFSpeechRecognitionTask?
 
@@ -116,9 +116,9 @@ extension ArchivedItem {
                 do {
                     let result = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<SFSpeechRecognitionResult, Error>) in
                         speechTask = recognizer.recognitionTask(with: request) { result, error in
-                            if let error = error {
+                            if let error {
                                 continuation.resume(throwing: error)
-                            } else if let result = result, result.isFinal {
+                            } else if let result, result.isFinal {
                                 continuation.resume(with: .success(result))
                             }
                         }
@@ -132,7 +132,7 @@ extension ArchivedItem {
                 }
                 try? FileManager.default.removeItem(at: link)
             }
-            
+
             let vr = visualRequests
             let st = speechTask
             loadingProgress?.cancellationHandler = {
@@ -223,7 +223,7 @@ extension ArchivedItem {
     private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
         var extractedData: Data?
         let data = try? await provider.loadDataRepresentation(for: type)
-        if let data = data, data.count < 16384 {
+        if let data, data.count < 16384 {
             var extractedText: String?
             if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
                 extractedText = text
@@ -232,7 +232,7 @@ extension ArchivedItem {
                 extractedText = text
             }
 
-            if let extractedText = extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
+            if let extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
                 extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
             }
         }

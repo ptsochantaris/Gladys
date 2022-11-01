@@ -179,7 +179,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
                     log("Got provisional badging permission")
                     PersistedOptions.badgeIconWithItemCount = true
                     Model.updateBadge()
-                } else if let error = error {
+                } else if let error {
                     self.badgeIconSwitch.isOn = false
                     await genericAlert(title: "Error", message: "Could not obtain permission to display badges, you may need to manually allow Gladys to display badges from settings.", offerSettingsShortcut: true)
                     log("Error requesting badge permission: \(error.localizedDescription)")
@@ -211,7 +211,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
             // we use an app intent for this
             siriSettingsButton.isHidden = true
         }
-        
+
         explicitScrolling = true
         doneButtonLocation = .right
 

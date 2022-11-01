@@ -23,7 +23,7 @@ final class MessageCell: UICollectionViewCell {
 
     var dropItem: ArchivedItem? {
         didSet {
-            guard let dropItem = dropItem else { return }
+            guard let dropItem else { return }
             topLabel.text = dropItem.displayText.0
             imageView.image = dropItem.displayIcon
             switch dropItem.displayMode {

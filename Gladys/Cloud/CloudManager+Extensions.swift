@@ -24,7 +24,7 @@ extension CloudManager {
         let operation = CKModifyRecordsOperation(recordsToSave: [updateRecord], recordIDsToDelete: nil)
         operation.savePolicy = .allKeys
         operation.perRecordCompletionBlock = { _, error in
-            if let error = error {
+            if let error {
                 log("Extension update post failed: \(error.localizedDescription)")
             } else {
                 log("Extension update posted")

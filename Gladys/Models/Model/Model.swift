@@ -131,7 +131,7 @@ enum Model {
                     let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
                     let totalItemsInStore = d.count / 16
                     let itemCount: Int
-                    if let maximumItems = maximumItems {
+                    if let maximumItems {
                         itemCount = min(maximumItems, totalItemsInStore)
                     } else {
                         itemCount = totalItemsInStore

@@ -108,7 +108,7 @@ final class Singleton {
 
         case kGladysQuicklookActivity:
             if
-                let userActivity = userActivity,
+                let userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
@@ -129,7 +129,7 @@ final class Singleton {
                     await v.highlightItem(request)
                     return
 
-                } else if let child = child {
+                } else if let child {
                     if let q = child.quickLook() {
                         let n = GladysNavController(rootViewController: q)
                         scene.windows.first?.rootViewController = n
@@ -140,7 +140,7 @@ final class Singleton {
 
         case kGladysDetailViewingActivity:
             if
-                let userActivity = userActivity,
+                let userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 guard let item = Model.item(uuid: uuidString) else {
@@ -174,7 +174,7 @@ final class Singleton {
             return
 
         case CSSearchableItemActionType:
-            if let userActivity = userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+            if let userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 let request = HighlightRequest(uuid: itemIdentifier, extraAction: .none)
                 let v = await showMainWindow(in: scene)
                 await v.highlightItem(request)
@@ -182,7 +182,7 @@ final class Singleton {
             }
 
         case CSQueryContinuationActionType:
-            if let userActivity = userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
+            if let userActivity, let searchQuery = userActivity.userInfo?[CSSearchQueryString] as? String {
                 let v = await showMainWindow(in: scene)
                 v.startSearch(searchQuery)
                 return
@@ -214,10 +214,10 @@ final class Singleton {
         }
 
         let filter = s.associatedFilter
-        if let labelList = labelList {
+        if let labelList {
             filter.applyLabelConfig(from: labelList)
 
-        } else if let legacyLabelList = legacyLabelList {
+        } else if let legacyLabelList {
             filter.enableLabelsByName(legacyLabelList)
         }
 
@@ -245,7 +245,7 @@ final class Singleton {
             UIApplication.shared.requestSceneSessionActivation(centralSession, userActivity: activity, options: options) { error in
                 log("Error requesting new scene: \(error)")
             }
-        } else if let scene = scene {
+        } else if let scene {
             await handleActivity(activity, in: scene, forceMainWindow: true)
         } else {
             // in theory this should never happen, leave the UI as-is

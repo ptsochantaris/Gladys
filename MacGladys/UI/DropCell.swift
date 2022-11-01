@@ -41,7 +41,7 @@ final class TokenTextField: NSTextField {
 
     var labels: [String]? {
         didSet {
-            guard let labels = labels, !labels.isEmpty, let font = font else {
+            guard let labels, !labels.isEmpty, let font else {
                 attributedStringValue = NSAttributedString()
                 return
             }
@@ -70,7 +70,7 @@ final class TokenTextField: NSTextField {
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        guard !attributedStringValue.string.isEmpty, let labels = labels, let context = NSGraphicsContext.current?.cgContext else { return }
+        guard !attributedStringValue.string.isEmpty, let labels, let context = NSGraphicsContext.current?.cgContext else { return }
 
         let insideRect = dirtyRect.insetBy(dx: 1, dy: 0).offsetBy(dx: -1, dy: 0)
         let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
@@ -273,7 +273,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             progressView.stopAnimation(nil)
         }
 
-        if let item = item {
+        if let item {
             if showLoading {
                 hideCancel = item.needsReIngest
                 hideSpinner = false
@@ -301,7 +301,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         let final = img.isTemplate ? img.template(with: NSColor.g_colorTint) : img
                         Images.shared[cacheKey] = final
                         await MainActor.run { [weak self] in
-                            if let self = self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
+                            if let self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
                                 self.image.layer?.contents = final
                                 self.image.updateLayer()
                             }
@@ -496,7 +496,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     }
 
     @IBAction private func cancelSelected(_: NSButton) {
-        if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
+        if let archivedDropItem, archivedDropItem.shouldDisplayLoading {
             Model.delete(items: [archivedDropItem])
         }
     }

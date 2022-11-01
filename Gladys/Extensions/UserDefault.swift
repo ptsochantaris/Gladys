@@ -25,9 +25,9 @@ struct OptionalUserDefault<Value> {
             PersistedOptions.defaults.object(forKey: key) as? Value
         }
         set {
-            if let newValue = newValue {
+            if let newValue {
                 PersistedOptions.defaults.set(newValue, forKey: key)
-            } else if let emptyValue = emptyValue {
+            } else if let emptyValue {
                 PersistedOptions.defaults.set(emptyValue, forKey: key)
             } else {
                 PersistedOptions.defaults.removeObject(forKey: key)

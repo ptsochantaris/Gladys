@@ -90,7 +90,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
     }
 
     func tableView(_ tableView: NSTableView, setObjectValue _: Any?, for _: NSTableColumn?, row: Int) {
-        guard let selectedItems = selectedItems else { return }
+        guard let selectedItems else { return }
         let toggle = availableToggles[row]
         let state = toggle.toggleState(across: selectedItems)
         let name = toggle.function.displayText

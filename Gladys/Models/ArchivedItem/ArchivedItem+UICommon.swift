@@ -97,11 +97,11 @@ extension ArchivedItem {
         #if MAC
             activity.isEligibleForSearch = false
         #else
-        if #available(iOS 16, *) {
-            activity.isEligibleForPrediction = false // using app intents
-        } else {
-            activity.isEligibleForPrediction = true
-        }
+            if #available(iOS 16, *) {
+                activity.isEligibleForPrediction = false // using app intents
+            } else {
+                activity.isEligibleForPrediction = true
+            }
             activity.contentAttributeSet = item.searchAttributes
             activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
             activity.isEligibleForSearch = true

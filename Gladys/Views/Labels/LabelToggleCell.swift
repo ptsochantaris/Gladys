@@ -8,7 +8,7 @@ final class LabelToggleCell: UITableViewCell {
 
     var toggle: Filter.Toggle? {
         didSet {
-            guard let toggle = toggle else { return }
+            guard let toggle else { return }
             labelName.text = toggle.function.displayText
             let c = toggle.count
             labelCount.text = c == 1 ? "1 item" : "\(c) items"

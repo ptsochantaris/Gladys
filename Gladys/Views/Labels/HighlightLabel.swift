@@ -32,7 +32,7 @@ final class HighlightLabel: UILabel {
     private func update() {
         let ls = _labels
 
-        guard !ls.isEmpty, let font = font, let tintColor = tintColor else {
+        guard !ls.isEmpty, let font, let tintColor else {
             attributedText = nil
             return
         }
@@ -72,7 +72,7 @@ final class HighlightLabel: UILabel {
     private var cachedSize = CGSize.zero
 
     override func draw(_ rect: CGRect) {
-        guard !rect.isEmpty, let attributedText = attributedText, let highlightColor = tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
+        guard !rect.isEmpty, let attributedText, let highlightColor = tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
 
         let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
 

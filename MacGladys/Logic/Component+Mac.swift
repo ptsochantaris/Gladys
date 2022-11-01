@@ -210,7 +210,7 @@ extension Component {
 
     @MainActor
     var canPreview: Bool {
-        if let canPreviewCache = canPreviewCache {
+        if let canPreviewCache {
             return canPreviewCache
         }
         let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)

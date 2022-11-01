@@ -46,7 +46,7 @@ final class ShareViewController: NSViewController {
         spinner.startAnimation(nil)
         pasteboardItems.removeAll()
 
-        guard let extensionContext = extensionContext else { return }
+        guard let extensionContext else { return }
 
         for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
             var attachments = inputItem.attachments ?? []
@@ -83,7 +83,7 @@ final class ShareViewController: NSViewController {
                     importGroup.enter()
                     let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
                         guard let s = self else { return }
-                        if let data = data {
+                        if let data {
                             newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
                         }
                         s.importGroup.leave()
@@ -99,7 +99,7 @@ final class ShareViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
 
-        guard let extensionContext = extensionContext else { return }
+        guard let extensionContext else { return }
 
         importGroup.notify(queue: DispatchQueue.main) { [weak self] in
             guard let s = self else { return }

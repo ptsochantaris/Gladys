@@ -5,7 +5,7 @@ func genericAlert(title: String, message: String?, windowOverride _: NSWindow? =
     let a = NSAlert()
     a.messageText = title
     _ = a.addButton(withTitle: buttonTitle)
-    if let message = message {
+    if let message {
         a.informativeText = message
     }
 

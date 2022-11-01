@@ -112,7 +112,7 @@ final class Filter {
     }
 
     func setDisplayMode(to displayMode: DisplayMode, for names: Set<String>?, setAsPreference: Bool) {
-        if let names = names {
+        if let names {
             labelToggles = labelToggles.map {
                 let effectiveName = $0.function.displayText
                 if names.contains(effectiveName) {
@@ -253,7 +253,7 @@ final class Filter {
                 }
             }
             q.completionHandler = { error in
-                if let error = error {
+                if let error {
                     log("Search error: \(error.finalDescription)")
                 }
                 lock.signal()

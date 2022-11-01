@@ -15,7 +15,7 @@ extension ArchivedItem {
             }
         }
         let tile = displayTitleOrUuid
-        if let webURL = webURL {
+        if let webURL {
             let a = webURL.absoluteString
             if tile != a {
                 return (tile, webURL)

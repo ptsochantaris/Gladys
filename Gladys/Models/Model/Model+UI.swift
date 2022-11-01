@@ -112,7 +112,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
     private func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType, replyHandler: @escaping ([String: Any]) -> Void) {
         Task.detached {
             let data: Data
-            if let size = size {
+            if let size {
                 if mode == .center || mode == .circle {
                     let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
                     data = scaledImage.pngData()!

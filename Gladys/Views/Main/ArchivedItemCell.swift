@@ -41,7 +41,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     @IBAction private func cancelSelected(_: UIButton) {
         progressView.observedProgress = nil
-        if let archivedDropItem = archivedDropItem, archivedDropItem.shouldDisplayLoading {
+        if let archivedDropItem, archivedDropItem.shouldDisplayLoading {
             Model.delete(items: [archivedDropItem])
         }
     }
@@ -263,7 +263,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         progressView.observedProgress = nil
         image.wideMode = wideCell
 
-        if let item = item {
+        if let item {
             if item.shouldDisplayLoading {
                 if isFirstImport {
                     hideProgress = false
@@ -291,7 +291,7 @@ final class ArchivedItemCell: UICollectionViewCell {
                         let img = item.displayIcon
                         Images.shared[cacheKey] = img
                         await MainActor.run { [weak self] in
-                            if let self = self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
+                            if let self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
                                 self.image.image = img
                             }
                         }

@@ -371,8 +371,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             collection.selectionIndexes = IndexSet(integer: i)
             switch request.extraAction {
             case .open:
-                
-                // TODO
+
+                // TODO:
                 break
             case .detail:
                 info(nil)

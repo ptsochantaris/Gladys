@@ -81,7 +81,7 @@ extension Model {
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
             let extractor = NSItemProvider()
             var count = 0
-            let utis = Set(pasteboardItem.types.compactMap { $0.rawValue })
+            let utis = Set(pasteboardItem.types.compactMap(\.rawValue))
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 let destinationUrl = Model.temporaryDirectoryUrl
@@ -98,7 +98,7 @@ extension Model {
                     // log("Waiting for promise: \(promiseType)")
                     promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
                         // log("Completed promise: \(promiseType)")
-                        if let error = error {
+                        if let error {
                             log("Warning, loading error in file drop: \(error.localizedDescription)")
                         } else {
                             let dropData = try? Data(contentsOf: url)
@@ -139,7 +139,7 @@ extension Model {
         for provider in itemProviders {
             for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
                 var modelIndex = indexPath.item
-                if let filterContext = filterContext, filterContext.isFiltering {
+                if let filterContext, filterContext.isFiltering {
                     modelIndex = filterContext.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
                     if filterContext.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
                         newItem.labels = filterContext.enabledLabelsForItems

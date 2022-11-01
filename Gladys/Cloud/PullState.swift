@@ -242,7 +242,7 @@ final actor PullState {
 
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             operation.fetchRecordZoneChangesCompletionBlock = { error in
-                if let error = error {
+                if let error {
                     continuation.resume(throwing: error)
                 } else {
                     continuation.resume()
@@ -274,7 +274,7 @@ final actor PullState {
 
         let newToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKServerChangeToken, Error>) in
             operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
-                if let newToken = newToken {
+                if let newToken {
                     continuation.resume(returning: newToken)
                     return
                 }
@@ -340,7 +340,7 @@ final actor PullState {
 
             try? await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 CloudManager.fetchMissingShareRecords { error in
-                    if let error = error {
+                    if let error {
                         continuation.resume(throwing: error)
                     } else {
                         continuation.resume()

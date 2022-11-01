@@ -33,7 +33,7 @@ final actor WebArchiver {
         } else {
             return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<(Data, HTTPURLResponse), Error>) in
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                    if let data = data, let response = response as? HTTPURLResponse {
+                    if let data, let response = response as? HTTPURLResponse {
                         continuation.resume(with: .success((data, response)))
                     } else {
                         continuation.resume(throwing: error ?? GladysError.blankResponse.error)
@@ -134,7 +134,7 @@ final actor WebArchiver {
         var resources: [String] = []
 
         func resoucePathFilter(_ base: String?) -> String? {
-            if let base = base {
+            if let base {
                 if base.hasPrefix("http") {
                     return base
                 } else if base.hasPrefix("//") {
@@ -220,7 +220,7 @@ final actor WebArchiver {
             }
         }
 
-        if let title = title {
+        if let title {
             log("Title located at URL: \(title)")
         } else {
             log("No title located at URL")
@@ -312,7 +312,7 @@ final actor WebArchiver {
     }
 
     private func repair(path: String?, using url: URL) -> URL? {
-        guard var path = path else { return nil }
+        guard var path else { return nil }
         var iconUrl: URL?
         if let i = URL(string: path), i.scheme != nil {
             iconUrl = i
@@ -334,7 +334,7 @@ final actor WebArchiver {
     ////////////////////////////////////////////
 
     private func fetchImage(url: URL?) async throws -> IMAGE? {
-        guard let url = url else { return nil }
+        guard let url else { return nil }
         let req = URLRequest(url: url)
         let (data, _) = try await getData(for: req)
         log("Image fetched for \(url)")

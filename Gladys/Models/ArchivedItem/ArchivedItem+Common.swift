@@ -237,7 +237,7 @@ extension ArchivedItem: Hashable {
             let recordLocation = cloudKitDataPath
             let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
-                if let newValue = newValue {
+                if let newValue {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
@@ -280,7 +280,7 @@ extension ArchivedItem: Hashable {
             let recordLocation = cloudKitShareDataPath
             let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
-                if let newValue = newValue {
+                if let newValue {
                     cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
 
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)

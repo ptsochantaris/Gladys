@@ -4,13 +4,13 @@ struct HighlightRequest {
     enum Action {
         case none, detail, open, preview(String?)
     }
-    
+
     let uuid: String
     let extraAction: Action
 
     @MainActor
     var itemExists: Bool {
-        return Model.item(uuid: uuid) != nil
+        Model.item(uuid: uuid) != nil
     }
 }
 

@@ -139,7 +139,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
         } else if let v = v as? NSNumber {
             return v.description
 
-        } else if let v = v {
+        } else if let v {
             let desc = String(describing: v)
             if desc.isEmpty {
                 return "<no description>"

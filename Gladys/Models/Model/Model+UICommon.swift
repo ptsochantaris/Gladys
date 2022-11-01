@@ -226,7 +226,7 @@ extension Model {
                 CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
             }
             #if os(iOS)
-            Model.clearLegacyIntents()
+                Model.clearLegacyIntents()
             #endif
             Model.searchableIndex(CSSearchableIndex.default()) {
                 PersistedOptions.lastRanVersion = currentBuild
@@ -262,7 +262,7 @@ extension Model {
 
         let removedUuids = itemsToDelete.map(\.uuid)
         index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString)) { error in
-            if let error = error {
+            if let error {
                 log("Error while deleting search indexes \(error.localizedDescription)")
             }
         }

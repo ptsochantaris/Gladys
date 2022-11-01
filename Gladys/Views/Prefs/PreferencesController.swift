@@ -37,9 +37,9 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             }
             return Model.createArchive(using: filter) { url, error in
                 completion(url, false, error)
-                if let url = url {
+                if let url {
                     try? FileManager.default.removeItem(at: url)
-                } else if let error = error {
+                } else if let error {
                     Task { @MainActor in
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
@@ -63,9 +63,9 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             }
             return Model.createZip(using: filter) { url, error in
                 completion(url, false, error)
-                if let url = url {
+                if let url {
                     try? FileManager.default.removeItem(at: url)
-                } else if let error = error {
+                } else if let error {
                     Task { @MainActor in
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
@@ -101,7 +101,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                     }
                     return
                 }
-                if let url = url {
+                if let url {
                     DispatchQueue.main.sync { // sync is intentional, to keep the data around
                         self.importArchive(from: url)
                     }
@@ -320,13 +320,13 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     }
 
     private func completeOperation(to url: URL?, error: Error?) {
-        if let error = error {
+        if let error {
             Task { @MainActor in
                 await genericAlert(title: "Error", message: error.localizedDescription)
             }
             return
         }
-        guard let url = url else { return }
+        guard let url else { return }
         Task { @MainActor in
             self.exportingFileURL = url
             let p = UIDocumentPickerViewController(forExporting: [url])

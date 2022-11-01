@@ -40,7 +40,7 @@ extension Component: Equatable {
     }
 
     func decode() -> Any? {
-        guard let bytes = bytes else { return nil }
+        guard let bytes else { return nil }
 
         // Do not do this because there may be a URL hidden there
         // if representedClass == "NSData" {
@@ -73,7 +73,7 @@ extension Component: Equatable {
     }
 
     var encodedUrl: URL? {
-        if let encodedURLCache = encodedURLCache {
+        if let encodedURLCache {
             return encodedURLCache.1
         }
 
@@ -100,7 +100,7 @@ extension Component: Equatable {
 
     var fileExtension: String? {
         let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
-        if let tag = tag {
+        if let tag {
             let t = tag as String
             if !t.isEmpty {
                 return t
@@ -436,7 +436,7 @@ extension Component: Equatable {
             let recordLocation = cloudKitDataPath
             let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
-                if let newValue = newValue {
+                if let newValue {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
