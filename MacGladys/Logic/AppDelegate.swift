@@ -266,7 +266,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         Task {
             await Model.detectExternalChanges()
-            await Model.startMonitoringForExternalChangesToBlobs()
+            Model.startMonitoringForExternalChangesToBlobs()
         }
 
         if WindowController.restoreStates() {

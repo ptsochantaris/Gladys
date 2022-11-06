@@ -81,7 +81,7 @@ extension Model {
         let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
             let extractor = NSItemProvider()
             var count = 0
-            let utis = Set(pasteboardItem.types.compactMap(\.rawValue))
+            let utis = Set(pasteboardItem.types.map(\.rawValue))
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 let destinationUrl = Model.temporaryDirectoryUrl
