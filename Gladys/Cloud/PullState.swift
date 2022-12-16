@@ -38,41 +38,30 @@ final actor PullState {
         }
     }
 
-    func processChanges(commitTokens: Bool) async {
+    private func processChanges(commitTokens: Bool) async {
         await CloudManager.setSyncProgressString("Updating…")
         log("Changes fetch complete, processing")
 
         if updatedSequence || newDropCount > 0 {
-            await Model.sortDrops()
+            Task { @MainActor in
+                Model.sortDrops()
+            }
         }
 
         let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
 
         if itemsModified {
             // need to save stuff that's been modified
-            let task = Task {
-                while !Task.isCancelled {
-                    try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-                }
-            }
-            await Model.queueNextSaveCallback {
-                task.cancel()
-            }
-
             Task { @MainActor in
                 Model.saveIsDueToSyncFetch = true
                 Model.save()
             }
 
-            await task.value
-
-        } else if !updatedZoneTokens.isEmpty {
+        } else if !updatedZoneTokens.isEmpty, updatedSequence {
             // a position record, most likely?
-            if updatedSequence {
-                await MainActor.run {
-                    Model.saveIsDueToSyncFetch = true
-                    Model.saveIndexOnly()
-                }
+            Task { @MainActor in
+                Model.saveIsDueToSyncFetch = true
+                Model.saveIndexOnly()
             }
 
         } else {

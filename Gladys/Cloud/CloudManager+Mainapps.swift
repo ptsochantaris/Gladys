@@ -16,18 +16,6 @@ extension CloudManager {
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
-
-    nonisolated static func submitAndWait(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) async {
-        await withCheckedContinuation { continuation in
-            log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
-            operation.qualityOfService = .userInitiated
-            let done = BlockOperation {
-                continuation.resume()
-            }
-            done.addDependency(operation)
-            database.add(operation)
-        }
-    }
     
     static var showNetwork = false {
         didSet {
@@ -96,12 +84,18 @@ extension CloudManager {
             return
         }
 
-        await withTaskGroup(of: Void.self) { group in
-            for operation in operations {
-                group.addTask {
-                    await submitAndWait(operation, on: operation.database!, type: "sync upload")
-                }
+        await withCheckedContinuation { continuation in
+            let done = BlockOperation {
+                continuation.resume()
             }
+
+            for operation in operations {
+                done.addDependency(operation)
+                submit(operation, on: operation.database!, type: "sync upload")
+            }
+            
+            let queue = OperationQueue.current ?? OperationQueue.main
+            queue.addOperation(done)
         }
 
         if let error = await privatePushState.latestError {
@@ -535,7 +529,7 @@ extension CloudManager {
 
     static func fetchMissingShareRecords() async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            fetchMissingShareRecords { error in
+            _fetchMissingShareRecords { error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
@@ -545,7 +539,7 @@ extension CloudManager {
         }
     }
 
-    private static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
+    private static func _fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
         for item in Model.allDrops {
