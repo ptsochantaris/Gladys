@@ -452,7 +452,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
 
             var destinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
-            let count = Model.drops.count
+            let count = Model.allDrops.count
             if destinationIndex >= count {
                 destinationIndex = count - 1
             }
@@ -465,8 +465,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
                 let sourceItem = filter.filteredDrops[draggingIndexPath.item]
                 let sourceIndex = Model.firstIndexOfItem(with: sourceItem.uuid)!
-                Model.drops.remove(at: sourceIndex)
-                Model.drops.insert(sourceItem, at: destinationIndex)
+                Model.removeDrop(at: sourceIndex)
+                Model.insert(drop: sourceItem, at: destinationIndex)
                 collection.deselectAll(nil)
             }
             Model.save()
@@ -487,7 +487,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         collection.animator().performBatchUpdates({
             let oldUUIDs = filter.filteredDrops.map(\.uuid)
             _ = filter.update(signalUpdate: .animated)
-            if Model.drops.allSatisfy(\.shouldDisplayLoading) {
+            if Model.allDrops.allSatisfy(\.shouldDisplayLoading) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -933,10 +933,12 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private func updateEmptyView() {
-        if Model.drops.isEmpty, emptyView.alphaValue < 1 {
+        let empty = Model.allDrops.isEmpty
+
+        if empty, emptyView.alphaValue < 1 {
             emptyView.animator().alphaValue = 1
 
-        } else if emptyView.alphaValue > 0, !Model.drops.isEmpty {
+        } else if emptyView.alphaValue > 0, !empty {
             emptyView.animator().alphaValue = 0
             emptyLabel.animator().alphaValue = 0
         }

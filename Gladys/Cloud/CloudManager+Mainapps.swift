@@ -11,12 +11,24 @@ extension CloudManager {
     static let sharedDatabaseSubscriptionId = "shared-changes"
     static var syncDirty = false
 
-    static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+    nonisolated static func submit(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
 
+    nonisolated static func submitAndWait(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) async {
+        await withCheckedContinuation { continuation in
+            log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
+            operation.qualityOfService = .userInitiated
+            let done = BlockOperation {
+                continuation.resume()
+            }
+            done.addDependency(operation)
+            database.add(operation)
+        }
+    }
+    
     static var showNetwork = false {
         didSet {
             Model.updateBadge()
@@ -87,7 +99,7 @@ extension CloudManager {
         await withTaskGroup(of: Void.self) { group in
             for operation in operations {
                 group.addTask {
-                    await perform(operation, on: operation.database!, type: "sync upload")
+                    await submitAndWait(operation, on: operation.database!, type: "sync upload")
                 }
             }
         }
@@ -336,16 +348,21 @@ extension CloudManager {
                     log("Cloud sync deactivation failed, could not deactivate current shares")
                     syncTransitioning = false
                 } else {
-                    deactivate(force: force, deactivatingShares: false, completion: completion)
+                    do {
+                        try await deactivate(force: force, deactivatingShares: false)
+                        completion(nil)
+                    } catch {
+                        completion(error)
+                    }
                 }
             }
         }
-        perform(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
+        submit(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
 
     static func deactivate(force: Bool, deactivatingShares _: Bool = true) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            deactivate(force: force) { error in
+            _deactivate(force: force) { error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
@@ -355,7 +372,7 @@ extension CloudManager {
         }
     }
 
-    private static func deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
+    private static func _deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
         syncTransitioning = true
 
         if deactivatingShares {
@@ -374,7 +391,7 @@ extension CloudManager {
                 finalError = error
             }
         }
-        perform(ss, on: container.sharedCloudDatabase, type: "delete subscription")
+        submit(ss, on: container.sharedCloudDatabase, type: "delete subscription")
 
         let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
         ms.modifySubscriptionsCompletionBlock = { _, _, error in
@@ -382,7 +399,7 @@ extension CloudManager {
                 finalError = error
             }
         }
-        perform(ms, on: container.privateCloudDatabase, type: "delete subscription")
+        submit(ms, on: container.privateCloudDatabase, type: "delete subscription")
 
         let doneOperation = BlockOperation {
             if let finalError, !force {
@@ -423,7 +440,7 @@ extension CloudManager {
                 fetchInitialUUIDSequence(zone: zone, completion: completion)
             }
         }
-        perform(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
+        submit(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
     }
 
     private static func updateSubscriptions(completion: @escaping (Error?) -> Void) {
@@ -449,7 +466,7 @@ extension CloudManager {
             }
             group.leave()
         }
-        perform(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
+        submit(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
 
         group.enter()
         let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
@@ -459,7 +476,7 @@ extension CloudManager {
             }
             group.leave()
         }
-        perform(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
+        submit(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
 
         group.notify(queue: .main) {
             completion(finalError)
@@ -470,7 +487,7 @@ extension CloudManager {
         Task { @MainActor in
             log("Activation aborted: \(error)")
             completion(error)
-            deactivate(force: true, completion: { _ in })
+            try? await deactivate(force: true)
         }
     }
 
@@ -498,7 +515,7 @@ extension CloudManager {
             }
         }
 
-        perform(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
+        submit(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
     }
 
     static func eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
@@ -513,7 +530,7 @@ extension CloudManager {
                 completion(error)
             }
         }
-        perform(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
+        submit(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
     }
 
     static func fetchMissingShareRecords() async throws {
@@ -580,7 +597,7 @@ extension CloudManager {
             }
             doneOperation.addDependency(fetch)
             let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-            perform(fetch, on: database, type: "fetch missing share records for items")
+            submit(fetch, on: database, type: "fetch missing share records for items")
         }
 
         OperationQueue.main.addOperation(doneOperation)
@@ -608,7 +625,7 @@ extension CloudManager {
             }
         }
         let database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-        perform(fetch, on: database, type: "fetching individual cloud record")
+        submit(fetch, on: database, type: "fetching individual cloud record")
     }
 
     static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
@@ -689,7 +706,7 @@ extension CloudManager {
         operation.modifyRecordsCompletionBlock = { _, _, error in
             completion(shareRecord, container, error)
         }
-        perform(operation, on: container.privateCloudDatabase, type: "share item")
+        submit(operation, on: container.privateCloudDatabase, type: "share item")
     }
 
     static func acceptShare(_ metadata: CKShare.Metadata) {
@@ -745,22 +762,20 @@ extension CloudManager {
             }
         }
         let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-        perform(deleteOperation, on: database, type: "delete share")
+        submit(deleteOperation, on: database, type: "delete share")
     }
 
-    static func proceedWithDeactivation() {
-        CloudManager.deactivate(force: false) { error in
-            Task {
-                if let error {
-                    await genericAlert(title: "Could not deactivate", message: error.finalDescription)
-                }
-            }
+    static func proceedWithDeactivation() async {
+        do {
+            try await deactivate(force: false)
+        } catch {
+            await genericAlert(title: "Could not deactivate", message: error.finalDescription)
         }
     }
 
     static func startActivation() async {
         do {
-            try await CloudManager.activate()
+            try await activate()
         } catch {
             await genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
         }

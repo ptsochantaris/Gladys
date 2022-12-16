@@ -248,10 +248,7 @@ final actor PullState {
                     continuation.resume()
                 }
             }
-
-            Task {
-                await CloudManager.perform(operation, on: database, type: "fetch zone changes")
-            }
+            CloudManager.submit(operation, on: database, type: "fetch zone changes")
         }
 
         if needsRetry {
@@ -284,9 +281,7 @@ final actor PullState {
                 log("\(database.databaseScope.logName) database fetch operation failed: \(err.finalDescription)")
                 continuation.resume(throwing: err)
             }
-            Task {
-                await CloudManager.perform(operation, on: database, type: "fetch database changes")
-            }
+            CloudManager.submit(operation, on: database, type: "fetch database changes")
         }
 
         if deletedZoneIds.contains(privateZoneId) {

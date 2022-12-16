@@ -128,29 +128,29 @@ final class ICloudController: GladysViewController {
                                                   message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
                                                   action: "Turn Off Sync",
                                                   cancel: "Cancel")
-                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
 
                 } else if sharingOwn {
                     let confirmed = await confirm(title: "You are sharing items",
                                                   message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
                                                   action: "Turn Off Sync",
                                                   cancel: "Cancel")
-                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
                 } else if importing {
                     let confirmed = await confirm(title: "You have items that are shared from others",
                                                   message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
                                                   action: "Turn Off Sync",
                                                   cancel: "Cancel")
-                    if confirmed { deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
                 } else {
-                    CloudManager.proceedWithDeactivation()
+                    await CloudManager.proceedWithDeactivation()
                 }
             }
         }
     }
 
-    private func deactivate() {
-        CloudManager.proceedWithDeactivation()
+    private func deactivate() async {
+        await CloudManager.proceedWithDeactivation()
         updateiCloudControls()
     }
 

@@ -435,35 +435,33 @@ final class Preferences: NSViewController {
 
     @IBAction private func syncSwitchChanged(_: NSButton) {
         syncSwitch.isEnabled = false
-
-        if CloudManager.syncSwitchedOn {
-            let sharingOwn = Model.sharingMyItems
-            let importing = Model.containsImportedShares
-            if sharingOwn, importing {
-                confirm(title: "You have shared items",
-                        message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
-            } else if sharingOwn {
-                confirm(title: "You are sharing items",
-                        message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
-            } else if importing {
-                confirm(title: "You have items that are shared from others",
-                        message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
-                        action: "Turn Off Sync",
-                        cancel: "Cancel") { confirmed in if confirmed { CloudManager.proceedWithDeactivation() } else { self.abortDeactivate() } }
-            } else {
-                CloudManager.proceedWithDeactivation()
-            }
-        } else {
-            if Model.drops.isEmpty {
-                Task {
-                    await CloudManager.startActivation()
+        
+        Task { @MainActor in
+            if CloudManager.syncSwitchedOn {
+                let sharingOwn = Model.sharingMyItems
+                let importing = Model.containsImportedShares
+                if sharingOwn, importing {
+                    confirm(title: "You have shared items",
+                            message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
+                            action: "Turn Off Sync",
+                            cancel: "Cancel") { confirmed in if confirmed { self.deactivationConfirmed() } else { self.abortDeactivate() } }
+                } else if sharingOwn {
+                    confirm(title: "You are sharing items",
+                            message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
+                            action: "Turn Off Sync",
+                            cancel: "Cancel") { confirmed in if confirmed { self.deactivationConfirmed() } else { self.abortDeactivate() } }
+                } else if importing {
+                    confirm(title: "You have items that are shared from others",
+                            message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
+                            action: "Turn Off Sync",
+                            cancel: "Cancel") { confirmed in if confirmed { self.deactivationConfirmed() } else { self.abortDeactivate() } }
+                } else {
+                    await CloudManager.proceedWithDeactivation()
                 }
             } else {
-                Task {
+                if Model.allDrops.isEmpty {
+                    await CloudManager.startActivation()
+                } else {
                     let contentSize = await Model.sizeInBytes()
                     self.confirm(title: "Upload Existing Items?",
                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
@@ -478,6 +476,12 @@ final class Preferences: NSViewController {
                     }
                 }
             }
+        }
+    }
+    
+    private func deactivationConfirmed() {
+        Task { @MainActor in
+            await CloudManager.proceedWithDeactivation()
         }
     }
 

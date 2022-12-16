@@ -40,7 +40,7 @@ extension Model {
     }
 
     private static func syncWithExternalUpdates() {
-        let changedDrops = drops.filter { $0.scanForBlobChanges() }
+        let changedDrops = allDrops.filter { $0.scanForBlobChanges() }
         for item in changedDrops {
             log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
             item.needsReIngest = true
@@ -145,7 +145,7 @@ extension Model {
                         newItem.labels = filterContext.enabledLabelsForItems
                     }
                 }
-                Model.drops.insert(newItem, at: modelIndex)
+                Model.insert(drop: newItem, at: modelIndex)
                 inserted = true
             }
         }
@@ -172,6 +172,10 @@ extension Model {
         }
         _ = addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
     }
+    
+    nonisolated static func unsafeModificationDate(for url: URL) -> Date? {
+        (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
+    }
 
     static func _updateBadge() {
         if CloudManager.showNetwork {
@@ -186,7 +190,7 @@ extension Model {
                 count = k.filter.filteredDrops.count
                 log("Updating app badge to show current only window item count (\(count))")
             } else {
-                count = Model.drops.count
+                count = Model.allDrops.count
                 log("Updating app badge to show item count (\(count))")
             }
             NSApp.dockTile.badgeLabel = count > 0 ? String(count) : nil

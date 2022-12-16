@@ -225,7 +225,7 @@ extension Component {
             let fm = FileManager.default
             guard fm.fileExists(atPath: recordLocation.path) else { return }
 
-            if let fileModification = Model.modificationDate(for: recordLocation) {
+            if let fileModification = Model.unsafeModificationDate(for: recordLocation) {
                 if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
                     if recordedModification < fileModification { // is the file modified after we stamped it?
                         lastGladysBlobUpdate = fileModification
