@@ -271,9 +271,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func insert(item: ArchivedItem, at destinationIndexPath: IndexPath, offset: Int = 0) {
         if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = Model.firstIndexOfItem(with: uuid) {
-            Model.drops.insert(item, at: index + offset)
+            Model.insert(drop: item, at: index + offset)
         } else {
-            Model.drops.append(item)
+            Model.append(drop: item)
         }
     }
 
@@ -291,7 +291,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         let destinationSectionIndex = IndexPath(item: 0, section: destinationIndexPath.section)
-        Model.drops.remove(at: modelSourceIndex)
+        Model.removeDrop(at: modelSourceIndex)
 
         switch filter.groupingMode {
         case .byLabel:
@@ -1243,7 +1243,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func updateUI() {
-        if Model.drops.isEmpty {
+        if Model.dropsAreEmpty {
             editButton.isEnabled = false
             if isEditing {
                 setEditing(false, animated: true)
@@ -1380,7 +1380,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
         labelsButton.accessibilityLabel = "Labels"
 
-        let haveDrops = !Model.drops.isEmpty
+        let haveDrops = !Model.dropsAreEmpty
         labelsButton.isEnabled = haveDrops
         sortAscendingButton.isEnabled = haveDrops
     }
@@ -1419,7 +1419,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private var emptyView: UIImageView?
 
     private func updateEmptyView() {
-        let isEmpty = Model.drops.isEmpty
+        let isEmpty = Model.dropsAreEmpty
         if isEmpty, emptyView == nil {
             let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
             e.isAccessibilityElement = false
@@ -1908,7 +1908,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-        let itemsToDelete = Model.drops.filter { candidateSet.contains($0) }
+        let itemsToDelete = Model.allDrops.filter { candidateSet.contains($0) }
         if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
             Model.delete(items: itemsToDelete)

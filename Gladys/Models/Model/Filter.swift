@@ -69,7 +69,7 @@ final class Filter {
 
     var filteredDrops: ContiguousArray<ArchivedItem> {
         if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
-            cachedFilteredDrops = Model.drops
+            cachedFilteredDrops = Model.allDrops
         }
         return cachedFilteredDrops!
     }
@@ -198,11 +198,11 @@ final class Filter {
         let enabledToggles = labelToggles.filter(\.active)
         let postLabelDrops: ContiguousArray<ArchivedItem>
         if enabledToggles.isEmpty {
-            postLabelDrops = Model.drops
+            postLabelDrops = Model.allDrops
 
         } else if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count
-            postLabelDrops = Model.drops.filter { item in
+            postLabelDrops = Model.allDrops.filter { item in
                 var matchCount = 0
                 for toggle in enabledToggles {
                     switch toggle.function {
@@ -215,7 +215,7 @@ final class Filter {
             }
 
         } else {
-            postLabelDrops = Model.drops.filter { item in
+            postLabelDrops = Model.allDrops.filter { item in
                 for toggle in enabledToggles {
                     switch toggle.function {
                     case .unlabeledItems: if item.labels.isEmpty { return true }
@@ -310,7 +310,7 @@ final class Filter {
     }
 
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
-        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.drops // copy
+        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.allDrops // copy
         return items.filter(\.goodToSave)
     }
 
@@ -465,7 +465,7 @@ final class Filter {
     }
 
     func rebuildRecentlyAdded() -> Bool {
-        let count = Model.drops.reduce(0) {
+        let count = Model.allDrops.reduce(0) {
             $0 + ($1.isRecentlyAdded ? 1 : 0)
         }
         let recentlyAddedIndex = labelToggles.firstIndex(where: { $0.function == .recentlyAddedItems })
@@ -494,7 +494,7 @@ final class Filter {
         counts.reserveCapacity(labelToggles.count)
         var noLabelCount = 0
         var recentlyAddedCount = 0
-        for item in Model.drops {
+        for item in Model.allDrops {
             item.labels.forEach {
                 if let c = counts[$0] {
                     counts[$0] = c + 1
@@ -556,7 +556,7 @@ final class Filter {
     func renameLabel(_ oldName: String, to newName: String) {
         let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
 
-        Model.drops.forEach { i in
+        Model.allDrops.forEach { i in
             if let oldIndex = i.labels.firstIndex(of: oldName) {
                 if i.labels.contains(newName) {
                     i.labels.remove(at: oldIndex)
@@ -581,12 +581,10 @@ final class Filter {
     }
 
     func removeLabel(_ label: String) {
-        Model.drops.forEach { i in
-            if i.labels.contains(label) {
-                i.labels.removeAll { $0 == label }
-                i.needsCloudPush = true
-                i.flags.insert(.needsSaving)
-            }
+        for i in Model.allDrops where i.labels.contains(label) {
+            i.labels.removeAll { $0 == label }
+            i.needsCloudPush = true
+            i.flags.insert(.needsSaving)
         }
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels

@@ -16,14 +16,14 @@ extension Model {
     private static var nextSaveCallbacks: [() -> Void]?
 
     static func sizeInBytes() async -> Int64 {
-        let snapshot = drops
+        let snapshot = allDrops
         return await Task.detached {
             snapshot.reduce(0) { $0 + $1.sizeInBytes }
         }.value
     }
 
     static func sizeForItems(uuids: [UUID]) async -> Int64 {
-        let snapshot = drops
+        let snapshot = allDrops
         return await Task.detached {
             snapshot.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
         }.value
@@ -56,7 +56,7 @@ extension Model {
 
         private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
             var itemIndexes = [Int]()
-            let toCheck = itemsToSort.isEmpty ? Model.drops : itemsToSort
+            let toCheck = itemsToSort.isEmpty ? Model.allDrops : itemsToSort
             let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
                 if let index = Model.firstIndexOfItem(with: item.uuid) {
                     itemIndexes.append(index)
@@ -131,7 +131,7 @@ extension Model {
                 for pos in 0 ..< itemIndexes.count {
                     let itemIndex = itemIndexes[pos]
                     let item = actualItemsToSort[pos]
-                    Model.drops[itemIndex] = item
+                    Model.replace(drop: item, at: itemIndex)
                 }
                 Model.saveIndexOnly()
             }
@@ -141,17 +141,17 @@ extension Model {
     }
 
     static func resetEverything() {
-        let toDelete = drops.filter { !$0.isImportedShare }
+        let toDelete = allDrops.filter { !$0.isImportedShare }
         delete(items: toDelete)
     }
 
     static func removeImportedShares() {
-        let toDelete = drops.filter(\.isImportedShare)
+        let toDelete = allDrops.filter(\.isImportedShare)
         delete(items: toDelete)
     }
 
     static func removeItemsFromZone(_ zoneID: CKRecordZone.ID) {
-        let itemsRelatedToZone = drops.filter { $0.parentZone == zoneID }
+        let itemsRelatedToZone = allDrops.filter { $0.parentZone == zoneID }
         for item in itemsRelatedToZone {
             item.removeFromCloudkit()
         }
@@ -159,21 +159,21 @@ extension Model {
     }
 
     static var sharingMyItems: Bool {
-        drops.contains { $0.shareMode == .sharing }
+        allDrops.contains { $0.shareMode == .sharing }
     }
 
     static var containsImportedShares: Bool {
-        drops.contains { $0.isImportedShare }
+        allDrops.contains { $0.isImportedShare }
     }
 
     static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
-        drops.filter { $0.shareMode == .sharing }
+        allDrops.filter { $0.shareMode == .sharing }
     }
 
     static func duplicate(item: ArchivedItem) {
         if let previousIndex = firstIndexOfItem(with: item.uuid) {
             let newItem = ArchivedItem(cloning: item)
-            drops.insert(newItem, at: previousIndex + 1)
+            insert(drop: newItem, at: previousIndex + 1)
             save()
         }
     }
@@ -186,7 +186,7 @@ extension Model {
     }
 
     static func lockUnlockedItems() {
-        for item in drops where item.isTemporarilyUnlocked {
+        for item in allDrops where item.isTemporarilyUnlocked {
             item.flags.insert(.needsUnlock)
             item.postModified()
         }
@@ -204,13 +204,7 @@ extension Model {
 
     static func sortDrops() {
         let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
-        if !sequence.isEmpty {
-            drops.sort { i1, i2 in
-                let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
-                let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
-                return p1 < p2
-            }
-        }
+        sortDrops(by: sequence)
     }
 
     ///////////////////////// Migrating
@@ -255,7 +249,7 @@ extension Model {
     private static func proceedWithSave() {
         let index = CSSearchableIndex.default()
 
-        let itemsToDelete = Set(drops.filter(\.needsDeletion))
+        let itemsToDelete = Set(allDrops.filter(\.needsDeletion))
         #if MAINAPP
             MirrorManager.removeItems(items: itemsToDelete)
         #endif
@@ -267,9 +261,9 @@ extension Model {
             }
         }
 
-        drops.removeAll { $0.needsDeletion }
+        removeDeletableDrops()
 
-        let saveableItems: ContiguousArray = drops.filter(\.goodToSave)
+        let saveableItems: ContiguousArray = allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
             let searchableItems = itemsToWrite.map(\.searchableItem)
@@ -300,6 +294,10 @@ extension Model {
                 log("Saving Error: \(error.finalDescription)")
             }
 
+            Task {
+                await ComponentLookup.shared.cleanup()
+            }
+
             Task { @MainActor in
                 if needsAnotherSave {
                     proceedWithSave()
@@ -319,7 +317,7 @@ extension Model {
     }
 
     static func saveIndexOnly() {
-        let itemsToSave: ContiguousArray = drops.filter(\.goodToSave)
+        let itemsToSave: ContiguousArray = allDrops.filter(\.goodToSave)
         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
         saveQueue.async {
             do {
@@ -348,7 +346,7 @@ extension Model {
             DispatchQueue.main.sync {
                 nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map(\.uuid))
                 commitQueue.removeAll()
-                itemsToSave = drops.filter(\.goodToSave)
+                itemsToSave = allDrops.filter(\.goodToSave)
             }
             if nextItemUUIDs.isEmpty {
                 return
@@ -422,7 +420,7 @@ extension Model {
     }
 
     static func detectExternalChanges() async {
-        for item in drops where !item.needsDeletion { // partial deletes
+        for item in allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {
                 item.components.removeAll { $0.needsDeletion }
@@ -432,13 +430,13 @@ extension Model {
                 item.needsReIngest = true
             }
         }
-        let itemsToDelete = drops.filter(\.needsDeletion)
+        let itemsToDelete = allDrops.filter(\.needsDeletion)
         if !itemsToDelete.isEmpty {
             delete(items: itemsToDelete) // will also save
         }
 
         await withTaskGroup(of: Void.self) { group in
-            for drop in drops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+            for drop in allDrops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
                 group.addTask {
                     await drop.reIngest()
                 }
@@ -448,12 +446,7 @@ extension Model {
 
     static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map(\.uuid))
-        let cut = drops.filter { uuids.contains($0.uuid) }
-        if cut.isEmpty { return }
-
-        drops.removeAll { uuids.contains($0.uuid) }
-        drops.insert(contentsOf: cut, at: 0)
-
+        promoteDropsToTop(uuids: uuids)
         saveIndexOnly()
     }
 }

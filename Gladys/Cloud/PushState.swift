@@ -15,7 +15,7 @@ final actor PushState {
     init(zoneId: CKRecordZone.ID, database: CKDatabase) async {
         self.database = database
 
-        let drops = await Model.drops
+        let drops = await Model.allDrops
 
         var idsToPush = [String]()
 

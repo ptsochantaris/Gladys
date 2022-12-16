@@ -301,7 +301,6 @@ private extension ArchivedItem {
 }
 
 private extension Component {
-    // TODO: renaming item keeps the old file
     func mirror(to path: String, using f: FileManager) throws -> Bool {
         if !f.fileExists(atPath: bytesPath.path) {
             return false

@@ -107,7 +107,7 @@ final class ICloudController: GladysViewController {
 
         Task {
             if icloudSwitch.isOn, !CloudManager.syncSwitchedOn {
-                if Model.drops.isEmpty {
+                if Model.allDrops.isEmpty {
                     await CloudManager.startActivation()
                 } else {
                     let contentSize = await Model.sizeInBytes()

@@ -24,6 +24,7 @@ extension Component {
         return 0
     }
 
+    @MainActor
     var sharedLink: URL {
         let f = FileManager.default
         guard f.fileExists(atPath: bytesPath.path) else { return bytesPath }

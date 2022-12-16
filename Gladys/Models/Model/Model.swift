@@ -3,37 +3,78 @@ import Foundation
 @MainActor
 enum Model {
     private static var uuidindex: [UUID: Int]?
-
-    static var drops = ContiguousArray<ArchivedItem>() {
-        didSet {
+    
+    private static var dropStore = ContiguousArray<ArchivedItem>()
+    
+    static var allDrops: ContiguousArray<ArchivedItem> {
+        dropStore
+    }
+    
+    static func insert(drop: ArchivedItem, at index: Int) {
+        dropStore.insert(drop, at: index)
+        uuidindex = nil
+    }
+    
+    static func replace(drop: ArchivedItem, at index: Int) {
+        dropStore[index] = drop
+        uuidindex = nil
+    }
+    
+    static func removeDrop(at index: Int) {
+        let item = dropStore.remove(at: index)
+        uuidindex?[item.uuid] = nil
+    }
+    
+    static var dropsAreEmpty: Bool {
+        dropStore.isEmpty
+    }
+    
+    static func sortDrops(by sequence: [UUID]) {
+        if sequence.isEmpty { return }
+        dropStore.sort { i1, i2 in
+            let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
+            let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
+            return p1 < p2
+        }
+        uuidindex = nil
+    }
+    
+    static func removeDeletableDrops() {
+        let count = dropStore.count
+        dropStore.removeAll { $0.needsDeletion }
+        if count != dropStore.count {
             uuidindex = nil
         }
     }
-
-    static func appendDropEfficiently(_ newDrop: ArchivedItem) {
-        uuidindex?[newDrop.uuid] = drops.count
-
-        let previousIndex = uuidindex
-        drops.append(newDrop)
-        uuidindex = previousIndex
+    
+    static func promoteDropsToTop(uuids: Set<UUID>) {
+        let cut = dropStore.filter { uuids.contains($0.uuid) }
+        if cut.isEmpty { return }
+        dropStore.removeAll { uuids.contains($0.uuid) }
+        dropStore.insert(contentsOf: cut, at: 0)
+        uuidindex = nil
     }
 
-    private static func rebuildIndexIfNeeded() {
-        if uuidindex == nil {
-            let z = zip(drops.map(\.uuid), 0 ..< drops.count)
-            uuidindex = Dictionary(z) { one, _ in one }
-            log("Rebuilt drop index")
-        }
+    static func append(drop: ArchivedItem) {
+        uuidindex?[drop.uuid] = dropStore.count
+        dropStore.append(drop)
     }
 
     static func firstIndexOfItem(with uuid: UUID) -> Int? {
-        rebuildIndexIfNeeded()
-        return uuidindex?[uuid]
+        if let uuidindex {
+            return uuidindex[uuid]
+        } else {
+            let z = zip(dropStore.map(\.uuid), 0 ..< dropStore.count)
+            let newIndex = Dictionary(z) { one, _ in one }
+            uuidindex = newIndex
+            log("Rebuilt drop index")
+            return newIndex[uuid]
+        }
     }
 
     static func firstItem(with uuid: UUID) -> ArchivedItem? {
         if let i = firstIndexOfItem(with: uuid) {
-            return drops[i]
+            return dropStore[i]
         }
         return nil
     }
@@ -50,7 +91,7 @@ enum Model {
     }
 
     static func clearCaches() {
-        for drop in drops {
+        for drop in dropStore {
             for component in drop.components {
                 component.clearCachedFields()
             }
@@ -65,7 +106,8 @@ enum Model {
     private static var isStarted = false
 
     static func reset() {
-        drops.removeAll(keepingCapacity: false)
+        dropStore.removeAll(keepingCapacity: false)
+        uuidindex = [:]
         clearCaches()
         dataFileLastModified = .distantPast
     }
@@ -108,7 +150,8 @@ enum Model {
         coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 
             if !FileManager.default.fileExists(atPath: url.path) {
-                drops.removeAll(keepingCapacity: false)
+                dropStore.removeAll(keepingCapacity: false)
+                uuidindex = [:]
                 log("Starting fresh store")
                 return
             }
@@ -152,7 +195,8 @@ enum Model {
                         }
                     }
 
-                    drops = newDrops
+                    dropStore = newDrops
+                    uuidindex = nil
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
                     log("No need to reload data")
@@ -222,11 +266,11 @@ enum Model {
     }
 
     static var doneIngesting: Bool {
-        !drops.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
+        !dropStore.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
     }
 
     static var visibleDrops: ContiguousArray<ArchivedItem> {
-        drops.filter(\.isVisible)
+        dropStore.filter(\.isVisible)
     }
 
     static let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
@@ -255,7 +299,7 @@ enum Model {
     }
 
     static func item(shareId: String) -> ArchivedItem? {
-        drops.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
+        dropStore.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
     }
 
     static func component(uuid: UUID) async -> Component? {
@@ -270,7 +314,7 @@ enum Model {
         }
     }
 
-    nonisolated static func modificationDate(for url: URL) -> Date? {
+    static func modificationDate(for url: URL) -> Date? {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 

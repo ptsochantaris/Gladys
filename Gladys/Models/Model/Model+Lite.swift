@@ -187,7 +187,9 @@ extension Model {
         if let e = coordinationError ?? closureError {
             log("Error inserting new item into saved data store: \(e.localizedDescription)")
         } else if addToDrops {
-            drops.append(contentsOf: items)
+            for item in items {
+                Model.append(drop: item)
+            }
         }
     }
 }

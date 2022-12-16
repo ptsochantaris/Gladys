@@ -249,7 +249,9 @@ final actor PullState {
                 }
             }
 
-            CloudManager.perform(operation, on: database, type: "fetch zone changes")
+            Task {
+                await CloudManager.perform(operation, on: database, type: "fetch zone changes")
+            }
         }
 
         if needsRetry {
@@ -282,7 +284,9 @@ final actor PullState {
                 log("\(database.databaseScope.logName) database fetch operation failed: \(err.finalDescription)")
                 continuation.resume(throwing: err)
             }
-            CloudManager.perform(operation, on: database, type: "fetch database changes")
+            Task {
+                await CloudManager.perform(operation, on: database, type: "fetch database changes")
+            }
         }
 
         if deletedZoneIds.contains(privateZoneId) {
@@ -338,15 +342,7 @@ final actor PullState {
                 return try await group.contains { $0 == true }
             }
 
-            try? await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                CloudManager.fetchMissingShareRecords { error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
-                    }
-                }
-            }
+            try? await CloudManager.fetchMissingShareRecords()
             await processChanges(commitTokens: !skipCommits)
 
         } catch {
@@ -379,7 +375,7 @@ final actor PullState {
                 }
 
             } else {
-                log("Will create new local item for cloud record (\(recordUUID))")
+                log("Will create new local item for cloud record (\(recordUUID)) - pendingTypeItemRecords count: \(pendingTypeItemRecords.count)")
                 let newItem = ArchivedItem(from: record)
                 let newTypeItemRecords = pendingTypeItemRecords.filter {
                     $0.parent?.recordID == recordID // takes zone into account
@@ -398,7 +394,7 @@ final actor PullState {
                     pendingShareRecords.remove(pendingShareRecord)
                     log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
-                await Model.appendDropEfficiently(newItem)
+                await Model.append(drop: newItem)
                 newDropCount += 1
                 Task { @MainActor in
                     sendNotification(name: .ItemAddedBySync, object: newItem)

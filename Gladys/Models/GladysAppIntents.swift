@@ -22,7 +22,7 @@
 
                 @MainActor
                 func suggestedEntities() async throws -> [ArchivedItemEntity] {
-                    Model.drops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                    Model.allDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
                 }
             }
 

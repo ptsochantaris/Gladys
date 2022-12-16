@@ -20,7 +20,7 @@ extension Model {
                 if let currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
-                Model.drops.insert(item, at: 0)
+                Model.insert(drop: item, at: 0)
                 items.append(item)
                 addedStuff = true
             }

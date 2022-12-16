@@ -39,15 +39,15 @@ extension Model {
 
         for item in itemsInPackage.reversed() {
             if let i = firstIndexOfItem(with: item.uuid) {
-                if drops[i].updatedAt >= item.updatedAt || drops[i].shareMode != .none {
+                if allDrops[i].updatedAt >= item.updatedAt || allDrops[i].shareMode != .none {
                     continue
                 }
                 if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    drops[i] = item
+                    replace(drop: item, at: i)
                 }
             } else {
                 if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    drops.insert(item, at: 0)
+                    insert(drop: item, at: 0)
                 }
             }
         }

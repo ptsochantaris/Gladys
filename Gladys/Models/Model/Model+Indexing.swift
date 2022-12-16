@@ -44,7 +44,7 @@ extension Model {
     }
 
     static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-        let items = drops.map(\.searchableItem)
+        let items = allDrops.map(\.searchableItem)
         searchableIndex.deleteAllSearchableItems { error in
             if let error {
                 log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
@@ -54,7 +54,7 @@ extension Model {
     }
 
     static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-        let existingItems = drops.filter { identifiers.contains($0.uuid.uuidString) }.map(\.searchableItem)
+        let existingItems = allDrops.filter { identifiers.contains($0.uuid.uuidString) }.map(\.searchableItem)
         reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
     }
 

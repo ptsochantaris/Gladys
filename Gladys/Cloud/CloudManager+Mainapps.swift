@@ -11,27 +11,10 @@ extension CloudManager {
     static let sharedDatabaseSubscriptionId = "shared-changes"
     static var syncDirty = false
 
-    nonisolated static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
-        Task {
-            await _perform(operation, on: database, type: type)
-        }
-    }
-
-    private static func _perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+    static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
         database.add(operation)
-    }
-
-    static func perform(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) async {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
-            operation.qualityOfService = .userInitiated
-            database.add(operation)
-            operation.completionBlock = {
-                continuation.resume()
-            }
-        }
     }
 
     static var showNetwork = false {
@@ -64,7 +47,7 @@ extension CloudManager {
         }
 
         var sharedZonesToPush = Set<CKRecordZone.ID>()
-        for item in Model.drops where item.needsCloudPush {
+        for item in Model.allDrops where item.needsCloudPush {
             let zoneID = item.parentZone
             if zoneID != privateZoneId {
                 sharedZonesToPush.insert(zoneID)
@@ -416,7 +399,7 @@ extension CloudManager {
                 syncSwitchedOn = false
                 lastiCloudAccount = nil
                 PersistedOptions.lastPushToken = nil
-                for item in Model.drops {
+                for item in Model.allDrops {
                     item.removeFromCloudkit()
                 }
                 Model.save()
@@ -533,16 +516,22 @@ extension CloudManager {
         perform(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
     }
 
-    nonisolated static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
-        Task {
-            await _fetchMissingShareRecords(completion: completion)
+    static func fetchMissingShareRecords() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            fetchMissingShareRecords { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
         }
     }
 
-    private static func _fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
+    private static func fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
-        for item in Model.drops {
+        for item in Model.allDrops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
                 if var existingFetchGroup = fetchGroups[zoneId] {

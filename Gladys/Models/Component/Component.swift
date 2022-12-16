@@ -14,14 +14,22 @@ enum ComponentActor {
 final actor ComponentLookup {
     static let shared = ComponentLookup()
 
-    private let componentLookup = NSMapTable<NSUUID, Component>(keyOptions: .strongMemory, valueOptions: .weakMemory)
+    private struct WeakComponent {
+        weak var component: Component?
+    }
+    
+    private var componentLookup = [UUID: WeakComponent]()
+    
+    func cleanup() {
+        componentLookup = componentLookup.filter { $0.value.component != nil }
+    }
 
     func register(_ component: Component) {
-        componentLookup.setObject(component, forKey: component.uuid as NSUUID)
+        componentLookup[component.uuid] = WeakComponent(component: component)
     }
 
     func lookup(uuid: UUID) -> Component? {
-        componentLookup.object(forKey: uuid as NSUUID)
+        componentLookup[uuid]?.component
     }
 }
 
