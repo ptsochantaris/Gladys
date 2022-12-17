@@ -70,12 +70,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         n.addObserver(self, selector: #selector(foreground(_:)), name: .ForegroundDisplayedItem, object: nil)
         n.addObserver(self, selector: #selector(updateAlwaysOnTop), name: .AlwaysOnTopChanged, object: nil)
 
-        components.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
+        components.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
         components.setDraggingSourceOperationMask(.move, forLocal: true)
         components.setDraggingSourceOperationMask(.copy, forLocal: false)
         components.detailController = self
 
-        labels.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeText as String)])
+        labels.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.text.identifier)])
         labels.setDraggingSourceOperationMask(.move, forLocal: true)
         labels.setDraggingSourceOperationMask(.copy, forLocal: false)
         labelsScrollView.layer?.cornerRadius = 2.5
@@ -207,7 +207,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     func tableView(_: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
         let p = NSPasteboardItem()
-        p.setString(item.labels[row], forType: NSPasteboard.PasteboardType(kUTTypeText as String))
+        p.setString(item.labels[row], forType: NSPasteboard.PasteboardType(UTType.text.identifier))
         return p
     }
 
@@ -220,9 +220,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         if item.shareMode == .elsewhereReadOnly { return false }
 
         let p = info.draggingPasteboard
-        guard let label = p.string(forType: NSPasteboard.PasteboardType(kUTTypeText as String)) ??
-            p.string(forType: NSPasteboard.PasteboardType(kUTTypePlainText as String)) ??
-            p.string(forType: NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)) else { return false }
+        guard let label = p.string(forType: NSPasteboard.PasteboardType(UTType.text.identifier)) ??
+                p.string(forType: NSPasteboard.PasteboardType(UTType.plainText.identifier)) ??
+                p.string(forType: NSPasteboard.PasteboardType(UTType.utf8PlainText.identifier)) else { return false }
 
         var newIndex = row
 
@@ -516,7 +516,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         Task { @MainActor in
             let res = try? await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
-                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
+                let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
                 self.item.components.append(newTypeItem)
                 self.saveItem()
             } else {

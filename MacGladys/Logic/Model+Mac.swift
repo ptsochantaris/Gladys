@@ -1,4 +1,5 @@
 import Cocoa
+import UniformTypeIdentifiers
 
 extension Model {
     static var coordinator: NSFileCoordinator {
@@ -165,7 +166,7 @@ extension Model {
             var isDir: ObjCBool = false
             FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
             if isDir.boolValue {
-                return NSItemProvider(item: url as NSURL, typeIdentifier: kUTTypeFileURL as String)
+                return NSItemProvider(item: url as NSURL, typeIdentifier: UTType.fileURL.identifier)
             } else {
                 return NSItemProvider(contentsOf: url)
             }

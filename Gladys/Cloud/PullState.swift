@@ -195,19 +195,16 @@ final actor PullState {
                                                  deletions: [CKDatabase.RecordZoneChange.Deletion],
                                                  changeToken: CKServerChangeToken,
                                                  moreComing: Bool)?
-                        var go = true
-                        while go {
-                            do {
-                                zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
-                                go = false
-                            } catch {
-                                if (error as? CKError)?.code == .changeTokenExpired {
-                                    zoneToken = nil
-                                    await CloudManager.setSyncProgressString("Fetching Full Update…")
-                                    log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
-                                } else {
-                                    throw error
-                                }
+                        do {
+                            zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
+                        } catch {
+                            if (error as? CKError)?.code == .changeTokenExpired {
+                                zoneToken = nil
+                                await CloudManager.setSyncProgressString("Fetching Full Update…")
+                                log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
+                                continue
+                            } else {
+                                throw error
                             }
                         }
                         
@@ -249,29 +246,45 @@ final actor PullState {
     private func fetchDBChanges(database: CKDatabase) async throws -> Bool {
         var changedZoneIds = Set<CKRecordZone.ID>()
         var deletedZoneIds = Set<CKRecordZone.ID>()
-        let databaseToken = databaseToken(for: database.databaseScope)
-        let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: databaseToken)
-        operation.recordZoneWithIDChangedBlock = { changedZoneIds.insert($0) }
-        operation.recordZoneWithIDWasPurgedBlock = {
-            deletedZoneIds.insert($0)
-            log("Detected zone purging in \(database.databaseScope.logName) database: \($0)")
-        }
-        operation.recordZoneWithIDWasDeletedBlock = {
-            deletedZoneIds.insert($0)
-            log("Detected zone deletion in \(database.databaseScope.logName) database: \($0)")
-        }
+        var databaseToken = databaseToken(for: database.databaseScope)
 
-        let newToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKServerChangeToken, Error>) in
-            operation.fetchDatabaseChangesCompletionBlock = { newToken, _, error in
-                if let newToken {
-                    continuation.resume(returning: newToken)
-                    return
+        var moreComing = true
+        while moreComing {
+            var databaseChanges: (modifications: [CKDatabase.DatabaseChange.Modification],
+                                  deletions: [CKDatabase.DatabaseChange.Deletion],
+                                  changeToken: CKServerChangeToken,
+                                  moreComing: Bool)?
+            do {
+                databaseChanges = try await database.databaseChanges(since: databaseToken)
+            } catch {
+                if (error as? CKError)?.code == CKError.changeTokenExpired {
+                    databaseToken = nil
+                    log("Database \(database.databaseScope.logName) changes fetch had stale token, will retry")
+                    await CloudManager.setSyncProgressString("Fetching Full Update…")
+                    continue
+                } else {
+                    log("\(database.databaseScope.logName) database fetch operation failed: \(error.finalDescription)")
+                    throw error
                 }
-                let err = error ?? GladysError.blankResponse.error
-                log("\(database.databaseScope.logName) database fetch operation failed: \(err.finalDescription)")
-                continuation.resume(throwing: err)
             }
-            CloudManager.submit(operation, on: database, type: "fetch database changes")
+            
+            guard let databaseChanges else {
+                throw GladysError.noData.error
+            }
+            
+            for modification in databaseChanges.modifications {
+                changedZoneIds.insert(modification.zoneID)
+            }
+            for deletion in databaseChanges.deletions {
+                deletedZoneIds.insert(deletion.zoneID)
+                if deletion.purged {
+                    log("Detected zone purging in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
+                } else {
+                    log("Detected zone deletion in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
+                }
+            }
+            databaseToken = databaseChanges.changeToken
+            moreComing = databaseChanges.moreComing
         }
 
         if deletedZoneIds.contains(privateZoneId) {
@@ -294,13 +307,13 @@ final actor PullState {
 
         if changedZoneIds.isEmpty {
             log("No database changes detected in \(database.databaseScope.logName) database")
-            updatedDatabaseTokens[database.databaseScope] = newToken
+            updatedDatabaseTokens[database.databaseScope] = databaseToken
             return false
         }
 
         do {
             try await fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds))
-            updatedDatabaseTokens[database.databaseScope] = newToken
+            updatedDatabaseTokens[database.databaseScope] = databaseToken
         } catch {
             log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
         }

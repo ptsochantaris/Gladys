@@ -329,42 +329,22 @@ extension CloudManager {
     }
 
     private static func shutdownShares(ids: [CKRecord.ID], force: Bool) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _shutdownShares(ids: ids, force: force) { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-
-    private static func _shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
-        let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
-        modifyOperation.savePolicy = .allKeys
-        modifyOperation.perRecordCompletionBlock = { record, _ in
-            let recordUUID = record.recordID.recordName
-            Task { @MainActor in
+        do {
+            let modifyResult = try await container.privateCloudDatabase.modifyRecords(saving: [], deleting: ids, savePolicy: .allKeys)
+            for recordID in modifyResult.deleteResults.keys {
+                let recordUUID = recordID.recordName
                 if let item = Model.item(shareId: recordUUID) {
                     item.cloudKitShareRecord = nil
                     log("Shut down sharing for item \(item.uuid) before deactivation")
                     item.postModified()
                 }
             }
+        } catch {
+            if force { return }
+            log("Cloud sync deactivation failed, could not deactivate current shares")
+            syncTransitioning = false
+            throw error
         }
-        modifyOperation.modifyRecordsCompletionBlock = { _, _, error in
-            Task { @MainActor in
-                if !force, let error {
-                    completion(error)
-                    log("Cloud sync deactivation failed, could not deactivate current shares")
-                    syncTransitioning = false
-                } else {
-                    completion(nil)
-                }
-            }
-        }
-        submit(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
 
     static func deactivate(force: Bool) async throws {

@@ -602,7 +602,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     func application(_: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShare.Metadata) {
         Task { @MainActor in
-            CloudManager.acceptShare(metadata)
+            await CloudManager.acceptShare(metadata)
         }
     }
 
