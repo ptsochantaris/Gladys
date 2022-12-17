@@ -235,11 +235,15 @@ final actor PullState {
                         moreComing = zoneChangesResults.moreComing
                     }
                     
-                    await self.setZoneToken(zoneToken, for: zoneID)
+                    await self.setUpdatedZoneToken(zoneToken, for: zoneID)
                 }
             }
             try await taskGroup.waitForAll()
         }
+    }
+    
+    private func setUpdatedZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
+        updatedZoneTokens[zoneId] = token
     }
 
     private func fetchDBChanges(database: CKDatabase) async throws -> Bool {

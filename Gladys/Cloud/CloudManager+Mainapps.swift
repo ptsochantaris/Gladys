@@ -445,28 +445,28 @@ extension CloudManager {
     private static func fetchInitialUUIDSequence() async throws {
         let zone = CKRecordZone(zoneID: privateZoneId)
         let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
-        let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
-                if let error, (error as? CKError)?.code != CKError.partialFailure {
-                    continuation.resume(throwing: error)
-                    return
-                }
-                if let sequenceRecord = ids2records?[positionListId],
-                   let sequence = sequenceRecord["positionList"] as? [String] {
-                    log("Received initial record sequence")
-                    uuidSequence = sequence
-                    uuidSequenceRecord = sequenceRecord
-                } else {
-                    log("No initial record sequence on server")
-                    uuidSequence = []
-                }
-                syncSwitchedOn = true
-                lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-                continuation.resume()
+
+        let sequenceRecord: CKRecord?
+        do {
+            sequenceRecord = try await container.privateCloudDatabase.record(for: positionListId)
+        } catch {
+            if (error as? CKError)?.itemDoesNotExistOnServer == true {
+                sequenceRecord = nil
+            } else {
+                throw error
             }
-            submit(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
         }
+        
+        if let sequence = sequenceRecord?["positionList"] as? [String] {
+            log("Received initial record sequence")
+            uuidSequence = sequence
+        } else {
+            log("No initial record sequence on server")
+            uuidSequence = []
+        }
+        uuidSequenceRecord = sequenceRecord
+        syncSwitchedOn = true
+        lastiCloudAccount = FileManager.default.ubiquityIdentityToken
     }
 
     static func eraseZoneIfNeeded() async throws {
