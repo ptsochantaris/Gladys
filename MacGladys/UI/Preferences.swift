@@ -528,18 +528,15 @@ final class Preferences: NSViewController {
         syncSwitch.isEnabled = false
         syncNowButton.isEnabled = false
         eraseAlliCloudDataButton.isEnabled = false
-        CloudManager.eraseZoneIfNeeded { [weak self] error in
-            guard let s = self else { return }
-            s.eraseAlliCloudDataButton.isEnabled = true
-            s.syncSwitch.isEnabled = true
-            s.syncSwitch.isEnabled = true
-            Task {
-                if let error {
-                    await genericAlert(title: "Error", message: error.finalDescription)
-                } else {
-                    await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
-                }
+        Task { @MainActor in
+            do {
+                try await CloudManager.eraseZoneIfNeeded()
+                await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
+            } catch {
+                await genericAlert(title: "Error", message: error.finalDescription)
             }
+            eraseAlliCloudDataButton.isEnabled = true
+            syncSwitch.isEnabled = true
         }
     }
 }

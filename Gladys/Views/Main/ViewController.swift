@@ -2267,7 +2267,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             self?.editInvites(in: item, at: indexPath)
         })
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
-            CloudManager.deleteShare(item) { _ in }
+            Task {
+                do {
+                    try await CloudManager.deleteShare(item)
+                } catch {
+                    await genericAlert(title: "Error", message: error.localizedDescription)
+                }
+            }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
@@ -2283,7 +2289,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             self?.editInvites(in: item, at: indexPath)
         })
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
-            CloudManager.deleteShare(item) { _ in }
+            Task {
+                do {
+                    try await CloudManager.deleteShare(item)
+                } catch {
+                    await genericAlert(title: "Error", message: error.localizedDescription)
+                }
+            }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
@@ -2296,7 +2308,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private func addInvites(to item: ArchivedItem, at indexPath: IndexPath) {
         guard let rootRecord = item.cloudKitRecord else { return }
         let cloudSharingController = UICloudSharingController { _, completion in
-            CloudManager.share(item: item, rootRecord: rootRecord, completion: completion)
+            Task { @MainActor in
+                do {
+                    let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
+                    completion(share, CloudManager.container, nil)
+                } catch {
+                    completion(nil, CloudManager.container, error)
+                }
+            }
         }
         presentCloudController(cloudSharingController, for: item, at: indexPath)
     }

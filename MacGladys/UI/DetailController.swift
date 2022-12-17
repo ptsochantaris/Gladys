@@ -654,15 +654,23 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     private func addInvites(_: Any) {
-        guard let rootRecord = item.cloudKitRecord else { return }
+        let itemToShare = item
+        guard let rootRecord = itemToShare.cloudKitRecord else { return }
         if let sharingService = NSSharingService(named: .cloudSharing) {
             let itemProvider = NSItemProvider()
-            itemProvider.registerCloudKitShare { [weak self] (completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
-                guard let s = self else { return }
-                CloudManager.share(item: s.item, rootRecord: rootRecord, completion: completion)
+            itemProvider.registerCloudKitShare { (completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
+                Task { @MainActor in
+                    do {
+                        let share = try await CloudManager.share(item: itemToShare, rootRecord: rootRecord)
+                        completion(share, CloudManager.container, nil)
+                    } catch {
+                        completion(nil, CloudManager.container, error)
+                    }
+                }
             }
             sharingService.delegate = self
             sharingService.perform(withItems: [itemProvider])
+            
         } else if let w = view.window {
             missingService(w)
         }
@@ -735,7 +743,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     private func deleteShare(_ sender: NSButton) {
         sender.isEnabled = false
-        CloudManager.deleteShare(item) { _ in
+        Task { @MainActor in
+            do {
+                try await CloudManager.deleteShare(item)
+            } catch {
+                await genericAlert(title: "Error", message: error.localizedDescription)
+            }
             sender.isEnabled = true
         }
     }

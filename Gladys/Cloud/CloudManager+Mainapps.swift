@@ -517,7 +517,19 @@ extension CloudManager {
         }
     }
 
-    static func eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
+    static func eraseZoneIfNeeded() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _eraseZoneIfNeeded { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    private static func _eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
         showNetwork = true
         let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: [privateZoneId])
         deleteZone.modifyRecordZonesCompletionBlock = { _, _, error in
@@ -583,7 +595,7 @@ extension CloudManager {
                             // this share record does not exist. Our local data is wrong
                             if let itemWithShare = Model.item(shareId: recordID.recordName) {
                                 log("Warning: Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
-                                fetchCloudRecord(for: itemWithShare, completion: nil)
+                                try? await fetchCloudRecord(for: itemWithShare)
                             }
                         } else {
                             finalError = error
@@ -602,7 +614,19 @@ extension CloudManager {
         OperationQueue.main.addOperation(doneOperation)
     }
 
-    private static func fetchCloudRecord(for item: ArchivedItem?, completion: ((Error?) -> Void)?) {
+    private static func fetchCloudRecord(for item: ArchivedItem?) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _fetchCloudRecord(for: item) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+    
+    private static func _fetchCloudRecord(for item: ArchivedItem?, completion: ((Error?) -> Void)?) {
         guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
         let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
         fetch.perRecordCompletionBlock = { record, _, error in
@@ -688,7 +712,21 @@ extension CloudManager {
         }
     }
 
-    static func share(item: ArchivedItem, rootRecord: CKRecord, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) {
+    static func share(item: ArchivedItem, rootRecord: CKRecord) async throws -> CKShare {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKShare, Error>) in
+            _share(item: item, rootRecord: rootRecord) { share, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else if let share {
+                    continuation.resume(returning: share)
+                } else {
+                    continuation.resume(throwing: GladysError.blankResponse.error)
+                }
+            }
+        }
+    }
+    
+    private static func _share(item: ArchivedItem, rootRecord: CKRecord, completion: @escaping (CKShare?, Error?) -> Void) {
         let shareRecord = CKShare(rootRecord: rootRecord)
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
         let icon = item.displayIcon
@@ -703,7 +741,7 @@ extension CloudManager {
         let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
         operation.savePolicy = .allKeys
         operation.modifyRecordsCompletionBlock = { _, _, error in
-            completion(shareRecord, container, error)
+            completion(shareRecord, error)
         }
         submit(operation, on: container.privateCloudDatabase, type: "share item")
     }
@@ -743,22 +781,39 @@ extension CloudManager {
         }
     }
 
-    static func deleteShare(_ item: ArchivedItem, completion: @escaping (Error?) -> Void) {
+    static func deleteShare(_ item: ArchivedItem) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _deleteShare(item) { error in
+                Task { @MainActor in
+                    if let error {
+                        if error.itemDoesNotExistOnServer {
+                            do {
+                                item.cloudKitShareRecord = nil
+                                try await fetchCloudRecord(for: item)
+                                continuation.resume()
+                            } catch {
+                                continuation.resume(throwing: error)
+                            }
+                        } else {
+                            await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                            continuation.resume(throwing: error)
+                        }
+                    } else {
+                        continuation.resume()
+                    }
+                }
+            }
+        }
+    }
+
+    private static func _deleteShare(_ item: ArchivedItem, completion: @escaping (Error?) -> Void) {
         guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
             completion(nil)
             return
         }
         let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
         deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
-            Task { @MainActor in
-                if let error, !error.itemDoesNotExistOnServer {
-                    await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
-                    completion(error)
-                } else { // our local record must be stale, let's refresh it just in case
-                    item.cloudKitShareRecord = nil
-                    fetchCloudRecord(for: item, completion: completion)
-                }
-            }
+            completion(error)
         }
         let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
         submit(deleteOperation, on: database, type: "delete share")

@@ -40,7 +40,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 if let url {
                     try? FileManager.default.removeItem(at: url)
                 } else if let error {
-                    Task { @MainActor in
+                    Task {
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
                 }
