@@ -17,9 +17,9 @@ final actor ComponentLookup {
     private struct WeakComponent {
         weak var component: Component?
     }
-    
+
     private var componentLookup = [UUID: WeakComponent]()
-    
+
     func cleanup() {
         componentLookup = componentLookup.filter { $0.value.component != nil }
     }

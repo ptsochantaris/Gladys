@@ -9,7 +9,7 @@ extension CloudManager {
         return Data(uuidBytes)
     }
 
-    static func signalExtensionUpdate() {
+    static func signalExtensionUpdate() async {
         guard syncSwitchedOn else { return }
 
         PersistedOptions.extensionRequestedSync = true
@@ -21,16 +21,12 @@ extension CloudManager {
         let updateRecord = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordType, zoneID: privateZoneId))
         updateRecord.setObject(deviceUUID as NSString, forKey: "deviceUUID")
 
-        let operation = CKModifyRecordsOperation(recordsToSave: [updateRecord], recordIDsToDelete: nil)
-        operation.savePolicy = .allKeys
-        operation.perRecordCompletionBlock = { _, error in
-            if let error {
-                log("Extension update post failed: \(error.localizedDescription)")
-            } else {
-                log("Extension update posted")
-            }
+        do {
+            let modifyResults = try await container.privateCloudDatabase.modifyRecords(saving: [updateRecord], deleting: [], savePolicy: .allKeys)
+            try check(modifyResults)
+            log("Extension update posted")
+        } catch {
+            log("Extension update post failed: \(error.localizedDescription)")
         }
-
-        container.privateCloudDatabase.add(operation)
     }
 }

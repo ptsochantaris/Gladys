@@ -6,19 +6,19 @@ extension Component {
         if fileExtension == nil {
             return 0
         }
-        if typeConforms(to: kUTTypeAudiovisualContent) {
+        if typeConforms(to: .audiovisualContent) {
             return 40
         }
-        if typeConforms(to: kUTTypeImage) {
+        if typeConforms(to: .image) {
             return 30
         }
-        if typeConforms(to: kUTTypeCompositeContent) {
+        if typeConforms(to: .compositeContent) {
             return 20
         }
-        if typeConforms(to: kUTTypeContact) {
+        if typeConforms(to: .contact) {
             return 15
         }
-        if typeConforms(to: kUTTypeContent) {
+        if typeConforms(to: .content) {
             return 10
         }
         return 0

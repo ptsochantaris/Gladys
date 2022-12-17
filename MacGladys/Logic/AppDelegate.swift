@@ -385,7 +385,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @MainActor
-    func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
         CloudManager.apnsUpdate(nil)
     }
 
@@ -462,7 +462,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         o.prompt = "Import"
         o.message = "Select an archive from which to\nmerge items into your existing collection."
         o.isExtensionHidden = true
-        o.allowedFileTypes = ["gladysArchive"]
+        o.allowedContentTypes = [.gladysArchive]
         let response = o.runModal()
         if response == .OK, let url = o.url {
             proceedWithImport(from: url)
@@ -495,7 +495,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.message = "Export your colection for importing\nto other devices, or as backup."
         s.isExtensionHidden = true
         s.nameFieldStringValue = "Gladys Archive"
-        s.allowedFileTypes = ["gladysArchive"]
+        s.allowedContentTypes = [.gladysArchive]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
             let p = Model.createArchive(using: controller.filter) { createdUrl, error in
@@ -528,7 +528,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.message = "Create a ZIP file of the current collection."
         s.isExtensionHidden = true
         s.nameFieldStringValue = "Gladys"
-        s.allowedFileTypes = [kUTTypeZipArchive as String]
+        s.allowedContentTypes = [.zip]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
             assert(Thread.isMainThread)

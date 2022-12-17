@@ -16,7 +16,7 @@ extension CloudManager {
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
-    
+
     static var showNetwork = false {
         didSet {
             Model.updateBadge()
@@ -93,7 +93,7 @@ extension CloudManager {
                 done.addDependency(operation)
                 submit(operation, on: operation.database!, type: "sync upload")
             }
-            
+
             let queue = OperationQueue.current ?? OperationQueue.main
             queue.addOperation(done)
         }
@@ -300,6 +300,9 @@ extension CloudManager {
         case .available:
             log("User has iCloud, can activate cloud sync")
             do {
+                let zone = CKRecordZone(zoneID: privateZoneId)
+                let modifyResults = try await container.privateCloudDatabase.modifyRecordZones(saving: [zone], deleting: [])
+                try check(modifyResults)
                 try await updateSubscriptions()
                 try await fetchInitialUUIDSequence()
             } catch {
@@ -325,7 +328,19 @@ extension CloudManager {
         }
     }
 
-    private static func shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
+    private static func shutdownShares(ids: [CKRecord.ID], force: Bool) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _shutdownShares(ids: ids, force: force) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    private static func _shutdownShares(ids: [CKRecord.ID], force: Bool, completion: @escaping (Error?) -> Void) {
         let modifyOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: ids)
         modifyOperation.savePolicy = .allKeys
         modifyOperation.perRecordCompletionBlock = { record, _ in
@@ -345,147 +360,84 @@ extension CloudManager {
                     log("Cloud sync deactivation failed, could not deactivate current shares")
                     syncTransitioning = false
                 } else {
-                    do {
-                        try await deactivate(force: force, deactivatingShares: false)
-                        completion(nil)
-                    } catch {
-                        completion(error)
-                    }
+                    completion(nil)
                 }
             }
         }
         submit(modifyOperation, on: container.privateCloudDatabase, type: "shutdown shares")
     }
 
-    static func deactivate(force: Bool, deactivatingShares _: Bool = true) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _deactivate(force: force) { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-
-    private static func _deactivate(force: Bool, deactivatingShares: Bool = true, completion: @escaping (Error?) -> Void) {
+    static func deactivate(force: Bool) async throws {
         syncTransitioning = true
-
-        if deactivatingShares {
-            let myOwnShareIds = Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
-            if !myOwnShareIds.isEmpty {
-                shutdownShares(ids: myOwnShareIds, force: force, completion: completion)
-                return
-            }
-        }
-
-        var finalError: Error?
-
-        let ss = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [sharedDatabaseSubscriptionId])
-        ss.modifySubscriptionsCompletionBlock = { _, _, error in
-            if let error {
-                finalError = error
-            }
-        }
-        submit(ss, on: container.sharedCloudDatabase, type: "delete subscription")
-
-        let ms = CKModifySubscriptionsOperation(subscriptionsToSave: nil, subscriptionIDsToDelete: [privateDatabaseSubscriptionId])
-        ms.modifySubscriptionsCompletionBlock = { _, _, error in
-            if let error {
-                finalError = error
-            }
-        }
-        submit(ms, on: container.privateCloudDatabase, type: "delete subscription")
-
-        let doneOperation = BlockOperation {
-            if let finalError, !force {
-                log("Cloud sync deactivation failed")
-                completion(finalError)
-            } else {
-                deletionQueue.removeAll()
-                lastSyncCompletion = .distantPast
-                uuidSequence = []
-                uuidSequenceRecord = nil
-                PullState.wipeDatabaseTokens()
-                PullState.wipeZoneTokens()
-                Model.removeImportedShares()
-                syncSwitchedOn = false
-                lastiCloudAccount = nil
-                PersistedOptions.lastPushToken = nil
-                for item in Model.allDrops {
-                    item.removeFromCloudkit()
-                }
-                Model.save()
-                log("Cloud sync deactivation complete")
-                completion(nil)
-            }
+        defer {
             syncTransitioning = false
         }
-        doneOperation.addDependency(ss)
-        doneOperation.addDependency(ms)
-        OperationQueue.main.addOperation(doneOperation)
+
+        let myOwnShareIds = Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
+        if !myOwnShareIds.isEmpty {
+            try await shutdownShares(ids: myOwnShareIds, force: force)
+        }
+
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                _ = try await container.sharedCloudDatabase.deleteSubscription(withID: sharedDatabaseSubscriptionId)
+            }
+            taskGroup.addTask {
+                _ = try await container.privateCloudDatabase.deleteSubscription(withID: privateDatabaseSubscriptionId)
+            }
+            do {
+                try await taskGroup.waitForAll()
+            } catch {
+                log("Cloud sync deactivation failed: \(error.finalDescription)")
+                throw error
+            }
+        }
+
+        deletionQueue.removeAll()
+        lastSyncCompletion = .distantPast
+        uuidSequence = []
+        uuidSequenceRecord = nil
+        PullState.wipeDatabaseTokens()
+        PullState.wipeZoneTokens()
+        Model.removeImportedShares()
+        syncSwitchedOn = false
+        lastiCloudAccount = nil
+        PersistedOptions.lastPushToken = nil
+        for item in Model.allDrops {
+            item.removeFromCloudkit()
+        }
+        Model.save()
+        log("Cloud sync deactivation complete")
     }
 
-    private static func proceedWithActivationNow() async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            let zone = CKRecordZone(zoneID: privateZoneId)
-            let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
-            createZone.modifyRecordZonesCompletionBlock = { _, _, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-            submit(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
-        }
+    private static func subscriptionToDatabaseZone(id: String) -> CKDatabaseSubscription {
+        let notificationInfo = CKSubscription.NotificationInfo()
+        notificationInfo.shouldSendContentAvailable = true
+        notificationInfo.shouldSendMutableContent = false
+        notificationInfo.shouldBadge = false
+
+        let subscription = CKDatabaseSubscription(subscriptionID: id)
+        subscription.notificationInfo = notificationInfo
+        return subscription
     }
 
     private static func updateSubscriptions() async throws {
         log("Updating subscriptions to CK zones")
-        
-        func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
-            let notificationInfo = CKSubscription.NotificationInfo()
-            notificationInfo.shouldSendContentAvailable = true
-            notificationInfo.shouldSendMutableContent = false
-            notificationInfo.shouldBadge = false
 
-            let subscription = CKDatabaseSubscription(subscriptionID: id)
-            subscription.notificationInfo = notificationInfo
-            return CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: nil)
-        }
-
-        let group = DispatchGroup()
-        var finalError: Error?
-
-        group.enter()
-        let subscribeToPrivateDatabase = subscribeToDatabaseOperation(id: privateDatabaseSubscriptionId)
-        subscribeToPrivateDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
-            if error != nil {
-                finalError = error
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                let subscribeToPrivateDatabase = await subscriptionToDatabaseZone(id: privateDatabaseSubscriptionId)
+                _ = try await container.privateCloudDatabase.modifySubscriptions(saving: [subscribeToPrivateDatabase], deleting: [])
             }
-            group.leave()
-        }
-        submit(subscribeToPrivateDatabase, on: container.privateCloudDatabase, type: "subscribe to db")
-
-        group.enter()
-        let subscribeToSharedDatabase = subscribeToDatabaseOperation(id: sharedDatabaseSubscriptionId)
-        subscribeToSharedDatabase.modifySubscriptionsCompletionBlock = { _, _, error in
-            if error != nil {
-                finalError = error
+            taskGroup.addTask {
+                let subscribeToSharedDatabase = await subscriptionToDatabaseZone(id: sharedDatabaseSubscriptionId)
+                _ = try await container.sharedCloudDatabase.modifySubscriptions(saving: [subscribeToSharedDatabase], deleting: [])
             }
-            group.leave()
-        }
-        submit(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
-
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            group.notify(queue: .main) {
-                if let finalError {
-                    continuation.resume(throwing: finalError)
-                } else {
-                    continuation.resume()
-                }
+            do {
+                try await taskGroup.waitForAll()
+            } catch {
+                log("CK zone subscription failed: \(error.finalDescription)")
+                throw error
             }
         }
     }
@@ -518,45 +470,19 @@ extension CloudManager {
     }
 
     static func eraseZoneIfNeeded() async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _eraseZoneIfNeeded { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-
-    private static func _eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
         showNetwork = true
-        let deleteZone = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: [privateZoneId])
-        deleteZone.modifyRecordZonesCompletionBlock = { _, _, error in
-            if let error {
-                log("Error while deleting zone: \(error.finalDescription)")
-            }
-            Task { @MainActor in
-                showNetwork = false
-                completion(error)
-            }
+        defer {
+            showNetwork = false
         }
-        submit(deleteZone, on: container.privateCloudDatabase, type: "erase private zone")
+        do {
+            _ = try await container.privateCloudDatabase.deleteRecordZone(withID: privateZoneId)
+        } catch {
+            log("Error while deleting zone: \(error.finalDescription)")
+            throw error
+        }
     }
 
     static func fetchMissingShareRecords() async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _fetchMissingShareRecords { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-
-    private static func _fetchMissingShareRecords(completion: @escaping (Error?) -> Void) {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
         for item in Model.allDrops {
@@ -572,83 +498,56 @@ extension CloudManager {
         }
 
         if fetchGroups.isEmpty {
-            completion(nil)
             return
         }
 
-        var finalError: Error?
-
-        let doneOperation = BlockOperation {
-            if let finalError {
-                log("Error fetching missing share records: \(finalError.finalDescription)")
-            }
-            completion(finalError)
-        }
-
-        for zoneId in fetchGroups.keys {
-            guard let fetchGroup = fetchGroups[zoneId] else { continue }
-            let fetch = CKFetchRecordsOperation(recordIDs: fetchGroup)
-            fetch.perRecordCompletionBlock = { record, recordID, error in
-                Task { @MainActor in
-                    if let error {
-                        if error.itemDoesNotExistOnServer, let recordID {
-                            // this share record does not exist. Our local data is wrong
-                            if let itemWithShare = Model.item(shareId: recordID.recordName) {
-                                log("Warning: Our local data thinks we have a share in the cloud (\(recordID.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
-                                try? await fetchCloudRecord(for: itemWithShare)
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            for (zoneId, fetchGroup) in fetchGroups {
+                taskGroup.addTask { @MainActor in
+                    let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+                    let fetchResults = try await database.records(for: fetchGroup)
+                    for (id, result) in fetchResults {
+                        switch result {
+                        case let .success(record):
+                            if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
+                                existingItem.cloudKitShareRecord = share
                             }
-                        } else {
-                            finalError = error
+                        case let .failure(error):
+                            if error.itemDoesNotExistOnServer {
+                                // this share record does not exist. Our local data is wrong
+                                if let itemWithShare = Model.item(shareId: id.recordName) {
+                                    log("Warning: Our local data thinks we have a share in the cloud (\(id.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
+                                    try? await fetchCloudRecord(for: itemWithShare)
+                                }
+                            } else {
+                                log("Error fetching missing share records: \(error.finalDescription)")
+                                throw error
+                            }
                         }
-                    }
-                    if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
-                        existingItem.cloudKitShareRecord = share
                     }
                 }
             }
-            doneOperation.addDependency(fetch)
-            let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-            submit(fetch, on: database, type: "fetch missing share records for items")
+            try await taskGroup.waitForAll()
         }
-
-        OperationQueue.main.addOperation(doneOperation)
     }
 
     private static func fetchCloudRecord(for item: ArchivedItem?) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _fetchCloudRecord(for: item) { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-        }
-    }
-    
-    private static func _fetchCloudRecord(for item: ArchivedItem?, completion: ((Error?) -> Void)?) {
-        guard let itemNeedingCloudPull = item, let recordIdNeedingRefresh = itemNeedingCloudPull.cloudKitRecord?.recordID else { return }
-        let fetch = CKFetchRecordsOperation(recordIDs: [recordIdNeedingRefresh])
-        fetch.perRecordCompletionBlock = { record, _, error in
-            if let record {
-                Task { @MainActor in
-                    log("Replaced local cloud record with latest copy from server (\(itemNeedingCloudPull.uuid))")
-                    itemNeedingCloudPull.cloudKitRecord = record
-                    itemNeedingCloudPull.postModified()
-                }
-            } else if let error, error.itemDoesNotExistOnServer {
-                Task { @MainActor in
-                    log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(itemNeedingCloudPull.uuid))")
-                    itemNeedingCloudPull.removeFromCloudkit()
-                    itemNeedingCloudPull.postModified()
-                }
-            }
-            Task { @MainActor in
-                completion?(error)
-            }
-        }
+        guard let item, let recordIdNeedingRefresh = item.cloudKitRecord?.recordID else { return }
+
         let database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-        submit(fetch, on: database, type: "fetching individual cloud record")
+        do {
+            let record = try await database.record(for: recordIdNeedingRefresh)
+            log("Replaced local cloud record with latest copy from server (\(item.uuid))")
+            item.cloudKitRecord = record
+            item.postModified()
+
+        } catch {
+            if error.itemDoesNotExistOnServer {
+                log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(item.uuid))")
+                item.removeFromCloudkit()
+                item.postModified()
+            }
+        }
     }
 
     static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
@@ -713,24 +612,9 @@ extension CloudManager {
     }
 
     static func share(item: ArchivedItem, rootRecord: CKRecord) async throws -> CKShare {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<CKShare, Error>) in
-            _share(item: item, rootRecord: rootRecord) { share, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else if let share {
-                    continuation.resume(returning: share)
-                } else {
-                    continuation.resume(throwing: GladysError.blankResponse.error)
-                }
-            }
-        }
-    }
-    
-    private static func _share(item: ArchivedItem, rootRecord: CKRecord, completion: @escaping (CKShare?, Error?) -> Void) {
         let shareRecord = CKShare(rootRecord: rootRecord)
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
-        let icon = item.displayIcon
-        let scaledIcon = icon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
+        let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
         #if os(iOS)
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #else
@@ -738,85 +622,61 @@ extension CloudManager {
         #endif
         let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap(\.populatedCloudKitRecord)
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
-        let operation = CKModifyRecordsOperation(recordsToSave: recordsToSave, recordIDsToDelete: [])
-        operation.savePolicy = .allKeys
-        operation.modifyRecordsCompletionBlock = { _, _, error in
-            completion(shareRecord, error)
-        }
-        submit(operation, on: container.privateCloudDatabase, type: "share item")
+        let modifyResults = try await container.privateCloudDatabase.modifyRecords(saving: recordsToSave, deleting: [], savePolicy: .allKeys)
+        try check(modifyResults)
+        return shareRecord
     }
 
-    static func acceptShare(_ metadata: CKShare.Metadata) {
-        if !syncSwitchedOn {
-            Task {
-                await genericAlert(title: "Could not accept shared item",
-                                   message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
-            }
+    static func acceptShare(_ metadata: CKShare.Metadata) async {
+        guard syncSwitchedOn else {
+            await genericAlert(title: "Could not accept shared item",
+                               message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
             return
         }
+
         if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
             let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
             sendNotification(name: .HighlightItemRequested, object: request)
             return
         }
+
         sendNotification(name: .AcceptStarting, object: nil)
-        Task {
-            try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
-            showNetwork = true
-            let acceptShareOperation = CKAcceptSharesOperation(shareMetadatas: [metadata])
-            acceptShareOperation.acceptSharesCompletionBlock = { error in
-                Task { @MainActor in
-                    showNetwork = false
-                    if let error {
-                        sendNotification(name: .AcceptEnding, object: nil)
-                        await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
-                    } else {
-                        try? await sync()
-                        sendNotification(name: .AcceptEnding, object: nil)
-                    }
-                }
-            }
-            acceptShareOperation.qualityOfService = .userInitiated
-            CKContainer(identifier: metadata.containerIdentifier).add(acceptShareOperation)
+
+        try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
+        showNetwork = true
+        do {
+            try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
+            try? await sync() // get the new shared objects
+            sendNotification(name: .AcceptEnding, object: nil)
+            showNetwork = false
+        } catch {
+            sendNotification(name: .AcceptEnding, object: nil)
+            showNetwork = false
+            await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
         }
     }
 
     static func deleteShare(_ item: ArchivedItem) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _deleteShare(item) { error in
-                Task { @MainActor in
-                    if let error {
-                        if error.itemDoesNotExistOnServer {
-                            do {
-                                item.cloudKitShareRecord = nil
-                                try await fetchCloudRecord(for: item)
-                                continuation.resume()
-                            } catch {
-                                continuation.resume(throwing: error)
-                            }
-                        } else {
-                            await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
-                            continuation.resume(throwing: error)
-                        }
-                    } else {
-                        continuation.resume()
-                    }
-                }
-            }
-        }
-    }
-
-    private static func _deleteShare(_ item: ArchivedItem, completion: @escaping (Error?) -> Void) {
         guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
-            completion(nil)
             return
         }
-        let deleteOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [shareId])
-        deleteOperation.modifyRecordsCompletionBlock = { _, _, error in
-            completion(error)
+
+        do {
+            let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+            _ = try await database.deleteRecord(withID: shareId)
+        } catch {
+            if error.itemDoesNotExistOnServer {
+                do {
+                    item.cloudKitShareRecord = nil
+                    try await fetchCloudRecord(for: item)
+                } catch {
+                    throw error
+                }
+            } else {
+                await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                throw error
+            }
         }
-        let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-        submit(deleteOperation, on: database, type: "delete share")
     }
 
     static func proceedWithDeactivation() async {
@@ -908,7 +768,7 @@ extension CloudManager {
             PersistedOptions.lastPushToken = nil
             log("Push migration needed - existing push token reset")
         }
-        
+
         guard syncSwitchedOn else {
             PersistedOptions.lastPushToken = newToken
             return

@@ -16,7 +16,9 @@ extension ArchivedItem {
     }
 
     var typeItemForFileDrop: Component? {
-        mostRelevantTypeItem ?? components.first(where: { $0.typeConforms(to: kUTTypeContent) || $0.typeConforms(to: kUTTypeItem) }) ?? components.first
+        mostRelevantTypeItem
+            ?? components.first { $0.typeConforms(to: .content) || $0.typeConforms(to: .item) }
+            ?? components.first
     }
 
     func tryOpen(from viewController: NSViewController) {

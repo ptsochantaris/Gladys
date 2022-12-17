@@ -1,6 +1,7 @@
 import CloudKit
 import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
@@ -852,7 +853,7 @@ final class DetailController: GladysViewController,
         do {
             let res = try await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res.image, let data = image.jpegData(compressionQuality: 1) {
-                let newTypeItem = Component(typeIdentifier: kUTTypeJPEG as String, parentUuid: item.uuid, data: data, order: item.components.count)
+                let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: item.uuid, data: data, order: item.components.count)
                 item.components.append(newTypeItem)
                 handleNewTypeItem()
             } else {

@@ -435,7 +435,7 @@ final class Preferences: NSViewController {
 
     @IBAction private func syncSwitchChanged(_: NSButton) {
         syncSwitch.isEnabled = false
-        
+
         Task { @MainActor in
             if CloudManager.syncSwitchedOn {
                 let sharingOwn = Model.sharingMyItems
@@ -478,7 +478,7 @@ final class Preferences: NSViewController {
             }
         }
     }
-    
+
     private func deactivationConfirmed() {
         Task { @MainActor in
             await CloudManager.proceedWithDeactivation()

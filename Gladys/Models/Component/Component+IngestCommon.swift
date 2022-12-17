@@ -160,7 +160,7 @@ extension Component {
                 if encodeAnyUIImage {
                     log("      will encode it to JPEG, as it's the only image in this parent item")
                     representedClass = .data
-                    typeIdentifier = kUTTypeJPEG as String
+                    typeIdentifier = UTType.jpeg.identifier
                     classWasWrapped = false
                     if storeBytes {
                         #if os(iOS)
@@ -238,19 +238,19 @@ extension Component {
     var contentPriority: Int {
         if typeIdentifier == "com.apple.mapkit.map-item" { return 90 }
 
-        if typeConforms(to: kUTTypeVCard) { return 80 }
+        if typeConforms(to: .vCard) { return 80 }
 
         if isWebURL { return 70 }
 
-        if typeConforms(to: kUTTypeVideo) { return 60 }
+        if typeConforms(to: .video) { return 60 }
 
-        if typeConforms(to: kUTTypeAudio) { return 50 }
+        if typeConforms(to: .audio) { return 50 }
 
-        if typeConforms(to: kUTTypePDF) { return 40 }
+        if typeConforms(to: .pdf) { return 40 }
 
-        if typeConforms(to: kUTTypeImage) { return 30 }
+        if typeConforms(to: .image) { return 30 }
 
-        if typeConforms(to: kUTTypeText) { return 20 }
+        if typeConforms(to: .text) { return 20 }
 
         if isFileURL { return 10 }
 
@@ -382,15 +382,15 @@ extension Component {
     }
 
     var isText: Bool {
-        !typeConforms(to: kUTTypeVCard) && (typeConforms(to: kUTTypeText) || isRichText)
+        !typeConforms(to: .vCard) && (typeConforms(to: .text) || isRichText)
     }
 
     var isRichText: Bool {
-        typeConforms(to: kUTTypeRTF) || typeConforms(to: kUTTypeRTFD) || typeConforms(to: kUTTypeFlatRTFD) || typeIdentifier == "com.apple.uikit.attributedstring"
+        typeConforms(to: .rtf) || typeConforms(to: .rtfd) || typeConforms(to: .flatRTFD) || typeIdentifier == "com.apple.uikit.attributedstring"
     }
 
     var textEncoding: String.Encoding {
-        typeConforms(to: kUTTypeUTF16PlainText) ? .utf16 : .utf8
+        typeConforms(to: .utf16PlainText) ? .utf16 : .utf8
     }
 
     func handleRemoteUrl(_ url: URL, _: Data, _: Bool) async throws {
@@ -468,35 +468,35 @@ extension Component {
             try await handleUrl(url as URL, data, storeBytes)
             return // important
 
-        } else if typeConforms(to: kUTTypeText as CFString) {
+        } else if typeConforms(to: .text) {
             if let s = String(data: data, encoding: .utf8) {
                 setTitleInfo(s, 5)
             }
             await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
-        } else if typeConforms(to: kUTTypeImage as CFString) {
+        } else if typeConforms(to: .image) {
             await setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
-        } else if typeConforms(to: kUTTypeAudiovisualContent as CFString) {
+        } else if typeConforms(to: .audiovisualContent) {
             if let moviePreview = generateMoviePreview() {
                 await setDisplayIcon(moviePreview, 50, .fill)
             } else {
                 await setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
             }
 
-        } else if typeConforms(to: kUTTypeAudio as CFString) {
+        } else if typeConforms(to: .audio) {
             await setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 
-        } else if typeConforms(to: kUTTypePDF as CFString), let pdfPreview = generatePdfPreview() {
+        } else if typeConforms(to: .pdf), let pdfPreview = generatePdfPreview() {
             if let title = getPdfTitle(), !title.isEmpty {
                 setTitleInfo(title, 11)
             }
             await setDisplayIcon(pdfPreview, 50, .fill)
 
-        } else if typeConforms(to: kUTTypeContent as CFString) {
+        } else if typeConforms(to: .content) {
             await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 
-        } else if typeConforms(to: kUTTypeArchive as CFString) {
+        } else if typeConforms(to: .archive) {
             await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
 
         } else {

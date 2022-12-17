@@ -6,10 +6,11 @@ import GladysFramework
 import MapKit
 import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 extension Filter.Toggle.Function {
     var dragItem: UIDragItem? {
-        let p = NSItemProvider(item: displayText as NSSecureCoding, typeIdentifier: kUTTypePlainText as String)
+        let p = NSItemProvider(item: displayText as NSSecureCoding, typeIdentifier: UTType.plainText.identifier)
         p.registerObject(userActivity, visibility: .all)
 
         let i = UIDragItem(itemProvider: p)

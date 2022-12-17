@@ -3,32 +3,32 @@ import Foundation
 @MainActor
 enum Model {
     private static var uuidindex: [UUID: Int]?
-    
+
     private static var dropStore = ContiguousArray<ArchivedItem>()
-    
+
     static var allDrops: ContiguousArray<ArchivedItem> {
         dropStore
     }
-    
+
     static func insert(drop: ArchivedItem, at index: Int) {
         dropStore.insert(drop, at: index)
         uuidindex = nil
     }
-    
+
     static func replace(drop: ArchivedItem, at index: Int) {
         dropStore[index] = drop
         uuidindex = nil
     }
-    
+
     static func removeDrop(at index: Int) {
         let item = dropStore.remove(at: index)
         uuidindex?[item.uuid] = nil
     }
-    
+
     static var dropsAreEmpty: Bool {
         dropStore.isEmpty
     }
-    
+
     static func sortDrops(by sequence: [UUID]) {
         if sequence.isEmpty { return }
         dropStore.sort { i1, i2 in
@@ -38,7 +38,7 @@ enum Model {
         }
         uuidindex = nil
     }
-    
+
     static func removeDeletableDrops() {
         let count = dropStore.count
         dropStore.removeAll { $0.needsDeletion }
@@ -46,7 +46,7 @@ enum Model {
             uuidindex = nil
         }
     }
-    
+
     static func promoteDropsToTop(uuids: Set<UUID>) {
         let cut = dropStore.filter { uuids.contains($0.uuid) }
         if cut.isEmpty { return }

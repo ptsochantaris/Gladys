@@ -142,7 +142,7 @@ final class ICloudController: GladysViewController {
                                                   cancel: "Cancel")
                     if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
                 } else {
-                    await CloudManager.proceedWithDeactivation()
+                    await deactivate()
                 }
             }
         }

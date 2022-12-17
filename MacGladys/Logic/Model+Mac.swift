@@ -172,7 +172,7 @@ extension Model {
         }
         _ = addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)
     }
-    
+
     nonisolated static func unsafeModificationDate(for url: URL) -> Date? {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }

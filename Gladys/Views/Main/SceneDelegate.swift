@@ -120,7 +120,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         Task { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-            CloudManager.acceptShare(cloudKitShareMetadata)
+            await CloudManager.acceptShare(cloudKitShareMetadata)
         }
     }
 }

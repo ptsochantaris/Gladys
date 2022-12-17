@@ -183,7 +183,9 @@ final class ActionRequestViewController: UIViewController {
 
         Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
 
-        CloudManager.signalExtensionUpdate()
+        Task {
+            await CloudManager.signalExtensionUpdate()
+        }
 
         dismiss(animated: true) {
             self.reset(ingestOnNextAppearance: true)

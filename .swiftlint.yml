@@ -12,6 +12,7 @@ disabled_rules:
   - type_body_length
   - force_try
   - implicit_getter
+  - large_tuple
 
 excluded:
   - Pods

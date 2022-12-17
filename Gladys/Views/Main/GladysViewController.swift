@@ -287,7 +287,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         currentOffset.y = max(currentOffset.y - scr.bounds.height, -scr.adjustedContentInset.top - 55)
         scr.setContentOffset(currentOffset, animated: true)
     }
-    
+
     private func pressesDone(_ presses: Set<UIPress>) -> Bool {
         if explicitScrolling {
             let code = presses.first?.key?.keyCode
@@ -341,7 +341,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
             firstScrollView.contentOffset = newPos
         }
     }
-    
+
     func confirm(title: String, message: String, action: String, cancel: String) async -> Bool {
         var continuation: CheckedContinuation<Bool, Never>?
 

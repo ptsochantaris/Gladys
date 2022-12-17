@@ -670,7 +670,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
             }
             sharingService.delegate = self
             sharingService.perform(withItems: [itemProvider])
-            
+
         } else if let w = view.window {
             missingService(w)
         }

@@ -3,7 +3,7 @@ import MobileCoreServices
 
 extension ArchivedItem {
     var attachmentForMessage: URL? {
-        components.first { $0.typeConforms(to: kUTTypeContent) }?.bytesPath
+        components.first { $0.typeConforms(to: .content) }?.bytesPath
     }
 
     var textForMessage: (String, URL?) {

@@ -2,6 +2,7 @@ import Cocoa
 import Contacts
 import ContactsUI
 import MapKit
+import UniformTypeIdentifiers
 import ZIPFoundation
 
 extension Component {
@@ -84,7 +85,7 @@ extension Component {
 
         if directory.boolValue {
             do {
-                typeIdentifier = kUTTypeZipArchive as String
+                typeIdentifier = UTType.zip.identifier
                 await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
                 representedClass = .data
                 let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
@@ -109,10 +110,10 @@ extension Component {
 
         } else {
             let ext = item.pathExtension
-            if !ext.isEmpty, let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext as CFString, nil)?.takeRetainedValue() {
-                typeIdentifier = uti as String
+            if !ext.isEmpty, let uti = UTType(filenameExtension: ext) {
+                typeIdentifier = uti.identifier
             } else {
-                typeIdentifier = kUTTypeData as String
+                typeIdentifier = UTType.data.identifier
             }
             representedClass = .data
             log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
@@ -179,11 +180,11 @@ extension Component {
         guard hasBytes else { return }
 
         if let s = encodedUrl?.absoluteString {
-            let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
+            let tid = NSPasteboard.PasteboardType(UTType.utf8PlainText.identifier)
             pasteboardItem.setString(s, forType: tid)
 
-        } else if classWasWrapped, typeConforms(to: kUTTypePlainText), isPlist, let s = decode() as? String {
-            let tid = NSPasteboard.PasteboardType(kUTTypeUTF8PlainText as String)
+        } else if classWasWrapped, typeConforms(to: .plainText), isPlist, let s = decode() as? String {
+            let tid = NSPasteboard.PasteboardType(UTType.utf8PlainText.identifier)
             pasteboardItem.setString(s, forType: tid)
 
         } else {

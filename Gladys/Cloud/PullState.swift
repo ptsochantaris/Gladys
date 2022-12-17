@@ -180,68 +180,65 @@ final actor PullState {
         }
     }
 
-    private func zoneFetchDone(zoneId: CKRecordZone.ID, token: CKServerChangeToken?, error: Error?) -> Bool {
-        if (error as? CKError)?.code == .changeTokenExpired {
-            setZoneToken(nil, for: zoneId)
-            Task {
-                await CloudManager.setSyncProgressString("Fetching Full Update…")
-            }
-            log("Zone \(zoneId.zoneName) changes fetch had stale token, will retry")
-            return true
-        } else {
-            updatedZoneTokens[zoneId] = token
-            return false
-        }
-    }
-
     private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
-        typealias ZoneConfig = CKFetchRecordZoneChangesOperation.ZoneConfiguration
-
-        var needsRetry = false
-        var configurationsByRecordZoneID = [CKRecordZone.ID: ZoneConfig]()
-        for zoneID in zoneIDs {
-            let options = ZoneConfig()
-            options.previousServerChangeToken = zoneToken(for: zoneID)
-            configurationsByRecordZoneID[zoneID] = options
-        }
-
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
-
-        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configurationsByRecordZoneID)
-
-        operation.recordWithIDWasDeletedBlock = { recordId, recordType in
-            if let type = CloudManager.RecordType(rawValue: recordType) {
-                Task {
-                    await self.recordDeleted(recordId: recordId, recordType: type)
+        
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            for zoneID in zoneIDs {
+                taskGroup.addTask {
+                    var zoneToken = await self.zoneToken(for: zoneID)
+                    var moreComing = true
+                    while moreComing {
+                        var zoneChangesResults: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
+                                                 deletions: [CKDatabase.RecordZoneChange.Deletion],
+                                                 changeToken: CKServerChangeToken,
+                                                 moreComing: Bool)?
+                        var go = true
+                        while go {
+                            do {
+                                zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
+                                go = false
+                            } catch {
+                                if (error as? CKError)?.code == .changeTokenExpired {
+                                    zoneToken = nil
+                                    await CloudManager.setSyncProgressString("Fetching Full Update…")
+                                    log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
+                                } else {
+                                    throw error
+                                }
+                            }
+                        }
+                        
+                        guard let zoneChangesResults else { return }
+                        
+                        for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
+                            switch fetchResult {
+                            case .success(let modification):
+                                let record = modification.record
+                                if let type = CloudManager.RecordType(rawValue: record.recordType) {
+                                    await self.recordChanged(record: record, recordType: type, neverSynced: neverSynced)
+                                }
+                            case .failure(let error):
+                                log("Changes could not be fetched for record \(recordId): \(error.finalDescription)")
+                            }
+                        }
+                        
+                        for deletion in zoneChangesResults.deletions {
+                            if let type = CloudManager.RecordType(rawValue: deletion.recordType) {
+                                await self.recordDeleted(recordId: deletion.recordID, recordType: type)
+                            }
+                        }
+                        
+                        zoneToken = zoneChangesResults.changeToken
+                        moreComing = zoneChangesResults.moreComing
+                    }
+                    
+                    await self.setZoneToken(zoneToken, for: zoneID)
                 }
             }
-        }
-        operation.recordChangedBlock = { record in
-            if let type = CloudManager.RecordType(rawValue: record.recordType) {
-                Task {
-                    await self.recordChanged(record: record, recordType: type, neverSynced: neverSynced)
-                }
-            }
-        }
-        operation.recordZoneFetchCompletionBlock = { zoneId, token, _, _, error in
-            needsRetry = self.zoneFetchDone(zoneId: zoneId, token: token, error: error)
-        }
-
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            operation.fetchRecordZoneChangesCompletionBlock = { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            }
-            CloudManager.submit(operation, on: database, type: "fetch zone changes")
-        }
-
-        if needsRetry {
-            try await fetchZoneChanges(database: database, zoneIDs: zoneIDs)
+            try await taskGroup.waitForAll()
         }
     }
 

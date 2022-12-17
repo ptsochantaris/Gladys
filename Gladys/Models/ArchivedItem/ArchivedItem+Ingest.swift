@@ -14,25 +14,29 @@ extension ArchivedItem {
 
     var mostRelevantTypeItemImage: Component? {
         let item = mostRelevantTypeItem
-        if let i = item, i.typeConforms(to: kUTTypeURL), PersistedOptions.includeUrlImagesInMlLogic {
-            return components.filter { $0.typeConforms(to: kUTTypeImage) }.max { $0.contentPriority < $1.contentPriority }
+        if let i = item, i.typeConforms(to: .url), PersistedOptions.includeUrlImagesInMlLogic {
+            return components.filter { $0.typeConforms(to: .image) }.max { $0.contentPriority < $1.contentPriority }
         }
         return item
     }
 
     var mostRelevantTypeItemMedia: Component? {
-        components.filter { $0.typeConforms(to: kUTTypeVideo) || $0.typeConforms(to: kUTTypeAudio) }.max { $0.contentPriority < $1.contentPriority }
+        components.filter { $0.typeConforms(to: .video) || $0.typeConforms(to: .audio) }.max { $0.contentPriority < $1.contentPriority }
     }
 
     static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
         var identifiers = ids.filter { typeIdentifier in
-            #if os(OSX)
+            #if os(macOS)
                 if typeIdentifier.hasPrefix("dyn.") {
                     return false
                 }
-                let cfid = typeIdentifier as CFString
-                if !(UTTypeConformsTo(cfid, kUTTypeItem) || UTTypeConformsTo(cfid, kUTTypeContent)) { return false }
+                guard let type = UTType(typeIdentifier) else {
+                    return false
+                }
+                if !(type.conforms(to: .item) || type.conforms(to: .content)) {
+                    return false
+                }
             #endif
             return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
         }
@@ -43,7 +47,7 @@ extension ArchivedItem {
     }
 
     private var imageOfImageComponentIfExists: CGImage? {
-        if let firstImageComponent = mostRelevantTypeItemImage, firstImageComponent.typeConforms(to: kUTTypeImage), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
+        if let firstImageComponent = mostRelevantTypeItemImage, firstImageComponent.typeConforms(to: .image), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
             #if os(macOS)
                 return image.cgImage(forProposedRect: nil, context: nil, hints: nil)
             #else
@@ -162,7 +166,7 @@ extension ArchivedItem {
 
         if let t = transcribedText {
             let data = Data(t.utf8)
-            let newComponent = Component(typeIdentifier: kUTTypeUTF8PlainText as String, parentUuid: uuid, data: data, order: 0)
+            let newComponent = Component(typeIdentifier: UTType.utf8PlainText.identifier, parentUuid: uuid, data: data, order: 0)
             newComponent.accessoryTitle = t
             components.insert(newComponent, at: 0)
         }
@@ -259,10 +263,11 @@ extension ArchivedItem {
                 var finalProvider = provider
                 var finalType = type
                 if !alreadyHasUrl,
-                   UTTypeConformsTo(type as CFString, kUTTypeText),
+                   let utiType = UTType(type),
+                   utiType.conforms(to: .text),
                    PersistedOptions.automaticallyDetectAndConvertWebLinks,
                    let extractedLinkData = await extractUrlData(from: provider, for: type) {
-                    finalType = kUTTypeURL as String
+                    finalType = UTType.url.identifier
                     finalProvider = NSItemProvider()
                     finalProvider.registerDataRepresentation(forTypeIdentifier: finalType, visibility: .all) { provide -> Progress? in
                         provide(extractedLinkData, nil)

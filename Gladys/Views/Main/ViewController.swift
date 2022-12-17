@@ -2203,7 +2203,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
         return a
     }
-    
+
     @objc private func deleteKey() {
         guard let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem else {
             return

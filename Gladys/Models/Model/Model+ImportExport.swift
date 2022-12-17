@@ -1,5 +1,10 @@
 import Foundation
+import UniformTypeIdentifiers
 import ZIPFoundation
+
+extension UTType {
+    static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
+}
 
 extension Model {
     private static func bringInItem(_ item: ArchivedItem, from url: URL, using fm: FileManager, moveItem: Bool) throws -> Bool {

@@ -1,6 +1,7 @@
 import AppKit
 import CallbackURLKit
 import Foundation
+import UniformTypeIdentifiers
 
 @MainActor
 enum CallbackSupport {
@@ -78,7 +79,7 @@ enum CallbackSupport {
     @discardableResult
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> Bool {
         let p = NSItemProvider()
-        p.registerDataRepresentation(forTypeIdentifier: kUTTypeData as String, visibility: .all) { completion -> Progress? in
+        p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
             completion(data, nil)
             return nil
         }

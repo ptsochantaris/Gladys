@@ -77,13 +77,13 @@
 
             var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: id) }
         }
-        
+
         struct DeleteItem: AppIntent {
             @Parameter(title: "Item")
             var entity: ArchivedItemEntity?
-            
+
             static var title: LocalizedStringResource { "Delete item" }
-            
+
             @MainActor
             func perform() async throws -> some IntentResult {
                 guard let entity,
@@ -99,9 +99,9 @@
         struct CopyItem: AppIntent {
             @Parameter(title: "Item")
             var entity: ArchivedItemEntity?
-            
+
             static var title: LocalizedStringResource { "Copy item to clipboard" }
-            
+
             @MainActor
             func perform() async throws -> some IntentResult {
                 guard let entity,
@@ -234,7 +234,7 @@
 
             @Parameter(title: "Note")
             var note: String?
-            
+
             @Parameter(title: "Labels")
             var labels: [ArchivedItemLabel]?
 
@@ -255,7 +255,7 @@
         }
 
         private static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
-            let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map { $0.id })
+            let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
             switch await Model.pasteItems(from: [provider], overrides: importOverrides) {
             case .noData:
                 throw Error.noItemsCreated
@@ -294,7 +294,7 @@
                             phrases: ["Copy \(.applicationName) item to clipboard"],
                             shortTitle: "Copy to clipboard",
                             systemImageName: "doc.on.doc")
-                
+
                 AppShortcut(intent: OpenGladys(),
                             phrases: ["Select \(.applicationName) item"],
                             shortTitle: "Select item",
@@ -314,12 +314,11 @@
                             phrases: ["Create \(.applicationName) item from file"],
                             shortTitle: "Create from file",
                             systemImageName: "doc")
-                
+
                 AppShortcut(intent: DeleteItem(),
                             phrases: ["Delete \(.applicationName) item"],
                             shortTitle: "Delete item",
                             systemImageName: "xmark.bin")
-
             }
         }
     }

@@ -60,4 +60,14 @@ enum CloudManager {
 
     @UserDefault(key: "syncSwitchedOn", defaultValue: false)
     static var syncSwitchedOn: Bool
+
+    static func check(_ results: ([CKRecordZone.ID: Result<CKRecordZone, Error>], [CKRecordZone.ID: Result<Void, Error>])) throws {
+        try results.0.forEach { _ = try $0.value.get() }
+        try results.1.forEach { _ = try $0.value.get() }
+    }
+
+    static func check(_ results: ([CKRecord.ID: Result<CKRecord, Error>], [CKRecord.ID: Result<Void, Error>])) throws {
+        try results.0.forEach { _ = try $0.value.get() }
+        try results.1.forEach { _ = try $0.value.get() }
+    }
 }

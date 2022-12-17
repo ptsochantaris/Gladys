@@ -4,6 +4,7 @@ import Foundation
     import MobileCoreServices
 #endif
 import GladysFramework
+import UniformTypeIdentifiers
 
 extension Component: Equatable {
     func setBytes(_ data: Data?) {
@@ -99,12 +100,8 @@ extension Component: Equatable {
     }
 
     var fileExtension: String? {
-        let tag = UTTypeCopyPreferredTagWithClass(typeIdentifier as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue()
-        if let tag {
-            let t = tag as String
-            if !t.isEmpty {
-                return t
-            }
+        if let type = UTType(typeIdentifier), let ext = type.preferredFilenameExtension {
+            return ext
         }
         if isURL {
             return "url"
@@ -116,7 +113,7 @@ extension Component: Equatable {
     }
 
     var isURL: Bool {
-        typeConforms(to: kUTTypeURL)
+        typeConforms(to: .url)
     }
 
     var isWebURL: Bool {
@@ -138,11 +135,8 @@ extension Component: Equatable {
     }
 
     var typeDescription: String {
-        if let desc = UTTypeCopyDescription(typeIdentifier as CFString)?.takeRetainedValue() {
-            let t = desc as String
-            if !t.isEmpty {
-                return t.capitalized
-            }
+        if let type = UTType(typeIdentifier) {
+            return type.description
         }
 
         let id = typeIdentifier.lowercased()
@@ -334,8 +328,8 @@ extension Component: Equatable {
         return representedClass.description
     }
 
-    func typeConforms(to parent: CFString) -> Bool {
-        UTTypeConformsTo(typeIdentifier as CFString, parent)
+    func typeConforms(to parent: UTType) -> Bool {
+        UTType(typeIdentifier)?.conforms(to: parent) ?? false
     }
 
     var sizeInBytes: Int64 {

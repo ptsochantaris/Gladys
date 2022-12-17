@@ -22,7 +22,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         CloudManager.apnsUpdate(deviceToken)
     }
 
-    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
         CloudManager.apnsUpdate(nil)
     }
 

@@ -78,7 +78,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         filter.delegate = self
         showSearch = false
 
-        collection.registerForDraggedTypes([NSPasteboard.PasteboardType(kUTTypeItem as String), NSPasteboard.PasteboardType(kUTTypeContent as String)])
+        collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
         updateDragOperationIndicators()
 
         let n = NotificationCenter.default

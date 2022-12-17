@@ -1,6 +1,7 @@
 import CallbackURLKit
 import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 @MainActor
 enum CallbackSupport {
@@ -66,7 +67,7 @@ enum CallbackSupport {
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> Model.PasteResult {
         let p = NSItemProvider()
         p.suggestedName = overrides.title
-        p.registerDataRepresentation(forTypeIdentifier: kUTTypeData as String, visibility: .all) { completion -> Progress? in
+        p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
             completion(data, nil)
             return nil
         }

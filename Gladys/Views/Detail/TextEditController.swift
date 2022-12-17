@@ -1,6 +1,7 @@
 import GladysFramework
 import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 protocol TextEditControllerDelegate: AnyObject {
     func textEditControllerMadeChanges(_ textEditController: TextEditController)
@@ -80,11 +81,11 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
             saveDone()
 
         } else if isAttributed, let a = textView.attributedText {
-            if typeEntry.typeIdentifier == (kUTTypeRTF as String) {
+            if typeEntry.typeIdentifier == UTType.rtf.identifier {
                 let b = try? a.data(from: NSRange(location: 0, length: a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtf])
                 typeEntry.setBytes(b)
                 saveDone()
-            } else if typeEntry.typeIdentifier == (kUTTypeRTFD as String) {
+            } else if typeEntry.typeIdentifier == UTType.rtfd.identifier {
                 let b = try? a.data(from: NSRange(location: 0, length: a.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd])
                 typeEntry.setBytes(b)
                 saveDone()

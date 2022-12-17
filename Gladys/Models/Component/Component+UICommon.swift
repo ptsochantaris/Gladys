@@ -27,7 +27,7 @@ extension Component {
             return item
         }
 
-        if typeConforms(to: kUTTypeVCard), let bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
+        if typeConforms(to: .vCard), let bytes, let contact = (try? CNContactVCardSerialization.contacts(with: bytes))?.first {
             return contact
         }
 

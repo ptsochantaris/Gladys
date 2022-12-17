@@ -1,6 +1,7 @@
 import GladysFramework
 import MobileCoreServices
 import UIKit
+import UniformTypeIdentifiers
 
 final class PlistEditorCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!
@@ -45,9 +46,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
         if let p = propertyList as? [AnyHashable: Any],
            let mimeType = p["WebResourceMIMEType"] as? String,
            let data = p["WebResourceData"] as? Data,
-           let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)?.takeRetainedValue() {
+           let uti = UTType(mimeType: mimeType) {
             let provider = NSItemProvider()
-            provider.registerDataRepresentation(forTypeIdentifier: uti as String, visibility: .all) { callback -> Progress? in
+            provider.registerDataRepresentation(forTypeIdentifier: uti.identifier, visibility: .all) { callback -> Progress? in
                 callback(data, nil)
                 return nil
             }
@@ -173,9 +174,8 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
     private var shouldEnableCopyButton: Bool {
         if let p = propertyList as? [AnyHashable: Any],
            let mimeType = p["WebResourceMIMEType"] as? String,
-           p["WebResourceData"] as? Data != nil,
-           UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil) != nil {
-            return true
+           p["WebResourceData"] as? Data != nil {
+            return UTType(mimeType: mimeType) != nil
         }
         return false
     }

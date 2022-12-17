@@ -57,7 +57,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
         let i = NSItemProvider()
         i.suggestedName = "Gladys.zip"
-        i.registerFileRepresentation(forTypeIdentifier: kUTTypeZipArchive as String, fileOptions: [], visibility: .all) { completion -> Progress? in
+        i.registerFileRepresentation(forTypeIdentifier: UTType.zip.identifier, fileOptions: [], visibility: .all) { completion -> Progress? in
             Task { @MainActor in
                 self.showZipActivity(true)
             }
