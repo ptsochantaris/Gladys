@@ -77,6 +77,42 @@
 
             var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: id) }
         }
+        
+        struct DeleteItem: AppIntent {
+            @Parameter(title: "Item")
+            var entity: ArchivedItemEntity?
+            
+            static var title: LocalizedStringResource { "Delete item" }
+            
+            @MainActor
+            func perform() async throws -> some IntentResult {
+                guard let entity,
+                      let item = Model.item(uuid: entity.id.uuidString)
+                else {
+                    throw Error.itemNotFound
+                }
+                Model.delete(items: [item])
+                return .result()
+            }
+        }
+
+        struct CopyItem: AppIntent {
+            @Parameter(title: "Item")
+            var entity: ArchivedItemEntity?
+            
+            static var title: LocalizedStringResource { "Copy item to clipboard" }
+            
+            @MainActor
+            func perform() async throws -> some IntentResult {
+                guard let entity,
+                      let item = Model.item(uuid: entity.id.uuidString)
+                else {
+                    throw Error.itemNotFound
+                }
+                item.copyToPasteboard(donateShortcut: false)
+                return .result()
+            }
+        }
 
         struct OpenGladys: AppIntent {
             @Parameter(title: "Item")
@@ -102,7 +138,7 @@
             @Parameter(title: "Action", optionsProvider: ActionProvider())
             var action: OpenGladysAction
 
-            static var title: LocalizedStringResource { "Open" }
+            static var title: LocalizedStringResource { "Select item" }
 
             static var openAppWhenRun = true
 
@@ -141,7 +177,7 @@
             var note: String?
 
             @Parameter(title: "Labels")
-            var labels: [ArchivedItemLabel]
+            var labels: [ArchivedItemLabel]?
 
             static var title: LocalizedStringResource { "Create item from file" }
 
@@ -156,7 +192,7 @@
 
                 let p = NSItemProvider(item: data.data as NSData, typeIdentifier: (data.type ?? .data).identifier)
                 p.suggestedName = data.filename
-                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels)
+                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
             }
         }
 
@@ -171,7 +207,7 @@
             var note: String?
 
             @Parameter(title: "Labels")
-            var labels: [ArchivedItemLabel]
+            var labels: [ArchivedItemLabel]?
 
             static var title: LocalizedStringResource { "Create item from link" }
 
@@ -185,7 +221,7 @@
                 }
 
                 let p = NSItemProvider(object: data as NSURL)
-                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels)
+                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
             }
         }
 
@@ -200,7 +236,7 @@
             var note: String?
             
             @Parameter(title: "Labels")
-            var labels: [ArchivedItemLabel]
+            var labels: [ArchivedItemLabel]?
 
             static var title: LocalizedStringResource { "Create item from text" }
 
@@ -214,7 +250,7 @@
                 }
 
                 let p = NSItemProvider(object: data as NSString)
-                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels)
+                return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
             }
         }
 
@@ -231,6 +267,11 @@
                 let hi = OpenGladys()
                 hi.entity = entity
                 hi.action = .highlight
+                for _ in 0 ..< 10 {
+                    let done = await Model.doneIngesting
+                    if done { break }
+                    try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
+                }
                 return .result(value: entity, opensIntent: hi)
             }
         }
@@ -249,9 +290,14 @@
 
         struct GladysShortcuts: AppShortcutsProvider {
             static var appShortcuts: [AppShortcut] {
+                AppShortcut(intent: CopyItem(),
+                            phrases: ["Copy \(.applicationName) item to clipboard"],
+                            shortTitle: "Copy to clipboard",
+                            systemImageName: "doc.on.doc")
+                
                 AppShortcut(intent: OpenGladys(),
-                            phrases: ["Open \(.applicationName)"],
-                            shortTitle: "Open",
+                            phrases: ["Select \(.applicationName) item"],
+                            shortTitle: "Select item",
                             systemImageName: "square.grid.3x3.topleft.filled")
 
                 AppShortcut(intent: CreateItemFromText(),
@@ -268,6 +314,12 @@
                             phrases: ["Create \(.applicationName) item from file"],
                             shortTitle: "Create from file",
                             systemImageName: "doc")
+                
+                AppShortcut(intent: DeleteItem(),
+                            phrases: ["Delete \(.applicationName) item"],
+                            shortTitle: "Delete item",
+                            systemImageName: "xmark.bin")
+
             }
         }
     }
