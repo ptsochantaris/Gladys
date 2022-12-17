@@ -19,12 +19,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        log("APNS ready: \(deviceToken.base64EncodedString())")
         CloudManager.apnsUpdate(deviceToken)
     }
 
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        log("Warning: APNS registration failed: \(error.finalDescription)")
         CloudManager.apnsUpdate(nil)
     }
 

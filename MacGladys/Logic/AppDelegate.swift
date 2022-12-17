@@ -381,13 +381,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     @MainActor
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        log("APNS ready: \(deviceToken.base64EncodedString())")
         CloudManager.apnsUpdate(deviceToken)
     }
 
     @MainActor
     func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        log("Warning: APNS registration failed: \(error.finalDescription)")
         CloudManager.apnsUpdate(nil)
     }
 

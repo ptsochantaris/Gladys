@@ -299,24 +299,27 @@ extension CloudManager {
         switch try await container.accountStatus() {
         case .available:
             log("User has iCloud, can activate cloud sync")
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                proceedWithActivationNow { error in
-                    if let error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
-                    }
-                }
+            do {
+                try await updateSubscriptions()
+                try await fetchInitialUUIDSequence()
+            } catch {
+                log("Error while activating: \(error.finalDescription)")
+                try? await deactivate(force: true)
+                throw error
             }
-            return
+
         case .couldNotDetermine:
             throw GladysError.cloudAccountRetirevalFailed.error
+
         case .noAccount:
             throw GladysError.cloudLoginRequired.error
+
         case .restricted:
             throw GladysError.cloudAccessRestricted.error
+
         case .temporarilyUnavailable:
             throw GladysError.cloudAccessTemporarilyUnavailable.error
+
         @unknown default:
             throw GladysError.cloudAccessNotSupported.error
         }
@@ -424,20 +427,24 @@ extension CloudManager {
         OperationQueue.main.addOperation(doneOperation)
     }
 
-    private static func proceedWithActivationNow(completion: @escaping (Error?) -> Void) {
-        let zone = CKRecordZone(zoneID: privateZoneId)
-        let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
-        createZone.modifyRecordZonesCompletionBlock = { _, _, error in
-            if let error {
-                abortActivation(error, completion: completion)
-            } else {
-                fetchInitialUUIDSequence(zone: zone, completion: completion)
+    private static func proceedWithActivationNow() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let zone = CKRecordZone(zoneID: privateZoneId)
+            let createZone = CKModifyRecordZonesOperation(recordZonesToSave: [zone], recordZoneIDsToDelete: nil)
+            createZone.modifyRecordZonesCompletionBlock = { _, _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
             }
+            submit(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
         }
-        submit(createZone, on: container.privateCloudDatabase, type: "create private zone: \(privateZoneId)")
     }
 
-    private static func updateSubscriptions(completion: @escaping (Error?) -> Void) {
+    private static func updateSubscriptions() async throws {
+        log("Updating subscriptions to CK zones")
+        
         func subscribeToDatabaseOperation(id: String) -> CKModifySubscriptionsOperation {
             let notificationInfo = CKSubscription.NotificationInfo()
             notificationInfo.shouldSendContentAvailable = true
@@ -472,44 +479,42 @@ extension CloudManager {
         }
         submit(subscribeToSharedDatabase, on: container.sharedCloudDatabase, type: "subscribe to db")
 
-        group.notify(queue: .main) {
-            completion(finalError)
-        }
-    }
-
-    private static func abortActivation(_ error: Error, completion: @escaping (Error?) -> Void) {
-        Task { @MainActor in
-            log("Activation aborted: \(error)")
-            completion(error)
-            try? await deactivate(force: true)
-        }
-    }
-
-    private static func fetchInitialUUIDSequence(zone: CKRecordZone, completion: @escaping (Error?) -> Void) {
-        let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
-        let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
-        fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
-            Task { @MainActor in
-                if let error, (error as? CKError)?.code != CKError.partialFailure {
-                    log("Error while activating: \(error.finalDescription)")
-                    abortActivation(error, completion: completion)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            group.notify(queue: .main) {
+                if let finalError {
+                    continuation.resume(throwing: finalError)
                 } else {
-                    if let sequenceRecord = ids2records?[positionListId], let sequence = sequenceRecord["positionList"] as? [String] {
-                        log("Received initial record sequence")
-                        uuidSequence = sequence
-                        uuidSequenceRecord = sequenceRecord
-                    } else {
-                        log("No initial record sequence on server")
-                        uuidSequence = []
-                    }
-                    syncSwitchedOn = true
-                    lastiCloudAccount = FileManager.default.ubiquityIdentityToken
-                    completion(nil)
+                    continuation.resume()
                 }
             }
         }
+    }
 
-        submit(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
+    private static func fetchInitialUUIDSequence() async throws {
+        let zone = CKRecordZone(zoneID: privateZoneId)
+        let positionListId = CKRecord.ID(recordName: RecordType.positionList.rawValue, zoneID: zone.zoneID)
+        let fetchInitialUUIDSequence = CKFetchRecordsOperation(recordIDs: [positionListId])
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            fetchInitialUUIDSequence.fetchRecordsCompletionBlock = { ids2records, error in
+                if let error, (error as? CKError)?.code != CKError.partialFailure {
+                    continuation.resume(throwing: error)
+                    return
+                }
+                if let sequenceRecord = ids2records?[positionListId],
+                   let sequence = sequenceRecord["positionList"] as? [String] {
+                    log("Received initial record sequence")
+                    uuidSequence = sequence
+                    uuidSequenceRecord = sequenceRecord
+                } else {
+                    log("No initial record sequence on server")
+                    uuidSequence = []
+                }
+                syncSwitchedOn = true
+                lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+                continuation.resume()
+            }
+            submit(fetchInitialUUIDSequence, on: container.privateCloudDatabase, type: "fetch initial uuid sequence")
+        }
     }
 
     static func eraseZoneIfNeeded(completion: @escaping (Error?) -> Void) {
@@ -831,24 +836,38 @@ extension CloudManager {
     }
 
     static func apnsUpdate(_ newToken: Data?) {
-        if newToken == PersistedOptions.lastPushToken, PersistedOptions.migratedSubscriptions7 {
-            return
-        }
-
         guard let newToken else {
-            PersistedOptions.migratedSubscriptions7 = true
-            PersistedOptions.lastPushToken = nil
+            log("Warning: APNS registration failed")
             return
         }
 
-        log("New APNS token or push migration needed, will update subscriptions")
-        updateSubscriptions { error in
-            if let error {
-                log("Subscription update failed: \(error)")
-            } else {
-                log("Subscriptions updated successfully, storing new token")
-                PersistedOptions.migratedSubscriptions7 = true
+        if newToken == PersistedOptions.lastPushToken, PersistedOptions.migratedSubscriptions8 {
+            log("APNS ready: \(newToken.base64EncodedString())")
+            return
+        }
+
+        log("APNS ready: \(newToken.base64EncodedString())")
+
+        if !PersistedOptions.migratedSubscriptions8 {
+            PersistedOptions.migratedSubscriptions8 = true
+            PersistedOptions.lastPushToken = nil
+            log("Push migration needed - existing push token reset")
+        }
+        
+        guard syncSwitchedOn else {
+            PersistedOptions.lastPushToken = newToken
+            return
+        }
+
+        log("Will subscribe for CK notifications")
+
+        Task {
+            do {
+                try await updateSubscriptions()
+                log("Subscriptions updated successfully, storing new APNS token")
                 PersistedOptions.lastPushToken = newToken
+            } catch {
+                log("Subscription update failed: \(error.localizedDescription)")
             }
         }
     }

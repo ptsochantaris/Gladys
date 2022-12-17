@@ -113,8 +113,8 @@ enum PersistedOptions {
     @UserDefault(key: "badgeIconWithItemCount", defaultValue: false)
     static var badgeIconWithItemCount: Bool
 
-    @UserDefault(key: "migratedSubscriptions7", defaultValue: false)
-    static var migratedSubscriptions7: Bool
+    @UserDefault(key: "migratedSubscriptions8", defaultValue: false)
+    static var migratedSubscriptions8: Bool
 
     @UserDefault(key: "requestInlineDrops", defaultValue: false)
     static var requestInlineDrops: Bool
