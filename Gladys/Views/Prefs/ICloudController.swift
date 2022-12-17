@@ -153,21 +153,4 @@ final class ICloudController: GladysViewController {
         await CloudManager.proceedWithDeactivation()
         updateiCloudControls()
     }
-
-    private func confirm(title: String, message: String, action: String, cancel: String) async -> Bool {
-        var continuation: CheckedContinuation<Bool, Never>?
-
-        let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        a.addAction(UIAlertAction(title: action, style: .default) { _ in
-            continuation?.resume(returning: true)
-        })
-        a.addAction(UIAlertAction(title: cancel, style: .cancel) { _ in
-            continuation?.resume(returning: false)
-        })
-        present(a, animated: true)
-
-        return await withCheckedContinuation { (c: CheckedContinuation<Bool, Never>) in
-            continuation = c
-        }
-    }
 }

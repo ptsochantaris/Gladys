@@ -2195,10 +2195,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             UIKeyCommand.makeCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), title: "Toggle Edit Mode")
         ])
         if UIScreen.main.focusedView is ArchivedItemCell {
+            if #available(iOS 15.0, *) {
+                a.append(UIKeyCommand(title: "Delete Item", action: #selector(deleteKey), input: UIKeyCommand.inputDelete))
+            }
             let ql = UIKeyCommand.makeCommand(input: " ", modifierFlags: [], action: #selector(quickLookFocusedItem), title: "Quick look item")
             a.append(ql)
         }
         return a
+    }
+    
+    @objc private func deleteKey() {
+        guard let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem else {
+            return
+        }
+        Task { @MainActor in
+            let result = await confirm(title: "Delete Selected Item", message: "Are you sure?", action: "Delete", cancel: "Cancel")
+            if result {
+                Model.delete(items: [item])
+            }
+        }
     }
 
     private var searchActive: Bool {
