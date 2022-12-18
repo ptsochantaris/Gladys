@@ -209,19 +209,23 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     }
 
     @objc private func itemModified(_ notification: Notification) {
-        if (notification.object as? ArchivedItem) == archivedDropItem {
-            representedObject = notification.object
-            reDecorate()
+        if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+            archivedDropItem = item
+        }
+    }
+    
+    override var representedObject: Any? {
+        get {
+            archivedDropItem
+        }
+        set {
+            archivedDropItem = newValue as? ArchivedItem
         }
     }
 
-    private var archivedDropItem: ArchivedItem? {
-        representedObject as? ArchivedItem
-    }
-
-    override var representedObject: Any? {
+    private weak var archivedDropItem: ArchivedItem? {
         didSet {
-            view.needsLayout = true
+            reDecorate()
         }
     }
 
@@ -235,11 +239,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         view.cacheDisplay(in: bounds, to: rep)
         img.addRepresentation(rep)
         return img
-    }
-
-    override func viewWillLayout() {
-        super.viewWillLayout()
-        reDecorate()
     }
 
     override func prepareForReuse() {
