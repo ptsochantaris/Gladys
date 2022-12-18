@@ -1,5 +1,4 @@
 import ClockKit
-import WatchKit
 
 final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
     func getComplicationDescriptors(handler: @escaping ([CLKComplicationDescriptor]) -> Void) {
@@ -45,7 +44,7 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
 
     func getCurrentTimelineEntry(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTimelineEntry?) -> Void) {
         let entry: CLKComplicationTimelineEntry?
-        if let template = template(for: complication, count: ExtensionDelegate.reportedCount) {
+        if let template = template(for: complication, count: GladysWatchModel.shared.reportedCount) {
             entry = CLKComplicationTimelineEntry(date: Date(), complicationTemplate: template)
         } else {
             entry = nil

@@ -1,13 +1,6 @@
+/*
 import WatchConnectivity
 import WatchKit
-
-private let formatter: DateFormatter = {
-    let d = DateFormatter()
-    d.dateStyle = .medium
-    d.timeStyle = .medium
-    d.doesRelativeDateFormatting = true
-    return d
-}()
 
 extension Notification.Name {
     static let GroupsUpdated = Notification.Name("GroupsUpdated")
@@ -295,3 +288,4 @@ final class ItemController: WKInterfaceController {
         }
     }
 }
+*/

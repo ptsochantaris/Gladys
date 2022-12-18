@@ -278,12 +278,10 @@
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A42A2124C4FAA1002CBD1B /* TipJar.swift */; };
-		16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E21FBB844A00D60596 /* Interface.storyboard */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
-		16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */; };
+		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
 		16A4E8091FBB963500D60596 /* ItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E8081FBB963500D60596 /* ItemController.swift */; };
-		16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
@@ -774,7 +772,6 @@
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchHolder.swift; sourceTree = "<group>"; };
-		168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "GladysWatch Extension.entitlements"; sourceTree = "<group>"; };
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistedOptions.swift; sourceTree = "<group>"; };
 		168A0CEB1FBCE9A100B63951 /* Data+Compression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Compression.swift"; sourceTree = "<group>"; };
@@ -816,14 +813,11 @@
 		16A223E41EF67FC7009EEEBC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		16A42A2124C4FAA1002CBD1B /* TipJar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipJar.swift; sourceTree = "<group>"; };
 		16A4E7E01FBB844A00D60596 /* GladysWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GladysWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		16A4E7E31FBB844A00D60596 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		16A4E7E51FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		16A4E7E71FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
-		16A4E7F91FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16A4E7F31FBB844A00D60596 /* GladysWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatch.swift; sourceTree = "<group>"; };
 		16A4E8081FBB963500D60596 /* ItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemController.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
-		16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
@@ -1244,7 +1238,6 @@
 				16969B9E1FB0E41E007B2F77 /* GladysToday */,
 				16D984942160C5A000D9D51C /* GladysIntents */,
 				16A4E7E11FBB844A00D60596 /* GladysWatch */,
-				16A4E7F01FBB844A00D60596 /* GladysWatch Extension */,
 				1657B8AE1FD41C1C00EC480D /* GladysMessage */,
 				161718C52094D333005ABD6C /* MacGladys */,
 				168DFAFF20B85F3D002C603D /* MacGladysHelper */,
@@ -1369,25 +1362,14 @@
 		16A4E7E11FBB844A00D60596 /* GladysWatch */ = {
 			isa = PBXGroup;
 			children = (
+				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
+				16A4E8081FBB963500D60596 /* ItemController.swift */,
+				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
 				168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */,
-				16A4E7E21FBB844A00D60596 /* Interface.storyboard */,
 				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7E71FBB844A00D60596 /* Info.plist */,
 			);
 			path = GladysWatch;
-			sourceTree = "<group>";
-		};
-		16A4E7F01FBB844A00D60596 /* GladysWatch Extension */ = {
-			isa = PBXGroup;
-			children = (
-				168A0CE51FBCD0FB00B63951 /* GladysWatch Extension.entitlements */,
-				16A4E80C1FBB9F8500D60596 /* InterfaceController.swift */,
-				16A4E7F31FBB844A00D60596 /* ExtensionDelegate.swift */,
-				16A4E8081FBB963500D60596 /* ItemController.swift */,
-				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
-				16A4E7F91FBB844A00D60596 /* Info.plist */,
-			);
-			path = "GladysWatch Extension";
 			sourceTree = "<group>";
 		};
 		16B2AA3924DF42B5004F3FC2 /* GladysKeys */ = {
@@ -2136,7 +2118,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */,
-				16A4E7E41FBB844A00D60596 /* Interface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2641,9 +2622,8 @@
 			files = (
 				1690D8592651C33C00A07744 /* UserDefault.swift in Sources */,
 				168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
-				16A4E7F41FBB844A00D60596 /* ExtensionDelegate.swift in Sources */,
+				16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */,
 				16559C8F20A4CC55006C281D /* Global.swift in Sources */,
-				16A4E80D1FBB9F8500D60596 /* InterfaceController.swift in Sources */,
 				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
 				162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
@@ -2844,14 +2824,6 @@
 				16969BA21FB0E41E007B2F77 /* Base */,
 			);
 			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
-		16A4E7E21FBB844A00D60596 /* Interface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				16A4E7E31FBB844A00D60596 /* Base */,
-			);
-			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 		16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */ = {
@@ -3516,7 +3488,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
+				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3537,7 +3509,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_ENTITLEMENTS = "GladysWatch Extension/GladysWatch Extension.entitlements";
+				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
