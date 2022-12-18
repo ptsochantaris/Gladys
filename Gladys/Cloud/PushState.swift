@@ -140,66 +140,41 @@ final actor PushState {
         return progress
     }
 
-    private func handleDeletion(deletedRecordIds: [CKRecord.ID]?, recordIdList: [CKRecord.ID], error: Error?) async {
-        let requestedDeletionUUIDs = recordIdList.map(\.recordName)
-        let deletedUUIDs = deletedRecordIds?.map(\.recordName) ?? []
-        for uuid in requestedDeletionUUIDs {
-            if deletedUUIDs.contains(uuid) {
-                log("Confirmed deletion of item (\(uuid))")
-            } else {
-                log("Didn't need to delete item (\(uuid))")
-            }
-        }
-
-        if let error {
-            latestError = error
-            log("Error deleting items: \(error.finalDescription)")
-            await CloudManager.commitDeletion(for: deletedUUIDs) // play it safe
-        } else {
-            await CloudManager.commitDeletion(for: requestedDeletionUUIDs)
-        }
-        updateSyncMessage()
-    }
-
     private var deletionOperations: [CKDatabaseOperation] {
         recordsToDelete.map { recordIdList in
             let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
             operation.database = database
             operation.savePolicy = .allKeys
-            operation.modifyRecordsCompletionBlock = { _, deletedRecordIds, error in
+            var deletedRecordIds = [String]()
+            operation.perRecordDeleteBlock = { (id, result) in
+                let uuid = id.recordName
+                switch result {
+                case .success:
+                    deletedRecordIds.append(uuid)
+                    log("Confirmed cloud deletion of item (\(uuid))")
+                case .failure(let error):
+                    if error.itemDoesNotExistOnServer {
+                        log("Didn't need to cloud delete item (\(uuid))")
+                    } else {
+                        log("Error in cloud deletion of item (\(uuid)): \(error.localizedDescription)")
+                    }
+                }
+            }
+            operation.modifyRecordsResultBlock = { result in
                 Task {
-                    await self.handleDeletion(deletedRecordIds: deletedRecordIds, recordIdList: recordIdList, error: error)
+                    switch result {
+                    case .success:
+                        log("Item cloud deletions completed")
+                        await CloudManager.commitDeletion(for: deletedRecordIds)
+                    case .failure(let error):
+                        self.latestError = error
+                        log("Error in cloud deletion of items: \(error.finalDescription)")
+                    }
+                    self.updateSyncMessage()
                 }
             }
             return operation
         }
-    }
-
-    private func recordsModified(updatedRecords: [CKRecord]?, error: Error?) async {
-        if let error {
-            log("Error updating cloud records: \(error.finalDescription)")
-            latestError = error
-        }
-        for record in updatedRecords ?? [] {
-            let itemUUID = record.recordID.recordName
-            if itemUUID == CloudManager.RecordType.positionList.rawValue {
-                await CloudManager.setUuidSequenceAsync(currentUUIDSequence)
-                await CloudManager.setUuidSequenceRecordAsync(record)
-            } else if let item = await Model.item(uuid: itemUUID) {
-                item.cloudKitRecord = record
-                dropsToPush -= 1
-            } else if let typeItem = await Model.component(uuid: itemUUID) {
-                typeItem.cloudKitRecord = record
-                dataItemsToPush -= 1
-            }
-            log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
-        }
-        updateSyncMessage()
-    }
-
-    private func progress(record: CKRecord, progress: Double) {
-        let recordProgress = uuid2progress[record.recordID.recordName]
-        recordProgress?.completedUnitCount = Int64(progress * 100.0)
     }
 
     private var pushOperations: [CKDatabaseOperation] {
@@ -209,14 +184,50 @@ final actor PushState {
             operation.savePolicy = .allKeys
             operation.perRecordProgressBlock = { record, progress in
                 Task {
-                    self.progress(record: record, progress: progress)
+                    let recordProgress = self.uuid2progress[record.recordID.recordName]
+                    recordProgress?.completedUnitCount = Int64(progress * 100.0)
                 }
             }
-            operation.modifyRecordsCompletionBlock = { updatedRecords, _, error in
+
+            var updatedRecords = [CKRecord]()
+
+            operation.perRecordSaveBlock = { (id, result) in
+                switch result {
+                case .success(let record):
+                    updatedRecords.append(record)
+                    log("Confirmed cloud save of item \(record.recordType) id (\(id.recordName))")
+                case .failure(let error):
+                    log("Error in cloud save of item (\(id.recordName)): \(error.localizedDescription)")
+                }
+            }
+            
+            operation.modifyRecordsResultBlock = { result in
                 Task {
-                    await self.recordsModified(updatedRecords: updatedRecords, error: error)
+                    switch result {
+                    case .success:
+                        for record in updatedRecords {
+                            let itemUUID = record.recordID.recordName
+                            if itemUUID == CloudManager.RecordType.positionList.rawValue {
+                                await CloudManager.setUuidSequenceAsync(self.currentUUIDSequence)
+                                await CloudManager.setUuidSequenceRecordAsync(record)
+                            } else if let item = await Model.item(uuid: itemUUID) {
+                                item.cloudKitRecord = record
+                                self.dropsToPush -= 1
+                            } else if let typeItem = await Model.component(uuid: itemUUID) {
+                                typeItem.cloudKitRecord = record
+                                self.dataItemsToPush -= 1
+                            }
+                            log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
+                        }
+                        
+                    case .failure(let error):
+                        log("Error updating cloud records: \(error.finalDescription)")
+                        self.latestError = error
+                    }
+                    self.updateSyncMessage()
                 }
             }
+            
             return operation
         }
     }

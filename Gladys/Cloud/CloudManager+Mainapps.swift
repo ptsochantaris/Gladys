@@ -430,7 +430,7 @@ extension CloudManager {
         do {
             sequenceRecord = try await container.privateCloudDatabase.record(for: positionListId)
         } catch {
-            if (error as? CKError)?.itemDoesNotExistOnServer == true {
+            if error.itemDoesNotExistOnServer {
                 sequenceRecord = nil
             } else {
                 throw error

@@ -198,7 +198,7 @@ final actor PullState {
                         do {
                             zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
                         } catch {
-                            if (error as? CKError)?.code == .changeTokenExpired {
+                            if error.changeTokenExpired {
                                 zoneToken = nil
                                 await CloudManager.setSyncProgressString("Fetching Full Update…")
                                 log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
@@ -257,7 +257,7 @@ final actor PullState {
             do {
                 databaseChanges = try await database.databaseChanges(since: databaseToken)
             } catch {
-                if (error as? CKError)?.code == CKError.changeTokenExpired {
+                if error.changeTokenExpired {
                     databaseToken = nil
                     log("Database \(database.databaseScope.logName) changes fetch had stale token, will retry")
                     await CloudManager.setSyncProgressString("Fetching Full Update…")

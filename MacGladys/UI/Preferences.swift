@@ -463,8 +463,9 @@ final class Preferences: NSViewController {
                     await CloudManager.startActivation()
                 } else {
                     let contentSize = await Model.sizeInBytes()
+                    let contentSizeString = ByteCountFormatter().string(fromByteCount: contentSize)
                     self.confirm(title: "Upload Existing Items?",
-                                 message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSize) of data.\n\nIs it OK to proceed?",
+                                 message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                  action: "Proceed", cancel: "Cancel") { confirmed in
                         if confirmed {
                             Task {
