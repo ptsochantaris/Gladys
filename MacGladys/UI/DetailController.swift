@@ -33,7 +33,7 @@ final class FocusableTextField: NSTextField {
 
     override func updateLayer() {
         if isEditable {
-            layer?.backgroundColor = NSColor.controlLightHighlightColor.cgColor
+            layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
         } else {
             layer?.backgroundColor = NSColor.clear.cgColor
         }

@@ -226,38 +226,33 @@ final class Preferences: NSViewController {
     }
 
     @IBAction private func transcribeSpeechFromMediaChanged(_ sender: NSButton) {
-        if #available(OSX 10.15, *) {
-            if sender.integerValue == 1 {
-                SFSpeechRecognizer.requestAuthorization { status in
-                    switch status {
-                    case .authorized:
-                        Task { @MainActor in
-                            if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
-                                PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
-                                await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
-                            } else {
-                                sender.integerValue = 0
-                                PersistedOptions.transcribeSpeechFromMedia = false
-                                await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
-                            }
-                        }
-                    case .denied, .notDetermined, .restricted:
-                        Task { @MainActor in
+        if sender.integerValue == 1 {
+            SFSpeechRecognizer.requestAuthorization { status in
+                switch status {
+                case .authorized:
+                    Task { @MainActor in
+                        if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
+                            PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
+                            await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                        } else {
                             sender.integerValue = 0
                             PersistedOptions.transcribeSpeechFromMedia = false
-                        }
-                    @unknown default:
-                        Task { @MainActor in
-                            sender.integerValue = 0
-                            PersistedOptions.transcribeSpeechFromMedia = false
+                            await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
                         }
                     }
+                case .denied, .notDetermined, .restricted:
+                    Task { @MainActor in
+                        sender.integerValue = 0
+                        PersistedOptions.transcribeSpeechFromMedia = false
+                    }
+                @unknown default:
+                    Task { @MainActor in
+                        sender.integerValue = 0
+                        PersistedOptions.transcribeSpeechFromMedia = false
+                    }
                 }
-            } else {
-                PersistedOptions.transcribeSpeechFromMedia = false
             }
         } else {
-            sender.integerValue = 0
             PersistedOptions.transcribeSpeechFromMedia = false
         }
     }

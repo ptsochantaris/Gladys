@@ -29,12 +29,10 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         labelText.text = label
         update()
 
-        if #available(iOS 15.0, *) {
-            table.allowsFocus = true
-            table.remembersLastFocusedIndexPath = true
-            table.focusGroupIdentifier = "build.bru.gladys.tablefocus"
-            labelText.focusGroupIdentifier = "build.bru.gladys.labelfocus"
-        }
+        table.allowsFocus = true
+        table.remembersLastFocusedIndexPath = true
+        table.focusGroupIdentifier = "build.bru.gladys.tablefocus"
+        labelText.focusGroupIdentifier = "build.bru.gladys.labelfocus"
     }
 
     var modelFilter: Filter!

@@ -38,9 +38,7 @@ final class ByteCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        if #available(iOS 15.0, *) {
-            focusEffect = UIFocusHaloEffect(roundedRect: self.bounds.insetBy(dx: 4, dy: 4), cornerRadius: 0, curve: .circular)
-        }
+        focusEffect = UIFocusHaloEffect(roundedRect: self.bounds.insetBy(dx: 4, dy: 4), cornerRadius: 0, curve: .circular)
     }
 
     private func updateSelected() {

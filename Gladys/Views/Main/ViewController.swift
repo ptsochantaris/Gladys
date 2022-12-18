@@ -652,46 +652,32 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             break
         }
     }
-
-    @objc private func pinched(_ pinchRecognizer: CenteredPinchGestureRecognizer) {
-        if
-            pinchRecognizer.state == .changed,
-            pinchRecognizer.velocity > 3,
-            let startPoint = pinchRecognizer.startPoint,
-            let recognizerView = pinchRecognizer.view,
-            let itemIndexPath = collection.indexPathForItem(at: collection.convert(startPoint, from: recognizerView)),
-            let cell = collection.cellForItem(at: itemIndexPath) as? ArchivedItemCell,
-            let item = cell.archivedDropItem,
-            !item.shouldDisplayLoading,
-            item.canPreview,
-            !item.flags.contains(.needsUnlock),
-            let presenter = view.window?.alertPresenter {
-            _ = item.tryPreview(in: presenter, from: cell)
-            pinchRecognizer.state = .ended
-        }
+    
+    private var focusedItem: UIFocusItem? {
+        view.window?.windowScene?.focusSystem?.focusedItem
     }
 
     @objc private func quickLookFocusedItem() {
-        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem {
+        if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem {
             _ = item.tryPreview(in: self, from: focusedCell)
         }
     }
 
     @objc private func deleteItem() {
-        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell {
+        if let focusedCell = focusedItem as? ArchivedItemCell {
             deleteButtonSelected(focusedCell)
         }
     }
 
     @objc private func infoForFocusedItem() {
-        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
+        if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
             mostRecentIndexPathActioned = indexPath
             performSegue(withIdentifier: "showDetail", sender: item)
         }
     }
 
     @objc private func openFocusedItem() {
-        if let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
+        if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
             mostRecentIndexPathActioned = indexPath
             item.tryOpen(in: navigationController) { [weak self] success in
                 if !success {
@@ -864,11 +850,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         collection.dragInteractionEnabled = true
         collection.dataSource = dataSource
         collection.contentOffset = .zero
-        if #available(iOS 15.0, *) {
-            collection.focusGroupIdentifier = "build.bru.gladys.collection"
-            collection.allowsFocus = true
-            collection.remembersLastFocusedIndexPath = true
-        }
+        collection.focusGroupIdentifier = "build.bru.gladys.collection"
+        collection.allowsFocus = true
+        collection.remembersLastFocusedIndexPath = true
 
         let headerMenuOptions = [
             UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
@@ -890,26 +874,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self else { return }
-            let sid: SectionIdentifier?
-            if #available(iOS 15.0, *) {
-                sid = self.dataSource.sectionIdentifier(for: indexPath.section)
-            } else {
-                let snap = self.dataSource.snapshot()
-                sid = snap.sectionIdentifiers[indexPath.section]
-            }
+            let sid = self.dataSource.sectionIdentifier(for: indexPath.section)
             guard let label = sid?.label else { return }
             titleView.configure(with: label, firstSection: indexPath.section == 0, viewController: self, menuOptions: headerMenuOptions)
         }
 
         let faderRegistration = UICollectionView.SupplementaryRegistration<ScrollFadeView>(elementKind: "ScrollFadeView") { [weak self] view, _, indexPath in
             guard let self else { return }
-            let sid: SectionIdentifier?
-            if #available(iOS 15.0, *) {
-                sid = self.dataSource.sectionIdentifier(for: indexPath.section)
-            } else {
-                let snap = self.dataSource.snapshot()
-                sid = snap.sectionIdentifiers[indexPath.section]
-            }
+            let sid = self.dataSource.sectionIdentifier(for: indexPath.section)
             guard let label = sid?.label else { return }
             view.configure(with: label, viewController: self)
         }
@@ -982,14 +954,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         userActivity = NSUserActivity(activityType: kGladysMainListActivity)
         userActivity?.needsSave = true
-
-        if #unavailable(iOS 15) {
-            let p = CenteredPinchGestureRecognizer(target: self, action: #selector(pinched(_:)))
-            for r in collection.gestureRecognizers ?? [] where r.name?.hasPrefix("multi-select.") == true {
-                r.require(toFail: p)
-            }
-            collection.addGestureRecognizer(p)
-        }
 
         updateDataSource(animated: false)
 
@@ -2194,10 +2158,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             UIKeyCommand.makeCommand(input: "f", modifierFlags: .command, action: #selector(openSearch), title: "Search Items"),
             UIKeyCommand.makeCommand(input: "e", modifierFlags: .command, action: #selector(toggleEdit), title: "Toggle Edit Mode")
         ])
-        if UIScreen.main.focusedView is ArchivedItemCell {
-            if #available(iOS 15.0, *) {
-                a.append(UIKeyCommand(title: "Delete Item", action: #selector(deleteKey), input: UIKeyCommand.inputDelete))
-            }
+        if focusedItem is ArchivedItemCell {
+            a.append(UIKeyCommand(title: "Delete Item", action: #selector(deleteKey), input: UIKeyCommand.inputDelete))
             let ql = UIKeyCommand.makeCommand(input: " ", modifierFlags: [], action: #selector(quickLookFocusedItem), title: "Quick look item")
             a.append(ql)
         }
@@ -2205,7 +2167,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func deleteKey() {
-        guard let focusedCell = UIScreen.main.focusedView as? ArchivedItemCell, let item = focusedCell.archivedDropItem else {
+        guard let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem else {
             return
         }
         Task { @MainActor in

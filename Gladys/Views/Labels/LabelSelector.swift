@@ -12,10 +12,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         doneButtonLocation = .left
-        if #available(iOS 15.0, *) {
-            table.allowsFocus = true
-            table.remembersLastFocusedIndexPath = true
-        }
+        table.allowsFocus = true
+        table.remembersLastFocusedIndexPath = true
+
         if filter.rebuildRecentlyAdded() {
             // there were changes to the labels, keep main views in sync
             updates()

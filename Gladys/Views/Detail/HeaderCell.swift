@@ -20,10 +20,8 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
             self?.caretMoved()
         }
 
-        if #available(iOS 15.0, *) {
-            self.focusEffect = UIFocusHaloEffect()
-            label.focusGroupIdentifier = "build.bru.gladys.detail.focus"
-        }
+        focusEffect = UIFocusHaloEffect()
+        label.focusGroupIdentifier = "build.bru.gladys.detail.focus"
     }
 
     func startEdit() {

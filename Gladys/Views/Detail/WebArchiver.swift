@@ -23,24 +23,11 @@ final actor WebArchiver {
     }
 
     private func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        if #available(iOS 15.0, iOSApplicationExtension 15.0, macOS 12.0, *) {
-            let res = try await URLSession.shared.data(for: request)
-            if let response = res.1 as? HTTPURLResponse {
-                return (res.0, response)
-            } else {
-                throw GladysError.blankResponse.error
-            }
+        let res = try await URLSession.shared.data(for: request)
+        if let response = res.1 as? HTTPURLResponse {
+            return (res.0, response)
         } else {
-            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<(Data, HTTPURLResponse), Error>) in
-                let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                    if let data, let response = response as? HTTPURLResponse {
-                        continuation.resume(with: .success((data, response)))
-                    } else {
-                        continuation.resume(throwing: error ?? GladysError.blankResponse.error)
-                    }
-                }
-                task.resume()
-            }
+            throw GladysError.blankResponse.error
         }
     }
 

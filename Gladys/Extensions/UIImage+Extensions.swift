@@ -23,40 +23,14 @@ extension UIImage {
     }()
 
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
-        if #available(iOS 15.0, *) {
-            if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
-                if template {
-                    return image.withRenderingMode(.alwaysTemplate).preparingForDisplay()
-                } else {
-                    return image.preparingForDisplay()
-                }
+        if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
+            if template {
+                return image.withRenderingMode(.alwaysTemplate).preparingForDisplay()
+            } else {
+                return image.preparingForDisplay()
             }
-            return nil
         }
-
-        guard let provider = CGDataProvider(url: url as CFURL),
-              let source = CGImageSourceCreateWithDataProvider(provider, nil),
-              let imageRef = CGImageSourceCreateImageAtIndex(source, 0, fromFileOptions) else {
-            return nil
-        }
-
-        let format = template ? templateFormat : regularFormat
-        let scale = format.scale
-        let w = CGFloat(imageRef.width) / scale
-        let h = CGFloat(imageRef.height) / scale
-        let rect = CGRect(x: 0, y: 0, width: w, height: h)
-        let outputImage = UIGraphicsImageRenderer(bounds: rect, format: format).image { rc in
-            let c = rc.cgContext
-            c.translateBy(x: 0, y: h)
-            c.scaleBy(x: 1, y: -1)
-            c.draw(imageRef, in: rect)
-        }
-
-        if template {
-            return outputImage.withRenderingMode(.alwaysTemplate)
-        } else {
-            return outputImage
-        }
+        return nil
     }
 
     final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {

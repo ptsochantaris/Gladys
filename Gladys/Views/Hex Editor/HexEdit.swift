@@ -37,10 +37,8 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
         super.viewDidLoad()
         doneButtonLocation = .right
         grid.allowsMultipleSelection = true
-        if #available(iOS 15.0, *) {
-            grid.allowsFocus = true
-            grid.remembersLastFocusedIndexPath = true
-        }
+        grid.allowsFocus = true
+        grid.remembersLastFocusedIndexPath = true
 
         inspectorButton.accessibilityLabel = "Inspect selection"
         addressItem.accessibilityLabel = "Selected addresses"

@@ -46,9 +46,7 @@ final class DetailCell: UITableViewCell {
         viewButton.accessibilityLabel = "Visual item preview"
         editButton.accessibilityLabel = "Edit item"
 
-        if #available(iOS 15.0, *) {
-            self.focusEffect = UIFocusHaloEffect()
-        }
+        focusEffect = UIFocusHaloEffect()
     }
 
     override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {

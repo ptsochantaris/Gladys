@@ -90,18 +90,12 @@ extension ArchivedItem {
 
         activity.isEligibleForHandoff = true
         activity.isEligibleForPublicIndexing = false
-        if #available(macOS 10.15, *) {
-            activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
-        }
+        activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
 
         #if MAC
             activity.isEligibleForSearch = false
         #else
-            if #available(iOS 16, *) {
-                activity.isEligibleForPrediction = false // using app intents
-            } else {
-                activity.isEligibleForPrediction = true
-            }
+            activity.isEligibleForPrediction = true
             activity.contentAttributeSet = item.searchAttributes
             activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
             activity.isEligibleForSearch = true

@@ -8,14 +8,6 @@ class FirstMouseView: NSView {
 
     @IBInspectable final var bgColor: NSColor?
 
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        let ea = effectiveAppearance
-        if !(NSAppearance.current === ea) {
-            NSAppearance.current = ea
-        }
-    }
-
     final func flatColor() {
         layer?.contents = nil
     }

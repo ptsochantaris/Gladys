@@ -5,8 +5,6 @@ final class LabelListCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        if #available(iOS 15.0, *) {
-            focusEffect = UIFocusHaloEffect()
-        }
+        focusEffect = UIFocusHaloEffect()
     }
 }

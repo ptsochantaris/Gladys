@@ -371,12 +371,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             collection.selectionIndexes = IndexSet(integer: i)
             switch request.extraAction {
             case .open:
-                // TODO:
-                break
+                if let item = Model.item(uuid: request.uuid) {
+                    item.tryOpen(from: self)
+                }
             case .detail:
                 info(nil)
             case .preview:
-                if !(previewPanel?.isVisible ?? false) {
+                let previewVisible = previewPanel?.isVisible ?? false
+                if !previewVisible {
                     toggleQuickLookPreviewPanel(self)
                 }
             case .none:

@@ -32,12 +32,10 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         labelsUpdated()
         doneButtonLocation = .left
 
-        if #available(iOS 15.0, *) {
-            table.allowsFocus = true
-            table.remembersLastFocusedIndexPath = true
-            table.focusGroupIdentifier = "build.bru.gladys.labeleditor.table"
-            headerLabel.focusGroupIdentifier = "build.bru.gladys.labeleditor.field"
-        }
+        table.allowsFocus = true
+        table.remembersLastFocusedIndexPath = true
+        table.focusGroupIdentifier = "build.bru.gladys.labeleditor.table"
+        headerLabel.focusGroupIdentifier = "build.bru.gladys.labeleditor.field"
 
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(labelsUpdated), name: .ModelDataUpdated, object: nil)
