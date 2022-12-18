@@ -51,25 +51,13 @@ extension Model {
             }
         }
     }
+    
+    static func saveIndexComplete() {
+        log("Index saving done")
+    }
 
-    static func saveComplete(wasIndexOnly _: Bool) {
-        if saveIsDueToSyncFetch, !CloudManager.syncDirty {
-            saveIsDueToSyncFetch = false
-            log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
-        } else {
-            if CloudManager.syncDirty {
-                log("A sync had been requested while syncing, running another sync")
-            } else {
-                log("Will sync up after a local save")
-            }
-            Task {
-                do {
-                    try await CloudManager.sync()
-                } catch {
-                    log("Error in sync after save: \(error.finalDescription)")
-                }
-            }
-        }
+    static func saveComplete() {
+        resyncIfNeeded()
     }
 
     @discardableResult

@@ -45,4 +45,20 @@ extension CloudManager {
             }
         }
     }
+    
+    static func syncAfterSaveIfNeeded() {
+        if !syncSwitchedOn {
+            log("Sync switched off, no need to sync after save")
+            return
+        }
+
+        Task {
+            do {
+                try await CloudManager.sync()
+            } catch {
+                log("Error in sync after save: \(error.finalDescription)")
+            }
+        }
+    }
+
 }

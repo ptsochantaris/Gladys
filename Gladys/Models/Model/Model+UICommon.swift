@@ -13,7 +13,6 @@ extension Model {
     static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
     private static var needsAnotherSave = false
     private static var isSaving = false
-    private static var nextSaveCallbacks: [() -> Void]?
 
     static func sizeInBytes() async -> Int64 {
         let snapshot = allDrops
@@ -157,6 +156,18 @@ extension Model {
         }
         delete(items: itemsRelatedToZone)
     }
+    
+    static func resyncIfNeeded() {
+        if saveIsDueToSyncFetch, !CloudManager.syncDirty {
+            saveIsDueToSyncFetch = false
+            log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
+        } else {
+            if CloudManager.syncDirty {
+                log("A sync had been requested while syncing, evaluating another sync")
+            }
+            CloudManager.syncAfterSaveIfNeeded()
+        }
+    }
 
     static var sharingMyItems: Bool {
         allDrops.contains { $0.shareMode == .sharing }
@@ -230,23 +241,14 @@ extension Model {
 
     //////////////////////// Saving
 
-    static func queueNextSaveCallback(_ callback: @escaping () -> Void) {
-        if nextSaveCallbacks == nil {
-            nextSaveCallbacks = [() -> Void]()
-        }
-        nextSaveCallbacks!.append(callback)
-    }
-
-    static func save() {
-        if isSaving {
+    static func save(force: Bool = false) {
+        if !force, isSaving {
             needsAnotherSave = true
-        } else {
-            prepareToSave()
-            proceedWithSave()
+            return
         }
-    }
-
-    private static func proceedWithSave() {
+        
+        prepareToSave()
+        
         let index = CSSearchableIndex.default()
 
         let itemsToDelete = Set(allDrops.filter(\.needsDeletion))
@@ -276,12 +278,6 @@ extension Model {
             return i.uuid
         })
 
-        #if DEBUG
-            if uuidsToEncode.count + removedUuids.count == 0 {
-                log("Warning: Save called but no changes to commit")
-            }
-        #endif
-
         isSaving = true
         needsAnotherSave = false
 
@@ -300,17 +296,11 @@ extension Model {
 
             Task { @MainActor in
                 if needsAnotherSave {
-                    proceedWithSave()
+                    save(force: true)
                 } else {
                     isSaving = false
-                    if let n = nextSaveCallbacks {
-                        for callback in n {
-                            callback()
-                        }
-                        nextSaveCallbacks = nil
-                    }
                     trimTemporaryDirectory()
-                    saveComplete(wasIndexOnly: false)
+                    saveComplete()
                 }
             }
         }
@@ -327,7 +317,7 @@ extension Model {
                 log("Warning: Error while committing index to disk: (\(error.finalDescription))")
             }
             Task { @MainActor in
-                saveComplete(wasIndexOnly: true)
+                saveIndexComplete()
             }
         }
     }

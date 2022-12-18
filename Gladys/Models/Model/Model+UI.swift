@@ -229,24 +229,25 @@ extension Model {
         }
     }
 
-    static func saveComplete(wasIndexOnly: Bool) {
-        if wasIndexOnly {
-            saveDone()
-        } else {
-            saveOverlap -= 1
-            if saveOverlap == 0 {
-                if PersistedOptions.mirrorFilesToDocuments {
-                    Task {
-                        await updateMirror()
-                        saveDone()
-                    }
-                } else {
-                    saveDone()
-                }
-            }
-        }
+    static func saveIndexComplete() {
+        saveDone()
     }
 
+    static func saveComplete() {
+        saveOverlap -= 1
+        if saveOverlap > 0 {
+            return
+        }
+        guard PersistedOptions.mirrorFilesToDocuments else {
+            saveDone()
+            return
+        }
+        Task {
+            await updateMirror()
+            saveDone()
+        }
+    }
+    
     private static func saveDone() {
         if let wd = watchDelegate {
             Task {
@@ -254,15 +255,7 @@ extension Model {
             }
         }
 
-        if saveIsDueToSyncFetch, !CloudManager.syncDirty {
-            saveIsDueToSyncFetch = false
-            log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
-        } else {
-            if CloudManager.syncDirty {
-                log("A sync had been requested while syncing, evaluating another sync")
-            }
-            CloudManager.syncAfterSaveIfNeeded()
-        }
+        resyncIfNeeded()
 
         if registeredForBackground {
             registeredForBackground = false
