@@ -39,11 +39,7 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
             self.dropList = dropList.compactMap { Drop(json: $0) }
             ComplicationDataSource.reloadComplications()
             ImageCache.trimUnaccessedEntries()
-            if dropList.isEmpty {
-                state = .empty
-            } else {
-                state = .list
-            }
+            state = dropList.isEmpty ? .empty : .list
         }
     }
 

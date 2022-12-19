@@ -29,8 +29,8 @@ private struct Label: View {
 }
 
 private struct DropView: View {
-    @ObservedObject var drop: Drop
-
+    @StateObject var drop: Drop
+    
     var body: some View {
         ZStack(alignment: .center) {
             Color(.darkGray)
@@ -102,6 +102,9 @@ private struct DropView: View {
                 }
             }
         }
+        .onAppear {
+            drop.fetchImage()
+        }
         .onTapGesture {
             switch drop.uiState {
             case .text:
@@ -126,15 +129,12 @@ private struct DropView: View {
                 break
             }
         }
-        .onAppear {
-            drop.fetchImage()
-        }
     }
 }
 
 @main
 struct GladysWatch: App {
-    @ObservedObject var model = GladysWatchModel.shared
+    @StateObject var model = GladysWatchModel.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {

@@ -217,7 +217,6 @@ final actor PushState {
                                 typeItem.cloudKitRecord = record
                                 self.dataItemsToPush -= 1
                             }
-                            log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
                         }
 
                     case let .failure(error):
