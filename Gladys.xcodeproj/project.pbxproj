@@ -281,7 +281,6 @@
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
-		16A4E8091FBB963500D60596 /* ItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E8081FBB963500D60596 /* ItemController.swift */; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
@@ -816,7 +815,6 @@
 		16A4E7E51FBB844A00D60596 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		16A4E7E71FBB844A00D60596 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16A4E7F31FBB844A00D60596 /* GladysWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatch.swift; sourceTree = "<group>"; };
-		16A4E8081FBB963500D60596 /* ItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemController.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
@@ -1363,7 +1361,6 @@
 			isa = PBXGroup;
 			children = (
 				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
-				16A4E8081FBB963500D60596 /* ItemController.swift */,
 				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
 				168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */,
 				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
@@ -2624,7 +2621,6 @@
 				168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
 				16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */,
 				16559C8F20A4CC55006C281D /* Global.swift in Sources */,
-				16A4E8091FBB963500D60596 /* ItemController.swift in Sources */,
 				162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 			);

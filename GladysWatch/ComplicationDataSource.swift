@@ -56,4 +56,11 @@ final class ComplicationDataSource: NSObject, CLKComplicationDataSource {
     func getLocalizableSampleTemplate(for complication: CLKComplication, withHandler handler: @escaping (CLKComplicationTemplate?) -> Void) {
         handler(template(for: complication, count: 23))
     }
+    
+    static func reloadComplications() {
+        let s = CLKComplicationServer.sharedInstance()
+        s.activeComplications?.forEach {
+            s.reloadTimeline(for: $0)
+        }
+    }
 }

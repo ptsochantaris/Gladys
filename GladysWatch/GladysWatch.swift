@@ -1,4 +1,3 @@
-import ClockKit
 import GladysFramework
 import WatchConnectivity
 import SwiftUI
@@ -11,7 +10,7 @@ private let formatter: DateFormatter = {
     return d
 }()
 
-final class ImageCache {
+private final class ImageCache {
     private static let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
 
     private static let accessKeys = Set([URLResourceKey.contentAccessDateKey])
@@ -57,13 +56,18 @@ final class Drop: Identifiable, ObservableObject {
     let id: String
     let title: String
     let imageDate: Date
-    
+
     enum ImageState {
         case none, loading, empty, loaded(image: UIImage)
     }
+    
+    indirect enum UIState {
+        case noText, text, menu(over: UIState), action(label: String)
+    }
 
     @Published var imageState = ImageState.none
-    
+    @Published var uiState = UIState.text
+
     init?(json: [String: Any]) {
         guard let id = json["u"] as? String,
               let title = json["t"] as? String,
@@ -106,12 +110,64 @@ final class Drop: Identifiable, ObservableObject {
             }
         })
     }
+    
+    func viewOnDeviceSelected() {
+        uiState = .action(label: "Opening item on the phone app")
+        WCSession.default.sendMessage(["view": id]) { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        } errorHandler: { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        }
+    }
+
+    func copySelected() {
+        uiState = .action(label: "Copying")
+        WCSession.default.sendMessage(["copy": id]) { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        } errorHandler: { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        }
+    }
+
+    func moveToTopSelected() {
+        uiState = .action(label: "Moving to the top of the list")
+        WCSession.default.sendMessage(["moveToTop": id]) { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        } errorHandler: { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        }
+    }
+
+    func deleteSelected() {
+        uiState = .action(label: "Deleting")
+        WCSession.default.sendMessage(["delete": id]) { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        } errorHandler: { _ in
+            Task { @MainActor in
+                self.uiState = .text
+            }
+        }
+    }
 }
 
 final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     @Published var reportedCount = 0
     @Published var dropList = [Drop]()
-    
+
     static let shared = GladysWatchModel()
 
     enum State {
@@ -144,7 +200,7 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
         DispatchQueue.main.sync {
             self.reportedCount = reportedCount
             self.dropList = dropList.compactMap { Drop(json: $0) }
-            reloadComplications()
+            ComplicationDataSource.reloadComplications()
             ImageCache.trimUnaccessedEntries()
             if dropList.isEmpty {
                 state = .empty
@@ -171,16 +227,9 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     }
 
     func session(_: WCSession, didReceiveApplicationContext _: [String: Any]) {}
-
-    func reloadComplications() {
-        let s = CLKComplicationServer.sharedInstance()
-        s.activeComplications?.forEach {
-            s.reloadTimeline(for: $0)
-        }
-    }
 }
 
-struct Label: View {
+private struct Label: View {
     var text: String
     var lineLimit = 0
     
@@ -199,13 +248,13 @@ struct Label: View {
     }
 }
 
-struct DropView: View {
+private struct DropView: View {
     @ObservedObject var drop: Drop
     
     var body: some View {
         ZStack(alignment: .center) {
             Color(.darkGray)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
 
             switch drop.imageState {
             case .empty:
@@ -219,13 +268,82 @@ struct DropView: View {
                         .scaledToFill()
                         .frame(width: reader.size.width, height: reader.size.height)
                 }
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             }
 
-            VStack {
-                Label(text: drop.title, lineLimit: 3)
+            switch drop.uiState {
+            case .noText:
                 Spacer()
-                Label(text: formatter.string(from: drop.imageDate), lineLimit: 1)
+
+            case .text:
+                VStack {
+                    Label(text: drop.title, lineLimit: 3)
+                    Spacer()
+                    Label(text: formatter.string(from: drop.imageDate), lineLimit: 1)
+                }
+            case .action(let label):
+                Color(white: 0, opacity: 0.8)
+                    .ignoresSafeArea()
+                Text(label)
+                
+            case .menu(let previousState):
+                Color(white: 0, opacity: 0.8)
+                    .ignoresSafeArea()
+                ScrollView {
+                    VStack {
+                        Button {
+                            drop.viewOnDeviceSelected()
+                        } label: {
+                            Text("Open on Phone")
+                        }
+                        Button {
+                            drop.copySelected()
+                        } label: {
+                            Text("Copy")
+                        }
+                        Button {
+                            drop.moveToTopSelected()
+                        } label: {
+                            Text("Move to Top")
+                        }
+                        Button(role: .destructive) {
+                            drop.deleteSelected()
+                        } label: {
+                            Text("Delete")
+                        }
+                        Button(role: .cancel) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                drop.uiState = previousState
+                            }
+                        } label: {
+                            Text("Cancel")
+                        }
+                    }
+                }
+            }
+        }
+        .onTapGesture {
+            switch drop.uiState {
+            case .text:
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    drop.uiState = .noText
+                }
+            case .noText:
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    drop.uiState = .text
+                }
+            case .action, .menu:
+                break
+            }
+        }
+        .onLongPressGesture {
+            switch drop.uiState {
+            case .text, .noText:
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    drop.uiState = .menu(over: drop.uiState)
+                }
+            case .menu, .action:
+                break
             }
         }
         .onAppear {
@@ -267,10 +385,7 @@ struct GladysWatch: App {
             case .active:
                 model.getFullUpdate(session: WCSession.default)
 
-            case .background:
-                model.reloadComplications()
-
-            case .inactive:
+            case .background, .inactive:
                 break
 
             @unknown default:
