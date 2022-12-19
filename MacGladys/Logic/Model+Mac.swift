@@ -51,7 +51,7 @@ extension Model {
             }
         }
     }
-    
+
     static func saveIndexComplete() {
         log("Index saving done")
     }

@@ -247,7 +247,7 @@ extension Model {
             saveDone()
         }
     }
-    
+
     private static func saveDone() {
         if let wd = watchDelegate {
             Task {

@@ -221,8 +221,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
         let p = info.draggingPasteboard
         guard let label = p.string(forType: NSPasteboard.PasteboardType(UTType.text.identifier)) ??
-                p.string(forType: NSPasteboard.PasteboardType(UTType.plainText.identifier)) ??
-                p.string(forType: NSPasteboard.PasteboardType(UTType.utf8PlainText.identifier)) else { return false }
+            p.string(forType: NSPasteboard.PasteboardType(UTType.plainText.identifier)) ??
+            p.string(forType: NSPasteboard.PasteboardType(UTType.utf8PlainText.identifier)) else { return false }
 
         var newIndex = row
 

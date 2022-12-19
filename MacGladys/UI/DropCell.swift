@@ -205,7 +205,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             archivedDropItem = item
         }
     }
-    
+
     override var representedObject: Any? {
         get {
             archivedDropItem

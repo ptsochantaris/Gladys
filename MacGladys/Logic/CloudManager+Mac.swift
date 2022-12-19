@@ -45,7 +45,7 @@ extension CloudManager {
             }
         }
     }
-    
+
     static func syncAfterSaveIfNeeded() {
         if !syncSwitchedOn {
             log("Sync switched off, no need to sync after save")
@@ -60,5 +60,4 @@ extension CloudManager {
             }
         }
     }
-
 }

@@ -146,13 +146,13 @@ final actor PushState {
             operation.database = database
             operation.savePolicy = .allKeys
             var deletedRecordIds = [String]()
-            operation.perRecordDeleteBlock = { (id, result) in
+            operation.perRecordDeleteBlock = { id, result in
                 let uuid = id.recordName
                 switch result {
                 case .success:
                     deletedRecordIds.append(uuid)
                     log("Confirmed cloud deletion of item (\(uuid))")
-                case .failure(let error):
+                case let .failure(error):
                     if error.itemDoesNotExistOnServer {
                         log("Didn't need to cloud delete item (\(uuid))")
                     } else {
@@ -166,7 +166,7 @@ final actor PushState {
                     case .success:
                         log("Item cloud deletions completed")
                         await CloudManager.commitDeletion(for: deletedRecordIds)
-                    case .failure(let error):
+                    case let .failure(error):
                         self.latestError = error
                         log("Error in cloud deletion of items: \(error.finalDescription)")
                     }
@@ -191,16 +191,16 @@ final actor PushState {
 
             var updatedRecords = [CKRecord]()
 
-            operation.perRecordSaveBlock = { (id, result) in
+            operation.perRecordSaveBlock = { id, result in
                 switch result {
-                case .success(let record):
+                case let .success(record):
                     updatedRecords.append(record)
                     log("Confirmed cloud save of item \(record.recordType) id (\(id.recordName))")
-                case .failure(let error):
+                case let .failure(error):
                     log("Error in cloud save of item (\(id.recordName)): \(error.localizedDescription)")
                 }
             }
-            
+
             operation.modifyRecordsResultBlock = { result in
                 Task {
                     switch result {
@@ -219,15 +219,15 @@ final actor PushState {
                             }
                             log("Sent updated \(record.recordType) cloud record (\(itemUUID))")
                         }
-                        
-                    case .failure(let error):
+
+                    case let .failure(error):
                         log("Error updating cloud records: \(error.finalDescription)")
                         self.latestError = error
                     }
                     self.updateSyncMessage()
                 }
             }
-            
+
             return operation
         }
     }

@@ -184,7 +184,7 @@ final actor PullState {
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
-        
+
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for zoneID in zoneIDs {
                 taskGroup.addTask {
@@ -207,38 +207,38 @@ final actor PullState {
                                 throw error
                             }
                         }
-                        
+
                         guard let zoneChangesResults else { return }
-                        
+
                         for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
                             switch fetchResult {
-                            case .success(let modification):
+                            case let .success(modification):
                                 let record = modification.record
                                 if let type = CloudManager.RecordType(rawValue: record.recordType) {
                                     await self.recordChanged(record: record, recordType: type, neverSynced: neverSynced)
                                 }
-                            case .failure(let error):
+                            case let .failure(error):
                                 log("Changes could not be fetched for record \(recordId): \(error.finalDescription)")
                             }
                         }
-                        
+
                         for deletion in zoneChangesResults.deletions {
                             if let type = CloudManager.RecordType(rawValue: deletion.recordType) {
                                 await self.recordDeleted(recordId: deletion.recordID, recordType: type)
                             }
                         }
-                        
+
                         zoneToken = zoneChangesResults.changeToken
                         moreComing = zoneChangesResults.moreComing
                     }
-                    
+
                     await self.setUpdatedZoneToken(zoneToken, for: zoneID)
                 }
             }
             try await taskGroup.waitForAll()
         }
     }
-    
+
     private func setUpdatedZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
         updatedZoneTokens[zoneId] = token
     }
@@ -267,11 +267,11 @@ final actor PullState {
                     throw error
                 }
             }
-            
+
             guard let databaseChanges else {
                 throw GladysError.noData.error
             }
-            
+
             for modification in databaseChanges.modifications {
                 changedZoneIds.insert(modification.zoneID)
             }

@@ -156,7 +156,7 @@ extension Model {
         }
         delete(items: itemsRelatedToZone)
     }
-    
+
     static func resyncIfNeeded() {
         if saveIsDueToSyncFetch, !CloudManager.syncDirty {
             saveIsDueToSyncFetch = false
@@ -246,9 +246,9 @@ extension Model {
             needsAnotherSave = true
             return
         }
-        
+
         prepareToSave()
-        
+
         let index = CSSearchableIndex.default()
 
         let itemsToDelete = Set(allDrops.filter(\.needsDeletion))

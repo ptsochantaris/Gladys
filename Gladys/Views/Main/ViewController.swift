@@ -652,7 +652,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             break
         }
     }
-    
+
     private var focusedItem: UIFocusItem? {
         view.window?.windowScene?.focusSystem?.focusedItem
     }

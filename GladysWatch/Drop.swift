@@ -51,7 +51,7 @@ final class Drop: Identifiable, ObservableObject {
     enum ImageState {
         case none, loading, empty, loaded(image: UIImage)
     }
-    
+
     indirect enum UIState {
         case noText, text, menu(over: UIState), action(label: String)
     }
@@ -70,12 +70,12 @@ final class Drop: Identifiable, ObservableObject {
         self.title = title
         self.imageDate = imageDate
     }
-    
+
     func fetchImage() {
-        guard case .none = imageState else {
+        if case .loading = imageState {
             return
         }
-        
+
         let cacheKey = id + String(imageDate.timeIntervalSinceReferenceDate) + ".dat"
         if let data = ImageCache.imageData(for: cacheKey), let i = UIImage(data: data) {
             imageState = .loaded(image: i)
@@ -86,22 +86,25 @@ final class Drop: Identifiable, ObservableObject {
 
         let screen = WKInterfaceDevice.current()
         let size = CGSize(width: screen.screenBounds.width, height: screen.screenBounds.height)
-        WCSession.default.sendMessage(["image": id, "width": size.width, "height": size.height], replyHandler: { reply in
-            if let r = reply["image"] as? Data {
-                if let i = UIImage(data: r) {
-                    ImageCache.setImageData(r, for: cacheKey)
-                    Task { @MainActor in
-                        self.imageState = .loaded(image: i)
-                    }
+        WCSession.default.sendMessage(["image": id, "width": size.width, "height": size.height]) { reply in
+            guard let r = reply["image"] as? Data, let i = UIImage(data: r) else {
+                Task { @MainActor in
+                    self.imageState = .empty
                 }
+                return
             }
-        }, errorHandler: { _ in
+            ImageCache.setImageData(r, for: cacheKey)
+            Task { @MainActor in
+                self.imageState = .loaded(image: i)
+            }
+
+        } errorHandler: { _ in
             Task { @MainActor in
                 self.imageState = .empty
             }
-        })
+        }
     }
-    
+
     func viewOnDeviceSelected() {
         uiState = .action(label: "Opening item on the phone app")
         WCSession.default.sendMessage(["view": id]) { _ in

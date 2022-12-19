@@ -1,5 +1,5 @@
-import WatchConnectivity
 import GladysFramework
+import WatchConnectivity
 
 final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     @Published var reportedCount = 0
@@ -10,7 +10,7 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     enum State {
         case loading, empty, list
     }
-    
+
     var state = State.loading
 
     private func extractDropList(from context: [String: Any]) -> ([[String: Any]], Int) {

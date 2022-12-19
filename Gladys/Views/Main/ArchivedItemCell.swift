@@ -169,7 +169,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        focusEffect = UIFocusHaloEffect(roundedRect: self.bounds.insetBy(dx: 2, dy: 2), cornerRadius: 10, curve: .continuous)
+        focusEffect = UIFocusHaloEffect(roundedRect: bounds.insetBy(dx: 2, dy: 2), cornerRadius: 10, curve: .continuous)
     }
 
     override func awakeFromNib() {

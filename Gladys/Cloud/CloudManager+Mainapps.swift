@@ -436,7 +436,7 @@ extension CloudManager {
                 throw error
             }
         }
-        
+
         if let sequence = sequenceRecord?["positionList"] as? [String] {
             log("Received initial record sequence")
             uuidSequence = sequence

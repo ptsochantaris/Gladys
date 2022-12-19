@@ -1,5 +1,5 @@
-import WatchConnectivity
 import SwiftUI
+import WatchConnectivity
 
 private let formatter: DateFormatter = {
     let d = DateFormatter()
@@ -12,7 +12,7 @@ private let formatter: DateFormatter = {
 private struct Label: View {
     var text: String
     var lineLimit = 0
-    
+
     var body: some View {
         Text(text)
             .multilineTextAlignment(.center)
@@ -30,7 +30,7 @@ private struct Label: View {
 
 private struct DropView: View {
     @ObservedObject var drop: Drop
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Color(.darkGray)
@@ -41,7 +41,7 @@ private struct DropView: View {
                 Spacer()
             case .loading, .none:
                 ProgressView()
-            case .loaded(let image):
+            case let .loaded(image):
                 GeometryReader { reader in
                     Image(uiImage: image)
                         .resizable()
@@ -61,12 +61,12 @@ private struct DropView: View {
                     Spacer()
                     Label(text: formatter.string(from: drop.imageDate), lineLimit: 1)
                 }
-            case .action(let label):
+            case let .action(label):
                 Color(white: 0, opacity: 0.8)
                     .ignoresSafeArea()
                 Text(label)
-                
-            case .menu(let previousState):
+
+            case let .menu(previousState):
                 Color(white: 0, opacity: 0.8)
                     .ignoresSafeArea()
                 ScrollView {
@@ -118,11 +118,11 @@ private struct DropView: View {
         }
         .onLongPressGesture {
             switch drop.uiState {
-            case .text, .noText:
+            case .noText, .text:
                 withAnimation(.easeInOut(duration: 0.2)) {
                     drop.uiState = .menu(over: drop.uiState)
                 }
-            case .menu, .action:
+            case .action, .menu:
                 break
             }
         }
@@ -136,7 +136,7 @@ private struct DropView: View {
 struct GladysWatch: App {
     @ObservedObject var model = GladysWatchModel.shared
     @Environment(\.scenePhase) private var scenePhase
-    
+
     init() {
         let session = WCSession.default
         session.delegate = model
