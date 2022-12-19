@@ -136,6 +136,8 @@
 		164CD3B3264FB4BD006019F1 /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		1651117E2163DEE300C5C874 /* Component+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* Component+Intents.swift */; };
 		165173031F99483E006CAF0A /* GladysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165173021F99483E006CAF0A /* GladysViewController.swift */; };
+		16524C6829508FD000384B20 /* GladysWatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16524C6729508FCF00384B20 /* GladysWatchModel.swift */; };
+		16524C6A2950900D00384B20 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16524C692950900D00384B20 /* Drop.swift */; };
 		16559C8A20A4CC55006C281D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		16559C8B20A4CC55006C281D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
 		16559C8C20A4CC55006C281D /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16559C8920A4CC55006C281D /* Global.swift */; };
@@ -732,6 +734,8 @@
 		164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		1651117D2163DEE300C5C874 /* Component+Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Intents.swift"; sourceTree = "<group>"; };
 		165173021F99483E006CAF0A /* GladysViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysViewController.swift; sourceTree = "<group>"; };
+		16524C6729508FCF00384B20 /* GladysWatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatchModel.swift; sourceTree = "<group>"; };
+		16524C692950900D00384B20 /* Drop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drop.swift; sourceTree = "<group>"; };
 		16559C8920A4CC55006C281D /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysMessage.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1657B8AC1FD41C1C00EC480D /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
@@ -1362,6 +1366,8 @@
 			children = (
 				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
 				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
+				16524C6729508FCF00384B20 /* GladysWatchModel.swift */,
+				16524C692950900D00384B20 /* Drop.swift */,
 				168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */,
 				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7E71FBB844A00D60596 /* Info.plist */,
@@ -2619,7 +2625,9 @@
 			files = (
 				1690D8592651C33C00A07744 /* UserDefault.swift in Sources */,
 				168A0CEA1FBCD1D300B63951 /* PersistedOptions.swift in Sources */,
+				16524C6A2950900D00384B20 /* Drop.swift in Sources */,
 				16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */,
+				16524C6829508FD000384B20 /* GladysWatchModel.swift in Sources */,
 				16559C8F20A4CC55006C281D /* Global.swift in Sources */,
 				162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */,
 				168A0CED1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
