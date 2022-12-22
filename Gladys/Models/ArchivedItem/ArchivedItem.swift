@@ -61,6 +61,12 @@ final class ArchivedItem: Codable {
             flags.insert(.needsSaving)
         }
     }
+    
+    var highlightColor: ItemColor = .none {
+        didSet {
+            flags.insert(.needsSaving)
+        }
+    }
 
     // Transient
     struct Flags: OptionSet {
@@ -87,6 +93,7 @@ final class ArchivedItem: Codable {
         case needsDeletion
         case lockPassword
         case lockHint
+        case highlightColor
     }
 
     func encode(to encoder: Encoder) throws {
@@ -101,6 +108,7 @@ final class ArchivedItem: Codable {
         try v.encode(titleOverride, forKey: .titleOverride)
         try v.encode(labels, forKey: .labels)
         try v.encode(needsDeletion, forKey: .needsDeletion)
+        try v.encode(highlightColor, forKey: .highlightColor)
         try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
         try v.encodeIfPresent(lockHint, forKey: .lockHint)
     }
@@ -118,6 +126,7 @@ final class ArchivedItem: Codable {
         titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
         labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
         needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
+        highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
         lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
         lockPassword = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
         flags = lockPassword == nil ? [] : .needsUnlock
@@ -131,6 +140,7 @@ final class ArchivedItem: Codable {
             createdAt = Date()
             updatedAt = createdAt
             lockPassword = nil
+            highlightColor = item.highlightColor
             lockHint = nil
             needsReIngest = true
             needsDeletion = false
@@ -211,9 +221,14 @@ final class ArchivedItem: Codable {
             lockHint = record["lockHint"] as? String
             labels = (record["labels"] as? [String]) ?? []
 
+            if let colorString = record["highlightColor"] as? String, let color = ItemColor(rawValue: colorString) {
+                highlightColor = color
+            } else {
+                highlightColor = .none
+            }
+
             needsReIngest = true
             needsDeletion = false
-
             components = []
 
             if lockPassword == nil {

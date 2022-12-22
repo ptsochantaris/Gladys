@@ -60,9 +60,10 @@ final class ArchivedItemCell: UICollectionViewCell {
         shareImage?.tintColor = shareColor
         cancelButton?.tintColor = c
         lockImage.tintColor = c
-        labelsLabel.tintColor = c
         topLabel.highlightedTextColor = c
         bottomLabel.highlightedTextColor = c
+        labelsLabel.tintColor = c
+        image.tintColor = .g_colorTint
     }
 
     override var isSelected: Bool {
@@ -240,6 +241,25 @@ final class ArchivedItemCell: UICollectionViewCell {
         guard let item = archivedDropItem else { return false }
         return item.shouldDisplayLoading && !(item.needsReIngest || item.flags.contains(.isBeingCreatedBySync))
     }
+    
+    private var highlightColor = ItemColor.none {
+        didSet {
+            container.backgroundColor = highlightColor.color
+            if highlightColor == .none {
+                topLabel.textColor = .g_colorComponentLabel
+                bottomLabel.textColor = .g_colorComponentLabel
+                tintColor = .g_colorTint
+            } else if highlightColor.invertText {
+                topLabel.textColor = .g_colorComponentLabelInverse
+                bottomLabel.textColor = .g_colorComponentLabelInverse
+                tintColor = .g_colorComponentLabelInverse
+            } else {
+                topLabel.textColor = .g_colorComponentLabel
+                bottomLabel.textColor = .g_colorComponentLabel
+                tintColor = .g_colorComponentLabel
+            }
+        }
+    }
 
     private func decorate(with item: ArchivedItem?) {
         var wantColourView = false
@@ -260,8 +280,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
         progressView.observedProgress = nil
         image.wideMode = wideCell
-
+        
         if let item {
+            highlightColor = item.highlightColor
+            
             if item.shouldDisplayLoading {
                 if isFirstImport {
                     hideProgress = false

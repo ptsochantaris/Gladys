@@ -123,13 +123,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     }
 
     private func showDone(_ show: Bool) {
-        #if targetEnvironment(macCatalyst)
-            if doneButtonLocation != ActionLocation.right {
-                showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
-            }
-        #else
-            showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
-        #endif
+        showButton(show, location: doneButtonLocation, button: doneButton, priority: true)
     }
 
     private func showWindow(_ show: Bool) {
@@ -171,7 +165,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
         navigationController?.navigationBar.setNeedsLayout()
     }
 
-    private func updateButtons(newTraitCollection: UITraitCollection) {
+    func updateButtons(newTraitCollection: UITraitCollection) {
         if autoConfigureButtons {
             if Singleton.shared.openCount > 1 {
                 doneButtonLocation = .right

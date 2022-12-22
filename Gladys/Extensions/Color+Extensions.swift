@@ -9,6 +9,7 @@
 
 extension COLORCLASS {
     static let g_colorComponentLabel = COLORCLASS(named: "colorComponentLabel")!
+    static let g_colorComponentLabelInverse = COLORCLASS(named: "colorComponentLabelInverse")!
     static let g_colorDarkGray = COLORCLASS(named: "colorDarkGray")!
     static let g_colorDim = COLORCLASS(named: "colorDim")!
     static let g_colorFill = COLORCLASS(named: "colorFill")!

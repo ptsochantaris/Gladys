@@ -776,6 +776,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     @objc func moveToTop(_: Any?) {
         Model.sendToTop(items: collection.actionableSelectedItems)
     }
+    
+    func updateColour(_ sender: NSMenuItem) {
+        let color = ItemColor.allCases[sender.tag]
+        var changed = false
+        for item in collection.actionableSelectedItems where Model.contains(uuid: item.uuid) {
+            item.highlightColor = color
+            changed = true
+        }
+        if changed {
+            Model.save()
+        }
+    }
 
     @objc func delete(_: Any?) {
         let items = collection.actionableSelectedItems

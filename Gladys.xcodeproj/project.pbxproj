@@ -466,6 +466,14 @@
 		16FC0B3627E929F300CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
 		16FC0B3727E929F300CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
 		16FC0B3827E929F400CF3290 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FC0B3027E9287B00CF3290 /* Cache.swift */; };
+		16FEBEE12954E08D004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE22954E0BA004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE32954E0BA004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE42954E0BB004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE52954E0BB004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE62954E0BC004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE72954E0BD004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
+		16FEBEE82954E0BD004AF383 /* ItemColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FEBEE02954E08D004AF383 /* ItemColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -900,6 +908,7 @@
 		16F693F81FD1AE2500DFE536 /* WebArchiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebArchiver.swift; sourceTree = "<group>"; };
 		16F72B35266D8232000E2C67 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 		16FC0B3027E9287B00CF3290 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		16FEBEE02954E08D004AF383 /* ItemColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1101,6 +1110,7 @@
 				16FC0B3027E9287B00CF3290 /* Cache.swift */,
 				16BD6452287ACECD00D3C57D /* TaskLock.swift */,
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
+				16FEBEE02954E08D004AF383 /* ItemColor.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2268,6 +2278,7 @@
 				161718E12094DCEC005ABD6C /* ArchivedItem+Indexing.swift in Sources */,
 				165FC62D2635A8C5003F9268 /* Filter.swift in Sources */,
 				166B6391236A451F00115AC3 /* FileMonitor.swift in Sources */,
+				16FEBEE82954E0BD004AF383 /* ItemColor.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
@@ -2334,6 +2345,7 @@
 				16287AF61EFB05E4007188AE /* Component.swift in Sources */,
 				16287AF41EFB05D7007188AE /* Model.swift in Sources */,
 				16559C8B20A4CC55006C281D /* Global.swift in Sources */,
+				16FEBEE22954E0BA004AF383 /* ItemColor.swift in Sources */,
 				169763251F1573D700537776 /* ArchivedItem+Indexing.swift in Sources */,
 				16EC10372607B21400ABE6D2 /* Color+Extensions.swift in Sources */,
 				162BDD75220F020700A3C17B /* Logging.swift in Sources */,
@@ -2391,6 +2403,7 @@
 				16BBF2252837534F00248BB0 /* NSItemProvider+Extensions.swift in Sources */,
 				16CD7D9320A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
+				16FEBEE32954E0BA004AF383 /* ItemColor.swift in Sources */,
 				16CD7D8920A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2437,6 +2450,7 @@
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				16559C9020A4CC55006C281D /* Global.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
+				16FEBEE62954E0BC004AF383 /* ItemColor.swift in Sources */,
 				1602F32F2030E63B0036E2B0 /* FileManager+Extensions.swift in Sources */,
 				1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */,
 				16EC10472607B21700ABE6D2 /* Color+Extensions.swift in Sources */,
@@ -2463,6 +2477,7 @@
 				161089A01FA322A90095FE34 /* Component+Cloud.swift in Sources */,
 				16BD6453287ACECD00D3C57D /* TaskLock.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
+				16FEBEE12954E08D004AF383 /* ItemColor.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */,
 				168A0CEC1FBCE9A100B63951 /* Data+Compression.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
@@ -2612,6 +2627,7 @@
 				164CD3B3264FB4BD006019F1 /* PersistedOptions.swift in Sources */,
 				16CD7D8320A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				16CD7D9420A112670039E6C2 /* Component+CopyCommon.swift in Sources */,
+				16FEBEE42954E0BB004AF383 /* ItemColor.swift in Sources */,
 				16969BAE1FB0E688007B2F77 /* Model.swift in Sources */,
 				1602F32C2030E6200036E2B0 /* Data+Extensions.swift in Sources */,
 				16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */,
@@ -2649,6 +2665,7 @@
 				16B2AA5724DF49A6004F3FC2 /* FileManager+Extensions.swift in Sources */,
 				16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */,
 				16B2AA5C24DF49D9004F3FC2 /* Global.swift in Sources */,
+				16FEBEE72954E0BD004AF383 /* ItemColor.swift in Sources */,
 				16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
 				16B2AA5224DF4980004F3FC2 /* Caches.swift in Sources */,
@@ -2683,6 +2700,7 @@
 				165B977925CD88B800E73E2D /* Component+iOS.swift in Sources */,
 				1690D8552651C31A00A07744 /* UserDefault.swift in Sources */,
 				165B975F25CD888C00E73E2D /* NSAttributedString+Extensions.swift in Sources */,
+				16FEBEE52954E0BB004AF383 /* ItemColor.swift in Sources */,
 				165B975225CD888300E73E2D /* Logging.swift in Sources */,
 				165B976C25CD88A200E73E2D /* Model+SimpleCoordinator.swift in Sources */,
 				164CD3B2264FB4BD006019F1 /* PersistedOptions.swift in Sources */,

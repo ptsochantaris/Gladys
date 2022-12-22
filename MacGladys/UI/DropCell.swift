@@ -525,6 +525,20 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             menu.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
             menu.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
             menu.addItem("Labels…", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
+            
+            let colourMenu = NSMenu()
+            var count = 0
+            for color in ItemColor.allCases {
+                let entry = NSMenuItem(title: color.title, action: #selector(colorSelected), keyEquivalent: "")
+                entry.tag = count
+                entry.image = color.img
+                entry.state = color == item.highlightColor ? .on : .off
+                colourMenu.addItem(entry)
+                count += 1
+            }
+            let colours = NSMenuItem(title: "Color", action: nil, keyEquivalent: "")
+            colours.submenu = colourMenu
+            menu.addItem(colours)
         }
 
         if !lockItems.isEmpty {
@@ -539,6 +553,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             menu.addItem(NSMenuItem.separator())
             menu.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
         }
+    }
+    
+    @objc private func colorSelected(sender: NSMenuItem) {
+        hostGladysController.updateColour(sender)
     }
 
     override var isSelected: Bool {
