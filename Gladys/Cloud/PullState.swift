@@ -13,8 +13,8 @@ final actor PullState {
 
     var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
     var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
-    var pendingShareRecords = Set<CKShare>()
-    var pendingTypeItemRecords = Set<CKRecord>()
+    var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
+    var pendingTypeItemRecords = [CKRecord.ID: ContiguousArray<CKRecord>]() // using full IDs because zone is also imporant
 
     private func updateProgress() {
         Task {
@@ -375,21 +375,15 @@ final actor PullState {
             } else {
                 log("Will create new local item for cloud record (\(recordUUID)) - pendingTypeItemRecords count: \(pendingTypeItemRecords.count)")
                 let newItem = ArchivedItem(from: record)
-                let newTypeItemRecords = pendingTypeItemRecords.filter {
-                    $0.parent?.recordID == recordID // takes zone into account
-                }
-                if !newTypeItemRecords.isEmpty {
-                    pendingTypeItemRecords.subtract(newTypeItemRecords)
+                let newTypeItemRecords = pendingTypeItemRecords.removeValue(forKey: recordID)
+                if let newTypeItemRecords {
                     let uuid = newItem.uuid
                     let newComponents = newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) }
-                    newItem.components.append(contentsOf: newComponents)
+                    newItem.components = ContiguousArray(newComponents)
                     log("  Hooked \(newTypeItemRecords.count) pending type items")
                 }
-                if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareRecords.first(where: {
-                    $0.recordID == existingShareId // takes zone into account
-                }) {
+                if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareRecords.removeValue(forKey: existingShareId) {
                     newItem.cloudKitShareRecord = pendingShareRecord
-                    pendingShareRecords.remove(pendingShareRecord)
                     log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
                 await Model.append(drop: newItem)
@@ -416,17 +410,24 @@ final actor PullState {
                         log("Update but no changes to item type data record (\(recordUUID))")
                     }
                 }
-            } else if let parentId = (record["parent"] as? CKRecord.Reference)?.recordID.recordName, let existingParent = await Model.item(uuid: parentId) {
-                if existingParent.parentZone != zoneID {
-                    log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId))")
+            } else if let parentId = record.parent?.recordID {
+                if let existingParent = await Model.item(uuid: parentId.recordName) {
+                    if existingParent.parentZone != zoneID {
+                        log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId.recordName))")
+                    } else {
+                        log("Will create new component (\(recordUUID)) for parent (\(parentId.recordName))")
+                        existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
+                        newTypeItemCount += 1
+                    }
                 } else {
-                    log("Will create new component (\(recordUUID)) for parent (\(parentId))")
-                    existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
-                    newTypeItemCount += 1
+                    if var pending = pendingTypeItemRecords[parentId] {
+                        pending.append(record)
+                        pendingTypeItemRecords[parentId] = pending
+                    } else {
+                        pendingTypeItemRecords[parentId] = [record]
+                    }
+                    log("Received new type item (\(recordUUID)) to link to upcoming new item (\(parentId.recordName))")
                 }
-            } else {
-                pendingTypeItemRecords.insert(record)
-                log("Received new type item (\(recordUUID)) to link to upcoming new item")
             }
 
         case .positionList:
@@ -455,7 +456,7 @@ final actor PullState {
                         updateCount += 1
                     }
                 } else {
-                    pendingShareRecords.insert(share)
+                    pendingShareRecords[recordID] = share
                     log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
                 }
             }
