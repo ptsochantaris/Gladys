@@ -27,7 +27,7 @@ final class DetailController: GladysViewController,
 
         doneButtonLocation = .right
         windowButtonLocation = .right
-        
+
         table.estimatedRowHeight = UITableView.automaticDimension
         table.rowHeight = UITableView.automaticDimension
         table.dragInteractionEnabled = true
@@ -43,7 +43,7 @@ final class DetailController: GladysViewController,
         navigationItem.titleView = dateLabelHolder
 
         isReadWrite = item.shareMode != .elsewhereReadOnly
-        
+
         userActivity = NSUserActivity(activityType: kGladysDetailViewingActivity)
         userActivity?.needsSave = true
 
@@ -53,12 +53,12 @@ final class DetailController: GladysViewController,
         n.addObserver(self, selector: #selector(dataUpdate(_:)), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
         n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
-        
+
         colorButton.changesSelectionAsPrimaryAction = true
     }
-    
+
     private let colorButton = UIBarButtonItem()
-    
+
     private func setupColorPicker() {
         let currentColor = item.highlightColor
         let children = ItemColor.allCases.map { color in
@@ -86,7 +86,7 @@ final class DetailController: GladysViewController,
             navigationItem.rightBarButtonItems = [colorButton]
         }
     }
-    
+
     override func updateButtons(newTraitCollection: UITraitCollection) {
         super.updateButtons(newTraitCollection: newTraitCollection)
         setupColorPicker()

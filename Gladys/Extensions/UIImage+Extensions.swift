@@ -36,7 +36,7 @@ extension UIImage {
     static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
         UIImage(systemName: systemName)?.withTintColor(coloured, renderingMode: UIImage.RenderingMode.alwaysOriginal)
     }
-    
+
     final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
         let targetScale = singleScale ? 1 : scale
         let mySizePixelWidth = size.width * targetScale

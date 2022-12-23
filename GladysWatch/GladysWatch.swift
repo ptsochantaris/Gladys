@@ -30,7 +30,7 @@ private struct Label: View {
 
 private struct DropView: View {
     @StateObject var drop: Drop
-    
+
     var body: some View {
         ZStack(alignment: .center) {
             Color(.darkGray)

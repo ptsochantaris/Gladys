@@ -285,6 +285,7 @@
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
+		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
 		16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */; };
 		16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
@@ -2258,6 +2259,7 @@
 				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
+				16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */,
 				16CD7D7A20A108550039E6C2 /* ArchivedItem+Ingest.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
 				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,

@@ -237,7 +237,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         super.prepareForReuse()
         image.flatColor()
     }
-    
+
     private func setHighlightColor(_ highlightColor: ItemColor?, highlightBottomLabel: Bool) {
         (view as? FirstMouseView)?.bgColor = highlightColor?.color ?? .g_colorMacCard
         if highlightColor == ItemColor.none {
@@ -438,7 +438,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         bottomLabel.stringValue = bottomLabelText
         bottomLabel.isHidden = hideBottomLabel
         bottomLabel.alignment = bottomLabelAlignment
-        
+
         image.isHidden = hideImage
         cancelButton.isHidden = hideCancel
         progressView.isHidden = hideSpinner
@@ -542,7 +542,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             menu.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
             menu.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
             menu.addItem("Labels…", action: #selector(labelsSelected), keyEquivalent: "l", keyEquivalentModifierMask: [.command, .option])
-            
+
             let colourMenu = NSMenu()
             var count = 0
             for color in ItemColor.allCases {
@@ -571,7 +571,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             menu.addItem("Delete", action: #selector(deleteSelected), keyEquivalent: String(format: "%c", NSBackspaceCharacter), keyEquivalentModifierMask: .command)
         }
     }
-    
+
     @objc private func colorSelected(sender: NSMenuItem) {
         hostGladysController.updateColour(sender)
     }

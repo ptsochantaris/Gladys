@@ -5,11 +5,12 @@ import UniformTypeIdentifiers
 
 @MainActor
 enum CallbackSupport {
-    private static func handle(result: Bool, success: @escaping SuccessCallback, failure: @escaping FailureCallback) async {
+    private static func handle(result: PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) async {
         try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
-        if result {
+        switch result {
+        case .success:
             success(nil)
-        } else {
+        case .noData:
             failure(NSError.error(code: 1, failureReason: "Items could not be added."))
         }
     }
@@ -77,7 +78,7 @@ enum CallbackSupport {
     }
 
     @discardableResult
-    static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> Bool {
+    static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> PasteResult {
         let p = NSItemProvider()
         p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
             completion(data, nil)
@@ -87,14 +88,14 @@ enum CallbackSupport {
     }
 
     @discardableResult
-    static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Bool {
+    static func handlePasteRequest(title: String?, note: String?, labels: String?) -> PasteResult {
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
         return Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
     }
 
     @discardableResult
-    static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Bool {
+    static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
         let p = NSItemProvider(object: object)
         return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
     }

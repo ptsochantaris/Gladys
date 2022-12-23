@@ -2,7 +2,7 @@ import Foundation
 
 enum ItemColor: String, CaseIterable, Codable {
     case none, blue, red, purple, green, cyan, yellow, gray
-    
+
     var title: String {
         switch self {
         case .green: return "Green"
@@ -15,7 +15,7 @@ enum ItemColor: String, CaseIterable, Codable {
         case .yellow: return "Yellow"
         }
     }
-    
+
     var color: COLOR {
         switch self {
         case .green: return COLOR.systemGreen
@@ -28,7 +28,7 @@ enum ItemColor: String, CaseIterable, Codable {
         case .yellow: return COLOR.systemYellow
         }
     }
-    
+
     var invertText: Bool {
         switch self {
         case .cyan: return true
@@ -41,7 +41,7 @@ enum ItemColor: String, CaseIterable, Codable {
         case .green: return true
         }
     }
-    
+
     var img: IMAGE? {
         switch self {
         case .none: return IMAGE(systemName: "circle")

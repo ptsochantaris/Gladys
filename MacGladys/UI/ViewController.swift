@@ -475,7 +475,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             return true
         } else {
             let p = draggingInfo.draggingPasteboard
-            return Model.addItems(from: p, at: indexPath, overrides: nil, filterContext: filter)
+            let result = Model.addItems(from: p, at: indexPath, overrides: nil, filterContext: filter)
+            switch result {
+            case .success:
+                return true
+            case .noData:
+                return false
+            }
         }
     }
 
@@ -776,7 +782,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     @objc func moveToTop(_: Any?) {
         Model.sendToTop(items: collection.actionableSelectedItems)
     }
-    
+
     func updateColour(_ sender: NSMenuItem) {
         let color = ItemColor.allCases[sender.tag]
         var changed = false

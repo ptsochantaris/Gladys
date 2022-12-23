@@ -241,7 +241,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         guard let item = archivedDropItem else { return false }
         return item.shouldDisplayLoading && !(item.needsReIngest || item.flags.contains(.isBeingCreatedBySync))
     }
-    
+
     private var highlightColor = ItemColor.none {
         didSet {
             container.backgroundColor = highlightColor.color
@@ -280,10 +280,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
         progressView.observedProgress = nil
         image.wideMode = wideCell
-        
+
         if let item {
             highlightColor = item.highlightColor
-            
+
             if item.shouldDisplayLoading {
                 if isFirstImport {
                     hideProgress = false

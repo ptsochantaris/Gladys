@@ -1,10 +1,6 @@
 import UIKit
 
 extension Model {
-    enum PasteResult {
-        case success([ArchivedItem]), noData
-    }
-
     @discardableResult
     static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
         if providers.isEmpty {

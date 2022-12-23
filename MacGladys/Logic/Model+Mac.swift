@@ -62,8 +62,8 @@ extension Model {
 
     @discardableResult
     @MainActor
-    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
-        guard let pasteboardItems = pasteBoard.pasteboardItems else { return false }
+    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
+        guard let pasteboardItems = pasteBoard.pasteboardItems else { return .noData }
 
         let importGroup = DispatchGroup()
 
@@ -115,7 +115,7 @@ extension Model {
         importGroup.wait()
 
         if itemProviders.isEmpty {
-            return false
+            return .noData
         }
 
         return addItems(itemProviders: itemProviders, indexPath: indexPath, overrides: overrides, filterContext: filterContext)
@@ -123,8 +123,8 @@ extension Model {
 
     @discardableResult
     @MainActor
-    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> Bool {
-        var inserted = false
+    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
+        var archivedItems = [ArchivedItem]()
         for provider in itemProviders {
             for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
                 var modelIndex = indexPath.item
@@ -135,16 +135,17 @@ extension Model {
                     }
                 }
                 Model.insert(drop: newItem, at: modelIndex)
-                inserted = true
+                archivedItems.append(newItem)
             }
         }
 
-        if inserted {
-            allFilters.forEach {
-                _ = $0.update(signalUpdate: .animated)
-            }
+        if archivedItems.isEmpty {
+            return .noData
         }
-        return inserted
+        allFilters.forEach {
+            _ = $0.update(signalUpdate: .animated)
+        }
+        return .success(archivedItems)
     }
 
     @MainActor

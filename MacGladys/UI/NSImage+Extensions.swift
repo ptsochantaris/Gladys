@@ -1,15 +1,14 @@
 import Cocoa
 
 extension NSImage {
-    
     convenience init?(systemName: String) {
         self.init(systemSymbolName: systemName, accessibilityDescription: nil)
     }
-        
+
     static func tintedShape(systemName: String, coloured: NSColor) -> NSImage? {
         NSImage(systemSymbolName: systemName, accessibilityDescription: nil)?.template(with: coloured)
     }
-    
+
     func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
         let mySizePixelWidth = size.width
         let mySizePixelHeight = size.height

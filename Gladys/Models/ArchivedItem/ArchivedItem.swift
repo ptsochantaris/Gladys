@@ -61,7 +61,7 @@ final class ArchivedItem: Codable {
             flags.insert(.needsSaving)
         }
     }
-    
+
     var highlightColor: ItemColor = .none {
         didSet {
             flags.insert(.needsSaving)
