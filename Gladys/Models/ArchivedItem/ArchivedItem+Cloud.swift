@@ -10,6 +10,12 @@ extension ArchivedItem {
         lockHint = record["lockHint"] as? String
         labels = (record["labels"] as? [String]) ?? []
 
+        if let colorString = record["highlightColor"] as? String, let color = ItemColor(rawValue: colorString) {
+            highlightColor = color
+        } else {
+            highlightColor = .none
+        }
+
         if isLocked {
             flags.insert(.needsUnlock)
         } else {
@@ -47,6 +53,7 @@ extension ArchivedItem {
         record["suggestedName"] = suggestedName
         record["lockPassword"] = lockPassword
         record["lockHint"] = lockHint
+        record["highlightColor"] = highlightColor.rawValue
         return record
     }
 }

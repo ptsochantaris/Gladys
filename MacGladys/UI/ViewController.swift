@@ -782,6 +782,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         var changed = false
         for item in collection.actionableSelectedItems where Model.contains(uuid: item.uuid) {
             item.highlightColor = color
+            item.markUpdated()
             changed = true
         }
         if changed {

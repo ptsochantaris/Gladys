@@ -24,12 +24,12 @@ final class FirstMouseImageView: NSImageView {
 }
 
 final class TokenTextField: NSTextField {
-    static let highlightTextKey = NSAttributedString.Key("HighlightText")
+    var tintColor = NSColor.g_colorTint
+    private var highlightColor: NSColor { tintColor.withAlphaComponent(0.7) }
 
+    private static let highlightTextKey = NSAttributedString.Key("HighlightText")
     private static let separator = "   "
     private static let separatorCount = separator.utf16.count
-    private static let tintColor = NSColor.g_colorTint
-    private static let highlightColor = tintColor.withAlphaComponent(0.7)
 
     var labels: [String]? {
         didSet {
@@ -47,7 +47,7 @@ final class TokenTextField: NSTextField {
             let joinedLabels = ls.joined(separator: TokenTextField.separator)
             let string = NSMutableAttributedString(string: joinedLabels, attributes: [
                 .font: font,
-                .foregroundColor: TokenTextField.tintColor,
+                .foregroundColor: tintColor,
                 .paragraphStyle: p
             ])
 
@@ -77,7 +77,7 @@ final class TokenTextField: NSTextField {
             return
         }
 
-        context.setStrokeColor(TokenTextField.highlightColor.cgColor)
+        context.setStrokeColor(highlightColor.cgColor)
         context.setLineWidth(0.5)
 
         let lines = CTFrameGetLines(totalFrame) as NSArray
@@ -236,6 +236,23 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     override func prepareForReuse() {
         super.prepareForReuse()
         image.flatColor()
+    }
+    
+    private func setHighlightColor(_ highlightColor: ItemColor?, highlightBottomLabel: Bool) {
+        (view as? FirstMouseView)?.bgColor = highlightColor?.color ?? .g_colorMacCard
+        if highlightColor == ItemColor.none {
+            topLabel.textColor = .g_colorComponentLabel
+            bottomLabel.textColor = highlightBottomLabel ? .g_colorTint : .g_colorComponentLabel
+            labelTokenField.tintColor = .g_colorTint
+        } else if highlightColor?.invertText == true {
+            topLabel.textColor = .g_colorComponentLabelInverse
+            bottomLabel.textColor = .g_colorComponentLabelInverse
+            labelTokenField.tintColor = .g_colorComponentLabelInverse
+        } else {
+            topLabel.textColor = .g_colorComponentLabel
+            bottomLabel.textColor = .g_colorComponentLabel
+            labelTokenField.tintColor = .g_colorComponentLabel
+        }
     }
 
     private func reDecorate() {
@@ -410,6 +427,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         labelTokenField.isHidden = hideLabels
+        setHighlightColor(item?.highlightColor, highlightBottomLabel: bottomLabelHighlight)
         labelTokenField.labels = item?.labels
 
         topLabel.stringValue = topLabelText
@@ -420,8 +438,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         bottomLabel.stringValue = bottomLabelText
         bottomLabel.isHidden = hideBottomLabel
         bottomLabel.alignment = bottomLabelAlignment
-        bottomLabel.textColor = bottomLabelHighlight ? NSColor.g_colorTint : NSColor.labelColor
-
+        
         image.isHidden = hideImage
         cancelButton.isHidden = hideCancel
         progressView.isHidden = hideSpinner
@@ -536,7 +553,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                 colourMenu.addItem(entry)
                 count += 1
             }
-            let colours = NSMenuItem(title: "Color", action: nil, keyEquivalent: "")
+            let colours = NSMenuItem(title: "Highlight", action: nil, keyEquivalent: "")
             colours.submenu = colourMenu
             menu.addItem(colours)
         }
