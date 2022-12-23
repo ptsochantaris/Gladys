@@ -5,7 +5,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 enum CallbackSupport {
-    private static func handle(result: Model.PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
+    private static func handle(result: PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             switch result {
@@ -64,7 +64,7 @@ enum CallbackSupport {
     }
 
     @discardableResult
-    static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> Model.PasteResult {
+    static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> PasteResult {
         let p = NSItemProvider()
         p.suggestedName = overrides.title
         p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
@@ -75,7 +75,7 @@ enum CallbackSupport {
     }
 
     @discardableResult
-    static func handlePasteRequest(title: String?, note: String?, labels: String?) -> Model.PasteResult {
+    static func handlePasteRequest(title: String?, note: String?, labels: String?) -> PasteResult {
         Task { @MainActor in
             sendNotification(name: .DismissPopoversRequest, object: nil)
         }
@@ -89,7 +89,7 @@ enum CallbackSupport {
     }
 
     @discardableResult
-    private static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> Model.PasteResult {
+    private static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
         Model.pasteItems(from: [NSItemProvider(object: object)], overrides: overrides)
     }
 }
