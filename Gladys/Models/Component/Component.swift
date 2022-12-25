@@ -5,12 +5,6 @@
 #endif
 import CloudKit
 
-@globalActor
-enum ComponentActor {
-    final actor ActorType {}
-    static let shared = ActorType()
-}
-
 final actor ComponentLookup {
     static let shared = ComponentLookup()
 
@@ -53,7 +47,6 @@ final class Component: Codable {
         case order
     }
 
-    @ComponentActor
     func encode(to encoder: Encoder) throws {
         var v = encoder.container(keyedBy: CodingKeys.self)
         try v.encode(typeIdentifier, forKey: .typeIdentifier)

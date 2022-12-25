@@ -2133,7 +2133,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard let uuid = csc.share?.parent?.recordID.recordName, let item = Model.item(uuid: uuid), let ip = item.imagePath else {
             return nil
         }
-        return dataAccessQueue.sync {
+        return componentAccessQueue.sync {
             return try? Data(contentsOf: ip)
         }
     }

@@ -44,12 +44,15 @@ extension ArchivedItem {
         }
         removeIntents()
         let p = folderUrl.path
-        dataAccessQueue.async(flags: .barrier) {
-            try? FileManager.default.removeItem(atPath: p)
-        }
-        clearCacheData(for: uuid) // this must be last since we use URLs above
-        for item in components {
-            clearCacheData(for: item.uuid)
+        let uuids = components.map(\.uuid)
+        itemAccessQueue.async(flags: .barrier) {
+            componentAccessQueue.async(flags: .barrier) {
+                try? FileManager.default.removeItem(atPath: p)
+                for item in uuids {
+                    clearCacheData(for: item)
+                }
+            }
+            clearCacheData(for: self.uuid) // this must be last since we use URLs above
         }
     }
 

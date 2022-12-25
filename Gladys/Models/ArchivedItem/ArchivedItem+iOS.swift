@@ -156,7 +156,7 @@ extension ArchivedItem {
 
     var watchItem: [String: Any] {
         var imageDate = updatedAt
-        dataAccessQueue.sync {
+        componentAccessQueue.sync {
             if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
                 imageDate = max(imageDate, id)
             }

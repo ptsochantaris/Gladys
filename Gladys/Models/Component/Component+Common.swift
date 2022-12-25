@@ -9,7 +9,7 @@ import UniformTypeIdentifiers
 extension Component: Equatable {
     func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
-        dataAccessQueue.async(flags: .barrier) {
+        componentAccessQueue.async(flags: .barrier) {
             if data == nil || self.flags.contains(.loadingAborted) {
                 let f = FileManager.default
                 if f.fileExists(atPath: byteLocation.path) {
@@ -58,13 +58,13 @@ extension Component: Equatable {
     }
 
     var bytes: Data? {
-        dataAccessQueue.sync {
+        componentAccessQueue.sync {
             Data.forceMemoryMapped(contentsOf: bytesPath)
         }
     }
 
     var hasBytes: Bool {
-        dataAccessQueue.sync {
+        componentAccessQueue.sync {
             FileManager.default.fileExists(atPath: bytesPath.path)
         }
     }
@@ -333,7 +333,7 @@ extension Component: Equatable {
     }
 
     var sizeInBytes: Int64 {
-        dataAccessQueue.sync {
+        componentAccessQueue.sync {
             let fm = FileManager.default
 
             var isDir: ObjCBool = false
@@ -412,7 +412,7 @@ extension Component: Equatable {
                 return cached.record
             }
             let recordLocation = cloudKitDataPath
-            return dataAccessQueue.sync {
+            return componentAccessQueue.sync {
                 if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
@@ -428,7 +428,7 @@ extension Component: Equatable {
         set {
             cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
             let recordLocation = cloudKitDataPath
-            dataAccessQueue.async(flags: .barrier) {
+            componentAccessQueue.async(flags: .barrier) {
                 if let newValue {
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)

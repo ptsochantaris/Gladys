@@ -65,7 +65,7 @@ extension Component {
     private func ingestFailed(error: Error?) async throws {
         let error = error ?? GladysError.unknownIngestError.error
         log(">> Error receiving item: \(error.finalDescription)")
-        await setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+        setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
         throw error
     }
 
@@ -127,7 +127,7 @@ extension Component {
             if let item = obj as? NSString {
                 log("      received string: \(item)")
                 setTitleInfo(item as String, 10)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
                 representedClass = .string
                 if storeBytes {
                     setBytes(data)
@@ -137,7 +137,7 @@ extension Component {
             } else if let item = obj as? NSAttributedString {
                 log("      received attributed string: \(item)")
                 setTitleInfo(item.string, 7)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
                 representedClass = .attributedString
                 if storeBytes {
                     setBytes(data)
@@ -147,7 +147,7 @@ extension Component {
             } else if let item = obj as? COLOR {
                 log("      received color: \(item)")
                 setTitleInfo("Color \(item.hexValue)", 0)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
                 representedClass = .color
                 if storeBytes {
                     setBytes(data)
@@ -156,7 +156,7 @@ extension Component {
 
             } else if let item = obj as? IMAGE {
                 log("      received image: \(item)")
-                await setDisplayIcon(item, 50, .fill)
+                setDisplayIcon(item, 50, .fill)
                 if encodeAnyUIImage {
                     log("      will encode it to JPEG, as it's the only image in this parent item")
                     representedClass = .data
@@ -181,7 +181,7 @@ extension Component {
 
             } else if let item = obj as? MKMapItem {
                 log("      received map item: \(item)")
-                await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
                 representedClass = .mapItem
                 if storeBytes {
                     setBytes(data)
@@ -199,7 +199,7 @@ extension Component {
                 } else {
                     setTitleInfo("\(item.count) Items", 1)
                 }
-                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
                 representedClass = .array
                 if storeBytes {
                     setBytes(data)
@@ -213,7 +213,7 @@ extension Component {
                 } else {
                     setTitleInfo("\(item.count) Entries", 1)
                 }
-                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
                 representedClass = .dictionary
                 if storeBytes {
                     setBytes(data)
@@ -348,7 +348,7 @@ extension Component {
         }
     }
 
-    func generateMoviePreview() -> IMAGE? {
+    private func generateMoviePreview() -> IMAGE? {
         var result: IMAGE?
         let fm = FileManager.default
         let tempPath = previewTempPath
@@ -395,7 +395,7 @@ extension Component {
 
     func handleRemoteUrl(_ url: URL, _: Data, _: Bool) async throws {
         log("      received remote url: \(url.absoluteString)")
-        await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+        setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
         guard let s = url.scheme, s.hasPrefix("http") else {
             throw GladysError.blankResponse.error
         }
@@ -408,9 +408,9 @@ extension Component {
         if let image = res?.image {
             if image.size.height > 100 || image.size.width > 200 {
                 let thumb = res?.isThumbnail ?? false
-                await setDisplayIcon(image, 30, thumb ? .fill : .fit)
+                setDisplayIcon(image, 30, thumb ? .fill : .fit)
             } else {
-                await setDisplayIcon(image, 30, .center)
+                setDisplayIcon(image, 30, .center)
             }
         }
     }
@@ -425,7 +425,7 @@ extension Component {
         }
 
         if let image = IMAGE(data: data) {
-            await setDisplayIcon(image, 50, .fill)
+            setDisplayIcon(image, 50, .fill)
 
         } else if typeIdentifier == "public.vcard" {
             if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
@@ -434,9 +434,9 @@ extension Component {
                 accessoryTitle = [name, job].filter { !$0.isEmpty }.joined(separator: " - ")
 
                 if let imageData = person.imageData, let img = IMAGE(data: imageData) {
-                    await setDisplayIcon(img, 9, .circle)
+                    setDisplayIcon(img, 9, .circle)
                 } else {
-                    await setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
+                    setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
                 }
             }
 
@@ -444,25 +444,25 @@ extension Component {
             if let s = String(data: data, encoding: .utf8) {
                 setTitleInfo(s, 9)
             }
-            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeIdentifier == "public.utf16-plain-text" {
             if let s = String(data: data, encoding: .utf16) {
                 setTitleInfo(s, 8)
             }
-            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeIdentifier == "public.email-message" {
-            await setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
 
         } else if typeIdentifier == "com.apple.mapkit.map-item" {
-            await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
 
         } else if typeIdentifier.hasSuffix(".rtf") || typeIdentifier.hasSuffix(".rtfd") || typeIdentifier.hasSuffix(".flat-rtfd") {
             if let data = (decode() as? Data), let s = (try? NSAttributedString(data: data, options: [:], documentAttributes: nil))?.string {
                 setTitleInfo(s, 4)
             }
-            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if resolveUrls, let url = encodedUrl {
             try await handleUrl(url as URL, data, storeBytes)
@@ -472,35 +472,35 @@ extension Component {
             if let s = String(data: data, encoding: .utf8) {
                 setTitleInfo(s, 5)
             }
-            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeConforms(to: .image) {
-            await setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
         } else if typeConforms(to: .audiovisualContent) {
             if let moviePreview = generateMoviePreview() {
-                await setDisplayIcon(moviePreview, 50, .fill)
+                setDisplayIcon(moviePreview, 50, .fill)
             } else {
-                await setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
             }
 
         } else if typeConforms(to: .audio) {
-            await setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 
         } else if typeConforms(to: .pdf), let pdfPreview = generatePdfPreview() {
             if let title = getPdfTitle(), !title.isEmpty {
                 setTitleInfo(title, 11)
             }
-            await setDisplayIcon(pdfPreview, 50, .fill)
+            setDisplayIcon(pdfPreview, 50, .fill)
 
         } else if typeConforms(to: .content) {
-            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 
         } else if typeConforms(to: .archive) {
-            await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
 
         } else {
-            await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
         }
     }
 
@@ -510,8 +510,7 @@ extension Component {
         }
     }
 
-    @ComponentActor
-    func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) async {
+    func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
         guard priority >= displayIconPriority else {
             return
         }

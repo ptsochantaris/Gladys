@@ -23,7 +23,7 @@ extension Component {
 
         if url.isFileURL {
             log("      received local file url: \(url.path)")
-            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
         } else {
             try await handleRemoteUrl(url, data, storeBytes)
         }

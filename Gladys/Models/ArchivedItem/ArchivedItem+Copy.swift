@@ -60,14 +60,6 @@ extension ArchivedItem {
     func removeIntents() {
         #if MAINAPP
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-            /* { error in
-                    if let error = error {
-                        log("Copy intent could not be removed: \(error.localizedDescription)")
-                    } else {
-                        log("Copy intent removed")
-                    }
-                }
-             */
             for item in components {
                 item.removeIntents()
             }

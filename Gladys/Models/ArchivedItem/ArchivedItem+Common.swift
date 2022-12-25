@@ -158,7 +158,7 @@ extension ArchivedItem: Hashable {
                 return cached
             }
             let path = cloudKitDataPath
-            return dataAccessQueue.sync {
+            return itemAccessQueue.sync {
                 let value = FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
                 needsCloudPushCache[uuid] = value
                 return value
@@ -167,7 +167,7 @@ extension ArchivedItem: Hashable {
         set {
             needsCloudPushCache[uuid] = newValue
             let path = cloudKitDataPath
-            dataAccessQueue.async(flags: .barrier) {
+            itemAccessQueue.async(flags: .barrier) {
                 FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
             }
         }
@@ -227,13 +227,13 @@ extension ArchivedItem: Hashable {
                 return cached.record
             }
             let recordLocation = cloudKitDataPath
-            return dataAccessQueue.sync {
+            return itemAccessQueue.sync {
                 if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
                     return record
-                    
+
                 } else {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     return nil
@@ -244,7 +244,7 @@ extension ArchivedItem: Hashable {
             let newEntry = CKRecordCacheEntry(record: newValue)
             cloudKitRecordCache[uuid] = newEntry
             let recordLocation = cloudKitDataPath
-            dataAccessQueue.async(flags: .barrier) {
+            itemAccessQueue.async(flags: .barrier) {
                 if let newValue {
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
@@ -266,7 +266,7 @@ extension ArchivedItem: Hashable {
             if let cached = cloudKitShareCache[uuid] {
                 return cached.share
             }
-            return dataAccessQueue.sync {
+            return itemAccessQueue.sync {
                 if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let share = CKShare(coder: coder)
                     coder.finishDecoding()
@@ -282,7 +282,7 @@ extension ArchivedItem: Hashable {
         set {
             cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
             let recordLocation = cloudKitShareDataPath
-            dataAccessQueue.async(flags: .barrier) {
+            itemAccessQueue.async(flags: .barrier) {
                 if let newValue {
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)

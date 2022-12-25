@@ -140,4 +140,5 @@ enum RepresentedClass: Codable, Equatable {
     }
 }
 
-let dataAccessQueue = DispatchQueue(label: "build.bru.Gladys.dataAccessQueue", qos: .default, attributes: .concurrent)
+let itemAccessQueue = DispatchQueue(label: "build.bru.Gladys.itemAccessQueue", qos: .default, attributes: .concurrent)
+let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.componentAccessQueue", qos: .default, attributes: .concurrent)

@@ -79,14 +79,14 @@ extension Component {
             }
             representedClass = .url
             log("      received local file url for non-existent file: \(item.absoluteString)")
-            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             return
         }
 
         if directory.boolValue {
             do {
                 typeIdentifier = UTType.zip.identifier
-                await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
                 representedClass = .data
                 let tempURL = Model.temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
                 let a = Archive(url: tempURL, accessMode: .create)!
@@ -105,7 +105,7 @@ extension Component {
                 }
                 representedClass = .url
                 log("      could not read data from file (\(error.localizedDescription)) treating as local file url: \(item.absoluteString)")
-                await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+                setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
             }
 
         } else {
@@ -221,7 +221,7 @@ extension Component {
 
     func scanForBlobChanges() -> Bool {
         var detectedChange = false
-        dataAccessQueue.sync(flags: .barrier) {
+        componentAccessQueue.sync(flags: .barrier) {
             let recordLocation = bytesPath
             let fm = FileManager.default
             guard fm.fileExists(atPath: recordLocation.path) else { return }

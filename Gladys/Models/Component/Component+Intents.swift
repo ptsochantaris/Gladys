@@ -49,12 +49,5 @@ extension Component {
 
     func removeIntents() {
         INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-        /* { error in
-             if let error = error {
-                 log("Copy intent for component could not be removed: \(error.localizedDescription)")
-             } else {
-                 log("Copy intent for component removed")
-             }
-         } */
     }
 }
