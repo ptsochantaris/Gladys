@@ -286,6 +286,7 @@
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A80A102113AFE7004C72AB /* Caches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162594D420D5548F00A65E06 /* Caches.swift */; };
 		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
+		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
 		16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */; };
 		16AC07AE20D070710030CC53 /* CKDatabaseScope+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AC07AD20D070710030CC53 /* CKDatabaseScope+Extensions.swift */; };
@@ -830,6 +831,7 @@
 		16A4E7F31FBB844A00D60596 /* GladysWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatch.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
+		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
 		16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchivedItemCell.xib; sourceTree = "<group>"; };
@@ -1430,6 +1432,7 @@
 				16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */,
 				1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */,
 				16F72B35266D8232000E2C67 /* RoundedBackground.swift */,
+				16AA7D23295891A6001C6506 /* UIUtilities.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -2506,6 +2509,7 @@
 				16CD7DB820A124390039E6C2 /* Model+UICommon.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
+				16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */,
 				165847062376CC2400666B7B /* Model+Siri.swift in Sources */,
 				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,

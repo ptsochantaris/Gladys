@@ -112,6 +112,7 @@ extension ArchivedItem: Hashable {
         !needsDeletion && lockPassword == nil && !needsReIngest
     }
 
+    @MainActor
     func markUpdated() {
         updatedAt = Date()
         needsCloudPush = true

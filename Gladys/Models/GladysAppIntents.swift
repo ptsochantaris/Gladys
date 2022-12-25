@@ -1,5 +1,5 @@
 #if canImport(AppIntents)
-import AppIntents
+    import AppIntents
 #endif
 
 #if MAC

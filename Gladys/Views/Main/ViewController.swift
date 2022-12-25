@@ -1,83 +1,6 @@
 import Intents
 import UIKit
 
-extension UIKeyCommand {
-    static func makeCommand(input: String, modifierFlags: UIKeyModifierFlags, action: Selector, title: String) -> UIKeyCommand {
-        let c = UIKeyCommand(input: input, modifierFlags: modifierFlags, action: action)
-        c.title = title
-        return c
-    }
-}
-
-@MainActor
-var currentWindow: UIWindow? {
-    UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
-}
-
-@MainActor
-weak var lastUsedWindow: UIWindow?
-
-@MainActor
-func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
-    var continuation: CheckedContinuation<Void, Never>?
-
-    let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    if let buttonTitle {
-        a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in
-            continuation?.resume()
-        })
-    }
-
-    if offerSettingsShortcut {
-        a.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
-            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:]) { _ in
-                continuation?.resume()
-            }
-        })
-    }
-
-    if let connectedWindow = currentWindow {
-        connectedWindow.alertPresenter?.present(a, animated: true)
-    }
-
-    if buttonTitle == nil, autoDismiss {
-        Task {
-            try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-            await a.dismiss(animated: true)
-            continuation?.resume()
-        }
-    }
-
-    alertController?(a)
-
-    await withCheckedContinuation { (awaitedContinuation: CheckedContinuation<Void, Never>) in
-        continuation = awaitedContinuation
-    }
-}
-
-@MainActor
-func getInput(from: UIViewController, title: String, action: String, previousValue: String?) async -> String? {
-    var continuation: CheckedContinuation<String?, Never>?
-
-    let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-    a.addTextField { textField in
-        textField.placeholder = title
-        textField.text = previousValue
-    }
-    a.addAction(UIAlertAction(title: action, style: .default) { _ in
-        let result = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        continuation?.resume(returning: result)
-    })
-    a.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-        continuation?.resume(returning: nil)
-    })
-    from.present(a, animated: true)
-
-    return await withCheckedContinuation { (c: CheckedContinuation<String?, Never>) in
-        continuation = c
-    }
-}
-
 final class ViewController: GladysViewController, UICollectionViewDelegate,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate {
@@ -309,13 +232,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 existingItem.markUpdated()
                 return .saveDB
 
-            } else if let sourceIndexPath {
+            } else if sourceIndexPath != nil {
                 // drag inside same section
-                if sourceIndexPath.item <= destinationIndexPath.item {
-                    insert(item: existingItem, at: destinationIndexPath, offset: 1)
-                } else {
-                    insert(item: existingItem, at: destinationIndexPath)
-                }
+                insert(item: existingItem, at: destinationIndexPath)
                 return .saveIndex
 
             } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function {
@@ -333,12 +252,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         case .flat:
             // gladys-to-gladys
-            if let sourceIndexPath, sourceIndexPath.item < destinationIndexPath.item {
-                insert(item: existingItem, at: destinationIndexPath, offset: 1)
-            } else {
-                // also covers case of another window
-                insert(item: existingItem, at: destinationIndexPath)
-            }
+            // also covers case of another window
+            insert(item: existingItem, at: destinationIndexPath)
             if !PersistedOptions.dontAutoLabelNewItems, filter.isFilteringLabels, existingItem.labels != filter.enabledLabelsForItems {
                 existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
                 existingItem.postModified()

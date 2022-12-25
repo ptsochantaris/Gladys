@@ -290,12 +290,10 @@ private extension ArchivedItem {
         }
 
         Task { @MainActor in
-            self.markUpdated()
-            self.needsReIngest = true
-            self.flags.insert(.skipMirrorAtNextSave)
-            Task {
-                await self.reIngest()
-            }
+            markUpdated()
+            needsReIngest = true
+            flags.insert(.skipMirrorAtNextSave)
+            await reIngest()
         }
     }
 }

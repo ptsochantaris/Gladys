@@ -94,7 +94,7 @@ extension Component {
     }
 
     private final actor GateKeeper {
-        private var counter = 8
+        private var counter = 12
         func waitForGate() async {
             while counter < 0 {
                 await Task.yield()
@@ -505,8 +505,8 @@ extension Component {
     }
 
     func reIngest() async throws {
-        if let bytesCopy = bytes {
-            try await ingest(data: bytesCopy, storeBytes: false)
+        if let bytes {
+            try await ingest(data: bytes, storeBytes: false)
         }
     }
 
