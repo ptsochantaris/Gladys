@@ -22,6 +22,7 @@ let imagePathCache = Cache<UUID, URL>()
 let bytesPathCache = Cache<UUID, URL>()
 let cloudKitRecordCache = Cache<UUID, CKRecordCacheEntry>()
 let cloudKitShareCache = Cache<UUID, CKShareCacheEntry>()
+let needsCloudPushCache = Cache<UUID, Bool>()
 
 func clearCacheData(for uuid: UUID) {
     folderUrlCache[uuid] = nil

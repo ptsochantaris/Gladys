@@ -408,13 +408,12 @@ extension Component: Equatable {
 
     var cloudKitRecord: CKRecord? {
         get {
+            if let cached = cloudKitRecordCache[uuid] {
+                return cached.record
+            }
             let recordLocation = cloudKitDataPath
-            let uuid = uuid
             return dataAccessQueue.sync {
-                if let cachedValue = cloudKitRecordCache[uuid] {
-                    return cachedValue.record
-
-                } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
@@ -427,16 +426,14 @@ extension Component: Equatable {
             }
         }
         set {
+            cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
             let recordLocation = cloudKitDataPath
-            let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
                 if let newValue {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
                     try? coder.encodedData.write(to: recordLocation)
                 } else {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     let f = FileManager.default
                     if f.fileExists(atPath: recordLocation.path) {
                         try? f.removeItem(at: recordLocation)

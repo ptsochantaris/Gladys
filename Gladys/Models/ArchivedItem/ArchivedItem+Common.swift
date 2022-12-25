@@ -154,12 +154,18 @@ extension ArchivedItem: Hashable {
     private static let needsCloudPushKey = "build.bru.Gladys.needsCloudPush"
     var needsCloudPush: Bool {
         get {
+            if let cached = needsCloudPushCache[uuid] {
+                return cached
+            }
             let path = cloudKitDataPath
             return dataAccessQueue.sync {
-                FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
+                let value = FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
+                needsCloudPushCache[uuid] = value
+                return value
             }
         }
         set {
+            needsCloudPushCache[uuid] = newValue
             let path = cloudKitDataPath
             dataAccessQueue.async(flags: .barrier) {
                 FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
@@ -217,17 +223,17 @@ extension ArchivedItem: Hashable {
 
     var cloudKitRecord: CKRecord? {
         get {
+            if let cached = cloudKitRecordCache[uuid] {
+                return cached.record
+            }
             let recordLocation = cloudKitDataPath
             return dataAccessQueue.sync {
-                if let cachedValue = cloudKitRecordCache[uuid] {
-                    return cachedValue.record
-
-                } else if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let record = CKRecord(coder: coder)
                     coder.finishDecoding()
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
                     return record
-
+                    
                 } else {
                     cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     return nil
@@ -235,19 +241,16 @@ extension ArchivedItem: Hashable {
             }
         }
         set {
+            let newEntry = CKRecordCacheEntry(record: newValue)
+            cloudKitRecordCache[uuid] = newEntry
             let recordLocation = cloudKitDataPath
-            let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
                 if let newValue {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
-
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
                     try? coder.encodedData.write(to: recordLocation)
-
                     self.needsCloudPush = false
                 } else {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
                     let f = FileManager.default
                     let path = recordLocation.path
                     if f.fileExists(atPath: path) {
@@ -260,12 +263,11 @@ extension ArchivedItem: Hashable {
 
     var cloudKitShareRecord: CKShare? {
         get {
-            let uuid = uuid
+            if let cached = cloudKitShareCache[uuid] {
+                return cached.share
+            }
             return dataAccessQueue.sync {
-                if let cachedValue = cloudKitShareCache[uuid] {
-                    return cachedValue.share
-
-                } else if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                     let share = CKShare(coder: coder)
                     coder.finishDecoding()
                     cloudKitShareCache[uuid] = CKShareCacheEntry(share: share)
@@ -278,17 +280,14 @@ extension ArchivedItem: Hashable {
             }
         }
         set {
+            cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
             let recordLocation = cloudKitShareDataPath
-            let uuid = uuid
             dataAccessQueue.async(flags: .barrier) {
                 if let newValue {
-                    cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
-
                     let coder = NSKeyedArchiver(requiringSecureCoding: true)
                     newValue.encodeSystemFields(with: coder)
                     try? coder.encodedData.write(to: recordLocation)
                 } else {
-                    cloudKitShareCache[uuid] = CKShareCacheEntry(share: nil)
                     let f = FileManager.default
                     let path = recordLocation.path
                     if f.fileExists(atPath: path) {
