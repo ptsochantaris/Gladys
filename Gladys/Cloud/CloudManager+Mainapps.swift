@@ -275,6 +275,7 @@ extension CloudManager {
 
         if syncRateLimited { return "Pausing" }
         if syncTransitioning { return syncSwitchedOn ? "Deactivating" : "Activating" }
+        if syncing { return "Syncing" }
 
         let i = -lastSyncCompletion.timeIntervalSinceNow
         if i < 1.0 {
