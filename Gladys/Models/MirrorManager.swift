@@ -252,7 +252,9 @@ private extension ArchivedItem {
 
             log("Assimilating mirror changes into component \(child.uuid.uuidString)")
             _ = try? f.copyAndReplaceItem(at: itemUrl, to: child.bytesPath)
-            child.markUpdated()
+            Task { @MainActor in
+                child.markComponentUpdated()
+            }
             assimilated = true
 
         } else { // multiple items
@@ -280,7 +282,9 @@ private extension ArchivedItem {
 
                 log("Assimilating mirror changes into component \(child.uuid.uuidString)")
                 try? f.copyAndReplaceItem(at: componentUrl, to: child.bytesPath)
-                child.markUpdated()
+                Task { @MainActor in
+                    child.markComponentUpdated()
+                }
                 assimilated = true
             }
         }
@@ -291,9 +295,10 @@ private extension ArchivedItem {
 
         Task { @MainActor in
             markUpdated()
-            needsReIngest = true
             flags.insert(.skipMirrorAtNextSave)
-            await reIngest()
+            if needsReIngest {
+                await reIngest()
+            }
         }
     }
 }

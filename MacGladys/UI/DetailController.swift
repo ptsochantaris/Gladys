@@ -344,7 +344,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         item.components.remove(at: index)
         component.deleteFromStorage()
         item.renumberTypeItems()
-        item.needsReIngest = true
         components.animator().deleteItems(at: [IndexPath(item: index, section: 0)])
         saveItem()
     }
@@ -516,9 +515,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         Task { @MainActor in
             let res = try? await WebArchiver.shared.fetchWebPreview(for: url)
             if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
-                let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: self.item.uuid, data: jpegData, order: self.item.components.count)
-                self.item.components.append(newTypeItem)
-                self.saveItem()
+                let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: item.uuid, data: jpegData, order: item.components.count)
+                item.components.append(newTypeItem)
+                saveItem()
             } else {
                 await genericAlert(title: "Image Download Failed", message: "The image could not be downloaded.")
             }
@@ -584,7 +583,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
             } else if let pasteboardItem = draggingInfo.draggingPasteboard.pasteboardItems?.first, let type = pasteboardItem.types.first, let data = pasteboardItem.data(forType: type) {
                 let typeItem = Component(typeIdentifier: type.rawValue, parentUuid: item.uuid, data: data, order: 99999)
                 item.components.insert(typeItem, at: destinationIndex)
-                item.needsReIngest = true
                 item.renumberTypeItems()
                 components.animator().insertItems(at: [indexPath])
                 saveItem()

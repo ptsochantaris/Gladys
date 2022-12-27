@@ -271,7 +271,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         var topLabelAlignment = NSTextAlignment.center
 
         var bottomLabelText = ""
-        var bottomLabelHighlight = false
         var bottomLabelAlignment = NSTextAlignment.center
 
         let showLoading = item?.shouldDisplayLoading ?? false
@@ -282,23 +281,23 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         if let item {
+            image.flatColor()
             if showLoading {
                 hideCancel = item.needsReIngest
                 hideSpinner = false
-                image.flatColor()
+                setHighlightColor(ItemColor.none, highlightBottomLabel: false)
 
             } else if item.flags.contains(.needsUnlock) {
                 hideLock = false
-                image.flatColor()
                 bottomLabelAlignment = .center
                 bottomLabelText = item.lockHint ?? ""
                 share = item.shareMode
+                setHighlightColor(ItemColor.none, highlightBottomLabel: false)
 
             } else {
+                var bottomLabelHighlight = false
                 hideImage = false
                 share = item.shareMode
-
-                image.flatColor()
                 let cacheKey = item.imageCacheKey
                 if let cachedImage = Images.shared[cacheKey] {
                     image.layer?.contents = cachedImage
@@ -316,14 +315,14 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         }
                     }
                 }
-
+                
                 let primaryLabel: NSTextField
                 let secondaryLabel: NSTextField
-
+                
                 let titleInfo = item.displayText
                 topLabelAlignment = titleInfo.1
                 topLabelText = titleInfo.0 ?? ""
-
+                
                 if PersistedOptions.displayNotesInMainView, !item.note.isEmpty {
                     bottomLabelText = item.note
                     bottomLabelHighlight = true
@@ -333,23 +332,23 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         topLabelText = ""
                     }
                 }
-
+                
                 if PersistedOptions.displayLabelsInMainView, !item.labels.isEmpty {
                     hideLabels = false
                 }
-
+                
                 if bottomLabelText.isEmpty, !topLabelText.isEmpty {
                     bottomLabelText = topLabelText
                     bottomLabelAlignment = topLabelAlignment
                     topLabelText = ""
-
+                    
                     primaryLabel = bottomLabel
                     secondaryLabel = topLabel
                 } else {
                     primaryLabel = topLabel
                     secondaryLabel = bottomLabel
                 }
-
+                
                 switch item.displayMode {
                 case .center:
                     image.layer?.contentsGravity = .center
@@ -368,7 +367,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                     primaryLabel.maximumNumberOfLines = 6
                     secondaryLabel.maximumNumberOfLines = 2
                 }
-
+                
                 // if we're showing an icon, let's try to enhance things a bit
                 if image.layer?.contentsGravity == .center, let backgroundItem = item.backgroundInfoObject {
                     if let mapItem = backgroundItem as? MKMapItem {
@@ -388,7 +387,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                                 m.topAnchor.constraint(equalTo: image.topAnchor),
                                 m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
                             ])
-
+                            
                             existingPreviewView = m
                         }
                     } else if let colourItem = backgroundItem as? NSColor {
@@ -410,15 +409,17 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                                 m.topAnchor.constraint(equalTo: image.topAnchor),
                                 m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
                             ])
-
+                            
                             existingPreviewView = m
                         }
                     }
                 }
+                setHighlightColor(item.highlightColor, highlightBottomLabel: bottomLabelHighlight)
             }
 
         } else { // item is nil
             image.flatColor()
+            setHighlightColor(ItemColor.none, highlightBottomLabel: false)
         }
 
         if !(wantMapView || wantColourView), let e = existingPreviewView {
@@ -427,7 +428,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         labelTokenField.isHidden = hideLabels
-        setHighlightColor(item?.highlightColor, highlightBottomLabel: bottomLabelHighlight)
         labelTokenField.labels = item?.labels
 
         topLabel.stringValue = topLabelText

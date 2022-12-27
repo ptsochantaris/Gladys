@@ -3,13 +3,7 @@ import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
 
-protocol TextEditControllerDelegate: AnyObject {
-    func textEditControllerMadeChanges(_ textEditController: TextEditController)
-}
-
 final class TextEditController: GladysViewController, UITextViewDelegate {
-    weak var delegate: TextEditControllerDelegate?
-
     var item: ArchivedItem!
     var typeEntry: Component!
     var hasChanges = false
@@ -106,13 +100,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
     }
 
     private func saveDone() {
-        typeEntry.markUpdated()
+        typeEntry.markComponentUpdated()
         item.markUpdated()
-        item.needsReIngest = true
-        Task {
-            try? await typeEntry.reIngest()
-            Model.save()
-            self.delegate?.textEditControllerMadeChanges(self)
-        }
+        Model.save()
     }
 }

@@ -36,8 +36,10 @@ extension Component: Equatable {
         accessoryTitle ?? displayTitle ?? filenameTypeIdentifier
     }
 
-    func markUpdated() {
+    @MainActor
+    func markComponentUpdated() {
         updatedAt = Date()
+        parent?.needsReIngest = true
     }
 
     func decode() -> Any? {

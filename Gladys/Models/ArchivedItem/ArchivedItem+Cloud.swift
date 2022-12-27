@@ -23,7 +23,6 @@ extension ArchivedItem {
         }
 
         cloudKitRecord = record
-        needsReIngest = true
         postModified()
     }
 

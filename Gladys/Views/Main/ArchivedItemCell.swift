@@ -282,9 +282,8 @@ final class ArchivedItemCell: UICollectionViewCell {
         image.wideMode = wideCell
 
         if let item {
-            highlightColor = item.highlightColor
-
             if item.shouldDisplayLoading {
+                highlightColor = .none
                 if isFirstImport {
                     hideProgress = false
                     progressView.observedProgress = item.loadingProgress
@@ -293,12 +292,14 @@ final class ArchivedItemCell: UICollectionViewCell {
                 }
 
             } else if item.flags.contains(.needsUnlock) {
+                highlightColor = .none
                 hideLock = false
                 bottomLabelAlignment = .center
                 bottomLabelText = item.lockHint
                 shared = item.shareMode
 
             } else {
+                highlightColor = item.highlightColor
                 hideImage = false
                 shared = item.shareMode
 

@@ -10,7 +10,7 @@ final class ArchivedItem: Codable {
 
     var components: ContiguousArray<Component> {
         didSet {
-            flags.insert(.needsSaving)
+            needsReIngest = true // also sets needsSaving
         }
     }
 

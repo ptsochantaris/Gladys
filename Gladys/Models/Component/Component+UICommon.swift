@@ -37,6 +37,33 @@ extension Component {
 
         return decode()
     }
+    
+    @MainActor
+    func replaceURL(_ newUrl: URL) {
+        guard isURL else { return }
+
+        let decoded = decode()
+        if decoded is URL {
+            let data = try? PropertyListSerialization.data(fromPropertyList: newUrl, format: .binary, options: 0)
+            setBytes(data)
+        } else if let array = decoded as? NSArray {
+            let newArray = array.map { (item: Any) -> Any in
+                if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+                    return newUrl.absoluteString
+                } else {
+                    return item
+                }
+            }
+            let data = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)
+            setBytes(data)
+        } else {
+            let data = Data(newUrl.absoluteString.utf8)
+            setBytes(data)
+        }
+        encodedURLCache = (true, newUrl)
+        setTitle(from: newUrl as URL)
+        markComponentUpdated()
+    }
 
     func prepareFilename(name: String, directory: String?) -> String {
         var name = name

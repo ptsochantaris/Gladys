@@ -417,7 +417,6 @@ extension Model {
                 for c in componentsToDelete {
                     c.deleteFromStorage()
                 }
-                item.needsReIngest = true
             }
         }
         let itemsToDelete = allDrops.filter(\.needsDeletion)

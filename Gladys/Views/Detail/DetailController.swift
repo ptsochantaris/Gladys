@@ -9,7 +9,7 @@ protocol ResizingCellDelegate: AnyObject {
 
 final class DetailController: GladysViewController,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate, TextEditControllerDelegate,
+    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate,
     ResizingCellDelegate, DetailCellDelegate {
     var item: ArchivedItem!
     var sourceIndexPath: IndexPath?
@@ -478,9 +478,7 @@ final class DetailController: GladysViewController,
             let newValue = await getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString)
             if let newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
                 component.replaceURL(newURL)
-                item.needsReIngest = true
                 makeIndexAndSaveItem()
-                refreshComponent(component)
             } else if let newValue {
                 await genericAlert(title: "This is not a valid URL", message: newValue)
                 editURL(component, existingEdit: newValue)
@@ -498,12 +496,12 @@ final class DetailController: GladysViewController,
         var keepChecking = true
         var alert: UIAlertController?
         Task {
-            await genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel", alertController: { alert = $0 })
+            await genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") { alert = $0 }
             keepChecking = false
         }
 
         while keepChecking {
-            try? await Task.sleep(nanoseconds: 25 * NSEC_PER_MSEC)
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             if !shouldWaitForSync {
                 keepChecking = false
                 await alert?.dismiss(animated: true)
@@ -540,7 +538,7 @@ final class DetailController: GladysViewController,
     }
 
     private func _removeComponent(_ component: Component) {
-        table.performBatchUpdates({
+        table.performBatchUpdates {
             guard let index = item.components.firstIndex(of: component) else {
                 return
             }
@@ -552,11 +550,11 @@ final class DetailController: GladysViewController,
                 let indexPath = IndexPath(row: index, section: 2)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
-        }, completion: { _ in
+        } completion: { _ in
             self.item.renumberTypeItems()
             self.item.needsReIngest = true
             self.makeIndexAndSaveItem()
-        })
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -565,7 +563,6 @@ final class DetailController: GladysViewController,
            let e = segue.destination as? TextEditController {
             e.item = item
             e.typeEntry = typeEntry
-            e.delegate = self
 
         } else if segue.identifier == "hexEdit",
                   let typeEntry = sender as? Component,
@@ -900,7 +897,6 @@ final class DetailController: GladysViewController,
     }
 
     private func handleNewTypeItem() {
-        item.needsReIngest = true
         makeIndexAndSaveItem()
         updateUI()
         if let newCell = table.cellForRow(at: IndexPath(row: 0, section: table.numberOfSections - 1)) {
@@ -923,19 +919,5 @@ final class DetailController: GladysViewController,
         } catch {
             await genericAlert(title: "Archiving Failed", message: error.finalDescription)
         }
-    }
-
-    private func refreshComponent(_ component: Component) {
-        if let indexOfComponent = item.components.firstIndex(of: component) {
-            let totalRows = tableView(table, numberOfRowsInSection: 2)
-            if indexOfComponent >= totalRows { return }
-            let ip = IndexPath(row: indexOfComponent, section: 2)
-            table.reloadRows(at: [ip], with: .none)
-        }
-    }
-
-    func textEditControllerMadeChanges(_ textEditController: TextEditController) {
-        guard let component = textEditController.typeEntry else { return }
-        refreshComponent(component)
     }
 }
