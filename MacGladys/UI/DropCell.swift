@@ -6,7 +6,13 @@ class FirstMouseView: NSView {
         true
     }
 
-    @IBInspectable final var bgColor: NSColor?
+    @IBInspectable final var bgColor: NSColor? {
+        didSet {
+            if oldValue != bgColor {
+                layer?.setNeedsDisplay()
+            }
+        }
+    }
 
     final func flatColor() {
         layer?.contents = nil
@@ -198,6 +204,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
+        
+        if archivedDropItem != nil {
+            reDecorate()
+        }
     }
 
     @objc private func itemModified(_ notification: Notification) {
@@ -217,7 +227,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
     private weak var archivedDropItem: ArchivedItem? {
         didSet {
-            reDecorate()
+            if isViewLoaded {
+                reDecorate()
+            }
         }
     }
 
@@ -238,13 +250,13 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         image.flatColor()
     }
 
-    private func setHighlightColor(_ highlightColor: ItemColor?, highlightBottomLabel: Bool) {
-        (view as? FirstMouseView)?.bgColor = highlightColor?.color ?? .g_colorMacCard
-        if highlightColor == ItemColor.none {
+    private func setHighlightColor(_ highlightColor: ItemColor, highlightBottomLabel: Bool) {
+        (view as? FirstMouseView)?.bgColor = highlightColor.color
+        if highlightColor == .none {
             topLabel.textColor = .g_colorComponentLabel
             bottomLabel.textColor = highlightBottomLabel ? .g_colorTint : .g_colorComponentLabel
             labelTokenField.tintColor = .g_colorTint
-        } else if highlightColor?.invertText == true {
+        } else if highlightColor.invertText {
             topLabel.textColor = .g_colorComponentLabelInverse
             bottomLabel.textColor = .g_colorComponentLabelInverse
             labelTokenField.tintColor = .g_colorComponentLabelInverse
@@ -272,29 +284,26 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
         var bottomLabelText = ""
         var bottomLabelAlignment = NSTextAlignment.center
-
-        let showLoading = item?.shouldDisplayLoading ?? false
-        if showLoading {
-            progressView.startAnimation(nil)
-        } else {
-            progressView.stopAnimation(nil)
-        }
+        
+        image.flatColor()
 
         if let item {
-            image.flatColor()
-            if showLoading {
+            if item.shouldDisplayLoading {
+                progressView.startAnimation(nil)
                 hideCancel = item.needsReIngest
                 hideSpinner = false
-                setHighlightColor(ItemColor.none, highlightBottomLabel: false)
+                setHighlightColor(.none, highlightBottomLabel: false)
 
             } else if item.flags.contains(.needsUnlock) {
+                progressView.stopAnimation(nil)
                 hideLock = false
                 bottomLabelAlignment = .center
                 bottomLabelText = item.lockHint ?? ""
                 share = item.shareMode
-                setHighlightColor(ItemColor.none, highlightBottomLabel: false)
+                setHighlightColor(.none, highlightBottomLabel: false)
 
             } else {
+                progressView.stopAnimation(nil)
                 var bottomLabelHighlight = false
                 hideImage = false
                 share = item.shareMode
@@ -418,8 +427,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             }
 
         } else { // item is nil
-            image.flatColor()
-            setHighlightColor(ItemColor.none, highlightBottomLabel: false)
+            progressView.stopAnimation(nil)
+            setHighlightColor(.none, highlightBottomLabel: false)
         }
 
         if !(wantMapView || wantColourView), let e = existingPreviewView {
