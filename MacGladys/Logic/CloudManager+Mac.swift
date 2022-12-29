@@ -2,30 +2,26 @@ import CloudKit
 import Cocoa
 
 extension CloudManager {
-    static func received(notificationInfo: [AnyHashable: Any]) {
-        if !syncSwitchedOn {
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-                Model.updateBadge()
-            }
+    static func received(notificationInfo: [AnyHashable: Any]) async {
+        guard syncSwitchedOn else {
+            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+            await Model.updateBadge()
             return
         }
-
+        
         guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
         let scope = notification.databaseScope
         log("Received \(scope.logName) DB change push")
         switch scope {
         case .private, .shared:
-            if !Model.doneIngesting {
+            guard await Model.doneIngesting else {
                 log("We'll be syncing in a moment anyway, ignoring the push")
                 return
             }
-            Task {
-                do {
-                    try await sync(scope: scope)
-                } catch {
-                    log("Notification-triggered sync error: \(error.finalDescription)")
-                }
+            do {
+                try await sync(scope: scope)
+            } catch {
+                log("Notification-triggered sync error: \(error.finalDescription)")
             }
         case .public:
             break
@@ -34,30 +30,18 @@ extension CloudManager {
         }
     }
 
-    static func opportunisticSyncIfNeeded() {
+    static func opportunisticSyncIfNeeded() async throws {
         if syncSwitchedOn, !syncing, lastSyncCompletion.timeIntervalSinceNow < -60 {
-            Task {
-                do {
-                    try await sync()
-                } catch {
-                    log("Error in waking sync: \(error.finalDescription)")
-                }
-            }
+            try await sync()
         }
     }
 
-    static func syncAfterSaveIfNeeded() {
+    static func syncAfterSaveIfNeeded() async throws {
         if !syncSwitchedOn {
             log("Sync switched off, no need to sync after save")
             return
         }
 
-        Task {
-            do {
-                try await CloudManager.sync()
-            } catch {
-                log("Error in sync after save: \(error.finalDescription)")
-            }
-        }
+        try await sync()
     }
 }

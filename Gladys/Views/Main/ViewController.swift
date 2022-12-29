@@ -972,46 +972,66 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func reachabilityChanged() {
-        if reachability.status == .reachableViaWiFi, CloudManager.syncContextSetting == .wifiOnly {
-            CloudManager.opportunisticSyncIfNeeded()
+        Task {
+            if await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi {
+                do {
+                    try await CloudManager.opportunisticSyncIfNeeded()
+                } catch {
+                    log("Error in reachability triggered sync: \(error.finalDescription)")
+                }
+            }
         }
     }
 
-    @objc private func refreshControlChanged(_: UIRefreshControl) {
-        guard let r = collection.refreshControl else { return }
-        if r.isRefreshing, !CloudManager.syncing {
-            Task {
-                do {
-                    try await CloudManager.sync(overridingUserPreference: true)
-                } catch {
-                    await genericAlert(title: "Sync Error", message: error.finalDescription)
-                }
+    @objc private func refreshControlChanged(_ r: UIRefreshControl) {
+        guard r.isRefreshing else { return }
+        Task {
+            await _refreshControlChanged()
+        }
+    }
+    
+    private func _refreshControlChanged() async {
+        let syncing = await CloudManager.syncing
+        if !syncing {
+            do {
+                try await CloudManager.sync(overridingUserPreference: true)
+            } catch {
+                await genericAlert(title: "Sync Error", message: error.finalDescription)
             }
             lastSyncUpdate()
         }
     }
 
     @objc private func cloudStatusChanged() {
-        if CloudManager.syncSwitchedOn && collection.refreshControl == nil {
+        Task {
+            await _cloudStatusChanged()
+        }
+    }
+    
+    private func _cloudStatusChanged() async {
+        let syncOn = await CloudManager.syncSwitchedOn
+        let syncing = await CloudManager.syncing
+        let transitioning = await CloudManager.syncTransitioning
+
+        if syncOn && collection.refreshControl == nil {
             let refresh = UIRefreshControl()
             refresh.addTarget(self, action: #selector(refreshControlChanged(_:)), for: .valueChanged)
             collection.refreshControl = refresh
-
             navigationController?.view.layoutIfNeeded()
 
-        } else if !CloudManager.syncSwitchedOn && collection.refreshControl != nil {
+        } else if !syncOn && collection.refreshControl != nil {
             collection.refreshControl = nil
         }
 
         if let r = collection.refreshControl {
-            if r.isRefreshing, !CloudManager.syncing {
+            if r.isRefreshing, !syncing {
                 r.endRefreshing()
             }
             lastSyncUpdate()
         }
 
-        if CloudManager.syncing || CloudManager.syncTransitioning {
-            collection.accessibilityLabel = CloudManager.syncString
+        if syncing || transitioning {
+            collection.accessibilityLabel = await CloudManager.syncString
         } else {
             collection.accessibilityLabel = "Items"
         }
@@ -1019,7 +1039,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func lastSyncUpdate() {
         if let r = collection.refreshControl {
-            r.attributedTitle = NSAttributedString(string: CloudManager.syncString, attributes: [:])
+            Task {
+                let message = await CloudManager.syncString
+                r.attributedTitle = NSAttributedString(string: message, attributes: [:])
+            }
         }
     }
 
@@ -1535,7 +1558,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
         }, style: [], iconName: "mic"))
 
-        if CloudManager.syncSwitchedOn {
+        if item.cloudKitRecord != nil {
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
                     guard let s = self else { return }

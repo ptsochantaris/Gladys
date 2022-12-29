@@ -6,27 +6,37 @@ import UIKit
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         Singleton.shared.setup()
-
-        if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
-            CloudManager.received(notificationInfo: pushUserInfo, fetchCompletionHandler: nil)
-        } else {
-            CloudManager.opportunisticSyncIfNeeded(isStartup: true)
-        }
-
         UIApplication.shared.registerForRemoteNotifications()
-
+        Task {
+            if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
+                _ = await CloudManager.received(notificationInfo: pushUserInfo)
+            } else {
+                do {
+                    try await CloudManager.opportunisticSyncIfNeeded(isStartup: true)
+                } catch {
+                    log("Error in startup sync: \(error.finalDescription)")
+                }
+            }
+        }
         return true
     }
 
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        CloudManager.apnsUpdate(deviceToken)
+        Task { @CloudActor in
+            CloudManager.apnsUpdate(deviceToken)
+        }
     }
 
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
-        CloudManager.apnsUpdate(nil)
+        Task { @CloudActor in
+            CloudManager.apnsUpdate(nil)
+        }
     }
 
     func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        CloudManager.received(notificationInfo: userInfo, fetchCompletionHandler: completionHandler)
+        Task { @CloudActor in
+            let result = await CloudManager.received(notificationInfo: userInfo)
+            completionHandler(result)
+        }
     }
 }

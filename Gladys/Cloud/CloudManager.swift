@@ -50,7 +50,13 @@ extension Error {
     }
 }
 
-@MainActor
+@globalActor
+enum CloudActor {
+    final actor ActorType {}
+    static let shared = ActorType()
+}
+
+@CloudActor
 enum CloudManager {
     enum RecordType: String {
         case item = "ArchivedDropItem"

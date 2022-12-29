@@ -3,7 +3,7 @@ import SystemConfiguration
 
 let reachability = Reachability()
 
-final class Reachability {
+final actor Reachability {
     private let reachability: SCNetworkReachability
 
     init() {
@@ -33,7 +33,19 @@ final class Reachability {
         }
     }
 
-    enum NetworkStatus: Int {
+    var isReachableViaWiFi: Bool {
+        status == .reachableViaWiFi
+    }
+
+    var notReachableViaWiFi: Bool {
+        status != .reachableViaWiFi
+    }
+    
+    var statusName: String {
+        status.name
+    }
+
+    private enum NetworkStatus: Int {
         case notReachable, reachableViaWiFi, reachableViaWWAN
         var name: String {
             switch self {
@@ -62,12 +74,12 @@ final class Reachability {
         return returnValue
     }
 
-    var status: NetworkStatus {
+    private var status: NetworkStatus {
         var flags = SCNetworkReachabilityFlags()
         if SCNetworkReachabilityGetFlags(reachability, &flags) {
             return Reachability.status(from: flags)
         } else {
-            return NetworkStatus.notReachable
+            return .notReachable
         }
     }
 }

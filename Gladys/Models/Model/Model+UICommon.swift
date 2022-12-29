@@ -157,15 +157,16 @@ extension Model {
         delete(items: itemsRelatedToZone)
     }
 
-    static func resyncIfNeeded() {
-        if saveIsDueToSyncFetch, !CloudManager.syncDirty {
+    static func resyncIfNeeded() async throws {
+        let syncDirty = await CloudManager.syncDirty
+        if saveIsDueToSyncFetch, !syncDirty {
             saveIsDueToSyncFetch = false
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
         } else {
-            if CloudManager.syncDirty {
+            if syncDirty {
                 log("A sync had been requested while syncing, evaluating another sync")
             }
-            CloudManager.syncAfterSaveIfNeeded()
+            try await CloudManager.syncAfterSaveIfNeeded()
         }
     }
 
@@ -205,7 +206,7 @@ extension Model {
 
     static let badgeTimer = PopTimer(timeInterval: 0.1) {
         Task {
-            _updateBadge()
+            await _updateBadge()
         }
     }
 
@@ -213,8 +214,8 @@ extension Model {
         badgeTimer.push()
     }
 
-    static func sortDrops() {
-        let sequence = CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
+    static func sortDrops() async {
+        let sequence = await CloudManager.uuidSequence.compactMap { UUID(uuidString: $0) }
         sortDrops(by: sequence)
     }
 
@@ -227,8 +228,10 @@ extension Model {
         // migrate if needed
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
         if PersistedOptions.lastRanVersion != currentBuild {
-            if CloudManager.syncSwitchedOn, CloudManager.lastiCloudAccount == nil {
-                CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+            Task { @CloudActor in
+                if CloudManager.syncSwitchedOn, CloudManager.lastiCloudAccount == nil {
+                    CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
+                }
             }
             #if os(iOS)
                 Model.clearLegacyIntents()
@@ -415,7 +418,7 @@ extension Model {
             if !componentsToDelete.isEmpty {
                 item.components.removeAll { $0.needsDeletion }
                 for c in componentsToDelete {
-                    c.deleteFromStorage()
+                    await c.deleteFromStorage()
                 }
             }
         }

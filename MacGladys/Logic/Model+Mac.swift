@@ -57,11 +57,16 @@ extension Model {
     }
 
     static func saveComplete() {
-        resyncIfNeeded()
+        Task {
+            do {
+                try await resyncIfNeeded()
+            } catch {
+                log("Error in sync after save: \(error.finalDescription)")
+            }
+        }
     }
 
     @discardableResult
-    @MainActor
     static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
         guard let pasteboardItems = pasteBoard.pasteboardItems else { return .noData }
 
@@ -167,8 +172,8 @@ extension Model {
         (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 
-    static func _updateBadge() {
-        if CloudManager.showNetwork {
+    static func _updateBadge() async {
+        if await CloudManager.showNetwork {
             log("Updating app badge to show network")
             NSApp.dockTile.badgeLabel = "↔"
         } else if PersistedOptions.badgeIconWithItemCount {

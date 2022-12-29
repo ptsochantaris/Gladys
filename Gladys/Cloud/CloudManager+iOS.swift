@@ -10,82 +10,69 @@ extension CloudManager {
     @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
     static var syncContextSetting: SyncPermissionContext
 
-    static func received(notificationInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        Model.updateBadge()
-        if !syncSwitchedOn { return }
+    static func received(notificationInfo: [AnyHashable: Any]) async -> UIBackgroundFetchResult {
+        await Model.updateBadge()
 
-        guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
+        guard syncSwitchedOn, let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else {
+            return .noData
+        }
+
         let scope = notification.databaseScope
         log("Received \(scope.logName) DB change push")
         switch scope {
         case .private, .shared:
-            if UIApplication.shared.applicationState == .background {
-                Model.reloadDataIfNeeded()
-            } else if !Model.doneIngesting {
+            if await UIApplication.shared.applicationState == .background {
+                await Model.reloadDataIfNeeded()
+            } else if !(await Model.doneIngesting) {
                 log("We'll be syncing in a moment anyway, ignoring the push for now")
-                completionHandler?(.newData)
-                return
+                return .newData
             }
-            Task {
-                do {
-                    try await sync(scope: scope)
-                    completionHandler?(.newData)
-                } catch {
-                    log("Sync from push failed: \(error.localizedDescription)")
-                    completionHandler?(.failed)
-                }
+            do {
+                try await sync(scope: scope)
+                return .newData
+            } catch {
+                log("Sync from push failed: \(error.localizedDescription)")
+                return .failed
             }
+
         case .public:
-            break
+            fallthrough
+
         @unknown default:
-            break
+            return .noData
         }
     }
 
-    static func syncAfterSaveIfNeeded() {
+    static func syncAfterSaveIfNeeded() async throws {
         if !syncSwitchedOn {
             log("Sync switched off, no need to sync after save")
             return
         }
 
-        let go: Bool
-        switch CloudManager.syncContextSetting {
+        switch syncContextSetting {
         case .always:
-            go = true
             log("Sync after a local save")
         case .wifiOnly:
-            go = reachability.status == .reachableViaWiFi
+            let go = await reachability.isReachableViaWiFi
             if go {
                 log("Will sync after save, since WiFi is available")
             } else {
                 log("Won't sync after save, because no WiFi")
+                return
             }
         case .manualOnly:
-            go = false
             log("Won't sync after save, as manual sync is selected")
+            return
         }
 
-        if !go { return }
-
-        Task {
-            do {
-                try await CloudManager.sync()
-            } catch {
-                log("Error in sync after save: \(error.finalDescription)")
-            }
-        }
+        try await sync()
     }
 
-    static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) {
-        if syncSwitchedOn, !syncing, isStartup || force || UIApplication.shared.backgroundRefreshStatus != .available || lastSyncCompletion.timeIntervalSinceNow < -60 {
+    static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) async throws {
+        let brs = await UIApplication.shared.backgroundRefreshStatus
+        if syncSwitchedOn, !syncing, isStartup || force || brs != .available || lastSyncCompletion.timeIntervalSinceNow < -60 {
             // If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
-            Task {
-                do {
-                    try await sync()
-                } catch {
-                    log("Error in foregrounding sync: \(error.finalDescription)")
-                }
-            }
+            try await sync()
         }
     }
 }

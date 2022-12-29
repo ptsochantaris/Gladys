@@ -35,10 +35,14 @@ extension ArchivedItem {
         }
 
         needsDeletion = true
-        if isImportedShare, let share = cloudKitShareRecord {
-            CloudManager.markAsDeleted(recordName: share.recordID.recordName, cloudKitRecord: share)
-        } else if cloudKitRecord != nil {
-            CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
+        if isImportedShare, let cloudKitShareRecord {
+            Task { @CloudActor in
+                CloudManager.markAsDeleted(recordName: cloudKitShareRecord.recordID.recordName, cloudKitRecord: cloudKitShareRecord)
+            }
+        } else if let cloudKitRecord {
+            Task { @CloudActor in
+                CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
+            }
         } else {
             log("No cloud record for this item, skipping cloud delete")
         }

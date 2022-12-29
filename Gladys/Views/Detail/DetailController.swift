@@ -486,12 +486,15 @@ final class DetailController: GladysViewController,
         }
     }
 
-    private var shouldWaitForSync: Bool {
-        CloudManager.syncing || item.needsReIngest || item.isTransferring
+    private func shouldWaitForSync() async -> Bool {
+        if await CloudManager.syncing {
+            return true
+        }
+        return item.needsReIngest || item.isTransferring
     }
 
     private func afterSync() async {
-        guard shouldWaitForSync else { return }
+        guard await shouldWaitForSync() else { return }
 
         var keepChecking = true
         var alert: UIAlertController?
@@ -502,7 +505,8 @@ final class DetailController: GladysViewController,
 
         while keepChecking {
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-            if !shouldWaitForSync {
+            let wait = await shouldWaitForSync()
+            if !wait {
                 keepChecking = false
                 await alert?.dismiss(animated: true)
             }
@@ -542,7 +546,9 @@ final class DetailController: GladysViewController,
             guard let index = item.components.firstIndex(of: component) else {
                 return
             }
-            component.deleteFromStorage()
+            Task {
+                await component.deleteFromStorage()
+            }
             item.components.remove(at: index)
             if item.components.isEmpty {
                 table.deleteSections(IndexSet(integer: 2), with: .automatic)

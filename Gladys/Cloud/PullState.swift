@@ -43,8 +43,8 @@ final actor PullState {
         log("Changes fetch complete, processing")
 
         if updatedSequence || newDropCount > 0 {
-            Task { @MainActor in
-                Model.sortDrops()
+            Task {
+                await Model.sortDrops()
             }
         }
 

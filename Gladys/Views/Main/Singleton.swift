@@ -12,20 +12,15 @@ final class Singleton {
 
         CallbackSupport.setupCallbackSupport()
 
-        log("Initial reachability status: \(reachability.status.name)")
-
-        if PersistedOptions.mirrorFilesToDocuments {
-            MirrorManager.startMirrorMonitoring()
-            Task {
-                await Model.scanForMirrorChanges()
-            }
+        Task {
+            let name = await reachability.statusName
+            log("Initial reachability status: \(name)")
         }
-
+        
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
-
         n.addObserver(self, selector: #selector(ingestStart), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
 
@@ -33,18 +28,29 @@ final class Singleton {
         Task {
             await Model.detectExternalChanges()
         }
+        
+        if PersistedOptions.mirrorFilesToDocuments {
+            MirrorManager.startMirrorMonitoring()
+            Task {
+                await Model.scanForMirrorChanges()
+            }
+        }
     }
 
     @objc private func foregrounded() {
         if UIApplication.shared.applicationState == .background {
             // foregrounding, not including app launch
             log("App foregrounded")
-            if PersistedOptions.mirrorFilesToDocuments {
-                Task {
+            Task {
+                if PersistedOptions.mirrorFilesToDocuments {
                     await Model.scanForMirrorChanges()
                 }
+                do {
+                    try await CloudManager.opportunisticSyncIfNeeded()
+                } catch {
+                    log("Error in forgrounding triggered sync: \(error.finalDescription)")
+                }
             }
-            CloudManager.opportunisticSyncIfNeeded()
         }
     }
 
@@ -62,7 +68,11 @@ final class Singleton {
             }
             if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
                 PersistedOptions.extensionRequestedSync = false
-                CloudManager.opportunisticSyncIfNeeded(force: true)
+                do {
+                    try await CloudManager.opportunisticSyncIfNeeded(force: true)
+                } catch {
+                    log("Error in extension triggered sync: \(error.finalDescription)")
+                }
             }
         }
     }

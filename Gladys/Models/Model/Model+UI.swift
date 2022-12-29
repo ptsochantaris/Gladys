@@ -255,7 +255,13 @@ extension Model {
             }
         }
 
-        resyncIfNeeded()
+        Task {
+            do {
+                try await resyncIfNeeded()
+            } catch {
+                log("Error in sync after save: \(error.finalDescription)")
+            }
+        }
 
         if registeredForBackground {
             registeredForBackground = false
@@ -317,7 +323,7 @@ extension Model {
         await MirrorManager.removeMirrorIfNeeded()
     }
 
-    static func _updateBadge() {
+    static func _updateBadge() async {
         if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
             log("Updating app badge to show item count (\(count))")
             UIApplication.shared.applicationIconBadgeNumber = count

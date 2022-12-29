@@ -15,6 +15,7 @@ final class GladysTimer {
     }
 }
 
+@MainActor
 final class PopTimer {
     private var popTimer: GladysTimer?
     private let timeInterval: TimeInterval
@@ -22,8 +23,9 @@ final class PopTimer {
 
     func push() {
         popTimer = GladysTimer(interval: timeInterval) { [weak self] in
-            self?.abort()
-            self?.callback()
+            guard let self else { return }
+            self.abort()
+            self.callback()
         }
     }
 

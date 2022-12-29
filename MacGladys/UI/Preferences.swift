@@ -338,44 +338,51 @@ final class Preferences: NSViewController {
 
     @objc private func updateSyncSwitches() {
         assert(Thread.isMainThread)
-        if CloudManager.syncTransitioning || CloudManager.syncing {
-            syncSwitch.isEnabled = false
-            syncNowButton.isEnabled = false
-            deleteAllButton.isEnabled = false
-            eraseAlliCloudDataButton.isHidden = true
-            syncStatus.stringValue = CloudManager.syncString
-            syncStatusHolder.isHidden = false
-            syncSpinner.startAnimation(nil)
-        } else {
-            syncSwitch.isEnabled = true
-            syncNowButton.isEnabled = CloudManager.syncSwitchedOn
-            deleteAllButton.isEnabled = true
-            eraseAlliCloudDataButton.isHidden = false
-            syncStatus.stringValue = ""
-            syncStatusHolder.isHidden = true
-            syncSpinner.stopAnimation(nil)
-            syncSwitch.integerValue = CloudManager.syncSwitchedOn ? 1 : 0
+        Task {
+            let transitioning = await CloudManager.syncTransitioning
+            let syncing = await CloudManager.syncing
+            if transitioning || syncing {
+                syncSwitch.isEnabled = false
+                syncNowButton.isEnabled = false
+                deleteAllButton.isEnabled = false
+                eraseAlliCloudDataButton.isHidden = true
+                syncStatus.stringValue = await CloudManager.syncString
+                syncStatusHolder.isHidden = false
+                syncSpinner.startAnimation(nil)
+            } else {
+                let switchOn = await CloudManager.syncSwitchedOn
+                syncSwitch.isEnabled = true
+                syncNowButton.isEnabled = switchOn
+                deleteAllButton.isEnabled = true
+                eraseAlliCloudDataButton.isHidden = false
+                syncStatus.stringValue = ""
+                syncStatusHolder.isHidden = true
+                syncSpinner.stopAnimation(nil)
+                syncSwitch.integerValue = switchOn ? 1 : 0
+            }
         }
     }
 
     @IBAction private func deleteLocalItemsSelected(_: NSButton) {
-        let title: String
-        let subtitle: String
-        let actionName: String
-
-        if CloudManager.syncSwitchedOn {
-            title = "Remove from all devices?"
-            subtitle = "Sync is switched on, so this action will remove your entire collection from all synced devices. This cannot be undone."
-            actionName = "Delete From All Devices"
-        } else {
-            title = "Are you sure?"
-            subtitle = "This will remove all items from your collection. This cannot be undone."
-            actionName = "Delete All"
-        }
-
-        confirm(title: title, message: subtitle, action: actionName, cancel: "Cancel") { confirmed in
-            if confirmed {
-                Model.resetEverything()
+        Task {
+            let title: String
+            let subtitle: String
+            let actionName: String
+            
+            if await CloudManager.syncSwitchedOn {
+                title = "Remove from all devices?"
+                subtitle = "Sync is switched on, so this action will remove your entire collection from all synced devices. This cannot be undone."
+                actionName = "Delete From All Devices"
+            } else {
+                title = "Are you sure?"
+                subtitle = "This will remove all items from your collection. This cannot be undone."
+                actionName = "Delete All"
+            }
+            
+            confirm(title: title, message: subtitle, action: actionName, cancel: "Cancel") { confirmed in
+                if confirmed {
+                    Model.resetEverything()
+                }
             }
         }
     }
@@ -431,8 +438,8 @@ final class Preferences: NSViewController {
     @IBAction private func syncSwitchChanged(_: NSButton) {
         syncSwitch.isEnabled = false
 
-        Task { @MainActor in
-            if CloudManager.syncSwitchedOn {
+        Task {
+            if await CloudManager.syncSwitchedOn {
                 let sharingOwn = Model.sharingMyItems
                 let importing = Model.containsImportedShares
                 if sharingOwn, importing {
@@ -492,17 +499,20 @@ final class Preferences: NSViewController {
     }
 
     @IBAction private func eraseiCloudDataSelected(_: NSButton) {
-        if CloudManager.syncSwitchedOn || CloudManager.syncTransitioning || CloudManager.syncing {
-            Task { @MainActor in
+        Task {
+            let syncOn = await CloudManager.syncSwitchedOn
+            let transitioning = await CloudManager.syncTransitioning
+            let syncing = await CloudManager.syncing
+            if syncOn || transitioning || syncing {
                 await genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
-            }
-        } else {
-            confirm(title: "Are you sure?",
-                    message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
-                    action: "Delete iCloud Data",
-                    cancel: "Cancel") { [weak self] confirmed in
-                if confirmed {
-                    self?.eraseiCloudData()
+            } else {
+                confirm(title: "Are you sure?",
+                        message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
+                        action: "Delete iCloud Data",
+                        cancel: "Cancel") { [weak self] confirmed in
+                    if confirmed {
+                        self?.eraseiCloudData()
+                    }
                 }
             }
         }

@@ -156,26 +156,27 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             return
         }
 
-        let title: String
-        let subtitle: String
-        let actionName: String
-
-        if CloudManager.syncSwitchedOn {
-            title = "Remove from all devices?"
-            subtitle = "Sync is switched on, so this action will remove all your own items from all synced devices. This cannot be undone."
-            actionName = "Delete From All Devices"
-        } else {
-            title = "Are you sure?"
-            subtitle = "This will remove all your own items. This cannot be undone."
-            actionName = "Delete All"
+        Task {
+            let title: String
+            let subtitle: String
+            let actionName: String
+            if await CloudManager.syncSwitchedOn {
+                title = "Remove from all devices?"
+                subtitle = "Sync is switched on, so this action will remove all your own items from all synced devices. This cannot be undone."
+                actionName = "Delete From All Devices"
+            } else {
+                title = "Are you sure?"
+                subtitle = "This will remove all your own items. This cannot be undone."
+                actionName = "Delete All"
+            }
+            
+            let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
+            a.addAction(UIAlertAction(title: actionName, style: .destructive) { _ in
+                Model.resetEverything()
+            })
+            a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(a, animated: true)
         }
-
-        let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
-        a.addAction(UIAlertAction(title: actionName, style: .destructive) { _ in
-            Model.resetEverything()
-        })
-        a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(a, animated: true)
     }
 
     @IBOutlet private var deleteAll: UIBarButtonItem!

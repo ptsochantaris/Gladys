@@ -190,7 +190,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         LauncherCommon.killHelper()
 
         Model.setup()
-
+        
         CallbackSupport.setupCallbackSupport()
     }
 
@@ -222,8 +222,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             Model.updateBadge()
         }
 
-        if CloudManager.syncSwitchedOn {
-            Task {
+        Task {
+            if await CloudManager.syncSwitchedOn {
                 try? await CloudManager.sync()
             }
         }
@@ -299,13 +299,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             AppDelegate.updateHotkey()
-            CloudManager.opportunisticSyncIfNeeded()
+            do {
+                try await CloudManager.opportunisticSyncIfNeeded()
+            } catch {
+                log("Error in system wake triggered sync: \(error.finalDescription)")
+            }
         }
     }
 
     @MainActor
     func application(_: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
-        CloudManager.received(notificationInfo: userInfo)
+        Task {
+            await CloudManager.received(notificationInfo: userInfo)
+        }
     }
 
     func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
@@ -381,12 +387,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     @MainActor
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        CloudManager.apnsUpdate(deviceToken)
+        Task { @CloudActor in
+            CloudManager.apnsUpdate(deviceToken)
+        }
     }
 
     @MainActor
     func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
-        CloudManager.apnsUpdate(nil)
+        Task { @CloudActor in
+            CloudManager.apnsUpdate(nil)
+        }
     }
 
     func applicationWillResignActive(_: Notification) {

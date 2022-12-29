@@ -19,26 +19,33 @@ extension CloudManager {
 
     static var showNetwork = false {
         didSet {
-            Model.updateBadge()
+            Task {
+                await Model.updateBadge()
+            }
         }
     }
 
     private(set) static var syncProgressString: String?
 
+    @MainActor
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
         #if DEBUG
+        Task { @CloudActor in
             if let s = syncProgressString {
                 log(">>> Sync label updated: \(s)")
             } else {
                 log(">>> Sync label cleared")
             }
+        }
         #endif
         sendNotification(name: .CloudManagerStatusChanged, object: nil)
     }
 
     static func setSyncProgressString(_ newString: String?) {
         syncProgressString = newString
-        syncProgressDebouncer.push()
+        Task {
+            await syncProgressDebouncer.push()
+        }
     }
 
     private static func sendUpdatesUp() async throws {
@@ -47,7 +54,7 @@ extension CloudManager {
         }
 
         var sharedZonesToPush = Set<CKRecordZone.ID>()
-        for item in Model.allDrops where item.needsCloudPush {
+        for item in await Model.allDrops where item.needsCloudPush {
             let zoneID = item.parentZone
             if zoneID != privateZoneId {
                 sharedZonesToPush.insert(zoneID)
@@ -113,7 +120,9 @@ extension CloudManager {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
-                sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task {
+                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                }
             }
         }
     }
@@ -125,7 +134,9 @@ extension CloudManager {
                     setSyncProgressString(syncing ? "Pausing" : nil)
                 }
                 showNetwork = false
-                sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task {
+                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                }
             }
         }
     }
@@ -137,7 +148,9 @@ extension CloudManager {
                     setSyncProgressString(syncing ? "Syncing" : nil)
                 }
                 showNetwork = syncing || syncTransitioning
-                sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task {
+                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                }
             }
         }
     }
@@ -334,7 +347,7 @@ extension CloudManager {
             let modifyResult = try await container.privateCloudDatabase.modifyRecords(saving: [], deleting: ids, savePolicy: .allKeys)
             for recordID in modifyResult.deleteResults.keys {
                 let recordUUID = recordID.recordName
-                if let item = Model.item(shareId: recordUUID) {
+                if let item = await Model.item(shareId: recordUUID) {
                     item.cloudKitShareRecord = nil
                     log("Shut down sharing for item \(item.uuid) before deactivation")
                     item.postModified()
@@ -354,7 +367,7 @@ extension CloudManager {
             syncTransitioning = false
         }
 
-        let myOwnShareIds = Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
+        let myOwnShareIds = await Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
         if !myOwnShareIds.isEmpty {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }
@@ -380,14 +393,14 @@ extension CloudManager {
         uuidSequenceRecord = nil
         PullState.wipeDatabaseTokens()
         PullState.wipeZoneTokens()
-        Model.removeImportedShares()
+        await Model.removeImportedShares()
         syncSwitchedOn = false
         lastiCloudAccount = nil
         PersistedOptions.lastPushToken = nil
-        for item in Model.allDrops {
+        for item in await Model.allDrops {
             item.removeFromCloudkit()
         }
-        Model.save()
+        await Model.save()
         log("Cloud sync deactivation complete")
     }
 
@@ -466,7 +479,7 @@ extension CloudManager {
     static func fetchMissingShareRecords() async throws {
         var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
 
-        for item in Model.allDrops {
+        for item in await Model.allDrops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
                 if var existingFetchGroup = fetchGroups[zoneId] {
@@ -615,23 +628,23 @@ extension CloudManager {
             return
         }
 
-        if let existingItem = Model.item(uuid: metadata.rootRecordID.recordName) {
+        if let existingItem = await Model.item(uuid: metadata.rootRecordID.recordName) {
             let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
-            sendNotification(name: .HighlightItemRequested, object: request)
+            await sendNotification(name: .HighlightItemRequested, object: request)
             return
         }
 
-        sendNotification(name: .AcceptStarting, object: nil)
+        await sendNotification(name: .AcceptStarting, object: nil)
 
         try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
         showNetwork = true
         do {
             try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
             try? await sync() // get the new shared objects
-            sendNotification(name: .AcceptEnding, object: nil)
+            await sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
         } catch {
-            sendNotification(name: .AcceptEnding, object: nil)
+            await sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
             await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
         }
@@ -688,7 +701,7 @@ extension CloudManager {
 
         #if os(iOS)
             if !force, !overridingUserPreference {
-                if syncContextSetting == .wifiOnly, reachability.status != .reachableViaWiFi {
+                if syncContextSetting == .wifiOnly, await reachability.notReachableViaWiFi {
                     log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
                     return
                 }
@@ -706,9 +719,11 @@ extension CloudManager {
         }
 
         #if os(iOS)
-            BackgroundTask.registerForBackground()
+            await BackgroundTask.registerForBackground()
             defer {
-                BackgroundTask.unregisterForBackground()
+                Task {
+                    await BackgroundTask.unregisterForBackground()
+                }
             }
         #endif
 

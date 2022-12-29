@@ -24,7 +24,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     override func viewWillAppear() {
         handleLayout()
-        updateTitle()
+        Task {
+            await updateTitle()
+        }
         AppDelegate.shared?.updateMenubarIconMode(showing: true, forceUpdateMenu: false)
 
         super.viewWillAppear()
@@ -84,23 +86,31 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let n = NotificationCenter.default
 
         let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
-            self?.filter.rebuildLabels()
-            self?.updateEmptyView()
-            self?.modelDataUpdate(notification)
+            guard let self else { return }
+            self.filter.rebuildLabels()
+            self.updateEmptyView()
+            self.modelDataUpdate(notification)
         }
 
         let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
-            self?.itemCollectionNeedsDisplay()
+            guard let self else { return }
+            self.itemCollectionNeedsDisplay()
         }
 
         let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
-            self?.updateTitle()
+            guard let self else { return }
+            Task {
+                await self.updateTitle()
+            }
         }
 
         let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
-            self?.collection.deselectAll(nil)
-            _ = self?.filter.update(signalUpdate: .animated)
-            self?.updateTitle()
+            guard let self else { return }
+            self.collection.deselectAll(nil)
+            _ = self.filter.update(signalUpdate: .animated)
+            Task {
+                await self.updateTitle()
+            }
         }
 
         let a8 = n.addObserver(forName: .AlwaysOnTopChanged, object: nil, queue: .main) { [weak self] _ in
@@ -127,7 +137,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         observers = [a1, a3, a4, a5, a8, a9, a11, a12, a13]
 
-        updateTitle()
+        Task {
+            await updateTitle()
+        }
         updateEmptyView()
         setupMouseMonitoring()
     }
@@ -135,8 +147,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func itemCollectionNeedsDisplay() {
         collection.animator().reloadData()
         touchBarScrubber?.reloadData()
-        Task { @MainActor in
-            self.updateTitle()
+        Task {
+            await updateTitle()
         }
     }
 
@@ -144,7 +156,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         NSApp.currentEvent?.modifierFlags.contains(.option) ?? false
     }
 
-    private func updateTitle() {
+    private func updateTitle() async {
         guard let window = view.window else { return }
 
         var title: String
@@ -156,7 +168,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         let items = collection.actionableSelectedItems
 
-        if let syncStatus = CloudManager.syncProgressString {
+        if let syncStatus = await CloudManager.syncProgressString {
             window.title = "\(title) — \(syncStatus)"
 
         } else if items.count > 1 {
@@ -236,11 +248,15 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if !collection.selectionIndexPaths.isEmpty, QLPreviewPanel.sharedPreviewPanelExists(), QLPreviewPanel.shared().isVisible {
             QLPreviewPanel.shared().reloadData()
         }
-        updateTitle()
+        Task {
+            await updateTitle()
+        }
     }
 
     func collectionView(_: NSCollectionView, didDeselectItemsAt _: Set<IndexPath>) {
-        updateTitle()
+        Task {
+            await updateTitle()
+        }
     }
 
     func collectionView(_: NSCollectionView, numberOfItemsInSection _: Int) -> Int {
@@ -555,7 +571,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
         touchBarScrubber?.reloadData()
 
-        updateTitle()
+        Task {
+            await updateTitle()
+        }
     }
 
     private func itemsDeleted() {

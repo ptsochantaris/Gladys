@@ -121,8 +121,8 @@ final actor PushState {
         let deletionCount = recordsToDelete.count
         if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
         let cs = components
-        Task { @MainActor in
-            CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
+        Task {
+            await CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
         }
     }
 

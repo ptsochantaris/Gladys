@@ -136,6 +136,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     @objc private func updateInfo() {
+        Task {
+            await _updateInfo()
+        }
+    }
+    
+    private func _updateInfo() async {
         let shareMode = item.shareMode
         let readWrite = shareMode != .elsewhereReadOnly
 
@@ -151,7 +157,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         lastShareMode = item.shareMode
         infoLabel.stringValue = item.addedString
 
-        if CloudManager.syncSwitchedOn {
+        if await CloudManager.syncSwitchedOn {
             inviteButton.isHidden = false
             inviteButton.isEnabled = true
             infoLabel.alignment = .center
@@ -342,7 +348,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     private func delete(at index: Int) {
         let component = item.components[index]
         item.components.remove(at: index)
-        component.deleteFromStorage()
+        Task {
+            await component.deleteFromStorage()
+        }
         item.renumberTypeItems()
         components.animator().deleteItems(at: [IndexPath(item: index, section: 0)])
         saveItem()
