@@ -189,9 +189,10 @@ extension UISceneSession {
         }
         let newFilter = Filter()
         if userInfo == nil {
-            userInfo = [String: Any]()
+            userInfo = [kGladysMainFilter: newFilter]
+        } else {
+            userInfo![kGladysMainFilter] = newFilter
         }
-        userInfo![kGladysMainFilter] = newFilter
         return newFilter
     }
 }
@@ -209,7 +210,7 @@ extension Model {
 
     private static var watchDelegate: WatchDelegate?
 
-    static var coordinator: NSFileCoordinator {
+    nonisolated static var coordinator: NSFileCoordinator {
         NSFileCoordinator(filePresenter: filePresenter)
     }
 

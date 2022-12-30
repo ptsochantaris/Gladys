@@ -7,10 +7,15 @@ import CoreSpotlight
     import Cocoa
 #endif
 
+@globalActor
+enum ModelStorage {
+    final actor ActorType {}
+    static let shared = ActorType()
+}
+
 extension Model {
     static var saveIsDueToSyncFetch = false
 
-    static let saveQueue = DispatchQueue(label: "build.bru.Gladys.saveQueue", qos: .background)
     private static var needsAnotherSave = false
     private static var isSaving = false
 
@@ -286,11 +291,17 @@ extension Model {
 
         sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
 
-        saveQueue.async {
-            do {
-                try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
-            } catch {
-                log("Saving Error: \(error.finalDescription)")
+        let broken = brokenMode
+
+        Task { @ModelStorage in
+            if broken {
+                log("Ignoring save, model is broken, app needs restart.")
+            } else {
+                do {
+                    try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
+                } catch {
+                    log("Saving Error: \(error.finalDescription)")
+                }
             }
 
             Task {
@@ -312,12 +323,18 @@ extension Model {
     static func saveIndexOnly() {
         let itemsToSave: ContiguousArray = allDrops.filter(\.goodToSave)
         NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-        saveQueue.async {
-            do {
-                _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
-                log("Saved index only")
-            } catch {
-                log("Warning: Error while committing index to disk: (\(error.finalDescription))")
+        let broken = brokenMode
+
+        Task { @ModelStorage in
+            if broken {
+                log("Ignoring save, model is broken, app needs restart.")
+            } else {
+                do {
+                    _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
+                    log("Saved index only")
+                } catch {
+                    log("Warning: Error while committing index to disk: (\(error.finalDescription))")
+                }
             }
             Task { @MainActor in
                 saveIndexComplete()
@@ -329,21 +346,26 @@ extension Model {
     static func commitItem(item: ArchivedItem) {
         item.flags.remove(.isBeingCreatedBySync)
         item.flags.remove(.needsSaving)
+        
+        if brokenMode {
+            log("Ignoring save, model is broken, app needs restart.")
+            return
+        }
+
         commitQueue.append(item)
 
-        reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
-
-        saveQueue.async {
-            var nextItemUUIDs = Set<UUID>()
-            var itemsToSave = ContiguousArray<ArchivedItem>()
-            DispatchQueue.main.sync {
-                nextItemUUIDs = Set(commitQueue.filter { !$0.needsDeletion }.map(\.uuid))
+        Task { @ModelStorage in
+            let (itemsToCommit, itemsToSave) = await MainActor.run {
+                let itemsToCommit = commitQueue.filter { !$0.needsDeletion }
                 commitQueue.removeAll()
-                itemsToSave = allDrops.filter(\.goodToSave)
+                reIndex(items: itemsToCommit.map(\.searchableItem), in: CSSearchableIndex.default())
+                let itemsToSave: ContiguousArray<ArchivedItem> = allDrops.filter(\.goodToSave)
+                return (itemsToCommit, itemsToSave)
             }
-            if nextItemUUIDs.isEmpty {
+            if itemsToCommit.isEmpty {
                 return
             }
+            let nextItemUUIDs = Set(itemsToCommit.map(\.uuid))
             do {
                 _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: nextItemUUIDs)
                 log("Ingest completed for items (\(nextItemUUIDs)) and committed to disk")
@@ -353,11 +375,8 @@ extension Model {
         }
     }
 
+    @ModelStorage
     private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
-        if brokenMode {
-            log("Ignoring save, model is broken, app needs restart.")
-            return
-        }
         var closureError: NSError?
         var coordinationError: NSError?
         coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
@@ -372,10 +391,10 @@ extension Model {
 
                 let allCount = allItems.count
                 var uuidData = Data(count: allCount * 16)
-                let encoder = saveEncoder
                 uuidData.withUnsafeMutableBytes { unsafeMutableRawBufferPointer in
                     let uuidArray = unsafeMutableRawBufferPointer.bindMemory(to: uuid_t.self)
                     var count = 0
+                    let encoder = saveEncoder
                     for item in allItems {
                         let u = item.uuid
                         uuidArray[count] = u.uuid
@@ -397,8 +416,10 @@ extension Model {
                     }
                 }
 
-                if let dataModified = modificationDate(for: url) {
-                    dataFileLastModified = dataModified
+                Task { @MainActor in
+                    if let dataModified = modificationDate(for: url) {
+                        dataFileLastModified = dataModified
+                    }
                 }
 
                 log("Saved: \(-start.timeIntervalSinceNow) seconds")

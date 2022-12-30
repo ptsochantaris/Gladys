@@ -150,23 +150,18 @@ final class Filter {
         }
     }
 
+    private static let regex = try! NSRegularExpression(pattern: "(\\b\\S+?\\b|\\B\\\".+?\\\"\\B)")
+
     private static func terms(for text: String?) -> [String]? {
         guard let text = text?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
 
-        var terms = [String]()
-        do {
-            let regex = try NSRegularExpression(pattern: "(\\b\\S+?\\b|\\B\\\".+?\\\"\\B)")
-            regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).forEach {
-                guard let r = Range($0.range, in: text) else { return }
-                let s = text[r]
-                let term = s.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
-                let criterion = "\"*\(term)*\"cd"
-                terms.append("title == \(criterion) || textContent == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)")
-            }
-        } catch {
-            log("Warning regex error: \(error.localizedDescription)")
+        return regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap { match -> String? in
+            guard let r = Range(match.range, in: text) else { return nil }
+            let s = text[r]
+            let term = s.trimmingCharacters(in: CharacterSet(charactersIn: "\""))
+            let criterion = "\"*\(term)*\"cd"
+            return "title == \(criterion) || textContent == \(criterion) || contentDescription == \(criterion) || keywords == \(criterion)"
         }
-        return terms
     }
 
     func countItems(for toggle: Toggle) -> Int {

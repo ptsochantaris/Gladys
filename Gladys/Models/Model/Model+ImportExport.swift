@@ -73,7 +73,7 @@ extension Model {
         let count = 2 + eligibleItems.count
         let p = Progress(totalUnitCount: Int64(count))
 
-        DispatchQueue.global(qos: .userInitiated).async {
+        Task.detached {
             do {
                 let url = try createArchiveThread(progress: p, eligibleItems: eligibleItems)
                 completion(url, nil)
@@ -85,7 +85,7 @@ extension Model {
         return p
     }
 
-    private static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
+    nonisolated private static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
         let fm = FileManager()
         let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path

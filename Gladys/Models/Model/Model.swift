@@ -116,7 +116,7 @@ enum Model {
         dataFileLastModified = .distantPast
     }
 
-    static var loadDecoder: JSONDecoder {
+    nonisolated static var loadDecoder: JSONDecoder {
         if let decoder = Thread.current.threadDictionary["gladys.decoder"] as? JSONDecoder {
             return decoder
         } else {
@@ -128,7 +128,7 @@ enum Model {
         }
     }
 
-    static var saveEncoder: JSONEncoder {
+    nonisolated static var saveEncoder: JSONEncoder {
         if let encoder = Thread.current.threadDictionary["gladys.encoder"] as? JSONEncoder {
             return encoder
         } else {

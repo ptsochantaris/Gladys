@@ -1,14 +1,9 @@
 import Foundation
 
 final class ModelFilePresenter: NSObject, NSFilePresenter {
-    var presentedItemURL: URL? {
-        Model.itemsDirectoryUrl
-    }
+    let presentedItemURL: URL? = Model.itemsDirectoryUrl
 
-    private let _presentedItemOperationQueue = OperationQueue()
-    var presentedItemOperationQueue: OperationQueue {
-        _presentedItemOperationQueue // requests will be dispatched to main below
-    }
+    let presentedItemOperationQueue = OperationQueue()
 
     func presentedItemDidChange() {
         Task { @MainActor in
