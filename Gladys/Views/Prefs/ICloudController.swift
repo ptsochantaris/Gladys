@@ -29,7 +29,7 @@ final class ICloudController: GladysViewController {
             await _eraseiCloudDataSelected()
         }
     }
-    
+
     private func _eraseiCloudDataSelected() async {
         let syncOn = await CloudManager.syncSwitchedOn
         let transitioning = await CloudManager.syncTransitioning
@@ -68,13 +68,13 @@ final class ICloudController: GladysViewController {
             await _updateiCloudControls()
         }
     }
-    
+
     private func _updateiCloudControls() async {
         let transitioning = await CloudManager.syncTransitioning
         let syncing = await CloudManager.syncing
         if transitioning || syncing {
             icloudSwitch.isEnabled = false
-            icloudLabel.text = await CloudManager.syncString
+            icloudLabel.text = await CloudManager.makeSyncString()
             icloudSpinner.startAnimating()
         } else {
             icloudSwitch.isEnabled = true
@@ -99,7 +99,7 @@ final class ICloudController: GladysViewController {
             await _syncPolicyChanged(index: sender.selectedSegmentIndex)
         }
     }
-    
+
     @CloudActor
     private func _syncPolicyChanged(index: Int) async {
         if let newPolicy = CloudManager.SyncPermissionContext(rawValue: index) {
@@ -125,15 +125,15 @@ final class ICloudController: GladysViewController {
             await _icloudSwitchChanged()
         }
     }
-    
+
     private func _icloudSwitchChanged() async {
         let syncOn = await CloudManager.syncSwitchedOn
-        
+
         if icloudSpinner.isAnimating {
             icloudSwitch.isOn = syncOn
             return
         }
-        
+
         if icloudSwitch.isOn, !syncOn {
             if Model.allDrops.isEmpty {
                 await CloudManager.startActivation()
@@ -158,7 +158,7 @@ final class ICloudController: GladysViewController {
                                               action: "Turn Off Sync",
                                               cancel: "Cancel")
                 if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
-                
+
             } else if sharingOwn {
                 let confirmed = await confirm(title: "You are sharing items",
                                               message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",

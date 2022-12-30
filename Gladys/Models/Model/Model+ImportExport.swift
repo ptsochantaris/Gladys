@@ -85,7 +85,7 @@ extension Model {
         return p
     }
 
-    nonisolated private static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
+    private nonisolated static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
         let fm = FileManager()
         let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path

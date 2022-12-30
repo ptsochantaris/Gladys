@@ -1,44 +1,24 @@
+import Combine
 import Foundation
 
-final class GladysTimer {
-    private let timer: DispatchSourceTimer
-
-    init(interval: TimeInterval, block: @escaping () -> Void) {
-        timer = DispatchSource.makeTimerSource(flags: [], queue: .main)
-        timer.schedule(deadline: .now() + interval)
-        timer.setEventHandler(handler: block)
-        timer.resume()
-    }
-
-    deinit {
-        timer.cancel()
-    }
-}
-
-@MainActor
 final class PopTimer {
-    private var popTimer: GladysTimer?
-    private let timeInterval: TimeInterval
-    private let callback: () -> Void
+    private let publisher = PassthroughSubject<Void, Never>()
+    private var cancel: Cancellable?
 
     func push() {
-        popTimer = GladysTimer(interval: timeInterval) { [weak self] in
-            guard let self else { return }
-            self.abort()
-            self.callback()
-        }
+        publisher.send()
     }
 
     func abort() {
-        popTimer = nil
+        cancel?.cancel()
     }
 
     var isRunning: Bool {
-        popTimer != nil
+        cancel != nil
     }
 
     init(timeInterval: TimeInterval, callback: @escaping () -> Void) {
-        self.timeInterval = timeInterval
-        self.callback = callback
+        let stride = RunLoop.SchedulerTimeType.Stride(timeInterval)
+        cancel = publisher.debounce(for: stride, scheduler: RunLoop.main).sink(receiveValue: callback)
     }
 }

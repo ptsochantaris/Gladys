@@ -346,7 +346,7 @@ final class Preferences: NSViewController {
                 syncNowButton.isEnabled = false
                 deleteAllButton.isEnabled = false
                 eraseAlliCloudDataButton.isHidden = true
-                syncStatus.stringValue = await CloudManager.syncString
+                syncStatus.stringValue = await CloudManager.makeSyncString()
                 syncStatusHolder.isHidden = false
                 syncSpinner.startAnimation(nil)
             } else {
@@ -368,7 +368,7 @@ final class Preferences: NSViewController {
             let title: String
             let subtitle: String
             let actionName: String
-            
+
             if await CloudManager.syncSwitchedOn {
                 title = "Remove from all devices?"
                 subtitle = "Sync is switched on, so this action will remove your entire collection from all synced devices. This cannot be undone."
@@ -378,7 +378,7 @@ final class Preferences: NSViewController {
                 subtitle = "This will remove all items from your collection. This cannot be undone."
                 actionName = "Delete All"
             }
-            
+
             confirm(title: title, message: subtitle, action: actionName, cancel: "Cancel") { confirmed in
                 if confirmed {
                     Model.resetEverything()

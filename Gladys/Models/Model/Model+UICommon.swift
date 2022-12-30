@@ -346,7 +346,7 @@ extension Model {
     static func commitItem(item: ArchivedItem) {
         item.flags.remove(.isBeingCreatedBySync)
         item.flags.remove(.needsSaving)
-        
+
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")
             return

@@ -15,6 +15,11 @@ final actor PullState {
     var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
     var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
     var pendingTypeItemRecords = [CKRecord.ID: ContiguousArray<CKRecord>]() // using full IDs because zone is also imporant
+    let newItemsDebounce = PopTimer(timeInterval: 0.3) {
+        Task { @MainActor in
+            sendNotification(name: .ItemsAddedBySync, object: nil)
+        }
+    }
 
     private func updateProgress() {
         Task {
@@ -39,6 +44,7 @@ final actor PullState {
     }
 
     private func processChanges(commitTokens: Bool) async {
+        newItemsDebounce.abort()
         await CloudManager.setSyncProgressString("Updating…")
         log("Changes fetch complete, processing")
 
@@ -388,9 +394,7 @@ final actor PullState {
                 }
                 await Model.append(drop: newItem)
                 newDropCount += 1
-                Task { @MainActor in
-                    sendNotification(name: .ItemAddedBySync, object: newItem)
-                }
+                newItemsDebounce.push()
             }
 
         case .component:

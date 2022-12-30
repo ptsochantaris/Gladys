@@ -190,7 +190,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         LauncherCommon.killHelper()
 
         Model.setup()
-        
+
         CallbackSupport.setupCallbackSupport()
     }
 

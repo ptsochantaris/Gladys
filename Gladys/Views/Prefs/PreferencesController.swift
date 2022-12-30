@@ -169,7 +169,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 subtitle = "This will remove all your own items. This cannot be undone."
                 actionName = "Delete All"
             }
-            
+
             let a = UIAlertController(title: title, message: subtitle, preferredStyle: .alert)
             a.addAction(UIAlertAction(title: actionName, style: .destructive) { _ in
                 Model.resetEverything()

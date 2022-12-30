@@ -204,7 +204,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
         n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
-        
+
         if archivedDropItem != nil {
             reDecorate()
         }
@@ -284,7 +284,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
         var bottomLabelText = ""
         var bottomLabelAlignment = NSTextAlignment.center
-        
+
         image.flatColor()
 
         if let item {
@@ -324,14 +324,14 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         }
                     }
                 }
-                
+
                 let primaryLabel: NSTextField
                 let secondaryLabel: NSTextField
-                
+
                 let titleInfo = item.displayText
                 topLabelAlignment = titleInfo.1
                 topLabelText = titleInfo.0 ?? ""
-                
+
                 if PersistedOptions.displayNotesInMainView, !item.note.isEmpty {
                     bottomLabelText = item.note
                     bottomLabelHighlight = true
@@ -341,23 +341,23 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         topLabelText = ""
                     }
                 }
-                
+
                 if PersistedOptions.displayLabelsInMainView, !item.labels.isEmpty {
                     hideLabels = false
                 }
-                
+
                 if bottomLabelText.isEmpty, !topLabelText.isEmpty {
                     bottomLabelText = topLabelText
                     bottomLabelAlignment = topLabelAlignment
                     topLabelText = ""
-                    
+
                     primaryLabel = bottomLabel
                     secondaryLabel = topLabel
                 } else {
                     primaryLabel = topLabel
                     secondaryLabel = bottomLabel
                 }
-                
+
                 switch item.displayMode {
                 case .center:
                     image.layer?.contentsGravity = .center
@@ -376,7 +376,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                     primaryLabel.maximumNumberOfLines = 6
                     secondaryLabel.maximumNumberOfLines = 2
                 }
-                
+
                 // if we're showing an icon, let's try to enhance things a bit
                 if image.layer?.contentsGravity == .center, let backgroundItem = item.backgroundInfoObject {
                     if let mapItem = backgroundItem as? MKMapItem {
@@ -396,7 +396,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                                 m.topAnchor.constraint(equalTo: image.topAnchor),
                                 m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
                             ])
-                            
+
                             existingPreviewView = m
                         }
                     } else if let colourItem = backgroundItem as? NSColor {
@@ -418,7 +418,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                                 m.topAnchor.constraint(equalTo: image.topAnchor),
                                 m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
                             ])
-                            
+
                             existingPreviewView = m
                         }
                     }

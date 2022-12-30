@@ -8,7 +8,7 @@ extension CloudManager {
             await Model.updateBadge()
             return
         }
-        
+
         guard let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else { return }
         let scope = notification.databaseScope
         log("Received \(scope.logName) DB change push")

@@ -27,25 +27,22 @@ extension CloudManager {
 
     private(set) static var syncProgressString: String?
 
-    @MainActor
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
         #if DEBUG
-        Task { @CloudActor in
             if let s = syncProgressString {
                 log(">>> Sync label updated: \(s)")
             } else {
                 log(">>> Sync label cleared")
             }
-        }
         #endif
-        sendNotification(name: .CloudManagerStatusChanged, object: nil)
+        Task { @MainActor in
+            sendNotification(name: .CloudManagerStatusChanged, object: nil)
+        }
     }
 
     static func setSyncProgressString(_ newString: String?) {
         syncProgressString = newString
-        Task {
-            await syncProgressDebouncer.push()
-        }
+        syncProgressDebouncer.push()
     }
 
     private static func sendUpdatesUp() async throws {
@@ -130,9 +127,7 @@ extension CloudManager {
     static var syncRateLimited = false {
         didSet {
             if syncTransitioning != oldValue {
-                Task {
-                    setSyncProgressString(syncing ? "Pausing" : nil)
-                }
+                setSyncProgressString(syncing ? "Pausing" : nil)
                 showNetwork = false
                 Task {
                     await sendNotification(name: .CloudManagerStatusChanged, object: nil)
@@ -144,9 +139,7 @@ extension CloudManager {
     static var syncing = false {
         didSet {
             if syncing != oldValue {
-                Task {
-                    setSyncProgressString(syncing ? "Syncing" : nil)
-                }
+                setSyncProgressString(syncing ? "Syncing" : nil)
                 showNetwork = syncing || syncTransitioning
                 Task {
                     await sendNotification(name: .CloudManagerStatusChanged, object: nil)
@@ -273,6 +266,7 @@ extension CloudManager {
         }
     }
 
+    @MainActor
     private static let agoFormatter: DateComponentsFormatter = {
         let f = DateComponentsFormatter()
         f.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute, .second]
@@ -281,7 +275,7 @@ extension CloudManager {
         return f
     }()
 
-    static var syncString: String {
+    static func makeSyncString() async -> String {
         if let s = syncProgressString {
             return s
         }
@@ -290,10 +284,11 @@ extension CloudManager {
         if syncTransitioning { return syncSwitchedOn ? "Deactivating" : "Activating" }
         if syncing { return "Syncing" }
 
-        let i = -lastSyncCompletion.timeIntervalSinceNow
+        let last = lastSyncCompletion
+        let i = -last.timeIntervalSinceNow
         if i < 1.0 {
             return "Synced"
-        } else if lastSyncCompletion != .distantPast, let s = agoFormatter.string(from: i) {
+        } else if last != .distantPast, let s = agoFormatter.string(from: i) {
             return "Synced \(s) ago"
         } else {
             return "Never"

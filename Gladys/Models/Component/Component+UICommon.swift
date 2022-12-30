@@ -37,7 +37,7 @@ extension Component {
 
         return decode()
     }
-    
+
     @MainActor
     func replaceURL(_ newUrl: URL) {
         guard isURL else { return }

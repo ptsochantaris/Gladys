@@ -131,7 +131,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             self?.highlightItem(with: request)
         }
 
-        let a13 = n.addObserver(forName: .ItemAddedBySync, object: nil, queue: .main) { [weak self] _ in
+        let a13 = n.addObserver(forName: .ItemsAddedBySync, object: nil, queue: .main) { [weak self] _ in
             _ = self?.filter.update(signalUpdate: .animated)
         }
 
@@ -1091,6 +1091,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if !checkingDrag, window.isVisible {
             if autoShown, autoShowOnEdge > 0, window.frame.insetBy(dx: -30, dy: -30).contains(mouseLocation) {
                 enteredWindowAfterAutoShow = true
+                hideTimer?.invalidate()
                 hideTimer = nil
 
             } else if enteredWindowAfterAutoShow, presentedViewControllers?.isEmpty ?? true {
@@ -1158,9 +1159,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-    private var hideTimer: GladysTimer?
+    private weak var hideTimer: Timer?
 
     func showWindow(window: NSWindow, startHideTimerIfNeeded: Bool = false) {
+        hideTimer?.invalidate()
         hideTimer = nil
         enteredWindowAfterAutoShow = false
         autoShown = startHideTimerIfNeeded
@@ -1174,7 +1176,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if startHideTimerIfNeeded {
             let time = TimeInterval(PersistedOptions.autoHideAfter)
             if time > 0 {
-                hideTimer = GladysTimer(interval: time) { [weak self] in
+                hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false) { [weak self] _ in
                     self?.hideWindowBecauseOfMouse(window: window)
                 }
             }
@@ -1184,6 +1186,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func hideWindowBecauseOfMouse(window: NSWindow) {
         enteredWindowAfterAutoShow = false
         autoShown = false
+        hideTimer?.invalidate()
         hideTimer = nil
 
         NSAnimationContext.runAnimationGroup { _ in

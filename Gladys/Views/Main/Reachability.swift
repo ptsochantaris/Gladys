@@ -40,7 +40,7 @@ final actor Reachability {
     var notReachableViaWiFi: Bool {
         status != .reachableViaWiFi
     }
-    
+
     var statusName: String {
         status.name
     }

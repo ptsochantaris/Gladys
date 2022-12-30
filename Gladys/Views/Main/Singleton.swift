@@ -16,7 +16,7 @@ final class Singleton {
             let name = await reachability.statusName
             log("Initial reachability status: \(name)")
         }
-        
+
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -28,7 +28,7 @@ final class Singleton {
         Task {
             await Model.detectExternalChanges()
         }
-        
+
         if PersistedOptions.mirrorFilesToDocuments {
             MirrorManager.startMirrorMonitoring()
             Task {

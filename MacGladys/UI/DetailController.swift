@@ -140,7 +140,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
             await _updateInfo()
         }
     }
-    
+
     private func _updateInfo() async {
         let shareMode = item.shareMode
         let readWrite = shareMode != .elsewhereReadOnly

@@ -841,7 +841,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         n.addObserver(self, selector: #selector(labelSelectionChanged), name: .LabelSelectionChanged, object: nil)
         n.addObserver(self, selector: #selector(reloadExistingItems(_:)), name: .ItemCollectionNeedsDisplay, object: nil)
         n.addObserver(self, selector: #selector(modelDataUpdate(_:)), name: .ModelDataUpdated, object: nil)
-        n.addObserver(self, selector: #selector(itemCreated(_:)), name: .ItemAddedBySync, object: nil)
+        n.addObserver(self, selector: #selector(itemCreated(_:)), name: .ItemsAddedBySync, object: nil)
         n.addObserver(self, selector: #selector(cloudStatusChanged), name: .CloudManagerStatusChanged, object: nil)
         n.addObserver(self, selector: #selector(reachabilityChanged), name: .ReachabilityChanged, object: nil)
         n.addObserver(self, selector: #selector(acceptStarted), name: .AcceptStarting, object: nil)
@@ -989,7 +989,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             await _refreshControlChanged()
         }
     }
-    
+
     private func _refreshControlChanged() async {
         let syncing = await CloudManager.syncing
         if !syncing {
@@ -1007,7 +1007,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             await _cloudStatusChanged()
         }
     }
-    
+
     private func _cloudStatusChanged() async {
         let syncOn = await CloudManager.syncSwitchedOn
         let syncing = await CloudManager.syncing
@@ -1031,7 +1031,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         if syncing || transitioning {
-            collection.accessibilityLabel = await CloudManager.syncString
+            collection.accessibilityLabel = await CloudManager.makeSyncString()
         } else {
             collection.accessibilityLabel = "Items"
         }
@@ -1040,7 +1040,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private func lastSyncUpdate() {
         if let r = collection.refreshControl {
             Task {
-                let message = await CloudManager.syncString
+                let message = await CloudManager.makeSyncString()
                 r.attributedTitle = NSAttributedString(string: message, attributes: [:])
             }
         }
