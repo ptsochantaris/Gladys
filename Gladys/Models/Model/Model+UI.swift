@@ -309,7 +309,7 @@ extension Model {
     private static func runMirror() async {
         let itemsToMirror: ContiguousArray = allDrops.filter(\.goodToSave)
         BackgroundTask.registerForBackground()
-        await MirrorManager.mirrorToFiles(from: itemsToMirror, andPruneOthers: true)
+        await MirrorManager.mirrorToFiles(from: itemsToMirror)
         BackgroundTask.unregisterForBackground()
     }
 
@@ -318,10 +318,6 @@ extension Model {
         let itemsToMirror: ContiguousArray = allDrops.filter(\.goodToSave)
         await MirrorManager.scanForMirrorChanges(items: itemsToMirror)
         BackgroundTask.unregisterForBackground()
-    }
-
-    static func deleteMirror() async {
-        await MirrorManager.removeMirrorIfNeeded()
     }
 
     static func _updateBadge() async {

@@ -198,7 +198,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
                 await Model.createMirror()
             } else {
                 MirrorManager.stopMirrorMonitoring()
-                await Model.deleteMirror()
+                MirrorManager.removeMirrorIfNeeded()
             }
             sender.isEnabled = true
         }

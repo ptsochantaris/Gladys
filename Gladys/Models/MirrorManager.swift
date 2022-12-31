@@ -2,6 +2,7 @@ import Foundation
 
 final class MirrorManager {
     fileprivate static let mirrorUuidKey = "build.bru.Gladys.fileMirrorUuidKey"
+    fileprivate static let mirrorBase: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
 
     private static let mirrorQueue: OperationQueue = {
         let o = OperationQueue()
@@ -9,8 +10,6 @@ final class MirrorManager {
         o.maxConcurrentOperationCount = 1
         return o
     }()
-
-    fileprivate static let mirrorBase: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
 
     private static func coordinateWrite(types: [NSFileCoordinator.WritingOptions], perform: @escaping () -> Void) {
         let coordinator = NSFileCoordinator(filePresenter: monitor)
@@ -35,15 +34,12 @@ final class MirrorManager {
         }
     }
 
-    static func removeMirrorIfNeeded() async {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            coordinateWrite(types: [.forDeleting]) {
-                log("Deleting file mirror")
-                let f = FileManager.default
-                if f.fileExists(atPath: mirrorBase.path) {
-                    try? f.removeItem(at: mirrorBase)
-                }
-                continuation.resume()
+    static func removeMirrorIfNeeded() {
+        coordinateWrite(types: [.forDeleting]) {
+            log("Deleting file mirror")
+            let f = FileManager.default
+            if f.fileExists(atPath: mirrorBase.path) {
+                try? f.removeItem(at: mirrorBase)
             }
         }
     }
@@ -63,10 +59,9 @@ final class MirrorManager {
 
     static func startMirrorMonitoring() {
         mirrorQueue.addOperation {
-            if monitor == nil {
-                monitor = FileMonitor(directory: mirrorBase) { url in
-                    handleChange(at: url)
-                }
+            guard monitor == nil else { return }
+            monitor = FileMonitor(directory: mirrorBase) { url in
+                handleChange(at: url)
             }
         }
     }
@@ -74,10 +69,14 @@ final class MirrorManager {
     private static func handleChange(at url: URL) {
         coordinateRead(type: []) {
             if let uuid = FileManager.default.getUUIDAttribute(MirrorManager.mirrorUuidKey, from: url) {
-                Task { @MainActor in
-                    let typeItem = await Model.component(uuid: uuid)
-                    typeItem?.parent?.assimilateMirrorChanges()
+                let blocker = DispatchSemaphore(value: 0)
+                Task {
+                    if let typeItem = await Model.component(uuid: uuid) {
+                        await typeItem.parent?.assimilateMirrorChanges()
+                    }
+                    blocker.signal()
                 }
+                blocker.wait()
             }
         }
     }
@@ -86,12 +85,15 @@ final class MirrorManager {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coordinateRead(type: []) {
                 let start = Date()
-                for item in items {
-                    Task { @MainActor in
-                        item.assimilateMirrorChanges()
+                let blocker = DispatchSemaphore(value: 0)
+                Task {
+                    for item in items {
+                        await item.assimilateMirrorChanges()
                     }
+                    log("Mirror scan done \(-start.timeIntervalSinceNow)s")
+                    blocker.signal()
                 }
-                log("Mirror scan done \(-start.timeIntervalSinceNow)s")
+                blocker.wait()
                 continuation.resume()
             }
         }
@@ -106,7 +108,7 @@ final class MirrorManager {
         }
     }
 
-    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>, andPruneOthers: Bool) async {
+    static func mirrorToFiles(from drops: ContiguousArray<ArchivedItem>) async {
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coordinateWrite(types: [.forDeleting, .forMerging]) {
                 do {
@@ -128,14 +130,12 @@ final class MirrorManager {
                         }
                     }
 
-                    if andPruneOthers {
-                        let prefix = baseDir + "/"
-                        try f.contentsOfDirectory(atPath: baseDir).forEach {
-                            let p = prefix + $0
-                            if !pathsExamined.contains(p) {
-                                log("Pruning \(p)")
-                                try f.removeItem(atPath: p)
-                            }
+                    let prefix = baseDir + "/"
+                    try f.contentsOfDirectory(atPath: baseDir).forEach {
+                        let p = prefix + $0
+                        if !pathsExamined.contains(p) {
+                            log("Pruning \(p)")
+                            try f.removeItem(atPath: p)
                         }
                     }
 
@@ -184,9 +184,9 @@ private extension ArchivedItem {
         }
         let res: Bool
         if components.count == 1 {
-            res = try components.first!.mirror(to: mirrorPath, using: f)
+            res = components.first!.mirror(to: mirrorPath, using: f)
         } else {
-            res = try mirrorFolder(to: mirrorPath, using: f)
+            res = mirrorFolder(to: mirrorPath, using: f)
         }
         if res {
             log("Mirrored item \(uuid.uuidString): \(displayTitleOrUuid)")
@@ -194,8 +194,14 @@ private extension ArchivedItem {
         return mirrorPath
     }
 
-    private func mirrorFolder(to path: String, using f: FileManager) throws -> Bool {
-        if !f.fileExists(atPath: path) {
+    private func mirrorFolder(to path: String, using f: FileManager) -> Bool {
+        var dir = ObjCBool(false)
+        var exists = f.fileExists(atPath: path, isDirectory: &dir)
+        if exists && !dir.boolValue {
+            try? f.removeItem(atPath: path)
+            exists = false
+        }
+        if !exists {
             let url = URL(fileURLWithPath: path)
             do {
                 try f.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
@@ -203,8 +209,6 @@ private extension ArchivedItem {
                 let nsError = (error as NSError)
                 if nsError.domain == NSCocoaErrorDomain, nsError.code == 4 { // exists, but case conflict
                     return false
-                } else {
-                    throw error
                 }
             }
         }
@@ -215,7 +219,7 @@ private extension ArchivedItem {
             if let ext = child.fileExtension {
                 childPath += "." + ext
             }
-            if try child.mirror(to: childPath, using: f) {
+            if child.mirror(to: childPath, using: f) {
                 mirrored = true
             }
         }
@@ -223,6 +227,7 @@ private extension ArchivedItem {
         return mirrored
     }
 
+    @MainActor
     func assimilateMirrorChanges() {
         if flags.contains(.needsSaving) || isTransferring || needsDeletion || needsReIngest || components.isEmpty {
             return
@@ -252,9 +257,7 @@ private extension ArchivedItem {
 
             log("Assimilating mirror changes into component \(child.uuid.uuidString)")
             _ = try? f.copyAndReplaceItem(at: itemUrl, to: child.bytesPath)
-            Task { @MainActor in
-                child.markComponentUpdated()
-            }
+            child.markComponentUpdated()
             assimilated = true
 
         } else { // multiple items
@@ -282,9 +285,7 @@ private extension ArchivedItem {
 
                 log("Assimilating mirror changes into component \(child.uuid.uuidString)")
                 try? f.copyAndReplaceItem(at: componentUrl, to: child.bytesPath)
-                Task { @MainActor in
-                    child.markComponentUpdated()
-                }
+                child.markComponentUpdated()
                 assimilated = true
             }
         }
@@ -293,10 +294,10 @@ private extension ArchivedItem {
             return
         }
 
-        Task { @MainActor in
-            markUpdated()
-            flags.insert(.skipMirrorAtNextSave)
-            if needsReIngest {
+        markUpdated()
+        flags.insert(.skipMirrorAtNextSave)
+        if needsReIngest {
+            Task {
                 await reIngest()
             }
         }
@@ -304,7 +305,7 @@ private extension ArchivedItem {
 }
 
 private extension Component {
-    func mirror(to path: String, using f: FileManager) throws -> Bool {
+    func mirror(to path: String, using f: FileManager) -> Bool {
         if !f.fileExists(atPath: bytesPath.path) {
             return false
         }
@@ -315,17 +316,17 @@ private extension Component {
             if let fileDate = try? MirrorManager.modificationDate(for: url, using: f), fileDate >= updatedAt {
                 return false
             } else {
-                try f.removeItem(atPath: path)
+                try? f.removeItem(atPath: path)
             }
         }
-        try f.copyItem(at: bytesPath, to: url)
+        try? f.copyItem(at: bytesPath, to: url)
         f.setUUIDAttribute(MirrorManager.mirrorUuidKey, at: url, to: uuid)
 
         var v = URLResourceValues()
         v.hasHiddenExtension = true
         v.creationDate = createdAt
         v.contentModificationDate = updatedAt
-        try url.setResourceValues(v)
+        try? url.setResourceValues(v)
 
         return true
     }
