@@ -1,73 +1,107 @@
 import Foundation
 import Fuzi
 import UniformTypeIdentifiers
+import AsyncHTTPClient
+import NIOCore
+import NIOHTTP1
+
+extension HTTPClientResponse {
+    var mimeType: String? {
+        if let ct = headers["Content-Type"].first,
+           let mime = ct.split(separator: ";").first {
+            return mime.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return nil
+    }
+    var textEncodingName: String? {
+        if  let ct = headers["Content-Type"].first,
+            let lang = ct.split(separator: ";").last {
+            let cs = lang.split(separator: "=")
+            if cs.count > 1 {
+                return cs[1].trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+        }
+        return nil
+    }
+}
 
 /// Archiver
 final actor WebArchiver {
     static let shared = WebArchiver()
-
+    
     /// Error type
     enum ArchiveErrorType: Error {
         case FailToInitHTMLDocument
         case FetchResourceFailed
         case PlistSerializeFailed
     }
-
-    func setup() {
-        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
-        #if os(iOS)
-            URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (iOS; iOS)"]
-        #else
-            URLSession.shared.configuration.httpAdditionalHeaders = ["User-Agent": "Gladys/\(v) (macOS; macOS)"]
-        #endif
+            
+    private let client = HTTPClient(eventLoopGroupProvider: .createNew,
+                                    configuration: {
+        var config = HTTPClient.Configuration(certificateVerification: .none,
+                                              redirectConfiguration: .follow(max: 4, allowCycles: false),
+                                              decompression: .enabled(limit: .none))
+        config.httpVersion = .http1Only
+        return config
+    }())
+    
+    deinit {
+        try? client.syncShutdown()
     }
+    
+    private let headers = HTTPHeaders([
+        ("Accept", "*/*"),
+        ("Accept-Language", "en-GB,en;q=0.9"),
+        ("User-Agent", "Gladys/1 CFNetwork/1402.0.8 Darwin/22.2.0")
+    ])
 
-    private func getData(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        let res = try await URLSession.shared.data(for: request)
-        if let response = res.1 as? HTTPURLResponse {
-            return (res.0, response)
+    private func getData(for request: HTTPClientRequest) async throws -> (Data, HTTPClientResponse) {
+        var request = request
+        request.headers = headers
+        let res = try await client.execute(request, timeout: .seconds(60))
+        if request.method == .HEAD {
+            return (Data(), res)
         } else {
-            throw GladysError.blankResponse.error
+            let buffer = try await res.body.collect(upTo: Int.max)
+            return (Data(buffer: buffer), res)
         }
     }
 
-    private func getData(from url: URL) async throws -> (Data, HTTPURLResponse) {
-        return try await getData(for: URLRequest(url: url))
+    private func getData(from url: String) async throws -> (Data, HTTPClientResponse) {
+        return try await getData(for: HTTPClientRequest(url: url))
     }
 
-    func archiveFromUrl(_ url: URL) async throws -> (Data, String) {
+    func archiveFromUrl(_ url: String) async throws -> (Data, String) {
         let (data, response) = try await getData(from: url)
-        if response.mimeType == "text/html" {
+        let mimeType = response.mimeType
+        if mimeType == "text/html" {
             return try await archiveWebpageFromUrl(url: url, data: data, response: response)
         } else {
             var type: String?
-            if let mimeType = response.mimeType {
+            if let mimeType {
                 type = UTType(mimeType: mimeType)?.identifier
             }
             return (data, type ?? "public.data")
         }
     }
 
-    private func archiveWebpageFromUrl(url: URL, data: Data, response: URLResponse) async throws -> (Data, String) {
-        let (r, error) = resourcePathsFromUrl(url: url, data: data, response: response)
+    private func archiveWebpageFromUrl(url: String, data: Data, response: HTTPClientResponse) async throws -> (Data, String) {
+        let (r, error) = resourcePathsFromUrl(url: url, data: data)
         guard let resources = r else {
             log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
             throw ArchiveErrorType.FetchResourceFailed
         }
 
         let resourceInfo = await withTaskGroup(of: (String, [AnyHashable: Any])?.self) { group -> [AnyHashable: Any] in
-            for path in resources {
-                guard let resourceUrl = URL(string: path) else {
-                    continue
-                }
+            for resourceUrl in resources {
                 group.addTask { [weak self] in
-                    guard let (data, response) = try? await self?.getData(from: resourceUrl), response.statusCode == 200 else {
-                        log("Download failed: \(path)")
+                    guard let self, let (data, response) = try? await self.getData(from: resourceUrl), response.status.code == 200 else {
+                        log("Download failed: \(resourceUrl)")
                         return nil
                     }
 
                     var resource: [AnyHashable: Any] = [
-                        "WebResourceURL": path
+                        "WebResourceURL": resourceUrl
                     ]
                     if let mimeType = response.mimeType {
                         resource["WebResourceMIMEType"] = mimeType
@@ -75,8 +109,8 @@ final actor WebArchiver {
                     if !data.isEmpty {
                         resource["WebResourceData"] = data
                     }
-                    log("Downloaded \(path)")
-                    return (path, resource)
+                    log("Downloaded \(resourceUrl)")
+                    return (resourceUrl, resource)
                 }
             }
             let pairs = group.compactMap { $0 }
@@ -87,10 +121,11 @@ final actor WebArchiver {
             return info
         }
 
+        let mimeType = response.mimeType ?? "text/html"
         var mainResource: [AnyHashable: Any] = [
             "WebResourceFrameName": "",
-            "WebResourceMIMEType": response.mimeType ?? "text/html",
-            "WebResourceURL": url.absoluteString,
+            "WebResourceMIMEType": mimeType,
+            "WebResourceURL": url,
             "WebResourceData": data
         ]
 
@@ -112,7 +147,7 @@ final actor WebArchiver {
         }
     }
 
-    private func resourcePathsFromUrl(url: URL, data htmlData: Data, response _: URLResponse) -> ([String]?, ArchiveErrorType?) {
+    private func resourcePathsFromUrl(url: String, data htmlData: Data) -> ([String]?, ArchiveErrorType?) {
         guard let doc = try? HTMLDocument(data: htmlData) else {
             log("Init html doc error")
             return (nil, .FailToInitHTMLDocument)
@@ -126,7 +161,7 @@ final actor WebArchiver {
                     return base
                 } else if base.hasPrefix("//") {
                     return "https:\(base)"
-                } else if base.hasPrefix("/"), let host = url.host {
+                } else if base.hasPrefix("/"), let url = URL(string: url), let host = url.host {
                     return "\(url.scheme ?? "")://\(host)\(base)"
                 }
             }
@@ -160,24 +195,23 @@ final actor WebArchiver {
         let isThumbnail: Bool
     }
 
-    func fetchWebPreview(for url: URL) async throws -> WebPreviewResult {
-        var request = URLRequest(url: url)
-        log("Investigating possible HTML title from this URL: \(url.absoluteString)")
-        request.httpMethod = "HEAD"
+    func fetchWebPreview(for url: String) async throws -> WebPreviewResult {
+        var headRequest = HTTPClientRequest(url: url)
+        log("Investigating possible HTML title from this URL: \(url)")
+        headRequest.method = .HEAD
 
-        let (_, response) = try await getData(for: request)
-        if let type = response.mimeType, type.hasPrefix("text/html") {
+        let (_, response) = try await getData(for: headRequest)
+        if let mimeType = response.mimeType, mimeType.hasPrefix("text/html") {
             log("Content for this is HTML, will try to fetch title")
         } else {
             log("Content for this isn't HTML, never mind")
             throw GladysError.blankResponse.error
         }
 
-        log("Fetching HTML from URL: \(url.absoluteString)")
-        request.httpMethod = "GET"
+        log("Fetching HTML from URL: \(url)")
 
-        let (data, _) = try await getData(for: request)
-
+        let contentRequest = HTTPClientRequest(url: url)
+        let (data, _) = try await getData(for: contentRequest)
         let htmlDoc = try HTMLDocument(data: data)
 
         var title: String?
@@ -224,8 +258,9 @@ final actor WebArchiver {
          }
          } */
 
+        let _url = URL(string: url)
         func fetchFavIcon() async throws -> WebPreviewResult {
-            let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: url)
+            let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: _url)
             if let iconUrl = favIconUrl {
                 log("Fetching favicon image for site icon: \(iconUrl)")
                 let newImage = try await fetchImage(url: iconUrl)
@@ -235,7 +270,7 @@ final actor WebArchiver {
             }
         }
 
-        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: url)
+        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: _url)
         guard let iconUrl = thumbnailUrl else {
             return try await fetchFavIcon()
         }
@@ -287,24 +322,22 @@ final actor WebArchiver {
                         rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
                     }
                 }
-                if let href = node.attr("href") {
-                    if rank > imageRank {
-                        imageRank = rank
-                        favIconPath = href
-                    }
+                if let href = node.attr("href"), rank > imageRank {
+                    imageRank = rank
+                    favIconPath = href
                 }
             }
         }
         return favIconPath
     }
 
-    private func repair(path: String?, using url: URL) -> URL? {
+    private func repair(path: String?, using url: URL?) -> String? {
         guard var path else { return nil }
         var iconUrl: URL?
         if let i = URL(string: path), i.scheme != nil {
             iconUrl = i
         } else {
-            if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            if let url, var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                 c.path = path
                 var url = c.url
                 if url == nil, !(path.hasPrefix("/") || path.hasPrefix(".")) {
@@ -315,14 +348,14 @@ final actor WebArchiver {
                 iconUrl = url
             }
         }
-        return iconUrl
+        return iconUrl?.absoluteString
     }
 
     ////////////////////////////////////////////
 
-    private func fetchImage(url: URL?) async throws -> IMAGE? {
+    private func fetchImage(url: String?) async throws -> IMAGE? {
         guard let url else { return nil }
-        let req = URLRequest(url: url)
+        let req = HTTPClientRequest(url: url)
         let (data, _) = try await getData(for: req)
         log("Image fetched for \(url)")
         return IMAGE(data: data)

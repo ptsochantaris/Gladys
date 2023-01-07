@@ -31,6 +31,8 @@
 		1602F3302030E6480036E2B0 /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3172030E4C90036E2B0 /* Data+Extensions.swift */; };
 		1602F3312030E64C0036E2B0 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F3152030E4B60036E2B0 /* UIImage+Extensions.swift */; };
 		1602F3322030E6570036E2B0 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31C2030E53D0036E2B0 /* FileManager+Extensions.swift */; };
+		16039A872969C92500CC73F4 /* AsyncHTTPClient in Frameworks */ = {isa = PBXBuildFile; productRef = 16039A862969C92500CC73F4 /* AsyncHTTPClient */; };
+		16039A892969C93900CC73F4 /* AsyncHTTPClient in Frameworks */ = {isa = PBXBuildFile; productRef = 16039A882969C93900CC73F4 /* AsyncHTTPClient */; };
 		1604A3351F091D79005A477E /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163845FB1EF8629700CB8D97 /* Types.swift */; };
 		1604A3361F091D7D005A477E /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E891EF5A1A000CCBD3C /* Component.swift */; };
 		1604A3371F091D80005A477E /* ArchivedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16101E8B1EF5A1EB00CCBD3C /* ArchivedItem.swift */; };
@@ -76,6 +78,8 @@
 		1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
+		16212C9C2969D63000982F3F /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
+		16212C9E2969D64100982F3F /* AsyncHTTPClient in Frameworks */ = {isa = PBXBuildFile; productRef = 16212C9D2969D64100982F3F /* AsyncHTTPClient */; };
 		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
 		16219A0A24E01CF4006ED18A /* PersistedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168A0CE71FBCD1D300B63951 /* PersistedOptions.swift */; };
 		16219A1024E03918006ED18A /* GladysFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167573FF1F12C22500385079 /* GladysFramework.framework */; };
@@ -278,7 +282,6 @@
 		169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16A223E31EF67959009EEEBC /* PopTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E21EF67959009EEEBC /* PopTimer.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
-		16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F693F81FD1AE2500DFE536 /* WebArchiver.swift */; };
 		16A42A2224C4FAA1002CBD1B /* TipJar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A42A2124C4FAA1002CBD1B /* TipJar.swift */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
@@ -934,6 +937,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */,
+				16039A892969C93900CC73F4 /* AsyncHTTPClient in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
@@ -956,6 +960,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16212C9E2969D64100982F3F /* AsyncHTTPClient in Frameworks */,
 				16B89EA92523D5A0007FD864 /* Fuzi in Frameworks */,
 				16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */,
 				16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */,
@@ -992,6 +997,7 @@
 				16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */,
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				16B552801F12E5C200641009 /* GladysFramework.framework in Frameworks */,
+				16039A872969C92500CC73F4 /* AsyncHTTPClient in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 				16B89E9B2523D545007FD864 /* Fuzi in Frameworks */,
 				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
@@ -1631,6 +1637,7 @@
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
 				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
 				16C12FC328AE497000E9EB04 /* DeepDiff */,
+				16039A882969C93900CC73F4 /* AsyncHTTPClient */,
 			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
@@ -1669,6 +1676,7 @@
 			name = GladysAction;
 			packageProductDependencies = (
 				16B89EA82523D5A0007FD864 /* Fuzi */,
+				16212C9D2969D64100982F3F /* AsyncHTTPClient */,
 			);
 			productName = GladysAction;
 			productReference = 1641368D1F09195000B34574 /* GladysAction.appex */;
@@ -1756,6 +1764,7 @@
 				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
 				16B89E8B2523D536007FD864 /* ZIPFoundation */,
 				16B89E9A2523D545007FD864 /* Fuzi */,
+				16039A862969C92500CC73F4 /* AsyncHTTPClient */,
 			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
@@ -2005,6 +2014,7 @@
 				16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
+				16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */,
 			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
 			projectDirPath = "";
@@ -2390,11 +2400,11 @@
 				16EDB37A1F2363EE001CC65C /* Model+SimpleCoordinator.swift in Sources */,
 				1604A3371F091D80005A477E /* ArchivedItem.swift in Sources */,
 				166E72F720BEDCC300DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
-				16A2A96E22ADB81D00DF2249 /* WebArchiver.swift in Sources */,
 				169763161F15669700537776 /* Component+Ingest+iOS.swift in Sources */,
 				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */,
+				16212C9C2969D63000982F3F /* WebArchiver.swift in Sources */,
 				1690D8532651C31A00A07744 /* UserDefault.swift in Sources */,
 				1602F3282030E5F20036E2B0 /* Notifications.swift in Sources */,
 				1602F3312030E64C0036E2B0 /* UIImage+Extensions.swift in Sources */,
@@ -3771,6 +3781,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swift-server/async-http-client.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
@@ -3814,6 +3832,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		16039A862969C92500CC73F4 /* AsyncHTTPClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */;
+			productName = AsyncHTTPClient;
+		};
+		16039A882969C93900CC73F4 /* AsyncHTTPClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */;
+			productName = AsyncHTTPClient;
+		};
+		16212C9D2969D64100982F3F /* AsyncHTTPClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */;
+			productName = AsyncHTTPClient;
+		};
 		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;

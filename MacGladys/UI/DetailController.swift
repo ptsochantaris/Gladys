@@ -500,7 +500,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         Task { @MainActor in
             cell.animateArchiving = true
             do {
-                let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url)
+                let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url.absoluteString)
                 let newTypeItem = Component(typeIdentifier: typeIdentifier, parentUuid: self.item.uuid, data: data, order: self.item.components.count)
                 item.components.append(newTypeItem)
                 saveItem()
@@ -521,7 +521,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         cell.animateArchiving = true
 
         Task { @MainActor in
-            let res = try? await WebArchiver.shared.fetchWebPreview(for: url)
+            let res = try? await WebArchiver.shared.fetchWebPreview(for: url.absoluteString)
             if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
                 let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: item.uuid, data: jpegData, order: item.components.count)
                 item.components.append(newTypeItem)
