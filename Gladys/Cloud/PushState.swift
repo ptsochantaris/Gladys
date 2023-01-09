@@ -115,14 +115,13 @@ final actor PushState {
     }
 
     func updateSyncMessage() {
-        var components = [String]()
+        let components = LinkedList<String>()
         if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
         if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
         let deletionCount = recordsToDelete.count
         if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-        let cs = components
         Task {
-            await CloudManager.setSyncProgressString("Sending" + (cs.isEmpty ? "" : (" " + cs.joined(separator: ", "))))
+            await CloudManager.setSyncProgressString("Sending" + (components.count == 0 ? "" : (" " + components.joined(separator: ", "))))
         }
     }
 
@@ -189,7 +188,7 @@ final actor PushState {
                 }
             }
 
-            var updatedRecords = [CKRecord]()
+            let updatedRecords = LinkedList<CKRecord>()
 
             operation.perRecordSaveBlock = { id, result in
                 switch result {

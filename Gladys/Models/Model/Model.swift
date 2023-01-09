@@ -184,22 +184,20 @@ enum Model {
                         itemCount = totalItemsInStore
                     }
 
-                    var newDrops = ContiguousArray<ArchivedItem>()
-                    newDrops.reserveCapacity(itemCount)
+                    let newDrops = PointerStack<ArchivedItem>(capacity: itemCount)
                     d.withUnsafeBytes { pointer in
                         let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
                         uuidSequence.forEach { u in
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath) {
-                                if let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
-                                    newDrops.append(item)
-                                }
+                            if let data = try? Data(contentsOf: dataPath),
+                                let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
+                                newDrops.append(item)
                             }
                         }
                     }
 
-                    dropStore = newDrops
+                    dropStore = ContiguousArray(newDrops)
                     uuidindex = nil
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {

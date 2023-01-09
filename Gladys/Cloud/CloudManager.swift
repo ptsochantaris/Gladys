@@ -12,7 +12,7 @@ extension Sequence where Element: Hashable {
 extension Array {
     func bunch(maxSize: Int) -> [[Element]] {
         var pos = 0
-        var slices = [ArraySlice<Element>]()
+        let slices = LinkedList<ArraySlice<Element>>()
         while pos < count {
             let end = Swift.min(count, pos + maxSize)
             slices.append(self[pos ..< end])
@@ -24,7 +24,7 @@ extension Array {
 
 extension [[CKRecord]] {
     func flatBunch(minSize: Int) -> [[CKRecord]] {
-        var result = [[CKRecord]]()
+        let result = LinkedList<[CKRecord]>()
         var newChild = [CKRecord]()
         for childArray in self {
             newChild.append(contentsOf: childArray)
@@ -36,7 +36,7 @@ extension [[CKRecord]] {
         if !newChild.isEmpty {
             result.append(newChild)
         }
-        return result
+        return Array(result)
     }
 }
 

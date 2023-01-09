@@ -14,7 +14,7 @@ final actor PullState {
     var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
     var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
     var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
-    var pendingTypeItemRecords = [CKRecord.ID: ContiguousArray<CKRecord>]() // using full IDs because zone is also imporant
+    var pendingTypeItemRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
     let newItemsDebounce = PopTimer(timeInterval: 0.3) {
         Task { @MainActor in
             sendNotification(name: .ItemsAddedBySync, object: nil)
@@ -28,7 +28,7 @@ final actor PullState {
     }
 
     private func _updateProgress() async {
-        var components = [String]()
+        let components = LinkedList<String>()
 
         if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
         if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
@@ -36,7 +36,7 @@ final actor PullState {
         if typeUpdateCount > 0 { components.append(typeUpdateCount == 1 ? "1 Component Update" : "\(typeUpdateCount) Component Updates") }
         if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
 
-        if components.isEmpty {
+        if components.count == 0 {
             await CloudManager.setSyncProgressString("Fetching")
         } else {
             await CloudManager.setSyncProgressString("Fetched " + components.joined(separator: ", "))
@@ -424,11 +424,10 @@ final actor PullState {
                         newTypeItemCount += 1
                     }
                 } else {
-                    if var pending = pendingTypeItemRecords[parentId] {
+                    if let pending = pendingTypeItemRecords[parentId] {
                         pending.append(record)
-                        pendingTypeItemRecords[parentId] = pending
                     } else {
-                        pendingTypeItemRecords[parentId] = [record]
+                        pendingTypeItemRecords[parentId] = LinkedList(value: record)
                     }
                     log("Received new type item (\(recordUUID)) to link to upcoming new item (\(parentId.recordName))")
                 }

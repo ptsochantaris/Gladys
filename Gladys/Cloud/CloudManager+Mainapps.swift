@@ -70,13 +70,11 @@ extension CloudManager {
 
         let privatePushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 
-        var _sharedPushStates = [PushState]()
-        _sharedPushStates.reserveCapacity(sharedZonesToPush.count)
+        let sharedPushStates = PointerStack<PushState>(capacity: sharedZonesToPush.count)
         for sharedZoneId in sharedZonesToPush {
             let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
-            _sharedPushStates.append(pushState)
+            sharedPushStates.append(pushState)
         }
-        let sharedPushStates = _sharedPushStates
 
         var operations = await privatePushState.operations
         for sharedPushState in sharedPushStates {
@@ -472,16 +470,15 @@ extension CloudManager {
     }
 
     static func fetchMissingShareRecords() async throws {
-        var fetchGroups = [CKRecordZone.ID: [CKRecord.ID]]()
+        var fetchGroups = [CKRecordZone.ID: LinkedList<CKRecord.ID>]()
 
         for item in await Model.allDrops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
-                if var existingFetchGroup = fetchGroups[zoneId] {
+                if let existingFetchGroup = fetchGroups[zoneId] {
                     existingFetchGroup.append(shareId)
-                    fetchGroups[zoneId] = existingFetchGroup
                 } else {
-                    fetchGroups[zoneId] = [shareId]
+                    fetchGroups[zoneId] = LinkedList(value: shareId)
                 }
             }
         }
@@ -494,7 +491,7 @@ extension CloudManager {
             for (zoneId, fetchGroup) in fetchGroups {
                 taskGroup.addTask { @MainActor in
                     let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
-                    let fetchResults = try await database.records(for: fetchGroup)
+                    let fetchResults = try await database.records(for: Array(fetchGroup))
                     for (id, result) in fetchResults {
                         switch result {
                         case let .success(record):

@@ -441,6 +441,17 @@
 		16EC10542607B4D600ABE6D2 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */; };
 		16EC2939219D6960004174C3 /* Model+Lite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* Model+Lite.swift */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
+		16EC5999296C6091001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599A296C60AA001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599B296C60AF001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599C296C60B1001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599D296C60B2001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599E296C60BA001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC599F296C60BF001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC59A0296C60C4001BA761 /* PointerStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC5998296C6091001BA761 /* PointerStack.swift */; };
+		16EC59A2296C6F4F001BA761 /* LinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC59A1296C6F4F001BA761 /* LinkedList.swift */; };
+		16EC59A3296C73B8001BA761 /* LinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC59A1296C6F4F001BA761 /* LinkedList.swift */; };
+		16EC59A4296C73BC001BA761 /* LinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC59A1296C6F4F001BA761 /* LinkedList.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16ED386320C08FAA00B9BFDA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16ED386620C14F4500B9BFDA /* Model+ImportExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */; };
@@ -899,6 +910,8 @@
 		16EC101C2607AFE300ABE6D2 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		16EC2934219D5F11004174C3 /* Model+Lite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Lite.swift"; sourceTree = "<group>"; };
 		16EC3D082145286F0015714A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		16EC5998296C6091001BA761 /* PointerStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointerStack.swift; sourceTree = "<group>"; };
+		16EC59A1296C6F4F001BA761 /* LinkedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedList.swift; sourceTree = "<group>"; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ImportExport.swift"; sourceTree = "<group>"; };
 		16EDB3731F22A1C3001CC65C /* Model+Indexing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Indexing.swift"; sourceTree = "<group>"; };
@@ -1120,6 +1133,8 @@
 				16BD6452287ACECD00D3C57D /* TaskLock.swift */,
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
 				16FEBEE02954E08D004AF383 /* ItemColor.swift */,
+				16EC59A1296C6F4F001BA761 /* LinkedList.swift */,
+				16EC5998296C6091001BA761 /* PointerStack.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2269,6 +2284,7 @@
 			files = (
 				161718E62094DFE8005ABD6C /* PersistedOptions.swift in Sources */,
 				16CD7D9B20A115280039E6C2 /* CloudManager.swift in Sources */,
+				16EC599A296C60AA001BA761 /* PointerStack.swift in Sources */,
 				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
@@ -2328,6 +2344,7 @@
 				161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */,
 				161718DB2094D7A6005ABD6C /* Types.swift in Sources */,
 				161718DA2094D757005ABD6C /* Data+Extensions.swift in Sources */,
+				16EC59A4296C73BC001BA761 /* LinkedList.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
 				1661B2C8245E258800BE888E /* CloudManager+Mainapps.swift in Sources */,
 				166E72F820BEDCC400DBAB52 /* NSAttributedString+Extensions.swift in Sources */,
@@ -2372,6 +2389,7 @@
 				1602F3202030E57A0036E2B0 /* UIImage+Extensions.swift in Sources */,
 				1602F3232030E5B40036E2B0 /* Data+Extensions.swift in Sources */,
 				16CD7D8020A10AF10039E6C2 /* Component+Common.swift in Sources */,
+				16EC59A0296C60C4001BA761 /* PointerStack.swift in Sources */,
 				16287AF51EFB05E0007188AE /* ArchivedItem.swift in Sources */,
 				16CD7D8820A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				16287AF81EFB05EC007188AE /* PopTimer.swift in Sources */,
@@ -2404,6 +2422,7 @@
 				162594D920D557D300A65E06 /* Caches.swift in Sources */,
 				16CD7D8120A10AF10039E6C2 /* Component+Common.swift in Sources */,
 				167CDF9820B62DB400EABC0A /* Component+Preview.swift in Sources */,
+				16EC59A3296C73B8001BA761 /* LinkedList.swift in Sources */,
 				16212C9C2969D63000982F3F /* WebArchiver.swift in Sources */,
 				1690D8532651C31A00A07744 /* UserDefault.swift in Sources */,
 				1602F3282030E5F20036E2B0 /* Notifications.swift in Sources */,
@@ -2420,6 +2439,7 @@
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
 				16FEBEE32954E0BA004AF383 /* ItemColor.swift in Sources */,
 				16CD7D8920A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
+				16EC599F296C60BF001BA761 /* PointerStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2443,6 +2463,7 @@
 				1657B8D71FD451F100EC480D /* PopTimer.swift in Sources */,
 				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
 				16906A9923C8C0C700D6C177 /* Component+iOS.swift in Sources */,
+				16EC599D296C60B2001BA761 /* PointerStack.swift in Sources */,
 				1657B8BF1FD41E6B00EC480D /* Component.swift in Sources */,
 				1602F32A2030E6060036E2B0 /* UIImage+Extensions.swift in Sources */,
 				16C3A2D820AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
@@ -2488,6 +2509,7 @@
 				16CD7D7320A0FF570039E6C2 /* Component+IngestCommon.swift in Sources */,
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				165FC62C2635A8BA003F9268 /* Filter.swift in Sources */,
+				16EC5999296C6091001BA761 /* PointerStack.swift in Sources */,
 				1673D0E5236497CE00564753 /* MirrorManager.swift in Sources */,
 				161089A01FA322A90095FE34 /* Component+Cloud.swift in Sources */,
 				16BD6453287ACECD00D3C57D /* TaskLock.swift in Sources */,
@@ -2574,6 +2596,7 @@
 				168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
 				16B534BD237CBCA70031FAF2 /* ArchivedItem+ActivityItemSource.swift in Sources */,
+				16EC59A2296C6F4F001BA761 /* LinkedList.swift in Sources */,
 				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				169763141F15669000537776 /* Component+Ingest+iOS.swift in Sources */,
 				16F254671F2D5633008EE07B /* ArchivedItem+Ingest.swift in Sources */,
@@ -2621,6 +2644,7 @@
 				16C3A2D720AF76A600A04F10 /* Component+BackgroundInfoObject.swift in Sources */,
 				162BDD78220F020900A3C17B /* Logging.swift in Sources */,
 				16969BAD1FB0E675007B2F77 /* Component.swift in Sources */,
+				16EC599E296C60BA001BA761 /* PointerStack.swift in Sources */,
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16CD7D8B20A10E5D0039E6C2 /* ArchivedItem+Common.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
@@ -2678,6 +2702,7 @@
 				16FC0B3727E929F300CF3290 /* Cache.swift in Sources */,
 				16B2AA5524DF4996004F3FC2 /* Component.swift in Sources */,
 				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
+				16EC599C296C60B1001BA761 /* PointerStack.swift in Sources */,
 				16B2AA5724DF49A6004F3FC2 /* FileManager+Extensions.swift in Sources */,
 				16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */,
 				16B2AA5C24DF49D9004F3FC2 /* Global.swift in Sources */,
@@ -2723,6 +2748,7 @@
 				165B96C325CD863600E73E2D /* Notifications.swift in Sources */,
 				165B97AD25CD88DC00E73E2D /* Global.swift in Sources */,
 				165B97A025CD88D000E73E2D /* Caches.swift in Sources */,
+				16EC599B296C60AF001BA761 /* PointerStack.swift in Sources */,
 				16FC0B3527E929F100CF3290 /* Cache.swift in Sources */,
 				165B970425CD884000E73E2D /* Component+Intents.swift in Sources */,
 				165B974525CD887A00E73E2D /* Types.swift in Sources */,

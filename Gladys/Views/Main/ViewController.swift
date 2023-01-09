@@ -636,38 +636,34 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         switch filter.groupingMode {
         case .byLabel:
             let toggles = filter.enabledToggles
-            var labelLookups = [Filter.Toggle.Function: [UUID]]()
-            labelLookups.reserveCapacity(toggles.count)
+            var labelLookups = [Filter.Toggle.Function: LinkedList<UUID>]()
             for item in filter.filteredDrops {
                 if item.isRecentlyAdded {
-                    if var list = labelLookups[.recentlyAddedItems] {
+                    if let list = labelLookups[.recentlyAddedItems] {
                         list.append(item.uuid)
-                        labelLookups[.recentlyAddedItems] = list
                     } else {
-                        labelLookups[.recentlyAddedItems] = [item.uuid]
+                        labelLookups[.recentlyAddedItems] = LinkedList(value: item.uuid)
                     }
                 }
                 if item.labels.isEmpty {
-                    if var list = labelLookups[.unlabeledItems] {
+                    if let list = labelLookups[.unlabeledItems] {
                         list.append(item.uuid)
-                        labelLookups[.unlabeledItems] = list
                     } else {
-                        labelLookups[.unlabeledItems] = [item.uuid]
+                        labelLookups[.unlabeledItems] = LinkedList(value: item.uuid)
                     }
                 } else {
                     for text in item.labels {
                         let function = Filter.Toggle.Function.userLabel(text)
-                        if var list = labelLookups[function] {
+                        if let list = labelLookups[function] {
                             list.append(item.uuid)
-                            labelLookups[function] = list
                         } else {
-                            labelLookups[function] = [item.uuid]
+                            labelLookups[function] = LinkedList(value: item.uuid)
                         }
                     }
                 }
             }
 
-            toggles.forEach { toggle in
+            for toggle in toggles {
                 if let sectionItems = labelLookups[toggle.function]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), !sectionItems.isEmpty {
                     let sectionIdentifier = SectionIdentifier(label: toggle)
                     snapshot.appendSections([sectionIdentifier])
@@ -677,7 +673,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
 
-            collection.subviews.forEach { ($0 as? LabelSectionTitle)?.reset() }
+            for subview in collection.subviews {
+                (subview as? LabelSectionTitle)?.reset()
+            }
 
         case .flat:
             let section = SectionIdentifier(label: nil)
@@ -1481,7 +1479,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             return a
         }
 
-        var children = [UIMenuElement]()
+        let children = LinkedList<UIMenuElement>()
 
         if mainView, item.canOpen {
             children.append(makeAction(title: "Open", callback: { [weak self] in
@@ -1613,7 +1611,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let deleteHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [deleteMenu])
         children.append(deleteHolder)
 
-        return UIMenu(title: "", image: nil, identifier: nil, options: [], children: children)
+        return UIMenu(title: "", image: nil, identifier: nil, options: [], children: Array(children))
     }
 
     func collectionView(_: UICollectionView, previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration) -> UITargetedPreview? {

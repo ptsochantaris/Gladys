@@ -342,7 +342,7 @@ extension Model {
         }
     }
 
-    private static var commitQueue = ContiguousArray<ArchivedItem>()
+    private static let commitQueue = LinkedList<ArchivedItem>()
     static func commitItem(item: ArchivedItem) {
         item.flags.remove(.isBeingCreatedBySync)
         item.flags.remove(.needsSaving)
