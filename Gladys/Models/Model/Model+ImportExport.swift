@@ -40,7 +40,7 @@ extension Model {
         guard let data = Data.forceMemoryMapped(contentsOf: finalPath) else {
             throw GladysError.importingArchiveFailed.error
         }
-        let itemsInPackage = try loadDecoder.decode([ArchivedItem].self, from: data)
+        let itemsInPackage = try loadDecoder().decode([ArchivedItem].self, from: data)
 
         for item in itemsInPackage.reversed() {
             if let i = firstIndexOfItem(with: item.uuid) {

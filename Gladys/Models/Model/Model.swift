@@ -116,16 +116,11 @@ enum Model {
         dataFileLastModified = .distantPast
     }
 
-    nonisolated static var loadDecoder: JSONDecoder {
-        if let decoder = Thread.current.threadDictionary["gladys.decoder"] as? JSONDecoder {
-            return decoder
-        } else {
-            log("Creating new loading decoder")
-            let decoder = JSONDecoder()
-            decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-            Thread.current.threadDictionary["gladys.decoder"] = decoder
-            return decoder
-        }
+    nonisolated static func loadDecoder() -> JSONDecoder {
+        log("Creating new loading decoder")
+        let decoder = JSONDecoder()
+        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+        return decoder
     }
 
     nonisolated static var saveEncoder: JSONEncoder {
@@ -184,20 +179,22 @@ enum Model {
                         itemCount = totalItemsInStore
                     }
 
-                    let newDrops = PointerStack<ArchivedItem>(capacity: itemCount)
+                    var newDrops = ContiguousArray<ArchivedItem>()
+                    newDrops.reserveCapacity(itemCount)
                     d.withUnsafeBytes { pointer in
                         let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+                        let decoder = loadDecoder()
                         uuidSequence.forEach { u in
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
                             if let data = try? Data(contentsOf: dataPath),
-                                let item = try? loadDecoder.decode(ArchivedItem.self, from: data) {
+                                let item = try? decoder.decode(ArchivedItem.self, from: data) {
                                 newDrops.append(item)
                             }
                         }
                     }
 
-                    dropStore = ContiguousArray(newDrops)
+                    dropStore = newDrops
                     uuidindex = nil
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {

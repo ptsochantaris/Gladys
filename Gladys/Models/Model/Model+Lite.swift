@@ -61,7 +61,7 @@ extension Model {
 
             let dataPath = url.appendingPathComponent(uuid)
             if let data = try? Data(contentsOf: dataPath) {
-                item = try? loadDecoder.decode(ArchivedItem.self, from: data)
+                item = try? loadDecoder().decode(ArchivedItem.self, from: data)
             }
         }
 
@@ -122,7 +122,7 @@ extension Model {
             }
 
             do {
-                let decoder = loadDecoder
+                let decoder = loadDecoder()
                 let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
                 d.withUnsafeBytes { pointer in
                     pointer.bindMemory(to: uuid_t.self).forEach { u in

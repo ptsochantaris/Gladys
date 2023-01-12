@@ -70,7 +70,8 @@ extension CloudManager {
 
         let privatePushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 
-        let sharedPushStates = PointerStack<PushState>(capacity: sharedZonesToPush.count)
+        var sharedPushStates = ContiguousArray<PushState>()
+        sharedPushStates.reserveCapacity(sharedZonesToPush.count)
         for sharedZoneId in sharedZonesToPush {
             let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
             sharedPushStates.append(pushState)
