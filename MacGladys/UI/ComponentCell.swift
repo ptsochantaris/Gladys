@@ -24,14 +24,14 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 
     override var representedObject: Any? {
         didSet {
-            decorate()
             view.menu = shortcutMenu
+            view.needsLayout = true
         }
     }
 
     var animateArchiving = false {
         didSet {
-            decorate()
+            view.needsLayout = true
         }
     }
 

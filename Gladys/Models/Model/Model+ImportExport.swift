@@ -107,7 +107,7 @@ extension Model {
             p.completedUnitCount += 1
         }
 
-        let data = try saveEncoder.encode(eligibleItems)
+        let data = try saveEncoder().encode(eligibleItems)
         let finalPath = tempPath.appendingPathComponent("items.json")
         try data.write(to: finalPath)
         p.completedUnitCount += 1

@@ -21,6 +21,12 @@ extension UIImage {
         f.scale = screenScale
         return f
     }()
+    
+    static func from(data: Data) async -> UIImage? {
+        await Task.detached {
+            UIImage(data: data)
+        }.value
+    }
 
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
         if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {

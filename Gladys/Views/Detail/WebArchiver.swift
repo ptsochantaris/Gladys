@@ -355,9 +355,8 @@ final actor WebArchiver {
 
     private func fetchImage(url: String?) async throws -> IMAGE? {
         guard let url else { return nil }
-        let req = HTTPClientRequest(url: url)
-        let (data, _) = try await getData(for: req)
+        let (data, _) = try await getData(from: url)
         log("Image fetched for \(url)")
-        return IMAGE(data: data)
+        return await IMAGE.from(data: data)
     }
 }

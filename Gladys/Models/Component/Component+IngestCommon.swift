@@ -8,6 +8,7 @@ import MapKit
     import Cocoa
 #endif
 import GladysFramework
+import AsyncAlgorithms
 
 extension Component {
     static let iconPointSize = CGSize(width: 256, height: 256)
@@ -16,15 +17,14 @@ extension Component {
         progress.totalUnitCount = 2
 
         do {
+            let data = try await provider.loadDataRepresentation(for: createWebArchive ? "public.url" : typeIdentifier)
+            progress.completedUnitCount += 1
+            flags.remove(.isTransferring)
+            if flags.contains(.loadingAborted) {
+                throw GladysError.actionCancelled.error
+            }
+
             if createWebArchive {
-                let data = try await provider.loadDataRepresentation(for: "public.url")
-                progress.completedUnitCount += 1
-                flags.remove(.isTransferring)
-
-                if flags.contains(.loadingAborted) {
-                    try await ingestFailed(error: nil)
-                }
-
                 var assignedUrl: URL?
                 if let propertyList = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
                     if let urlString = propertyList as? String, let u = URL(string: urlString) { // usually on macOS
@@ -34,28 +34,20 @@ extension Component {
                     }
                 }
 
-                guard let url = assignedUrl else {
-                    try await ingestFailed(error: nil)
-                    return
+                guard let assignedUrl else {
+                    throw GladysError.actionCancelled.error
                 }
 
                 log(">> Resolved url to read data from: [\(typeIdentifier)]")
-                try await ingest(from: url)
-                progress.completedUnitCount += 1
+                try await ingest(from: assignedUrl)
 
             } else {
-                let data = try await provider.loadDataRepresentation(for: typeIdentifier)
-                progress.completedUnitCount += 1
-                flags.remove(.isTransferring)
-
-                if flags.contains(.loadingAborted) {
-                    try await ingestFailed(error: nil)
-                }
-
                 log(">> Received type: [\(typeIdentifier)]")
                 try await ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true)
-                progress.completedUnitCount += 1
             }
+
+            progress.completedUnitCount += 1
+            
         } catch {
             flags.remove(.isTransferring)
             try await ingestFailed(error: error)
@@ -65,7 +57,7 @@ extension Component {
     private func ingestFailed(error: Error?) async throws {
         let error = error ?? GladysError.unknownIngestError.error
         log(">> Error receiving item: \(error.finalDescription)")
-        setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
+        await setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
         throw error
     }
 
@@ -93,17 +85,27 @@ extension Component {
         try await handleData(data, resolveUrls: false, storeBytes: true)
     }
 
-    private final actor GateKeeper {
-        private var counter = 12
-        func waitForGate() async {
-            while counter < 0 {
-                await Task.yield()
+    private final class GateKeeper {
+        private var channel: AsyncChannel<Int>
+        private var iterator: AsyncChannel<Int>.Iterator
+        
+        init() {
+            let c = AsyncChannel(element: Int.self)
+            channel = c
+            iterator = c.makeAsyncIterator()
+            Task {
+                for _ in 0 ..< 12 {
+                    await c.send(1)
+                }
             }
-            counter -= 1
+        }
+        
+        func waitForGate() async {
+            _ = await iterator.next()!
         }
 
-        func signalGate() {
-            counter += 1
+        func signalGate() async {
+            await channel.send(1)
         }
     }
 
@@ -127,7 +129,7 @@ extension Component {
             if let item = obj as? NSString {
                 log("      received string: \(item)")
                 setTitleInfo(item as String, 10)
-                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
                 representedClass = .string
                 if storeBytes {
                     setBytes(data)
@@ -137,7 +139,7 @@ extension Component {
             } else if let item = obj as? NSAttributedString {
                 log("      received attributed string: \(item)")
                 setTitleInfo(item.string, 7)
-                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
                 representedClass = .attributedString
                 if storeBytes {
                     setBytes(data)
@@ -147,7 +149,7 @@ extension Component {
             } else if let item = obj as? COLOR {
                 log("      received color: \(item)")
                 setTitleInfo("Color \(item.hexValue)", 0)
-                setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
                 representedClass = .color
                 if storeBytes {
                     setBytes(data)
@@ -156,7 +158,7 @@ extension Component {
 
             } else if let item = obj as? IMAGE {
                 log("      received image: \(item)")
-                setDisplayIcon(item, 50, .fill)
+                await setDisplayIcon(item, 50, .fill)
                 if encodeAnyUIImage {
                     log("      will encode it to JPEG, as it's the only image in this parent item")
                     representedClass = .data
@@ -181,7 +183,7 @@ extension Component {
 
             } else if let item = obj as? MKMapItem {
                 log("      received map item: \(item)")
-                setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
                 representedClass = .mapItem
                 if storeBytes {
                     setBytes(data)
@@ -199,7 +201,7 @@ extension Component {
                 } else {
                     setTitleInfo("\(item.count) Items", 1)
                 }
-                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
                 representedClass = .array
                 if storeBytes {
                     setBytes(data)
@@ -213,7 +215,7 @@ extension Component {
                 } else {
                     setTitleInfo("\(item.count) Entries", 1)
                 }
-                setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
                 representedClass = .dictionary
                 if storeBytes {
                     setBytes(data)
@@ -369,7 +371,7 @@ extension Component {
 
     func handleRemoteUrl(_ url: URL, _: Data, _: Bool) async throws {
         log("      received remote url: \(url.absoluteString)")
-        setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+        await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
         guard let s = url.scheme, s.hasPrefix("http") else {
             throw GladysError.blankResponse.error
         }
@@ -382,9 +384,9 @@ extension Component {
         if let image = res?.image {
             if image.size.height > 100 || image.size.width > 200 {
                 let thumb = res?.isThumbnail ?? false
-                setDisplayIcon(image, 30, thumb ? .fill : .fit)
+                await setDisplayIcon(image, 30, thumb ? .fill : .fit)
             } else {
-                setDisplayIcon(image, 30, .center)
+                await setDisplayIcon(image, 30, .center)
             }
         }
     }
@@ -398,8 +400,8 @@ extension Component {
             typeIdentifier = "public.zip-archive"
         }
 
-        if let image = IMAGE(data: data) {
-            setDisplayIcon(image, 50, .fill)
+        if let image = await IMAGE.from(data: data) {
+            await setDisplayIcon(image, 50, .fill)
 
         } else if typeIdentifier == "public.vcard" {
             if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
@@ -407,10 +409,10 @@ extension Component {
                 let job = [person.jobTitle, person.organizationName].filter { !$0.isEmpty }.joined(separator: ", ")
                 accessoryTitle = [name, job].filter { !$0.isEmpty }.joined(separator: " - ")
 
-                if let imageData = person.imageData, let img = IMAGE(data: imageData) {
-                    setDisplayIcon(img, 9, .circle)
+                if let imageData = person.imageData, let img = await IMAGE.from(data: imageData) {
+                    await setDisplayIcon(img, 9, .circle)
                 } else {
-                    setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
+                    await setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)
                 }
             }
 
@@ -418,25 +420,25 @@ extension Component {
             if let s = String(data: data, encoding: .utf8) {
                 setTitleInfo(s, 9)
             }
-            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeIdentifier == "public.utf16-plain-text" {
             if let s = String(data: data, encoding: .utf16) {
                 setTitleInfo(s, 8)
             }
-            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeIdentifier == "public.email-message" {
-            setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconEmail"), 10, .center)
 
         } else if typeIdentifier == "com.apple.mapkit.map-item" {
-            setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 5, .center)
 
         } else if typeIdentifier.hasSuffix(".rtf") || typeIdentifier.hasSuffix(".rtfd") || typeIdentifier.hasSuffix(".flat-rtfd") {
             if let data = (decode() as? Data), let s = (try? NSAttributedString(data: data, options: [:], documentAttributes: nil))?.string {
                 setTitleInfo(s, 4)
             }
-            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if resolveUrls, let url = encodedUrl {
             try await handleUrl(url as URL, data, storeBytes)
@@ -446,35 +448,35 @@ extension Component {
             if let s = String(data: data, encoding: .utf8) {
                 setTitleInfo(s, 5)
             }
-            setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeConforms(to: .image) {
-            setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
         } else if typeConforms(to: .audiovisualContent) {
             if let moviePreview = generateMoviePreview() {
-                setDisplayIcon(moviePreview, 50, .fill)
+                await setDisplayIcon(moviePreview, 50, .fill)
             } else {
-                setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
+                await setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)
             }
 
         } else if typeConforms(to: .audio) {
-            setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 
         } else if typeConforms(to: .pdf), let pdfPreview = generatePdfPreview() {
             if let title = getPdfTitle(), !title.isEmpty {
                 setTitleInfo(title, 11)
             }
-            setDisplayIcon(pdfPreview, 50, .fill)
+            await setDisplayIcon(pdfPreview, 50, .fill)
 
         } else if typeConforms(to: .content) {
-            setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
 
         } else if typeConforms(to: .archive) {
-            setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
 
         } else {
-            setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
         }
     }
 
@@ -484,19 +486,25 @@ extension Component {
         }
     }
 
-    func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) {
+    func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) async {
         guard priority >= displayIconPriority else {
             return
         }
 
-        let result: IMAGE
-        if contentMode == .center || contentMode == .circle {
-            result = icon
-        } else if contentMode == .fit {
-            result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
-        } else {
-            result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
-        }
+        await Task.detached { [weak self] in
+            guard let self else { return }
+            let result: IMAGE
+            switch contentMode {
+            case .fit:
+                result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+            case .fill:
+                result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
+            case .center, .circle:
+                result = icon
+            }
+            self.componentIcon = result
+        }.value
+        
         displayIconPriority = priority
         displayIconContentMode = contentMode
         #if os(iOS)
@@ -504,6 +512,5 @@ extension Component {
         #else
             displayIconTemplate = icon.isTemplate
         #endif
-        componentIcon = result
     }
 }

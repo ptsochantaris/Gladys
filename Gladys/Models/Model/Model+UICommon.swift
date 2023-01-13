@@ -390,22 +390,24 @@ extension Model {
                 }
 
                 let allCount = allItems.count
-                var uuidData = Data(count: allCount * 16)
-                uuidData.withUnsafeMutableBytes { unsafeMutableRawBufferPointer in
-                    let uuidArray = unsafeMutableRawBufferPointer.bindMemory(to: uuid_t.self)
-                    var count = 0
-                    let encoder = saveEncoder
-                    for item in allItems {
-                        let u = item.uuid
-                        uuidArray[count] = u.uuid
-                        count += 1
-                        if dirtyUuids.contains(u) {
+                let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount * 16)
+                let queue = DispatchQueue(label: "build.bru.gladys.serialisation")
+                var count = 0
+                let encoder = saveEncoder()
+                for item in allItems {
+                    let u = item.uuid
+                    uuidArray[count] = u.uuid
+                    count += 1
+                    if dirtyUuids.contains(u) {
+                        queue.async {
                             let finalPath = url.appendingPathComponent(u.uuidString)
                             try? encoder.encode(item).write(to: finalPath)
                         }
                     }
                 }
-                try uuidData.write(to: url.appendingPathComponent("uuids"), options: .atomic)
+
+                let data = queue.sync { Data(buffer: uuidArray) }
+                try data.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
                 if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
                     let oldFiles = Set(filesInDir).subtracting(allItems.map(\.uuid.uuidString)).subtracting(["uuids"])

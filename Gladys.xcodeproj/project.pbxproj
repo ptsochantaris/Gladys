@@ -297,6 +297,9 @@
 		16AECA611F94B83900981B29 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
+		16B229C32971857300E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229C22971857300E6D910 /* AsyncAlgorithms */; };
+		16B229C72971859900E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229C62971859900E6D910 /* AsyncAlgorithms */; };
+		16B229CD297185E500E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229CC297185E500E6D910 /* AsyncAlgorithms */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
 		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
@@ -949,6 +952,7 @@
 				16C12FBE28AE48F800E9EB04 /* Fuzi in Frameworks */,
 				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
 				16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */,
+				16B229CD297185E500E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,6 +972,7 @@
 				16B89EA92523D5A0007FD864 /* Fuzi in Frameworks */,
 				16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */,
 				16B5527F1F12E5A900641009 /* GladysFramework.framework in Frameworks */,
+				16B229C72971859900E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1005,6 +1010,7 @@
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 				16B89E9B2523D545007FD864 /* Fuzi in Frameworks */,
 				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
+				16B229C32971857300E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1643,6 +1649,7 @@
 				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
 				16C12FC328AE497000E9EB04 /* DeepDiff */,
 				16039A882969C93900CC73F4 /* AsyncHTTPClient */,
+				16B229CC297185E500E6D910 /* AsyncAlgorithms */,
 			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
@@ -1661,6 +1668,8 @@
 			dependencies = (
 			);
 			name = GladysIndex;
+			packageProductDependencies = (
+			);
 			productName = GladysIndex;
 			productReference = 16287AE71EFB03FD007188AE /* GladysIndex.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -1682,6 +1691,7 @@
 			packageProductDependencies = (
 				16B89EA82523D5A0007FD864 /* Fuzi */,
 				16212C9D2969D64100982F3F /* AsyncHTTPClient */,
+				16B229C62971859900E6D910 /* AsyncAlgorithms */,
 			);
 			productName = GladysAction;
 			productReference = 1641368D1F09195000B34574 /* GladysAction.appex */;
@@ -1770,6 +1780,7 @@
 				16B89E8B2523D536007FD864 /* ZIPFoundation */,
 				16B89E9A2523D545007FD864 /* Fuzi */,
 				16039A862969C92500CC73F4 /* AsyncHTTPClient */,
+				16B229C22971857300E6D910 /* AsyncAlgorithms */,
 			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
@@ -1805,6 +1816,8 @@
 			dependencies = (
 			);
 			name = GladysToday;
+			packageProductDependencies = (
+			);
 			productName = GladysToday;
 			productReference = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -2020,6 +2033,7 @@
 				16B89E992523D545007FD864 /* XCRemoteSwiftPackageReference "Fuzi" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
 				16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */,
+				16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
 			projectDirPath = "";
@@ -3797,6 +3811,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
 		16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
@@ -3854,6 +3876,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16039A852969C92500CC73F4 /* XCRemoteSwiftPackageReference "async-http-client" */;
 			productName = AsyncHTTPClient;
+		};
+		16B229C22971857300E6D910 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+		16B229C62971859900E6D910 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+		16B229CC297185E500E6D910 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
 		};
 		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;

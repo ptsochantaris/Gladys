@@ -8,6 +8,12 @@ extension NSImage {
     static func tintedShape(systemName: String, coloured: NSColor) -> NSImage? {
         NSImage(systemSymbolName: systemName, accessibilityDescription: nil)?.template(with: coloured)
     }
+    
+    static func from(data: Data) async -> NSImage? {
+        await Task.detached {
+            NSImage(data: data)
+        }.value
+    }
 
     func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
         let mySizePixelWidth = size.width

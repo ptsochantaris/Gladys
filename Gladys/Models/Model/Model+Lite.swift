@@ -125,7 +125,8 @@ extension Model {
                 let decoder = loadDecoder()
                 let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
                 d.withUnsafeBytes { pointer in
-                    pointer.bindMemory(to: uuid_t.self).forEach { u in
+                    let uuids = pointer.bindMemory(to: uuid_t.self)
+                    for u in uuids {
                         autoreleasepool {
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
@@ -167,7 +168,7 @@ extension Model {
                     uuidData = emptyData
                 }
 
-                let encoder = saveEncoder
+                let encoder = saveEncoder()
                 for item in items {
                     item.flags.remove(.isBeingCreatedBySync)
                     item.flags.remove(.needsSaving)

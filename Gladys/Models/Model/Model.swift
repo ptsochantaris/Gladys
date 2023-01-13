@@ -123,16 +123,11 @@ enum Model {
         return decoder
     }
 
-    nonisolated static var saveEncoder: JSONEncoder {
-        if let encoder = Thread.current.threadDictionary["gladys.encoder"] as? JSONEncoder {
-            return encoder
-        } else {
-            log("Creating new saving encoder")
-            let encoder = JSONEncoder()
-            encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-            Thread.current.threadDictionary["gladys.encoder"] = encoder
-            return encoder
-        }
+    nonisolated static func saveEncoder() -> JSONEncoder {
+        log("Creating new saving encoder")
+        let encoder = JSONEncoder()
+        encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+        return encoder
     }
     
     private final class LoaderBuffer {
