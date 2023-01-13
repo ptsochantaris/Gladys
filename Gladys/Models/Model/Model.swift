@@ -134,6 +134,28 @@ enum Model {
             return encoder
         }
     }
+    
+    private final class LoaderBuffer {
+        private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation")
+
+        private var store: ContiguousArray<ArchivedItem?>
+        
+        init(capacity: Int) {
+            store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
+        }
+        
+        func set(_ item: ArchivedItem, at index: Int) {
+            queue.async {
+                self.store[index] = item
+            }
+        }
+        
+        func result() -> ContiguousArray<ArchivedItem> {
+            queue.sync {
+                ContiguousArray(store.compactMap { $0 })
+            }
+        }
+    }
 
     static func reloadDataIfNeeded(maximumItems: Int? = nil) {
         if brokenMode {
@@ -179,22 +201,21 @@ enum Model {
                         itemCount = totalItemsInStore
                     }
 
-                    var newDrops = ContiguousArray<ArchivedItem>()
-                    newDrops.reserveCapacity(itemCount)
-                    d.withUnsafeBytes { pointer in
-                        let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+                    let loader = LoaderBuffer(capacity: itemCount)
+                    d.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) in
                         let decoder = loadDecoder()
-                        uuidSequence.forEach { u in
-                            let u = UUID(uuid: u)
+                        let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+                        DispatchQueue.concurrentPerform(iterations: itemCount) { count in
+                            let us = uuidSequence[count]
+                            let u = UUID(uuid: us)
                             let dataPath = url.appendingPathComponent(u.uuidString)
                             if let data = try? Data(contentsOf: dataPath),
-                                let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                                newDrops.append(item)
+                               let item = try? decoder.decode(ArchivedItem.self, from: data) {
+                                loader.set(item, at: count)
                             }
                         }
                     }
-
-                    dropStore = newDrops
+                    dropStore = loader.result()
                     uuidindex = nil
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
