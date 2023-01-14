@@ -31,9 +31,9 @@ extension UIImage {
     static func fromFile(_ url: URL, template: Bool) -> UIImage? {
         if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
             if template {
-                return image.withRenderingMode(.alwaysTemplate).preparingForDisplay()
+                return image.withRenderingMode(.alwaysTemplate)
             } else {
-                return image.preparingForDisplay()
+                return image
             }
         }
         return nil

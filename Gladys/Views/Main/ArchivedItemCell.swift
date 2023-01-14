@@ -309,10 +309,10 @@ final class ArchivedItemCell: UICollectionViewCell {
                 } else {
                     let u1 = item.uuid
                     Task.detached {
-                        let img = item.displayIcon
+                        let img = item.displayIcon.preparingForDisplay()
                         Images.shared[cacheKey] = img
-                        await MainActor.run { [weak self] in
-                            if let self, let latestItemUuid = self.archivedDropItem?.uuid, u1 == latestItemUuid {
+                        Task { @MainActor [weak self] in
+                            if let self, let i = self.archivedDropItem, u1 == i.uuid {
                                 self.image.image = img
                             }
                         }
