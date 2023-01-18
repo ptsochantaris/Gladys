@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 extension NSItemProvider {
     func loadDataRepresentation(for typeIdentifier: String) async throws -> Data {

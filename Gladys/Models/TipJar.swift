@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import GladysCommon
 
 extension SKProduct {
     var regularPrice: String? {

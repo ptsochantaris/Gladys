@@ -1,5 +1,6 @@
 import CoreSpotlight
 import Foundation
+import GladysCommon
 
 extension ArchivedItem {
     private static let dateFormatter: DateFormatter = {

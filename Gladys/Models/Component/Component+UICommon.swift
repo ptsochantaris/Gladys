@@ -1,9 +1,11 @@
 import Contacts
 import Foundation
 import MapKit
-#if os(iOS)
+#if os(macOS)
+#else
     import MobileCoreServices
 #endif
+import GladysCommon
 
 extension Component {
     var sizeDescription: String? {

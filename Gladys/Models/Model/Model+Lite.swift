@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 extension Model {
     static func countSavedItemsWithoutLoading() -> Int {
@@ -165,7 +166,7 @@ extension Model {
                     uuidData = try Data(contentsOf: url.appendingPathComponent("uuids"))
                 } else {
                     try fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-                    uuidData = emptyData
+                    uuidData = Data()
                 }
 
                 let encoder = saveEncoder()

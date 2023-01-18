@@ -1,9 +1,9 @@
 import CloudKit
 import CoreSpotlight
-import GladysFramework
 import MapKit
 import UIKit
 import WatchConnectivity
+import GladysCommon
 
 private class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
@@ -239,14 +239,7 @@ extension Model {
         if saveOverlap > 0 {
             return
         }
-        guard PersistedOptions.mirrorFilesToDocuments else {
-            saveDone()
-            return
-        }
-        Task {
-            await updateMirror()
-            saveDone()
-        }
+        saveDone()
     }
 
     private static func saveDone() {
@@ -293,31 +286,6 @@ extension Model {
 
     private static func backgrounded() {
         NSFileCoordinator.removeFilePresenter(filePresenter)
-    }
-
-    static func createMirror() async {
-        log("Creating file mirror")
-        allDrops.forEach { $0.flags.remove(.skipMirrorAtNextSave) }
-        await runMirror()
-    }
-
-    static func updateMirror() async {
-        log("Updating file mirror")
-        await runMirror()
-    }
-
-    private static func runMirror() async {
-        let itemsToMirror: ContiguousArray = allDrops.filter(\.goodToSave)
-        BackgroundTask.registerForBackground()
-        await MirrorManager.mirrorToFiles(from: itemsToMirror)
-        BackgroundTask.unregisterForBackground()
-    }
-
-    static func scanForMirrorChanges() async {
-        BackgroundTask.registerForBackground()
-        let itemsToMirror: ContiguousArray = allDrops.filter(\.goodToSave)
-        await MirrorManager.scanForMirrorChanges(items: itemsToMirror)
-        BackgroundTask.unregisterForBackground()
     }
 
     static func _updateBadge() async {

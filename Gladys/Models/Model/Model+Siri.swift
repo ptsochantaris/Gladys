@@ -1,6 +1,7 @@
 import Foundation
 import Intents
 import UIKit
+import GladysCommon
 
 extension Model {
     static var pasteIntent: PasteClipboardIntent {

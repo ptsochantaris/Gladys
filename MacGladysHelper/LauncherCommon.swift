@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 extension Notification.Name {
     static let KillHelper = Notification.Name("KillHelper")

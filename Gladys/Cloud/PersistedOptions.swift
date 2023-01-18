@@ -62,9 +62,6 @@ enum PersistedOptions {
     @UserDefault(key: "removeItemsWhenDraggedOut", defaultValue: false)
     static var removeItemsWhenDraggedOut: Bool
 
-    @UserDefault(key: "mirrorFilesToDocuments", defaultValue: false)
-    static var mirrorFilesToDocuments: Bool
-
     @UserDefault(key: "dontAutoLabelNewItems", defaultValue: false)
     static var dontAutoLabelNewItems: Bool
 

@@ -1,7 +1,6 @@
 import CloudKit
 import Foundation
-
-extension NSItemProvider: @unchecked Sendable {}
+import GladysCommon
 
 final class ArchivedItem: Codable {
     let suggestedName: String?
@@ -74,7 +73,6 @@ final class ArchivedItem: Codable {
         static let needsSaving = Flags(rawValue: 1 << 0)
         static let needsUnlock = Flags(rawValue: 1 << 1)
         static let isBeingCreatedBySync = Flags(rawValue: 1 << 2)
-        static let skipMirrorAtNextSave = Flags(rawValue: 1 << 3)
     }
 
     var flags: Flags

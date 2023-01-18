@@ -1,10 +1,11 @@
 import CloudKit
 import Foundation
-#if os(iOS)
+#if os(macOS)
+#else
     import MobileCoreServices
 #endif
-import GladysFramework
 import UniformTypeIdentifiers
+import GladysCommon
 
 extension Component: Equatable {
     func setBytes(_ data: Data?) {

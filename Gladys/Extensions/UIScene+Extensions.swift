@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 extension UISceneSession {
     var isAccessoryWindow: Bool {

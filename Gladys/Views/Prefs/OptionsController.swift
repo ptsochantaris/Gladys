@@ -1,5 +1,6 @@
 import Speech
 import UIKit
+import GladysCommon
 
 final class OptionsController: GladysViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet private var twoColumnsSwitch: UISwitch!
@@ -28,7 +29,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var actionSelector: UISegmentedControl!
     @IBOutlet private var autoArchiveSwitch: UISwitch!
     @IBOutlet private var exclusiveLabelsSwitch: UISwitch!
-    @IBOutlet private var fileMirrorSwitch: UISwitch!
 
     @IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.wideMode = sender.isOn
@@ -188,22 +188,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         }
     }
 
-    @IBAction private func fileMirrorSwitch(_ sender: UISwitch) {
-        let on = sender.isOn
-        PersistedOptions.mirrorFilesToDocuments = on
-        sender.isEnabled = false
-        Task {
-            if on {
-                MirrorManager.startMirrorMonitoring()
-                await Model.createMirror()
-            } else {
-                MirrorManager.stopMirrorMonitoring()
-                MirrorManager.removeMirrorIfNeeded()
-            }
-            sender.isEnabled = true
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -233,7 +217,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
         autoArchiveSwitch.isOn = PersistedOptions.autoArchiveUrlComponents
         exclusiveLabelsSwitch.isOn = PersistedOptions.exclusiveMultipleLabels
-        fileMirrorSwitch.isOn = PersistedOptions.mirrorFilesToDocuments
         wideModeSwitch.isOn = PersistedOptions.wideMode
         fullScreenSwitch.isOn = PersistedOptions.fullScreenPreviews
         badgeIconSwitch.isOn = PersistedOptions.badgeIconWithItemCount

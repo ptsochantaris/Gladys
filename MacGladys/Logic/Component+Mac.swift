@@ -4,6 +4,7 @@ import ContactsUI
 import MapKit
 import UniformTypeIdentifiers
 import ZIPFoundation
+import GladysCommon
 
 extension Component {
     var isArchivable: Bool {
@@ -117,7 +118,7 @@ extension Component {
             }
             representedClass = .data
             log("      read data from file url: \(item.absoluteString) - type assumed to be \(typeIdentifier)")
-            let data = Data.forceMemoryMapped(contentsOf: item) ?? emptyData
+            let data = Data.forceMemoryMapped(contentsOf: item) ?? Data()
             try await handleData(data, resolveUrls: false, storeBytes: storeBytes)
         }
     }
@@ -189,7 +190,7 @@ extension Component {
 
         } else {
             let tid = NSPasteboard.PasteboardType(typeIdentifier)
-            pasteboardItem.setData(bytes ?? emptyData, forType: tid)
+            pasteboardItem.setData(bytes ?? Data(), forType: tid)
         }
     }
 

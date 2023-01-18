@@ -4,6 +4,7 @@
     import UIKit
 #endif
 import CloudKit
+import GladysCommon
 
 final actor ComponentLookup {
     static let shared = ComponentLookup()

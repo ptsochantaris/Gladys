@@ -1,5 +1,6 @@
 import Messages
 import UIKit
+import GladysCommon
 
 private var messagesCurrentOffset = CGPoint.zero
 private var lastFilter: String?

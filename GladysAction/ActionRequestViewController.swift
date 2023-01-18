@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 extension Notification.Name {
     static let DoneSelected = Notification.Name("DoneSelected")

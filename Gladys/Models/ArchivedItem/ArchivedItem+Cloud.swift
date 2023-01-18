@@ -1,4 +1,5 @@
 import CloudKit
+import GladysCommon
 
 extension ArchivedItem {
     func cloudKitUpdate(from record: CKRecord) {

@@ -55,7 +55,7 @@ extension Data {
             stream.dst_ptr = dstBufferPtr
             stream.dst_size = dstBufferSize
             // and we store the output in a mutable data object
-            var outputData = emptyData
+            var outputData = Data()
 
             repeat {
                 status = compression_stream_process(&stream, flags)

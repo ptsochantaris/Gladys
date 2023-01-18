@@ -1,6 +1,7 @@
 import Contacts
 import MobileCoreServices
 import UIKit
+import GladysCommon
 
 extension UIColor {
     var hexValue: String {

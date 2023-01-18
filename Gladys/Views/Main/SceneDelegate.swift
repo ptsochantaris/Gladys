@@ -1,18 +1,6 @@
 import CloudKit
 import UIKit
-
-extension UIWindow {
-    var alertPresenter: UIViewController? {
-        var vc = rootViewController
-        while let p = vc?.presentedViewController {
-            if p is UIAlertController {
-                break
-            }
-            vc = p
-        }
-        return vc
-    }
-}
+import GladysCommon
 
 extension UIScene {
     var firstController: UIViewController? {

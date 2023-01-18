@@ -46,7 +46,7 @@ func sendNotification(name: Notification.Name, object: Any?) {
     NotificationCenter.default.post(name: name, object: object)
 }
 
-#if MAINAPP
+#if os(iOS)
     import UIKit
 
     struct UIRequest {

@@ -1,9 +1,10 @@
 import CloudKit
 import UIKit
+import GladysCommon
 
 extension CloudManager {
     private static func getDeviceId() -> Data {
-        guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return emptyData }
+        guard let identifier = UIDevice.current.identifierForVendor as NSUUID? else { return Data() }
         var uuidBytes = [UInt8](repeating: 0, count: 16)
         identifier.getBytes(&uuidBytes)
         return Data(uuidBytes)

@@ -1,4 +1,4 @@
-import GladysFramework
+import GladysCommon
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers

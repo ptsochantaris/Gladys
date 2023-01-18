@@ -1,4 +1,5 @@
 import CloudKit
+import GladysCommon
 
 extension Component {
     func cloudKitUpdate(from record: CKRecord) {

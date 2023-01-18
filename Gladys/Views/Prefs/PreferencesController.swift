@@ -1,6 +1,7 @@
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
+import GladysCommon
 
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
     @IBOutlet private var exportOnlyVisibleSwitch: UISwitch!

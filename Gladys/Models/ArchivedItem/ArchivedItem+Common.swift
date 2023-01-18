@@ -1,23 +1,14 @@
 import CloudKit
-#if os(iOS)
-    import UIKit
-    typealias IMAGE = UIImage
-    typealias COLOR = UIColor
-#else
-    import Cocoa
-    typealias IMAGE = NSImage
-    typealias COLOR = NSColor
+import GladysCommon
+#if canImport(UIKit)
+import UIKit
+#elseif canImport(Cocoa)
+import Cocoa
 #endif
-
-struct ImportOverrides {
-    let title: String?
-    let note: String?
-    let labels: [String]?
-}
 
 let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
-extension ArchivedItem: Hashable {
+extension ArchivedItem: Hashable, DisplayImageProviding {
     static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
         lhs.uuid == rhs.uuid
     }

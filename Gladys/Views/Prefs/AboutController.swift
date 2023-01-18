@@ -1,6 +1,6 @@
-import GladysFramework
 import StoreKit
 import UIKit
+import GladysCommon
 
 final class AboutController: GladysViewController {
     @IBOutlet private var versionLabel: UIBarButtonItem!
@@ -43,7 +43,7 @@ final class AboutController: GladysViewController {
 
         supportStack.isHidden = true
 
-        if isRunningInTestFlightEnvironment() {
+        if isRunningInTestFlightEnvironment {
             testFlightStack.isHidden = false
         } else {
             testFlightStack.isHidden = true

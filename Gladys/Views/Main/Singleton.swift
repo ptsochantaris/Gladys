@@ -1,5 +1,6 @@
 import CoreSpotlight
 import UIKit
+import GladysCommon
 
 @MainActor
 final class Singleton {
@@ -29,11 +30,9 @@ final class Singleton {
             await Model.detectExternalChanges()
         }
 
-        if PersistedOptions.mirrorFilesToDocuments {
-            MirrorManager.startMirrorMonitoring()
-            Task {
-                await Model.scanForMirrorChanges()
-            }
+        let mirrorPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
+        if FileManager.default.fileExists(atPath: mirrorPath.path) {
+            try? FileManager.default.removeItem(at: mirrorPath)
         }
     }
 
@@ -42,9 +41,6 @@ final class Singleton {
             // foregrounding, not including app launch
             log("App foregrounded")
             Task {
-                if PersistedOptions.mirrorFilesToDocuments {
-                    await Model.scanForMirrorChanges()
-                }
                 do {
                     try await CloudManager.opportunisticSyncIfNeeded()
                 } catch {

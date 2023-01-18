@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 final class LabelSelectionViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate {
     private var presentingGladysVc: ViewController {

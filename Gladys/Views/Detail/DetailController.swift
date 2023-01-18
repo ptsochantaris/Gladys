@@ -2,6 +2,7 @@ import CloudKit
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
+import GladysCommon
 
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
@@ -573,7 +574,7 @@ final class DetailController: GladysViewController,
         } else if segue.identifier == "hexEdit",
                   let typeEntry = sender as? Component,
                   let e = segue.destination as? HexEdit {
-            e.bytes = typeEntry.bytes ?? emptyData
+            e.bytes = typeEntry.bytes ?? Data()
 
             let f = ByteCountFormatter()
             let size = f.string(fromByteCount: Int64(e.bytes.count))

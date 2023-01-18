@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 extension Component {
     static var droppedIds = Set<UUID>()

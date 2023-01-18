@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet private var notesText: UITextField!

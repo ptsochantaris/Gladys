@@ -1,11 +1,12 @@
 import Foundation
-#if os(iOS)
+#if os(macOS)
+#else
     import MobileCoreServices
 #endif
-import GladysFramework
 import NaturalLanguage
 import Speech
 import Vision
+import GladysCommon
 
 extension ArchivedItem {
     var mostRelevantTypeItem: Component? {

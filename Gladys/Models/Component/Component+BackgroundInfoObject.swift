@@ -1,4 +1,5 @@
 import MapKit
+import GladysCommon
 
 extension Component {
     var backgroundInfoObject: (Any?, Int) {

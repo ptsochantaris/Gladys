@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 final class ShareViewController: NSViewController {
     override var nibName: NSNib.Name? {

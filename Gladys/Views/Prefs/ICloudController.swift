@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 final class ICloudController: GladysViewController {
     @IBOutlet private var icloudLabel: UILabel!

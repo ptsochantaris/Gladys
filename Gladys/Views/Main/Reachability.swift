@@ -1,5 +1,6 @@
 import Foundation
 import SystemConfiguration
+import GladysCommon
 
 let reachability = Reachability()
 

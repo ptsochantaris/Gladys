@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 import AsyncHTTPClient
 import NIOCore
 import NIOHTTP1
+import GladysCommon
 
 extension HTTPClientResponse {
     var mimeType: String? {

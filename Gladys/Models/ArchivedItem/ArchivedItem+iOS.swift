@@ -2,11 +2,11 @@ import CloudKit
 import Contacts
 import ContactsUI
 import CoreSpotlight
-import GladysFramework
 import MapKit
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
+import GladysCommon
 
 extension Filter.Toggle.Function {
     var dragItem: UIDragItem? {

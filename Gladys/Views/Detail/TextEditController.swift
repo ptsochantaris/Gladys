@@ -1,7 +1,7 @@
-import GladysFramework
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
+import GladysCommon
 
 final class TextEditController: GladysViewController, UITextViewDelegate {
     var item: ArchivedItem!
@@ -70,7 +70,7 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
         if !hasChanges { return }
 
         if typeEntry.classWasWrapped, let d: Any = (isAttributed ? textView.attributedText : textView.text) {
-            let b = SafeArchiving.archive(d) ?? emptyData
+            let b = SafeArchiving.archive(d) ?? Data()
             typeEntry.setBytes(b)
             saveDone()
 

@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 @MainActor
 enum BackgroundTask {

@@ -1,4 +1,5 @@
 import UIKit
+import GladysCommon
 
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate {
     @IBOutlet private var table: UITableView!

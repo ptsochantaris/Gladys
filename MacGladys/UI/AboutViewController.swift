@@ -1,5 +1,6 @@
 import AppKit
 import StoreKit
+import GladysCommon
 
 final class AboutViewController: NSViewController {
     @IBOutlet private var tip1: NSView!

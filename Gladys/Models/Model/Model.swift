@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 enum PasteResult {
     case success([ArchivedItem]), noData

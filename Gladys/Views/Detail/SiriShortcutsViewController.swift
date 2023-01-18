@@ -1,5 +1,6 @@
 import IntentsUI
 import UIKit
+import GladysCommon
 
 final class SiriShortcutsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     @IBOutlet private var openItemDetailContainer: UIView!

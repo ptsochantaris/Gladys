@@ -1,10 +1,10 @@
-#if os(iOS)
-    import UIKit
+#if os(macOS)
+import Cocoa
 #else
-    import Cocoa
+import UIKit
 #endif
 import CloudKit
-import GladysFramework
+import GladysCommon
 
 extension CloudManager {
     static let privateDatabaseSubscriptionId = "private-changes"
@@ -602,10 +602,10 @@ extension CloudManager {
         let shareRecord = CKShare(rootRecord: rootRecord)
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
         let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
-        #if os(iOS)
-            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
+        #if os(macOS)
+        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
         #else
-            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
+        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #endif
         let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap(\.populatedCloudKitRecord)
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
@@ -692,7 +692,8 @@ extension CloudManager {
             return
         }
 
-        #if os(iOS)
+        #if os(macOS)
+        #else
             if !force, !overridingUserPreference {
                 if syncContextSetting == .wifiOnly, await reachability.notReachableViaWiFi {
                     log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
@@ -711,7 +712,8 @@ extension CloudManager {
             return
         }
 
-        #if os(iOS)
+        #if os(macOS)
+        #else
             await BackgroundTask.registerForBackground()
             defer {
                 Task {

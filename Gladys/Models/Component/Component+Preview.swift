@@ -1,9 +1,9 @@
 import Foundation
-
-#if os(iOS)
-    import QuickLook
+import GladysCommon
+#if os(macOS)
+import Quartz
 #else
-    import Quartz
+import QuickLook
 #endif
 
 extension Component {

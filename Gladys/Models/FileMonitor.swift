@@ -1,8 +1,9 @@
-#if os(iOS)
-    import UIKit
+#if os(macOS)
+import Foundation
 #else
-    import Foundation
+import UIKit
 #endif
+import GladysCommon
 
 final class FileMonitor: NSObject, NSFilePresenter {
     var presentedItemURL: URL?
@@ -24,14 +25,16 @@ final class FileMonitor: NSObject, NSFilePresenter {
 
         NSFileCoordinator.addFilePresenter(self)
 
-        #if os(iOS)
+        #if os(macOS)
+        #else
             let nc = NotificationCenter.default
             nc.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
             nc.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
         #endif
     }
 
-    #if os(iOS)
+    #if os(macOS)
+    #else
         @objc private func foregrounded() {
             NSFileCoordinator.addFilePresenter(self)
         }

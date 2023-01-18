@@ -1,8 +1,10 @@
 import CoreSpotlight
 import Foundation
-#if os(iOS)
+#if os(macOS)
+#else
     import UIKit
 #endif
+import GladysCommon
 
 struct SectionIdentifier: Hashable {
     let label: Filter.Toggle?
@@ -269,7 +271,8 @@ final class Filter {
             if signalUpdate != .none {
                 delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
-                #if os(iOS)
+#if os(macOS)
+#else
                     if isFilteringText, UIAccessibility.isVoiceOverRunning {
                         let resultString: String
                         let c = filteredDrops.count

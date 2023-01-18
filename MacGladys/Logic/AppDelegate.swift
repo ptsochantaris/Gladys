@@ -3,6 +3,7 @@ import Cocoa
 import CoreSpotlight
 import HotKey
 import UserNotifications
+import GladysCommon
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?

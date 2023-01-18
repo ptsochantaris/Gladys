@@ -1,5 +1,6 @@
 import Foundation
 import MobileCoreServices
+import GladysCommon
 
 extension Component {
     var attachPriority: Int {

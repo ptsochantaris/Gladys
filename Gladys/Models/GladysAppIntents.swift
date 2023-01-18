@@ -7,6 +7,7 @@
 #else
     import Foundation
 #endif
+import GladysCommon
 
 @available(iOS 16, macOS 13, *)
 enum GladysAppIntents {

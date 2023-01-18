@@ -1,12 +1,12 @@
 import Foundation
 
 extension Data {
-    var isPlist: Bool {
+    public var isPlist: Bool {
         count > 5
             && self[0 ..< 6].elementsEqual([0x62, 0x70, 0x6C, 0x69, 0x73, 0x74])
     }
 
-    var isZip: Bool {
+    public var isZip: Bool {
         count > 3
             && self[0 ..< 2].elementsEqual([0x50, 0x4B])
             && (self[2 ..< 4].elementsEqual([3, 4])
@@ -15,7 +15,7 @@ extension Data {
             )
     }
 
-    static func forceMemoryMapped(contentsOf url: URL) -> Data? {
+    public static func forceMemoryMapped(contentsOf url: URL) -> Data? {
         guard let cPath = url.absoluteURL.path.cString(using: .utf8) else {
             log("Warning, could not resolve \(url.absoluteURL.path)")
             return nil

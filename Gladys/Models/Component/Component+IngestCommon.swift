@@ -1,14 +1,14 @@
 import AVFoundation
 import Contacts
 import MapKit
-#if os(iOS)
-    import MobileCoreServices
-    import UIKit
+#if os(macOS)
+import Cocoa
 #else
-    import Cocoa
+import MobileCoreServices
+import UIKit
 #endif
-import GladysFramework
 import AsyncAlgorithms
+import GladysCommon
 
 extension Component {
     static let iconPointSize = CGSize(width: 256, height: 256)
@@ -73,7 +73,7 @@ extension Component {
         classWasWrapped = false
 
         if let scheme = url.scheme, !scheme.hasPrefix("http") {
-            try await handleData(emptyData, resolveUrls: false, storeBytes: true)
+            try await handleData(Data(), resolveUrls: false, storeBytes: true)
             return
         }
 
@@ -165,12 +165,12 @@ extension Component {
                     typeIdentifier = UTType.jpeg.identifier
                     classWasWrapped = false
                     if storeBytes {
-                        #if os(iOS)
-                            let b = item.jpegData(compressionQuality: 1)
-                            setBytes(b)
+                        #if os(macOS)
+                        let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
+                        setBytes(b ?? Data())
                         #else
-                            let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
-                            setBytes(b ?? emptyData)
+                        let b = item.jpegData(compressionQuality: 1)
+                        setBytes(b)
                         #endif
                     }
                 } else {
@@ -314,10 +314,10 @@ extension Component {
         context.drawPDFPage(firstPage)
 
         if let cgImage = context.makeImage() {
-            #if os(iOS)
-                return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
+            #if os(macOS)
+            return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
             #else
-                return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+            return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
             #endif
         } else {
             return nil
@@ -341,10 +341,10 @@ extension Component {
             imgGenerator.appliesPreferredTrackTransform = true
             let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
 
-            #if os(iOS)
-                result = UIImage(cgImage: cgImage)
+            #if os(macOS)
+            result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
             #else
-                result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+            result = UIImage(cgImage: cgImage)
             #endif
 
         } catch {
@@ -507,10 +507,10 @@ extension Component {
         
         displayIconPriority = priority
         displayIconContentMode = contentMode
-        #if os(iOS)
-            displayIconTemplate = icon.renderingMode == .alwaysTemplate
+        #if os(macOS)
+        displayIconTemplate = icon.isTemplate
         #else
-            displayIconTemplate = icon.isTemplate
+        displayIconTemplate = icon.renderingMode == .alwaysTemplate
         #endif
     }
 }

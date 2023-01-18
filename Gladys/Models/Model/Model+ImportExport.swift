@@ -1,6 +1,7 @@
 import Foundation
 import UniformTypeIdentifiers
 import ZIPFoundation
+import GladysCommon
 
 extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!

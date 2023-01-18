@@ -1,4 +1,5 @@
 import CoreSpotlight
+import GladysCommon
 
 extension Model {
     private final class IndexProxy: NSObject, CSSearchableIndexDelegate {
@@ -62,7 +63,7 @@ extension Model {
         if let item = Model.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
             return data
         }
-        return emptyData
+        return Data()
     }
 
     static func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {

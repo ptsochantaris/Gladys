@@ -1,20 +1,6 @@
 import Cocoa
 
 extension NSImage {
-    convenience init?(systemName: String) {
-        self.init(systemSymbolName: systemName, accessibilityDescription: nil)
-    }
-
-    static func tintedShape(systemName: String, coloured: NSColor) -> NSImage? {
-        NSImage(systemSymbolName: systemName, accessibilityDescription: nil)?.template(with: coloured)
-    }
-    
-    static func from(data: Data) async -> NSImage? {
-        await Task.detached {
-            NSImage(data: data)
-        }.value
-    }
-
     func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
         let mySizePixelWidth = size.width
         let mySizePixelHeight = size.height
@@ -50,17 +36,5 @@ extension NSImage {
         let imageRef = cgImage(forProposedRect: nil, context: nil, hints: nil)!
         c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
         return NSImage(cgImage: c.makeImage()!, size: targetSize)
-    }
-
-    func template(with tint: NSColor) -> NSImage {
-        let image = copy() as! NSImage
-        image.isTemplate = false
-        image.lockFocus()
-        tint.set()
-
-        let imageRect = NSRect(origin: .zero, size: image.size)
-        imageRect.fill(using: .sourceAtop)
-        image.unlockFocus()
-        return image
     }
 }

@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func terminate() {

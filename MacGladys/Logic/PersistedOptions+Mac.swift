@@ -1,5 +1,6 @@
 import Cocoa
 import ServiceManagement
+import GladysCommon
 
 extension PersistedOptions {
     static var hotkeyCmd: Bool {

@@ -1,11 +1,12 @@
 import CloudKit
 import CoreSpotlight
-#if os(iOS)
-    import CoreAudioKit
-    import Foundation
+#if os(macOS)
+import Cocoa
 #else
-    import Cocoa
+import CoreAudioKit
+import Foundation
 #endif
+import GladysCommon
 
 @globalActor
 enum ModelStorage {
@@ -238,7 +239,8 @@ extension Model {
                     CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken
                 }
             }
-            #if os(iOS)
+            #if os(macOS)
+            #else
                 Model.clearLegacyIntents()
             #endif
             Model.searchableIndex(CSSearchableIndex.default()) {
@@ -260,10 +262,6 @@ extension Model {
         let index = CSSearchableIndex.default()
 
         let itemsToDelete = Set(allDrops.filter(\.needsDeletion))
-        #if MAINAPP
-            MirrorManager.removeItems(items: itemsToDelete)
-        #endif
-
         let removedUuids = itemsToDelete.map(\.uuid)
         index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString)) { error in
             if let error {

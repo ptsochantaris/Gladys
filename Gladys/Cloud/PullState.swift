@@ -1,5 +1,5 @@
 import CloudKit
-import GladysFramework
+import GladysCommon
 
 final actor PullState {
     var updatedSequence = false

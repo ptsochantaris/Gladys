@@ -1,5 +1,6 @@
 import CoreLocation
 import MapKit
+import GladysCommon
 
 extension CLLocationCoordinate2D: Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
