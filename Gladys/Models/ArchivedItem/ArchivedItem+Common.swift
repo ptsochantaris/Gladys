@@ -8,6 +8,10 @@ import GladysCommon
 
 let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
+enum PasteResult {
+    case success([ArchivedItem]), noData
+}
+
 extension ArchivedItem: Hashable, DisplayImageProviding {
     static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
         lhs.uuid == rhs.uuid
