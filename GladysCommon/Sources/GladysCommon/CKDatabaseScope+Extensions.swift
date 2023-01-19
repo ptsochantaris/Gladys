@@ -1,9 +1,9 @@
 import CloudKit
 
-enum RecordChangeCheck {
+public enum RecordChangeCheck {
     case none, changed, tagOnly
 
-    init(localRecord: CKRecord?, remoteRecord: CKRecord) {
+    public init(localRecord: CKRecord?, remoteRecord: CKRecord) {
         if localRecord?.recordChangeTag == remoteRecord.recordChangeTag {
             self = .none
         } else {
@@ -19,7 +19,7 @@ enum RecordChangeCheck {
 }
 
 extension CKDatabase.Scope {
-    var keyName: String {
+    public var keyName: String {
         switch self {
         case .public: return "1"
         case .private: return "2"
@@ -28,7 +28,7 @@ extension CKDatabase.Scope {
         }
     }
 
-    var logName: String {
+    public var logName: String {
         switch self {
         case .private: return "private"
         case .public: return "public"

@@ -1,30 +1,33 @@
 import Foundation
 
-let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
-let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
-let kGladysMainListActivity = "build.bru.Gladys.main.list"
-let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
-let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
-let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
-let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
-let kGladysMainViewSearchText = "kGladysMainViewSearchText"
-let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
-let kGladysMainViewSections = "kGladysMainViewSections"
-let kGladysMainFilter = "mainFilter"
+public let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
+public let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
+public let kGladysMainListActivity = "build.bru.Gladys.main.list"
+public let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
+public let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
+public let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
+public let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
+public let kGladysMainViewSearchText = "kGladysMainViewSearchText"
+public let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
+public let kGladysMainViewSections = "kGladysMainViewSections"
+public let kGladysMainFilter = "mainFilter"
 
-enum ArchivedDropItemDisplayType: Int {
+public let itemAccessQueue = DispatchQueue(label: "build.bru.Gladys.itemAccessQueue", qos: .default, attributes: .concurrent)
+public let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.componentAccessQueue", qos: .default, attributes: .concurrent)
+
+public enum ArchivedDropItemDisplayType: Int {
     case fit, fill, center, circle
 }
 
 extension Error {
-    var finalDescription: String {
+    public var finalDescription: String {
         let err = self as NSError
         return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
     }
 }
 
 extension String {
-    var filenameSafe: String {
+    public var filenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
                 return host + "-" + components.path.split(separator: "/").joined(separator: "-")
@@ -36,7 +39,7 @@ extension String {
         }
     }
 
-    var dropFilenameSafe: String {
+    public var dropFilenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
                 return host + "-" + components.path.split(separator: "/").joined(separator: "-")
@@ -50,17 +53,17 @@ extension String {
 }
 
 extension URL {
-    var urlFileContent: Data {
+    public var urlFileContent: Data {
         Data("[InternetShortcut]\r\nURL=\(absoluteString)\r\n".utf8)
     }
 }
 
-enum RepresentedClass: Codable, Equatable {
-    init(from decoder: Decoder) throws {
+public enum RepresentedClass: Codable, Equatable {
+    public init(from decoder: Decoder) throws {
         self.init(name: try decoder.singleValueContainer().decode(String.self))
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
         case .data: try container.encode("NSData")
@@ -79,7 +82,7 @@ enum RepresentedClass: Codable, Equatable {
 
     case data, string, attributedString, color, image, mapItem, array, dictionary, url, unknown(name: String)
 
-    init(name: String) {
+    public init(name: String) {
         switch name {
         case "NSData": self = .data
         case "NSString": self = .string
@@ -94,7 +97,7 @@ enum RepresentedClass: Codable, Equatable {
         }
     }
 
-    var name: String {
+    public var name: String {
         switch self {
         case .data: return "NSData"
         case .string: return "NSString"
@@ -109,7 +112,7 @@ enum RepresentedClass: Codable, Equatable {
         }
     }
 
-    var description: String {
+    public var description: String {
         switch self {
         case .data: return "Data"
         case .string: return "Text"
@@ -124,10 +127,7 @@ enum RepresentedClass: Codable, Equatable {
         }
     }
 
-    static func == (lhs: RepresentedClass, rhs: RepresentedClass) -> Bool {
+    public static func == (lhs: RepresentedClass, rhs: RepresentedClass) -> Bool {
         lhs.name == rhs.name
     }
 }
-
-let itemAccessQueue = DispatchQueue(label: "build.bru.Gladys.itemAccessQueue", qos: .default, attributes: .concurrent)
-let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.componentAccessQueue", qos: .default, attributes: .concurrent)

@@ -1,8 +1,7 @@
 import Foundation
-import GladysCommon
 
-extension NSItemProvider {
-    func loadDataRepresentation(for typeIdentifier: String) async throws -> Data {
+extension NSItemProvider: @unchecked Sendable {
+    public func loadDataRepresentation(for typeIdentifier: String) async throws -> Data {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Error>) in
             _ = self.loadDataRepresentation(forTypeIdentifier: typeIdentifier) { data, error in
                 if let data {

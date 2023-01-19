@@ -16,6 +16,24 @@ public func genericAlert(title: String, message: String?, windowOverride _: NSWi
 #elseif os(iOS)
 import UIKit
 
+extension UIWindow {
+    public var alertPresenter: UIViewController? {
+        var vc = rootViewController
+        while let p = vc?.presentedViewController {
+            if p is UIAlertController {
+                break
+            }
+            vc = p
+        }
+        return vc
+    }
+}
+
+@MainActor
+public var currentWindow: UIWindow? {
+    UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
+}
+
 @MainActor
 public func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
     guard let presenter = currentWindow?.alertPresenter else {
@@ -42,8 +60,9 @@ public func genericAlert(title: String?, message: String?, autoDismiss: Bool = t
         if buttonTitle == nil, autoDismiss {
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-                await a.dismiss(animated: true)
-                continuation.resume()
+                a.dismiss(animated: true) {
+                    continuation.resume()
+                }
             }
         }
 

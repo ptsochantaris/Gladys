@@ -1,17 +1,21 @@
 import CommonCrypto
 import Foundation
 
-#if os(iOS)
-    let groupName = "group.build.bru.Gladys"
+#if os(macOS)
+import Cocoa
+public typealias IMAGE = NSImage
+public typealias COLOR = NSColor
+public let groupName = "X727JSJUGJ.build.bru.MacGladys"
 #else
-    let groupName = "X727JSJUGJ.build.bru.MacGladys"
+import UIKit
+public typealias IMAGE = UIImage
+public typealias COLOR = UIColor
+public let groupName = "group.build.bru.Gladys"
 #endif
 
-let GladysFileUTI = "build.bru.gladys.archive"
+public let GladysFileUTI = "build.bru.gladys.archive"
 
-let emptyData = Data()
-
-enum GladysError: Int {
+public enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100
     case cloudLoginRequired
     case cloudAccessRestricted
@@ -24,7 +28,7 @@ enum GladysError: Int {
     case blankResponse
     case noData
 
-    var error: NSError {
+    public var error: NSError {
         let message: String
         switch self {
         case .cloudAccessRestricted: message = "iCloud access is restricted on this device due to policy or parental controls."
@@ -45,7 +49,7 @@ enum GladysError: Int {
     }
 }
 
-func sha1(_ input: String) -> Data {
+public func sha1(_ input: String) -> Data {
     input.utf8CString.withUnsafeBytes { bytes -> Data in
         let len = Int(CC_SHA1_DIGEST_LENGTH)
         var digest = [UInt8](repeating: 0, count: len)

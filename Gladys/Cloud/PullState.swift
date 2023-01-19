@@ -2,20 +2,20 @@ import CloudKit
 import GladysCommon
 
 final actor PullState {
-    var updatedSequence = false
-    var newDropCount = 0 { didSet { updateProgress() } }
-    var newTypeItemCount = 0 { didSet { updateProgress() } }
+    private var updatedSequence = false
+    private var newDropCount = 0 { didSet { updateProgress() } }
+    private var newTypeItemCount = 0 { didSet { updateProgress() } }
 
-    var typeUpdateCount = 0 { didSet { updateProgress() } }
-    var deletionCount = 0 { didSet { updateProgress() } }
-    var updateCount = 0 { didSet { updateProgress() } }
-    var newTypesAppended = 0
+    private var typeUpdateCount = 0 { didSet { updateProgress() } }
+    private var deletionCount = 0 { didSet { updateProgress() } }
+    private var updateCount = 0 { didSet { updateProgress() } }
+    private var newTypesAppended = 0
 
-    var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
-    var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
-    var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
-    var pendingTypeItemRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
-    let newItemsDebounce = PopTimer(timeInterval: 0.3) {
+    private var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
+    private var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
+    private var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
+    private var pendingTypeItemRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
+    private let newItemsDebounce = PopTimer(timeInterval: 0.3) {
         Task { @MainActor in
             sendNotification(name: .ItemsAddedBySync, object: nil)
         }

@@ -2210,9 +2210,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             Task { @MainActor in
                 do {
                     let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
-                    completion(share, CloudManager.container, nil)
+                    completion(share, await CloudManager.container, nil)
                 } catch {
-                    completion(nil, CloudManager.container, error)
+                    completion(nil, await CloudManager.container, error)
                 }
             }
         }
@@ -2221,8 +2221,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func editInvites(in item: ArchivedItem, at indexPath: IndexPath) {
         guard let shareRecord = item.cloudKitShareRecord else { return }
-        let cloudSharingController = UICloudSharingController(share: shareRecord, container: CloudManager.container)
-        presentCloudController(cloudSharingController, for: item, at: indexPath)
+        Task {
+            let cloudSharingController = UICloudSharingController(share: shareRecord, container: await CloudManager.container)
+            presentCloudController(cloudSharingController, for: item, at: indexPath)
+        }
     }
 
     private func presentCloudController(_ cloudSharingController: UICloudSharingController, for item: ArchivedItem, at indexPath: IndexPath) {

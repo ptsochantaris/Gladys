@@ -1,13 +1,13 @@
 import Foundation
 
 extension NSAttributedString {
-    var toData: Data? {
+    public var toData: Data? {
         try? data(from: NSRange(location: 0, length: string.count), documentAttributes: [:])
     }
 }
 
 extension String {
-    func truncate(limit: Int) -> String {
+    public func truncate(limit: Int) -> String {
         let string = self
         if string.count > limit {
             let s = string.startIndex
@@ -17,7 +17,7 @@ extension String {
         return string
     }
 
-    func truncateWithEllipses(limit: Int) -> String {
+    public func truncateWithEllipses(limit: Int) -> String {
         let string = self
         let limit = limit - 1
         if string.count > limit {

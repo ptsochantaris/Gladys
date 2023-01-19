@@ -1,13 +1,13 @@
 import Combine
 import Foundation
 
-final class PopTimer {
+public final class PopTimer {
     private let publisher = PassthroughSubject<Void, Never>()
     private let stride: RunLoop.SchedulerTimeType.Stride
     private let callback: () -> Void
     private var cancel: Cancellable?
 
-    func push() {
+    public func push() {
         if cancel == nil {
             cancel = publisher.debounce(for: stride, scheduler: RunLoop.main).sink { [weak self] _ in
                 guard let self else { return }
@@ -18,18 +18,18 @@ final class PopTimer {
         publisher.send()
     }
 
-    func abort() {
+    public func abort() {
         if let c = cancel {
             c.cancel()
             cancel = nil
         }
     }
     
-    var isPushed: Bool {
+    public var isPushed: Bool {
         cancel != nil
     }
 
-    init(timeInterval: TimeInterval, callback: @escaping () -> Void) {
+    public init(timeInterval: TimeInterval, callback: @escaping () -> Void) {
         self.stride = RunLoop.SchedulerTimeType.Stride(timeInterval)
         self.callback = callback
     }

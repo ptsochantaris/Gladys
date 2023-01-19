@@ -669,9 +669,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                 Task { @MainActor in
                     do {
                         let share = try await CloudManager.share(item: itemToShare, rootRecord: rootRecord)
-                        completion(share, CloudManager.container, nil)
+                        completion(share, await CloudManager.container, nil)
                     } catch {
-                        completion(nil, CloudManager.container, error)
+                        completion(nil, await CloudManager.container, error)
                     }
                 }
             }
@@ -693,14 +693,16 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     private func editInvites(_: Any) {
         guard let shareRecord = item.cloudKitShareRecord else { return }
 
-        let itemProvider = NSItemProvider()
-        itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
-        if let sharingService = NSSharingService(named: .cloudSharing) {
-            sharingService.delegate = self
-            sharingService.subject = item.trimmedSuggestedName
-            sharingService.perform(withItems: [itemProvider])
-        } else if let w = view.window {
-            missingService(w)
+        Task {
+            let itemProvider = NSItemProvider()
+            itemProvider.registerCloudKitShare(shareRecord, container: await CloudManager.container)
+            if let sharingService = NSSharingService(named: .cloudSharing) {
+                sharingService.delegate = self
+                sharingService.subject = item.trimmedSuggestedName
+                sharingService.perform(withItems: [itemProvider])
+            } else if let w = view.window {
+                missingService(w)
+            }
         }
     }
 

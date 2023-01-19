@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import GladysCommon
 import CloudKit
 import MapKit
+import ExceptionCatcher
 
 public enum SafeArchiving {
     private static let allowedClasses = [
@@ -27,10 +27,22 @@ public enum SafeArchiving {
     ]
     
     public static func archive(_ object: Any) -> Data? {
-        return try! NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false) // TODO
+        do {
+            return try ExceptionCatcher.catch {
+                return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
+            }
+        } catch {
+            return nil
+        }
     }
     
     public static func unarchive(_ data: Data) -> Any? {
-        return try! NSKeyedUnarchiver.unarchivedObject(ofClasses: allowedClasses, from: data)
+        do {
+            return try ExceptionCatcher.catch {
+                return try NSKeyedUnarchiver.unarchivedObject(ofClasses: allowedClasses, from: data)
+            }
+        } catch {
+            return nil
+        }
     }
 }

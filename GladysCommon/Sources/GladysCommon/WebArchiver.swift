@@ -4,7 +4,6 @@ import UniformTypeIdentifiers
 import AsyncHTTPClient
 import NIOCore
 import NIOHTTP1
-import GladysCommon
 
 extension HTTPClientResponse {
     var mimeType: String? {
@@ -27,11 +26,11 @@ extension HTTPClientResponse {
 }
 
 /// Archiver
-final actor WebArchiver {
-    static let shared = WebArchiver()
+public final actor WebArchiver {
+    public static let shared = WebArchiver()
     
     /// Error type
-    enum ArchiveErrorType: Error {
+    public enum ArchiveErrorType: Error {
         case FailToInitHTMLDocument
         case FetchResourceFailed
         case PlistSerializeFailed
@@ -72,7 +71,7 @@ final actor WebArchiver {
         return try await getData(for: HTTPClientRequest(url: url))
     }
 
-    func archiveFromUrl(_ url: String) async throws -> (Data, String) {
+    public func archiveFromUrl(_ url: String) async throws -> (Data, String) {
         let (data, response) = try await getData(from: url)
         let mimeType = response.mimeType
         if mimeType == "text/html" {
@@ -189,14 +188,14 @@ final actor WebArchiver {
 
     /////////////////////////////////////////
 
-    struct WebPreviewResult {
-        let title: String?
-        let description: String?
-        let image: IMAGE?
-        let isThumbnail: Bool
+    public struct WebPreviewResult {
+        public let title: String?
+        public let description: String?
+        public let image: IMAGE?
+        public let isThumbnail: Bool
     }
 
-    func fetchWebPreview(for url: String) async throws -> WebPreviewResult {
+    public func fetchWebPreview(for url: String) async throws -> WebPreviewResult {
         var headRequest = HTTPClientRequest(url: url)
         log("Investigating possible HTML title from this URL: \(url)")
         headRequest.method = .HEAD

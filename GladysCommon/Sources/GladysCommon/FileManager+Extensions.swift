@@ -1,8 +1,7 @@
 import Foundation
-import GladysCommon
 
 extension FileManager {
-    func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
+    public func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
         var contentSize: Int64 = 0
         if let e = enumerator(at: directoryURL, includingPropertiesForKeys: [.fileSizeKey]) {
             for itemURL in e {
@@ -15,21 +14,21 @@ extension FileManager {
         return contentSize
     }
 
-    func moveAndReplaceItem(at: URL, to: URL) throws {
+    public func moveAndReplaceItem(at: URL, to: URL) throws {
         if fileExists(atPath: to.path) {
             try removeItem(at: to)
         }
         try moveItem(at: at, to: to)
     }
 
-    func copyAndReplaceItem(at: URL, to: URL) throws {
+    public func copyAndReplaceItem(at: URL, to: URL) throws {
         if fileExists(atPath: to.path) {
             try removeItem(at: to)
         }
         try copyItem(at: at, to: to)
     }
 
-    func getDateAttribute(_ attributeName: String, from url: URL) -> Date? {
+    public func getDateAttribute(_ attributeName: String, from url: URL) -> Date? {
         guard fileExists(atPath: url.path) else {
             return nil
         }
@@ -47,7 +46,7 @@ extension FileManager {
         }
     }
 
-    func setDateAttribute(_ attributeName: String, at url: URL, to date: Date?) {
+    public func setDateAttribute(_ attributeName: String, at url: URL, to date: Date?) {
         guard fileExists(atPath: url.path) else {
             return
         }
@@ -65,7 +64,7 @@ extension FileManager {
         }
     }
 
-    func setBoolAttribute(_ attributeName: String, at url: URL, to newValue: Bool) {
+    public func setBoolAttribute(_ attributeName: String, at url: URL, to newValue: Bool) {
         guard fileExists(atPath: url.path) else {
             return
         }
@@ -82,7 +81,7 @@ extension FileManager {
         }
     }
 
-    func getBoolAttribute(_ attributeName: String, from url: URL) -> Bool? {
+    public func getBoolAttribute(_ attributeName: String, from url: URL) -> Bool? {
         guard fileExists(atPath: url.path) else {
             return nil
         }
@@ -92,7 +91,7 @@ extension FileManager {
         }
     }
 
-    func getUUIDAttribute(_ attributeName: String, from url: URL) -> UUID? {
+    public func getUUIDAttribute(_ attributeName: String, from url: URL) -> UUID? {
         guard fileExists(atPath: url.path) else {
             return nil
         }
@@ -109,7 +108,7 @@ extension FileManager {
         }
     }
 
-    func setUUIDAttribute(_ attributeName: String, at url: URL, to uuid: UUID?) {
+    public func setUUIDAttribute(_ attributeName: String, at url: URL, to uuid: UUID?) {
         guard fileExists(atPath: url.path) else {
             return
         }

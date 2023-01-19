@@ -1,22 +1,20 @@
-#if os(macOS)
 import Foundation
-#else
+#if os(iOS)
 import UIKit
 #endif
-import GladysCommon
 
-final class FileMonitor: NSObject, NSFilePresenter {
-    var presentedItemURL: URL?
+public final class FileMonitor: NSObject, NSFilePresenter {
+    public var presentedItemURL: URL?
 
-    var presentedItemOperationQueue = OperationQueue.main
+    public var presentedItemOperationQueue = OperationQueue.main
 
-    func presentedSubitemDidChange(at url: URL) {
+    public func presentedSubitemDidChange(at url: URL) {
         completion(url)
     }
 
     private let completion: (URL) -> Void
 
-    init(directory: URL, completion: @escaping (URL) -> Void) {
+    public init(directory: URL, completion: @escaping (URL) -> Void) {
         log("Starting monitoring of \(directory.path)")
         presentedItemURL = directory
         self.completion = completion
@@ -25,16 +23,14 @@ final class FileMonitor: NSObject, NSFilePresenter {
 
         NSFileCoordinator.addFilePresenter(self)
 
-        #if os(macOS)
-        #else
+        #if os(iOS)
             let nc = NotificationCenter.default
             nc.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
             nc.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
         #endif
     }
 
-    #if os(macOS)
-    #else
+    #if os(iOS)
         @objc private func foregrounded() {
             NSFileCoordinator.addFilePresenter(self)
         }
@@ -44,7 +40,7 @@ final class FileMonitor: NSObject, NSFilePresenter {
         }
     #endif
 
-    func stop() {
+    public func stop() {
         if let p = presentedItemURL {
             log("Ending monitoring of \(p.path)")
         }

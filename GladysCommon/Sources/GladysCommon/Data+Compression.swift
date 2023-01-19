@@ -2,12 +2,12 @@ import Compression
 import Foundation
 
 extension Data {
-    enum CompressionOperation {
+    public enum CompressionOperation {
         case compress
         case decompress
     }
 
-    func data(operation: CompressionOperation) -> Data? {
+    public func data(operation: CompressionOperation) -> Data? {
         guard !isEmpty else {
             return nil
         }

@@ -1,20 +1,24 @@
 import Foundation
 
-final class Cache<Key: Hashable, Value> {
-    private let store = NSCache<WrappedKey, Entry>()
+public final class Cache<Key: Hashable, Value> {
+    private let store: NSCache<WrappedKey, Entry>
+    
+    public init() {
+        store = NSCache<WrappedKey, Entry>()
+    }
 
-    final class WrappedKey: NSObject {
-        let key: Key
+    public final class WrappedKey: NSObject {
+        public let key: Key
 
-        init(_ key: Key) {
+        public init(_ key: Key) {
             self.key = key
         }
 
-        override var hash: Int {
+        public override var hash: Int {
             key.hashValue
         }
 
-        override func isEqual(_ object: Any?) -> Bool {
+        public override func isEqual(_ object: Any?) -> Bool {
             if let value = object as? WrappedKey {
                 return value.key == key
             } else {
@@ -23,19 +27,19 @@ final class Cache<Key: Hashable, Value> {
         }
     }
 
-    final class Entry {
+    public final class Entry {
         let value: Value
 
-        init(value: Value) {
+        public init(value: Value) {
             self.value = value
         }
     }
 
-    func reset() {
+    public func reset() {
         store.removeAllObjects()
     }
 
-    subscript(key: Key) -> Value? {
+    public subscript(key: Key) -> Value? {
         get {
             store.object(forKey: WrappedKey(key))?.value
         }

@@ -1,6 +1,5 @@
 import CoreLocation
 import MapKit
-import GladysCommon
 
 extension CLLocationCoordinate2D: Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
@@ -24,12 +23,17 @@ extension CGSize: Hashable {
     }
 }
 
-final class Images {
+public protocol DisplayImageProviding {
+    var imageCacheKey: String { get }
+    var displayIcon: IMAGE { get }
+}
+
+public final class Images {
     private let cache = Cache<String, IMAGE>()
 
-    static let shared = Images()
+    public static let shared = Images()
 
-    func image(for item: ArchivedItem) -> IMAGE? {
+    public func image(for item: DisplayImageProviding) -> IMAGE? {
         let cacheKey = item.imageCacheKey
         if let cachedImage = cache[cacheKey] {
             return cachedImage
@@ -40,7 +44,7 @@ final class Images {
         }
     }
 
-    subscript(key: String) -> IMAGE? {
+    public subscript(key: String) -> IMAGE? {
         get {
             cache[key]
         }
@@ -49,17 +53,24 @@ final class Images {
         }
     }
 
-    func reset() {
+    public func reset() {
         cache.reset()
     }
 
-    struct SnapshotOptions: Hashable {
-        var coordinate: CLLocationCoordinate2D?
-        var range: CLLocationDistance = 0
-        var outputSize = CGSize.zero
+    public struct SnapshotOptions: Hashable {
+        public var coordinate: CLLocationCoordinate2D?
+        public let range: CLLocationDistance
+        public let outputSize: CGSize
+        
+        public init(coordinate: CLLocationCoordinate2D? = nil, range: CLLocationDistance = 0, outputSize: CoreFoundation.CGSize = .zero) {
+            self.coordinate = coordinate
+            self.range = range
+            self.outputSize = outputSize
+        }
     }
 
-    func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
+    #if os(iOS) || os(macOS)
+    public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
         guard let coordinate = options.coordinate else {
             throw GladysError.noData.error
         }
@@ -70,4 +81,5 @@ final class Images {
         O.pointOfInterestFilter = .includingAll
         return try await MKMapSnapshotter(options: O).start().image
     }
+    #endif
 }

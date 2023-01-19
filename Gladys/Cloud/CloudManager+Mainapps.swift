@@ -491,7 +491,8 @@ extension CloudManager {
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for (zoneId, fetchGroup) in fetchGroups {
                 taskGroup.addTask { @MainActor in
-                    let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+                    let c = await container
+                    let database = zoneId == privateZoneId ? c.privateCloudDatabase : c.sharedCloudDatabase
                     let fetchResults = try await database.records(for: Array(fetchGroup))
                     for (id, result) in fetchResults {
                         switch result {

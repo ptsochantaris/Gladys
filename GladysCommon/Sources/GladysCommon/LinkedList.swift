@@ -8,8 +8,8 @@
 
 import Foundation
 
-final class LinkedList<Value>: Sequence {
-    final class Node<Value> {
+public final class LinkedList<Value>: Sequence {
+    public final class Node<Value> {
         fileprivate let value: Value
         fileprivate var next: Node<Value>?
 
@@ -22,9 +22,9 @@ final class LinkedList<Value>: Sequence {
     private var head: Node<Value>?
     private var tail: Node<Value>?
 
-    var count: Int
+    public var count: Int
 
-    init(value: Value? = nil) {
+    public init(value: Value? = nil) {
         if let value {
             let newNode = Node(value, nil)
             head = newNode
@@ -37,7 +37,7 @@ final class LinkedList<Value>: Sequence {
         }
     }
 
-    func push(_ value: Value) {
+    public func push(_ value: Value) {
         count += 1
 
         let newNode = Node(value, head)
@@ -47,7 +47,7 @@ final class LinkedList<Value>: Sequence {
         head = newNode
     }
     
-    func append(_ value: Value) {
+    public func append(_ value: Value) {
         count += 1
 
         let newNode = Node(value, nil)
@@ -59,7 +59,7 @@ final class LinkedList<Value>: Sequence {
         tail = newNode
     }
     
-    func append(contentsOf collection: LinkedList<Value>) {
+    public func append(contentsOf collection: LinkedList<Value>) {
         if collection.count == 0 {
             return
         }
@@ -74,7 +74,7 @@ final class LinkedList<Value>: Sequence {
         tail = collection.tail
     }
 
-    func pop() -> Value? {
+    public func pop() -> Value? {
         if let top = head {
             count -= 1
             head = top.next
@@ -87,16 +87,16 @@ final class LinkedList<Value>: Sequence {
         }
     }
     
-    var first: Value? {
+    public var first: Value? {
         head?.value
     }
     
-    var last: Value? {
+    public var last: Value? {
         tail?.value
     }
 
     @discardableResult
-    func remove(first removeCheck: (Value) -> Bool) -> Bool {
+    public func remove(first removeCheck: (Value) -> Bool) -> Bool {
         guard var prev = head else {
             return false
         }
@@ -123,20 +123,20 @@ final class LinkedList<Value>: Sequence {
         return false
     }
 
-    func removeAll() {
+    public func removeAll() {
         head = nil
         tail = nil
         count = 0
     }
 
-    final class ListIterator: IteratorProtocol {
+    public final class ListIterator: IteratorProtocol {
         private var current: Node<Value>?
 
         fileprivate init(_ current: Node<Value>?) {
             self.current = current
         }
 
-        func next() -> Value? {
+        public func next() -> Value? {
             if let res = current {
                 current = res.next
                 return res.value
@@ -146,17 +146,17 @@ final class LinkedList<Value>: Sequence {
         }
     }
 
-    func makeIterator() -> ListIterator {
+    public func makeIterator() -> ListIterator {
         ListIterator(head)
     }
 
-    var underestimatedCount: Int { count }
+    public var underestimatedCount: Int { count }
 
-    func withContiguousStorageIfAvailable<R>(_: (_ buffer: UnsafeBufferPointer<Value>) throws -> R) rethrows -> R? { nil }
+    public func withContiguousStorageIfAvailable<R>(_: (_ buffer: UnsafeBufferPointer<Value>) throws -> R) rethrows -> R? { nil }
 }
 
 extension LinkedList: Codable where Value: Codable {
-    convenience init(from decoder: Decoder) throws {
+    public convenience init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         self.init()
         while !container.isAtEnd {
@@ -165,7 +165,7 @@ extension LinkedList: Codable where Value: Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(contentsOf: self)
     }
@@ -173,7 +173,7 @@ extension LinkedList: Codable where Value: Codable {
 
 extension LinkedList where Value: AnyObject {
     @discardableResult
-    func removeInstance(of item: Value) -> Bool {
+    public func removeInstance(of item: Value) -> Bool {
         guard var prev = head else {
             return false
         }

@@ -1,9 +1,9 @@
 import Foundation
 
-enum ItemColor: String, CaseIterable, Codable {
+public enum ItemColor: String, CaseIterable, Codable {
     case none, blue, red, purple, green, cyan, yellow, gray
 
-    var title: String {
+    public var title: String {
         switch self {
         case .green: return "Green"
         case .red: return "Red"
@@ -16,20 +16,20 @@ enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    var color: COLOR {
+    public var color: COLOR {
         switch self {
-        case .green: return COLOR.systemGreen
-        case .red: return COLOR.systemRed
-        case .blue: return COLOR.systemBlue
-        case .cyan: return COLOR.systemCyan
-        case .gray: return COLOR.systemGray
+        case .green: return COLOR.green
+        case .red: return COLOR.red
+        case .blue: return COLOR.blue
+        case .cyan: return COLOR.cyan
+        case .gray: return COLOR.gray
         case .none: return COLOR.g_colorMacCard
-        case .purple: return COLOR.systemPurple
-        case .yellow: return COLOR.systemYellow
+        case .purple: return COLOR.purple
+        case .yellow: return COLOR.yellow
         }
     }
 
-    var invertText: Bool {
+    public var invertText: Bool {
         switch self {
         case .cyan: return true
         case .none: return false
@@ -42,7 +42,7 @@ enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    var img: IMAGE? {
+    public var img: IMAGE? {
         switch self {
         case .none: return IMAGE(systemName: "circle")
         default: return IMAGE.tintedShape(systemName: "circle.fill", coloured: color)

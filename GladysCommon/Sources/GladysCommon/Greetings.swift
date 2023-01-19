@@ -1,9 +1,9 @@
 import Foundation
 
-final class Greetings {
-    static let openLine = "Ready! Drop me stuff."
+public final class Greetings {
+    public static let openLine = "Ready! Drop me stuff."
 
-    static var randomCleanLine: String {
+    public static var randomCleanLine: String {
         cleanLines[Int.random(in: 0 ..< cleanLines.count)]
     }
 
@@ -28,7 +28,7 @@ final class Greetings {
         "Gladys zero!"
     ]
 
-    static var randomGreetLine: String {
+    public static var randomGreetLine: String {
         greetLines[Int.random(in: 0 ..< greetLines.count)]
     }
 

@@ -1,11 +1,16 @@
 import Foundation
 
 @propertyWrapper
-struct UserDefault<Value> {
+public struct UserDefault<Value> {
     let key: String
     let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
             PersistedOptions.defaults.object(forKey: key) as? Value ?? defaultValue
         }
@@ -16,11 +21,16 @@ struct UserDefault<Value> {
 }
 
 @propertyWrapper
-struct OptionalUserDefault<Value> {
+public struct OptionalUserDefault<Value> {
     let key: String
     let emptyValue: Value?
 
-    var wrappedValue: Value? {
+    public init(key: String, emptyValue: Value?) {
+        self.key = key
+        self.emptyValue = emptyValue
+    }
+
+    public var wrappedValue: Value? {
         get {
             PersistedOptions.defaults.object(forKey: key) as? Value
         }
@@ -37,11 +47,16 @@ struct OptionalUserDefault<Value> {
 }
 
 @propertyWrapper
-struct EnumUserDefault<Value: RawRepresentable> {
+public struct EnumUserDefault<Value: RawRepresentable> {
     let key: String
     let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
             if let o = PersistedOptions.defaults.object(forKey: key) as? Value.RawValue, let v = Value(rawValue: o) {
                 return v
