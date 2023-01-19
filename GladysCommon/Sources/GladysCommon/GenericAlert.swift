@@ -9,7 +9,6 @@
         if let message {
             a.informativeText = message
         }
-
         _ = a.runModal()
     }
 
@@ -41,32 +40,38 @@
         }
 
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let a = GladysAlertController(title: title, message: message, preferredStyle: .alert)
             if let buttonTitle {
-                a.addAction(UIAlertAction(title: buttonTitle, style: .default) { _ in
-                    continuation.resume()
-                })
+                a.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: nil))
             }
 
             if offerSettingsShortcut {
                 a.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
                     UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:])
-                    continuation.resume()
                 })
             }
+
+            a.completion = { continuation.resume() }
 
             presenter.present(a, animated: true)
 
             if buttonTitle == nil, autoDismiss {
                 Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-                    a.dismiss(animated: true) {
-                        continuation.resume()
-                    }
+                    a.dismiss(animated: true)
                 }
             }
 
             alertController?(a)
+        }
+    }
+
+    final class GladysAlertController: UIAlertController {
+        var completion: (() -> Void)?
+
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            completion?()
         }
     }
 #endif
