@@ -1,19 +1,4 @@
-import CommonCrypto
 import Foundation
-
-#if os(macOS)
-    import Cocoa
-    public typealias IMAGE = NSImage
-    public typealias COLOR = NSColor
-    public let groupName = "X727JSJUGJ.build.bru.MacGladys"
-#else
-    import UIKit
-    public typealias IMAGE = UIImage
-    public typealias COLOR = UIColor
-    public let groupName = "group.build.bru.Gladys"
-#endif
-
-public let GladysFileUTI = "build.bru.gladys.archive"
 
 public enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100
@@ -49,11 +34,9 @@ public enum GladysError: Int {
     }
 }
 
-public func sha1(_ input: String) -> Data {
-    input.utf8CString.withUnsafeBytes { bytes -> Data in
-        let len = Int(CC_SHA1_DIGEST_LENGTH)
-        var digest = [UInt8](repeating: 0, count: len)
-        CC_SHA1(bytes.baseAddress, CC_LONG(bytes.count), &digest)
-        return Data(bytes: digest, count: len)
+public extension Error {
+    var finalDescription: String {
+        let err = self as NSError
+        return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
     }
 }
