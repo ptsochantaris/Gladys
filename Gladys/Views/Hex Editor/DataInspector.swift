@@ -1,5 +1,5 @@
-import UIKit
 import GladysCommon
+import UIKit
 
 final class DataInspector: GladysViewController {
     static func setBool(_ name: String, _ value: Bool) {

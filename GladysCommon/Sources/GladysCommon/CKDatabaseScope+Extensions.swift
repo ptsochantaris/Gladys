@@ -18,8 +18,8 @@ public enum RecordChangeCheck {
     }
 }
 
-extension CKDatabase.Scope {
-    public var keyName: String {
+public extension CKDatabase.Scope {
+    var keyName: String {
         switch self {
         case .public: return "1"
         case .private: return "2"
@@ -28,7 +28,7 @@ extension CKDatabase.Scope {
         }
     }
 
-    public var logName: String {
+    var logName: String {
         switch self {
         case .private: return "private"
         case .public: return "public"

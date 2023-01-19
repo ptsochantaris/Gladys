@@ -1,9 +1,9 @@
 import CloudKit
 import CoreSpotlight
+import GladysCommon
 import MapKit
 import UIKit
 import WatchConnectivity
-import GladysCommon
 
 private class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {

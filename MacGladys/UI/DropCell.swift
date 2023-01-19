@@ -1,6 +1,6 @@
 import Cocoa
-import MapKit
 import GladysCommon
+import MapKit
 
 class FirstMouseView: NSView {
     override final func acceptsFirstMouse(for _: NSEvent?) -> Bool {

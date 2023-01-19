@@ -61,7 +61,7 @@ public final class Images {
         public var coordinate: CLLocationCoordinate2D?
         public let range: CLLocationDistance
         public let outputSize: CGSize
-        
+
         public init(coordinate: CLLocationCoordinate2D? = nil, range: CLLocationDistance = 0, outputSize: CoreFoundation.CGSize = .zero) {
             self.coordinate = coordinate
             self.range = range
@@ -70,16 +70,16 @@ public final class Images {
     }
 
     #if os(iOS) || os(macOS)
-    public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
-        guard let coordinate = options.coordinate else {
-            throw GladysError.noData.error
+        public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
+            guard let coordinate = options.coordinate else {
+                throw GladysError.noData.error
+            }
+            let O = MKMapSnapshotter.Options()
+            O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: options.range, longitudinalMeters: options.range)
+            O.size = options.outputSize
+            O.showsBuildings = true
+            O.pointOfInterestFilter = .includingAll
+            return try await MKMapSnapshotter(options: O).start().image
         }
-        let O = MKMapSnapshotter.Options()
-        O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: options.range, longitudinalMeters: options.range)
-        O.size = options.outputSize
-        O.showsBuildings = true
-        O.pointOfInterestFilter = .includingAll
-        return try await MKMapSnapshotter(options: O).start().image
-    }
     #endif
 }

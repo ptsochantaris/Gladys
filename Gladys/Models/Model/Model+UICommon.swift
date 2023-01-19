@@ -1,10 +1,10 @@
 import CloudKit
 import CoreSpotlight
 #if os(macOS)
-import Cocoa
+    import Cocoa
 #else
-import CoreAudioKit
-import Foundation
+    import CoreAudioKit
+    import Foundation
 #endif
 import GladysCommon
 

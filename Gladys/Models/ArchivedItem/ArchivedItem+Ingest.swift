@@ -3,10 +3,10 @@ import Foundation
 #else
     import MobileCoreServices
 #endif
+import GladysCommon
 import NaturalLanguage
 import Speech
 import Vision
-import GladysCommon
 
 extension ArchivedItem {
     var mostRelevantTypeItem: Component? {

@@ -1,10 +1,10 @@
 import CloudKit
 import Contacts
 import ContactsUI
+import GladysCommon
 import MapKit
 import QuickLook
 import UIKit
-import GladysCommon
 
 final class NavBarHiderNavigationController: UINavigationController {
     override func viewWillLayoutSubviews() {

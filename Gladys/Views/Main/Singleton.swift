@@ -1,6 +1,6 @@
 import CoreSpotlight
-import UIKit
 import GladysCommon
+import UIKit
 
 @MainActor
 final class Singleton {

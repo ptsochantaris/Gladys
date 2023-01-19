@@ -1,6 +1,6 @@
 import Cocoa
-import UniformTypeIdentifiers
 import GladysCommon
+import UniformTypeIdentifiers
 
 extension Model {
     nonisolated static var coordinator: NSFileCoordinator {

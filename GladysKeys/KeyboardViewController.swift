@@ -1,5 +1,5 @@
-import UIKit
 import GladysCommon
+import UIKit
 
 private var latestOffset = CGPoint.zero
 private var selectedLabel: String?

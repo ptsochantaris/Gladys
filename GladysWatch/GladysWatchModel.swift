@@ -1,5 +1,5 @@
-import WatchConnectivity
 import GladysCommon
+import WatchConnectivity
 
 final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     @Published var reportedCount = 0

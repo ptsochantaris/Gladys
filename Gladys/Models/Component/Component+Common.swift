@@ -4,8 +4,8 @@ import Foundation
 #else
     import MobileCoreServices
 #endif
-import UniformTypeIdentifiers
 import GladysCommon
+import UniformTypeIdentifiers
 
 extension Component: Equatable {
     func setBytes(_ data: Data?) {

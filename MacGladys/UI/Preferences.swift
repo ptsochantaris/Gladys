@@ -1,7 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
-import Speech
 import GladysCommon
+import Speech
 
 final class Preferences: NSViewController {
     @IBOutlet private var syncSwitch: NSButton!

@@ -2,7 +2,7 @@ import Foundation
 
 public final class Cache<Key: Hashable, Value> {
     private let store: NSCache<WrappedKey, Entry>
-    
+
     public init() {
         store = NSCache<WrappedKey, Entry>()
     }
@@ -14,11 +14,11 @@ public final class Cache<Key: Hashable, Value> {
             self.key = key
         }
 
-        public override var hash: Int {
+        override public var hash: Int {
             key.hashValue
         }
 
-        public override func isEqual(_ object: Any?) -> Bool {
+        override public func isEqual(_ object: Any?) -> Bool {
             if let value = object as? WrappedKey {
                 return value.key == key
             } else {

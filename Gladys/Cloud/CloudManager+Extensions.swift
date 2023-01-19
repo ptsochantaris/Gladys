@@ -1,6 +1,6 @@
 import CloudKit
-import UIKit
 import GladysCommon
+import UIKit
 
 extension CloudManager {
     private static func getDeviceId() -> Data {

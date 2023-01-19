@@ -1,9 +1,9 @@
+import AsyncHTTPClient
 import Foundation
 import Fuzi
-import UniformTypeIdentifiers
-import AsyncHTTPClient
 import NIOCore
 import NIOHTTP1
+import UniformTypeIdentifiers
 
 extension HTTPClientResponse {
     var mimeType: String? {
@@ -13,9 +13,10 @@ extension HTTPClientResponse {
         }
         return nil
     }
+
     var textEncodingName: String? {
-        if  let ct = headers["Content-Type"].first,
-            let lang = ct.split(separator: ";").last {
+        if let ct = headers["Content-Type"].first,
+           let lang = ct.split(separator: ";").last {
             let cs = lang.split(separator: "=")
             if cs.count > 1 {
                 return cs[1].trimmingCharacters(in: .whitespacesAndNewlines)
@@ -28,27 +29,27 @@ extension HTTPClientResponse {
 /// Archiver
 public final actor WebArchiver {
     public static let shared = WebArchiver()
-    
+
     /// Error type
     public enum ArchiveErrorType: Error {
         case FailToInitHTMLDocument
         case FetchResourceFailed
         case PlistSerializeFailed
     }
-            
+
     private let client = HTTPClient(eventLoopGroupProvider: .createNew,
                                     configuration: {
-        var config = HTTPClient.Configuration(certificateVerification: .none,
-                                              redirectConfiguration: .follow(max: 4, allowCycles: false),
-                                              decompression: .enabled(limit: .none))
-        config.httpVersion = .http1Only
-        return config
-    }())
-    
+                                        var config = HTTPClient.Configuration(certificateVerification: .none,
+                                                                              redirectConfiguration: .follow(max: 4, allowCycles: false),
+                                                                              decompression: .enabled(limit: .none))
+                                        config.httpVersion = .http1Only
+                                        return config
+                                    }())
+
     deinit {
         try? client.syncShutdown()
     }
-    
+
     private let headers = HTTPHeaders([
         ("Accept", "*/*"),
         ("Accept-Language", "en-GB,en;q=0.9"),

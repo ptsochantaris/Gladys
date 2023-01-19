@@ -1,7 +1,7 @@
 import BackgroundTasks
 import CloudKit
-import UIKit
 import GladysCommon
+import UIKit
 
 extension CloudManager {
     enum SyncPermissionContext: Int {

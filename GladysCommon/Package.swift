@@ -14,7 +14,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "GladysCommon",
-            targets: ["GladysCommon"]),
+            targets: ["GladysCommon"]
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/sindresorhus/ExceptionCatcher", from: "2.0.0"),
@@ -28,7 +29,7 @@ let package = Package(
             name: "GladysCommon",
             dependencies: ["ExceptionCatcher",
                            "Fuzi",
-                           .product(name: "AsyncHTTPClient", package: "async-http-client")
-                          ])
+                           .product(name: "AsyncHTTPClient", package: "async-http-client")]
+        )
     ]
 )

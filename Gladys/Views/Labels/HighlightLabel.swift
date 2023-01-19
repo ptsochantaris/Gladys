@@ -1,4 +1,5 @@
 import CoreText
+import GladysCommon
 import UIKit
 
 final class HighlightLabel: UILabel {

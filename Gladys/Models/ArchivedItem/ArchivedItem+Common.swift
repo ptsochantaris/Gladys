@@ -1,9 +1,9 @@
 import CloudKit
 import GladysCommon
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 #elseif canImport(Cocoa)
-import Cocoa
+    import Cocoa
 #endif
 
 let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)

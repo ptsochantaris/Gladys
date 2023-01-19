@@ -1,6 +1,6 @@
+import GladysCommon
 import StoreKit
 import UIKit
-import GladysCommon
 
 final class AboutController: GladysViewController {
     @IBOutlet private var versionLabel: UIBarButtonItem!

@@ -4,7 +4,7 @@ import Foundation
 public struct UserDefault<Value> {
     let key: String
     let defaultValue: Value
-    
+
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue
@@ -50,7 +50,7 @@ public struct OptionalUserDefault<Value> {
 public struct EnumUserDefault<Value: RawRepresentable> {
     let key: String
     let defaultValue: Value
-    
+
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue

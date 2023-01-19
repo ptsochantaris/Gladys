@@ -9,10 +9,10 @@ public func valueForKeyedArchiverUID(_ item: Any) -> UInt32 {
 
 public let isRunningInTestFlightEnvironment: Bool = {
     #if targetEnvironment(simulator)
-    return false
+        return false
     #else
-    let sandbox = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    let provision = Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil
-    return sandbox && !provision
+        let sandbox = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        let provision = Bundle.main.path(forResource: "embedded", ofType: "mobileprovision") != nil
+        return sandbox && !provision
     #endif
 }()

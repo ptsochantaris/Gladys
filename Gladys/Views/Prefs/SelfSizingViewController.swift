@@ -1,5 +1,5 @@
-import UIKit
 import GladysCommon
+import UIKit
 
 final class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {

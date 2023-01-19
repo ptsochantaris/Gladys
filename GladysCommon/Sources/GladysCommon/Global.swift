@@ -2,15 +2,15 @@ import CommonCrypto
 import Foundation
 
 #if os(macOS)
-import Cocoa
-public typealias IMAGE = NSImage
-public typealias COLOR = NSColor
-public let groupName = "X727JSJUGJ.build.bru.MacGladys"
+    import Cocoa
+    public typealias IMAGE = NSImage
+    public typealias COLOR = NSColor
+    public let groupName = "X727JSJUGJ.build.bru.MacGladys"
 #else
-import UIKit
-public typealias IMAGE = UIImage
-public typealias COLOR = UIColor
-public let groupName = "group.build.bru.Gladys"
+    import UIKit
+    public typealias IMAGE = UIImage
+    public typealias COLOR = UIColor
+    public let groupName = "group.build.bru.Gladys"
 #endif
 
 public let GladysFileUTI = "build.bru.gladys.archive"

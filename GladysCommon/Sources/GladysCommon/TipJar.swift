@@ -1,8 +1,8 @@
 import Foundation
 import StoreKit
 
-extension SKProduct {
-    public var regularPrice: String? {
+public extension SKProduct {
+    var regularPrice: String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = priceLocale
@@ -13,7 +13,7 @@ extension SKProduct {
 public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     private let completion: ([SKProduct]?, Error?) -> Void
     #if os(macOS)
-    public var aboutWindow: NSWindow?
+        public var aboutWindow: NSWindow?
     #endif
 
     public init(completion: @escaping ([SKProduct]?, Error?) -> Void) {

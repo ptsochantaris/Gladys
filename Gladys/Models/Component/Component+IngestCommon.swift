@@ -2,10 +2,10 @@ import AVFoundation
 import Contacts
 import MapKit
 #if os(macOS)
-import Cocoa
+    import Cocoa
 #else
-import MobileCoreServices
-import UIKit
+    import MobileCoreServices
+    import UIKit
 #endif
 import AsyncAlgorithms
 import GladysCommon
@@ -47,7 +47,7 @@ extension Component {
             }
 
             progress.completedUnitCount += 1
-            
+
         } catch {
             flags.remove(.isTransferring)
             try await ingestFailed(error: error)
@@ -88,7 +88,7 @@ extension Component {
     private final class GateKeeper {
         private var channel: AsyncChannel<Int>
         private var iterator: AsyncChannel<Int>.Iterator
-        
+
         init() {
             let c = AsyncChannel(element: Int.self)
             channel = c
@@ -99,7 +99,7 @@ extension Component {
                 }
             }
         }
-        
+
         func waitForGate() async {
             _ = await iterator.next()!
         }
@@ -166,11 +166,11 @@ extension Component {
                     classWasWrapped = false
                     if storeBytes {
                         #if os(macOS)
-                        let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
-                        setBytes(b ?? Data())
+                            let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
+                            setBytes(b ?? Data())
                         #else
-                        let b = item.jpegData(compressionQuality: 1)
-                        setBytes(b)
+                            let b = item.jpegData(compressionQuality: 1)
+                            setBytes(b)
                         #endif
                     }
                 } else {
@@ -315,9 +315,9 @@ extension Component {
 
         if let cgImage = context.makeImage() {
             #if os(macOS)
-            return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+                return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
             #else
-            return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
+                return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
             #endif
         } else {
             return nil
@@ -342,9 +342,9 @@ extension Component {
             let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
 
             #if os(macOS)
-            result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+                result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
             #else
-            result = UIImage(cgImage: cgImage)
+                result = UIImage(cgImage: cgImage)
             #endif
 
         } catch {
@@ -504,13 +504,13 @@ extension Component {
             }
             self.componentIcon = result
         }.value
-        
+
         displayIconPriority = priority
         displayIconContentMode = contentMode
         #if os(macOS)
-        displayIconTemplate = icon.isTemplate
+            displayIconTemplate = icon.isTemplate
         #else
-        displayIconTemplate = icon.renderingMode == .alwaysTemplate
+            displayIconTemplate = icon.renderingMode == .alwaysTemplate
         #endif
     }
 }

@@ -130,22 +130,22 @@ enum Model {
         encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
         return encoder
     }
-    
+
     private final class LoaderBuffer {
         private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation")
 
         private var store: ContiguousArray<ArchivedItem?>
-        
+
         init(capacity: Int) {
             store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
         }
-        
+
         func set(_ item: ArchivedItem, at index: Int) {
             queue.async {
                 self.store[index] = item
             }
         }
-        
+
         func result() -> ContiguousArray<ArchivedItem> {
             queue.sync {
                 ContiguousArray(store.compactMap { $0 })

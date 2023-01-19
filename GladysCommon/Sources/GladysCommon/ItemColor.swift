@@ -42,10 +42,14 @@ public enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    public var img: IMAGE? {
-        switch self {
-        case .none: return IMAGE(systemName: "circle")
-        default: return IMAGE.tintedShape(systemName: "circle.fill", coloured: color)
+    #if os(macOS) || os(iOS)
+        public var img: IMAGE? {
+            switch self {
+            case .none:
+                return IMAGE(systemName: "circle")
+            default:
+                return IMAGE.tintedShape(systemName: "circle.fill", coloured: color)
+            }
         }
-    }
+    #endif
 }

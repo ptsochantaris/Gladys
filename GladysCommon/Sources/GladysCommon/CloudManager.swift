@@ -2,15 +2,15 @@ import CloudKit
 
 public let diskSizeFormatter = ByteCountFormatter()
 
-extension Sequence where Element: Hashable {
-    public var uniqued: [Element] {
+public extension Sequence where Element: Hashable {
+    var uniqued: [Element] {
         var set = Set<Element>()
         return filter { set.insert($0).inserted }
     }
 }
 
-extension Array {
-    public func bunch(maxSize: Int) -> [[Element]] {
+public extension Array {
+    func bunch(maxSize: Int) -> [[Element]] {
         var pos = 0
         let slices = LinkedList<ArraySlice<Element>>()
         while pos < count {
@@ -22,8 +22,8 @@ extension Array {
     }
 }
 
-extension [[CKRecord]] {
-    public func flatBunch(minSize: Int) -> [[CKRecord]] {
+public extension [[CKRecord]] {
+    func flatBunch(minSize: Int) -> [[CKRecord]] {
         let result = LinkedList<[CKRecord]>()
         var newChild = [CKRecord]()
         for childArray in self {
@@ -40,12 +40,12 @@ extension [[CKRecord]] {
     }
 }
 
-extension Error {
-    public var itemDoesNotExistOnServer: Bool {
+public extension Error {
+    var itemDoesNotExistOnServer: Bool {
         (self as? CKError)?.code == CKError.Code.unknownItem
     }
 
-    public var changeTokenExpired: Bool {
+    var changeTokenExpired: Bool {
         (self as? CKError)?.code == CKError.Code.changeTokenExpired
     }
 }

@@ -1,5 +1,5 @@
-import UIKit
 import GladysCommon
+import UIKit
 
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()

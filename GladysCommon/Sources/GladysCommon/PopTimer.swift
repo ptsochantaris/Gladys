@@ -24,7 +24,7 @@ public final class PopTimer {
             cancel = nil
         }
     }
-    
+
     public var isPushed: Bool {
         cancel != nil
     }

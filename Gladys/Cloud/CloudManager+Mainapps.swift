@@ -1,7 +1,7 @@
 #if os(macOS)
-import Cocoa
+    import Cocoa
 #else
-import UIKit
+    import UIKit
 #endif
 import CloudKit
 import GladysCommon
@@ -604,9 +604,9 @@ extension CloudManager {
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
         let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
         #if os(macOS)
-        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
+            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
         #else
-        shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
+            shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #endif
         let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap(\.populatedCloudKitRecord)
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating

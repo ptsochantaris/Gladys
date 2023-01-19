@@ -1,10 +1,10 @@
 import Cocoa
 import Contacts
 import ContactsUI
+import GladysCommon
 import MapKit
 import UniformTypeIdentifiers
 import ZIPFoundation
-import GladysCommon
 
 extension Component {
     var isArchivable: Bool {

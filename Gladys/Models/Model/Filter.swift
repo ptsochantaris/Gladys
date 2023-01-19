@@ -271,8 +271,8 @@ final class Filter {
             if signalUpdate != .none {
                 delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
-#if os(macOS)
-#else
+                #if os(macOS)
+                #else
                     if isFilteringText, UIAccessibility.isVoiceOverRunning {
                         let resultString: String
                         let c = filteredDrops.count

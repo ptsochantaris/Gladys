@@ -1,6 +1,6 @@
 import Foundation
 
-public final class Greetings {
+public enum Greetings {
     public static let openLine = "Ready! Drop me stuff."
 
     public static var randomCleanLine: String {

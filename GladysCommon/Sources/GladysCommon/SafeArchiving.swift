@@ -1,15 +1,7 @@
-//
-//  SafeArchiving.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 18/01/2023.
-//  Copyright © 2023 Paul Tsochantaris. All rights reserved.
-//
-
-import Foundation
 import CloudKit
-import MapKit
 import ExceptionCatcher
+import Foundation
+import MapKit
 
 public enum SafeArchiving {
     private static let allowedClasses = [
@@ -25,7 +17,7 @@ public enum SafeArchiving {
         CKServerChangeToken.classForKeyedUnarchiver(),
         NSDate.classForKeyedUnarchiver()
     ]
-    
+
     public static func archive(_ object: Any) -> Data? {
         do {
             return try ExceptionCatcher.catch {
@@ -35,7 +27,7 @@ public enum SafeArchiving {
             return nil
         }
     }
-    
+
     public static func unarchive(_ data: Data) -> Any? {
         do {
             return try ExceptionCatcher.catch {

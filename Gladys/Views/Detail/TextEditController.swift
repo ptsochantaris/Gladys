@@ -1,7 +1,7 @@
+import GladysCommon
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
-import GladysCommon
 
 final class TextEditController: GladysViewController, UITextViewDelegate {
     var item: ArchivedItem!

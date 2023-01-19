@@ -19,15 +19,15 @@ public enum ArchivedDropItemDisplayType: Int {
     case fit, fill, center, circle
 }
 
-extension Error {
-    public var finalDescription: String {
+public extension Error {
+    var finalDescription: String {
         let err = self as NSError
         return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
     }
 }
 
-extension String {
-    public var filenameSafe: String {
+public extension String {
+    var filenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
                 return host + "-" + components.path.split(separator: "/").joined(separator: "-")
@@ -39,7 +39,7 @@ extension String {
         }
     }
 
-    public var dropFilenameSafe: String {
+    var dropFilenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
                 return host + "-" + components.path.split(separator: "/").joined(separator: "-")
@@ -52,8 +52,8 @@ extension String {
     }
 }
 
-extension URL {
-    public var urlFileContent: Data {
+public extension URL {
+    var urlFileContent: Data {
         Data("[InternetShortcut]\r\nURL=\(absoluteString)\r\n".utf8)
     }
 }

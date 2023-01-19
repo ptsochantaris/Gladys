@@ -1,6 +1,6 @@
+import GladysCommon
 import Intents
 import UIKit
-import GladysCommon
 
 extension Component {
     func copyToPasteboard(donateShortcut: Bool = true) {

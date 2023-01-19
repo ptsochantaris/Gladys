@@ -1,7 +1,7 @@
 import CoreLocation
+import GladysCommon
 import MapKit
 import UIKit
-import GladysCommon
 
 final class GladysImageView: UIImageView {
     var circle = false {

@@ -1,5 +1,5 @@
-import UIKit
 import GladysCommon
+import UIKit
 
 extension Model {
     @discardableResult
