@@ -1,4 +1,5 @@
 import Foundation
+import CloudKit
 
 public enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100
@@ -38,5 +39,13 @@ public extension Error {
     var finalDescription: String {
         let err = self as NSError
         return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
+    }
+
+    var itemDoesNotExistOnServer: Bool {
+        (self as? CKError)?.code == CKError.Code.unknownItem
+    }
+
+    var changeTokenExpired: Bool {
+        (self as? CKError)?.code == CKError.Code.changeTokenExpired
     }
 }

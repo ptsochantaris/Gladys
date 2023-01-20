@@ -274,7 +274,7 @@ extension Model {
         backgroundObserver = n.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
             backgrounded()
         }
-        foregrounded()
+        NSFileCoordinator.addFilePresenter(filePresenter)
     }
 
     private static let filePresenter = ModelFilePresenter()

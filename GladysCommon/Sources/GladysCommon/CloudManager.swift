@@ -40,16 +40,6 @@ public extension [[CKRecord]] {
     }
 }
 
-public extension Error {
-    var itemDoesNotExistOnServer: Bool {
-        (self as? CKError)?.code == CKError.Code.unknownItem
-    }
-
-    var changeTokenExpired: Bool {
-        (self as? CKError)?.code == CKError.Code.changeTokenExpired
-    }
-}
-
 @globalActor
 public enum CloudActor {
     public final actor ActorType {}

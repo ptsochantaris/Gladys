@@ -19,7 +19,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     @IBOutlet private var shareButton: UIBarButtonItem!
     @IBOutlet private var editButton: UIBarButtonItem!
 
-    var filter: Filter!
+    var filter: Filter! {
+        didSet {
+            filterChanged()
+        }
+    }
+    
+    private func filterChanged() {
+        guard isViewLoaded else { return }
+        if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
+            sc.searchBar.text = search
+            searchTimer.abort()
+            updateSearchResults(for: sc)
+        }
+        updateTitle()
+    }
 
     var itemView: UICollectionView {
         collection!
@@ -621,8 +635,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         dragModePanel.alpha = 0
     }
 
-    var onLoadTask: TaskLock? = TaskLock(preLocked: true)
-
     private func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
             if let item = Model.item(uuid: uuid) {
@@ -858,8 +870,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             _ = filter.update(signalUpdate: .none)
         }
 
-        updateUI()
-        blurb(Greetings.openLine)
+        UIView.performWithoutAnimation {
+            updateUI()
+            blurb(Greetings.openLine)
+        }
 
         cloudStatusChanged()
 
@@ -889,26 +903,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         ]
         let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
         sortAscendingButton.menu = menu
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        if firstAppearance {
-            if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
-                sc.searchBar.text = search
-                searchTimer.abort()
-                updateSearchResults(for: sc)
-            }
-            updateTitle()
-        }
-
-        super.viewDidAppear(animated)
-
-        if let taskLock = onLoadTask {
-            onLoadTask = nil
-            Task {
-                await taskLock.unlock()
-            }
-        }
+        
+        filterChanged()
     }
 
     @objc private func keyboardHiding() {
@@ -1882,7 +1878,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     //////////////////////////
 
-    func startSearch(_ initialText: String?) {
+    func startSearch(_ initialText: String?) async {
+        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         guard let s = navigationItem.searchController else { return }
         if let initialText {
             s.searchBar.text = initialText

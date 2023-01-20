@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="kiZ-3T-dZQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -20,7 +20,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView autoresizesSubviews="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="-1" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="colorPaper"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GOE-Ci-zLW">
@@ -130,16 +130,16 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
-                            <rect key="frame" x="20" y="66.5" width="160" height="53.5"/>
+                            <rect key="frame" x="20" y="59.5" width="160" height="60.5"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                                    <rect key="frame" x="0.0" y="0.0" width="160" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="26.5"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Oo-XrT">
-                                    <rect key="frame" x="0.0" y="39" width="160" height="14.5"/>
+                                    <rect key="frame" x="0.0" y="42.5" width="160" height="18"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="colorTint"/>
                                     <nil key="highlightedColor"/>
@@ -178,28 +178,28 @@
             <objects>
                 <viewController id="XPV-LI-EHc" customClass="LabelSelector" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9l2-YE-hbb" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="422"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9At-u8-ZrJ">
-                                <rect key="frame" x="0.0" y="56" width="240" height="404"/>
+                                <rect key="frame" x="0.0" y="56" width="240" height="366"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelToggleCell" rowHeight="70" id="pwg-9e-MlX" customClass="LabelToggleCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.5" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="50" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pwg-9e-MlX" id="fje-lK-u5A">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIL-f2-cgn">
-                                                    <rect key="frame" x="16" y="11" width="208" height="14.5"/>
+                                                    <rect key="frame" x="16" y="11" width="208" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="1000" text="Item count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phz-mJ-ghT">
-                                                    <rect key="frame" x="16" y="25.5" width="208" height="33.5"/>
+                                                    <rect key="frame" x="16" y="29" width="208" height="30"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
@@ -232,7 +232,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOj-EL-dRw">
-                                <rect key="frame" x="24" y="219" width="192" height="78.5"/>
+                                <rect key="frame" x="24" y="195" width="192" height="88"/>
                                 <string key="text">You can add labels to items, and they will appear here.
 
 Selecting them will show only items that contain these labels.</string>
@@ -241,7 +241,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWn-S9-INk">
-                                <rect key="frame" x="81.5" y="341.5" width="77" height="37"/>
+                                <rect key="frame" x="78.5" y="327" width="83" height="41"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
                                 <state key="normal" title="Close"/>
@@ -291,39 +291,13 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="2579" y="1339"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="guN-Qh-8Za">
-            <objects>
-                <viewController id="kiZ-3T-dZQ" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Wk5-yt-ach" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z5b-ii-Xc2">
-                                <rect key="frame" x="150.5" y="323" width="74" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" systemColor="secondaryLabelColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="9yY-D5-eut"/>
-                        <color key="backgroundColor" name="colorPaper"/>
-                        <constraints>
-                            <constraint firstItem="Z5b-ii-Xc2" firstAttribute="centerX" secondItem="Wk5-yt-ach" secondAttribute="centerX" id="2yW-ML-8qr"/>
-                            <constraint firstItem="Z5b-ii-Xc2" firstAttribute="centerY" secondItem="Wk5-yt-ach" secondAttribute="centerY" id="JwO-yd-axZ"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pRm-2F-1Mk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1809" y="1017"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="OxQ-td-RmR">
             <objects>
                 <navigationController storyboardIdentifier="Central" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oc1-ut-DYH">
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -331,6 +305,7 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Xv4-HG-X2o">
+                        <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -348,6 +323,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JPd-vO-wga">
+                        <rect key="frame" x="0.0" y="48" width="240" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -369,6 +345,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8VE-3P-ayT">
+                        <rect key="frame" x="0.0" y="48" width="240" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -388,11 +365,11 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="QMf-pW-MMr" customClass="LabelEditorController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="onX-EX-zET" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Ju-bV-ySp">
-                                <rect key="frame" x="0.0" y="44" width="240" height="196"/>
+                                <rect key="frame" x="0.0" y="92" width="240" height="148"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="gto-xm-PNG">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="65"/>
@@ -417,7 +394,7 @@ Selecting them will show only items that contain these labels.</string>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelEditorCell" rowHeight="70" id="KzW-m7-SWz" customClass="LabelEditorCell" customModule="Gladys" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="109.5" width="240" height="70"/>
+                                        <rect key="frame" x="0.0" y="115" width="240" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KzW-m7-SWz" id="oEA-Ty-W8a">
                                             <rect key="frame" x="0.0" y="0.0" width="240" height="70"/>
@@ -493,7 +470,7 @@ Selecting them will show only items that contain these labels.</string>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Existing Labels" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OzW-Qz-ZYJ">
-                            <rect key="frame" x="16" y="15" width="208" height="14.5"/>
+                            <rect key="frame" x="16" y="13" width="208" height="18"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <color key="textColor" systemColor="tertiaryLabelColor"/>
                             <nil key="highlightedColor"/>
@@ -515,7 +492,7 @@ Selecting them will show only items that contain these labels.</string>
             <objects>
                 <viewController id="7B8-TI-m45" customClass="NotesEditorViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a6B-br-fDc" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="240"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hec-cI-C3I">
@@ -574,20 +551,62 @@ Selecting them will show only items that contain these labels.</string>
             </objects>
             <point key="canvasLocation" x="3750" y="250"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="xmJ-yj-Z0e">
+            <objects>
+                <viewController id="vWV-e6-pEn" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qSH-mR-aZn"/>
+                        <viewControllerLayoutGuide type="bottom" id="xxY-Hc-KMP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rdm-ky-kRz">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="gha-n2-WE1">
+                                <rect key="frame" x="127" y="368" width="160" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="9Jv-Ht-VV3"/>
+                                    <constraint firstAttribute="height" constant="160" id="ZcI-EH-zDz"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just a sec…" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDX-MR-PoD">
+                                <rect key="frame" x="127" y="536" width="160" height="14"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="es0-iI-cd8"/>
+                        <color key="backgroundColor" name="colorPaper"/>
+                        <constraints>
+                            <constraint firstItem="cDX-MR-PoD" firstAttribute="centerX" secondItem="gha-n2-WE1" secondAttribute="centerX" id="JhM-Mi-K2T"/>
+                            <constraint firstItem="gha-n2-WE1" firstAttribute="centerY" secondItem="rdm-ky-kRz" secondAttribute="centerY" id="K8a-xr-AVa"/>
+                            <constraint firstItem="cDX-MR-PoD" firstAttribute="top" secondItem="gha-n2-WE1" secondAttribute="bottom" constant="8" id="TKQ-zv-nXC"/>
+                            <constraint firstItem="gha-n2-WE1" firstAttribute="centerX" secondItem="rdm-ky-kRz" secondAttribute="centerX" id="Xkl-0s-8k1"/>
+                            <constraint firstItem="cDX-MR-PoD" firstAttribute="width" secondItem="gha-n2-WE1" secondAttribute="width" id="o2a-sm-o5m"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MtF-dq-imo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1457" y="996"/>
+        </scene>
     </scenes>
     <color key="tintColor" name="colorTint"/>
     <resources>
-        <image name="arrow.down.doc" catalog="system" width="32" height="32"/>
-        <image name="arrow.up.arrow.down.circle" catalog="system" width="32" height="32"/>
-        <image name="checkmark.circle" catalog="system" width="32" height="32"/>
-        <image name="checkmark.circle.fill" catalog="system" width="32" height="32"/>
-        <image name="ellipsis.circle" catalog="system" width="32" height="32"/>
-        <image name="line.3.horizontal.circle" catalog="system" width="32" height="32"/>
-        <image name="list.bullet" catalog="system" width="32" height="32"/>
-        <image name="slider.horizontal.3" catalog="system" width="32" height="32"/>
-        <image name="square.and.arrow.up" catalog="system" width="32" height="32"/>
-        <image name="square.grid.3x3" catalog="system" width="32" height="32"/>
-        <image name="xmark.bin" catalog="system" width="32" height="32"/>
+        <image name="arrow.down.doc" catalog="system" width="115" height="128"/>
+        <image name="arrow.up.arrow.down.circle" catalog="system" width="128" height="123"/>
+        <image name="checkmark.circle" catalog="system" width="128" height="123"/>
+        <image name="checkmark.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="ellipsis.circle" catalog="system" width="128" height="123"/>
+        <image name="gladysImage" width="1024" height="1024"/>
+        <image name="line.3.horizontal.circle" catalog="system" width="128" height="123"/>
+        <image name="list.bullet" catalog="system" width="128" height="87"/>
+        <image name="slider.horizontal.3" catalog="system" width="128" height="99"/>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="square.grid.3x3" catalog="system" width="128" height="113"/>
+        <image name="xmark.bin" catalog="system" width="128" height="92"/>
         <namedColor name="colorComponentLabel">
             <color red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -604,7 +623,7 @@ Selecting them will show only items that contain these labels.</string>
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

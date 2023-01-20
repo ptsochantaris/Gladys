@@ -34,11 +34,11 @@
     }
 
     @MainActor
-    public func genericAlert(title: String?, message: String?, autoDismiss: Bool = true, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
+    public func genericAlert(title: String?, message: String?, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
         guard let presenter = currentWindow?.alertPresenter else {
             return
         }
-
+                
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             let a = GladysAlertController(title: title, message: message, preferredStyle: .alert)
             if let buttonTitle {
@@ -55,7 +55,7 @@
 
             presenter.present(a, animated: true)
 
-            if buttonTitle == nil, autoDismiss {
+            if buttonTitle == nil {
                 Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
                     a.dismiss(animated: true)
@@ -68,7 +68,7 @@
 
     final class GladysAlertController: UIAlertController {
         var completion: (() -> Void)?
-
+        
         override func viewDidDisappear(_ animated: Bool) {
             super.viewDidDisappear(animated)
             completion?()

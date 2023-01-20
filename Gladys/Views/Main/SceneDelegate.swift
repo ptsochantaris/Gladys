@@ -21,13 +21,13 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         let forceMainWindow = !UIApplication.shared.supportsMultipleScenes
-        Task {
-            if let shortcut = connectionOptions.shortcutItem, let scene = scene as? UIWindowScene {
+        if let shortcut = connectionOptions.shortcutItem, let scene = scene as? UIWindowScene {
+            Task {
                 _ = await windowScene(scene, performActionFor: shortcut)
-            } else {
-                await Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, forceMainWindow: forceMainWindow)
-                updateWindowCount()
             }
+        } else {
+            Singleton.shared.handleActivity(connectionOptions.userActivities.first ?? session.stateRestorationActivity, in: scene, forceMainWindow: forceMainWindow)
+            updateWindowCount()
         }
     }
 
@@ -38,20 +38,18 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @MainActor
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
         if shortcutItem.type.hasSuffix(".Search") {
-            await Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
+            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)
             return true
 
         } else if shortcutItem.type.hasSuffix(".Paste") {
-            await Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
+            Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartPasteShortcutActivity), in: windowScene)
             return true
         }
         return false
     }
 
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        Task {
-            await Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)
-        }
+        Singleton.shared.handleActivity(userActivity, in: scene, forceMainWindow: true)
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -94,12 +92,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func updateWindowCount() {
-        Singleton.shared.openCount = UIApplication.shared.connectedScenes.reduce(0) {
-            if $1.activationState == .background {
-                return $0
-            }
-            return $0 + 1
+        var count = 0
+        for scene in UIApplication.shared.connectedScenes where scene.activationState != .background {
+            count += 1
         }
+        Singleton.shared.openCount = count
         if let c = currentWindow {
             lastUsedWindow = c
         }

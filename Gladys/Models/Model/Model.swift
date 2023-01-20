@@ -218,20 +218,25 @@ enum Model {
                 loadingError = error as NSError
             }
         }
+        
+        if brokenMode {
+            log("Model in broken state, further loading or error processing aborted")
+            return
+        }
 
-        if let e = loadingError {
+        if let loadingError {
             brokenMode = true
-            log("Error in loading: \(e)")
+            log("Error in loading: \(loadingError)")
             #if MAINAPP || MAC
                 let finalError: NSError
-                if let underlyingError = e.userInfo[NSUnderlyingErrorKey] as? NSError {
+                if let underlyingError = loadingError.userInfo[NSUnderlyingErrorKey] as? NSError {
                     finalError = underlyingError
                 } else {
-                    finalError = e
+                    finalError = loadingError
                 }
                 Task {
                     await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                       message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(loadingError.domain): \(loadingError.localizedDescription)\n\nIf this error persists, please report it to the developer.",
                                        buttonTitle: "Quit")
                     abort()
                 }
@@ -243,18 +248,19 @@ enum Model {
                 }
             #endif
 
-        } else if let e = coordinationError {
-            log("Error in file coordinator: \(e)")
+        } else if let coordinationError {
+            brokenMode = true
+            log("Error in file coordinator: \(coordinationError)")
             #if MAINAPP || MAC
                 let finalError: NSError
-                if let underlyingError = e.userInfo[NSUnderlyingErrorKey] as? NSError {
+                if let underlyingError = coordinationError.userInfo[NSUnderlyingErrorKey] as? NSError {
                     finalError = underlyingError
                 } else {
-                    finalError = e
+                    finalError = coordinationError
                 }
                 Task {
                     await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                       message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(e.domain): \(e.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                                       message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(coordinationError.domain): \(coordinationError.localizedDescription)\n\nIf this error persists, please report it to the developer.",
                                        buttonTitle: "Quit")
                     abort()
                 }

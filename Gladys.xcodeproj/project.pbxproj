@@ -70,6 +70,7 @@
 		162383F420F969650086E719 /* LabelEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162383F320F969650086E719 /* LabelEditorController.swift */; };
 		162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162383F520F96C650086E719 /* LabelEditorCell.swift */; };
 		1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626650A221056B800068136 /* SiriSettingsViewController.swift */; };
+		1626A98E297AC97D00BC682D /* GladysCommon in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354529788166005B8CE6 /* GladysCommon */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -443,6 +444,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1626A98E297AC97D00BC682D /* GladysCommon in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,6 +487,7 @@
 		1607079E1F8A38B5003B856A /* ByteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCell.swift; sourceTree = "<group>"; };
 		160707A11F8A3915003B856A /* DataInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataInspector.swift; sourceTree = "<group>"; };
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
+		160807B1297AA80900B92C0F /* FileProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FileProvider.framework; path = System/Library/Frameworks/FileProvider.framework; sourceTree = SDKROOT; };
 		16080FFF242D726800E19FCE /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "openssl-xcframeworks/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
 		161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+iOS.swift"; sourceTree = "<group>"; };
 		1610899A1FA322260095FE34 /* ArchivedItem+Cloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Cloud.swift"; sourceTree = "<group>"; };
@@ -1228,6 +1231,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				160807B1297AA80900B92C0F /* FileProvider.framework */,
 				16080FFF242D726800E19FCE /* openssl.xcframework */,
 				1643C03F2323EDA0005D7BF3 /* StoreKit.framework */,
 				16C389E5221D42AD00AB790A /* ClockKit.framework */,
@@ -2318,6 +2322,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladys/Boot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2346,6 +2351,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladys/Boot/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2576,6 +2582,7 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2697,6 +2704,7 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
