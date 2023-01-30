@@ -84,7 +84,7 @@ extension Component {
         try await handleData(data, resolveUrls: false, storeBytes: true)
     }
 
-    private static let gateKeeper = GateKeeper()
+    private static let gateKeeper = GateKeeper(entries: 10)
 
     private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool) async throws {
         // in thread!
