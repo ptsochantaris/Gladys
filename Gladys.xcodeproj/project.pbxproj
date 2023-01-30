@@ -88,7 +88,6 @@
 		1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
-		1647F7CE2979E48300B77BF7 /* GladysCommon in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 16A435572978917A005B8CE6 /* GladysCommon */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		164947CF20BEAA6200BD1BEB /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 164947CE20BEAA6200BD1BEB /* icon.icns */; };
 		164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947D020BEAA6200BD1BEB /* ShareViewController.swift */; };
 		164947D420BEAA6200BD1BEB /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 164947D220BEAA6200BD1BEB /* ShareViewController.xib */; };
@@ -189,9 +188,7 @@
 		16A4354E297885E1005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354D297885E1005B8CE6 /* GladysCommon */; };
 		16A43550297885E6005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354F297885E6005B8CE6 /* GladysCommon */; };
 		16A43552297885EC005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A43551297885EB005B8CE6 /* GladysCommon */; };
-		16A4355429788DA4005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355329788DA4005B8CE6 /* GladysCommon */; };
 		16A4355629788DB1005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355529788DB1005B8CE6 /* GladysCommon */; };
-		16A435582978917A005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A435572978917A005B8CE6 /* GladysCommon */; };
 		16A4355A29789A51005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355929789A51005B8CE6 /* GladysCommon */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
@@ -235,6 +232,7 @@
 		16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC328AE497000E9EB04 /* DeepDiff */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
+		16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993D2987DF40002286B1 /* GladysCommon */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -406,7 +404,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1647F7CE2979E48300B77BF7 /* GladysCommon in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -697,11 +694,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */,
+				16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
 				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
-				16A435582978917A005B8CE6 /* GladysCommon in Frameworks */,
 				16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */,
 				16B229CD297185E500E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
@@ -759,7 +756,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A4355429788DA4005B8CE6 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1284,7 +1280,7 @@
 				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
 				16C12FC328AE497000E9EB04 /* DeepDiff */,
 				16B229CC297185E500E6D910 /* AsyncAlgorithms */,
-				16A435572978917A005B8CE6 /* GladysCommon */,
+				16C2993D2987DF40002286B1 /* GladysCommon */,
 			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
@@ -1420,7 +1416,6 @@
 			);
 			name = MacGladysHelper;
 			packageProductDependencies = (
-				16A4355329788DA4005B8CE6 /* GladysCommon */,
 			);
 			productName = MacGladysHelper;
 			productReference = 168DFAFE20B85F3D002C603D /* MacGladysHelper.app */;
@@ -3093,15 +3088,7 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};
-		16A4355329788DA4005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
 		16A4355529788DB1005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A435572978917A005B8CE6 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};
@@ -3153,6 +3140,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
 			productName = DeepDiff;
+		};
+		16C2993D2987DF40002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

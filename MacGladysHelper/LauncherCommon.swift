@@ -1,5 +1,4 @@
 import Cocoa
-import GladysCommon
 
 extension Notification.Name {
     static let KillHelper = Notification.Name("KillHelper")
@@ -33,11 +32,6 @@ enum LauncherCommon {
         }
         let path = "/" + finalPathComponents.joined(separator: "/")
         let config = NSWorkspace.OpenConfiguration()
-        log("Will launch Gladys at \(path)")
-        NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: path), configuration: config) { _, error in
-            if let error {
-                log("Error launching Gladys: \(error.localizedDescription)")
-            }
-        }
+        NSWorkspace.shared.openApplication(at: URL(fileURLWithPath: path), configuration: config) { _, _ in }
     }
 }
