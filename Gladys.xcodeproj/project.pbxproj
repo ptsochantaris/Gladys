@@ -70,7 +70,6 @@
 		162383F420F969650086E719 /* LabelEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162383F320F969650086E719 /* LabelEditorController.swift */; };
 		162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162383F520F96C650086E719 /* LabelEditorCell.swift */; };
 		1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1626650A221056B800068136 /* SiriSettingsViewController.swift */; };
-		1626A98E297AC97D00BC682D /* GladysCommon in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354529788166005B8CE6 /* GladysCommon */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		16287AEA1EFB03FD007188AE /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16287AE71EFB03FD007188AE /* GladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16287AF41EFB05D7007188AE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
@@ -181,15 +180,7 @@
 		169A52DD2163FCE5006A0234 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16A223E51EF67FC7009EEEBC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
-		16A4354629788166005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354529788166005B8CE6 /* GladysCommon */; };
-		16A43548297885D0005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A43547297885D0005B8CE6 /* GladysCommon */; };
-		16A4354A297885D5005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A43549297885D5005B8CE6 /* GladysCommon */; };
-		16A4354C297885DB005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354B297885DB005B8CE6 /* GladysCommon */; };
-		16A4354E297885E1005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354D297885E1005B8CE6 /* GladysCommon */; };
-		16A43550297885E6005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4354F297885E6005B8CE6 /* GladysCommon */; };
-		16A43552297885EC005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A43551297885EB005B8CE6 /* GladysCommon */; };
 		16A4355629788DB1005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355529788DB1005B8CE6 /* GladysCommon */; };
-		16A4355A29789A51005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355929789A51005B8CE6 /* GladysCommon */; };
 		16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16A4E7E51FBB844A00D60596 /* Assets.xcassets */; };
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
@@ -201,9 +192,6 @@
 		16AECA611F94B83900981B29 /* ArchivedItem+Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763221F156E0700537776 /* ArchivedItem+Indexing.swift */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
-		16B229C32971857300E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229C22971857300E6D910 /* AsyncAlgorithms */; };
-		16B229C72971859900E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229C62971859900E6D910 /* AsyncAlgorithms */; };
-		16B229CD297185E500E6D910 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 16B229CC297185E500E6D910 /* AsyncAlgorithms */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
 		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
@@ -233,6 +221,13 @@
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993D2987DF40002286B1 /* GladysCommon */; };
+		16C299402987E475002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993F2987E475002286B1 /* GladysCommon */; };
+		16C299422987E484002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299412987E484002286B1 /* GladysCommon */; };
+		16C299442987E492002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299432987E492002286B1 /* GladysCommon */; };
+		16C299462987E4A8002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299452987E4A8002286B1 /* GladysCommon */; };
+		16C299482987E52C002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299472987E52C002286B1 /* GladysCommon */; };
+		16C2994A2987E53A002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299492987E53A002286B1 /* GladysCommon */; };
+		16C2994C2987E56B002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2994B2987E56B002286B1 /* GladysCommon */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
@@ -441,7 +436,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				1626A98E297AC97D00BC682D /* GladysCommon in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -700,7 +694,6 @@
 				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
 				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
 				16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */,
-				16B229CD297185E500E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -708,7 +701,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A43548297885D0005B8CE6 /* GladysCommon in Frameworks */,
+				16C299422987E484002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,9 +709,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16C2994C2987E56B002286B1 /* GladysCommon in Frameworks */,
 				16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */,
-				16A4354A297885D5005B8CE6 /* GladysCommon in Frameworks */,
-				16B229C72971859900E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,8 +726,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A43550297885E6005B8CE6 /* GladysCommon in Frameworks */,
 				1657B8AD1FD41C1C00EC480D /* Messages.framework in Frameworks */,
+				16C299442987E492002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,9 +738,7 @@
 				16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */,
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
-				16A4354629788166005B8CE6 /* GladysCommon in Frameworks */,
 				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
-				16B229C32971857300E6D910 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,8 +753,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A4354C297885DB005B8CE6 /* GladysCommon in Frameworks */,
 				16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */,
+				16C299462987E4A8002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -772,7 +762,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A43552297885EC005B8CE6 /* GladysCommon in Frameworks */,
+				16C299482987E52C002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -780,8 +770,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A4354E297885E1005B8CE6 /* GladysCommon in Frameworks */,
 				1661B2C1245E219200BE888E /* CloudKit.framework in Frameworks */,
+				16C2994A2987E53A002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -789,8 +779,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16A4355A29789A51005B8CE6 /* GladysCommon in Frameworks */,
 				16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */,
+				16C299402987E475002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1279,7 +1269,6 @@
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
 				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
 				16C12FC328AE497000E9EB04 /* DeepDiff */,
-				16B229CC297185E500E6D910 /* AsyncAlgorithms */,
 				16C2993D2987DF40002286B1 /* GladysCommon */,
 			);
 			productName = MacGladys;
@@ -1300,7 +1289,7 @@
 			);
 			name = GladysIndex;
 			packageProductDependencies = (
-				16A43547297885D0005B8CE6 /* GladysCommon */,
+				16C299412987E484002286B1 /* GladysCommon */,
 			);
 			productName = GladysIndex;
 			productReference = 16287AE71EFB03FD007188AE /* GladysIndex.appex */;
@@ -1320,8 +1309,7 @@
 			);
 			name = GladysAction;
 			packageProductDependencies = (
-				16B229C62971859900E6D910 /* AsyncAlgorithms */,
-				16A43549297885D5005B8CE6 /* GladysCommon */,
+				16C2994B2987E56B002286B1 /* GladysCommon */,
 			);
 			productName = GladysAction;
 			productReference = 1641368D1F09195000B34574 /* GladysAction.appex */;
@@ -1361,7 +1349,7 @@
 			);
 			name = GladysMessage;
 			packageProductDependencies = (
-				16A4354F297885E6005B8CE6 /* GladysCommon */,
+				16C299432987E492002286B1 /* GladysCommon */,
 			);
 			productName = GladysMessage;
 			productReference = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */;
@@ -1395,8 +1383,6 @@
 			packageProductDependencies = (
 				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
 				16B89E8B2523D536007FD864 /* ZIPFoundation */,
-				16B229C22971857300E6D910 /* AsyncAlgorithms */,
-				16A4354529788166005B8CE6 /* GladysCommon */,
 			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
@@ -1435,7 +1421,7 @@
 			);
 			name = GladysToday;
 			packageProductDependencies = (
-				16A4354B297885DB005B8CE6 /* GladysCommon */,
+				16C299452987E4A8002286B1 /* GladysCommon */,
 			);
 			productName = GladysToday;
 			productReference = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */;
@@ -1456,7 +1442,7 @@
 			);
 			name = GladysWatch;
 			packageProductDependencies = (
-				16A4355929789A51005B8CE6 /* GladysCommon */,
+				16C2993F2987E475002286B1 /* GladysCommon */,
 			);
 			productName = GladysWatch;
 			productReference = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */;
@@ -1476,7 +1462,7 @@
 			);
 			name = GladysKeys;
 			packageProductDependencies = (
-				16A43551297885EB005B8CE6 /* GladysCommon */,
+				16C299472987E52C002286B1 /* GladysCommon */,
 			);
 			productName = GladysKeys;
 			productReference = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */;
@@ -1496,7 +1482,7 @@
 			);
 			name = GladysIntents;
 			packageProductDependencies = (
-				16A4354D297885E1005B8CE6 /* GladysCommon */,
+				16C299492987E53A002286B1 /* GladysCommon */,
 			);
 			productName = GladysIntents;
 			productReference = 16D984932160C5A000D9D51C /* GladysIntents.appex */;
@@ -1647,7 +1633,6 @@
 				16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */,
 				16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
-				16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
 			projectDirPath = "";
@@ -3017,14 +3002,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-async-algorithms";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.4;
-			};
-		};
 		16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
@@ -3060,56 +3037,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		16A4354529788166005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A43547297885D0005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A43549297885D5005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A4354B297885DB005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A4354D297885E1005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A4354F297885E6005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16A43551297885EB005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
 		16A4355529788DB1005B8CE6 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
-		};
-		16A4355929789A51005B8CE6 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16B229C22971857300E6D910 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
-		};
-		16B229C62971859900E6D910 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
-		};
-		16B229CC297185E500E6D910 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B229C12971857300E6D910 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
 		};
 		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -3142,6 +3072,34 @@
 			productName = DeepDiff;
 		};
 		16C2993D2987DF40002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C2993F2987E475002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C299412987E484002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C299432987E492002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C299452987E4A8002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C299472987E52C002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C299492987E53A002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16C2994B2987E56B002286B1 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};

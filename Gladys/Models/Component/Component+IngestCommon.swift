@@ -7,7 +7,6 @@ import MapKit
     import MobileCoreServices
     import UIKit
 #endif
-import AsyncAlgorithms
 import GladysCommon
 
 extension Component {
@@ -83,30 +82,6 @@ extension Component {
         }
 
         try await handleData(data, resolveUrls: false, storeBytes: true)
-    }
-
-    private final class GateKeeper {
-        private var channel: AsyncChannel<Int>
-        private var iterator: AsyncChannel<Int>.Iterator
-
-        init() {
-            let c = AsyncChannel(element: Int.self)
-            channel = c
-            iterator = c.makeAsyncIterator()
-            Task {
-                for _ in 0 ..< 12 {
-                    await c.send(1)
-                }
-            }
-        }
-
-        func waitForGate() async {
-            _ = await iterator.next()!
-        }
-
-        func signalGate() async {
-            await channel.send(1)
-        }
     }
 
     private static let gateKeeper = GateKeeper()
