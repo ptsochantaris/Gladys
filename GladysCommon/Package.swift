@@ -18,13 +18,15 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/sindresorhus/ExceptionCatcher", from: "2.0.0"),
         .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.0.0"),
-        .package(url: "https://github.com/cezheng/Fuzi", from: "3.0.0")
+        .package(url: "https://github.com/cezheng/Fuzi", from: "3.0.0"),
+        .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.0.0")
     ],
     targets: [
         .target(
             name: "GladysCommon",
             dependencies: ["ExceptionCatcher",
                            "Fuzi",
+                           .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
                            .product(name: "AsyncHTTPClient", package: "async-http-client")]
         )
     ]

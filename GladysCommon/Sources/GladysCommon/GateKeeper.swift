@@ -1,20 +1,26 @@
 import Foundation
+import AsyncAlgorithms
 
 public final actor GateKeeper {
-    private var counter: Int
+    private var stream = AsyncChannel<Void>()
     
     public init(entries: Int) {
-        counter = entries
+        Task {
+            for _ in 0 ..< entries {
+                await stream.send(())
+            }
+        }
     }
 
     public func waitForGate() async {
-        while counter < 0 {
-            try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+        for await _ in stream {
+            return
         }
-        counter -= 1
     }
 
     public func signalGate() {
-        counter += 1
+        Task {
+            await stream.send(())
+        }
     }
 }
