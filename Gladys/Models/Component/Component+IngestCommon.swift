@@ -90,9 +90,7 @@ extension Component {
         // in thread!
         await Component.gateKeeper.waitForGate()
         defer {
-            Task {
-                await Component.gateKeeper.signalGate()
-            }
+            Component.gateKeeper.signalGate()
         }
 
         clearCachedFields()

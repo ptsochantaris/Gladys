@@ -130,10 +130,12 @@ enum Model {
     private final class LoaderBuffer {
         private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation")
 
-        private var store: ContiguousArray<ArchivedItem?>
+        private var store = ContiguousArray<ArchivedItem?>()
 
         init(capacity: Int) {
-            store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
+            queue.async {
+                self.store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
+            }
         }
 
         func set(_ item: ArchivedItem, at index: Int) {
