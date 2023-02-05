@@ -4,6 +4,7 @@ import GladysCommon
 import MapKit
 import UIKit
 import WatchConnectivity
+import Intents
 
 private class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
@@ -197,6 +198,20 @@ extension UISceneSession {
     }
 }
 
+final class ModelFilePresenter: NSObject, NSFilePresenter {
+    let presentedItemURL: URL? = itemsDirectoryUrl
+
+    let presentedItemOperationQueue = OperationQueue()
+
+    func presentedItemDidChange() {
+        Task { @MainActor in
+            if DropStore.doneIngesting {
+                Model.reloadDataIfNeeded()
+            }
+        }
+    }
+}
+
 extension UIView {
     var associatedFilter: Filter? {
         let w = (self as? UIWindow) ?? window
@@ -295,6 +310,62 @@ extension Model {
         } else {
             log("Updating app badge to clear")
             UIApplication.shared.applicationIconBadgeNumber = 0
+        }
+    }
+    
+    @discardableResult
+    static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
+        if providers.isEmpty {
+            return .noData
+        }
+
+        let currentFilter = currentWindow?.associatedFilter
+
+        var items = [ArchivedItem]()
+        var addedStuff = false
+        for provider in providers { // separate item for each provider in the pasteboard
+            for item in ArchivedItem.importData(providers: [provider], overrides: overrides) {
+                if let currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
+                    item.labels = currentFilter.enabledLabelsForItems
+                }
+                DropStore.insert(drop: item, at: 0)
+                items.append(item)
+                addedStuff = true
+            }
+        }
+
+        if addedStuff {
+            _ = currentFilter?.update(signalUpdate: .animated)
+        }
+
+        return .success(items)
+    }
+    
+    static var pasteIntent: PasteClipboardIntent {
+        let intent = PasteClipboardIntent()
+        intent.suggestedInvocationPhrase = "Paste in Gladys"
+        return intent
+    }
+
+    static func clearLegacyIntents() {
+        if #available(iOS 16, *) {
+            INInteraction.deleteAll() // using app intents now
+        }
+    }
+
+    static func donatePasteIntent() {
+        if #available(iOS 16, *) {
+            log("Will not donate SiriKit paste shortcut")
+        } else {
+            let interaction = INInteraction(intent: pasteIntent, response: nil)
+            interaction.identifier = "paste-in-gladys"
+            interaction.donate { error in
+                if let error {
+                    log("Error donating paste shortcut: \(error.localizedDescription)")
+                } else {
+                    log("Donated paste shortcut")
+                }
+            }
         }
     }
 }
