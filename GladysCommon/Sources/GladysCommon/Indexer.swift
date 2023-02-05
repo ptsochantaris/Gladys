@@ -6,12 +6,12 @@
 //  Copyright © 2023 Paul Tsochantaris. All rights reserved.
 //
 
+#if canImport(CoreSpotlight)
 import Foundation
 import CoreSpotlight
-import GladysCommon
 
-final class Indexer: NSObject, CSSearchableIndexDelegate {
-    override init() {
+public final class Indexer: NSObject, CSSearchableIndexDelegate {
+    public override init() {
         super.init()
         log("Indexer initialised")
     }
@@ -20,7 +20,7 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
         log("Indexer disposed")
     }
     
-    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+    public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
         Task { @MainActor in
             do {
                 try await searchableIndex.deleteAllSearchableItems()
@@ -43,7 +43,7 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
         }
     }
 
-    func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+    public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
         Task { @MainActor in
             let identifierSet = Set(identifiers)
             var searchableItems = [CSSearchableItem]()
@@ -65,7 +65,7 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
     }
 
     @MainActor // lie, but taking care of that in the method
-    func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+    public func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
         if Thread.isMainThread {
             return try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         } else {
@@ -76,7 +76,7 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
     }
 
     @MainActor // lie, but taking care of that in the method
-    func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
+    public func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
         if Thread.isMainThread {
             return try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         } else {
@@ -86,7 +86,7 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
         }
     }
     
-    func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
+    public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
         index.indexSearchableItems(items) { error in
             if let error {
                 log("Error indexing items: \(error.finalDescription)")
@@ -112,3 +112,4 @@ final class Indexer: NSObject, CSSearchableIndexDelegate {
         return URL(string: "file://")!
     }
 }
+#endif

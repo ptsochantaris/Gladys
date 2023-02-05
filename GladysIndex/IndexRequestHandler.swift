@@ -1,4 +1,5 @@
 import CoreSpotlight
+import GladysCommon
 
 final class IndexRequestHandler: CSIndexExtensionRequestHandler {
     

@@ -1,13 +1,12 @@
 import Foundation
-import GladysCommon
 
 @MainActor
-enum LiteModel {
-    static var coordinator: NSFileCoordinator {
+public enum LiteModel {
+    private static var coordinator: NSFileCoordinator {
         NSFileCoordinator(filePresenter: nil)
     }
     
-    static func countSavedItemsWithoutLoading() -> Int {
+    public static func countSavedItemsWithoutLoading() -> Int {
         var count = 0
         var coordinationError: NSError?
         var loadingError: NSError?
@@ -44,7 +43,7 @@ enum LiteModel {
         return count
     }
 
-    static func locateItemWithoutLoading(uuid: String) -> ArchivedItem? {
+    public static func locateItemWithoutLoading(uuid: String) -> ArchivedItem? {
         var item: ArchivedItem?
         var coordinationError: NSError?
 
@@ -68,7 +67,7 @@ enum LiteModel {
         return item
     }
 
-    static func getLabelsWithoutLoading() -> Set<String> {
+    public static func getLabelsWithoutLoading() -> Set<String> {
         var labels = Set<String>()
         iterateThroughSavedItemsWithoutLoading {
             labels.formUnion($0.labels)
@@ -78,7 +77,7 @@ enum LiteModel {
         return labels
     }
 
-    static func locateComponentWithoutLoading(uuid: String) -> (ArchivedItem, Component)? {
+    public static func locateComponentWithoutLoading(uuid: String) -> (ArchivedItem, Component)? {
         var result: (ArchivedItem, Component)?
         let uuidData = UUID(uuidString: uuid)
 
@@ -92,7 +91,7 @@ enum LiteModel {
         return result
     }
 
-    static func prefix(_ count: Int) -> ContiguousArray<ArchivedItem> {
+    public static func prefix(_ count: Int) -> ContiguousArray<ArchivedItem> {
         var items = ContiguousArray<ArchivedItem>()
         var number = 0
         iterateThroughSavedItemsWithoutLoading { item in
@@ -103,7 +102,7 @@ enum LiteModel {
         return items
     }
 
-    static func allItems() -> ContiguousArray<ArchivedItem> {
+    public static func allItems() -> ContiguousArray<ArchivedItem> {
         var items = ContiguousArray<ArchivedItem>()
         iterateThroughSavedItemsWithoutLoading { item in
             items.append(item)
@@ -112,7 +111,7 @@ enum LiteModel {
         return items
     }
 
-    static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
+    public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
         var coordinationError: NSError?
         var loadingError: NSError?
 
@@ -148,7 +147,7 @@ enum LiteModel {
         }
     }
 
-    static func insertNewItemsWithoutLoading(items: [ArchivedItem]) {
+    public static func insertNewItemsWithoutLoading(items: [ArchivedItem]) {
         if items.isEmpty { return }
 
         var closureError: NSError?
