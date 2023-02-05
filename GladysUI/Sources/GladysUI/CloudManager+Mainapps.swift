@@ -687,7 +687,7 @@ extension CloudManager {
             await genericAlert(title: "Initial sync failed", message: error.finalDescription)
         }
     }
-    
+
     public static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
     public static var syncAttempDone: (() async -> Void)?
 

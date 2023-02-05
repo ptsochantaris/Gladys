@@ -1,7 +1,7 @@
 import GladysCommon
+import GladysUI
 import Speech
 import UIKit
-import GladysUI
 
 final class OptionsController: GladysViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet private var twoColumnsSwitch: UISwitch!

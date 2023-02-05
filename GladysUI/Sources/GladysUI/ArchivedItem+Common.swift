@@ -1,30 +1,29 @@
 import Foundation
 import GladysCommon
 #if os(iOS)
-import Intents
+    import Intents
 #endif
 
-extension ArchivedItem {
-    
-    func removeIntents() {
-#if os(iOS)
-        INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-        for item in components {
-            item.removeIntents()
-        }
-#endif
+public extension ArchivedItem {
+    internal func removeIntents() {
+        #if os(iOS)
+            INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
+            for item in components {
+                item.removeIntents()
+            }
+        #endif
     }
-    
-    public var shouldDisplayLoading: Bool {
+
+    var shouldDisplayLoading: Bool {
         flags.contains(.isBeingCreatedBySync) || needsReIngest || loadingProgress != nil
     }
 
     @MainActor
-    public var canPreview: Bool {
+    var canPreview: Bool {
         components.contains { $0.canPreview }
     }
 
-    func removeFromCloudkit() {
+    internal func removeFromCloudkit() {
         cloudKitRecord = nil
         cloudKitShareRecord = nil
         for typeItem in components {
@@ -32,14 +31,14 @@ extension ArchivedItem {
         }
     }
 
-    var shareOwnerName: String? {
+    internal var shareOwnerName: String? {
         guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
         let f = PersonNameComponentsFormatter()
         return f.string(from: p)
     }
 
     @MainActor
-    func delete() {
+    internal func delete() {
         if shouldDisplayLoading {
             cancelIngest()
         }
@@ -70,7 +69,7 @@ extension ArchivedItem {
         }
     }
 
-    public func renumberTypeItems() {
+    func renumberTypeItems() {
         var count = 0
         for i in components {
             i.order = count
@@ -78,30 +77,30 @@ extension ArchivedItem {
         }
     }
 
-    public var addedString: String {
+    var addedString: String {
         diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + shortDateFormatter.string(from: createdAt)
     }
 
-    public var previewableTypeItem: Component? {
+    var previewableTypeItem: Component? {
         components.filter(\.canPreview).max { $0.contentPriority < $1.contentPriority }
     }
 
-    public static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {
+    static func updateUserActivity(_ activity: NSUserActivity, from item: ArchivedItem, child: Component?, titled: String) {
         activity.title = titled + " \"" + item.trimmedName + "\""
-        
+
         let uuidString = item.uuid.uuidString
         let childUuidString = child?.uuid.uuidString
-        
+
         var userInfo = [kGladysDetailViewingActivityItemUuid: uuidString]
         userInfo[kGladysDetailViewingActivityItemTypeUuid] = childUuidString
         activity.addUserInfoEntries(from: userInfo)
-        
+
         activity.isEligibleForHandoff = true
         activity.isEligibleForPublicIndexing = false
         activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
-        
+
         #if os(iOS)
-        activity.isEligibleForPrediction = true
+            activity.isEligibleForPrediction = true
         #endif
         activity.contentAttributeSet = item.searchAttributes
         activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString

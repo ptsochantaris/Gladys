@@ -2,8 +2,8 @@ import AppKit
 import CallbackURLKit
 import Foundation
 import GladysCommon
-import UniformTypeIdentifiers
 import GladysUI
+import UniformTypeIdentifiers
 
 @MainActor
 enum CallbackSupport {

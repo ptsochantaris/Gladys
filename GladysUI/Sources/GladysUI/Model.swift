@@ -14,8 +14,8 @@ enum ModelStorage {
     static let shared = ActorType()
 }
 
-extension UTType {
-    public static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
+public extension UTType {
+    static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
 
 @MainActor
@@ -33,7 +33,7 @@ public enum Model {
     public static var saveIsDueToSyncFetch = false
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
-    
+
     static func reset() {
         DropStore.reset()
         dataFileLastModified = .distantPast
@@ -304,16 +304,16 @@ public enum Model {
         if await CloudManager.syncDirty {
             log("A sync had been requested while syncing, will attempt another sync")
             return true
-            
+
         } else if saveIsDueToSyncFetch {
             saveIsDueToSyncFetch = false
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
             return false
-            
+
         } else if await CloudManager.syncSwitchedOn {
             log("Will sync after a save")
             return true
-            
+
         } else {
             return false
         }
@@ -340,7 +340,7 @@ public enum Model {
             item.postModified()
         }
     }
-    
+
     private static let badgeTimer = PopTimer(timeInterval: 0.1) {
         badgeHandler?()
     }

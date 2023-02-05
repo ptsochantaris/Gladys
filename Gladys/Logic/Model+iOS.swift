@@ -1,16 +1,9 @@
-//
-//  File.swift
-//  
-//
-//  Created by Paul Tsochantaris on 05/02/2023.
-//
-
 import Foundation
 import GladysCommon
 import GladysUI
+import Intents
 import UIKit
 import WatchConnectivity
-import Intents
 
 extension UISceneSession {
     var associatedFilter: Filter {
@@ -39,7 +32,7 @@ extension Model {
     private static var registeredForBackground = false
 
     private static var watchDelegate: WatchDelegate?
-    
+
     static func registerStateHandler() {
         stateHandler = { state in
             switch state {

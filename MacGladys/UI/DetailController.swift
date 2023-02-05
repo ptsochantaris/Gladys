@@ -1,8 +1,8 @@
 import CloudKit
 import Cocoa
 import GladysCommon
-import Quartz
 import GladysUI
+import Quartz
 
 final class ComponentCollectionView: NSCollectionView {
     weak var detailController: DetailController?

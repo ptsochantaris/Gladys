@@ -1,8 +1,8 @@
 import BackgroundTasks
 import CloudKit
 import GladysCommon
-import UIKit
 import GladysUI
+import UIKit
 
 extension CloudManager {
     enum SyncPermissionContext: Int {
@@ -44,7 +44,7 @@ extension CloudManager {
             return .noData
         }
     }
-    
+
     static func registerBackgroundHandling() {
         shouldSyncAttempProceed = { force, overridingUserPreference in
             if !force, !overridingUserPreference {

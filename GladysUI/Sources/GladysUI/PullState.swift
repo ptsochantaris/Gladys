@@ -57,9 +57,9 @@ final actor PullState {
         }
 
         needsSave = needsSave
-        || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
-        || (!updatedZoneTokens.isEmpty && updatedSequence)
-        
+            || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
+            || (!updatedZoneTokens.isEmpty && updatedSequence)
+
         if needsSave {
             Task { @MainActor in
                 Model.saveIsDueToSyncFetch = true

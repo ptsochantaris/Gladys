@@ -11,7 +11,8 @@ let package = Package(
     products: [
         .library(
             name: "GladysUI",
-            targets: ["GladysUI"])
+            targets: ["GladysUI"]
+        )
     ],
     dependencies: [
         .package(path: "../GladysCommon")
@@ -19,6 +20,7 @@ let package = Package(
     targets: [
         .target(
             name: "GladysUI",
-            dependencies: ["GladysCommon"])
+            dependencies: ["GladysCommon"]
+        )
     ]
 )

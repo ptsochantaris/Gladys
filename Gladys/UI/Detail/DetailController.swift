@@ -1,9 +1,9 @@
 import CloudKit
 import GladysCommon
+import GladysUI
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
-import GladysUI
 
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)

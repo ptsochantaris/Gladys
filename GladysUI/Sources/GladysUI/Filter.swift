@@ -395,7 +395,7 @@ public final class Filter {
         public var active: Bool
         public var currentDisplayMode: DisplayMode
         public var preferredDisplayMode: DisplayMode
-        
+
         public init(function: Function, count: Int, active: Bool, currentDisplayMode: DisplayMode, preferredDisplayMode: DisplayMode) {
             self.function = function
             self.count = count

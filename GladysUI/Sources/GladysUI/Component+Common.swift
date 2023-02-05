@@ -8,33 +8,33 @@ import MapKit
 #endif
 import GladysCommon
 
-extension Component {
-    public var sizeDescription: String? {
+public extension Component {
+    var sizeDescription: String? {
         diskSizeFormatter.string(fromByteCount: sizeInBytes)
     }
-    
-    func removeIntents() {
-#if os(iOS)
-        INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-#endif
+
+    internal func removeIntents() {
+        #if os(iOS)
+            INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
+        #endif
     }
-    
+
     @MainActor
-    public var canPreview: Bool {
+    var canPreview: Bool {
         if let canPreviewCache {
             return canPreviewCache
         }
-#if os(iOS)
-        let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
-#else
-        let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
-#endif
+        #if os(iOS)
+            let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
+        #else
+            let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
+        #endif
         canPreviewCache = res
         return res
     }
-    
+
     @MainActor
-    public func deleteFromStorage() async {
+    func deleteFromStorage() async {
         await CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
         let fm = FileManager.default
         if fm.fileExists(atPath: folderUrl.path) {
@@ -45,7 +45,7 @@ extension Component {
         removeIntents()
     }
 
-    public var objectForShare: Any? {
+    var objectForShare: Any? {
         if typeIdentifier == "com.apple.mapkit.map-item", let item = decode() as? MKMapItem {
             return item
         }
@@ -62,7 +62,7 @@ extension Component {
     }
 
     @MainActor
-    public func replaceURL(_ newUrl: URL) {
+    func replaceURL(_ newUrl: URL) {
         guard isURL else { return }
 
         let decoded = decode()
@@ -88,7 +88,7 @@ extension Component {
         markComponentUpdated()
     }
 
-    public func prepareFilename(name: String, directory: String?) -> String {
+    func prepareFilename(name: String, directory: String?) -> String {
         var name = name
 
         if let ext = fileExtension {

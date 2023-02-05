@@ -1,7 +1,7 @@
 import GladysCommon
+import GladysUI
 import Intents
 import UIKit
-import GladysUI
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,

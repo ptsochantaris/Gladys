@@ -1,19 +1,18 @@
 import Cocoa
 import GladysCommon
-import UniformTypeIdentifiers
 import GladysUI
+import UniformTypeIdentifiers
 
 extension Model {
-    
     static func registerStateHandler() {
         stateHandler = { state in
             switch state {
             case .migrated, .willSave:
                 break
-                
+
             case .startupComplete:
                 trimTemporaryDirectory()
-                                                
+
             case .saveComplete:
                 Task {
                     do {
@@ -27,7 +26,7 @@ extension Model {
             }
         }
     }
-    
+
     private static var eventMonitor: FileMonitor?
 
     static func startMonitoringForExternalChangesToBlobs() {

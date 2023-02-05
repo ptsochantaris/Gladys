@@ -1,8 +1,8 @@
 import GladysCommon
+import GladysUI
 import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
-import GladysUI
 
 final class PlistEditorCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!

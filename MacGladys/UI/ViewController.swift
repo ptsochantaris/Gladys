@@ -1,8 +1,8 @@
 import Cocoa
 import DeepDiff
 import GladysCommon
-import Quartz
 import GladysUI
+import Quartz
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
     NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {

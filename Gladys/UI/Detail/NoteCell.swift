@@ -1,6 +1,6 @@
 import GladysCommon
-import UIKit
 import GladysUI
+import UIKit
 
 final class NoteCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet private var placeholder: UILabel!

@@ -2,9 +2,9 @@ import CloudKit
 import Cocoa
 import CoreSpotlight
 import GladysCommon
+import GladysUI
 import HotKey
 import UserNotifications
-import GladysUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?

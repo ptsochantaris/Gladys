@@ -1,5 +1,5 @@
-import UIKit
 import GladysUI
+import UIKit
 
 final class LabelToggleCell: UITableViewCell {
     @IBOutlet private var labelCount: UILabel!

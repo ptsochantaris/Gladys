@@ -1,6 +1,6 @@
+import GladysUI
 import IntentsUI
 import UIKit
-import GladysUI
 
 final class SiriSettingsViewController: GladysViewController, INUIAddVoiceShortcutButtonDelegate, INUIAddVoiceShortcutViewControllerDelegate, INUIEditVoiceShortcutViewControllerDelegate {
     @IBOutlet private var pasteInGladysContainer: UIView!

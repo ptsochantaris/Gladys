@@ -1,17 +1,9 @@
-//
-//  WatchDelegate.swift
-//  Gladys
-//
-//  Created by Paul Tsochantaris on 05/02/2023.
-//  Copyright © 2023 Paul Tsochantaris. All rights reserved.
-//
-
 import Foundation
-import WatchConnectivity
 import GladysCommon
 import GladysUI
-import UIKit
 import MapKit
+import UIKit
+import WatchConnectivity
 
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {

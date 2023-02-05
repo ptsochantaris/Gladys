@@ -1,6 +1,6 @@
 import GladysCommon
-import UIKit
 import GladysUI
+import UIKit
 
 final class HeaderCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet private var label: UITextView!

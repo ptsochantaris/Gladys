@@ -1,8 +1,8 @@
 import CloudKit
 import GladysCommon
+import GladysUI
 import MapKit
 import UIKit
-import GladysUI
 
 #if canImport(PencilKit)
     import PencilKit

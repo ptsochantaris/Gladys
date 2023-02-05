@@ -11,7 +11,7 @@ final class Singleton {
 
     func setup() {
         Model.registerStateHandler()
-        
+
         Model.setup()
         Model.badgeHandler = {
             if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
@@ -25,7 +25,7 @@ final class Singleton {
 
         CallbackSupport.setupCallbackSupport()
 
-        Task {            
+        Task {
             let name = await reachability.statusName
             log("Initial reachability status: \(name)")
         }
