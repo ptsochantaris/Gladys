@@ -1,3 +1,4 @@
+import GladysCommon
 import UIKit
 
 final class NoteCell: UITableViewCell, UITextViewDelegate {

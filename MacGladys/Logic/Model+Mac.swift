@@ -28,7 +28,7 @@ extension Model {
             else { return }
 
             log("Examining potential external update for component \(potentialComponentUUID)")
-            if let parent = item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.components.first(where: { $0.uuid == potentialComponentUUID }), component.scanForBlobChanges() {
+            if let parent = DropStore.item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.components.first(where: { $0.uuid == potentialComponentUUID }), component.scanForBlobChanges() {
                 parent.needsReIngest = true
                 parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID)")
@@ -42,7 +42,7 @@ extension Model {
     }
 
     private static func syncWithExternalUpdates() {
-        let changedDrops = allDrops.filter { $0.scanForBlobChanges() }
+        let changedDrops = DropStore.allDrops.filter { $0.scanForBlobChanges() }
         for item in changedDrops {
             log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
             item.needsReIngest = true
@@ -79,7 +79,6 @@ extension Model {
             let utis = Set(pasteboardItem.types.map(\.rawValue))
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
-                let destinationUrl = Model.temporaryDirectoryUrl
                 for promise in filePromises {
                     guard let promiseType = promise.fileTypes.first, !promise.fileNames.isEmpty else {
                         continue
@@ -91,7 +90,7 @@ extension Model {
                     importGroup.enter()
 
                     // log("Waiting for promise: \(promiseType)")
-                    promise.receivePromisedFiles(atDestination: destinationUrl, options: [:], operationQueue: OperationQueue()) { url, error in
+                    promise.receivePromisedFiles(atDestination: temporaryDirectoryUrl, options: [:], operationQueue: OperationQueue()) { url, error in
                         // log("Completed promise: \(promiseType)")
                         if let error {
                             log("Warning, loading error in file drop: \(error.localizedDescription)")
@@ -140,7 +139,7 @@ extension Model {
                         newItem.labels = filterContext.enabledLabelsForItems
                     }
                 }
-                Model.insert(drop: newItem, at: modelIndex)
+                DropStore.insert(drop: newItem, at: modelIndex)
                 archivedItems.append(newItem)
             }
         }
@@ -186,7 +185,7 @@ extension Model {
                 count = k.filter.filteredDrops.count
                 log("Updating app badge to show current only window item count (\(count))")
             } else {
-                count = Model.allDrops.count
+                count = DropStore.allDrops.count
                 log("Updating app badge to show item count (\(count))")
             }
             NSApp.dockTile.badgeLabel = count > 0 ? String(count) : nil

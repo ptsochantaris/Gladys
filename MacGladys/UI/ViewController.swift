@@ -175,7 +175,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             let selectedItems = items.map(\.uuid)
             window.title = "…"
             Task {
-                let size = await Model.sizeForItems(uuids: selectedItems)
+                let size = await DropStore.sizeForItems(uuids: selectedItems)
                 let sizeString = diskSizeFormatter.string(fromByteCount: size)
                 let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
                 window.title = "\(title) — \(selectedReport)"
@@ -237,7 +237,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private func itemIngested(_ item: ArchivedItem) {
-        if Model.doneIngesting {
+        if DropStore.doneIngesting {
             Model.save()
         } else {
             Model.commitItem(item: item)
@@ -381,13 +381,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func highlightItem(with request: HighlightRequest) {
         // focusOnChild ignored for now
         resetSearch(andLabels: true)
-        if let i = Model.firstIndexOfItem(with: request.uuid) {
+        if let i = DropStore.firstIndexOfItem(with: request.uuid) {
             let ip = IndexPath(item: i, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: i)
             switch request.extraAction {
             case .open:
-                if let item = Model.item(uuid: request.uuid) {
+                if let item = DropStore.item(uuid: request.uuid) {
                     item.tryOpen(from: self)
                 }
             case .detail:
@@ -470,7 +470,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             }
 
             var destinationIndex = filter.nearestUnfilteredIndexForFilteredIndex(indexPath.item, checkForWeirdness: false)
-            let count = Model.allDrops.count
+            let count = DropStore.allDrops.count
             if destinationIndex >= count {
                 destinationIndex = count - 1
             }
@@ -482,9 +482,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
             for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
                 let sourceItem = filter.filteredDrops[draggingIndexPath.item]
-                let sourceIndex = Model.firstIndexOfItem(with: sourceItem.uuid)!
-                Model.removeDrop(at: sourceIndex)
-                Model.insert(drop: sourceItem, at: destinationIndex)
+                let sourceIndex = DropStore.firstIndexOfItem(with: sourceItem.uuid)!
+                DropStore.removeDrop(at: sourceIndex)
+                DropStore.insert(drop: sourceItem, at: destinationIndex)
                 collection.deselectAll(nil)
             }
             Model.save()
@@ -511,7 +511,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         collection.animator().performBatchUpdates({
             let oldUUIDs = filter.filteredDrops.map(\.uuid)
             _ = filter.update(signalUpdate: .animated)
-            if Model.allDrops.allSatisfy(\.shouldDisplayLoading) {
+            if DropStore.allDrops.allSatisfy(\.shouldDisplayLoading) {
                 collection.reloadSections(IndexSet(integer: 0))
                 return
             }
@@ -792,7 +792,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     @objc func duplicateItem(_: Any?) {
-        for item in collection.actionableSelectedItems where Model.contains(uuid: item.uuid) {
+        for item in collection.actionableSelectedItems where DropStore.contains(uuid: item.uuid) {
             Model.duplicate(item: item)
         }
     }
@@ -804,7 +804,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     func updateColour(_ sender: NSMenuItem) {
         let color = ItemColor.allCases[sender.tag]
         var changed = false
-        for item in collection.actionableSelectedItems where Model.contains(uuid: item.uuid) {
+        for item in collection.actionableSelectedItems where DropStore.contains(uuid: item.uuid) {
             item.highlightColor = color
             item.markUpdated()
             changed = true
@@ -972,7 +972,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private func updateEmptyView() {
-        let empty = Model.allDrops.isEmpty
+        let empty = DropStore.allDrops.isEmpty
 
         if empty, emptyView.alphaValue < 1 {
             emptyView.animator().alphaValue = 1
@@ -1029,7 +1029,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     func previewPanel(_: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
         guard let qlItem = item as? Component.PreviewItem else { return .zero }
-        if let drop = Model.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
+        if let drop = DropStore.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
             let frameRealativeToCollection = collection.frameForItem(at: index)
             let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
             let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)

@@ -109,7 +109,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     @objc func checkForChanges() {
-        if Model.item(uuid: item.uuid) == nil {
+        if DropStore.item(uuid: item.uuid) == nil {
             view.window?.close()
         } else if lastUpdate != item.updatedAt || lastShareMode != item.shareMode {
             updateInfo()
@@ -277,7 +277,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     private func saveItem() {
-        if Model.item(uuid: item.uuid) == nil {
+        if DropStore.item(uuid: item.uuid) == nil {
             return
         }
         item.markUpdated()

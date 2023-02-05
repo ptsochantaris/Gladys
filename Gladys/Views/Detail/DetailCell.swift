@@ -1,3 +1,4 @@
+import GladysCommon
 import UIKit
 
 protocol DetailCellDelegate: AnyObject {
@@ -100,14 +101,6 @@ final class DetailCell: UITableViewCell {
         }
     }
 
-    private static let shortFormatter: DateFormatter = {
-        let d = DateFormatter()
-        d.doesRelativeDateFormatting = true
-        d.dateStyle = .short
-        d.timeStyle = .short
-        return d
-    }()
-
     private var handlingComponentId: UUID?
 
     func configure(with component: Component, showTypeDetails: Bool, isReadWrite: Bool, delegate: DetailCellDelegate) {
@@ -137,7 +130,7 @@ final class DetailCell: UITableViewCell {
 
         } else if component.dataExists {
             if component.isWebArchive {
-                name.text = DetailCell.shortFormatter.string(from: component.createdAt)
+                name.text = shortDateFormatter.string(from: component.createdAt)
             } else {
                 name.text = hasImage ? nil : "Binary Data"
             }

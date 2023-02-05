@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 final class ModelFilePresenter: NSObject, NSFilePresenter {
     let presentedItemURL: URL? = Model.itemsDirectoryUrl
@@ -7,7 +8,7 @@ final class ModelFilePresenter: NSObject, NSFilePresenter {
 
     func presentedItemDidChange() {
         Task { @MainActor in
-            if Model.doneIngesting {
+            if DropStore.doneIngesting {
                 Model.reloadDataIfNeeded()
             }
         }

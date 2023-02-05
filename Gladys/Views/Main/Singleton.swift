@@ -10,26 +10,26 @@ final class Singleton {
 
     func setup() {
         Model.setup()
-        
+
         CallbackSupport.setupCallbackSupport()
-        
+
         Task {
             let name = await reachability.statusName
             log("Initial reachability status: \(name)")
         }
-        
+
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
         n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
         n.addObserver(self, selector: #selector(ingestStart), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
-        
+
         Model.beginMonitoringChanges()
         Task {
             await Model.detectExternalChanges()
         }
-        
+
         let mirrorPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
         if FileManager.default.fileExists(atPath: mirrorPath.path) {
             try? FileManager.default.removeItem(at: mirrorPath)
@@ -79,7 +79,7 @@ final class Singleton {
 
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
-        if Model.doneIngesting {
+        if DropStore.doneIngesting {
             Model.save()
         } else {
             Model.commitItem(item: item)
@@ -117,7 +117,7 @@ final class Singleton {
                 let userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-                guard let item = Model.item(uuid: uuidString) else {
+                guard let item = DropStore.item(uuid: uuidString) else {
                     _ = showMainWindow(in: scene)
                     Task {
                         await genericAlert(title: "Not Found", message: "This item was not found")
@@ -128,7 +128,7 @@ final class Singleton {
                 Task {
                     let child: Component?
                     if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                        child = await Model.component(uuid: childUuid)
+                        child = await ComponentLookup.shared.component(uuid: childUuid)
                     } else {
                         child = item.previewableTypeItem
                     }
@@ -136,7 +136,7 @@ final class Singleton {
                         let v = showMainWindow(in: scene)
                         let request = HighlightRequest(uuid: uuidString, extraAction: .preview(child?.uuid.uuidString))
                         await v.highlightItem(request)
-                        
+
                     } else if let child,
                               let q = child.quickLook() {
                         let n = GladysNavController(rootViewController: q)
@@ -151,7 +151,7 @@ final class Singleton {
                 let userActivity,
                 let userInfo = userActivity.userInfo,
                 let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
-                guard let item = Model.item(uuid: uuidString) else {
+                guard let item = DropStore.item(uuid: uuidString) else {
                     _ = showMainWindow(in: scene)
                     Task {
                         await genericAlert(title: "Not Found", message: "This item was not found")
@@ -254,7 +254,7 @@ final class Singleton {
         }
         return v
     }
-    
+
     private func replaceRootVc(in scene: UIWindowScene, with vc: UIViewController?) {
         guard let vc else { return }
         if !Model.brokenMode {

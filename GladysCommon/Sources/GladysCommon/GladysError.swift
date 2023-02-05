@@ -1,5 +1,5 @@
-import Foundation
 import CloudKit
+import Foundation
 
 public enum GladysError: Int {
     case cloudAccountRetirevalFailed = 100

@@ -1,4 +1,5 @@
 import AppKit
+import GladysCommon
 
 final class LabelEditorViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
     @IBOutlet private var tableView: NSTableView!
@@ -97,7 +98,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
         switch state {
         case .none:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0) {
+                if let item = DropStore.item(uuid: $0) {
                     item.labels.append(name)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -105,7 +106,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             }
         case .some:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0), !item.labels.contains(name) {
+                if let item = DropStore.item(uuid: $0), !item.labels.contains(name) {
                     item.labels.append(name)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -113,7 +114,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             }
         case .all:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: name) {
+                if let item = DropStore.item(uuid: $0), let i = item.labels.firstIndex(of: name) {
                     item.labels.remove(at: i)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -127,7 +128,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
         super.viewWillDisappear()
         var hadChanges = false
         for uuid in editedUUIDs {
-            if let i = Model.item(uuid: uuid) {
+            if let i = DropStore.item(uuid: uuid) {
                 i.markUpdated()
                 hadChanges = true
             }

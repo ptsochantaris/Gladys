@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 extension ArchivedItem {
     func removeIntents() {}

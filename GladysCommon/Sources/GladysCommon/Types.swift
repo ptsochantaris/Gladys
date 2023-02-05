@@ -1,3 +1,4 @@
+import CloudKit
 import Foundation
 
 #if os(macOS)
@@ -32,3 +33,42 @@ public let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.compone
 public enum ArchivedDropItemDisplayType: Int {
     case fit, fill, center, circle
 }
+
+public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+
+public enum PasteResult {
+    case success([ArchivedItem]), noData
+}
+
+public func modificationDate(for url: URL) -> Date? {
+    (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
+}
+
+public let appStorageUrl: URL = {
+    #if os(macOS)
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
+    #else
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("File Provider Storage")
+    #endif
+    log("Model URL: \(url.path)")
+    return url
+}()
+
+public let temporaryDirectoryUrl: URL = {
+    let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
+    let fm = FileManager.default
+    let p = url.path
+    if fm.fileExists(atPath: p) {
+        try? fm.removeItem(atPath: p)
+    }
+    try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+    return url
+}()
+
+public let shortDateFormatter: DateFormatter = {
+    let d = DateFormatter()
+    d.doesRelativeDateFormatting = true
+    d.dateStyle = .short
+    d.timeStyle = .short
+    return d
+}()

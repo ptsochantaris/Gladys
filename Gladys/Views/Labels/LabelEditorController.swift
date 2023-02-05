@@ -1,3 +1,4 @@
+import GladysCommon
 import UIKit
 
 final class LabelEditorController: GladysViewController, NotesEditorViewControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -90,7 +91,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         switch state {
         case .none:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0) {
+                if let item = DropStore.item(uuid: $0) {
                     item.labels.append(toggle.function.displayText)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -98,7 +99,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             }
         case .some:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0), !item.labels.contains(toggle.function.displayText) {
+                if let item = DropStore.item(uuid: $0), !item.labels.contains(toggle.function.displayText) {
                     item.labels.append(toggle.function.displayText)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -106,7 +107,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             }
         case .all:
             selectedItems.forEach {
-                if let item = Model.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.function.displayText) {
+                if let item = DropStore.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.function.displayText) {
                     item.labels.remove(at: i)
                     item.postModified()
                     editedUUIDs.insert($0)
@@ -178,7 +179,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         }
         var hadChanges = false
         for uuid in editedUUIDs {
-            if let i = Model.item(uuid: uuid) {
+            if let i = DropStore.item(uuid: uuid) {
                 i.markUpdated()
                 hadChanges = true
             }
@@ -212,9 +213,9 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
     private var commonNote: String? {
         if let firstItemUuid = selectedItems.first {
-            let firstItem = Model.item(uuid: firstItemUuid)
+            let firstItem = DropStore.item(uuid: firstItemUuid)
             let commonNote = firstItem?.note
-            for item in selectedItems where Model.item(uuid: item)?.note != commonNote {
+            for item in selectedItems where DropStore.item(uuid: item)?.note != commonNote {
                 return nil
             }
             return commonNote
@@ -224,7 +225,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
     func newNoteSaved(note: String) {
         selectedItems.forEach {
-            if let item = Model.item(uuid: $0) {
+            if let item = DropStore.item(uuid: $0) {
                 item.note = note
                 item.postModified()
                 editedUUIDs.insert($0)

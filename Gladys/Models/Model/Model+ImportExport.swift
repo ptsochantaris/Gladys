@@ -44,16 +44,16 @@ extension Model {
         let itemsInPackage = try loadDecoder().decode([ArchivedItem].self, from: data)
 
         for item in itemsInPackage.reversed() {
-            if let i = firstIndexOfItem(with: item.uuid) {
-                if allDrops[i].updatedAt >= item.updatedAt || allDrops[i].shareMode != .none {
+            if let i = DropStore.firstIndexOfItem(with: item.uuid) {
+                if DropStore.allDrops[i].updatedAt >= item.updatedAt || DropStore.allDrops[i].shareMode != .none {
                     continue
                 }
                 if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    replace(drop: item, at: i)
+                    DropStore.replace(drop: item, at: i)
                 }
             } else {
                 if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    insert(drop: item, at: 0)
+                    DropStore.insert(drop: item, at: 0)
                 }
             }
         }
@@ -88,7 +88,7 @@ extension Model {
 
     private nonisolated static func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
         let fm = FileManager()
-        let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
+        let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
         if fm.fileExists(atPath: path) {
             try fm.removeItem(atPath: path)
@@ -102,7 +102,7 @@ extension Model {
         try fm.createDirectory(at: tempPath, withIntermediateDirectories: true, attributes: nil)
         for item in eligibleItems {
             let uuidString = item.uuid.uuidString
-            let sourceForItem = Model.appStorageUrl.appendingPathComponent(uuidString)
+            let sourceForItem = appStorageUrl.appendingPathComponent(uuidString)
             let destinationForItem = tempPath.appendingPathComponent(uuidString)
             try fm.copyAndReplaceItem(at: sourceForItem, to: destinationForItem)
             p.completedUnitCount += 1
@@ -137,7 +137,7 @@ extension Model {
     }
 
     static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
-        let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
+        let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default
         let path = tempPath.path

@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 protocol ComponentCellDelegate: AnyObject {
     func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action)
@@ -47,7 +48,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         m.addItem("Copy", action: #selector(copySelected), keyEquivalent: "c", keyEquivalentModifierMask: .command)
         m.addItem("Share", action: #selector(shareSelected), keyEquivalent: "s", keyEquivalentModifierMask: [.command, .option])
         m.addItem("Reveal in Finder", action: #selector(revealSelected), keyEquivalent: "r", keyEquivalentModifierMask: [.command, .option])
-        if let parent = Model.item(uuid: item.parentUuid), parent.shareMode != .elsewhereReadOnly {
+        if let parent = DropStore.item(uuid: item.parentUuid), parent.shareMode != .elsewhereReadOnly {
             if item.isArchivable {
                 m.addItem("Edit", action: #selector(editSelected), keyEquivalent: "e", keyEquivalentModifierMask: [.command, .option])
 
@@ -131,7 +132,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         } else if typeEntry.dataExists {
             previewLabel.alphaValue = 0.7
             if typeEntry.isWebArchive {
-                previewLabel.stringValue = ComponentCell.shortFormatter.string(from: typeEntry.createdAt)
+                previewLabel.stringValue = shortDateFormatter.string(from: typeEntry.createdAt)
             } else if typeEntry.displayIconContentMode == .fill {
                 previewLabel.stringValue = ""
                 showPreview = true
@@ -159,14 +160,6 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         centreBlock.layer?.contentsGravity = .resizeAspectFill
         centreBlock.layer?.cornerRadius = 4
     }
-
-    private static let shortFormatter: DateFormatter = {
-        let d = DateFormatter()
-        d.doesRelativeDateFormatting = true
-        d.dateStyle = .short
-        d.timeStyle = .short
-        return d
-    }()
 
     override var isSelected: Bool {
         didSet {

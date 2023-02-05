@@ -45,7 +45,7 @@ extension Model {
     }
 
     static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
-        let items = allDrops.map(\.searchableItem)
+        let items = DropStore.allDrops.map(\.searchableItem)
         searchableIndex.deleteAllSearchableItems { error in
             if let error {
                 log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
@@ -55,19 +55,19 @@ extension Model {
     }
 
     static func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
-        let existingItems = allDrops.filter { identifiers.contains($0.uuid.uuidString) }.map(\.searchableItem)
+        let existingItems = DropStore.allDrops.filter { identifiers.contains($0.uuid.uuidString) }.map(\.searchableItem)
         reIndex(items: existingItems, in: searchableIndex, completion: acknowledgementHandler)
     }
 
     static func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-        if let item = Model.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
+        if let item = DropStore.item(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
             return data
         }
         return Data()
     }
 
     static func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
-        if let item = Model.item(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
+        if let item = DropStore.item(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
             return url as URL
         }
         return URL(string: "file://")!

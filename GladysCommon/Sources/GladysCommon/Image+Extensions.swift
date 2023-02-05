@@ -1,9 +1,11 @@
 #if os(macOS)
     import Cocoa
-    import Foundation
-#else
+#elseif os(iOS)
     import UIKit
+#elseif os(watchOS)
+    import WatchKit
 #endif
+import Foundation
 
 public extension IMAGE {
     static func from(data: Data) async -> IMAGE? {
@@ -92,6 +94,10 @@ public extension IMAGE {
         }
     }
 
+#elseif os(watchOS)
+    public let screenScale = WKInterfaceDevice.current().screenScale
+    public let pixelSize: CGFloat = 1 / screenScale
+
 #elseif os(iOS)
 
     public let screenScale = UIScreen.main.scale
@@ -121,7 +127,35 @@ public extension IMAGE {
             return f
         }()
 
-        public static func fromFile(_ url: URL, template: Bool) -> UIImage? {
+        private static let sharedCiContext = CIContext()
+
+        public final func desaturated(darkMode: Bool) async -> UIImage {
+            guard let ciImage = CIImage(image: self) else {
+                return self
+            }
+            let p1 = darkMode ? "inputColor0" : "inputColor1"
+            let p2 = darkMode ? "inputColor1" : "inputColor0"
+            let a: CGFloat = darkMode ? 0.05 : 0.2
+            let blackAndWhiteImage = ciImage
+                .applyingFilter("CIFalseColor", parameters: [
+                    p1: CIColor(color: .systemBackground),
+                    p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
+                ])
+            return await Task.detached {
+                if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
+                    let img = UIImage(cgImage: cgImage)
+                    return img
+                } else {
+                    return self
+                }
+            }.value
+        }
+    }
+#endif
+
+#if os(iOS) || os(watchOS)
+    public extension UIImage {
+        static func fromFile(_ url: URL, template: Bool) -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
                 if template {
                     return image.withRenderingMode(.alwaysTemplate)
@@ -132,7 +166,7 @@ public extension IMAGE {
             return nil
         }
 
-        public final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
+        final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
             let targetScale = singleScale ? 1 : scale
             let mySizePixelWidth = size.width * targetScale
             let mySizePixelHeight = size.height * targetScale
@@ -197,30 +231,6 @@ public extension IMAGE {
             }
 
             return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
-        }
-
-        private static let sharedCiContext = CIContext()
-
-        public final func desaturated(darkMode: Bool) async -> UIImage {
-            guard let ciImage = CIImage(image: self) else {
-                return self
-            }
-            let p1 = darkMode ? "inputColor0" : "inputColor1"
-            let p2 = darkMode ? "inputColor1" : "inputColor0"
-            let a: CGFloat = darkMode ? 0.05 : 0.2
-            let blackAndWhiteImage = ciImage
-                .applyingFilter("CIFalseColor", parameters: [
-                    p1: CIColor(color: .systemBackground),
-                    p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
-                ])
-            return await Task.detached {
-                if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
-                    let img = UIImage(cgImage: cgImage)
-                    return img
-                } else {
-                    return self
-                }
-            }.value
         }
     }
 #endif

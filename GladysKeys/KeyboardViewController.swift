@@ -20,7 +20,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
     var changeCallback: (() -> Void)?
 
     let labels: [String] = {
-        Model.visibleDrops
+        DropStore.visibleDrops
             .reduce(Set<String>()) { $0.union($1.labels) }
             .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
     }()
@@ -237,9 +237,9 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     private func updateFilteredItems() {
         if let f = selectedLabel, !f.isEmpty {
-            filteredDrops = Model.visibleDrops.filter { $0.labels.contains(f) }
+            filteredDrops = DropStore.visibleDrops.filter { $0.labels.contains(f) }
         } else {
-            filteredDrops = Model.visibleDrops
+            filteredDrops = DropStore.visibleDrops
         }
     }
 
@@ -445,7 +445,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     private func previewForContextMenu(of configuration: UIContextMenuConfiguration) -> UITargetedPreview? {
         if
             let uuid = configuration.identifier as? String,
-            let item = Model.item(uuid: uuid),
+            let item = DropStore.item(uuid: uuid),
             let index = filteredDrops.firstIndex(of: item),
             let cell = itemsView.cellForItem(at: IndexPath(item: index, section: 0)) as? KeyboardCell {
             return cell.targetedPreviewItem

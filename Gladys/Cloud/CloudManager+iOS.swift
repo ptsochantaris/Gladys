@@ -24,7 +24,7 @@ extension CloudManager {
         case .private, .shared:
             if await UIApplication.shared.applicationState == .background {
                 await Model.reloadDataIfNeeded()
-            } else if !(await Model.doneIngesting) {
+            } else if !(await DropStore.doneIngesting) {
                 log("We'll be syncing in a moment anyway, ignoring the push for now")
                 return .newData
             }

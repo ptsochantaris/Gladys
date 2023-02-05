@@ -4,7 +4,7 @@ import GladysCommon
 final class GladysFilePromiseProvider: NSFilePromiseProvider {
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
         let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
-        let tempPath = Model.temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
+        let tempPath = temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
 
         let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath, tags: tags)
 

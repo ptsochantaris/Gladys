@@ -132,7 +132,7 @@ final class ActionRequestViewController: UIViewController {
             }
         }
 
-        guard Model.doneIngesting else {
+        guard DropStore.doneIngesting else {
             return
         }
 

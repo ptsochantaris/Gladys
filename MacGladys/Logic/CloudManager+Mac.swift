@@ -15,7 +15,7 @@ extension CloudManager {
         log("Received \(scope.logName) DB change push")
         switch scope {
         case .private, .shared:
-            guard await Model.doneIngesting else {
+            guard await DropStore.doneIngesting else {
                 log("We'll be syncing in a moment anyway, ignoring the push")
                 return
             }

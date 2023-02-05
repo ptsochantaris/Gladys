@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 final class NotesEditor: NSViewController {
     var uuids = [UUID]()
@@ -30,7 +31,7 @@ final class NotesEditor: NSViewController {
         var changes = false
         let newText = noteField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         for uuid in uuids {
-            if let item = Model.item(uuid: uuid) {
+            if let item = DropStore.item(uuid: uuid) {
                 if item.note != newText {
                     item.note = newText
                     changes = true
@@ -45,9 +46,9 @@ final class NotesEditor: NSViewController {
 
     private var commonNote: String? {
         if let firstItemUuid = uuids.first {
-            let firstItem = Model.item(uuid: firstItemUuid)
+            let firstItem = DropStore.item(uuid: firstItemUuid)
             let commonNote = firstItem?.note
-            for item in uuids where Model.item(uuid: item)?.note != commonNote {
+            for item in uuids where DropStore.item(uuid: item)?.note != commonNote {
                 return nil
             }
             return commonNote

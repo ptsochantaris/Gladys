@@ -51,7 +51,7 @@ extension CloudManager {
         }
 
         var sharedZonesToPush = Set<CKRecordZone.ID>()
-        for item in await Model.allDrops where item.needsCloudPush {
+        for item in await DropStore.allDrops where item.needsCloudPush {
             let zoneID = item.parentZone
             if zoneID != privateZoneId {
                 sharedZonesToPush.insert(zoneID)
@@ -189,7 +189,7 @@ extension CloudManager {
     }
 
     static var uuidSequenceRecordPath: URL {
-        Model.appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
+        appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
     }
 
     static var uuidSequenceRecord: CKRecord? {
@@ -219,7 +219,7 @@ extension CloudManager {
     }
 
     static var deleteQueuePath: URL {
-        Model.appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
+        appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
     }
 
     static var deletionQueue: Set<String> {
@@ -341,7 +341,7 @@ extension CloudManager {
             let modifyResult = try await container.privateCloudDatabase.modifyRecords(saving: [], deleting: ids, savePolicy: .allKeys)
             for recordID in modifyResult.deleteResults.keys {
                 let recordUUID = recordID.recordName
-                if let item = await Model.item(shareId: recordUUID) {
+                if let item = await DropStore.item(shareId: recordUUID) {
                     item.cloudKitShareRecord = nil
                     log("Shut down sharing for item \(item.uuid) before deactivation")
                     item.postModified()
@@ -391,7 +391,7 @@ extension CloudManager {
         syncSwitchedOn = false
         lastiCloudAccount = nil
         PersistedOptions.lastPushToken = nil
-        for item in await Model.allDrops {
+        for item in await DropStore.allDrops {
             item.removeFromCloudkit()
         }
         await Model.save()
@@ -473,7 +473,7 @@ extension CloudManager {
     static func fetchMissingShareRecords() async throws {
         var fetchGroups = [CKRecordZone.ID: LinkedList<CKRecord.ID>]()
 
-        for item in await Model.allDrops {
+        for item in await DropStore.allDrops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
                 if let existingFetchGroup = fetchGroups[zoneId] {
@@ -497,13 +497,13 @@ extension CloudManager {
                     for (id, result) in fetchResults {
                         switch result {
                         case let .success(record):
-                            if let share = record as? CKShare, let existingItem = Model.item(shareId: share.recordID.recordName) {
+                            if let share = record as? CKShare, let existingItem = DropStore.item(shareId: share.recordID.recordName) {
                                 existingItem.cloudKitShareRecord = share
                             }
                         case let .failure(error):
                             if error.itemDoesNotExistOnServer {
                                 // this share record does not exist. Our local data is wrong
-                                if let itemWithShare = Model.item(shareId: id.recordName) {
+                                if let itemWithShare = DropStore.item(shareId: id.recordName) {
                                     log("Warning: Our local data thinks we have a share in the cloud (\(id.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
                                     try? await fetchCloudRecord(for: itemWithShare)
                                 }
@@ -622,7 +622,7 @@ extension CloudManager {
             return
         }
 
-        if let existingItem = await Model.item(uuid: metadata.rootRecordID.recordName) {
+        if let existingItem = await DropStore.item(uuid: metadata.rootRecordID.recordName) {
             let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
             await sendNotification(name: .HighlightItemRequested, object: request)
             return

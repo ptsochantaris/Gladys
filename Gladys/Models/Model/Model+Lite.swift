@@ -190,7 +190,7 @@ extension Model {
             log("Error inserting new item into saved data store: \(e.localizedDescription)")
         } else if addToDrops {
             for item in items {
-                Model.append(drop: item)
+                DropStore.append(drop: item)
             }
         }
     }

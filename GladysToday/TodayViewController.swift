@@ -1,3 +1,4 @@
+import GladysCommon
 import NotificationCenter
 import UIKit
 
@@ -17,17 +18,17 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         let compact = extensionContext?.widgetActiveDisplayMode == .compact
         let numberOfRows = compact ? 1 : 3
-        return min(itemsPerRow * numberOfRows, Model.visibleDrops.count)
+        return min(itemsPerRow * numberOfRows, DropStore.visibleDrops.count)
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodayCell", for: indexPath) as! TodayCell
-        cell.dropItem = Model.visibleDrops[indexPath.item]
+        cell.dropItem = DropStore.visibleDrops[indexPath.item]
         return cell
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let drop = Model.visibleDrops[indexPath.item]
+        let drop = DropStore.visibleDrops[indexPath.item]
         drop.copyToPasteboard()
         UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
             self.copiedLabel.alpha = 1
@@ -41,12 +42,12 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     }
 
     func collectionView(_: UICollectionView, itemsForBeginning _: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        let drop = Model.visibleDrops[indexPath.item]
+        let drop = DropStore.visibleDrops[indexPath.item]
         return [drop.dragItem]
     }
 
     func collectionView(_: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point _: CGPoint) -> [UIDragItem] {
-        let item = Model.visibleDrops[indexPath.item].dragItem
+        let item = DropStore.visibleDrops[indexPath.item].dragItem
         if !session.items.contains(item) {
             return [item]
         } else {
@@ -84,11 +85,11 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
 
         let width = view.bounds.width
         if width < 320 {
-            itemsPerRow = min(2, Model.visibleDrops.count)
+            itemsPerRow = min(2, DropStore.visibleDrops.count)
         } else if width < 400 {
-            itemsPerRow = min(3, Model.visibleDrops.count)
+            itemsPerRow = min(3, DropStore.visibleDrops.count)
         } else {
-            itemsPerRow = min(4, Model.visibleDrops.count)
+            itemsPerRow = min(4, DropStore.visibleDrops.count)
         }
 
         let columnCount = CGFloat(itemsPerRow)
@@ -129,7 +130,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
 
     private func updateUI() {
         copiedLabel.alpha = 0
-        emptyLabel.isHidden = !Model.visibleDrops.isEmpty
+        emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
         itemsView.reloadData()
         itemsView.layoutIfNeeded()
         preferredContentSize = itemsView.contentSize

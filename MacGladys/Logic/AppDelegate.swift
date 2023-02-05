@@ -402,7 +402,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     func applicationWillResignActive(_: Notification) {
         Task { @MainActor in
-            Model.clearCaches()
+            DropStore.clearCaches()
         }
     }
 

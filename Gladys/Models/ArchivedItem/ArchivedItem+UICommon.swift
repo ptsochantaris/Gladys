@@ -3,14 +3,6 @@ import Foundation
 import GladysCommon
 
 extension ArchivedItem {
-    private static let dateFormatter: DateFormatter = {
-        let d = DateFormatter()
-        d.doesRelativeDateFormatting = true
-        d.dateStyle = .short
-        d.timeStyle = .short
-        return d
-    }()
-
     var shouldDisplayLoading: Bool {
         flags.contains(.isBeingCreatedBySync) || needsReIngest || loadingProgress != nil
     }
@@ -69,14 +61,8 @@ extension ArchivedItem {
         }
     }
 
-    func postModified() {
-        Task { @MainActor in
-            sendNotification(name: .ItemModified, object: self)
-        }
-    }
-
     var addedString: String {
-        diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + ArchivedItem.dateFormatter.string(from: createdAt)
+        diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + shortDateFormatter.string(from: createdAt)
     }
 
     var previewableTypeItem: Component? {

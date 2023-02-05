@@ -38,7 +38,7 @@
         guard let presenter = currentWindow?.alertPresenter else {
             return
         }
-                
+
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             let a = GladysAlertController(title: title, message: message, preferredStyle: .alert)
             if let buttonTitle {
@@ -68,7 +68,7 @@
 
     final class GladysAlertController: UIAlertController {
         var completion: (() -> Void)?
-        
+
         override func viewDidDisappear(_ animated: Bool) {
             super.viewDidDisappear(animated)
             completion?()

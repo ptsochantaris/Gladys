@@ -2,14 +2,6 @@ import GladysCommon
 import MapKit
 import UIKit
 
-private let todayCellFormatter: DateFormatter = {
-    let d = DateFormatter()
-    d.doesRelativeDateFormatting = true
-    d.dateStyle = .short
-    d.timeStyle = .short
-    return d
-}()
-
 extension Notification.Name {
     static let OpenParentApp = Notification.Name("OpenParentApp")
 }
@@ -56,7 +48,7 @@ final class TodayCell: UICollectionViewCell {
         didSet {
             guard let dropItem else { return }
             topLabel.text = dropItem.displayText.0
-            bottomLabel.text = todayCellFormatter.string(from: dropItem.updatedAt)
+            bottomLabel.text = shortDateFormatter.string(from: dropItem.updatedAt)
             let size: CGFloat
             switch dropItem.displayMode {
             case .center, .circle:

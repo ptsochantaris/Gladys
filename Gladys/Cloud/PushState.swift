@@ -16,7 +16,7 @@ final actor PushState {
     init(zoneId: CKRecordZone.ID, database: CKDatabase) async {
         self.database = database
 
-        let drops = await Model.allDrops
+        let drops = await DropStore.allDrops
 
         var idsToPush = [String]()
 
@@ -210,10 +210,10 @@ final actor PushState {
                             if itemUUID == CloudManager.RecordType.positionList.rawValue {
                                 await CloudManager.setUuidSequenceAsync(self.currentUUIDSequence)
                                 await CloudManager.setUuidSequenceRecordAsync(record)
-                            } else if let item = await Model.item(uuid: itemUUID) {
+                            } else if let item = await DropStore.item(uuid: itemUUID) {
                                 item.cloudKitRecord = record
                                 self.dropsToPush -= 1
-                            } else if let typeItem = await Model.component(uuid: itemUUID) {
+                            } else if let typeItem = await ComponentLookup.shared.component(uuid: itemUUID) {
                                 typeItem.cloudKitRecord = record
                                 self.dataItemsToPush -= 1
                             }

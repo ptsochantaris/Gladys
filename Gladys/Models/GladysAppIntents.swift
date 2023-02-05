@@ -22,12 +22,12 @@ enum GladysAppIntents {
 
             @MainActor
             func entities(for identifiers: [ID]) async throws -> [ArchivedItemEntity] {
-                identifiers.compactMap { Model.item(uuid: $0) }.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                identifiers.compactMap { DropStore.item(uuid: $0) }.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
             }
 
             @MainActor
             func suggestedEntities() async throws -> [ArchivedItemEntity] {
-                Model.allDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                DropStore.allDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
             }
         }
 
@@ -92,7 +92,7 @@ enum GladysAppIntents {
         @MainActor
         func perform() async throws -> some IntentResult {
             guard let entity,
-                  let item = Model.item(uuid: entity.id)
+                  let item = DropStore.item(uuid: entity.id)
             else {
                 throw Error.itemNotFound
             }
@@ -110,7 +110,7 @@ enum GladysAppIntents {
         @MainActor
         func perform() async throws -> some IntentResult {
             guard let entity,
-                  let item = Model.item(uuid: entity.id)
+                  let item = DropStore.item(uuid: entity.id)
             else {
                 throw Error.itemNotFound
             }
@@ -289,7 +289,7 @@ enum GladysAppIntents {
             hi.entity = entity
             hi.action = .highlight
             for _ in 0 ..< 20 {
-                let done = await Model.doneIngesting
+                let done = await DropStore.doneIngesting
                 if done { break }
                 try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
             }

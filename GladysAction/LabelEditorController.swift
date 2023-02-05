@@ -34,7 +34,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
     }
 
     @objc private func itemIngested(_: Notification?) {
-        guard Model.doneIngesting else { return }
+        guard DropStore.doneIngesting else { return }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in
             guard let self else { return }

@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 import MobileCoreServices
 
 extension ArchivedItem {

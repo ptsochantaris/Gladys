@@ -42,19 +42,19 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
                 replyHandler([:])
             }
 
-        } else if let uuid = message["moveToTop"] as? String, let item = Model.item(uuid: uuid) {
+        } else if let uuid = message["moveToTop"] as? String, let item = DropStore.item(uuid: uuid) {
             Model.sendToTop(items: [item])
             Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
-        } else if let uuid = message["delete"] as? String, let item = Model.item(uuid: uuid) {
+        } else if let uuid = message["delete"] as? String, let item = DropStore.item(uuid: uuid) {
             Model.delete(items: [item])
             Task.detached(priority: .background) {
                 replyHandler([:])
             }
 
-        } else if let uuid = message["copy"] as? String, let item = Model.item(uuid: uuid) {
+        } else if let uuid = message["copy"] as? String, let item = DropStore.item(uuid: uuid) {
             item.copyToPasteboard()
             Task.detached(priority: .background) {
                 replyHandler([:])
@@ -66,7 +66,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
                 replyHandler(context ?? [:])
             }
 
-        } else if let uuid = message["image"] as? String, let item = Model.item(uuid: uuid) {
+        } else if let uuid = message["image"] as? String, let item = DropStore.item(uuid: uuid) {
             let W = message["width"] as! CGFloat
             let H = message["height"] as! CGFloat
             let size = CGSize(width: W, height: H)
@@ -131,7 +131,7 @@ private class WatchDelegate: NSObject, WCSessionDelegate {
     private func buildContext() async -> [String: Any]? {
         BackgroundTask.registerForBackground()
 
-        let drops = Model.allDrops
+        let drops = DropStore.allDrops
         let total = drops.count
         let items = drops.prefix(100).map(\.watchItem)
         let task = Task<[String: Any]?, Never>.detached {

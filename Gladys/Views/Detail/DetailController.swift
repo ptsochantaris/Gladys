@@ -138,7 +138,7 @@ final class DetailController: GladysViewController,
         }
 
         // second pass, ensure item is fresh
-        item = Model.item(uuid: item.uuid)
+        item = DropStore.item(uuid: item.uuid)
         if item == nil || item?.needsDeletion == true {
             done()
         } else {

@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
     override func keyDown(with event: NSEvent) {

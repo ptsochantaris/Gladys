@@ -6,7 +6,7 @@ public enum Greetings {
     public static var randomCleanLine: String {
         cleanLines[Int.random(in: 0 ..< cleanLines.count)]
     }
-    
+
     private static let cleanLines = [
         "Tidy!",
         "Woosh!",

@@ -24,7 +24,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             filterChanged()
         }
     }
-    
+
     private func filterChanged() {
         guard isViewLoaded else { return }
         if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
@@ -139,7 +139,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     func collectionView(_: UICollectionView, dragSessionDidEnd _: UIDragSession) {
         showDragModeOverlay(false)
 
-        let items = Component.droppedIds.compactMap { Model.item(uuid: $0) }
+        let items = Component.droppedIds.compactMap { DropStore.item(uuid: $0) }
         if !items.isEmpty {
             if dragModeMove {
                 Model.delete(items: items)
@@ -208,10 +208,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     private func insert(item: ArchivedItem, at destinationIndexPath: IndexPath, offset: Int = 0) {
-        if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = Model.firstIndexOfItem(with: uuid) {
-            Model.insert(drop: item, at: index + offset)
+        if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = DropStore.firstIndexOfItem(with: uuid) {
+            DropStore.insert(drop: item, at: index + offset)
         } else {
-            Model.append(drop: item)
+            DropStore.append(drop: item)
         }
     }
 
@@ -224,12 +224,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func gladysToGladysDrop(existingItem: ArchivedItem, sourceIndexPath: IndexPath?, to destinationIndexPath: IndexPath) -> PostDropAction {
         Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
-        guard let modelSourceIndex = Model.firstIndexOfItem(with: existingItem.uuid) else {
+        guard let modelSourceIndex = DropStore.firstIndexOfItem(with: existingItem.uuid) else {
             return .none
         }
 
         let destinationSectionIndex = IndexPath(item: 0, section: destinationIndexPath.section)
-        Model.removeDrop(at: modelSourceIndex)
+        DropStore.removeDrop(at: modelSourceIndex)
 
         switch filter.groupingMode {
         case .byLabel:
@@ -489,7 +489,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func item(for indexPath: IndexPath) -> ArchivedItem? {
         if let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
-            return Model.item(uuid: uuid)
+            return DropStore.item(uuid: uuid)
         }
         return nil
     }
@@ -637,7 +637,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
-            if let item = Model.item(uuid: uuid) {
+            if let item = DropStore.item(uuid: uuid) {
                 item.postModified()
             }
         }
@@ -754,7 +754,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: archivedItemCellNib) { [unowned self] cell, _, identifier in
             cell.wideCell = false
             cell.lowMemoryMode = self.lowMemoryMode
-            cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+            cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
             cell.isEditing = self.isEditing
         }
 
@@ -762,7 +762,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
             cell.wideCell = true
             cell.lowMemoryMode = self.lowMemoryMode
-            cell.archivedDropItem = Model.item(uuid: identifier.uuid)
+            cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
             cell.isEditing = self.isEditing
         }
 
@@ -903,7 +903,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         ]
         let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
         sortAscendingButton.menu = menu
-        
+
         filterChanged()
     }
 
@@ -1140,7 +1140,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func updateUI() {
-        if Model.dropsAreEmpty {
+        if DropStore.dropsAreEmpty {
             editButton.isEnabled = false
             if isEditing {
                 setEditing(false, animated: true)
@@ -1182,7 +1182,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             totalSizeLabel.title = "…"
             Task {
                 let drops = someSelected ? filteredDrops.filter { selected.contains($0) } : filteredDrops
-                let size = await Model.sizeForItems(uuids: drops.map(\.uuid))
+                let size = await DropStore.sizeForItems(uuids: drops.map(\.uuid))
                 let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
                 totalSizeLabel.title = sizeLabel
             }
@@ -1277,7 +1277,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
         labelsButton.accessibilityLabel = "Labels"
 
-        let haveDrops = !Model.dropsAreEmpty
+        let haveDrops = !DropStore.dropsAreEmpty
         labelsButton.isEnabled = haveDrops
         sortAscendingButton.isEnabled = haveDrops
     }
@@ -1316,7 +1316,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private var emptyView: UIImageView?
 
     private func updateEmptyView() {
-        let isEmpty = Model.dropsAreEmpty
+        let isEmpty = DropStore.dropsAreEmpty
         if isEmpty, emptyView == nil {
             let e = UIImageView(image: #imageLiteral(resourceName: "gladysImage"))
             e.isAccessibilityElement = false
@@ -1805,7 +1805,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard !candidates.isEmpty else { return }
 
         let candidateSet = Set(candidates)
-        let itemsToDelete = Model.allDrops.filter { candidateSet.contains($0) }
+        let itemsToDelete = DropStore.allDrops.filter { candidateSet.contains($0) }
         if !itemsToDelete.isEmpty {
             setEditing(false, animated: true)
             Model.delete(items: itemsToDelete)
@@ -1871,7 +1871,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
         }
 
-        if Model.doneIngesting {
+        if DropStore.doneIngesting {
             UIAccessibility.post(notification: .screenChanged, argument: nil)
         }
     }
@@ -1914,12 +1914,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
             await dismissAnyPopOverOrModal()
-        } else if Model.firstIndexOfItem(with: request.uuid) != nil {
+        } else if DropStore.firstIndexOfItem(with: request.uuid) != nil {
             await resetSearch(andLabels: true)
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         }
 
-        if filter.groupingMode == .byLabel, let item = Model.item(uuid: request.uuid) {
+        if filter.groupingMode == .byLabel, let item = DropStore.item(uuid: request.uuid) {
             let labelList = item.labels
             let labels = Set(labelList)
             let fullLabels = labels.subtracting(filter.labels(for: .full).map(\.function.displayText))
@@ -2149,7 +2149,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
-        guard let uuid = csc.share?.parent?.recordID.recordName, let item = Model.item(uuid: uuid), let ip = item.imagePath else {
+        guard let uuid = csc.share?.parent?.recordID.recordName, let item = DropStore.item(uuid: uuid), let ip = item.imagePath else {
             return nil
         }
         return componentAccessQueue.sync {

@@ -1,115 +1,18 @@
 import Foundation
 import GladysCommon
+#if canImport(Cocoa)
+    import Cocoa
+#endif
 
 @MainActor
 enum Model {
-    private static var uuidindex: [UUID: Int]?
-
-    private static var dropStore = ContiguousArray<ArchivedItem>()
-
-    static var allDrops: ContiguousArray<ArchivedItem> {
-        dropStore
-    }
-
-    static func insert(drop: ArchivedItem, at index: Int) {
-        dropStore.insert(drop, at: index)
-        uuidindex = nil
-    }
-
-    static func replace(drop: ArchivedItem, at index: Int) {
-        dropStore[index] = drop
-        uuidindex = nil
-    }
-
-    static func removeDrop(at index: Int) {
-        let item = dropStore.remove(at: index)
-        uuidindex?[item.uuid] = nil
-    }
-
-    static var dropsAreEmpty: Bool {
-        dropStore.isEmpty
-    }
-
-    static func sortDrops(by sequence: [UUID]) {
-        if sequence.isEmpty { return }
-        dropStore.sort { i1, i2 in
-            let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
-            let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
-            return p1 < p2
-        }
-        uuidindex = nil
-    }
-
-    static func removeDeletableDrops() {
-        let count = dropStore.count
-        dropStore.removeAll { $0.needsDeletion }
-        if count != dropStore.count {
-            uuidindex = nil
-        }
-    }
-
-    static func promoteDropsToTop(uuids: Set<UUID>) {
-        let cut = dropStore.filter { uuids.contains($0.uuid) }
-        if cut.isEmpty { return }
-        dropStore.removeAll { uuids.contains($0.uuid) }
-        dropStore.insert(contentsOf: cut, at: 0)
-        uuidindex = nil
-    }
-
-    static func append(drop: ArchivedItem) {
-        uuidindex?[drop.uuid] = dropStore.count
-        dropStore.append(drop)
-    }
-
-    static func firstIndexOfItem(with uuid: UUID) -> Int? {
-        if let uuidindex {
-            return uuidindex[uuid]
-        } else {
-            let z = zip(dropStore.map(\.uuid), 0 ..< dropStore.count)
-            let newIndex = Dictionary(z) { one, _ in one }
-            uuidindex = newIndex
-            log("Rebuilt drop index")
-            return newIndex[uuid]
-        }
-    }
-
-    static func firstItem(with uuid: UUID) -> ArchivedItem? {
-        if let i = firstIndexOfItem(with: uuid) {
-            return dropStore[i]
-        }
-        return nil
-    }
-
-    static func firstIndexOfItem(with uuid: String) -> Int? {
-        if let uuidData = UUID(uuidString: uuid) {
-            return firstIndexOfItem(with: uuidData)
-        }
-        return nil
-    }
-
-    static func contains(uuid: UUID) -> Bool {
-        firstIndexOfItem(with: uuid) != nil
-    }
-
-    static func clearCaches() {
-        for drop in dropStore {
-            for component in drop.components {
-                component.clearCachedFields()
-            }
-        }
-    }
-
-    ////////////////////////////////////////
-
     static var brokenMode = false
     static var dataFileLastModified = Date.distantPast
 
     private static var isStarted = false
 
     static func reset() {
-        dropStore.removeAll(keepingCapacity: false)
-        uuidindex = [:]
-        clearCaches()
+        DropStore.reset()
         dataFileLastModified = .distantPast
     }
 
@@ -127,29 +30,7 @@ enum Model {
         return encoder
     }
 
-    private final class LoaderBuffer {
-        private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation")
-
-        private var store = ContiguousArray<ArchivedItem?>()
-
-        init(capacity: Int) {
-            queue.async {
-                self.store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
-            }
-        }
-
-        func set(_ item: ArchivedItem, at index: Int) {
-            queue.async {
-                self.store[index] = item
-            }
-        }
-
-        func result() -> ContiguousArray<ArchivedItem> {
-            queue.sync {
-                ContiguousArray(store.compactMap { $0 })
-            }
-        }
-    }
+    static let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
 
     static func reloadDataIfNeeded(maximumItems: Int? = nil) {
         if brokenMode {
@@ -165,8 +46,7 @@ enum Model {
         coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
 
             if !FileManager.default.fileExists(atPath: url.path) {
-                dropStore.removeAll(keepingCapacity: false)
-                uuidindex = [:]
+                DropStore.reset()
                 log("Starting fresh store")
                 return
             }
@@ -209,8 +89,7 @@ enum Model {
                             }
                         }
                     }
-                    dropStore = loader.result()
-                    uuidindex = nil
+                    DropStore.initialize(with: loader.result())
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
                     log("No need to reload data")
@@ -220,7 +99,7 @@ enum Model {
                 loadingError = error as NSError
             }
         }
-        
+
         if brokenMode {
             log("Model in broken state, further loading or error processing aborted")
             return
@@ -284,69 +163,4 @@ enum Model {
             }
         }
     }
-
-    static var doneIngesting: Bool {
-        !dropStore.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
-    }
-
-    static var visibleDrops: ContiguousArray<ArchivedItem> {
-        dropStore.filter(\.isVisible)
-    }
-
-    static let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
-
-    static let temporaryDirectoryUrl: URL = {
-        let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
-        let fm = FileManager.default
-        let p = url.path
-        if fm.fileExists(atPath: p) {
-            try? fm.removeItem(atPath: p)
-        }
-        try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-        return url
-    }()
-
-    static func item(uuid: String) -> ArchivedItem? {
-        if let uuidData = UUID(uuidString: uuid) {
-            return item(uuid: uuidData)
-        } else {
-            return nil
-        }
-    }
-
-    static func item(uuid: UUID) -> ArchivedItem? {
-        firstItem(with: uuid)
-    }
-
-    static func item(shareId: String) -> ArchivedItem? {
-        dropStore.first { $0.cloudKitRecord?.share?.recordID.recordName == shareId }
-    }
-
-    static func component(uuid: UUID) async -> Component? {
-        await ComponentLookup.shared.lookup(uuid: uuid)
-    }
-
-    static func component(uuid: String) async -> Component? {
-        if let uuidData = UUID(uuidString: uuid) {
-            return await component(uuid: uuidData)
-        } else {
-            return nil
-        }
-    }
-
-    static func modificationDate(for url: URL) -> Date? {
-        (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
-    }
-
-    static let appStorageUrl: URL = {
-        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
-        #if MAC
-            log("Model URL: \(url.path)")
-            return url
-        #else
-            let fps = url.appendingPathComponent("File Provider Storage")
-            log("Model URL: \(fps.path)")
-            return fps
-        #endif
-    }()
 }

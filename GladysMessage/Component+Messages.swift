@@ -33,7 +33,7 @@ extension Component {
         let sharedPath = folderUrl.appendingPathComponent("shared-blob")
         let linkURL = sharedPath.appendingPathComponent("shared").appendingPathExtension(fileExtension ?? "bin")
         let originalURL = bytesPath
-        if f.fileExists(atPath: linkURL.path), Model.modificationDate(for: linkURL) == Model.modificationDate(for: originalURL) {
+        if f.fileExists(atPath: linkURL.path), modificationDate(for: linkURL) == modificationDate(for: originalURL) {
             return linkURL
         }
 

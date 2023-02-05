@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 
 extension ArchivedItem {
     var backgroundInfoObject: Any? {

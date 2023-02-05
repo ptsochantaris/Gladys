@@ -39,9 +39,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     private var filteredDrops: ContiguousArray<ArchivedItem> {
         if let t = searchBar.text, !t.isEmpty {
-            return Model.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
+            return DropStore.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
         } else {
-            return Model.visibleDrops
+            return DropStore.visibleDrops
         }
     }
 
@@ -92,7 +92,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     }
 
     @objc private func externalDataUpdated() {
-        emptyLabel.isHidden = !Model.visibleDrops.isEmpty
+        emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
         updateItemSize(for: view.bounds.size)
         itemsView.reloadData()
     }
@@ -110,7 +110,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
             filePresenter = ModelFilePresenter()
             NSFileCoordinator.addFilePresenter(filePresenter!)
         }
-        emptyLabel.isHidden = !Model.visibleDrops.isEmpty
+        emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
         updateItemSize(for: view.bounds.size)
         searchBar.text = lastFilter
         itemsView.reloadData()

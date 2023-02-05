@@ -17,7 +17,7 @@ extension Model {
                 if let currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
                     item.labels = currentFilter.enabledLabelsForItems
                 }
-                Model.insert(drop: item, at: 0)
+                DropStore.insert(drop: item, at: 0)
                 items.append(item)
                 addedStuff = true
             }

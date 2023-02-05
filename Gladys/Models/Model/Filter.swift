@@ -71,7 +71,7 @@ final class Filter {
 
     var filteredDrops: ContiguousArray<ArchivedItem> {
         if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
-            cachedFilteredDrops = Model.allDrops
+            cachedFilteredDrops = DropStore.allDrops
         }
         return cachedFilteredDrops!
     }
@@ -92,7 +92,7 @@ final class Filter {
     func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
-                if let closestItem = filteredDrops.last, let i = Model.firstIndexOfItem(with: closestItem.uuid) {
+                if let closestItem = filteredDrops.last, let i = DropStore.firstIndexOfItem(with: closestItem.uuid) {
                     let ret = i + 1
                     if checkForWeirdness, ret >= filteredDrops.count {
                         return -1
@@ -103,7 +103,7 @@ final class Filter {
                 return 0
             } else {
                 let closestItem = filteredDrops[index]
-                return Model.firstIndexOfItem(with: closestItem.uuid) ?? 0
+                return DropStore.firstIndexOfItem(with: closestItem.uuid) ?? 0
             }
         } else {
             if checkForWeirdness, index >= filteredDrops.count {
@@ -195,11 +195,11 @@ final class Filter {
         let enabledToggles = labelToggles.filter(\.active)
         let postLabelDrops: ContiguousArray<ArchivedItem>
         if enabledToggles.isEmpty {
-            postLabelDrops = Model.allDrops
+            postLabelDrops = DropStore.allDrops
 
         } else if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count
-            postLabelDrops = Model.allDrops.filter { item in
+            postLabelDrops = DropStore.allDrops.filter { item in
                 var matchCount = 0
                 for toggle in enabledToggles {
                     switch toggle.function {
@@ -212,7 +212,7 @@ final class Filter {
             }
 
         } else {
-            postLabelDrops = Model.allDrops.filter { item in
+            postLabelDrops = DropStore.allDrops.filter { item in
                 for toggle in enabledToggles {
                     switch toggle.function {
                     case .unlabeledItems: if item.labels.isEmpty { return true }
@@ -308,7 +308,7 @@ final class Filter {
     }
 
     var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
-        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : Model.allDrops // copy
+        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : DropStore.allDrops // copy
         return items.filter(\.goodToSave)
     }
 
@@ -418,7 +418,7 @@ final class Filter {
                 return .none
             }
             let n = uuids?.reduce(0) { total, uuid -> Int in
-                if let item = Model.item(uuid: uuid), item.labels.contains(name) {
+                if let item = DropStore.item(uuid: uuid), item.labels.contains(name) {
                     return total + 1
                 }
                 return total
@@ -463,7 +463,7 @@ final class Filter {
     }
 
     func rebuildRecentlyAdded() -> Bool {
-        let count = Model.allDrops.reduce(0) {
+        let count = DropStore.allDrops.reduce(0) {
             $0 + ($1.isRecentlyAdded ? 1 : 0)
         }
         let recentlyAddedIndex = labelToggles.firstIndex(where: { $0.function == .recentlyAddedItems })
@@ -492,7 +492,7 @@ final class Filter {
         counts.reserveCapacity(labelToggles.count)
         var noLabelCount = 0
         var recentlyAddedCount = 0
-        for item in Model.allDrops {
+        for item in DropStore.allDrops {
             item.labels.forEach {
                 if let c = counts[$0] {
                     counts[$0] = c + 1
@@ -554,7 +554,7 @@ final class Filter {
     func renameLabel(_ oldName: String, to newName: String) {
         let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
 
-        Model.allDrops.forEach { i in
+        DropStore.allDrops.forEach { i in
             if let oldIndex = i.labels.firstIndex(of: oldName) {
                 if i.labels.contains(newName) {
                     i.labels.remove(at: oldIndex)
@@ -579,7 +579,7 @@ final class Filter {
     }
 
     func removeLabel(_ label: String) {
-        for i in Model.allDrops where i.labels.contains(label) {
+        for i in DropStore.allDrops where i.labels.contains(label) {
             i.labels.removeAll { $0 == label }
             i.needsCloudPush = true
             i.flags.insert(.needsSaving)

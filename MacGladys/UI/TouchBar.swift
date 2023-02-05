@@ -1,4 +1,5 @@
 import Cocoa
+import GladysCommon
 
 extension ViewController {
     func touchBar(_: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
