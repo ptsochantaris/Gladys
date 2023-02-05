@@ -1,6 +1,7 @@
 import CloudKit
 import Cocoa
 import GladysCommon
+import GladysUI
 
 extension CloudManager {
     static func received(notificationInfo: [AnyHashable: Any]) async {

@@ -5,6 +5,7 @@ import GladysCommon
 import MapKit
 import UniformTypeIdentifiers
 import ZIPFoundation
+import GladysUI
 
 extension Component {
     var isArchivable: Bool {
@@ -14,8 +15,6 @@ extension Component {
             return false
         }
     }
-
-    func removeIntents() {}
 
     func tryOpen(from viewController: NSViewController) {
         let shareItem = objectForShare
@@ -85,16 +84,6 @@ extension Component {
     @MainActor
     var quickLookItem: PreviewItem {
         PreviewItem(typeItem: self)
-    }
-
-    @MainActor
-    var canPreview: Bool {
-        if let canPreviewCache {
-            return canPreviewCache
-        }
-        let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
-        canPreviewCache = res
-        return res
     }
 
     func scanForBlobChanges() -> Bool {

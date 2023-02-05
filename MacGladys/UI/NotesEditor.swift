@@ -1,5 +1,6 @@
 import Cocoa
 import GladysCommon
+import GladysUI
 
 final class NotesEditor: NSViewController {
     var uuids = [UUID]()

@@ -5,7 +5,7 @@ public enum LiteModel {
     private static var coordinator: NSFileCoordinator {
         NSFileCoordinator(filePresenter: nil)
     }
-    
+
     public static func countSavedItemsWithoutLoading() -> Int {
         var count = 0
         var coordinationError: NSError?

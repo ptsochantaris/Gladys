@@ -949,7 +949,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         record["highlightColor"] = highlightColor.rawValue
         return record
     }
-    
+
     public var backgroundInfoObject: Any? {
         var currentItem: Any?
         var currentPriority = -1

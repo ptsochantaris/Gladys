@@ -1,5 +1,6 @@
 import Cocoa
 import GladysCommon
+import GladysUI
 
 final class GladysFilePromiseProvider: NSFilePromiseProvider {
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {

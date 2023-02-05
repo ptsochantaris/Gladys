@@ -2,8 +2,6 @@ import Cocoa
 import GladysCommon
 
 extension ArchivedItem {
-    func removeIntents() {}
-
     func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting? {
         if components.isEmpty { return nil }
 

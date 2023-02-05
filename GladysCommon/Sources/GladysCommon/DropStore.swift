@@ -145,7 +145,7 @@ public enum DropStore {
             snapshot.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
         }.value
     }
-    
+
     public static var sharingMyItems: Bool {
         dropStore.contains { $0.shareMode == .sharing }
     }

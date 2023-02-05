@@ -1,5 +1,6 @@
 import Cocoa
 import GladysCommon
+import GladysUI
 
 var allFilters: [Filter] {
     NSApp.orderedWindows.compactMap {

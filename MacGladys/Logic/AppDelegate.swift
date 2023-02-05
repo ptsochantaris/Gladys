@@ -4,6 +4,7 @@ import CoreSpotlight
 import GladysCommon
 import HotKey
 import UserNotifications
+import GladysUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
@@ -191,6 +192,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         LauncherCommon.killHelper()
 
         Model.setup()
+        Model.badgeHandler = {
+            Task {
+                if await CloudManager.showNetwork {
+                    log("Updating app badge to show network")
+                    NSApp.dockTile.badgeLabel = "↔"
+                } else if PersistedOptions.badgeIconWithItemCount {
+                    let count: Int
+                    if let k = NSApp.keyWindow?.contentViewController as? ViewController {
+                        count = k.filter.filteredDrops.count
+                        log("Updating app badge to show current key window item count (\(count))")
+                    } else if NSApp.orderedWindows.count == 1, let k = NSApp.orderedWindows.first(where: { $0.contentViewController is ViewController })?.gladysController {
+                        count = k.filter.filteredDrops.count
+                        log("Updating app badge to show current only window item count (\(count))")
+                    } else {
+                        count = DropStore.allDrops.count
+                        log("Updating app badge to show item count (\(count))")
+                    }
+                    NSApp.dockTile.badgeLabel = count > 0 ? String(count) : nil
+                } else {
+                    log("Updating app badge to clear")
+                    NSApp.dockTile.badgeLabel = nil
+                }
+            }
+        }
 
         CallbackSupport.setupCallbackSupport()
     }

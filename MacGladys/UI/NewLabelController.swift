@@ -1,4 +1,5 @@
 import Cocoa
+import GladysUI
 
 protocol NewLabelControllerDelegate: AnyObject {
     func newLabelController(_ newLabelController: NewLabelController, selectedLabel label: String)

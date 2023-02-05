@@ -1,5 +1,6 @@
 import AppKit
 import GladysCommon
+import GladysUI
 
 final class LabelEditorViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate {
     @IBOutlet private var tableView: NSTableView!

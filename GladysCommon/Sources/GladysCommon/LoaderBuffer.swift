@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Paul Tsochantaris on 05/02/2023.
-//
-
 import Foundation
 
 public final class LoaderBuffer {
