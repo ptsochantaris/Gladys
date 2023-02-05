@@ -20,15 +20,13 @@ extension UTType {
 
 @MainActor
 enum Model {
-    static var brokenMode = false
-    static var dataFileLastModified = Date.distantPast
-
+    private static var brokenMode = false
+    private static var dataFileLastModified = Date.distantPast
     private static var isStarted = false
-
-    static var saveIsDueToSyncFetch = false
-
     private static var needsAnotherSave = false
     private static var isSaving = false
+
+    static var saveIsDueToSyncFetch = false
 
     static func reset() {
         DropStore.reset()
@@ -307,18 +305,6 @@ enum Model {
             }
             try await CloudManager.syncAfterSaveIfNeeded()
         }
-    }
-
-    static var sharingMyItems: Bool {
-        DropStore.allDrops.contains { $0.shareMode == .sharing }
-    }
-
-    static var containsImportedShares: Bool {
-        DropStore.allDrops.contains { $0.isImportedShare }
-    }
-
-    static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
-        DropStore.allDrops.filter { $0.shareMode == .sharing }
     }
 
     static func duplicate(item: ArchivedItem) {

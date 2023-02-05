@@ -361,7 +361,7 @@ extension CloudManager {
             syncTransitioning = false
         }
 
-        let myOwnShareIds = await Model.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
+        let myOwnShareIds = await DropStore.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
         if !myOwnShareIds.isEmpty {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }

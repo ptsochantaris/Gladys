@@ -1,4 +1,3 @@
-import CoreSpotlight
 import Foundation
 import GladysCommon
 

@@ -441,8 +441,8 @@ final class Preferences: NSViewController {
 
         Task {
             if await CloudManager.syncSwitchedOn {
-                let sharingOwn = Model.sharingMyItems
-                let importing = Model.containsImportedShares
+                let sharingOwn = DropStore.sharingMyItems
+                let importing = DropStore.containsImportedShares
                 if sharingOwn, importing {
                     confirm(title: "You have shared items",
                             message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
