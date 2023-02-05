@@ -14,7 +14,7 @@ extension Model {
             case .startupComplete:
                 trimTemporaryDirectory()
                                                 
-            case .saveComplete, .indexSaveComplete:
+            case .saveComplete:
                 Task {
                     do {
                         if try await resyncIfNeeded() {

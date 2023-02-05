@@ -46,9 +46,6 @@ extension Model {
             case .migrated:
                 clearLegacyIntents()
 
-            case .indexSaveComplete:
-                saveDone()
-
             case .saveComplete:
                 saveOverlap -= 1
                 if saveOverlap > 0 {

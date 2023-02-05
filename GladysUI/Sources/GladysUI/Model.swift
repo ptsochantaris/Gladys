@@ -21,7 +21,7 @@ extension UTType {
 @MainActor
 public enum Model {
     public enum State {
-        case startupComplete, willSave, saveComplete, indexSaveComplete, migrated
+        case startupComplete, willSave, saveComplete, migrated
     }
 
     private static var dataFileLastModified = Date.distantPast
@@ -275,7 +275,7 @@ public enum Model {
                     let item = actualItemsToSort[pos]
                     DropStore.replace(drop: item, at: itemIndex)
                 }
-                Model.saveIndexOnly()
+                Model.save()
             }
         }
 
@@ -301,17 +301,22 @@ public enum Model {
     }
 
     public static func resyncIfNeeded() async throws -> Bool {
-        let syncDirty = await CloudManager.syncDirty
-        if saveIsDueToSyncFetch, !syncDirty {
+        if await CloudManager.syncDirty {
+            log("A sync had been requested while syncing, will attempt another sync")
+            return true
+            
+        } else if saveIsDueToSyncFetch {
             saveIsDueToSyncFetch = false
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
+            return false
+            
+        } else if await CloudManager.syncSwitchedOn {
+            log("Will sync after a save")
+            return true
+            
         } else {
-            if syncDirty {
-                log("A sync had been requested while syncing, evaluating another sync")
-                return true
-            }
+            return false
         }
-        return false
     }
 
     public static func duplicate(item: ArchivedItem) {
@@ -441,28 +446,6 @@ public enum Model {
         }
     }
 
-    public static func saveIndexOnly() {
-        let itemsToSave: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
-        NotificationCenter.default.post(name: .ModelDataUpdated, object: nil)
-        let broken = brokenMode
-
-        Task { @ModelStorage in
-            if broken {
-                log("Ignoring save, model is broken, app needs restart.")
-            } else {
-                do {
-                    _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [])
-                    log("Saved index only")
-                } catch {
-                    log("Warning: Error while committing index to disk: (\(error.finalDescription))")
-                }
-            }
-            Task { @MainActor in
-                stateHandler?(.indexSaveComplete)
-            }
-        }
-    }
-
     private static let commitQueue = LinkedList<ArchivedItem>()
     public static func commitItem(item: ArchivedItem) {
         item.flags.remove(.isBeingCreatedBySync)
@@ -583,7 +566,7 @@ public enum Model {
     public static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map(\.uuid))
         DropStore.promoteDropsToTop(uuids: uuids)
-        saveIndexOnly()
+        save()
     }
 
     private static func bringInItem(_ item: ArchivedItem, from url: URL, using fm: FileManager, moveItem: Bool) throws -> Bool {

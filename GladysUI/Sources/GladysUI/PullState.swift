@@ -48,26 +48,22 @@ final actor PullState {
         await CloudManager.setSyncProgressString("Updating…")
         log("Changes fetch complete, processing")
 
+        var needsSave = false
         if updatedSequence || newDropCount > 0 {
+            needsSave = true
             Task {
                 await Model.sortDrops()
             }
         }
 
-        let itemsModified = typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0
-
-        if itemsModified {
-            // need to save stuff that's been modified
+        needsSave = needsSave
+        || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
+        || (!updatedZoneTokens.isEmpty && updatedSequence)
+        
+        if needsSave {
             Task { @MainActor in
                 Model.saveIsDueToSyncFetch = true
                 Model.save()
-            }
-
-        } else if !updatedZoneTokens.isEmpty, updatedSequence {
-            // a position record, most likely?
-            Task { @MainActor in
-                Model.saveIsDueToSyncFetch = true
-                Model.saveIndexOnly()
             }
 
         } else {
@@ -75,13 +71,12 @@ final actor PullState {
         }
 
         if commitTokens {
-            if !updatedZoneTokens.isEmpty || !updatedDatabaseTokens.isEmpty {
-                log("Committing change tokens")
-            }
             for (zoneId, zoneToken) in updatedZoneTokens {
+                log("Committing zone token")
                 setZoneToken(zoneToken, for: zoneId)
             }
             for (databaseId, databaseToken) in updatedDatabaseTokens {
+                log("Committing DB token")
                 setDatabaseToken(databaseToken, for: databaseId)
             }
         }

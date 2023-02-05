@@ -217,7 +217,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     private enum PostDropAction: Int {
-        case none, updateUI, saveIndex, saveDB
+        case none, updateUI, save
         func supercedes(action: PostDropAction) -> Bool {
             rawValue > action.rawValue
         }
@@ -246,12 +246,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     existingItem.labels.append(text)
                 }
                 existingItem.markUpdated()
-                return .saveDB
+                return .save
 
             } else if sourceIndexPath != nil {
                 // drag inside same section
                 insert(item: existingItem, at: destinationIndexPath)
-                return .saveIndex
+                return .save
 
             } else if let destinationSectionLabel = dataSource.itemIdentifier(for: destinationSectionIndex)?.label?.function {
                 // drag into section from another Gladys window
@@ -260,10 +260,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 if case let .userLabel(text) = destinationSectionLabel, !existingItem.labels.contains(text) {
                     existingItem.labels.append(text)
                     existingItem.markUpdated()
-                    return .saveDB
-                } else {
-                    return .saveIndex
                 }
+                return .save
             }
 
         case .flat:
@@ -274,10 +272,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
                 existingItem.postModified()
                 existingItem.markUpdated()
-                return .saveDB
-            } else {
-                return .saveIndex
             }
+            return .save
         }
 
         log("Warning: Unhandled local drop scenario")
@@ -339,9 +335,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         case .updateUI:
             focusInitialAccessibilityElement()
             updateEmptyView()
-        case .saveIndex:
-            Model.saveIndexOnly()
-        case .saveDB:
+        case .save:
             Model.save()
         }
 
