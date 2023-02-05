@@ -15,7 +15,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         itemAccessQueue.async(flags: .barrier) {
-            self.allToggles = Model.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+            self.allToggles = LiteModel.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
             Task { @MainActor [weak self] in
                 self?.table.isHidden = false
                 self?.updateFilter(nil)

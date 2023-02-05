@@ -32,7 +32,7 @@ final class ActionRequestViewController: UIViewController {
     }
 
     private var newTotal: Int {
-        Model.countSavedItemsWithoutLoading() + loadCount
+        LiteModel.countSavedItemsWithoutLoading() + loadCount
     }
 
     private func error(text: String) {
@@ -169,7 +169,7 @@ final class ActionRequestViewController: UIViewController {
         newItems.removeAll()
         ActionRequestViewController.labelsToApply.removeAll()
         ActionRequestViewController.noteToApply = ""
-        Model.reset()
+        DropStore.reset()
     }
 
     @objc private func signalDone() {
@@ -182,7 +182,10 @@ final class ActionRequestViewController: UIViewController {
             item.note = ActionRequestViewController.noteToApply
         }
 
-        Model.insertNewItemsWithoutLoading(items: newItems, addToDrops: true)
+        LiteModel.insertNewItemsWithoutLoading(items: newItems)
+        for item in newItems {
+            DropStore.append(drop: item)
+        }
 
         Task {
             await CloudManager.signalExtensionUpdate()

@@ -1,13 +1,13 @@
 import Foundation
 import GladysCommon
 
-extension Model {
+@MainActor
+enum LiteModel {
+    static var coordinator: NSFileCoordinator {
+        NSFileCoordinator(filePresenter: nil)
+    }
+    
     static func countSavedItemsWithoutLoading() -> Int {
-        if brokenMode {
-            log("Ignoring count, model is broken, app needs restart.")
-            return 0
-        }
-
         var count = 0
         var coordinationError: NSError?
         var loadingError: NSError?
@@ -45,11 +45,6 @@ extension Model {
     }
 
     static func locateItemWithoutLoading(uuid: String) -> ArchivedItem? {
-        if brokenMode {
-            log("Ignoring locate operation, model is broken, app needs restart.")
-            return nil
-        }
-
         var item: ArchivedItem?
         var coordinationError: NSError?
 
@@ -74,11 +69,6 @@ extension Model {
     }
 
     static func getLabelsWithoutLoading() -> Set<String> {
-        if brokenMode {
-            log("Ignoring locate operation, model is broken, app needs restart.")
-            return []
-        }
-
         var labels = Set<String>()
         iterateThroughSavedItemsWithoutLoading {
             labels.formUnion($0.labels)
@@ -89,11 +79,6 @@ extension Model {
     }
 
     static func locateComponentWithoutLoading(uuid: String) -> (ArchivedItem, Component)? {
-        if brokenMode {
-            log("Ignoring locate component operation, model is broken, app needs restart.")
-            return nil
-        }
-
         var result: (ArchivedItem, Component)?
         let uuidData = UUID(uuidString: uuid)
 
@@ -108,11 +93,6 @@ extension Model {
     }
 
     private static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
-        if brokenMode {
-            log("Ignoring search operation, model is broken, app needs restart.")
-            return
-        }
-
         var coordinationError: NSError?
         var loadingError: NSError?
 
@@ -148,13 +128,8 @@ extension Model {
         }
     }
 
-    static func insertNewItemsWithoutLoading(items: [ArchivedItem], addToDrops: Bool) {
+    static func insertNewItemsWithoutLoading(items: [ArchivedItem]) {
         if items.isEmpty { return }
-
-        if brokenMode {
-            log("Ignoring insert operation, model is broken, app needs restart.")
-            return
-        }
 
         var closureError: NSError?
         var coordinationError: NSError?
@@ -188,10 +163,6 @@ extension Model {
         }
         if let e = coordinationError ?? closureError {
             log("Error inserting new item into saved data store: \(e.localizedDescription)")
-        } else if addToDrops {
-            for item in items {
-                DropStore.append(drop: item)
-            }
         }
     }
 }

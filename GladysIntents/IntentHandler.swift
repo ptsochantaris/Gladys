@@ -10,7 +10,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
             return
         }
 
-        guard let (_, component) = Model.locateComponentWithoutLoading(uuid: uuidString) else {
+        guard let (_, component) = LiteModel.locateComponentWithoutLoading(uuid: uuidString) else {
             completion(CopyComponentIntentResponse(code: .failure, userActivity: nil))
             return
         }
@@ -28,7 +28,7 @@ final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIn
             return
         }
 
-        guard let item = Model.locateItemWithoutLoading(uuid: uuid.uuidString) else {
+        guard let item = LiteModel.locateItemWithoutLoading(uuid: uuid.uuidString) else {
             completion(CopyItemIntentResponse(code: .failure, userActivity: nil))
             return
         }

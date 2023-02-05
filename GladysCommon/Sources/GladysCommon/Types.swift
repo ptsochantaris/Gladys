@@ -35,6 +35,7 @@ public enum ArchivedDropItemDisplayType: Int {
 }
 
 public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+public let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
 
 public enum PasteResult {
     case success([ArchivedItem]), noData
@@ -72,3 +73,17 @@ public let shortDateFormatter: DateFormatter = {
     d.timeStyle = .short
     return d
 }()
+
+public func loadDecoder() -> JSONDecoder {
+    log("Creating new loading decoder")
+    let decoder = JSONDecoder()
+    decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+    return decoder
+}
+
+public func saveEncoder() -> JSONEncoder {
+    log("Creating new saving encoder")
+    let encoder = JSONEncoder()
+    encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
+    return encoder
+}

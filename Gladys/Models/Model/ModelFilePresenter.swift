@@ -2,7 +2,7 @@ import Foundation
 import GladysCommon
 
 final class ModelFilePresenter: NSObject, NSFilePresenter {
-    let presentedItemURL: URL? = Model.itemsDirectoryUrl
+    let presentedItemURL: URL? = itemsDirectoryUrl
 
     let presentedItemOperationQueue = OperationQueue()
 

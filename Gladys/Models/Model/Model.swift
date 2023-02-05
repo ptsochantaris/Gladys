@@ -16,22 +16,6 @@ enum Model {
         dataFileLastModified = .distantPast
     }
 
-    nonisolated static func loadDecoder() -> JSONDecoder {
-        log("Creating new loading decoder")
-        let decoder = JSONDecoder()
-        decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-        return decoder
-    }
-
-    nonisolated static func saveEncoder() -> JSONEncoder {
-        log("Creating new saving encoder")
-        let encoder = JSONEncoder()
-        encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
-        return encoder
-    }
-
-    static let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
-
     static func reloadDataIfNeeded(maximumItems: Int? = nil) {
         if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
