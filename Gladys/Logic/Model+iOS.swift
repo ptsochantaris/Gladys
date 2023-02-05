@@ -63,11 +63,6 @@ extension Model {
                     BackgroundTask.registerForBackground()
                 }
 
-            case .syncSuggested:
-                Task {
-                    try await CloudManager.syncAfterSaveIfNeeded()
-                }
-                
             case .startupComplete:
                 trimTemporaryDirectory()
                 if WCSession.isSupported() {
@@ -86,7 +81,9 @@ extension Model {
 
         Task {
             do {
-                try await resyncIfNeeded()
+                if try await resyncIfNeeded() {
+                    try await CloudManager.syncAfterSaveIfNeeded()
+                }
             } catch {
                 log("Error in sync after save: \(error.finalDescription)")
             }
@@ -126,13 +123,13 @@ extension Model {
         return .success(items)
     }
 
-    public static var pasteIntent: PasteClipboardIntent {
+    static var pasteIntent: PasteClipboardIntent {
         let intent = PasteClipboardIntent()
         intent.suggestedInvocationPhrase = "Paste in Gladys"
         return intent
     }
 
-    static func clearLegacyIntents() {
+    private static func clearLegacyIntents() {
         if #available(iOS 16, *) {
             INInteraction.deleteAll() // using app intents now
         }

@@ -21,7 +21,7 @@ extension UTType {
 @MainActor
 public enum Model {
     public enum State {
-        case startupComplete, willSave, saveComplete, indexSaveComplete, syncSuggested, migrated
+        case startupComplete, willSave, saveComplete, indexSaveComplete, migrated
     }
 
     private static var dataFileLastModified = Date.distantPast
@@ -300,7 +300,7 @@ public enum Model {
         delete(items: itemsRelatedToZone)
     }
 
-    public static func resyncIfNeeded() async throws {
+    public static func resyncIfNeeded() async throws -> Bool {
         let syncDirty = await CloudManager.syncDirty
         if saveIsDueToSyncFetch, !syncDirty {
             saveIsDueToSyncFetch = false
@@ -308,9 +308,10 @@ public enum Model {
         } else {
             if syncDirty {
                 log("A sync had been requested while syncing, evaluating another sync")
+                return true
             }
-            stateHandler?(.syncSuggested)
         }
+        return false
     }
 
     public static func duplicate(item: ArchivedItem) {

@@ -192,6 +192,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         LauncherCommon.killHelper()
 
         Model.setup()
+        Model.registerStateHandler()
         Model.badgeHandler = {
             Task {
                 if await CloudManager.showNetwork {

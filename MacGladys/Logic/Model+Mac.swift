@@ -4,12 +4,30 @@ import UniformTypeIdentifiers
 import GladysUI
 
 extension Model {
-    static func prepareToSave() {}
-
-    static func startupComplete() {
-        trimTemporaryDirectory()
+    
+    static func registerStateHandler() {
+        stateHandler = { state in
+            switch state {
+            case .migrated, .willSave:
+                break
+                
+            case .startupComplete:
+                trimTemporaryDirectory()
+                                                
+            case .saveComplete, .indexSaveComplete:
+                Task {
+                    do {
+                        if try await resyncIfNeeded() {
+                            try await CloudManager.syncAfterSaveIfNeeded()
+                        }
+                    } catch {
+                        log("Error in sync after save: \(error.finalDescription)")
+                    }
+                }
+            }
+        }
     }
-
+    
     private static var eventMonitor: FileMonitor?
 
     static func startMonitoringForExternalChangesToBlobs() {
@@ -46,20 +64,6 @@ extension Model {
             item.markUpdated()
             Task {
                 await item.reIngest()
-            }
-        }
-    }
-
-    static func saveIndexComplete() {
-        log("Index saving done")
-    }
-
-    static func saveComplete() {
-        Task {
-            do {
-                try await resyncIfNeeded()
-            } catch {
-                log("Error in sync after save: \(error.finalDescription)")
             }
         }
     }

@@ -6,6 +6,9 @@ import UIKit
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        Task { @CloudActor in
+            CloudManager.registerBackgroundHandling()
+        }
         Singleton.shared.setup()
         UIApplication.shared.registerForRemoteNotifications()
         Task {
