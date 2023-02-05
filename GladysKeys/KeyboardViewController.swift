@@ -243,7 +243,9 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         }
     }
 
-    @objc private func externalDataUpdated() {
+    private func externalDataUpdated() {
+        let items = LiteModel.allItems()
+        DropStore.initialize(with: items)
         updateFilteredItems()
         if filteredDrops.isEmpty {
             emptyStack.isHidden = false
@@ -259,13 +261,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         log("Keyboard extension dismissed")
     }
 
-    private var filePresenter: ModelFilePresenter?
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         if hasFullAccess {
-            Model.reloadDataIfNeeded()
             emptyLabel.text = "The items in your collection will appear here."
         } else {
             emptyLabel.text = "This keyboard requires perimssion to access your Gladys collection.\n\nPlease enable it from Gladys > Keyboards > Allow Full Access"
@@ -274,10 +273,6 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             return
         }
 
-        if filePresenter == nil {
-            filePresenter = ModelFilePresenter()
-            NSFileCoordinator.addFilePresenter(filePresenter!)
-        }
         externalDataUpdated()
         view.layoutIfNeeded()
         itemsView.contentOffset = latestOffset
@@ -326,11 +321,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         super.viewWillDisappear(animated)
         dragCompletionGroup.notify(queue: .main) {
             latestOffset = self.itemsView.contentOffset
-            if let m = self.filePresenter {
-                NSFileCoordinator.removeFilePresenter(m)
-                self.filePresenter = nil
-            }
-            Model.reset()
+            DropStore.reset()
         }
     }
 
@@ -346,7 +337,6 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         super.viewDidLoad()
         dismissButton.isHidden = UIDevice.current.userInterfaceIdiom != .pad
         nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
-        NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ModelDataUpdated, object: nil)
         itemsView.dragDelegate = self
         itemsView.dragInteractionEnabled = UIDevice.current.userInterfaceIdiom == .pad
 

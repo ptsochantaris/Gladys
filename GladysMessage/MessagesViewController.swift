@@ -88,28 +88,15 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
             self?.searchUpdated()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(externalDataUpdated), name: .ModelDataUpdated, object: nil)
-    }
-
-    @objc private func externalDataUpdated() {
-        emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
-        updateItemSize(for: view.bounds.size)
-        itemsView.reloadData()
     }
 
     deinit {
         log("iMessage app dismissed")
     }
 
-    private var filePresenter: ModelFilePresenter?
-
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
-        Model.reloadDataIfNeeded()
-        if filePresenter == nil {
-            filePresenter = ModelFilePresenter()
-            NSFileCoordinator.addFilePresenter(filePresenter!)
-        }
+        DropStore.initialize(with: LiteModel.allItems())
         emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
         updateItemSize(for: view.bounds.size)
         searchBar.text = lastFilter
@@ -121,13 +108,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     override func willResignActive(with conversation: MSConversation) {
         super.willResignActive(with: conversation)
-        if let m = filePresenter {
-            NSFileCoordinator.removeFilePresenter(m)
-            filePresenter = nil
-        }
         messagesCurrentOffset = itemsView.contentOffset
         lastFilter = searchBar.text
-        Model.reset()
+        DropStore.reset()
         itemsView.reloadData()
     }
 

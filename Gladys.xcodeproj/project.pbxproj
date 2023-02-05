@@ -32,7 +32,6 @@
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
 		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
-		1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
 		162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */; };
@@ -71,7 +70,6 @@
 		1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */; };
 		1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */; };
 		1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C31FD4329300EC480D /* MessageCell.swift */; };
 		1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		165847062376CC2400666B7B /* Model+Siri.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165847052376CC2400666B7B /* Model+Siri.swift */; };
@@ -101,14 +99,15 @@
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
-		16896442298FF48A009D7D01 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
-		16896443298FF48B009D7D01 /* ModelFilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */; };
 		16896448299008E1009D7D01 /* Indexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16896447299008E1009D7D01 /* Indexer.swift */; };
 		16896449299008F0009D7D01 /* Indexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16896447299008E1009D7D01 /* Indexer.swift */; };
 		1689644A299008F1009D7D01 /* Indexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16896447299008E1009D7D01 /* Indexer.swift */; };
 		1689644B29900D27009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
 		1689644C29900DFC009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
 		1689644D29900DFD009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
+		1689644F29901C0C009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
+		1689645029901DE6009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
+		1689645129901F9B009D7D01 /* LiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC2934219D5F11004174C3 /* LiteModel.swift */; };
 		168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
 		168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
@@ -130,8 +129,6 @@
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
 		16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		16969BAE1FB0E688007B2F77 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
-		16969BB01FB0E6B1007B2F77 /* Model+SimpleCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */; };
 		16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB11FB0F309007B2F77 /* TodayCell.swift */; };
 		16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
@@ -154,11 +151,9 @@
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
 		16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */; };
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
-		16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A223E41EF67FC7009EEEBC /* Model.swift */; };
 		16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
 		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
@@ -427,7 +422,6 @@
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
 		16219A0124E0108E006ED18A /* KeyboardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardCell.swift; sourceTree = "<group>"; };
-		1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+MessageCoordinator.swift"; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
 		162383F320F969650086E719 /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
@@ -587,7 +581,6 @@
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ImportExport.swift"; sourceTree = "<group>"; };
 		16EDB3761F2361EB001CC65C /* Model+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+UI.swift"; sourceTree = "<group>"; };
-		16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+SimpleCoordinator.swift"; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F1BD6822A7B605009BFFD1 /* BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTask.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
@@ -842,7 +835,6 @@
 				1657B8C21FD4248800EC480D /* GladysMessage.entitlements */,
 				1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */,
 				1657B8C31FD4329300EC480D /* MessageCell.swift */,
-				1621F7882002409B0080B666 /* Model+MessageCoordinator.swift */,
 				1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */,
 				169E5E051FE0851A00CCE984 /* Component+Messages.swift */,
 				1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */,
@@ -1060,7 +1052,6 @@
 				16A223E41EF67FC7009EEEBC /* Model.swift */,
 				16EDB3761F2361EB001CC65C /* Model+UI.swift */,
 				16CD7DB720A124390039E6C2 /* Model+UICommon.swift */,
-				16EDB3781F2363D9001CC65C /* Model+SimpleCoordinator.swift */,
 				169C07DA2003835C00D34E47 /* ModelFilePresenter.swift */,
 				16ED386520C14F4500B9BFDA /* Model+ImportExport.swift */,
 				16EC2934219D5F11004174C3 /* LiteModel.swift */,
@@ -1829,15 +1820,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16896442298FF48A009D7D01 /* ModelFilePresenter.swift in Sources */,
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
+				1689644F29901C0C009D7D01 /* LiteModel.swift in Sources */,
 				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
 				16C3A2D320AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
-				1657B8BD1FD41E5B00EC480D /* Model.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
-				1621F7892002409B0080B666 /* Model+MessageCoordinator.swift in Sources */,
 				16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1939,12 +1928,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
+				1689645029901DE6009D7D01 /* LiteModel.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
-				16969BB01FB0E6B1007B2F77 /* Model+SimpleCoordinator.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
 				16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
-				16969BAE1FB0E688007B2F77 /* Model.swift in Sources */,
 				16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				1602F32B2030E60F0036E2B0 /* UIView+Extensions.swift in Sources */,
 			);
@@ -1968,15 +1956,13 @@
 				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
 				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
-				16B2AA4424DF4542004F3FC2 /* Model+MessageCoordinator.swift in Sources */,
-				16896443298FF48B009D7D01 /* ModelFilePresenter.swift in Sources */,
 				16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
 				16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */,
-				16B2AA4C24DF4755004F3FC2 /* Model.swift in Sources */,
+				1689645129901F9B009D7D01 /* LiteModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

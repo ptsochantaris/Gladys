@@ -92,6 +92,26 @@ enum LiteModel {
         return result
     }
 
+    static func prefix(_ count: Int) -> ContiguousArray<ArchivedItem> {
+        var items = ContiguousArray<ArchivedItem>()
+        var number = 0
+        iterateThroughSavedItemsWithoutLoading { item in
+            items.append(item)
+            number += 1
+            return number <= count
+        }
+        return items
+    }
+
+    static func allItems() -> ContiguousArray<ArchivedItem> {
+        var items = ContiguousArray<ArchivedItem>()
+        iterateThroughSavedItemsWithoutLoading { item in
+            items.append(item)
+            return true
+        }
+        return items
+    }
+
     static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
         var coordinationError: NSError?
         var loadingError: NSError?

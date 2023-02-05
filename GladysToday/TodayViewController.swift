@@ -137,7 +137,8 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     }
 
     private func reloadData() {
-        Model.reloadDataIfNeeded(maximumItems: 12)
+        let items = LiteModel.prefix(12)
+        DropStore.initialize(with: items)
     }
 
     func widgetPerformUpdate(completionHandler: @escaping (NCUpdateResult) -> Void) {
