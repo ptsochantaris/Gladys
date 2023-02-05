@@ -213,9 +213,11 @@ extension Model {
 
     ///////////////////////// Migrating
 
+    private static let indexDelegate = Indexer()
+
     static func setup() {
         reloadDataIfNeeded()
-        setupIndexDelegate()
+        CSSearchableIndex.default().indexDelegate = indexDelegate
 
         // migrate if needed
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
@@ -229,7 +231,7 @@ extension Model {
             #else
                 Model.clearLegacyIntents()
             #endif
-            Model.searchableIndex(CSSearchableIndex.default()) {
+            indexDelegate.searchableIndex(CSSearchableIndex.default()) {
                 PersistedOptions.lastRanVersion = currentBuild
             }
         }
@@ -261,7 +263,7 @@ extension Model {
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
             let searchableItems = itemsToWrite.map(\.searchableItem)
-            reIndex(items: searchableItems, in: index)
+            indexDelegate.reIndex(items: searchableItems, in: index)
         }
 
         let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
@@ -342,7 +344,7 @@ extension Model {
             let (itemsToCommit, itemsToSave) = await MainActor.run {
                 let itemsToCommit = commitQueue.filter { !$0.needsDeletion }
                 commitQueue.removeAll()
-                reIndex(items: itemsToCommit.map(\.searchableItem), in: CSSearchableIndex.default())
+                indexDelegate.reIndex(items: itemsToCommit.map(\.searchableItem), in: CSSearchableIndex.default())
                 let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
                 return (itemsToCommit, itemsToSave)
             }

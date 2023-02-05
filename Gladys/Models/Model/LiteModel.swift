@@ -92,7 +92,7 @@ enum LiteModel {
         return result
     }
 
-    private static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
+    static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
         var coordinationError: NSError?
         var loadingError: NSError?
 
