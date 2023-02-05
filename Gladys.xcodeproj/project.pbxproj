@@ -140,7 +140,6 @@
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
-		16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
 		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E7C2523D50C007FD864 /* CallbackURLKit */; };
@@ -166,10 +165,6 @@
 		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
-		16C3A2D120AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
-		16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
-		16C3A2D320AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
-		16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */; };
 		16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */; };
 		16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7A91F72579E00CD1C11 /* gladysIcon320.png */; };
@@ -520,7 +515,6 @@
 		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
 		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
-		16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+BackgroundInfoObject.swift"; sourceTree = "<group>"; };
 		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
@@ -734,7 +728,6 @@
 		1610899D1FA322580095FE34 /* ArchivedItem */ = {
 			isa = PBXGroup;
 			children = (
-				16C3A2D020AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
 				169763201F156CBE00537776 /* ArchivedItem+iOS.swift */,
 				16CD7D7B20A108BB0039E6C2 /* ArchivedItem+Common.swift */,
@@ -1703,7 +1696,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16C3A2D420AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
 				16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */,
@@ -1781,7 +1773,6 @@
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
 				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
-				16C3A2D320AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
 				16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */,
@@ -1834,7 +1825,6 @@
 				169763151F15669000537776 /* Component+iOS.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
-				16C3A2D120AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16C8166720CB0354001C12DF /* PullState.swift in Sources */,
 				162BDD94220F8F0500A3C17B /* SiriShortcutsViewController.swift in Sources */,
 				16EDB3771F2361EB001CC65C /* Model+iOS.swift in Sources */,
@@ -1879,7 +1869,6 @@
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
-				16C3A2D220AF765000A04F10 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 				16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				1602F32B2030E60F0036E2B0 /* UIView+Extensions.swift in Sources */,
@@ -1904,7 +1893,6 @@
 				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
 				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
-				16B2AA5124DF497A004F3FC2 /* ArchivedItem+BackgroundInfoObject.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
