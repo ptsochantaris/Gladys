@@ -616,8 +616,8 @@
 		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
-		16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchivedItemCell.xib; sourceTree = "<group>"; };
-		16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WideArchivedItemCell.xib; sourceTree = "<group>"; };
+		16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ArchivedItemCell.xib; path = Gladys/ArchivedItemCell.xib; sourceTree = "<group>"; };
+		16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = WideArchivedItemCell.xib; path = Gladys/WideArchivedItemCell.xib; sourceTree = "<group>"; };
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyhive.appex; sourceTree = BUILT_PRODUCTS_DIR; };
