@@ -6,7 +6,7 @@ import Intents
 import MapKit
 import UIKit
 
-extension Model.SortOption {
+extension SortOption {
     var ascendingIcon: UIImage? {
         switch self {
         case .label: return UIImage(systemName: "line.horizontal.3")

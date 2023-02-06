@@ -28,8 +28,6 @@ extension UIView {
 }
 
 extension Model {
-    private static var saveOverlap = 0
-
     private static var watchDelegate: WatchDelegate?
 
     static func registerStateHandler() {
@@ -38,12 +36,7 @@ extension Model {
             case .migrated:
                 clearLegacyIntents()
 
-            case .saveComplete:
-                saveOverlap -= 1
-                if saveOverlap > 0 {
-                    return
-                }
-                
+            case let .saveComplete(dueToSyncFetch):
                 if let watchDelegate {
                     Task {
                         await watchDelegate.updateContext()
@@ -52,7 +45,7 @@ extension Model {
 
                 Task {
                     do {
-                        if try await shouldSync() {
+                        if try await shouldSync(dueToSyncFetch: dueToSyncFetch) {
                             try await CloudManager.syncAfterSaveIfNeeded()
                         }
                     } catch {
@@ -63,7 +56,6 @@ extension Model {
                 BackgroundTask.unregisterForBackground()
 
             case .willSave:
-                saveOverlap += 1
                 BackgroundTask.registerForBackground()
 
             case .startupComplete:

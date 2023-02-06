@@ -231,7 +231,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         NSApplication.shared.servicesProvider = servicesProvider
 
-        for sortOption in Model.SortOption.options {
+        for sortOption in SortOption.options {
             sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
             sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
         }
@@ -510,7 +510,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
         Task { @MainActor in // give UI a chance to update
             do {
-                try Model.importArchive(from: url, removingOriginal: false)
+                try ImportExport().importArchive(from: url, removingOriginal: false)
                 endProgress()
             } catch {
                 endProgress()
@@ -535,8 +535,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.allowedContentTypes = [.gladysArchive]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
-            let p = Model.createArchive(using: controller.filter) { createdUrl, error in
-                self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
+            let p = ImportExport().createArchive(using: controller.filter) { result in
+                self.createOperationDone(selectedUrl: selectedUrl, result: result)
             }
             startProgress(for: p)
         }
@@ -569,8 +569,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
             assert(Thread.isMainThread)
-            let p = Model.createZip(using: controller.filter) { createdUrl, error in
-                self.createOperationDone(selectedUrl: selectedUrl, createdUrl: createdUrl, error: error)
+            let p = ImportExport().createZip(using: controller.filter) { result in
+                self.createOperationDone(selectedUrl: selectedUrl, result: result)
             }
             startProgress(for: p)
         }
@@ -610,27 +610,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    private func createOperationDone(selectedUrl: URL, createdUrl: URL?, error: Error?) {
-        // thread
+    private func createOperationDone(selectedUrl: URL, result: Result<URL, Error>) {
         Task { @MainActor in
-            self.endProgress()
+            endProgress()
         }
 
-        guard let createdUrl else {
-            if let error {
+        switch result {
+        case let .success(createdUrl):
+            do {
+                let fm = FileManager.default
+                try fm.moveAndReplaceItem(at: createdUrl, to: selectedUrl)
+                try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
+                NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+            } catch {
                 Task {
                     await genericAlert(title: "Operation Failed", message: error.finalDescription)
                 }
             }
-            return
-        }
 
-        do {
-            let fm = FileManager.default
-            try fm.moveAndReplaceItem(at: createdUrl, to: selectedUrl)
-            try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
-            NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
-        } catch {
+        case let .failure(error):
             Task {
                 await genericAlert(title: "Operation Failed", message: error.finalDescription)
             }
@@ -675,10 +673,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     @MainActor
     private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedItem>) {
-        if let sortOption = Model.SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
+        if let sortOption = SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
             let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)
             sortMethod()
-        } else if let sortOption = Model.SortOption.options.first(where: { $0.descendingTitle == sender.title }) {
+        } else if let sortOption = SortOption.options.first(where: { $0.descendingTitle == sender.title }) {
             let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: false)
             sortMethod()
         }

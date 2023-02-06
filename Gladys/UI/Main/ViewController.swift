@@ -880,13 +880,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         updateDataSource(animated: false)
 
-        let descendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
+        let descendingMenu = SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil) { [weak self] _ in
                 guard let self else { return }
                 self.sortRequested(option, ascending: false, button: self.sortAscendingButton)
             }
         }
-        let ascendingMenu = Model.SortOption.options.map { option -> UIMenuElement in
+        let ascendingMenu = SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil) { [weak self] _ in
                 guard let self else { return }
                 self.sortRequested(option, ascending: true, button: self.sortAscendingButton)
@@ -1233,7 +1233,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         a.popoverPresentationController?.barButtonItem = sender
     }
 
-    private func sortRequested(_ option: Model.SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
+    private func sortRequested(_ option: SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
         let items = ignoreSelectedItems ? [] : selectedItems
         if !items.isEmpty, verifyRange {
             let a = UIAlertController(title: "Sort selected items?", message: "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?", preferredStyle: .actionSheet)

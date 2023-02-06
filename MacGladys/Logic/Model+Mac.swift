@@ -13,10 +13,10 @@ extension Model {
             case .startupComplete:
                 trimTemporaryDirectory()
 
-            case .saveComplete:
+            case let .saveComplete(dueToSyncFetch):
                 Task {
                     do {
-                        if try await shouldSync() {
+                        if try await shouldSync(dueToSyncFetch: dueToSyncFetch) {
                             try await CloudManager.syncAfterSaveIfNeeded()
                         }
                     } catch {

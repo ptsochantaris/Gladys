@@ -56,7 +56,7 @@ public enum LiteModel {
 
             let dataPath = url.appendingPathComponent(uuid)
             if let data = try? Data(contentsOf: dataPath) {
-                item = try? loadDecoder().decode(ArchivedItem.self, from: data)
+                item = try? loadDecoder.decode(ArchivedItem.self, from: data)
             }
         }
 
@@ -122,7 +122,7 @@ public enum LiteModel {
             }
 
             do {
-                let decoder = loadDecoder()
+                let decoder = loadDecoder
                 let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
                 d.withUnsafeBytes { pointer in
                     let uuids = pointer.bindMemory(to: uuid_t.self)
@@ -163,7 +163,7 @@ public enum LiteModel {
                     uuidData = Data()
                 }
 
-                let encoder = saveEncoder()
+                let encoder = saveEncoder
                 for item in items {
                     item.flags.remove(.isBeingCreatedBySync)
                     item.flags.remove(.needsSaving)

@@ -74,16 +74,16 @@ public let shortDateFormatter: DateFormatter = {
     return d
 }()
 
-public func loadDecoder() -> JSONDecoder {
+public let loadDecoder: JSONDecoder = {
     log("Creating new loading decoder")
     let decoder = JSONDecoder()
     decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
     return decoder
-}
+}()
 
-public func saveEncoder() -> JSONEncoder {
+public let saveEncoder: JSONEncoder = {
     log("Creating new saving encoder")
     let encoder = JSONEncoder()
     encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
     return encoder
-}
+}()

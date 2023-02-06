@@ -62,8 +62,7 @@ final actor PullState {
 
         if needsSave {
             Task { @MainActor in
-                Model.saveIsDueToSyncFetch = true
-                Model.save()
+                Model.save(dueToSyncFetch: true)
             }
 
         } else {

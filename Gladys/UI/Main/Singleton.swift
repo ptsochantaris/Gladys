@@ -37,7 +37,7 @@ final class Singleton {
         n.addObserver(self, selector: #selector(ingestStart), name: .IngestStart, object: nil)
         n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
 
-        Model.beginMonitoringChanges()
+        Coordination.beginMonitoringChanges()
         Task {
             await Model.detectExternalChanges()
         }
@@ -316,7 +316,7 @@ final class Singleton {
                         securityScoped = url.startAccessingSecurityScopedResource()
                     }
                     do {
-                        try Model.importArchive(from: url, removingOriginal: !options.openInPlace)
+                        try ImportExport().importArchive(from: url, removingOriginal: !options.openInPlace)
                     } catch {
                         Task {
                             await genericAlert(title: "Could not import data", message: error.finalDescription)

@@ -37,11 +37,13 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             Task { @MainActor in
                 self.showExportActivity(true)
             }
-            return Model.createArchive(using: filter) { url, error in
-                completion(url, false, error)
-                if let url {
+            return ImportExport().createArchive(using: filter) { result in
+                switch result {
+                case let .success(url):
+                    completion(url, false, nil)
                     try? FileManager.default.removeItem(at: url)
-                } else if let error {
+                case let .failure(error):
+                    completion(nil, false, error)
                     Task {
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
@@ -63,11 +65,13 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             Task { @MainActor in
                 self.showZipActivity(true)
             }
-            return Model.createZip(using: filter) { url, error in
-                completion(url, false, error)
-                if let url {
+            return ImportExport().createZip(using: filter) { result in
+                switch result {
+                case let .success(url):
+                    completion(url, false, nil)
                     try? FileManager.default.removeItem(at: url)
-                } else if let error {
+                case let .failure(error):
+                    completion(nil, false, error)
                     Task { @MainActor in
                         await genericAlert(title: "Error", message: error.localizedDescription)
                     }
@@ -297,8 +301,8 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         Task { @MainActor in
             self.showExportActivity(true)
         }
-        _ = Model.createArchive(using: filter) { url, error in
-            self.completeOperation(to: url, error: error)
+        _ = ImportExport().createArchive(using: filter) { result in
+            self.completeOperation(result: result)
             Task { @MainActor in
                 self.showExportActivity(false)
             }
@@ -313,7 +317,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     private func importArchive(from url: URL) {
         do {
-            try Model.importArchive(from: url, removingOriginal: true)
+            try ImportExport().importArchive(from: url, removingOriginal: true)
         } catch {
             Task { @MainActor in
                 await genericAlert(title: "Error", message: error.localizedDescription)
@@ -322,19 +326,19 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         updateUI()
     }
 
-    private func completeOperation(to url: URL?, error: Error?) {
-        if let error {
+    private func completeOperation(result: Result<URL, Error>) {
+        switch result {
+        case let .success(url):
             Task { @MainActor in
+                self.exportingFileURL = url
+                let p = UIDocumentPickerViewController(forExporting: [url])
+                p.delegate = self
+                self.present(p, animated: true)
+            }
+        case let .failure(error):
+            Task {
                 await genericAlert(title: "Error", message: error.localizedDescription)
             }
-            return
-        }
-        guard let url else { return }
-        Task { @MainActor in
-            self.exportingFileURL = url
-            let p = UIDocumentPickerViewController(forExporting: [url])
-            p.delegate = self
-            self.present(p, animated: true)
         }
     }
 
@@ -344,8 +348,8 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         Task { @MainActor in
             self.showZipActivity(true)
         }
-        _ = Model.createZip(using: filter) { url, error in
-            self.completeOperation(to: url, error: error)
+        _ = ImportExport().createZip(using: filter) { result in
+            self.completeOperation(result: result)
             Task { @MainActor in
                 self.showZipActivity(false)
             }
