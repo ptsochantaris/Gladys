@@ -139,7 +139,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         var urlEventBeforeLaunch = false
 
         @MainActor
-        @objc func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
+        @objc private func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
             _ = Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
         }
 
@@ -576,7 +576,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @objc func showPreferences(_ sender: Any?) {
+    @objc private func showPreferences(_ sender: Any?) {
         if let prefs = NSApp.orderedWindows.first(where: { $0.contentViewController is Preferences }) {
             prefs.makeKeyAndOrderFront(sender)
             return

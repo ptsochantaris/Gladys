@@ -7,7 +7,7 @@ import GladysCommon
 
 extension Model {
     #if os(macOS)
-        public nonisolated static var coordinator: NSFileCoordinator {
+        nonisolated static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: nil)
         }
     #else
@@ -25,7 +25,7 @@ extension Model {
             }
         }
 
-        public nonisolated static var coordinator: NSFileCoordinator {
+        nonisolated static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: filePresenter)
         }
 

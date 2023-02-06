@@ -29,7 +29,6 @@ extension UIView {
 
 extension Model {
     private static var saveOverlap = 0
-    private static var registeredForBackground = false
 
     private static var watchDelegate: WatchDelegate?
 
@@ -44,14 +43,28 @@ extension Model {
                 if saveOverlap > 0 {
                     return
                 }
-                saveDone()
+                
+                if let watchDelegate {
+                    Task {
+                        await watchDelegate.updateContext()
+                    }
+                }
+
+                Task {
+                    do {
+                        if try await shouldSync() {
+                            try await CloudManager.syncAfterSaveIfNeeded()
+                        }
+                    } catch {
+                        log("Error in sync after save: \(error.finalDescription)")
+                    }
+                }
+
+                BackgroundTask.unregisterForBackground()
 
             case .willSave:
                 saveOverlap += 1
-                if !registeredForBackground {
-                    registeredForBackground = true
-                    BackgroundTask.registerForBackground()
-                }
+                BackgroundTask.registerForBackground()
 
             case .startupComplete:
                 trimTemporaryDirectory()
@@ -59,29 +72,6 @@ extension Model {
                     watchDelegate = WatchDelegate()
                 }
             }
-        }
-    }
-
-    private static func saveDone() {
-        if let wd = watchDelegate {
-            Task {
-                await wd.updateContext()
-            }
-        }
-
-        Task {
-            do {
-                if try await resyncIfNeeded() {
-                    try await CloudManager.syncAfterSaveIfNeeded()
-                }
-            } catch {
-                log("Error in sync after save: \(error.finalDescription)")
-            }
-        }
-
-        if registeredForBackground {
-            registeredForBackground = false
-            BackgroundTask.unregisterForBackground()
         }
     }
 

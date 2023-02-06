@@ -288,7 +288,7 @@ public enum Model {
         delete(items: itemsRelatedToZone)
     }
 
-    public static func resyncIfNeeded() async throws -> Bool {
+    public static func shouldSync() async throws -> Bool {
         if await CloudManager.syncDirty {
             log("A sync had been requested while syncing, will attempt another sync")
             return true
@@ -685,7 +685,7 @@ public enum Model {
         return p
     }
 
-    static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
+    private static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default

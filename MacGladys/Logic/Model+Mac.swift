@@ -16,7 +16,7 @@ extension Model {
             case .saveComplete:
                 Task {
                     do {
-                        if try await resyncIfNeeded() {
+                        if try await shouldSync() {
                             try await CloudManager.syncAfterSaveIfNeeded()
                         }
                     } catch {

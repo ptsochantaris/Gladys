@@ -757,7 +757,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private var labelController: LabelSelectionViewController?
-    @objc func showLabels(_: Any?) {
+    @objc private func showLabels(_: Any?) {
         if let l = labelController {
             labelController = nil
             l.dismiss(nil)
@@ -842,7 +842,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-    @objc func paste(_: Any?) {
+    @objc private func paste(_: Any?) {
         _ = Model.addItems(from: NSPasteboard.general, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filter)
     }
 
@@ -913,7 +913,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-    @objc func editNotes(_: Any?) {
+    @objc private func editNotes(_: Any?) {
         performSegue(withIdentifier: "editNotes", sender: nil)
     }
 

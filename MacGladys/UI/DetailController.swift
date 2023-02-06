@@ -109,7 +109,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc func checkForChanges() {
+    @objc private func checkForChanges() {
         if DropStore.item(uuid: item.uuid) == nil {
             view.window?.close()
         } else if lastUpdate != item.updatedAt || lastShareMode != item.shareMode {
@@ -421,25 +421,25 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc func copy(_: Any?) {
+    @objc private func copy(_: Any?) {
         if let i = selectedItem {
             copy(item: i)
         }
     }
 
-    @objc func open(_: Any?) {
+    @objc private func open(_: Any?) {
         if let i = selectedItem {
             i.tryOpen(from: self)
         }
     }
 
-    @objc func delete(_: Any?) {
+    @objc private func delete(_: Any?) {
         if let i = components.selectionIndexes.first {
             delete(at: i)
         }
     }
 
-    @objc func shareSelected(_: Any?) {
+    @objc private func shareSelected(_: Any?) {
         guard let i = components.selectionIndexes.first,
               let cell = components.item(at: IndexPath(item: i, section: 0)),
               let itemToShare = cell.representedObject as? Component
@@ -454,7 +454,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc func editCurrent(_ sender: Any?) {
+    @objc private func editCurrent(_ sender: Any?) {
         guard let typeItem = selectedItem else { return }
         guard let urlString = typeItem.encodedUrl?.absoluteString else { return }
 
@@ -489,13 +489,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc func revealCurrent(_: Any?) {
+    @objc private func revealCurrent(_: Any?) {
         if let typeItem = selectedItem {
             NSWorkspace.shared.activateFileViewerSelecting([typeItem.bytesPath])
         }
     }
 
-    @objc func archivePage(_: Any?) {
+    @objc private func archivePage(_: Any?) {
         guard let i = components.selectionIndexes.first else { return }
         let component = item.components[i]
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
@@ -516,7 +516,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc func archiveThumbnail(_: Any?) {
+    @objc private func archiveThumbnail(_: Any?) {
         guard let i = components.selectionIndexes.first else { return }
         let component = item.components[i]
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }

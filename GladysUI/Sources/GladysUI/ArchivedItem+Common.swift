@@ -5,7 +5,7 @@ import GladysCommon
 #endif
 
 public extension ArchivedItem {
-    internal func removeIntents() {
+    private func removeIntents() {
         #if os(iOS)
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
             for item in components {
@@ -23,7 +23,7 @@ public extension ArchivedItem {
         components.contains { $0.canPreview }
     }
 
-    internal func removeFromCloudkit() {
+    func removeFromCloudkit() {
         cloudKitRecord = nil
         cloudKitShareRecord = nil
         for typeItem in components {
@@ -31,14 +31,14 @@ public extension ArchivedItem {
         }
     }
 
-    internal var shareOwnerName: String? {
+    private var shareOwnerName: String? {
         guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
         let f = PersonNameComponentsFormatter()
         return f.string(from: p)
     }
 
     @MainActor
-    internal func delete() {
+    func delete() {
         if shouldDisplayLoading {
             cancelIngest()
         }

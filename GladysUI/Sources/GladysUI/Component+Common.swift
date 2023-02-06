@@ -12,7 +12,7 @@ public extension Component {
         diskSizeFormatter.string(fromByteCount: sizeInBytes)
     }
 
-    internal func removeIntents() {
+    func removeIntents() {
         #if os(iOS)
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
         #endif
