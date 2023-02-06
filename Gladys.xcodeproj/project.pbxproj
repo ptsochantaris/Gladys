@@ -1994,7 +1994,6 @@
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) MAC";
 			};
 			name = Debug;
 		};
@@ -2023,7 +2022,6 @@
 				PRODUCT_NAME = Gladys;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "MAC $(inherited)";
 			};
 			name = Release;
 		};
@@ -2270,7 +2268,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) INDEXER";
 			};
 			name = Debug;
 		};
@@ -2289,7 +2286,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ACTIONEXTENSION";
 			};
 			name = Debug;
 		};
@@ -2392,7 +2388,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Index;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "INDEXER $(inherited)";
 			};
 			name = Release;
 		};
@@ -2411,7 +2406,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Action;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "ACTIONEXTENSION $(inherited)";
 			};
 			name = Release;
 		};
@@ -2429,7 +2423,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TODAYEXTENSION";
 			};
 			name = Debug;
 		};
@@ -2447,7 +2440,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TODAYEXTENSION $(inherited)";
 			};
 			name = Release;
 		};
@@ -2509,7 +2501,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
 				PRODUCT_NAME = Keyhive;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG KEYBOARDEXTENSION";
 			};
 			name = Debug;
 		};
@@ -2528,7 +2519,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
 				PRODUCT_NAME = Keyhive;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = KEYBOARDEXTENSION;
 			};
 			name = Release;
 		};
@@ -2548,7 +2538,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) INTENTSEXTENSION";
 			};
 			name = Debug;
 		};
@@ -2567,7 +2556,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Intents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "INTENTSEXTENSION $(inherited)";
 			};
 			name = Release;
 		};

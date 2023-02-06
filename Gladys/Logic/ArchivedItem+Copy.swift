@@ -1,8 +1,5 @@
 import GladysCommon
 import UIKit
-#if MAINAPP
-    import Intents
-#endif
 
 extension ArchivedItem {
     private var itemProvider: NSItemProvider {
@@ -15,13 +12,11 @@ extension ArchivedItem {
         return p
     }
 
-    #if !INTENTSEXTENSION
-        var dragItem: UIDragItem {
-            let i = UIDragItem(itemProvider: itemProvider)
-            i.localObject = self
-            return i
-        }
-    #endif
+    var dragItem: UIDragItem {
+        let i = UIDragItem(itemProvider: itemProvider)
+        i.localObject = self
+        return i
+    }
 
     func copyToPasteboard(donateShortcut: Bool = true) {
         UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
@@ -29,8 +24,12 @@ extension ArchivedItem {
             donateCopyIntent()
         }
     }
+}
 
-    #if MAINAPP
+#if MAINAPP
+    import Intents
+
+    extension ArchivedItem {
         var copyIntent: CopyItemIntent {
             let intent = CopyItemIntent()
             let trimmed = displayTitleOrUuid.truncateWithEllipses(limit: 24)
@@ -38,10 +37,8 @@ extension ArchivedItem {
             intent.item = INObject(identifier: uuid.uuidString, display: trimmed)
             return intent
         }
-    #endif
 
-    func donateCopyIntent() {
-        #if MAINAPP
+        func donateCopyIntent() {
             if #available(iOS 16, *) {
                 log("Will not donate SiriKit copy shortcut")
             } else {
@@ -55,6 +52,10 @@ extension ArchivedItem {
                     }
                 }
             }
-        #endif
+        }
     }
-}
+#else
+    extension ArchivedItem {
+        func donateCopyIntent() {}
+    }
+#endif
