@@ -1,4 +1,3 @@
-import AsyncAlgorithms
 import CloudKit
 import CoreSpotlight
 import Foundation
@@ -20,9 +19,6 @@ public enum Model {
     public static var brokenMode = false
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
-
-    private static var saveRequestChannel = AsyncChannel<(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>, dueToSyncFetch: Bool)>()
-    private static var commitRequestChannel = AsyncChannel<ArchivedItem>()
 
     static func reset() {
         DropStore.reset()
@@ -180,7 +176,9 @@ public enum Model {
         if let previousIndex = DropStore.firstIndexOfItem(with: item.uuid) {
             let newItem = ArchivedItem(cloning: item)
             DropStore.insert(drop: newItem, at: previousIndex + 1)
-            save()
+            Task {
+                await save()
+            }
         }
     }
 
@@ -188,7 +186,9 @@ public enum Model {
         for item in items {
             item.delete()
         }
-        save()
+        Task {
+            await save()
+        }
     }
 
     public static func lockUnlockedItems() {
@@ -232,76 +232,64 @@ public enum Model {
                 PersistedOptions.lastRanVersion = currentBuild
             }
         }
-
-        Task { @MainActor in
-            for await (saveableItems, uuidsToEncode, dueToSyncFetch) in saveRequestChannel {
-                if brokenMode {
-                    log("Ignoring save, model is broken, app needs restart.")
-                } else {
-                    await Task.detached(priority: .background) {
-                        do {
-                            try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
-                        } catch {
-                            log("Saving Error: \(error.finalDescription)")
-                        }
-                    }.value
-                }
-                await ComponentLookup.shared.cleanup()
-                trimTemporaryDirectory()
-                stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
-            }
-        }
-
-        Task { @MainActor in
-            for await itemToSave in commitRequestChannel where !(itemToSave.needsDeletion || brokenMode) {
-                let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
-                indexDelegate.reIndex(items: [itemToSave.searchableItem], in: CSSearchableIndex.default())
-                await Task.detached(priority: .background) {
-                    do {
-                        _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [itemToSave.uuid])
-                        log("Ingest completed for items (\(itemToSave.uuid)) and committed to disk")
-                    } catch {
-                        log("Warning: Error while committing item to disk: (\(error.finalDescription))")
-                    }
-                }.value
-            }
-        }
     }
 
     //////////////////////// Saving
+    
+    private static let storageGatekeeper = GateKeeper(entries: 1)
 
-    public static func save(dueToSyncFetch: Bool = false) {
+    public static func save(dueToSyncFetch: Bool = false) async {
+        await storageGatekeeper.waitForGate()
+        defer {
+            storageGatekeeper.signalGate()
+        }
+
         stateHandler?(.willSave)
-
+        
         let index = CSSearchableIndex.default()
-
+        
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
-        index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString)) { error in
-            if let error {
+        if !removedUuids.isEmpty {
+            do {
+                try await index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString))
+            } catch {
                 log("Error while deleting search indexes \(error.localizedDescription)")
             }
         }
-
+        
         DropStore.removeDeletableDrops()
-
+        
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
             let searchableItems = itemsToWrite.map(\.searchableItem)
             indexDelegate.reIndex(items: searchableItems, in: index)
         }
-
+        
         let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
             i.flags.remove(.isBeingCreatedBySync)
             i.flags.remove(.needsSaving)
             return i.uuid
         })
-
+        
         sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-        Task {
-            await saveRequestChannel.send((allItems: saveableItems, dirtyUuids: uuidsToEncode, dueToSyncFetch))
+                
+        if brokenMode {
+            log("Ignoring save, model is broken, app needs restart.")
+        } else {
+            await Task.detached(priority: .background) {
+                do {
+                    try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
+                } catch {
+                    log("Saving Error: \(error.finalDescription)")
+                }
+            }.value
         }
+        
+        await ComponentLookup.shared.cleanup()
+        trimTemporaryDirectory()
+        stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
     }
 
     public static func commitItem(item: ArchivedItem) {
@@ -314,7 +302,23 @@ public enum Model {
         }
 
         Task {
-            await commitRequestChannel.send(item)
+            await storageGatekeeper.waitForGate()
+            defer {
+                storageGatekeeper.signalGate()
+            }
+            if item.needsDeletion || brokenMode {
+                return
+            }
+            let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
+            indexDelegate.reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
+            await Task.detached(priority: .background) {
+                do {
+                    _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [item.uuid])
+                    log("Ingest completed for items (\(item.uuid)) and committed to disk")
+                } catch {
+                    log("Warning: Error while committing item to disk: (\(error.finalDescription))")
+                }
+            }.value
         }
     }
 
@@ -404,7 +408,9 @@ public enum Model {
     public static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map(\.uuid))
         DropStore.promoteDropsToTop(uuids: uuids)
-        save()
+        Task {
+            await save()
+        }
     }
 
     public static func trimTemporaryDirectory() {

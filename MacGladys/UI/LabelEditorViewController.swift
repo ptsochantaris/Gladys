@@ -135,7 +135,9 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             }
         }
         if hadChanges {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
     }
 }

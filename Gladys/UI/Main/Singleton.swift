@@ -92,7 +92,9 @@ final class Singleton {
     @objc private func ingestComplete(_ notification: Notification) {
         guard let item = notification.object as? ArchivedItem else { return }
         if DropStore.doneIngesting {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         } else {
             Model.commitItem(item: item)
         }

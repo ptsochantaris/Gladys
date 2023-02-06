@@ -570,7 +570,9 @@ final class ArchivedItemCell: UICollectionViewCell {
             if let item = archivedDropItem, let text = notesTextView?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, item.note != text {
                 item.note = text
                 item.markUpdated()
-                Model.save()
+                Task {
+                    await Model.save()
+                }
             }
 
             if let n = notesTextView {

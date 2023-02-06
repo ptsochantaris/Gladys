@@ -101,7 +101,9 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
         delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     /////////////////////////////////////

@@ -103,6 +103,8 @@ final class TextEditController: GladysViewController, UITextViewDelegate {
     private func saveDone() {
         typeEntry.markComponentUpdated()
         item.markUpdated()
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 }

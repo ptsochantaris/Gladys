@@ -158,7 +158,9 @@ public final class ImportExport {
             if removingOriginal {
                 try? fm.removeItem(at: url)
             }
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
 
         let finalPath = url.appendingPathComponent("items.json")

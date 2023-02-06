@@ -40,7 +40,9 @@ final class NotesEditor: NSViewController {
             }
         }
         if changes {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
         dismiss(nil)
     }

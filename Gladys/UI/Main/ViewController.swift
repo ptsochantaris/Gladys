@@ -336,7 +336,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             focusInitialAccessibilityElement()
             updateEmptyView()
         case .save:
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
 
         collection.isAccessibilityElement = false
@@ -1250,7 +1252,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
             sortMethod()
             _ = filter.update(signalUpdate: .none)
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
     }
 
@@ -1458,7 +1462,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
         item.markUpdated()
         item.postModified()
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     func createShortcutActions(for item: ArchivedItem, mainView: Bool, indexPath: IndexPath) -> UIMenu? {

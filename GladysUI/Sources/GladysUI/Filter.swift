@@ -589,7 +589,9 @@ public final class Filter {
         }
 
         sendNotification(name: .LabelSelectionChanged, object: nil)
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     public func removeLabel(_ label: String) {
@@ -601,6 +603,8 @@ public final class Filter {
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
         sendNotification(name: .LabelSelectionChanged, object: nil)
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 }

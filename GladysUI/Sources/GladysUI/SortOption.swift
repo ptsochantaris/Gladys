@@ -105,7 +105,9 @@ public enum SortOption {
                 let item = actualItemsToSort[pos]
                 DropStore.replace(drop: item, at: itemIndex)
             }
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
     }
 

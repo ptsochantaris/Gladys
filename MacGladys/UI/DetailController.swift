@@ -282,7 +282,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
             return
         }
         item.markUpdated()
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     private func done(notesCheck: Bool = false, titleCheck: Bool = false) {

@@ -9,7 +9,6 @@ import GladysCommon
 extension CloudManager {
     static let privateDatabaseSubscriptionId = "private-changes"
     static let sharedDatabaseSubscriptionId = "shared-changes"
-    private static var syncDirty = false
 
     nonisolated static func submit(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
@@ -690,39 +689,36 @@ extension CloudManager {
 
     public static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
     public static var syncAttempDone: (() async -> Void)?
+    private static let requestGateKeeper = GateKeeper(entries: 1)
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
+        await requestGateKeeper.waitForGate()
+        defer {
+            requestGateKeeper.signalGate()
+        }
+        
         if !syncSwitchedOn {
             return
         }
-
-        if syncing, !force {
-            log("Sync already running, but need another one. Marked to retry at the end of this.")
-            syncDirty = true
-            return
-        }
-
+                
         if let shouldSyncAttempProceed, await shouldSyncAttempProceed(force, overridingUserPreference) == false {
             return
         }
+        
         defer {
             Task {
                 await syncAttempDone?()
             }
         }
-
+        
         syncing = true
-        syncDirty = false
-
+        
         do {
             try await sendUpdatesUp()
             try await PullState().fetchDatabaseChanges(scope: scope)
-            if syncDirty {
-                try await attemptSync(scope: nil, force: true, overridingUserPreference: overridingUserPreference)
-            } else {
-                lastSyncCompletion = Date()
-                syncing = false
-            }
+            lastSyncCompletion = Date()
+            syncing = false
+
         } catch {
             log("Sync failure: \(error.finalDescription)")
             syncing = false

@@ -106,7 +106,9 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
         delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)
 
-        Model.save()
+        Task {
+            await Model.save()
+        }
     }
 
     private func setLabelText() {

@@ -695,7 +695,9 @@ final class DetailController: GladysViewController,
 
     private func makeIndexAndSaveItem() {
         item.markUpdated()
-        Model.save()
+        Task {
+            await Model.save()
+        }
         userActivity?.needsSave = true
     }
 

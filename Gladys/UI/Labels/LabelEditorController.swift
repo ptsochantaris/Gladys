@@ -186,7 +186,9 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             }
         }
         if hadChanges {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
         endCallback?(hadChanges)
     }

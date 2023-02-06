@@ -239,7 +239,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     private func itemIngested(_ item: ArchivedItem) {
         if DropStore.doneIngesting {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         } else {
             Model.commitItem(item: item)
         }
@@ -488,7 +490,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 DropStore.insert(drop: sourceItem, at: destinationIndex)
                 collection.deselectAll(nil)
             }
-            Model.save()
+            Task {
+                await Model.save()
+            }
             return true
         } else {
             let p = draggingInfo.draggingPasteboard
@@ -631,7 +635,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             if successCount == 0 {
                 removeLockWithPassword(items: items, label: label, plural: plural)
             } else {
-                Model.save()
+                Task {
+                    await Model.save()
+                }
             }
         }
     }
@@ -691,7 +697,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                     item.lockHint = hint.stringValue.isEmpty ? nil : hint.stringValue
                     item.markUpdated()
                 }
-                Model.save()
+                Task {
+                    await Model.save()
+                }
             } else {
                 createLock(sender)
             }
@@ -811,7 +819,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             changed = true
         }
         if changed {
-            Model.save()
+            Task {
+                await Model.save()
+            }
         }
     }
 

@@ -61,8 +61,8 @@ final actor PullState {
             || (!updatedZoneTokens.isEmpty && updatedSequence)
 
         if needsSave {
-            Task { @MainActor in
-                Model.save(dueToSyncFetch: true)
+            Task {
+                await Model.save(dueToSyncFetch: true)
             }
 
         } else {
