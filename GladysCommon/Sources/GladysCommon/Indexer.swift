@@ -1,4 +1,4 @@
-#if canImport(CoreSpotlight)
+#if !os(watchOS)
     import CoreSpotlight
     import Foundation
 

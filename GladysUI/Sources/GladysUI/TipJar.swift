@@ -1,4 +1,5 @@
 import Foundation
+import GladysCommon
 import StoreKit
 
 public extension SKProduct {
@@ -78,7 +79,7 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
             await genericAlert(title: "Thank you for supporting Gladys!",
                                message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
                                windowOverride: aboutWindow)
-        #elseif os(iOS)
+        #else
             await genericAlert(title: "Thank you for supporting Gladys!",
                                message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.")
         #endif
@@ -93,7 +94,7 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
             await genericAlert(title: "There was an error completing this operation",
                                message: error?.localizedDescription,
                                windowOverride: aboutWindow)
-        #elseif os(iOS)
+        #else
             await genericAlert(title: "There was an error completing this operation",
                                message: error?.localizedDescription)
         #endif

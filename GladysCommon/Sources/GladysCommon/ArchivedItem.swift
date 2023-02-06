@@ -7,14 +7,10 @@ import Foundation
 #endif
 import NaturalLanguage
 import UniformTypeIdentifiers
-#if canImport(Speech)
-    import Speech
-#endif
-#if canImport(Vision)
-    import Vision
-#endif
-#if canImport(CoreSpotlight)
+#if !os(watchOS)
     import CoreSpotlight
+    import Speech
+    import Vision
 #endif
 
 public final class ArchivedItem: Codable {
@@ -595,7 +591,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         return nil
     }
 
-    #if canImport(Vision) && canImport(Speech)
+    #if !os(watchOS)
         private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) async {
             let finalTitle = displayText.0
             var transcribedText: String?
@@ -849,7 +845,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             }
         }
 
-        #if canImport(Vision) && canImport(Speech)
+        #if !os(watchOS)
             let autoText = PersistedOptions.autoGenerateLabelsFromText
             let autoImage = PersistedOptions.autoGenerateLabelsFromImage
             let ocrImage = PersistedOptions.autoGenerateTextFromImage
@@ -861,7 +857,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         await componentIngestDone()
     }
 
-    #if canImport(CoreSpotlight)
+    #if !os(watchOS)
         public var searchAttributes: CSSearchableItemAttributeSet {
             let attributes = CSSearchableItemAttributeSet(itemContentType: "build.bru.Gladys.archivedItem")
             if isLocked {

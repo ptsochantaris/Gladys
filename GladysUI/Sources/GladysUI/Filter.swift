@@ -1,7 +1,6 @@
 import CoreSpotlight
 import Foundation
-#if os(macOS)
-#else
+#if os(iOS)
     import UIKit
 #endif
 import GladysCommon

@@ -1,5 +1,6 @@
 import AppKit
 import GladysCommon
+import GladysUI
 import StoreKit
 
 final class AboutViewController: NSViewController {

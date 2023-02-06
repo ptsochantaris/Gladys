@@ -1,3 +1,5 @@
+import GladysCommon
+
 #if os(macOS)
     import Cocoa
 
@@ -12,7 +14,7 @@
         _ = a.runModal()
     }
 
-#elseif os(iOS)
+#else
     import UIKit
 
     public extension UIWindow {

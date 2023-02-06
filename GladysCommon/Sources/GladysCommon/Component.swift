@@ -1,6 +1,6 @@
-#if canImport(Cocoa)
+#if os(macOS)
     import Cocoa
-#elseif canImport(UIKit)
+#else
     import UIKit
 #endif
 import AVFoundation
@@ -753,6 +753,7 @@ public final class Component: Codable, Equatable {
                 }
             }
         }
+
     #else
         public var componentIcon: UIImage? {
             get {
@@ -1348,6 +1349,7 @@ public final class Component: Codable, Equatable {
                 }
             }
         }
+
     #else
         func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
             if storeBytes {

@@ -1,8 +1,7 @@
 import Contacts
 import Foundation
 import MapKit
-#if os(macOS)
-#else
+#if os(iOS)
     import Intents
     import QuickLook
 #endif

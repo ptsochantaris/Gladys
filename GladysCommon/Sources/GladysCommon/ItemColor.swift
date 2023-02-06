@@ -42,7 +42,7 @@ public enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    #if os(macOS) || os(iOS)
+    #if !os(watchOS)
         public var img: IMAGE? {
             switch self {
             case .none:

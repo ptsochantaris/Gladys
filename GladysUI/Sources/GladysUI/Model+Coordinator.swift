@@ -1,15 +1,16 @@
-import Foundation
-#if canImport(Cocoa)
+#if os(macOS)
     import Cocoa
-#endif
-#if canImport(UIKit)
+#else
     import UIKit
 #endif
 import GladysCommon
 
 extension Model {
-    #if os(iOS)
-
+    #if os(macOS)
+        public nonisolated static var coordinator: NSFileCoordinator {
+            NSFileCoordinator(filePresenter: nil)
+        }
+    #else
         private final class ModelFilePresenter: NSObject, NSFilePresenter {
             let presentedItemURL: URL? = itemsDirectoryUrl
 
@@ -51,11 +52,6 @@ extension Model {
 
         private static func backgrounded() {
             NSFileCoordinator.removeFilePresenter(filePresenter)
-        }
-
-    #elseif os(macOS)
-        public nonisolated static var coordinator: NSFileCoordinator {
-            NSFileCoordinator(filePresenter: nil)
         }
     #endif
 }

@@ -69,7 +69,7 @@ public final class Images {
         }
     }
 
-    #if os(iOS) || os(macOS)
+    #if !os(watchOS)
         public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
             guard let coordinate = options.coordinate else {
                 throw GladysError.noData.error
