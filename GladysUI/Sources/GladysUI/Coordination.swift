@@ -12,7 +12,7 @@ import Foundation
             func presentedItemDidChange() {
                 Task { @MainActor in
                     if DropStore.doneIngesting {
-                        Model.reloadDataIfNeeded()
+                        await Model.reloadDataIfNeeded()
                     }
                 }
             }
@@ -30,7 +30,7 @@ import Foundation
                 assert(Thread.isMainThread)
                 for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(filePresenter)
-                    Model.reloadDataIfNeeded()
+                    await Model.reloadDataIfNeeded()
                 }
             }
             Task {

@@ -8,24 +8,35 @@ public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
 
+public var brokenMode = false
+
+private var dataFileLastModified = Date.distantPast
+
 @MainActor
 public enum Model {
     public enum State {
         case startupComplete, willSave, saveComplete(dueToSyncFetch: Bool), migrated
     }
 
-    private static var dataFileLastModified = Date.distantPast
-    private static var isStarted = false
-    public static var brokenMode = false
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
+
+    private static let storageGatekeeper = GateKeeper(entries: 1)
 
     static func reset() {
         DropStore.reset()
         dataFileLastModified = .distantPast
     }
 
-    public static func reloadDataIfNeeded(maximumItems: Int? = nil) {
+    public static func reloadDataIfNeeded() async {
+        await storageGatekeeper.waitForGate()
+        await Task.detached {
+            _reloadDataIfNeeded()
+        }.value
+        storageGatekeeper.signalGate()
+    }
+    
+    private nonisolated static func _reloadDataIfNeeded() {
         if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
             return
@@ -33,7 +44,87 @@ public enum Model {
 
         var coordinationError: NSError?
         var loadingError: NSError?
-        var didLoad = false
+
+        // withoutChanges because we only signal the provider after we have saved
+        Coordination.coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
+
+            if !FileManager.default.fileExists(atPath: url.path) {
+                Task {
+                    await DropStore.reset()
+                }
+                log("Starting fresh store")
+                return
+            }
+
+            do {
+                var shouldLoad = true
+                if let dataModified = modificationDate(for: url) {
+                    if dataModified == dataFileLastModified {
+                        shouldLoad = false
+                    } else {
+                        dataFileLastModified = dataModified
+                    }
+                }
+                if shouldLoad {
+                    log("Needed to reload data, new file date: \(dataFileLastModified)")
+
+                    let start = Date()
+                    let result = try dataLoad(from: url)
+                    Task {
+                        await DropStore.initialize(with: result)
+                        await sendNotification(name: .ModelDataUpdated, object: nil)
+                    }
+                    log("Load time: \(-start.timeIntervalSinceNow) seconds")
+                } else {
+                    log("No need to reload data")
+                }
+            } catch {
+                log("Loading Error: \(error)")
+                loadingError = error as NSError
+            }
+        }
+
+        if brokenMode {
+            log("Model in broken state, further loading or error processing aborted")
+            return
+        }
+
+        if let loadingError {
+            Task {
+                await handleLoadingError(loadingError)
+            }
+
+        } else if let coordinationError {
+            Task {
+                await handleCoordinationError(coordinationError)
+            }
+        }
+    }
+    
+    private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
+        let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
+        let itemCount = d.count / 16
+
+        let loader = LoaderBuffer(capacity: itemCount)
+        d.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) in
+            let decoder = loadDecoder
+            let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+            DispatchQueue.concurrentPerform(iterations: itemCount) { count in
+                let us = uuidSequence[count]
+                let u = UUID(uuid: us)
+                let dataPath = url.appendingPathComponent(u.uuidString)
+                if let data = try? Data(contentsOf: dataPath),
+                   let item = try? decoder.decode(ArchivedItem.self, from: data) {
+                    loader.set(item, at: count)
+                }
+            }
+        }
+        return loader.result()
+    }
+
+    private static func loadInitialData() {
+        var coordinationError: NSError?
+        var loadingError: NSError?
 
         // withoutChanges because we only signal the provider after we have saved
         Coordination.coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
@@ -55,34 +146,9 @@ public enum Model {
                 }
                 if shouldLoad {
                     log("Needed to reload data, new file date: \(dataFileLastModified)")
-                    didLoad = true
-
                     let start = Date()
-
-                    let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
-                    let totalItemsInStore = d.count / 16
-                    let itemCount: Int
-                    if let maximumItems {
-                        itemCount = min(maximumItems, totalItemsInStore)
-                    } else {
-                        itemCount = totalItemsInStore
-                    }
-
-                    let loader = LoaderBuffer(capacity: itemCount)
-                    d.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) in
-                        let decoder = loadDecoder
-                        let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
-                        DispatchQueue.concurrentPerform(iterations: itemCount) { count in
-                            let us = uuidSequence[count]
-                            let u = UUID(uuid: us)
-                            let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath),
-                               let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                                loader.set(item, at: count)
-                            }
-                        }
-                    }
-                    DropStore.initialize(with: loader.result())
+                    let result = try dataLoad(from: url)
+                    DropStore.initialize(with: result)
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
                     log("No need to reload data")
@@ -93,58 +159,41 @@ public enum Model {
             }
         }
 
-        if brokenMode {
-            log("Model in broken state, further loading or error processing aborted")
-            return
-        }
-
         if let loadingError {
-            brokenMode = true
-            log("Error in loading: \(loadingError)")
-            let finalError: NSError
-            if let underlyingError = loadingError.userInfo[NSUnderlyingErrorKey] as? NSError {
-                finalError = underlyingError
-            } else {
-                finalError = loadingError
-            }
-            Task {
-                await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                   message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(loadingError.domain): \(loadingError.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                   buttonTitle: "Quit")
-                abort()
-            }
+            handleLoadingError(loadingError)
 
         } else if let coordinationError {
-            brokenMode = true
-            log("Error in file coordinator: \(coordinationError)")
-            let finalError: NSError
-            if let underlyingError = coordinationError.userInfo[NSUnderlyingErrorKey] as? NSError {
-                finalError = underlyingError
-            } else {
-                finalError = coordinationError
-            }
-            Task {
-                await genericAlert(title: "Loading Error (code \(finalError.code))",
-                                   message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(coordinationError.domain): \(coordinationError.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                                   buttonTitle: "Quit")
-                abort()
-            }
-        }
-
-        if !brokenMode {
-            if isStarted {
-                if didLoad {
-                    Task {
-                        sendNotification(name: .ModelDataUpdated, object: nil)
-                    }
-                }
-            } else {
-                isStarted = true
-                stateHandler?(.startupComplete)
-            }
+            handleCoordinationError(coordinationError)
+            
+        } else {
+            stateHandler?(.startupComplete)
         }
     }
-
+    
+    private static func handleLoadingError(_ error: NSError) {
+        brokenMode = true
+        log("Error while loading: \(error)")
+        let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
+        Task {
+            await genericAlert(title: "Loading Error (code \(finalError.code))",
+                               message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(error.domain): \(error.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                               buttonTitle: "Quit")
+            abort()
+        }
+    }
+    
+    private static func handleCoordinationError(_ error: NSError) {
+        brokenMode = true
+        log("Error in file coordinator: \(error)")
+        let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
+        Task {
+            await genericAlert(title: "Loading Error (code \(finalError.code))",
+                               message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(error.domain): \(error.localizedDescription)\n\nIf this error persists, please report it to the developer.",
+                               buttonTitle: "Quit")
+            abort()
+        }
+    }
+    
     public static func resetEverything() {
         let toDelete = DropStore.allDrops.filter { !$0.isImportedShare }
         delete(items: toDelete)
@@ -216,7 +265,7 @@ public enum Model {
     private static let indexDelegate = Indexer()
 
     public static func setup() {
-        reloadDataIfNeeded()
+        loadInitialData()
         CSSearchableIndex.default().indexDelegate = indexDelegate
 
         // migrate if needed
@@ -236,8 +285,6 @@ public enum Model {
 
     //////////////////////// Saving
     
-    private static let storageGatekeeper = GateKeeper(entries: 1)
-
     public static func save(dueToSyncFetch: Bool = false) async {
         await storageGatekeeper.waitForGate()
         defer {

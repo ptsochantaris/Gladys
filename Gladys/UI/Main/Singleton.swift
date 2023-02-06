@@ -11,8 +11,6 @@ final class Singleton {
 
     func setup() {
         Model.registerStateHandler()
-
-        Model.setup()
         Model.badgeHandler = {
             if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
                 log("Updating app badge to show item count (\(count))")
@@ -22,6 +20,7 @@ final class Singleton {
                 UIApplication.shared.applicationIconBadgeNumber = 0
             }
         }
+        Model.setup()
 
         CallbackSupport.setupCallbackSupport()
 
@@ -271,7 +270,7 @@ final class Singleton {
 
     private func replaceRootVc(in scene: UIWindowScene, with vc: UIViewController?) {
         guard let vc else { return }
-        if !Model.brokenMode {
+        if !brokenMode {
             scene.windows.first?.rootViewController = vc
         }
     }
