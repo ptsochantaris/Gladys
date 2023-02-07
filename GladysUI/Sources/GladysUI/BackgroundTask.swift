@@ -1,8 +1,9 @@
+#if os(iOS)
 import GladysCommon
 import UIKit
 
 @MainActor
-enum BackgroundTask {
+public enum BackgroundTask {
     private static var bgTask = UIBackgroundTaskIdentifier.invalid
 
     private static func endTask() {
@@ -20,7 +21,7 @@ enum BackgroundTask {
         endTask()
     }
 
-    static func appBackgrounded() {
+    public static func appBackgrounded() {
         appInBackground = true
         if globalBackgroundCount != 0, bgTask == .invalid {
             log("BG Task starting")
@@ -30,13 +31,13 @@ enum BackgroundTask {
         }
     }
 
-    static func appForegrounded() {
+    public static func appForegrounded() {
         endTimer.abort()
         appInBackground = false
         endTask()
     }
 
-    static func registerForBackground() {
+    public static func registerForBackground() {
         endTimer.abort()
         let count = globalBackgroundCount
         globalBackgroundCount = count + 1
@@ -45,10 +46,17 @@ enum BackgroundTask {
         }
     }
 
-    static func unregisterForBackground() {
+    public static func unregisterForBackground() {
         globalBackgroundCount -= 1
         if globalBackgroundCount == 0, bgTask != .invalid {
             endTimer.push()
         }
     }
 }
+#elseif os(macOS)
+@MainActor
+public enum BackgroundTask {
+    public static func registerForBackground() {}
+    public static func unregisterForBackground() {}
+}
+#endif

@@ -29,14 +29,67 @@ final class Singleton {
             log("Initial reachability status: \(name)")
         }
 
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
-        n.addObserver(self, selector: #selector(foregrounded), name: UIApplication.willEnterForegroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(backgrounded), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        n.addObserver(self, selector: #selector(ingestStart), name: .IngestStart, object: nil)
-        n.addObserver(self, selector: #selector(ingestComplete(_:)), name: .IngestComplete, object: nil)
+        Task {
+            for await _ in notifications(named: .ModelDataUpdated) {
+                let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
+                await Model.detectExternalChanges()
+                for session in backgroundSessions {
+                    UIApplication.shared.requestSceneSessionRefresh(session)
+                }
+                if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
+                    PersistedOptions.extensionRequestedSync = false
+                    do {
+                        try await CloudManager.opportunisticSyncIfNeeded(force: true)
+                    } catch {
+                        log("Error in extension triggered sync: \(error.finalDescription)")
+                    }
+                }
+            }
+        }
+        
+        Task {
+            for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
+                guard UIApplication.shared.applicationState == .background else {
+                    return
+                }
+                log("App foregrounded")
+                do {
+                    try await CloudManager.opportunisticSyncIfNeeded()
+                } catch {
+                    log("Error in forgrounding triggered sync: \(error.finalDescription)")
+                }
+            }
+        }
+        
+        Task {
+            for await _ in notifications(named: UIApplication.didEnterBackgroundNotification) {
+                log("App backgrounded")
+                Model.lockUnlockedItems()
+            }
+        }
 
+        Task {
+            for await _ in notifications(named: .IngestStart) {
+                BackgroundTask.registerForBackground()
+            }
+        }
+
+        Task {
+            for await notification in notifications(named: .IngestComplete) {
+                guard let item = notification.object as? ArchivedItem else {
+                    return
+                }
+                if DropStore.doneIngesting {
+                    await Model.save()
+                } else {
+                    Model.commitItem(item: item)
+                }
+                BackgroundTask.unregisterForBackground()
+            }
+        }
+        
         Coordination.beginMonitoringChanges()
+        
         Task {
             await Model.detectExternalChanges()
         }
@@ -45,59 +98,6 @@ final class Singleton {
         if FileManager.default.fileExists(atPath: mirrorPath.path) {
             try? FileManager.default.removeItem(at: mirrorPath)
         }
-    }
-
-    @objc private func foregrounded() {
-        if UIApplication.shared.applicationState == .background {
-            // foregrounding, not including app launch
-            log("App foregrounded")
-            Task {
-                do {
-                    try await CloudManager.opportunisticSyncIfNeeded()
-                } catch {
-                    log("Error in forgrounding triggered sync: \(error.finalDescription)")
-                }
-            }
-        }
-    }
-
-    @objc private func backgrounded() {
-        log("App backgrounded")
-        Model.lockUnlockedItems()
-    }
-
-    @objc private func modelDataUpdate() {
-        let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
-        Task {
-            await Model.detectExternalChanges()
-            for session in backgroundSessions {
-                UIApplication.shared.requestSceneSessionRefresh(session)
-            }
-            if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
-                PersistedOptions.extensionRequestedSync = false
-                do {
-                    try await CloudManager.opportunisticSyncIfNeeded(force: true)
-                } catch {
-                    log("Error in extension triggered sync: \(error.finalDescription)")
-                }
-            }
-        }
-    }
-
-    @objc private func ingestStart() {
-        BackgroundTask.registerForBackground()
-    }
-
-    @objc private func ingestComplete(_ notification: Notification) {
-        guard let item = notification.object as? ArchivedItem else { return }
-        if DropStore.doneIngesting {
-            Task {
-                await Model.save()
-            }
-        } else {
-            Model.commitItem(item: item)
-        }
-        BackgroundTask.unregisterForBackground()
     }
 
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {

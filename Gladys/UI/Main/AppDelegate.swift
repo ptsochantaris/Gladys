@@ -2,6 +2,7 @@ import CloudKit
 import CoreSpotlight
 import GladysCommon
 import UIKit
+import GladysUI
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -38,8 +39,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        BackgroundTask.registerForBackground()
         Task { @CloudActor in
             let result = await CloudManager.received(notificationInfo: userInfo)
+            await BackgroundTask.unregisterForBackground()
             completionHandler(result)
         }
     }

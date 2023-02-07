@@ -73,8 +73,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         itemCollectionNeedsDisplay()
     }
 
-    private var observers = [NSObjectProtocol]()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -84,64 +82,72 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
         updateDragOperationIndicators()
 
-        let n = NotificationCenter.default
-
-        let a1 = n.addObserver(forName: .ModelDataUpdated, object: nil, queue: .main) { [weak self] notification in
-            guard let self else { return }
-            self.filter.rebuildLabels()
-            self.updateEmptyView()
-            self.modelDataUpdate(notification)
-        }
-
-        let a3 = n.addObserver(forName: .ItemCollectionNeedsDisplay, object: nil, queue: .main) { [weak self] _ in
-            guard let self else { return }
-            self.itemCollectionNeedsDisplay()
-        }
-
-        let a4 = n.addObserver(forName: .CloudManagerStatusChanged, object: nil, queue: .main) { [weak self] _ in
-            guard let self else { return }
-            Task {
-                await self.updateTitle()
+        Task {
+            for await notification in notifications(named: .ModelDataUpdated) {
+                filter.rebuildLabels()
+                updateEmptyView()
+                modelDataUpdate(notification)
             }
         }
 
-        let a5 = n.addObserver(forName: .LabelSelectionChanged, object: nil, queue: .main) { [weak self] _ in
-            guard let self else { return }
-            self.collection.deselectAll(nil)
-            _ = self.filter.update(signalUpdate: .animated)
-            Task {
-                await self.updateTitle()
+        Task {
+            for await _ in notifications(named: .ItemCollectionNeedsDisplay) {
+                itemCollectionNeedsDisplay()
+            }
+        }
+        
+        Task {
+            for await _ in notifications(named: .CloudManagerStatusChanged) {
+                await updateTitle()
             }
         }
 
-        let a8 = n.addObserver(forName: .AlwaysOnTopChanged, object: nil, queue: .main) { [weak self] _ in
-            self?.updateAlwaysOnTop()
+        Task {
+            for await _ in notifications(named: .LabelSelectionChanged) {
+                collection.deselectAll(nil)
+                _ = filter.update(signalUpdate: .animated)
+                await updateTitle()
+            }
         }
 
-        let a9 = n.addObserver(forName: NSScroller.preferredScrollerStyleDidChangeNotification, object: nil, queue: .main) { [weak self] _ in
-            self?.handleLayout()
+        Task {
+            for await _ in notifications(named: .AlwaysOnTopChanged) {
+                updateAlwaysOnTop()
+            }
+        }
+        
+        Task {
+            for await _ in notifications(named: NSScroller.preferredScrollerStyleDidChangeNotification) {
+                handleLayout()
+            }
         }
 
-        let a11 = n.addObserver(forName: .IngestComplete, object: nil, queue: .main) { [weak self] notification in
-            guard let item = notification.object as? ArchivedItem else { return }
-            self?.itemIngested(item)
+        Task {
+            for await notification in notifications(named: .IngestComplete) {
+                guard let item = notification.object as? ArchivedItem else { continue }
+                itemIngested(item)
+            }
         }
 
-        let a12 = n.addObserver(forName: .HighlightItemRequested, object: nil, queue: .main) { [weak self] notification in
-            guard let request = notification.object as? HighlightRequest else { return }
-            self?.highlightItem(with: request)
+        Task {
+            for await notification in notifications(named: .HighlightItemRequested) {
+                guard let request = notification.object as? HighlightRequest else { continue }
+                highlightItem(with: request)
+            }
         }
 
-        let a13 = n.addObserver(forName: .ItemsAddedBySync, object: nil, queue: .main) { [weak self] _ in
-            _ = self?.filter.update(signalUpdate: .animated)
+        Task {
+            for await _ in notifications(named: .ItemsAddedBySync) {
+                _ = filter.update(signalUpdate: .animated)
+            }
         }
-
-        observers = [a1, a3, a4, a5, a8, a9, a11, a12, a13]
 
         Task {
             await updateTitle()
         }
+        
         updateEmptyView()
+
         setupMouseMonitoring()
     }
 
@@ -304,12 +310,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         let leftOver = w.truncatingRemainder(dividingBy: baseSize)
         let s = ((baseSize - 10) + (leftOver / columns)).rounded(.down)
         (collection.collectionViewLayout as? NSCollectionViewFlowLayout)?.itemSize = NSSize(width: s, height: s)
-    }
-
-    deinit {
-        observers.forEach {
-            NotificationCenter.default.removeObserver($0)
-        }
     }
 
     @objc func shareSelected(_: Any?) {

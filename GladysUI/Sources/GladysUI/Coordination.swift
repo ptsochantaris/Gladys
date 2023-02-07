@@ -27,15 +27,13 @@ import Foundation
         @MainActor
         public static func beginMonitoringChanges() {
             Task {
-                assert(Thread.isMainThread)
-                for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
+                for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(filePresenter)
                     await Model.reloadDataIfNeeded()
                 }
             }
             Task {
-                assert(Thread.isMainThread)
-                for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
+                for await _ in notifications(named: UIApplication.didEnterBackgroundNotification) {
                     NSFileCoordinator.removeFilePresenter(filePresenter)
                 }
             }

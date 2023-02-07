@@ -288,8 +288,10 @@ public enum Model {
     
     public static func save(dueToSyncFetch: Bool = false) async {
         await storageGatekeeper.waitForGate()
+        BackgroundTask.registerForBackground()
         defer {
             storageGatekeeper.signalGate()
+            BackgroundTask.unregisterForBackground()
         }
 
         stateHandler?(.willSave)
@@ -299,12 +301,14 @@ public enum Model {
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
         if !removedUuids.isEmpty {
+            BackgroundTask.registerForBackground()
             Task {
                 do {
                     try await index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString))
                 } catch {
                     log("Error while deleting search indexes \(error.localizedDescription)")
                 }
+                BackgroundTask.unregisterForBackground()
             }
         }
         
@@ -313,9 +317,11 @@ public enum Model {
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
+            BackgroundTask.registerForBackground()
             Task {
                 let searchableItems = itemsToWrite.map(\.searchableItem)
                 indexDelegate.reIndex(items: searchableItems, in: index)
+                BackgroundTask.unregisterForBackground()
             }
         }
         
@@ -434,6 +440,11 @@ public enum Model {
     }
 
     public static func detectExternalChanges() async {
+        BackgroundTask.registerForBackground()
+        defer {
+            BackgroundTask.unregisterForBackground()
+        }
+
         for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {

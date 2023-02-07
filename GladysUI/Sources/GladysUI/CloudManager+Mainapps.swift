@@ -693,8 +693,12 @@ extension CloudManager {
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
         await requestGateKeeper.waitForGate()
+        await BackgroundTask.registerForBackground()
         defer {
             requestGateKeeper.signalGate()
+            Task {
+                await BackgroundTask.unregisterForBackground()
+            }
         }
         
         if !syncSwitchedOn {
