@@ -11,7 +11,7 @@ extension Model {
                 break
 
             case .startupComplete:
-                trimTemporaryDirectory()
+                break
 
             case let .saveComplete(dueToSyncFetch):
                 Task {

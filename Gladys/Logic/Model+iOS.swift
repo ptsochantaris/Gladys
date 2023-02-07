@@ -59,7 +59,6 @@ extension Model {
                 BackgroundTask.registerForBackground()
 
             case .startupComplete:
-                trimTemporaryDirectory()
                 if WCSession.isSupported() {
                     watchDelegate = WatchDelegate()
                 }

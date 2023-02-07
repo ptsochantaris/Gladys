@@ -166,6 +166,7 @@ public enum Model {
             handleCoordinationError(coordinationError)
             
         } else {
+            trimTemporaryDirectory()
             stateHandler?(.startupComplete)
         }
     }
@@ -298,10 +299,12 @@ public enum Model {
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
         if !removedUuids.isEmpty {
-            do {
-                try await index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString))
-            } catch {
-                log("Error while deleting search indexes \(error.localizedDescription)")
+            Task {
+                do {
+                    try await index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString))
+                } catch {
+                    log("Error while deleting search indexes \(error.localizedDescription)")
+                }
             }
         }
         
@@ -310,8 +313,10 @@ public enum Model {
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
-            let searchableItems = itemsToWrite.map(\.searchableItem)
-            indexDelegate.reIndex(items: searchableItems, in: index)
+            Task {
+                let searchableItems = itemsToWrite.map(\.searchableItem)
+                indexDelegate.reIndex(items: searchableItems, in: index)
+            }
         }
         
         let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
