@@ -24,22 +24,28 @@ final actor PushState {
         var _dataItemsToPush = 0
         var _uuid2progress = [String: Progress]()
         var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
-            guard let itemRecord = item.populatedCloudKitRecord else { return nil }
-            if itemRecord.recordID.zoneID != zoneId {
+            guard let itemRecord = item.populatedCloudKitRecord,
+                  itemRecord.recordID.zoneID == zoneId
+            else {
                 return nil
+                
             }
             _dataItemsToPush += item.components.count
             _dropsToPush += 1
-            var payload = item.components.compactMap(\.populatedCloudKitRecord)
-            payload.append(itemRecord)
 
             let itemId = item.uuid.uuidString
             idsToPush.append(itemId)
-            idsToPush.append(contentsOf: item.components.map(\.uuid.uuidString))
             _uuid2progress[itemId] = Progress(totalUnitCount: 100)
-            item.components.forEach { _uuid2progress[$0.uuid.uuidString] = Progress(totalUnitCount: 100) }
+            for component in item.components {
+                let uuidString = component.uuid.uuidString
+                idsToPush.append(uuidString)
+                _uuid2progress[uuidString] = Progress(totalUnitCount: 100)
+            }
 
+            var payload = item.components.compactMap(\.populatedCloudKitRecord)
+            payload.append(itemRecord)
             return payload
+
         }.flatBunch(minSize: 10)
 
         var newQueue = await CloudManager.deletionQueue
