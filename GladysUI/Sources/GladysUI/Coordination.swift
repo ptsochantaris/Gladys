@@ -29,7 +29,9 @@ import Foundation
             Task {
                 for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(filePresenter)
-                    await Model.reloadDataIfNeeded()
+                    if DropStore.doneIngesting {
+                        await Model.reloadDataIfNeeded()
+                    }
                 }
             }
             Task {

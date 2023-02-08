@@ -73,6 +73,7 @@ public enum Model {
                     Task {
                         await DropStore.initialize(with: result)
                         await sendNotification(name: .ModelDataUpdated, object: nil)
+                        await postLoad()
                     }
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
@@ -167,6 +168,7 @@ public enum Model {
 
         } else {
             trimTemporaryDirectory()
+            postLoad()
             stateHandler?(.startupComplete)
         }
     }
@@ -438,18 +440,17 @@ public enum Model {
         }
     }
 
-    public static func detectExternalChanges() async {
+    private static func postLoad() {
         BackgroundTask.registerForBackground()
-        defer {
-            BackgroundTask.unregisterForBackground()
-        }
 
         for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {
                 item.components.removeAll { $0.needsDeletion }
                 for c in componentsToDelete {
-                    await c.deleteFromStorage()
+                    Task {
+                        await c.deleteFromStorage()
+                    }
                 }
             }
         }
@@ -458,12 +459,15 @@ public enum Model {
             delete(items: itemsToDelete) // will also save
         }
 
-        await withTaskGroup(of: Void.self) { group in
-            for drop in DropStore.allDrops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
-                group.addTask {
-                    await drop.reIngest()
+        Task {
+            await withTaskGroup(of: Void.self) { group in
+                for drop in DropStore.allDrops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
+                    group.addTask {
+                        await drop.reIngest()
+                    }
                 }
             }
+            BackgroundTask.unregisterForBackground()
         }
     }
 

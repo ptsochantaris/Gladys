@@ -32,7 +32,6 @@ final class Singleton {
         Task {
             for await _ in notifications(named: .ModelDataUpdated) {
                 let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
-                await Model.detectExternalChanges()
                 for session in backgroundSessions {
                     UIApplication.shared.requestSceneSessionRefresh(session)
                 }
@@ -89,10 +88,6 @@ final class Singleton {
         }
 
         Coordination.beginMonitoringChanges()
-
-        Task {
-            await Model.detectExternalChanges()
-        }
 
         let mirrorPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Mirrored Files")
         if FileManager.default.fileExists(atPath: mirrorPath.path) {

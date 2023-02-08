@@ -275,12 +275,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             }
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
-                await Model.detectExternalChanges()
-            }
-        }
-
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
     }
 
@@ -300,7 +294,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         NSApplication.shared.isAutomaticCustomizeTouchBarMenuItemEnabled = true
 
         Task {
-            await Model.detectExternalChanges()
             Model.startMonitoringForExternalChangesToBlobs()
         }
 

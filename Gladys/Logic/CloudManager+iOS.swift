@@ -23,11 +23,12 @@ extension CloudManager {
         log("Received \(scope.logName) DB change push")
         switch scope {
         case .private, .shared:
-            if await UIApplication.shared.applicationState == .background {
-                await Model.reloadDataIfNeeded()
-            } else if !(await DropStore.doneIngesting) {
+            if !(await DropStore.doneIngesting) {
                 log("We'll be syncing in a moment anyway, ignoring the push for now")
                 return .newData
+            }
+            if await UIApplication.shared.applicationState != .active {
+                await Model.reloadDataIfNeeded()
             }
             do {
                 try await sync(scope: scope)
