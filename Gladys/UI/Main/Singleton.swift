@@ -46,7 +46,7 @@ final class Singleton {
                 }
             }
         }
-        
+
         Task {
             for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
                 guard UIApplication.shared.applicationState == .background else {
@@ -60,7 +60,7 @@ final class Singleton {
                 }
             }
         }
-        
+
         Task {
             for await _ in notifications(named: UIApplication.didEnterBackgroundNotification) {
                 log("App backgrounded")
@@ -87,9 +87,9 @@ final class Singleton {
                 BackgroundTask.unregisterForBackground()
             }
         }
-        
+
         Coordination.beginMonitoringChanges()
-        
+
         Task {
             await Model.detectExternalChanges()
         }

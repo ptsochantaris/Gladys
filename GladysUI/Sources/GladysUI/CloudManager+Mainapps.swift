@@ -6,17 +6,17 @@
 import CloudKit
 import GladysCommon
 
-extension CloudManager {
-    static let privateDatabaseSubscriptionId = "private-changes"
-    static let sharedDatabaseSubscriptionId = "shared-changes"
+public extension CloudManager {
+    internal static let privateDatabaseSubscriptionId = "private-changes"
+    internal static let sharedDatabaseSubscriptionId = "shared-changes"
 
-    nonisolated static func submit(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
+    internal nonisolated static func submit(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
         log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
         operation.qualityOfService = .userInitiated
         database.add(operation)
     }
 
-    public static var showNetwork = false {
+    static var showNetwork = false {
         didSet {
             Task {
                 await Model.updateBadge()
@@ -24,7 +24,7 @@ extension CloudManager {
         }
     }
 
-    public static var syncProgressString: String?
+    static var syncProgressString: String?
 
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
         #if DEBUG
@@ -39,7 +39,7 @@ extension CloudManager {
         }
     }
 
-    static func setSyncProgressString(_ newString: String?) {
+    internal static func setSyncProgressString(_ newString: String?) {
         syncProgressString = newString
         syncProgressDebouncer.push()
     }
@@ -111,7 +111,7 @@ extension CloudManager {
         }
     }
 
-    public static var syncTransitioning = false {
+    static var syncTransitioning = false {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
@@ -122,7 +122,7 @@ extension CloudManager {
         }
     }
 
-    public static var syncRateLimited = false {
+    static var syncRateLimited = false {
         didSet {
             if syncTransitioning != oldValue {
                 setSyncProgressString(syncing ? "Pausing" : nil)
@@ -134,7 +134,7 @@ extension CloudManager {
         }
     }
 
-    public static var syncing = false {
+    static var syncing = false {
         didSet {
             if syncing != oldValue {
                 setSyncProgressString(syncing ? "Syncing" : nil)
@@ -146,8 +146,8 @@ extension CloudManager {
         }
     }
 
-    typealias ICloudToken = (NSCoding & NSCopying & NSObjectProtocol)
-    static var lastiCloudAccount: ICloudToken? {
+    internal typealias ICloudToken = (NSCoding & NSCopying & NSObjectProtocol)
+    internal static var lastiCloudAccount: ICloudToken? {
         get {
             let o = PersistedOptions.defaults.object(forKey: "lastiCloudAccount") as? ICloudToken
             return (o?.isEqual("") ?? false) ? nil : o
@@ -162,9 +162,9 @@ extension CloudManager {
     }
 
     @UserDefault(key: "lastSyncCompletion", defaultValue: .distantPast)
-    public static var lastSyncCompletion: Date
+    static var lastSyncCompletion: Date
 
-    static var uuidSequence: [String] {
+    internal static var uuidSequence: [String] {
         get {
             if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
                 return SafeArchiving.unarchive(data) as? [String] ?? []
@@ -179,19 +179,19 @@ extension CloudManager {
         }
     }
 
-    static func setUuidSequenceAsync(_ newList: [String]) {
+    internal static func setUuidSequenceAsync(_ newList: [String]) {
         uuidSequence = newList
     }
 
-    static func setUuidSequenceRecordAsync(_ newRecord: CKRecord?) {
+    internal static func setUuidSequenceRecordAsync(_ newRecord: CKRecord?) {
         uuidSequenceRecord = newRecord
     }
 
-    static var uuidSequenceRecordPath: URL {
+    internal static var uuidSequenceRecordPath: URL {
         appStorageUrl.appendingPathComponent("ck-uuid-sequence", isDirectory: false)
     }
 
-    static var uuidSequenceRecord: CKRecord? {
+    internal static var uuidSequenceRecord: CKRecord? {
         get {
             if let data = try? Data(contentsOf: uuidSequenceRecordPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
                 let record = CKRecord(coder: coder)
@@ -217,11 +217,11 @@ extension CloudManager {
         }
     }
 
-    static var deleteQueuePath: URL {
+    internal static var deleteQueuePath: URL {
         appStorageUrl.appendingPathComponent("ck-delete-queue", isDirectory: false)
     }
 
-    static var deletionQueue: Set<String> {
+    internal static var deletionQueue: Set<String> {
         get {
             if let data = try? Data(contentsOf: deleteQueuePath) {
                 return SafeArchiving.unarchive(data) as? Set<String> ?? []
@@ -234,7 +234,7 @@ extension CloudManager {
         }
     }
 
-    static func setDeletionQueueAsync(_ newQueue: Set<String>) {
+    internal static func setDeletionQueueAsync(_ newQueue: Set<String>) {
         deletionQueue = newQueue
     }
 
@@ -246,13 +246,13 @@ extension CloudManager {
         }
     }
 
-    public static func markAsDeleted(recordName: String, cloudKitRecord: CKRecord?) {
+    static func markAsDeleted(recordName: String, cloudKitRecord: CKRecord?) {
         if syncSwitchedOn {
             deletionQueue.insert(deletionTag(for: recordName, cloudKitRecord: cloudKitRecord))
         }
     }
 
-    static func commitDeletion(for recordNames: [String]) {
+    internal static func commitDeletion(for recordNames: [String]) {
         if recordNames.isEmpty { return }
 
         CloudManager.deletionQueue = CloudManager.deletionQueue.filter {
@@ -273,7 +273,7 @@ extension CloudManager {
         return f
     }()
 
-    public static func makeSyncString() async -> String {
+    static func makeSyncString() async -> String {
         if let s = syncProgressString {
             return s
         }
@@ -354,7 +354,7 @@ extension CloudManager {
         }
     }
 
-    static func deactivate(force: Bool) async throws {
+    internal static func deactivate(force: Bool) async throws {
         syncTransitioning = true
         defer {
             syncTransitioning = false
@@ -456,7 +456,7 @@ extension CloudManager {
         lastiCloudAccount = FileManager.default.ubiquityIdentityToken
     }
 
-    public static func eraseZoneIfNeeded() async throws {
+    static func eraseZoneIfNeeded() async throws {
         showNetwork = true
         defer {
             showNetwork = false
@@ -469,7 +469,7 @@ extension CloudManager {
         }
     }
 
-    static func fetchMissingShareRecords() async throws {
+    internal static func fetchMissingShareRecords() async throws {
         var fetchGroups = [CKRecordZone.ID: LinkedList<CKRecord.ID>]()
 
         for item in await DropStore.allDrops {
@@ -537,7 +537,7 @@ extension CloudManager {
         }
     }
 
-    public static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
+    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
             if !l.isEqual(newToken) {
@@ -598,7 +598,7 @@ extension CloudManager {
         }
     }
 
-    public static func share(item: ArchivedItem, rootRecord: CKRecord) async throws -> CKShare {
+    static func share(item: ArchivedItem, rootRecord: CKRecord) async throws -> CKShare {
         let shareRecord = CKShare(rootRecord: rootRecord)
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
         let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
@@ -614,7 +614,7 @@ extension CloudManager {
         return shareRecord
     }
 
-    public static func acceptShare(_ metadata: CKShare.Metadata) async {
+    static func acceptShare(_ metadata: CKShare.Metadata) async {
         guard syncSwitchedOn else {
             await genericAlert(title: "Could not accept shared item",
                                message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
@@ -643,7 +643,7 @@ extension CloudManager {
         }
     }
 
-    public static func deleteShare(_ item: ArchivedItem) async throws {
+    static func deleteShare(_ item: ArchivedItem) async throws {
         guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
             return
         }
@@ -666,7 +666,7 @@ extension CloudManager {
         }
     }
 
-    public static func proceedWithDeactivation() async {
+    static func proceedWithDeactivation() async {
         do {
             try await deactivate(force: false)
         } catch {
@@ -674,7 +674,7 @@ extension CloudManager {
         }
     }
 
-    public static func startActivation() async {
+    static func startActivation() async {
         do {
             try await activate()
         } catch {
@@ -687,8 +687,8 @@ extension CloudManager {
         }
     }
 
-    public static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
-    public static var syncAttempDone: (() async -> Void)?
+    static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
+    static var syncAttempDone: (() async -> Void)?
     private static let requestGateKeeper = GateKeeper(entries: 1)
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
@@ -700,23 +700,23 @@ extension CloudManager {
                 await BackgroundTask.unregisterForBackground()
             }
         }
-        
+
         if !syncSwitchedOn {
             return
         }
-                
+
         if let shouldSyncAttempProceed, await shouldSyncAttempProceed(force, overridingUserPreference) == false {
             return
         }
-        
+
         defer {
             Task {
                 await syncAttempDone?()
             }
         }
-        
+
         syncing = true
-        
+
         do {
             try await sendUpdatesUp()
             try await PullState().fetchDatabaseChanges(scope: scope)
@@ -730,7 +730,7 @@ extension CloudManager {
         }
     }
 
-    public static func apnsUpdate(_ newToken: Data?) {
+    static func apnsUpdate(_ newToken: Data?) {
         guard let newToken else {
             log("Warning: APNS registration failed")
             return

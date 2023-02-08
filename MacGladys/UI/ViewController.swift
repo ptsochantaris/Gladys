@@ -95,7 +95,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 itemCollectionNeedsDisplay()
             }
         }
-        
+
         Task {
             for await _ in notifications(named: .CloudManagerStatusChanged) {
                 await updateTitle()
@@ -115,7 +115,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
                 updateAlwaysOnTop()
             }
         }
-        
+
         Task {
             for await _ in notifications(named: NSScroller.preferredScrollerStyleDidChangeNotification) {
                 handleLayout()
@@ -145,7 +145,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         Task {
             await updateTitle()
         }
-        
+
         updateEmptyView()
 
         setupMouseMonitoring()

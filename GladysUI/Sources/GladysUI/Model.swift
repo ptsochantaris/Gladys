@@ -35,7 +35,7 @@ public enum Model {
         }.value
         storageGatekeeper.signalGate()
     }
-    
+
     private nonisolated static func _reloadDataIfNeeded() {
         if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
@@ -100,7 +100,7 @@ public enum Model {
             }
         }
     }
-    
+
     private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
         let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
         let itemCount = d.count / 16
@@ -164,13 +164,13 @@ public enum Model {
 
         } else if let coordinationError {
             handleCoordinationError(coordinationError)
-            
+
         } else {
             trimTemporaryDirectory()
             stateHandler?(.startupComplete)
         }
     }
-    
+
     private static func handleLoadingError(_ error: NSError) {
         brokenMode = true
         log("Error while loading: \(error)")
@@ -182,7 +182,7 @@ public enum Model {
             abort()
         }
     }
-    
+
     private static func handleCoordinationError(_ error: NSError) {
         brokenMode = true
         log("Error in file coordinator: \(error)")
@@ -194,7 +194,7 @@ public enum Model {
             abort()
         }
     }
-    
+
     public static func resetEverything() {
         let toDelete = DropStore.allDrops.filter { !$0.isImportedShare }
         delete(items: toDelete)
@@ -217,7 +217,6 @@ public enum Model {
         if dueToSyncFetch {
             log("Will not sync to cloud, as the save was due to the completion of a cloud sync")
             return false
-
         }
         return await CloudManager.syncSwitchedOn
     }
@@ -285,7 +284,7 @@ public enum Model {
     }
 
     //////////////////////// Saving
-    
+
     public static func save(dueToSyncFetch: Bool = false) async {
         await storageGatekeeper.waitForGate()
         BackgroundTask.registerForBackground()
@@ -295,9 +294,9 @@ public enum Model {
         }
 
         stateHandler?(.willSave)
-        
+
         let index = CSSearchableIndex.default()
-        
+
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
         if !removedUuids.isEmpty {
@@ -311,9 +310,9 @@ public enum Model {
                 BackgroundTask.unregisterForBackground()
             }
         }
-        
+
         DropStore.removeDeletableDrops()
-        
+
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
@@ -324,15 +323,15 @@ public enum Model {
                 BackgroundTask.unregisterForBackground()
             }
         }
-        
+
         let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
             i.flags.remove(.isBeingCreatedBySync)
             i.flags.remove(.needsSaving)
             return i.uuid
         })
-        
+
         sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
-                
+
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")
         } else {
@@ -344,7 +343,7 @@ public enum Model {
                 }
             }.value
         }
-        
+
         await ComponentLookup.shared.cleanup()
         trimTemporaryDirectory()
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))

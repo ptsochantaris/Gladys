@@ -1,8 +1,8 @@
 import CloudKit
 import CoreSpotlight
 import GladysCommon
-import UIKit
 import GladysUI
+import UIKit
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {

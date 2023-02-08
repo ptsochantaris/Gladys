@@ -15,7 +15,7 @@ public final class FileMonitor: NSObject, NSFilePresenter {
     private let completion: (URL) -> Void
 
     private var notificationObservers = [Task<Void, Never>]()
-    
+
     public init(directory: URL, completion: @escaping (URL) -> Void) {
         log("Starting monitoring of \(directory.path)")
         presentedItemURL = directory
@@ -26,17 +26,17 @@ public final class FileMonitor: NSObject, NSFilePresenter {
         NSFileCoordinator.addFilePresenter(self)
 
         #if os(iOS)
-        let task1 = Task {
-            for await _ in await notifications(named: UIApplication.willEnterForegroundNotification) {
-                NSFileCoordinator.addFilePresenter(self)
+            let task1 = Task {
+                for await _ in await notifications(named: UIApplication.willEnterForegroundNotification) {
+                    NSFileCoordinator.addFilePresenter(self)
+                }
             }
-        }
-        let task2 = Task {
-            for await _ in await notifications(named: UIApplication.didEnterBackgroundNotification) {
-                NSFileCoordinator.removeFilePresenter(self)
+            let task2 = Task {
+                for await _ in await notifications(named: UIApplication.didEnterBackgroundNotification) {
+                    NSFileCoordinator.removeFilePresenter(self)
+                }
             }
-        }
-        notificationObservers = [task1, task2]
+            notificationObservers = [task1, task2]
         #endif
     }
 

@@ -28,7 +28,6 @@ final actor PushState {
                   itemRecord.recordID.zoneID == zoneId
             else {
                 return nil
-                
             }
             _dataItemsToPush += item.components.count
             _dropsToPush += 1

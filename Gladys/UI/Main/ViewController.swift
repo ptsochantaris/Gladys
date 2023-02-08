@@ -826,7 +826,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 reloadCells(for: Set(uuids))
             }
         }
-        
+
         Task {
             for await notification in notifications(named: .ModelDataUpdated) {
                 await _modelDataUpdate(notification)
@@ -844,7 +844,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 await cloudStatusChanged()
             }
         }
-        
+
         Task {
             for await _ in notifications(named: .ReachabilityChanged) {
                 if await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi {
@@ -856,7 +856,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
         }
-        
+
         Task {
             for await _ in notifications(named: .AcceptStarting) {
                 await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
@@ -871,7 +871,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 acceptAlert = nil
             }
         }
-        
+
         Task {
             for await notification in notifications(named: .IngestComplete) {
                 if let item = notification.object as? ArchivedItem,
@@ -888,14 +888,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
         }
-        
+
         Task {
             for await notification in notifications(named: .HighlightItemRequested) {
                 guard let request = notification.object as? HighlightRequest else { continue }
                 await highlightItem(request)
             }
         }
-        
+
         Task {
             for await notification in notifications(named: .UIRequest) {
                 guard let request = notification.object as? UIRequest,
@@ -914,13 +914,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
         }
-        
+
         Task {
             for await _ in notifications(named: .DismissPopoversRequest) {
                 await dismissAnyPopOver()
             }
         }
-        
+
         Task {
             for await _ in notifications(named: .ResetSearchRequest) {
                 if searchActive || filter.isFiltering {
@@ -928,7 +928,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
         }
-        
+
         Task {
             for await _ in notifications(named: UIApplication.keyboardWillHideNotification) {
                 if presentedViewController != nil {
@@ -942,7 +942,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 }
             }
         }
-        
+
         Task {
             for await notification in notifications(named: .SectionHeaderTapped) {
                 guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { continue }
