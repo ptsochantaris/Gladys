@@ -49,13 +49,12 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     override func viewDidLoad() {
         autoConfigureButtons = isAccessoryWindow
         super.viewDidLoad()
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(multipleWindowModeChange), name: .MultipleWindowModeChange, object: nil)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .MultipleWindowModeChange) {
+                updateButtons(newTraitCollection: view.traitCollection)
+            }
+        }
         (view as? GladysView)?.delegate = self
-    }
-
-    @objc private func multipleWindowModeChange() {
-        updateButtons(newTraitCollection: view.traitCollection)
     }
 
     func movedToWindow() {

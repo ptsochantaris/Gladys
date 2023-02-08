@@ -24,8 +24,13 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
         notesText.text = ActionRequestViewController.noteToApply
 
-        NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
-        itemIngested(nil)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .IngestComplete) {
+                itemIngested()
+            }
+        }
+
+        itemIngested()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -33,7 +38,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
         commitNote()
     }
 
-    @objc private func itemIngested(_: Notification?) {
+    private func itemIngested() {
         guard DropStore.doneIngesting else { return }
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in

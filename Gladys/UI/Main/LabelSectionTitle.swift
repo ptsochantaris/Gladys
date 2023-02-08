@@ -38,11 +38,11 @@ final class ScrollFadeView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        NotificationCenter.default.addObserver(self, selector: #selector(updateColor), name: .ModelDataUpdated, object: nil)
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
+                updateColor()
+            }
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -50,7 +50,7 @@ final class ScrollFadeView: UICollectionReusableView {
         updateColor()
     }
 
-    @objc private func updateColor() {
+    private func updateColor() {
         let g = layer as! CAGradientLayer
         if let count = viewController?.currentColumnCount, sectionCount > count {
             g.startPoint = CGPoint(x: 0, y: 0)
@@ -177,7 +177,11 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
 
-        NotificationCenter.default.addObserver(self, selector: #selector(setNeedsLayout), name: .ModelDataUpdated, object: nil)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
+                setNeedsLayout()
+            }
+        }
     }
 
     func reset() {

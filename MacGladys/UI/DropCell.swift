@@ -202,19 +202,25 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
-        n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
+        
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .ItemModified) {
+                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                    archivedDropItem = item
+                }
+            }
+        }
+        
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
+                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                    archivedDropItem = item
+                }
+            }
+        }
 
         if archivedDropItem != nil {
             reDecorate()
-        }
-    }
-
-    @objc private func itemModified(_ notification: Notification) {
-        if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-            archivedDropItem = item
         }
     }
 

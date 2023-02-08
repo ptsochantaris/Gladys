@@ -15,14 +15,18 @@ final class ICloudController: GladysViewController {
 
         doneButtonLocation = .right
 
-        NotificationCenter.default.addObserver(self, selector: #selector(updateiCloudControls), name: .CloudManagerStatusChanged, object: nil)
-
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
+                await updateiCloudControls()
+            }
+        }
+        
         icloudSwitch.tintColor = UIColor.g_colorLightGray
 
         Task {
             icloudSwitch.isOn = await CloudManager.syncSwitchedOn
             icloudSwitch.addTarget(self, action: #selector(icloudSwitchChanged), for: .valueChanged)
-            await _updateiCloudControls()
+            await updateiCloudControls()
         }
     }
 
@@ -65,13 +69,7 @@ final class ICloudController: GladysViewController {
         }
     }
 
-    @objc private func updateiCloudControls() {
-        Task {
-            await _updateiCloudControls()
-        }
-    }
-
-    private func _updateiCloudControls() async {
+    private func updateiCloudControls() async {
         let transitioning = await CloudManager.syncTransitioning
         let syncing = await CloudManager.syncing
         if transitioning || syncing {
@@ -181,6 +179,6 @@ final class ICloudController: GladysViewController {
 
     private func deactivate() async {
         await CloudManager.proceedWithDeactivation()
-        updateiCloudControls()
+        await updateiCloudControls()
     }
 }

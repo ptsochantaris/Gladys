@@ -59,7 +59,13 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
         itemsView.dragDelegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(openParentApp(_:)), name: .OpenParentApp, object: nil)
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .OpenParentApp) {
+                if let url = notification.object as? URL {
+                    extensionContext?.open(url, completionHandler: nil)
+                }
+            }
+        }
 
         let divider = UIView()
         divider.translatesAutoresizingMaskIntoConstraints = false
@@ -72,12 +78,6 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
             divider.topAnchor.constraint(equalTo: view.topAnchor),
             divider.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale)
         ])
-    }
-
-    @objc private func openParentApp(_ notification: Notification) {
-        if let url = notification.object as? URL {
-            extensionContext?.open(url, completionHandler: nil)
-        }
     }
 
     func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize _: CGSize) {

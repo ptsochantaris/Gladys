@@ -257,23 +257,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         setupClipboardSnooping()
 
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(setupClipboardSnooping), name: .ClipboardSnoopingChanged, object: nil)
-        nc.addObserver(self, selector: #selector(acceptShareStarted), name: .AcceptStarting, object: nil)
-        nc.addObserver(self, selector: #selector(endProgress), name: .AcceptEnding, object: nil)
-        nc.addObserver(self, selector: #selector(modelDataUpdate), name: .ModelDataUpdated, object: nil)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .ClipboardSnoopingChanged) {
+                setupClipboardSnooping()
+            }
+        }
+
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .AcceptStarting) {
+                startProgress(for: nil, titleOverride: "Accepting Share…")
+            }
+        }
+
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .AcceptEnding) {
+                endProgress()
+            }
+        }
+
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
+                await Model.detectExternalChanges()
+            }
+        }
 
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
-    }
-
-    @objc private func modelDataUpdate() {
-        Task { @MainActor in
-            await Model.detectExternalChanges()
-        }
-    }
-
-    @objc private func acceptShareStarted() {
-        startProgress(for: nil, titleOverride: "Accepting Share…")
     }
 
     @objc private func interfaceModeChanged(sender _: NSNotification) {
@@ -460,7 +468,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private var pasteboardObservationTimer: Timer?
     private var pasteboardObservationCount = NSPasteboard.general.changeCount
 
-    @objc private func setupClipboardSnooping() {
+    private func setupClipboardSnooping() {
         let snoop = PersistedOptions.clipboardSnooping
 
         if snoop, pasteboardObservationTimer == nil {

@@ -18,8 +18,18 @@ final class ActionRequestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(itemIngested(_:)), name: .IngestComplete, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(done), name: .DoneSelected, object: nil)
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
+                itemIngested(notification)
+            }
+        }
+
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .DoneSelected) {
+                done()
+            }
+        }
+        
         ingest()
     }
 
@@ -125,7 +135,7 @@ final class ActionRequestViewController: UIViewController {
         extensionContext?.cancelRequest(withError: GladysError.actionCancelled.error)
     }
 
-    @objc private func itemIngested(_ notification: Notification) {
+    private func itemIngested(_ notification: Notification) {
         if let item = notification.object as? ArchivedItem {
             for label in item.labels where !ActionRequestViewController.labelsToApply.contains(label) {
                 ActionRequestViewController.labelsToApply.append(label)
@@ -176,7 +186,7 @@ final class ActionRequestViewController: UIViewController {
         sendNotification(name: .DoneSelected, object: nil)
     }
 
-    @objc private func done() {
+    private func done() {
         for item in newItems {
             item.labels = ActionRequestViewController.labelsToApply
             item.note = ActionRequestViewController.noteToApply

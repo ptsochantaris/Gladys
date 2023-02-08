@@ -125,7 +125,12 @@ final class Preferences: NSViewController {
         badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(updateSyncSwitches), name: .CloudManagerStatusChanged, object: nil)
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
+                updateSyncSwitches()
+            }
+        }
+
         updateSyncSwitches()
         setupHotkeySection()
     }
@@ -338,7 +343,7 @@ final class Preferences: NSViewController {
         AppDelegate.updateHotkey()
     }
 
-    @objc private func updateSyncSwitches() {
+    private func updateSyncSwitches() {
         assert(Thread.isMainThread)
         Task {
             let transitioning = await CloudManager.syncTransitioning

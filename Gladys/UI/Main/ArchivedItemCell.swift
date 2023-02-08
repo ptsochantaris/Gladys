@@ -186,9 +186,21 @@ final class ArchivedItemCell: UICollectionViewCell {
 
         labelStack.setCustomSpacing(4, after: labelsHolder)
 
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(itemModified(_:)), name: .ItemModified, object: nil)
-        n.addObserver(self, selector: #selector(itemModified(_:)), name: .IngestComplete, object: nil)
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .ItemModified) {
+                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                    reDecorate()
+                }
+            }
+        }
+        
+        Task {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
+                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                    reDecorate()
+                }
+            }
+        }
 
         #if canImport(PencilKit)
             let pencil = UIIndirectScribbleInteraction(delegate: self)
@@ -222,12 +234,6 @@ final class ArchivedItemCell: UICollectionViewCell {
             if lowMemoryMode != oldValue {
                 reDecorate()
             }
-        }
-    }
-
-    @objc private func itemModified(_ notification: Notification) {
-        if (notification.object as? ArchivedItem) == archivedDropItem {
-            reDecorate()
         }
     }
 
