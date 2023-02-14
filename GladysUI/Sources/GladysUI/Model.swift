@@ -73,7 +73,7 @@ public enum Model {
                     Task {
                         await DropStore.initialize(with: result)
                         await sendNotification(name: .ModelDataUpdated, object: nil)
-                        await postLoad()
+                        await ingestItemsIfNeeded()
                     }
                     log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
@@ -168,7 +168,7 @@ public enum Model {
 
         } else {
             trimTemporaryDirectory()
-            postLoad()
+            ingestItemsIfNeeded()
             stateHandler?(.startupComplete)
         }
     }
@@ -283,6 +283,8 @@ public enum Model {
                 PersistedOptions.lastRanVersion = currentBuild
             }
         }
+        
+        clearPartialDeletions()
     }
 
     //////////////////////// Saving
@@ -348,6 +350,7 @@ public enum Model {
 
         await ComponentLookup.shared.cleanup()
         trimTemporaryDirectory()
+        ingestItemsIfNeeded()
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
     }
 
@@ -439,10 +442,8 @@ public enum Model {
             throw e
         }
     }
-
-    private static func postLoad() {
-        BackgroundTask.registerForBackground()
-
+    
+    private static func clearPartialDeletions() {
         for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if !componentsToDelete.isEmpty {
@@ -454,11 +455,10 @@ public enum Model {
                 }
             }
         }
-        let itemsToDelete = DropStore.allDrops.filter(\.needsDeletion)
-        if !itemsToDelete.isEmpty {
-            delete(items: itemsToDelete) // will also save
-        }
-
+    }
+    
+    private static func ingestItemsIfNeeded() {
+        BackgroundTask.registerForBackground()
         Task {
             await withTaskGroup(of: Void.self) { group in
                 for drop in DropStore.allDrops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
