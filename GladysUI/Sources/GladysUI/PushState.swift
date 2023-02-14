@@ -52,7 +52,10 @@ final actor PushState {
             let previousCount = newQueue.count
             newQueue = newQueue.filter { !idsToPush.contains($0) }
             if newQueue.count != previousCount {
-                await CloudManager.setDeletionQueueAsync(newQueue)
+                let newQueue = newQueue
+                Task { @CloudActor in
+                    CloudManager.deletionQueue = newQueue
+                }
             }
         }
         recordsToDelete = newQueue.compactMap {
@@ -213,8 +216,10 @@ final actor PushState {
                         for record in updatedRecords {
                             let itemUUID = record.recordID.recordName
                             if itemUUID == CloudManager.RecordType.positionList.rawValue {
-                                await CloudManager.setUuidSequenceAsync(self.currentUUIDSequence)
-                                await CloudManager.setUuidSequenceRecordAsync(record)
+                                Task { @CloudActor in
+                                    CloudManager.uuidSequence = self.currentUUIDSequence
+                                    CloudManager.uuidSequenceRecord = record
+                                }
                             } else if let item = await DropStore.item(uuid: itemUUID) {
                                 item.cloudKitRecord = record
                                 self.dropsToPush -= 1

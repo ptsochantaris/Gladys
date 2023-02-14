@@ -432,12 +432,16 @@ final actor PullState {
             if change == .changed || neverSynced {
                 log("Received an updated position list record")
                 let newList = (record["positionList"] as? [String]) ?? []
-                await CloudManager.setUuidSequenceAsync(newList)
+                Task { @CloudActor in
+                    CloudManager.uuidSequence = newList
+                    CloudManager.uuidSequenceRecord = record
+                }
                 updatedSequence = true
-                await CloudManager.setUuidSequenceRecordAsync(record)
             } else if change == .tagOnly {
                 log("Received non-updated position list record, updated tag")
-                await CloudManager.setUuidSequenceRecordAsync(record)
+                Task { @CloudActor in
+                    CloudManager.uuidSequenceRecord = record
+                }
             } else {
                 log("Received non-updated position list record")
             }

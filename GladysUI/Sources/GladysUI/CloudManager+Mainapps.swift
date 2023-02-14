@@ -18,8 +18,8 @@ public extension CloudManager {
 
     static var showNetwork = false {
         didSet {
-            Task {
-                await Model.updateBadge()
+            Task { @MainActor in
+                Model.updateBadge()
             }
         }
     }
@@ -115,8 +115,8 @@ public extension CloudManager {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
-                Task {
-                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task { @MainActor in
+                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
                 }
             }
         }
@@ -127,8 +127,8 @@ public extension CloudManager {
             if syncTransitioning != oldValue {
                 setSyncProgressString(syncing ? "Pausing" : nil)
                 showNetwork = false
-                Task {
-                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task { @MainActor in
+                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
                 }
             }
         }
@@ -139,8 +139,8 @@ public extension CloudManager {
             if syncing != oldValue {
                 setSyncProgressString(syncing ? "Syncing" : nil)
                 showNetwork = syncing || syncTransitioning
-                Task {
-                    await sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                Task { @MainActor in
+                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
                 }
             }
         }
@@ -177,14 +177,6 @@ public extension CloudManager {
                 PersistedOptions.defaults.set(data, forKey: "uuidSequence")
             }
         }
-    }
-
-    internal static func setUuidSequenceAsync(_ newList: [String]) {
-        uuidSequence = newList
-    }
-
-    internal static func setUuidSequenceRecordAsync(_ newRecord: CKRecord?) {
-        uuidSequenceRecord = newRecord
     }
 
     internal static var uuidSequenceRecordPath: URL {
@@ -232,10 +224,6 @@ public extension CloudManager {
         set {
             try? SafeArchiving.archive(newValue)?.write(to: deleteQueuePath)
         }
-    }
-
-    internal static func setDeletionQueueAsync(_ newQueue: Set<String>) {
-        deletionQueue = newQueue
     }
 
     private static func deletionTag(for recordName: String, cloudKitRecord: CKRecord?) -> String {
