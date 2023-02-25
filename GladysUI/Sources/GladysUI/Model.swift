@@ -216,7 +216,7 @@ public enum Model {
     }
 
     public static func duplicate(item: ArchivedItem) {
-        if let previousIndex = DropStore.firstIndexOfItem(with: item.uuid) {
+        if let previousIndex = DropStore.indexOfItem(with: item.uuid) {
             let newItem = ArchivedItem(cloning: item)
             DropStore.insert(drop: newItem, at: previousIndex + 1)
             Task {

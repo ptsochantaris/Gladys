@@ -209,7 +209,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     private func insert(item: ArchivedItem, at destinationIndexPath: IndexPath, offset: Int = 0) {
-        if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = DropStore.firstIndexOfItem(with: uuid) {
+        if let uuid = dataSource.itemIdentifier(for: destinationIndexPath)?.uuid, let index = DropStore.indexOfItem(with: uuid) {
             DropStore.insert(drop: item, at: index + offset)
         } else {
             DropStore.append(drop: item)
@@ -225,7 +225,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func gladysToGladysDrop(existingItem: ArchivedItem, sourceIndexPath: IndexPath?, to destinationIndexPath: IndexPath) -> PostDropAction {
         Component.droppedIds.remove(existingItem.uuid) // do not count this as an external drop
-        guard let modelSourceIndex = DropStore.firstIndexOfItem(with: existingItem.uuid) else {
+        guard let modelSourceIndex = DropStore.indexOfItem(with: existingItem.uuid) else {
             return .none
         }
 
@@ -632,14 +632,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         dragModePanel.alpha = 0
     }
 
-    private func reloadCells(for uuids: Set<UUID>) {
-        for uuid in uuids {
-            if let item = DropStore.item(uuid: uuid) {
-                item.postModified()
-            }
-        }
-    }
-
     private func updateDataSource(animated: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
 
@@ -823,7 +815,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     updateDataSource(animated: false)
                 }
                 let uuids = filter.filteredDrops.map(\.uuid)
-                reloadCells(for: Set(uuids))
+                DropStore.reloadCells(for: Set(uuids))
             }
         }
 
@@ -1133,17 +1125,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func _modelDataUpdate(_ notification: Notification) async {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
+        let oldSet = Set(oldUUIDs)
 
         let previous = filter.enabledToggles
         filter.rebuildLabels()
         let forceAnnounce = previous != filter.enabledToggles
         _ = filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
-        let oldSet = Set(oldUUIDs)
-
         let parameters = notification.object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
-            reloadCells(for: uuidsToReload)
+            DropStore.reloadCells(for: uuidsToReload)
         }
 
         let newUUIDs = filter.filteredDrops.map(\.uuid)
@@ -1923,7 +1914,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
             await dismissAnyPopOverOrModal()
-        } else if DropStore.firstIndexOfItem(with: request.uuid) != nil {
+        } else if DropStore.indexOfItem(with: request.uuid) != nil {
             await resetSearch(andLabels: true)
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         }

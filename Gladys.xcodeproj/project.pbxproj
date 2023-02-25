@@ -149,7 +149,6 @@
 		16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBB28AE48F300E9EB04 /* CallbackURLKit */; };
 		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
 		16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC128AE495600E9EB04 /* ZIPFoundation */; };
-		16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC328AE497000E9EB04 /* DeepDiff */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993D2987DF40002286B1 /* GladysCommon */; };
@@ -552,7 +551,6 @@
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
 				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
-				16C12FC428AE497000E9EB04 /* DeepDiff in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1059,7 +1057,6 @@
 				16C12FBB28AE48F300E9EB04 /* CallbackURLKit */,
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
 				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
-				16C12FC328AE497000E9EB04 /* DeepDiff */,
 				16C2993D2987DF40002286B1 /* GladysCommon */,
 				1689646129903BD0009D7D01 /* GladysUI */,
 			);
@@ -1423,7 +1420,6 @@
 			);
 			mainGroup = 1678F9C41EF475FE005697CB;
 			packageReferences = (
-				16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */,
 				16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */,
 				16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
@@ -2669,14 +2665,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onmyway133/DeepDiff.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.3;
-			};
-		};
 		16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/phimage/CallbackURLKit";
@@ -2744,11 +2732,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
-		};
-		16C12FC328AE497000E9EB04 /* DeepDiff */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E6C2523D4F0007FD864 /* XCRemoteSwiftPackageReference "DeepDiff" */;
-			productName = DeepDiff;
 		};
 		16C2993D2987DF40002286B1 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -65,7 +65,14 @@ public enum DropStore {
         dropStore.append(drop)
     }
 
-    public static func firstIndexOfItem(with uuid: UUID) -> Int? {
+    public static func indexOfItem(with uuid: String) -> Int? {
+        if let uuidData = UUID(uuidString: uuid) {
+            return indexOfItem(with: uuidData)
+        }
+        return nil
+    }
+    
+    public static func indexOfItem(with uuid: UUID) -> Int? {
         if let uuidindex {
             return uuidindex[uuid]
         } else {
@@ -77,22 +84,22 @@ public enum DropStore {
         }
     }
 
-    public static func firstItem(with uuid: UUID) -> ArchivedItem? {
-        if let i = firstIndexOfItem(with: uuid) {
+    public static func item(uuid: UUID) -> ArchivedItem? {
+        if let i = indexOfItem(with: uuid) {
             return dropStore[i]
         }
         return nil
     }
 
-    public static func firstIndexOfItem(with uuid: String) -> Int? {
+    public static func item(with uuid: String) -> Int? {
         if let uuidData = UUID(uuidString: uuid) {
-            return firstIndexOfItem(with: uuidData)
+            return indexOfItem(with: uuidData)
         }
         return nil
     }
 
     public static func contains(uuid: UUID) -> Bool {
-        firstIndexOfItem(with: uuid) != nil
+        indexOfItem(with: uuid) != nil
     }
 
     public static func clearCaches() {
@@ -114,10 +121,6 @@ public enum DropStore {
 
     public static var visibleDrops: ContiguousArray<ArchivedItem> {
         dropStore.filter(\.isVisible)
-    }
-
-    public static func item(uuid: UUID) -> ArchivedItem? {
-        firstItem(with: uuid)
     }
 
     public static func item(shareId: String) -> ArchivedItem? {
@@ -156,5 +159,13 @@ public enum DropStore {
 
     public static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
         dropStore.filter { $0.shareMode == .sharing }
+    }
+    
+    public static func reloadCells(for uuids: Set<UUID>) {
+        for uuid in uuids {
+            if let item = item(uuid: uuid) {
+                item.postModified()
+            }
+        }
     }
 }

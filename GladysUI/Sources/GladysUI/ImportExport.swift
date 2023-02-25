@@ -170,7 +170,7 @@ public final class ImportExport {
         let itemsInPackage = try loadDecoder.decode([ArchivedItem].self, from: data)
 
         for item in itemsInPackage.reversed() {
-            if let i = DropStore.firstIndexOfItem(with: item.uuid) {
+            if let i = DropStore.indexOfItem(with: item.uuid) {
                 if DropStore.allDrops[i].updatedAt >= item.updatedAt || DropStore.allDrops[i].shareMode != .none {
                     continue
                 }

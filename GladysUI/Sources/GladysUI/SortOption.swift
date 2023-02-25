@@ -30,7 +30,7 @@ public enum SortOption {
         var itemIndexes = [Int]()
         let toCheck = itemsToSort.isEmpty ? DropStore.allDrops : itemsToSort
         let actualItemsToSort = toCheck.compactMap { item -> ArchivedItem? in
-            if let index = DropStore.firstIndexOfItem(with: item.uuid) {
+            if let index = DropStore.indexOfItem(with: item.uuid) {
                 itemIndexes.append(index)
                 return item
             }

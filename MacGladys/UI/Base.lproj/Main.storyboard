@@ -930,51 +930,6 @@ Cg
                                                             </attributes>
                                                         </fragment>
                                                         <fragment>
-                                                            <string key="content">Diffing
-</string>
-                                                            <attributes>
-                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" metaFont="controlContent"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                    <tabStops/>
-                                                                </paragraphStyle>
-                                                            </attributes>
-                                                        </fragment>
-                                                        <fragment content="DeepDiff">
-                                                            <attributes>
-                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" metaFont="controlContent"/>
-                                                                <url key="NSLink" string="https://github.com/onmyway133/DeepDiff"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                    <tabStops/>
-                                                                </paragraphStyle>
-                                                            </attributes>
-                                                        </fragment>
-                                                        <fragment>
-                                                            <string key="content" base64-UTF8="YES">
-Cg
-</string>
-                                                            <attributes>
-                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" metaFont="controlContent"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                    <tabStops/>
-                                                                </paragraphStyle>
-                                                            </attributes>
-                                                        </fragment>
-                                                        <fragment>
-                                                            <string key="content" base64-UTF8="YES">
-Cg
-</string>
-                                                            <attributes>
-                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <font key="NSFont" metaFont="controlContent"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                                    <tabStops/>
-                                                                </paragraphStyle>
-                                                            </attributes>
-                                                        </fragment>
-                                                        <fragment>
                                                             <string key="content">Sanity
 </string>
                                                             <attributes>
@@ -3506,7 +3461,6 @@ Only</string>
                                             </collectionViewFlowLayout>
                                             <color key="primaryBackgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
-                                                <outlet property="dataSource" destination="XfG-lQ-9wD" id="2IS-pE-H5D"/>
                                                 <outlet property="delegate" destination="XfG-lQ-9wD" id="AlC-O3-NLI"/>
                                             </connections>
                                         </collectionView>

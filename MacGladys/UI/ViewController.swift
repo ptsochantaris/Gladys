@@ -1,16 +1,13 @@
 import Cocoa
-import DeepDiff
 import GladysCommon
 import GladysUI
 import Quartz
 
-final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollectionViewDataSource, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
+final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
+                            NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!
-
-    private static let dropCellId = NSUserInterfaceItemIdentifier("DropCell")
 
     @IBOutlet private var searchHolder: NSView!
     @IBOutlet private var searchBar: NSSearchField!
@@ -71,6 +68,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
     func modelFilterContextChanged(_: Filter, animate _: Bool) {
         itemCollectionNeedsDisplay()
+        updateEmptyView()
+    }
+
+    private lazy var dataSource = NSCollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { _, _, archivedItem in
+        let item = DropCell(nibName: "DropCell", bundle: nil)
+        item.representedObject = DropStore.item(uuid: archivedItem.uuid)
+        return item
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        collection.dataSource = dataSource
+        collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
     }
 
     override func viewDidLoad() {
@@ -79,7 +89,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         filter.delegate = self
         showSearch = false
 
-        collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
         updateDragOperationIndicators()
 
         Task {
@@ -146,17 +155,27 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
             await updateTitle()
         }
 
+        updateDataSource(animated: false)
         updateEmptyView()
 
         setupMouseMonitoring()
     }
 
     private func itemCollectionNeedsDisplay() {
-        collection.animator().reloadData()
+        updateDataSource(animated: true)
         touchBarScrubber?.reloadData()
         Task {
             await updateTitle()
         }
+    }
+    
+    private func updateDataSource(animated: Bool) {
+        var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
+        let section = SectionIdentifier(label: nil)
+        snapshot.appendSections([section])
+        let identifiers = filter.filteredDrops.map { ItemIdentifier(label: nil, uuid: $0.uuid) }
+        snapshot.appendItems(identifiers)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
 
     private var optionPressed: Bool {
@@ -268,16 +287,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         }
     }
 
-    func collectionView(_: NSCollectionView, numberOfItemsInSection _: Int) -> Int {
-        filter.filteredDrops.count
-    }
-
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let i = collectionView.makeItem(withIdentifier: ViewController.dropCellId, for: indexPath)
-        i.representedObject = filter.filteredDrops[indexPath.item]
-        return i
-    }
-
     override func viewWillLayout() {
         super.viewWillLayout()
         handleLayout()
@@ -384,7 +393,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     private func highlightItem(with request: HighlightRequest) {
         // focusOnChild ignored for now
         resetSearch(andLabels: true)
-        if let i = DropStore.firstIndexOfItem(with: request.uuid) {
+        if let i = DropStore.indexOfItem(with: request.uuid) {
             let ip = IndexPath(item: i, section: 0)
             collection.scrollToItems(at: [ip], scrollPosition: .centeredVertically)
             collection.selectionIndexes = IndexSet(integer: i)
@@ -485,7 +494,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
 
             for draggingIndexPath in dip.sorted(by: { $0.item > $1.item }) {
                 let sourceItem = filter.filteredDrops[draggingIndexPath.item]
-                let sourceIndex = DropStore.firstIndexOfItem(with: sourceItem.uuid)!
+                let sourceIndex = DropStore.indexOfItem(with: sourceItem.uuid)!
                 DropStore.removeDrop(at: sourceIndex)
                 DropStore.insert(drop: sourceItem, at: destinationIndex)
                 collection.deselectAll(nil)
@@ -507,61 +516,36 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
     }
 
     private func modelDataUpdate(_ notification: Notification) {
+        let oldUUIDs = filter.filteredDrops.map(\.uuid)
+        let oldSet = Set(oldUUIDs)
+
+        let previous = filter.enabledToggles
+        filter.rebuildLabels()
+        let forceAnnounce = previous != filter.enabledToggles
+        _ = filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+
         let parameters = notification.object as? [AnyHashable: Any]
-        let savedUUIDs = parameters?["updated"] as? Set<UUID> ?? Set<UUID>()
-        let selectedUUIDS = collection.selectionIndexPaths.compactMap { collection.item(at: $0) }.compactMap { $0.representedObject as? ArchivedItem }.map(\.uuid)
-
-        var removedItems = false
-        var ipsToReload = Set<IndexPath>()
-        collection.animator().performBatchUpdates({
-            let oldUUIDs = filter.filteredDrops.map(\.uuid)
-            _ = filter.update(signalUpdate: .animated)
-            if DropStore.allDrops.allSatisfy(\.shouldDisplayLoading) {
-                collection.reloadSections(IndexSet(integer: 0))
-                return
-            }
-            let newUUIDs = filter.filteredDrops.map(\.uuid)
-            var ipsToRemove = Set<IndexPath>()
-            var ipsToInsert = Set<IndexPath>()
-            var moveList = [(IndexPath, IndexPath)]()
-
-            let changes = diff(old: oldUUIDs, new: newUUIDs)
-            for change in changes {
-                switch change {
-                case let .delete(deletion):
-                    ipsToRemove.insert(IndexPath(item: deletion.index, section: 0))
-                case let .insert(insertion):
-                    ipsToInsert.insert(IndexPath(item: insertion.index, section: 0))
-                case let .move(move):
-                    moveList.append((IndexPath(item: move.fromIndex, section: 0), IndexPath(item: move.toIndex, section: 0)))
-                case let .replace(reload):
-                    ipsToReload.insert(IndexPath(item: reload.index, section: 0))
-                }
-            }
-
-            for uuid in savedUUIDs {
-                if let i = newUUIDs.firstIndex(of: uuid) {
-                    let ip = IndexPath(item: i, section: 0)
-                    ipsToReload.insert(ip)
-                }
-            }
-
-            removedItems = !ipsToRemove.isEmpty
-
-            collection.deleteItems(at: ipsToRemove)
-            collection.insertItems(at: ipsToInsert)
-            for move in moveList {
-                collection.moveItem(at: move.0, to: move.1)
-            }
-
-        })
-
-        collection.reloadItems(at: ipsToReload)
-
-        if removedItems {
-            itemsDeleted()
+        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
+            DropStore.reloadCells(for: uuidsToReload)
         }
 
+        let newUUIDs = filter.filteredDrops.map(\.uuid)
+        let newSet = Set(newUUIDs)
+
+        let removed = oldSet.subtracting(newSet)
+        let added = newSet.subtracting(oldSet)
+
+        let removedItems = !removed.isEmpty
+        let ipsInsered = !added.isEmpty
+        let ipsMoved = !removedItems && !ipsInsered && oldUUIDs != newUUIDs
+
+        if removedItems || ipsInsered || ipsMoved {
+            if removedItems {
+                itemsDeleted()
+            }
+        }
+        
+        /*
         var index = 0
         var indexSet = Set<IndexPath>()
         for i in filter.filteredDrops {
@@ -573,7 +557,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, NSCollec
         if !indexSet.isEmpty {
             collection.selectItems(at: indexSet, scrollPosition: [.centeredHorizontally, .centeredVertically])
         }
-
+*/
         touchBarScrubber?.reloadData()
 
         Task {

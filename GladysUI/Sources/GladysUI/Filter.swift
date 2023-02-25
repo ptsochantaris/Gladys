@@ -98,7 +98,7 @@ public final class Filter {
     public func nearestUnfilteredIndexForFilteredIndex(_ index: Int, checkForWeirdness: Bool) -> Int {
         if isFiltering {
             if index >= filteredDrops.count {
-                if let closestItem = filteredDrops.last, let i = DropStore.firstIndexOfItem(with: closestItem.uuid) {
+                if let closestItem = filteredDrops.last, let i = DropStore.indexOfItem(with: closestItem.uuid) {
                     let ret = i + 1
                     if checkForWeirdness, ret >= filteredDrops.count {
                         return -1
@@ -109,7 +109,7 @@ public final class Filter {
                 return 0
             } else {
                 let closestItem = filteredDrops[index]
-                return DropStore.firstIndexOfItem(with: closestItem.uuid) ?? 0
+                return DropStore.indexOfItem(with: closestItem.uuid) ?? 0
             }
         } else {
             if checkForWeirdness, index >= filteredDrops.count {

@@ -218,12 +218,18 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                 }
             }
         }
-
-        if archivedDropItem != nil {
+    }
+    
+    private var reDecorateNeeded = false
+    
+    override func viewWillLayout() {
+        if reDecorateNeeded {
+            reDecorateNeeded = false
             reDecorate()
         }
+        super.viewWillLayout()
     }
-
+    
     override var representedObject: Any? {
         get {
             archivedDropItem
@@ -235,9 +241,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
     private weak var archivedDropItem: ArchivedItem? {
         didSet {
-            if isViewLoaded {
-                reDecorate()
-            }
+            reDecorateNeeded = true
+            view.needsLayout = true
         }
     }
 

@@ -19,15 +19,6 @@
       }
     },
     {
-      "identity" : "deepdiff",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/onmyway133/DeepDiff.git",
-      "state" : {
-        "revision" : "2639b3a11054d666a4c5ec1b7dd2808e437f3289",
-        "version" : "2.3.3"
-      }
-    },
-    {
       "identity" : "exceptioncatcher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/ExceptionCatcher",
