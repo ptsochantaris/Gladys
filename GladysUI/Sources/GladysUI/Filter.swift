@@ -191,6 +191,35 @@ public final class Filter {
             return $0
         }
     }
+    
+    private func findIds(for queryString: String) -> Set<UUID> {
+        var replacementResults = Set<UUID>()
+        
+        let q = CSSearchQuery(queryString: queryString, attributes: nil)
+        q.foundItemsHandler = { items in
+            log("Found item matching search")
+            for item in items {
+                if let uuid = UUID(uuidString: item.uniqueIdentifier) {
+                    replacementResults.insert(uuid)
+                }
+            }
+        }
+        let lock = NSLock()
+        lock.lock()
+        q.completionHandler = { error in
+            if let error {
+                log("Search error: \(error.finalDescription)")
+            }
+            lock.unlock()
+        }
+        q.start()
+        if lock.lock(before: Date(timeIntervalSinceNow: 10)) {
+        } else {
+            q.cancel()
+        }
+        lock.unlock()
+        return replacementResults
+    }
 
     @discardableResult
     public func update(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
@@ -233,9 +262,6 @@ public final class Filter {
         // text pass
 
         if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
-            var replacementResults = Set<UUID>()
-
-            let lock = DispatchSemaphore(value: 0)
             let queryString: String
             if terms.count > 1 {
                 if PersistedOptions.inclusiveSearchTerms {
@@ -247,24 +273,8 @@ public final class Filter {
                 queryString = terms.first ?? ""
             }
 
-            let q = CSSearchQuery(queryString: queryString, attributes: nil)
-            q.foundItemsHandler = { items in
-                items.forEach {
-                    if let uuid = UUID(uuidString: $0.uniqueIdentifier) {
-                        replacementResults.insert(uuid)
-                    }
-                }
-            }
-            q.completionHandler = { error in
-                if let error {
-                    log("Search error: \(error.finalDescription)")
-                }
-                lock.signal()
-            }
             isFilteringText = true
-            q.start()
-            lock.wait()
-
+            let replacementResults = findIds(for: queryString)
             cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid) }
         } else {
             isFilteringText = false

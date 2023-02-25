@@ -1,7 +1,7 @@
 import Foundation
 
 public final class LoaderBuffer {
-    private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation")
+    private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation", qos: .background)
 
     private var store = ContiguousArray<ArchivedItem?>()
 

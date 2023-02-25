@@ -68,14 +68,12 @@ public enum Model {
                 if shouldLoad {
                     log("Needed to reload data, new file date: \(dataFileLastModified)")
 
-                    let start = Date()
                     let result = try dataLoad(from: url)
                     Task {
                         await DropStore.initialize(with: result)
                         await sendNotification(name: .ModelDataUpdated, object: nil)
                         await ingestItemsIfNeeded()
                     }
-                    log("Load time: \(-start.timeIntervalSinceNow) seconds")
                 } else {
                     log("No need to reload data")
                 }
@@ -103,6 +101,11 @@ public enum Model {
     }
 
     private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
+        let start = Date()
+        defer {
+            log("Load time: \(-start.timeIntervalSinceNow) seconds")
+        }
+
         let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
         let itemCount = d.count / 16
 
@@ -137,23 +140,12 @@ public enum Model {
             }
 
             do {
-                var shouldLoad = true
                 if let dataModified = modificationDate(for: url) {
-                    if dataModified == dataFileLastModified {
-                        shouldLoad = false
-                    } else {
-                        dataFileLastModified = dataModified
-                    }
+                    dataFileLastModified = dataModified
                 }
-                if shouldLoad {
-                    log("Needed to reload data, new file date: \(dataFileLastModified)")
-                    let start = Date()
-                    let result = try dataLoad(from: url)
-                    DropStore.initialize(with: result)
-                    log("Load time: \(-start.timeIntervalSinceNow) seconds")
-                } else {
-                    log("No need to reload data")
-                }
+                log("Loading inital data")
+                let result = try dataLoad(from: url)
+                DropStore.initialize(with: result)
             } catch {
                 log("Loading Error: \(error)")
                 loadingError = error as NSError
@@ -389,7 +381,8 @@ public enum Model {
         var coordinationError: NSError?
         Coordination.coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in
             let start = Date()
-            log("Saving: \(allItems.count) uuids, \(dirtyUuids.count) updated data files")
+            let allCount = allItems.count
+            log("Saving: \(allCount) uuids, \(dirtyUuids.count) updated data files")
             do {
                 let fm = FileManager.default
                 let p = url.path
@@ -397,7 +390,6 @@ public enum Model {
                     try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
                 }
 
-                let allCount = allItems.count
                 let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount * 16)
                 let queue = DispatchQueue(label: "build.bru.gladys.serialisation")
                 var count = 0
@@ -414,10 +406,7 @@ public enum Model {
                     }
                 }
 
-                let data = queue.sync { Data(buffer: uuidArray) }
-                try data.write(to: url.appendingPathComponent("uuids"), options: .atomic)
-
-                if let filesInDir = fm.enumerator(atPath: url.path)?.allObjects as? [String], (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
+                if let filesInDir = try? fm.contentsOfDirectory(atPath: url.path), (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
                     let oldFiles = Set(filesInDir).subtracting(allItems.map(\.uuid.uuidString)).subtracting(["uuids"])
                     for file in oldFiles {
                         log("Removing save file for non-existent item: \(file)")
@@ -425,6 +414,9 @@ public enum Model {
                         try? fm.removeItem(at: finalPath)
                     }
                 }
+
+                let data = queue.sync { Data(buffer: uuidArray) }
+                try data.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
                 if let dataModified = modificationDate(for: url) {
                     Task { @MainActor in
