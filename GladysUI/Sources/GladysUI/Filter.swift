@@ -197,7 +197,6 @@ public final class Filter {
         
         let q = CSSearchQuery(queryString: queryString, attributes: nil)
         q.foundItemsHandler = { items in
-            log("Found item matching search")
             for item in items {
                 if let uuid = UUID(uuidString: item.uniqueIdentifier) {
                     replacementResults.insert(uuid)
