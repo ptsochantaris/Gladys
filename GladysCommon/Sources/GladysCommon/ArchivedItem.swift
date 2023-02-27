@@ -726,6 +726,10 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
 
     @MainActor
     public func reIngest() async {
+        guard loadingProgress == nil else {
+            return
+        }
+        
         sendNotification(name: .IngestStart, object: self)
 
         let loadCount = components.count

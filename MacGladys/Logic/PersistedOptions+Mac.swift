@@ -112,6 +112,15 @@ extension PersistedOptions {
         }
     }
 
+    static var clipboardSnoopingLabel: String {
+        get {
+            defaults.string(forKey: "clipboardSnoopingLabel") ?? ""
+        }
+        set {
+            defaults.set(newValue, forKey: "clipboardSnoopingLabel")
+        }
+    }
+
     static var alwaysOnTop: Bool {
         get {
             defaults.bool(forKey: "alwaysOnTop")

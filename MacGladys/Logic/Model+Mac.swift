@@ -33,24 +33,23 @@ extension Model {
         syncWithExternalUpdates()
 
         eventMonitor = FileMonitor(directory: appStorageUrl) { url in
-            let components = url.pathComponents
-            let count = components.count
-
-            guard count > 3, components[count - 4].hasSuffix(".MacGladys"),
-                  let potentialParentUUID = UUID(uuidString: String(components[count - 3])),
-                  let potentialComponentUUID = UUID(uuidString: String(components[count - 2]))
-            else { return }
-
-            log("Examining potential external update for component \(potentialComponentUUID)")
-            if let parent = DropStore.item(uuid: potentialParentUUID), parent.eligibleForExternalUpdateCheck, let component = parent.components.first(where: { $0.uuid == potentialComponentUUID }), component.scanForBlobChanges() {
+            Task { @MainActor in
+                let components = url.pathComponents
+                let count = components.count
+                
+                guard count > 3, components[count - 4].hasSuffix(".MacGladys"),
+                      let potentialParentUUID = UUID(uuidString: String(components[count - 3])),
+                      let parent = DropStore.item(uuid: potentialParentUUID),
+                      parent.eligibleForExternalUpdateCheck,
+                      let potentialComponentUUID = UUID(uuidString: String(components[count - 2])),
+                      let component = await ComponentLookup.shared.component(uuid: potentialParentUUID),
+                      component.scanForBlobChanges()
+                else { return }
+                
                 parent.needsReIngest = true
                 parent.markUpdated()
-                log("Detected a modified component blob, uuid \(potentialComponentUUID)")
-                Task {
-                    await parent.reIngest()
-                }
-            } else {
-                log("No change detected")
+                log("Detected a modified component blob, uuid \(potentialComponentUUID), will re-ingest parent")
+                await parent.reIngest()
             }
         }
     }

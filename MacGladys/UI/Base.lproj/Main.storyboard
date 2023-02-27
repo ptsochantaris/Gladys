@@ -1726,10 +1726,10 @@ Cg
                                                             </view>
                                                         </box>
                                                         <box fixedFrame="YES" title="Auto-hide..." translatesAutoresizingMaskIntoConstraints="NO" id="txY-wg-CfD">
-                                                            <rect key="frame" x="16" y="34" width="324" height="156"/>
+                                                            <rect key="frame" x="16" y="34" width="267" height="156"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <view key="contentView" id="69n-n0-Dru">
-                                                                <rect key="frame" x="4" y="5" width="316" height="136"/>
+                                                                <rect key="frame" x="4" y="5" width="259" height="136"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <stepper horizontalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fjP-Wp-Vc8">
@@ -1742,7 +1742,7 @@ Cg
                                                                         </stepperCell>
                                                                     </stepper>
                                                                     <textField horizontalHuggingPriority="750" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hra-D9-E6j">
-                                                                        <rect key="frame" x="38" y="-2" width="277" height="41"/>
+                                                                        <rect key="frame" x="38" y="-2" width="195" height="41"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                         <textFieldCell key="cell" title="Hide after X seconds unless mouse enters a window" id="xAA-P0-ep6">
                                                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1902,27 +1902,25 @@ Cg
                                                             </view>
                                                         </box>
                                                         <box fixedFrame="YES" title="Clipboard snooping" translatesAutoresizingMaskIntoConstraints="NO" id="IBz-NE-gHe">
-                                                            <rect key="frame" x="359" y="34" width="259" height="156"/>
+                                                            <rect key="frame" x="298" y="34" width="320" height="156"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                             <view key="contentView" id="PTt-Ah-yvW">
-                                                                <rect key="frame" x="4" y="5" width="251" height="136"/>
+                                                                <rect key="frame" x="4" y="5" width="312" height="136"/>
                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Th8-bZ-qEU">
-                                                                        <rect key="frame" x="18" y="88" width="193" height="32"/>
+                                                                        <rect key="frame" x="18" y="104" width="276" height="16"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <textFieldCell key="cell" selectable="YES" alignment="left" id="cSF-cz-XKH">
-                                                                            <font key="font" usesAppearanceFont="YES"/>
-                                                                            <string key="title">Keep text items added to the
-system clipboard</string>
+                                                                        <textFieldCell key="cell" selectable="YES" alignment="left" title="Keep text added to the system clipboard" id="cSF-cz-XKH">
+                                                                            <font key="font" metaFont="smallSystem"/>
                                                                             <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Il5-ig-9jb">
-                                                                        <rect key="frame" x="18" y="58" width="146" height="18"/>
+                                                                        <rect key="frame" x="18" y="79" width="78" height="18"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <buttonCell key="cell" type="check" title="Enable snooping" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="R5k-gl-oWi">
+                                                                        <buttonCell key="cell" type="check" title="Enable" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="R5k-gl-oWi">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                         </buttonCell>
@@ -1931,18 +1929,38 @@ system clipboard</string>
                                                                         </connections>
                                                                     </button>
                                                                     <button verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="02j-C4-SrB">
-                                                                        <rect key="frame" x="18" y="15" width="284" height="32"/>
+                                                                        <rect key="frame" x="102" y="79" width="158" height="18"/>
                                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="MtF-3L-wbv">
+                                                                        <buttonCell key="cell" type="check" title="Include secure text" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="MtF-3L-wbv">
                                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                                            <string key="title">Include text that is marked as
-sensitive or secure</string>
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                         </buttonCell>
                                                                         <connections>
                                                                             <action selector="clipboardSnoopingAllSelected:" target="FB0-Ob-ymN" id="P5n-Ky-D7J"/>
                                                                         </connections>
                                                                     </button>
+                                                                    <box fixedFrame="YES" title="Auto-label snooped items" translatesAutoresizingMaskIntoConstraints="NO" id="iid-jd-mvG">
+                                                                        <rect key="frame" x="17" y="12" width="278" height="54"/>
+                                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                        <view key="contentView" id="EiK-My-qp6">
+                                                                            <rect key="frame" x="4" y="5" width="270" height="34"/>
+                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                            <subviews>
+                                                                                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="50u-Vg-d9P">
+                                                                                    <rect key="frame" x="8" y="6" width="256" height="21"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Leave empty for none" bezelStyle="round" id="Me6-Os-tKG">
+                                                                                        <font key="font" metaFont="smallSystem"/>
+                                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                                    </textFieldCell>
+                                                                                    <connections>
+                                                                                        <outlet property="delegate" destination="FB0-Ob-ymN" id="KmM-q4-oWr"/>
+                                                                                    </connections>
+                                                                                </textField>
+                                                                            </subviews>
+                                                                        </view>
+                                                                    </box>
                                                                 </subviews>
                                                             </view>
                                                         </box>
@@ -2806,6 +2824,7 @@ to links</string>
                         <outlet property="autoShowOnEdgePicker" destination="Ja7-q3-jnF" id="Nzt-wD-aT8"/>
                         <outlet property="autoShowWhenDraggingSwitch" destination="QZl-T8-SRc" id="617-AN-U27"/>
                         <outlet property="badgeItemWithVisibleItemCount" destination="e7W-ub-QWK" id="8Av-ye-5Je"/>
+                        <outlet property="clipboardLabelling" destination="50u-Vg-d9P" id="gU3-VR-Uel"/>
                         <outlet property="clipboardSnooping" destination="Il5-ig-9jb" id="xmD-8a-SEx"/>
                         <outlet property="clipboardSnoopingAll" destination="02j-C4-SrB" id="fyN-iG-ZSh"/>
                         <outlet property="convertLabelsToTagsSwitch" destination="Dgi-3I-XZK" id="RX3-i8-hT9"/>
@@ -2839,7 +2858,7 @@ to links</string>
                 </viewController>
                 <customObject id="h3G-lB-sNa" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-102" y="73"/>
+            <point key="canvasLocation" x="-102.5" y="73"/>
         </scene>
         <!--Label Selection View Controller-->
         <scene sceneID="tnC-ll-Awt">

@@ -5,6 +5,7 @@ import GladysCommon
 import GladysUI
 import HotKey
 import UserNotifications
+import Combine
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
@@ -458,33 +459,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     /////////////////////////////////////////////////////////////////
 
-    private var pasteboardObservationTimer: Timer?
-    private var pasteboardObservationCount = NSPasteboard.general.changeCount
+    private var pasteboardObservation: Cancellable?
 
     private func setupClipboardSnooping() {
         let snoop = PersistedOptions.clipboardSnooping
 
-        if snoop, pasteboardObservationTimer == nil {
+        if snoop, pasteboardObservation == nil {
             let pasteboard = NSPasteboard.general
-            let timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-                let newCount = pasteboard.changeCount
-                guard let s = self, s.pasteboardObservationCount != newCount else {
-                    return
-                }
-                s.pasteboardObservationCount = newCount
-                if let text = pasteboard.string(forType: .string), PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive {
-                    Task {
-                        let i = NSItemProvider(object: text as NSItemProviderWriting)
-                        _ = await Model.addItems(itemProviders: [i], indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: keyGladysControllerIfExists?.filter)
+            pasteboardObservation = Timer
+                .publish(every: 0.5, tolerance: 0.2, on: .main, in: .default)
+                .autoconnect()
+                .map { _ in pasteboard.changeCount }
+                .removeDuplicates()
+                .dropFirst()
+                .compactMap { _ in pasteboard.string(forType: .string) }
+                .filter { _ in PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive }
+                .map { text in NSItemProvider(object: text as NSItemProviderWriting) }
+                .sink { provider in
+                    let label = PersistedOptions.clipboardSnoopingLabel
+                    let overrides = label.isEmpty ? nil : ImportOverrides(title: nil, note: nil, labels: [label])
+                    Task { @MainActor in
+                        _ = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: keyGladysControllerIfExists?.filter)
                     }
                 }
-            }
-            timer.tolerance = 0.5
-            pasteboardObservationTimer = timer
-
-        } else if !snoop, let p = pasteboardObservationTimer {
-            p.invalidate()
-            pasteboardObservationTimer = nil
+        } else if !snoop, pasteboardObservation != nil {
+            pasteboardObservation = nil
         }
     }
 

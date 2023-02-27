@@ -4,7 +4,7 @@ import GladysCommon
 import GladysUI
 import Speech
 
-final class Preferences: NSViewController {
+final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBOutlet private var syncSwitch: NSButton!
     @IBOutlet private var syncSpinner: NSProgressIndicator!
     @IBOutlet private var syncNowButton: NSButton!
@@ -31,7 +31,8 @@ final class Preferences: NSViewController {
 
     @IBOutlet private var clipboardSnooping: NSButton!
     @IBOutlet private var clipboardSnoopingAll: NSButton!
-
+    @IBOutlet private var clipboardLabelling: NSTextField!
+    
     @IBOutlet private var badgeItemWithVisibleItemCount: NSButton!
 
     @IBOutlet private var fadeAfterLabel: NSTextField!
@@ -122,6 +123,7 @@ final class Preferences: NSViewController {
         transcribeSpeechFromMedia.integerValue = PersistedOptions.transcribeSpeechFromMedia ? 1 : 0
         clipboardSnooping.integerValue = PersistedOptions.clipboardSnooping ? 1 : 0
         clipboardSnoopingAll.integerValue = PersistedOptions.clipboardSnoopingAll ? 1 : 0
+        clipboardLabelling.stringValue = PersistedOptions.clipboardSnoopingLabel
         badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
 
@@ -184,6 +186,10 @@ final class Preferences: NSViewController {
         view.window?.styleMask.remove(.resizable)
     }
 
+    func controlTextDidChange(_: Notification) {
+        PersistedOptions.clipboardSnoopingLabel = clipboardLabelling.stringValue
+    }
+    
     @IBAction private func convertLabelsToTagsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.readAndStoreFinderTagsAsLabels = sender.integerValue == 1
     }
