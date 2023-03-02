@@ -1,11 +1,11 @@
 import CloudKit
 import Cocoa
+import Combine
 import CoreSpotlight
 import GladysCommon
 import GladysUI
 import HotKey
 import UserNotifications
-import Combine
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
@@ -137,8 +137,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     final class ServicesProvider: NSObject {
-        var urlEventBeforeLaunch = false
-
         @MainActor
         @objc private func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
             _ = Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
@@ -148,7 +146,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         @objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent _: NSAppleEventDescriptor) {
             if PersistedOptions.blockGladysUrlRequests { return }
             if let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue, let url = URL(string: urlString) {
-                urlEventBeforeLaunch = true
                 _ = CallbackSupport.handlePossibleCallbackURL(url: url)
             }
         }

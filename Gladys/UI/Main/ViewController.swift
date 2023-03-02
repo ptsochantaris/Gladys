@@ -36,10 +36,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         updateTitle()
     }
 
-    var itemView: UICollectionView {
-        collection!
-    }
-
     /////////////////////////////
 
     private var dragModeReverse = false
@@ -491,13 +487,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         return nil
     }
 
-    private func cell(for identifier: ItemIdentifier) -> ArchivedItemCell? {
-        if let indexPath = dataSource.indexPath(for: identifier), let cell = dataSource.collectionView(collection, cellForItemAt: indexPath) as? ArchivedItemCell {
-            return cell
-        }
-        return nil
-    }
-
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if collectionView.hasActiveDrop, Singleton.shared.componentDropActiveFromDetailView == nil { return false }
         guard let item = item(for: indexPath) else {
@@ -587,30 +576,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     @objc private func quickLookFocusedItem() {
         if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem {
             _ = item.tryPreview(in: self, from: focusedCell)
-        }
-    }
-
-    @objc private func deleteItem() {
-        if let focusedCell = focusedItem as? ArchivedItemCell {
-            deleteButtonSelected(focusedCell)
-        }
-    }
-
-    @objc private func infoForFocusedItem() {
-        if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
-            mostRecentIndexPathActioned = indexPath
-            performSegue(withIdentifier: "showDetail", sender: item)
-        }
-    }
-
-    @objc private func openFocusedItem() {
-        if let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem, let indexPath = collection.indexPath(for: focusedCell) {
-            mostRecentIndexPathActioned = indexPath
-            item.tryOpen(in: navigationController) { [weak self] success in
-                if !success {
-                    self?.performSegue(withIdentifier: "showDetail", sender: item)
-                }
-            }
         }
     }
 
@@ -704,17 +669,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: archivedItemCellNib) { [unowned self] cell, _, identifier in
             cell.wideCell = false
-            cell.lowMemoryMode = self.lowMemoryMode
+            cell.lowMemoryMode = lowMemoryMode
             cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
-            cell.isEditing = self.isEditing
+            cell.isEditing = isEditing
         }
 
         let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
         let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
             cell.wideCell = true
-            cell.lowMemoryMode = self.lowMemoryMode
+            cell.lowMemoryMode = lowMemoryMode
             cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
-            cell.isEditing = self.isEditing
+            cell.isEditing = isEditing
         }
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
@@ -2038,12 +2003,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
     }
 
-    @objc private func resetSearchTerms() {
-        Task {
-            await resetSearch(andLabels: false)
-        }
-    }
-
     @objc private func toggleEdit() {
         setEditing(!isEditing, animated: true)
     }
@@ -2059,17 +2018,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         return false
     }
 
-    private var selectingGestureActive = false
-
     func collectionView(_: UICollectionView, didBeginMultipleSelectionInteractionAt _: IndexPath) {
-        selectingGestureActive = true
         if !isEditing {
             setEditing(true, animated: true)
         }
-    }
-
-    func collectionViewDidEndMultipleSelectionInteraction(_: UICollectionView) {
-        selectingGestureActive = false
     }
 
     override var keyCommands: [UIKeyCommand]? {
@@ -2143,7 +2095,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             return nil
         }
         return componentAccessQueue.sync {
-            return try? Data(contentsOf: ip)
+            try? Data(contentsOf: ip)
         }
     }
 
@@ -2197,9 +2149,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             Task { @MainActor in
                 do {
                     let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
-                    completion(share, await CloudManager.container, nil)
+                    await completion(share, CloudManager.container, nil)
                 } catch {
-                    completion(nil, await CloudManager.container, error)
+                    await completion(nil, CloudManager.container, error)
                 }
             }
         }
@@ -2209,7 +2161,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private func editInvites(in item: ArchivedItem, at indexPath: IndexPath) {
         guard let shareRecord = item.cloudKitShareRecord else { return }
         Task {
-            let cloudSharingController = UICloudSharingController(share: shareRecord, container: await CloudManager.container)
+            let cloudSharingController = await UICloudSharingController(share: shareRecord, container: CloudManager.container)
             presentCloudController(cloudSharingController, for: item, at: indexPath)
         }
     }

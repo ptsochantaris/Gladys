@@ -20,7 +20,7 @@ final class ICloudController: GladysViewController {
                 await updateiCloudControls()
             }
         }
-        
+
         icloudSwitch.tintColor = UIColor.g_colorLightGray
 
         Task {
@@ -80,7 +80,7 @@ final class ICloudController: GladysViewController {
             icloudSwitch.isEnabled = true
             icloudLabel.text = "iCloud Sync"
             icloudSpinner.stopAnimating()
-            icloudSwitch.setOn(await CloudManager.syncSwitchedOn, animated: true)
+            await icloudSwitch.setOn(CloudManager.syncSwitchedOn, animated: true)
         }
         eraseAlliCloudData.isEnabled = icloudSwitch.isEnabled
         syncNowButton.isEnabled = icloudSwitch.isEnabled && icloudSwitch.isOn

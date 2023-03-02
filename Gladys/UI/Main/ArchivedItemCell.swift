@@ -193,7 +193,7 @@ final class ArchivedItemCell: UICollectionViewCell {
                 }
             }
         }
-        
+
         Task {
             for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 if let item = notification.object as? ArchivedItem, item == archivedDropItem {

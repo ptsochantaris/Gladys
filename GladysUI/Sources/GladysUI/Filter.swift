@@ -191,10 +191,10 @@ public final class Filter {
             return $0
         }
     }
-    
+
     private func findIds(for queryString: String) -> Set<UUID> {
         var replacementResults = Set<UUID>()
-        
+
         let q = CSSearchQuery(queryString: queryString, attributes: nil)
         q.foundItemsHandler = { items in
             for item in items {

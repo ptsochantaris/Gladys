@@ -21,8 +21,4 @@ extension UIWindowScene {
     var isAccessoryWindow: Bool {
         session.isAccessoryWindow
     }
-
-    var isMainWindow: Bool {
-        session.isMainWindow
-    }
 }

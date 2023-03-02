@@ -2,7 +2,7 @@ import Foundation
 
 public enum RepresentedClass: Codable, Equatable {
     public init(from decoder: Decoder) throws {
-        self.init(name: try decoder.singleValueContainer().decode(String.self))
+        try self.init(name: decoder.singleValueContainer().decode(String.self))
     }
 
     public func encode(to encoder: Encoder) throws {

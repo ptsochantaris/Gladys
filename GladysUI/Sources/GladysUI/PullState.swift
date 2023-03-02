@@ -134,7 +134,7 @@ final actor PullState {
         let itemUUID = recordId.recordName
         switch recordType {
         case .item:
-            if let item = (await MainActor.run { DropStore.item(uuid: itemUUID) }) {
+            if let item = await (MainActor.run { DropStore.item(uuid: itemUUID) }) {
                 if item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
@@ -162,7 +162,7 @@ final actor PullState {
                 log("Received delete for non-existent component record \(itemUUID), ignoring")
             }
         case .share:
-            if let associatedItem = (await MainActor.run { DropStore.item(shareId: itemUUID) }) {
+            if let associatedItem = await (MainActor.run { DropStore.item(shareId: itemUUID) }) {
                 if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
                     log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
                 } else {
@@ -393,7 +393,7 @@ final actor PullState {
 
         case .component:
             if let typeItem = await ComponentLookup.shared.component(uuid: recordUUID) {
-                if (await typeItem.parentZone) != zoneID {
+                if await (typeItem.parentZone) != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
                 } else {
                     switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
@@ -428,7 +428,7 @@ final actor PullState {
             }
 
         case .positionList:
-            let change = RecordChangeCheck(localRecord: await CloudManager.uuidSequenceRecord, remoteRecord: record)
+            let change = await RecordChangeCheck(localRecord: CloudManager.uuidSequenceRecord, remoteRecord: record)
             if change == .changed || neverSynced {
                 log("Received an updated position list record")
                 let newList = (record["positionList"] as? [String]) ?? []

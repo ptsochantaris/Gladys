@@ -71,7 +71,7 @@ public enum DropStore {
         }
         return nil
     }
-    
+
     public static func indexOfItem(with uuid: UUID) -> Int? {
         if let uuidindex {
             return uuidindex[uuid]
@@ -160,7 +160,7 @@ public enum DropStore {
     public static var itemsIAmSharing: ContiguousArray<ArchivedItem> {
         dropStore.filter { $0.shareMode == .sharing }
     }
-    
+
     public static func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
             if let item = item(uuid: uuid) {

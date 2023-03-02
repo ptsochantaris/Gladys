@@ -4,7 +4,7 @@ import GladysUI
 import Quartz
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-                            NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
+    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!
@@ -76,7 +76,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         item.representedObject = DropStore.item(uuid: archivedItem.uuid)
         return item
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         collection.dataSource = dataSource
@@ -168,7 +168,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             await updateTitle()
         }
     }
-    
+
     private func updateDataSource(animated: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<SectionIdentifier, ItemIdentifier>()
         let section = SectionIdentifier(label: nil)
@@ -544,20 +544,20 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
                 itemsDeleted()
             }
         }
-        
+
         /*
-        var index = 0
-        var indexSet = Set<IndexPath>()
-        for i in filter.filteredDrops {
-            if selectedUUIDS.contains(i.uuid) {
-                indexSet.insert(IndexPath(item: index, section: 0))
-            }
-            index += 1
-        }
-        if !indexSet.isEmpty {
-            collection.selectItems(at: indexSet, scrollPosition: [.centeredHorizontally, .centeredVertically])
-        }
-*/
+         var index = 0
+         var indexSet = Set<IndexPath>()
+         for i in filter.filteredDrops {
+             if selectedUUIDS.contains(i.uuid) {
+                 indexSet.insert(IndexPath(item: index, section: 0))
+             }
+             index += 1
+         }
+         if !indexSet.isEmpty {
+             collection.selectItems(at: indexSet, scrollPosition: [.centeredHorizontally, .centeredVertically])
+         }
+         */
         touchBarScrubber?.reloadData()
 
         Task {

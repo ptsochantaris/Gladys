@@ -24,7 +24,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
     private var tempPath: URL?
     private var tags: [String]?
 
-    override public func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
+    override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
         var types = super.writableTypes(for: pasteboard)
         let newItems = (extraItems ?? []).map { NSPasteboard.PasteboardType($0.typeIdentifier) }
         types.insert(contentsOf: newItems, at: 0)
@@ -34,7 +34,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         return types
     }
 
-    override public func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
+    override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
         let t = type.rawValue
         if t == "public.file-url" {
             return []
@@ -46,7 +46,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
     }
 
     @MainActor
-    override public func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
+    override func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
         let T = type.rawValue
         switch T {
         case "com.apple.NSFilePromiseItemMetaData", "com.apple.pasteboard.NSFilePromiseID", "com.apple.pasteboard.promised-file-content-type", "com.apple.pasteboard.promised-file-name", "public.data":

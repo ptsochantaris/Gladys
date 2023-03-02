@@ -275,7 +275,7 @@ public enum Model {
                 PersistedOptions.lastRanVersion = currentBuild
             }
         }
-        
+
         clearPartialDeletions()
     }
 
@@ -434,7 +434,7 @@ public enum Model {
             throw e
         }
     }
-    
+
     private static func clearPartialDeletions() {
         for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
@@ -448,7 +448,7 @@ public enum Model {
             }
         }
     }
-    
+
     private static func ingestItemsIfNeeded() {
         BackgroundTask.registerForBackground()
         Task {

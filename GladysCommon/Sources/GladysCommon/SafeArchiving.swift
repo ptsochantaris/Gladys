@@ -21,7 +21,7 @@ public enum SafeArchiving {
     public static func archive(_ object: Any) -> Data? {
         do {
             return try ExceptionCatcher.catch {
-                return try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
+                try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
             }
         } catch {
             return nil
@@ -31,7 +31,7 @@ public enum SafeArchiving {
     public static func unarchive(_ data: Data) -> Any? {
         do {
             return try ExceptionCatcher.catch {
-                return try NSKeyedUnarchiver.unarchivedObject(ofClasses: allowedClasses, from: data)
+                try NSKeyedUnarchiver.unarchivedObject(ofClasses: allowedClasses, from: data)
             }
         } catch {
             return nil

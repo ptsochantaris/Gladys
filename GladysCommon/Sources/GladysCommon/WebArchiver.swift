@@ -69,7 +69,7 @@ public final actor WebArchiver {
     }
 
     private func getData(from url: String) async throws -> (Data, HTTPClientResponse) {
-        return try await getData(for: HTTPClientRequest(url: url))
+        try await getData(for: HTTPClientRequest(url: url))
     }
 
     public func archiveFromUrl(_ url: String) async throws -> (Data, String) {

@@ -672,9 +672,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                 Task { @MainActor in
                     do {
                         let share = try await CloudManager.share(item: itemToShare, rootRecord: rootRecord)
-                        completion(share, await CloudManager.container, nil)
+                        await completion(share, CloudManager.container, nil)
                     } catch {
-                        completion(nil, await CloudManager.container, error)
+                        await completion(nil, CloudManager.container, error)
                     }
                 }
             }
@@ -698,7 +698,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
         Task {
             let itemProvider = NSItemProvider()
-            itemProvider.registerCloudKitShare(shareRecord, container: await CloudManager.container)
+            await itemProvider.registerCloudKitShare(shareRecord, container: CloudManager.container)
             if let sharingService = NSSharingService(named: .cloudSharing) {
                 sharingService.delegate = self
                 sharingService.subject = item.trimmedSuggestedName

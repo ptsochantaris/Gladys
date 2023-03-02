@@ -202,7 +202,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         Task {
             for await notification in NotificationCenter.default.notifications(named: .ItemModified) {
                 if let item = notification.object as? ArchivedItem, item == archivedDropItem {
@@ -210,7 +210,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                 }
             }
         }
-        
+
         Task {
             for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 if let item = notification.object as? ArchivedItem, item == archivedDropItem {
@@ -219,9 +219,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             }
         }
     }
-    
+
     private var reDecorateNeeded = false
-    
+
     override func viewWillLayout() {
         if reDecorateNeeded {
             reDecorateNeeded = false
@@ -229,7 +229,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
         super.viewWillLayout()
     }
-    
+
     override var representedObject: Any? {
         get {
             archivedDropItem

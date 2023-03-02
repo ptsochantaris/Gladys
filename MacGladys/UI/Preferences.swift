@@ -32,7 +32,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBOutlet private var clipboardSnooping: NSButton!
     @IBOutlet private var clipboardSnoopingAll: NSButton!
     @IBOutlet private var clipboardLabelling: NSTextField!
-    
+
     @IBOutlet private var badgeItemWithVisibleItemCount: NSButton!
 
     @IBOutlet private var fadeAfterLabel: NSTextField!
@@ -189,7 +189,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
     func controlTextDidChange(_: Notification) {
         PersistedOptions.clipboardSnoopingLabel = clipboardLabelling.stringValue
     }
-    
+
     @IBAction private func convertLabelsToTagsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.readAndStoreFinderTagsAsLabels = sender.integerValue == 1
     }

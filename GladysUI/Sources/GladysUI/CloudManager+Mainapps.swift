@@ -78,7 +78,7 @@ public extension CloudManager {
 
         var operations = await privatePushState.operations
         for sharedPushState in sharedPushStates {
-            operations.append(contentsOf: await sharedPushState.operations)
+            await operations.append(contentsOf: sharedPushState.operations)
         }
 
         if operations.isEmpty {

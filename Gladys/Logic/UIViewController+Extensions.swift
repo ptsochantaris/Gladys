@@ -20,12 +20,6 @@ extension UIViewController {
         return b
     }
 
-    func removeChildController(_ vc: UIViewController) {
-        vc.willMove(toParent: nil)
-        vc.view.removeFromSuperview()
-        vc.removeFromParent()
-    }
-
     var phoneMode: Bool {
         guard let t = (viewIfLoaded ?? navigationController?.viewIfLoaded)?.window?.traitCollection else { return false }
         return t.horizontalSizeClass == .compact || t.verticalSizeClass == .compact

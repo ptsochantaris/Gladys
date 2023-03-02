@@ -689,7 +689,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
                         }
                     }
                 }
-                tags2.append(contentsOf: await tagTask.value)
+                await tags2.append(contentsOf: tagTask.value)
             }
 
             if let t = transcribedText {
@@ -729,7 +729,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         guard loadingProgress == nil else {
             return
         }
-        
+
         sendNotification(name: .IngestStart, object: self)
 
         let loadCount = components.count

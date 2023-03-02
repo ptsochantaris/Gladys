@@ -36,7 +36,7 @@ extension Model {
             Task { @MainActor in
                 let components = url.pathComponents
                 let count = components.count
-                
+
                 guard count > 3, components[count - 4].hasSuffix(".MacGladys"),
                       let potentialParentUUID = UUID(uuidString: String(components[count - 3])),
                       let parent = DropStore.item(uuid: potentialParentUUID),
@@ -45,7 +45,7 @@ extension Model {
                       let component = await ComponentLookup.shared.component(uuid: potentialParentUUID),
                       component.scanForBlobChanges()
                 else { return }
-                
+
                 parent.needsReIngest = true
                 parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID), will re-ingest parent")

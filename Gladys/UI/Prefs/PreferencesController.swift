@@ -215,7 +215,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 updateUI()
             }
         }
-        
+
         container.isAccessibilityElement = true
         container.accessibilityLabel = "Import and export area"
 
