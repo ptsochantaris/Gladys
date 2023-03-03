@@ -852,13 +852,13 @@ public final class Component: Codable, Equatable {
         try await handleData(data, resolveUrls: false, storeBytes: true)
     }
 
-    private static let gateKeeper = GateKeeper(entries: 10)
+    private static let gateKeeper = Gate(tickets: 10)
 
     private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool) async throws {
         // in thread!
-        await Component.gateKeeper.waitForGate()
+        await Component.gateKeeper.takeTicket()
         defer {
-            Component.gateKeeper.signalGate()
+            Component.gateKeeper.relaxedReturnTicket()
         }
 
         clearCachedFields()

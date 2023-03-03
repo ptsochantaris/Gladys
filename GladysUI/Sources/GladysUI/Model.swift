@@ -21,7 +21,7 @@ public enum Model {
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
 
-    private static let storageGatekeeper = GateKeeper(entries: 1)
+    private static let storageGatekeeper = Gate(tickets: 1)
 
     static func reset() {
         DropStore.reset()
@@ -29,11 +29,11 @@ public enum Model {
     }
 
     public static func reloadDataIfNeeded() async {
-        await storageGatekeeper.waitForGate()
+        await storageGatekeeper.takeTicket()
         await Task.detached {
             _reloadDataIfNeeded()
         }.value
-        storageGatekeeper.signalGate()
+        await storageGatekeeper.returnTicket()
     }
 
     private nonisolated static func _reloadDataIfNeeded() {
@@ -204,7 +204,7 @@ public enum Model {
         for item in itemsRelatedToZone {
             item.removeFromCloudkit()
         }
-        delete(items: itemsRelatedToZone)
+        delete(items: itemsRelatedToZone, shouldSave: false)
     }
 
     public static func shouldSync(dueToSyncFetch: Bool) async throws -> Bool {
@@ -225,12 +225,14 @@ public enum Model {
         }
     }
 
-    public static func delete(items: [ArchivedItem]) {
+    public static func delete(items: [ArchivedItem], shouldSave: Bool = true) {
         for item in items {
             item.delete()
         }
-        Task {
-            await save()
+        if shouldSave {
+            Task {
+                await save()
+            }
         }
     }
 
@@ -282,10 +284,10 @@ public enum Model {
     //////////////////////// Saving
 
     public static func save(dueToSyncFetch: Bool = false) async {
-        await storageGatekeeper.waitForGate()
+        await storageGatekeeper.takeTicket()
         BackgroundTask.registerForBackground()
         defer {
-            storageGatekeeper.signalGate()
+            storageGatekeeper.relaxedReturnTicket()
             BackgroundTask.unregisterForBackground()
         }
 
@@ -356,9 +358,9 @@ public enum Model {
         }
 
         Task {
-            await storageGatekeeper.waitForGate()
+            await storageGatekeeper.takeTicket()
             defer {
-                storageGatekeeper.signalGate()
+                storageGatekeeper.relaxedReturnTicket()
             }
             if item.needsDeletion || brokenMode {
                 return

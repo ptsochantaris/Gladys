@@ -677,14 +677,14 @@ public extension CloudManager {
 
     static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
     static var syncAttempDone: (() async -> Void)?
-    private static let requestGateKeeper = GateKeeper(entries: 1)
+    private static let requestGateKeeper = Gate(tickets: 1)
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
-        await requestGateKeeper.waitForGate()
+        await requestGateKeeper.takeTicket()
         await BackgroundTask.registerForBackground()
         defer {
-            requestGateKeeper.signalGate()
             Task {
+                await requestGateKeeper.returnTicket()
                 await BackgroundTask.unregisterForBackground()
             }
         }
