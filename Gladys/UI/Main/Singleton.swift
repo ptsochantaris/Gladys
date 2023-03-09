@@ -30,7 +30,7 @@ final class Singleton {
         }
 
         Task {
-            for await _ in notifications(named: .ModelDataUpdated) {
+            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
                 let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
                 for session in backgroundSessions {
                     UIApplication.shared.requestSceneSessionRefresh(session)
@@ -47,7 +47,7 @@ final class Singleton {
         }
 
         Task {
-            for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
+            for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                 guard UIApplication.shared.applicationState == .background else {
                     return
                 }
@@ -61,20 +61,20 @@ final class Singleton {
         }
 
         Task {
-            for await _ in notifications(named: UIApplication.didEnterBackgroundNotification) {
+            for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
                 log("App backgrounded")
                 Model.lockUnlockedItems()
             }
         }
 
         Task {
-            for await _ in notifications(named: .IngestStart) {
+            for await _ in NotificationCenter.default.notifications(named: .IngestStart) {
                 BackgroundTask.registerForBackground()
             }
         }
 
         Task {
-            for await notification in notifications(named: .IngestComplete) {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 guard let item = notification.object as? ArchivedItem else {
                     return
                 }
@@ -228,19 +228,9 @@ final class Singleton {
 
     @discardableResult
     private func showMainWindow(in scene: UIWindowScene, restoringSearch: String? = nil, restoringDisplayMode: Int? = nil, labelList: [Filter.Toggle]? = nil, legacyLabelList: Set<String>? = nil) -> ViewController {
-        let s = scene.session
-        let v: ViewController
-        let replacing: Bool
-        if let vc = scene.mainController {
-            v = vc
-            replacing = false
-        } else {
-            let n = s.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
-            v = n.viewControllers.first as! ViewController
-            replacing = true
-        }
+        let sceneSession = scene.session
 
-        let filter = s.associatedFilter
+        let filter = sceneSession.associatedFilter
         if let labelList {
             filter.applyLabelConfig(from: labelList)
 
@@ -251,15 +241,22 @@ final class Singleton {
         if let search = restoringSearch, !search.isEmpty {
             filter.text = search
         }
+
         if let modeNumber = restoringDisplayMode, let mode = Filter.GroupingMode(rawValue: modeNumber) {
             filter.groupingMode = mode
         }
 
-        v.filter = filter
-        filter.delegate = v
-        if replacing {
+        let v: ViewController
+        if let vc = scene.mainController {
+            v = vc
+            v.filter = filter
+        } else {
+            let n = sceneSession.configuration.storyboard?.instantiateViewController(identifier: "Central") as! UINavigationController
+            v = n.viewControllers.first as! ViewController
+            v.filter = filter
             replaceRootVc(in: scene, with: v.navigationController)
         }
+
         return v
     }
 

@@ -26,13 +26,13 @@ public final class FileMonitor: NSObject, NSFilePresenter {
         NSFileCoordinator.addFilePresenter(self)
 
         #if os(iOS)
-            let task1 = Task {
-                for await _ in await notifications(named: UIApplication.willEnterForegroundNotification) {
+            let task1 = Task { @MainActor in
+                for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(self)
                 }
             }
-            let task2 = Task {
-                for await _ in await notifications(named: UIApplication.didEnterBackgroundNotification) {
+            let task2 = Task { @MainActor in
+                for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
                     NSFileCoordinator.removeFilePresenter(self)
                 }
             }

@@ -14,15 +14,15 @@ public final actor Barrier {
             }
         }
     }
-    
+
     public init() {}
-    
+
     private let publisher = CurrentValueSubject<State, Never>(.unlocked)
 
     public var state: State {
         publisher.value
     }
-    
+
     public func lock() {
         if publisher.value == .unlocked {
             publisher.send(.locked)

@@ -87,7 +87,3 @@ public let saveEncoder: JSONEncoder = {
     encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
     return encoder
 }()
-
-public func notifications(named: Notification.Name) -> NotificationCenter.Notifications {
-    NotificationCenter.default.notifications(named: named)
-}

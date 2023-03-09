@@ -27,7 +27,7 @@ import Foundation
         @MainActor
         public static func beginMonitoringChanges() {
             Task {
-                for await _ in notifications(named: UIApplication.willEnterForegroundNotification) {
+                for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(filePresenter)
                     if DropStore.doneIngesting {
                         await Model.reloadDataIfNeeded()
@@ -35,7 +35,7 @@ import Foundation
                 }
             }
             Task {
-                for await _ in notifications(named: UIApplication.didEnterBackgroundNotification) {
+                for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
                     NSFileCoordinator.removeFilePresenter(filePresenter)
                 }
             }

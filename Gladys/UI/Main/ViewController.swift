@@ -22,12 +22,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     var filter: Filter! {
         didSet {
-            filterChanged()
+            if isViewLoaded {
+                filterChanged()
+            }
         }
     }
 
     private func filterChanged() {
-        guard isViewLoaded else { return }
         if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
             sc.searchBar.text = search
             searchTimer.abort()
@@ -765,7 +766,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         navigationController?.setToolbarHidden(true, animated: false)
 
         Task {
-            for await _ in notifications(named: .LabelSelectionChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
                 _ = filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
                 updateLabelIcon()
                 userActivity?.needsSave = true
@@ -773,7 +774,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await notification in notifications(named: .ItemCollectionNeedsDisplay) {
+            for await notification in NotificationCenter.default.notifications(named: .ItemCollectionNeedsDisplay) {
                 if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
                     lastLayoutProcessed = 0
                     setupLayout()
@@ -785,25 +786,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await notification in notifications(named: .ModelDataUpdated) {
+            for await notification in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
                 await _modelDataUpdate(notification)
             }
         }
 
         Task {
-            for await _ in notifications(named: .ItemsAddedBySync) {
+            for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
                 _ = filter.update(signalUpdate: .animated)
             }
         }
 
         Task {
-            for await _ in notifications(named: .CloudManagerStatusChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
                 await cloudStatusChanged()
             }
         }
 
         Task {
-            for await _ in notifications(named: .ReachabilityChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .ReachabilityChanged) {
                 if await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi {
                     do {
                         try await CloudManager.opportunisticSyncIfNeeded()
@@ -815,7 +816,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await _ in notifications(named: .AcceptStarting) {
+            for await _ in NotificationCenter.default.notifications(named: .AcceptStarting) {
                 await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
                     self?.acceptAlert = alert
                 })
@@ -823,14 +824,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await _ in notifications(named: .AcceptEnding) {
+            for await _ in NotificationCenter.default.notifications(named: .AcceptEnding) {
                 await acceptAlert?.dismiss(animated: true)
                 acceptAlert = nil
             }
         }
 
         Task {
-            for await notification in notifications(named: .IngestComplete) {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 if let item = notification.object as? ArchivedItem,
                    let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
                    let indexPath = dataSource.indexPath(for: firstIdentifier) {
@@ -847,14 +848,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await notification in notifications(named: .HighlightItemRequested) {
+            for await notification in NotificationCenter.default.notifications(named: .HighlightItemRequested) {
                 guard let request = notification.object as? HighlightRequest else { continue }
                 await highlightItem(request)
             }
         }
 
         Task {
-            for await notification in notifications(named: .UIRequest) {
+            for await notification in NotificationCenter.default.notifications(named: .UIRequest) {
                 guard let request = notification.object as? UIRequest,
                       request.sourceScene == view.window?.windowScene
                 else { continue }
@@ -873,13 +874,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await _ in notifications(named: .DismissPopoversRequest) {
+            for await _ in NotificationCenter.default.notifications(named: .DismissPopoversRequest) {
                 await dismissAnyPopOver()
             }
         }
 
         Task {
-            for await _ in notifications(named: .ResetSearchRequest) {
+            for await _ in NotificationCenter.default.notifications(named: .ResetSearchRequest) {
                 if searchActive || filter.isFiltering {
                     await resetSearch(andLabels: true)
                 }
@@ -887,7 +888,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await _ in notifications(named: UIApplication.keyboardWillHideNotification) {
+            for await _ in NotificationCenter.default.notifications(named: UIApplication.keyboardWillHideNotification) {
                 if presentedViewController != nil {
                     continue
                 }
@@ -901,7 +902,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await notification in notifications(named: .SectionHeaderTapped) {
+            for await notification in NotificationCenter.default.notifications(named: .SectionHeaderTapped) {
                 guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { continue }
                 var name = event.name
 
@@ -922,7 +923,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         Task {
-            for await notification in notifications(named: .SectionShowAllTapped) {
+            for await notification in NotificationCenter.default.notifications(named: .SectionShowAllTapped) {
                 guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { continue }
                 var name = event.name
 
@@ -982,6 +983,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let menu = UIMenu(title: "Sort", image: UIImage(systemName: "arrow.up.arrow.down"), identifier: UIMenu.Identifier("sortMenu"), options: [], children: menuItems)
         sortAscendingButton.menu = menu
 
+        filter.delegate = self
         filterChanged()
     }
 

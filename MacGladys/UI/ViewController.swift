@@ -92,7 +92,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         updateDragOperationIndicators()
 
         Task {
-            for await notification in notifications(named: .ModelDataUpdated) {
+            for await notification in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
                 filter.rebuildLabels()
                 updateEmptyView()
                 modelDataUpdate(notification)
@@ -100,19 +100,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
 
         Task {
-            for await _ in notifications(named: .ItemCollectionNeedsDisplay) {
+            for await _ in NotificationCenter.default.notifications(named: .ItemCollectionNeedsDisplay) {
                 itemCollectionNeedsDisplay()
             }
         }
 
         Task {
-            for await _ in notifications(named: .CloudManagerStatusChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
                 await updateTitle()
             }
         }
 
         Task {
-            for await _ in notifications(named: .LabelSelectionChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
                 collection.deselectAll(nil)
                 _ = filter.update(signalUpdate: .animated)
                 await updateTitle()
@@ -120,33 +120,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
 
         Task {
-            for await _ in notifications(named: .AlwaysOnTopChanged) {
+            for await _ in NotificationCenter.default.notifications(named: .AlwaysOnTopChanged) {
                 updateAlwaysOnTop()
             }
         }
 
         Task {
-            for await _ in notifications(named: NSScroller.preferredScrollerStyleDidChangeNotification) {
+            for await _ in NotificationCenter.default.notifications(named: NSScroller.preferredScrollerStyleDidChangeNotification) {
                 handleLayout()
             }
         }
 
         Task {
-            for await notification in notifications(named: .IngestComplete) {
+            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 guard let item = notification.object as? ArchivedItem else { continue }
                 itemIngested(item)
             }
         }
 
         Task {
-            for await notification in notifications(named: .HighlightItemRequested) {
+            for await notification in NotificationCenter.default.notifications(named: .HighlightItemRequested) {
                 guard let request = notification.object as? HighlightRequest else { continue }
                 highlightItem(with: request)
             }
         }
 
         Task {
-            for await _ in notifications(named: .ItemsAddedBySync) {
+            for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
                 _ = filter.update(signalUpdate: .animated)
             }
         }

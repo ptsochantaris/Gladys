@@ -20,8 +20,8 @@ public final actor Gate {
         tickets += 1
         await barrier.unlock()
     }
-    
-    nonisolated public func relaxedReturnTicket() {
+
+    public nonisolated func relaxedReturnTicket() {
         Task {
             await returnTicket()
         }
