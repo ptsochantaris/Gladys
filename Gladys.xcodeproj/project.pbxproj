@@ -142,13 +142,11 @@
 		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E7C2523D50C007FD864 /* CallbackURLKit */; };
-		16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E8B2523D536007FD864 /* ZIPFoundation */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
 		16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBB28AE48F300E9EB04 /* CallbackURLKit */; };
 		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
-		16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FC128AE495600E9EB04 /* ZIPFoundation */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993D2987DF40002286B1 /* GladysCommon */; };
@@ -550,7 +548,6 @@
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
-				16C12FC228AE495600E9EB04 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -597,7 +594,6 @@
 				1689646429903BD9009D7D01 /* GladysUI in Frameworks */,
 				16950FFF2987F4B300F0CEE6 /* GladysCommon in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
-				16B89E8C2523D536007FD864 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1056,7 +1052,6 @@
 			packageProductDependencies = (
 				16C12FBB28AE48F300E9EB04 /* CallbackURLKit */,
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
-				16C12FC128AE495600E9EB04 /* ZIPFoundation */,
 				16C2993D2987DF40002286B1 /* GladysCommon */,
 				1689646129903BD0009D7D01 /* GladysUI */,
 			);
@@ -1171,7 +1166,6 @@
 			name = Gladys;
 			packageProductDependencies = (
 				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
-				16B89E8B2523D536007FD864 /* ZIPFoundation */,
 				16950FFE2987F4B300F0CEE6 /* GladysCommon */,
 				1689646329903BD9009D7D01 /* GladysUI */,
 			);
@@ -1421,7 +1415,6 @@
 			mainGroup = 1678F9C41EF475FE005697CB;
 			packageReferences = (
 				16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */,
-				16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
@@ -2673,14 +2666,6 @@
 				minimumVersion = 2.3.2;
 			};
 		};
-		16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.15;
-			};
-		};
 		16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/soffes/HotKey";
@@ -2713,11 +2698,6 @@
 			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
 			productName = CallbackURLKit;
 		};
-		16B89E8B2523D536007FD864 /* ZIPFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
-			productName = ZIPFoundation;
-		};
 		16C12FBB28AE48F300E9EB04 /* CallbackURLKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
@@ -2727,11 +2707,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */;
 			productName = HotKey;
-		};
-		16C12FC128AE495600E9EB04 /* ZIPFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E8A2523D536007FD864 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
-			productName = ZIPFoundation;
 		};
 		16C2993D2987DF40002286B1 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
