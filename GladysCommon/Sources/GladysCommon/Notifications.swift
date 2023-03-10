@@ -32,6 +32,8 @@ public struct PasteRequest {
     public let skipVisibleErrors: Bool
 }
 
+extension Notification: @unchecked Sendable {}
+
 public extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
     static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
