@@ -649,7 +649,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             let section = SectionIdentifier(label: nil)
             snapshot.appendSections([section])
             let identifiers = filter.filteredDrops.map { ItemIdentifier(label: nil, uuid: $0.uuid) }
-            snapshot.appendItems(identifiers)
+            snapshot.appendItems(identifiers, toSection: section)
         }
 
         dataSource.apply(snapshot, animatingDifferences: animated)
