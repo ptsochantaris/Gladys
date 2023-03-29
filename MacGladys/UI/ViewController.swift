@@ -114,7 +114,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         Task {
             for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
                 collection.deselectAll(nil)
-                _ = filter.update(signalUpdate: .animated)
+                filter.update(signalUpdate: .animated)
                 await updateTitle()
             }
         }
@@ -147,7 +147,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         Task {
             for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
-                _ = filter.update(signalUpdate: .animated)
+                filter.update(signalUpdate: .animated)
             }
         }
 
@@ -522,7 +522,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let previous = filter.enabledToggles
         filter.rebuildLabels()
         let forceAnnounce = previous != filter.enabledToggles
-        _ = filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+        filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let parameters = notification.object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
@@ -951,7 +951,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
         if !windowState.labels.isEmpty {
             filter.enableLabelsByName(Set(windowState.labels))
-            _ = filter.update(signalUpdate: .instant)
+            filter.update(signalUpdate: .instant)
         }
         if let text = windowState.search, !text.isEmpty {
             startSearch(initialText: text)

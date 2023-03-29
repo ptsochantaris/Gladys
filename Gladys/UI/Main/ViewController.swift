@@ -322,7 +322,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
 
             coordinator.drop(dragItem, toItemAt: destinationIndexPath)
-            _ = filter.update(signalUpdate: .animated)
+            filter.update(signalUpdate: .animated)
             mostRecentIndexPathActioned = destinationIndexPath
         }
 
@@ -767,7 +767,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         Task {
             for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
-                _ = filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+                filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
                 updateLabelIcon()
                 userActivity?.needsSave = true
             }
@@ -793,7 +793,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         Task {
             for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
-                _ = filter.update(signalUpdate: .animated)
+                filter.update(signalUpdate: .animated)
             }
         }
 
@@ -944,7 +944,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         if filter.isFilteringLabels { // in case we're restored with active labels
-            _ = filter.update(signalUpdate: .none)
+            filter.update(signalUpdate: .none)
         }
 
         UIView.performWithoutAnimation {
@@ -1097,7 +1097,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let previous = filter.enabledToggles
         filter.rebuildLabels()
         let forceAnnounce = previous != filter.enabledToggles
-        _ = filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
+        filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let parameters = notification.object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
@@ -1251,7 +1251,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         } else {
             let sortMethod = option.handlerForSort(itemsToSort: ContiguousArray(items), ascending: ascending)
             sortMethod()
-            _ = filter.update(signalUpdate: .none)
+            filter.update(signalUpdate: .none)
             Task {
                 await Model.save()
             }

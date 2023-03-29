@@ -1,14 +1,12 @@
 import Foundation
-#if os(iOS)
-    import UIKit
-#endif
+import GladysCommon
 
-public final class FileMonitor: NSObject, NSFilePresenter {
-    public var presentedItemURL: URL?
+final class FileMonitor: NSObject, NSFilePresenter {
+    var presentedItemURL: URL?
 
-    public var presentedItemOperationQueue = OperationQueue.main
+    var presentedItemOperationQueue = OperationQueue.main
 
-    public func presentedSubitemDidChange(at url: URL) {
+    func presentedSubitemDidChange(at url: URL) {
         completion(url)
     }
 
@@ -16,7 +14,7 @@ public final class FileMonitor: NSObject, NSFilePresenter {
 
     private var notificationObservers = [Task<Void, Never>]()
 
-    public init(directory: URL, completion: @escaping (URL) -> Void) {
+    init(directory: URL, completion: @escaping (URL) -> Void) {
         log("Starting monitoring of \(directory.path)")
         presentedItemURL = directory
         self.completion = completion
@@ -40,7 +38,7 @@ public final class FileMonitor: NSObject, NSFilePresenter {
         #endif
     }
 
-    public func stop() {
+    func stop() {
         if let p = presentedItemURL {
             log("Ending monitoring of \(p.path)")
         }

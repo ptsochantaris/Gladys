@@ -147,7 +147,7 @@ extension Model {
             return .noData
         }
         allFilters.forEach {
-            _ = $0.update(signalUpdate: .animated)
+            $0.update(signalUpdate: .animated)
         }
         return .success(archivedItems)
     }

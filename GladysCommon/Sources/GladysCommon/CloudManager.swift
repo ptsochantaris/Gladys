@@ -5,6 +5,7 @@ public let diskSizeFormatter = ByteCountFormatter()
 public extension Sequence where Element: Hashable {
     var uniqued: [Element] {
         var set = Set<Element>()
+        set.reserveCapacity(underestimatedCount)
         return filter { set.insert($0).inserted }
     }
 }

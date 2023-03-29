@@ -128,6 +128,7 @@
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
+		16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A6729E29D4ED5900110F63 /* FileMonitor.swift */; };
 		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
 		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
@@ -483,6 +484,7 @@
 		16A4E7F31FBB844A00D60596 /* GladysWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatch.swift; sourceTree = "<group>"; };
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
+		16A6729E29D4ED5900110F63 /* FileMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
 		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
@@ -843,15 +845,16 @@
 		16906A9C23C8C9CA00D6C177 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				16C8166A20CB4EF1001C12DF /* Application.swift */,
 				161718C62094D333005ABD6C /* AppDelegate.swift */,
+				16C8166A20CB4EF1001C12DF /* Application.swift */,
+				161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */,
+				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
+				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
+				161718D62094D6B8005ABD6C /* Component+Mac.swift */,
+				16A6729E29D4ED5900110F63 /* FileMonitor.swift */,
+				1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */,
 				161718DC2094D7F7005ABD6C /* Model+Mac.swift */,
 				162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */,
-				1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */,
-				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
-				161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */,
-				161718D62094D6B8005ABD6C /* Component+Mac.swift */,
-				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1635,6 +1638,7 @@
 				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
 				1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */,
+				16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,

@@ -435,7 +435,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSButton) {
         PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
         allFilters.forEach {
-            _ = $0.update(signalUpdate: .instant)
+            $0.update(signalUpdate: .instant)
         }
     }
 

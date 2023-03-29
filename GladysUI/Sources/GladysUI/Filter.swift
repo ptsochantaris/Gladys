@@ -54,7 +54,6 @@ public final class Filter {
     public var isFilteringText = false
 
     private var modelFilter: String?
-    private var cachedFilteredDrops: ContiguousArray<ArchivedItem>?
 
     public init() {
         rebuildLabels()
@@ -75,12 +74,7 @@ public final class Filter {
         isFilteringText || isFilteringLabels
     }
 
-    public var filteredDrops: ContiguousArray<ArchivedItem> {
-        if cachedFilteredDrops == nil { // this array must always be separate from updates from the model
-            cachedFilteredDrops = DropStore.allDrops
-        }
-        return cachedFilteredDrops!
-    }
+    public var filteredDrops = DropStore.allDrops
 
     public var text: String? {
         get {
@@ -90,7 +84,7 @@ public final class Filter {
             let v = newValue == "" ? nil : newValue
             if modelFilter != v {
                 modelFilter = v
-                _ = update(signalUpdate: .animated)
+                update(signalUpdate: .animated)
             }
         }
     }
@@ -173,23 +167,24 @@ public final class Filter {
     }
 
     public func countItems(for toggle: Toggle) -> Int {
-        filteredDrops.reduce(0) {
+        var count = 0
+        for drop in filteredDrops {
             switch toggle.function {
             case let .userLabel(text):
-                if $1.labels.contains(text) {
-                    return $0 + 1
+                if drop.labels.contains(text) {
+                    count += 1
                 }
             case .unlabeledItems:
-                if $1.labels.isEmpty {
-                    return $0 + 1
+                if drop.labels.isEmpty {
+                    count += 1
                 }
             case .recentlyAddedItems:
-                if $1.isRecentlyAdded {
-                    return $0 + 1
+                if drop.isRecentlyAdded {
+                    count += 1
                 }
             }
-            return $0
         }
+        return count
     }
 
     private func findIds(for queryString: String) -> Set<UUID> {
@@ -212,18 +207,27 @@ public final class Filter {
             lock.unlock()
         }
         q.start()
-        if lock.lock(before: Date(timeIntervalSinceNow: 10)) {
-        } else {
+        if !lock.lock(before: Date(timeIntervalSinceNow: 10)) {
             q.cancel()
         }
         lock.unlock()
         return replacementResults
     }
+    
+    private func checkForChange(between a: ContiguousArray<ArchivedItem>, and b: ContiguousArray<ArchivedItem>) -> Bool {
+        let ac = a.count
+        if ac != b.count {
+            return true
+        }
+        
+        for i in 0 ..< ac where a[i].uuid != b[i].uuid {
+            return true
+        }
+        
+        return false
+    }
 
-    @discardableResult
-    public func update(signalUpdate: UpdateType, forceAnnounce: Bool = false) -> Bool {
-        let previousFilteredDrops = filteredDrops
-
+    public func update(signalUpdate: UpdateType, forceAnnounce: Bool = false) {
         // label pass
 
         let enabledToggles = labelToggles.filter(\.active)
@@ -258,6 +262,7 @@ public final class Filter {
             }
         }
 
+        let previousFilteredDrops = filteredDrops
         // text pass
 
         if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
@@ -273,15 +278,14 @@ public final class Filter {
             }
 
             isFilteringText = true
-            let replacementResults = findIds(for: queryString)
-            cachedFilteredDrops = postLabelDrops.filter { replacementResults.contains($0.uuid) }
+            let ids = findIds(for: queryString)
+            filteredDrops = postLabelDrops.filter { ids.contains($0.uuid) }
         } else {
             isFilteringText = false
-            cachedFilteredDrops = postLabelDrops
+            filteredDrops = postLabelDrops
         }
 
-        let changesToVisibleItems = forceAnnounce || previousFilteredDrops != filteredDrops
-        if changesToVisibleItems {
+        if forceAnnounce || checkForChange(between: previousFilteredDrops, and: filteredDrops) {
             Model.updateBadge()
             if signalUpdate != .none {
                 delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
@@ -296,15 +300,13 @@ public final class Filter {
                         } else if c == 1 {
                             resultString = "One result"
                         } else {
-                            resultString = "\(filteredDrops.count) results"
+                            resultString = "\(c) results"
                         }
                         UIAccessibility.post(notification: .announcement, argument: resultString)
                     }
                 #endif
             }
         }
-
-        return changesToVisibleItems
     }
 
     public var enabledLabelsForItems: [String] {
