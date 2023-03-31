@@ -213,17 +213,17 @@ public final class Filter {
         lock.unlock()
         return replacementResults
     }
-    
+
     private func checkForChange(between a: ContiguousArray<ArchivedItem>, and b: ContiguousArray<ArchivedItem>) -> Bool {
         let ac = a.count
         if ac != b.count {
             return true
         }
-        
+
         for i in 0 ..< ac where a[i].uuid != b[i].uuid {
             return true
         }
-        
+
         return false
     }
 

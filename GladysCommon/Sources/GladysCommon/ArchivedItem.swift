@@ -770,7 +770,8 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             }
 
             if let extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
-                extractedData = try? PropertyListSerialization.data(fromPropertyList: [extractedText, "", [:]], format: .binary, options: 0)
+                let list = [extractedText, "", [AnyHashable: Any]()] as [Any]
+                extractedData = try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
             }
         }
         return extractedData

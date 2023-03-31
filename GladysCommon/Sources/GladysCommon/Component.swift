@@ -1430,12 +1430,14 @@ public final class Component: Codable, Equatable {
                 return s.toData
             } else if let s = decoded as? URL {
                 let urlString = s.absoluteString
-                return try? PropertyListSerialization.data(fromPropertyList: [urlString, "", ["title": urlDropTitle]], format: .binary, options: 0)
+                let list = [urlString, "", ["title": urlDropTitle]] as [Any]
+                return try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
             }
         }
         if !classWasWrapped, typeIdentifier == "public.url", let s = encodedUrl {
             let urlString = s.absoluteString
-            return try? PropertyListSerialization.data(fromPropertyList: [urlString, "", ["title": urlDropTitle]], format: .binary, options: 0)
+            let list = [urlString, "", ["title": urlDropTitle]] as [Any]
+            return try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
         }
         return nil
     }

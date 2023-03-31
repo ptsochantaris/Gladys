@@ -328,7 +328,7 @@ public enum Model {
             return i.uuid
         })
 
-        sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids])
+        sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids] as [String: Any])
 
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")

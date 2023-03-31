@@ -1,5 +1,10 @@
 import CloudKit
 
+extension CKRecord: @unchecked Sendable {}
+extension CKDatabaseOperation: @unchecked Sendable {}
+extension CKShare.Metadata: @unchecked Sendable {}
+extension CKRecordZone: @unchecked Sendable {}
+
 public let diskSizeFormatter = ByteCountFormatter()
 
 public extension Sequence where Element: Hashable {
