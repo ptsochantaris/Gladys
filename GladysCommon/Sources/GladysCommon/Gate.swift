@@ -1,24 +1,25 @@
 import Foundation
+import AsyncAlgorithms
 
 public final actor Gate {
-    private let barrier = Barrier()
-    private var tickets: Int
+    private let queue = AsyncChannel<Void>()
 
     public init(tickets: Int) {
-        self.tickets = tickets
+        for _ in 0 ..< tickets {
+            Task {
+                await returnTicket()
+            }
+        }
     }
 
     public func takeTicket() async {
-        await barrier.wait()
-        tickets -= 1
-        if tickets == 0 {
-            await barrier.lock()
+        for await _ in queue {
+            return
         }
     }
 
     public func returnTicket() async {
-        tickets += 1
-        await barrier.unlock()
+        await queue.send(Void())
     }
 
     public nonisolated func relaxedReturnTicket() {

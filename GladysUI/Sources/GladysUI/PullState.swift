@@ -1,7 +1,14 @@
 import CloudKit
 import GladysCommon
+import AsyncAlgorithms
 
 final actor PullState {
+    private enum ZoneModification {
+        case itemModified(modification: CKDatabase.RecordZoneChange.Modification)
+        case itemDeleted(deletion: CKDatabase.RecordZoneChange.Deletion)
+        case setZoneToken(zoneToken: CKServerChangeToken?, zoneId: CKRecordZone.ID)
+    }
+
     private var updatedSequence = false
     private var newDropCount = 0 { didSet { updateProgress() } }
     private var newTypeItemCount = 0 { didSet { updateProgress() } }
@@ -13,8 +20,8 @@ final actor PullState {
 
     private var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
     private var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
-    private var pendingShareRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
-    private var pendingTypeItemRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
+    private var pendingShareComponentRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
+    private var pendingComponentRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
     private let newItemsDebounce = PopTimer(timeInterval: 0.3) {
         Task { @MainActor in
             sendNotification(name: .ItemsAddedBySync, object: nil)
@@ -179,11 +186,30 @@ final actor PullState {
             log("Extension record deletion detected")
         }
     }
-
+    
     private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
+        let changeQueue = AsyncChannel<ZoneModification>()
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
+        
+        let queueTask = Task {
+            for await change in changeQueue {
+                switch change {
+                case let .itemModified(modification):
+                    let record = modification.record
+                    if let type = CloudManager.RecordType(rawValue: record.recordType) {
+                        await recordChanged(record: record, recordType: type, neverSynced: neverSynced)
+                    }
+                case let .itemDeleted(deletion):
+                    if let type = CloudManager.RecordType(rawValue: deletion.recordType) {
+                        await recordDeleted(recordId: deletion.recordID, recordType: type)
+                    }
+                case let .setZoneToken(zoneToken, zoneId):
+                    setUpdatedZoneToken(zoneToken, for: zoneId)
+                }
+            }
+        }
 
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for zoneID in zoneIDs {
@@ -191,7 +217,7 @@ final actor PullState {
                     var zoneToken = await self.zoneToken(for: zoneID)
                     var moreComing = true
                     while moreComing {
-                        var zoneChangesResults: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
+                        let zoneChangesResults: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
                                                  deletions: [CKDatabase.RecordZoneChange.Deletion],
                                                  changeToken: CKServerChangeToken,
                                                  moreComing: Bool)?
@@ -213,30 +239,28 @@ final actor PullState {
                         for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
                             switch fetchResult {
                             case let .success(modification):
-                                let record = modification.record
-                                if let type = CloudManager.RecordType(rawValue: record.recordType) {
-                                    await self.recordChanged(record: record, recordType: type, neverSynced: neverSynced)
-                                }
+                                await changeQueue.send(.itemModified(modification: modification))
                             case let .failure(error):
                                 log("Changes could not be fetched for record \(recordId): \(error.finalDescription)")
                             }
                         }
 
                         for deletion in zoneChangesResults.deletions {
-                            if let type = CloudManager.RecordType(rawValue: deletion.recordType) {
-                                await self.recordDeleted(recordId: deletion.recordID, recordType: type)
-                            }
+                            await changeQueue.send(.itemDeleted(deletion: deletion))
                         }
 
                         zoneToken = zoneChangesResults.changeToken
                         moreComing = zoneChangesResults.moreComing
                     }
 
-                    await self.setUpdatedZoneToken(zoneToken, for: zoneID)
+                    await changeQueue.send(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
                 }
             }
             try await taskGroup.waitForAll()
         }
+        
+        changeQueue.finish()
+        _ = await queueTask.value
     }
 
     private func setUpdatedZoneToken(_ token: CKServerChangeToken?, for zoneId: CKRecordZone.ID) {
@@ -373,16 +397,16 @@ final actor PullState {
                 }
 
             } else {
-                log("Will create new local item for cloud record (\(recordUUID)) - pendingTypeItemRecords count: \(pendingTypeItemRecords.count)")
+                log("Will create new local item for cloud record (\(recordUUID)) - pending count: \(pendingComponentRecords.count)")
                 let newItem = ArchivedItem(from: record)
-                let newTypeItemRecords = pendingTypeItemRecords.removeValue(forKey: recordID)
+                let newTypeItemRecords = pendingComponentRecords.removeValue(forKey: recordID)
                 if let newTypeItemRecords {
                     let uuid = newItem.uuid
                     let newComponents = newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) }
                     newItem.components = ContiguousArray(newComponents)
                     log("  Hooked \(newTypeItemRecords.count) pending type items")
                 }
-                if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareRecords.removeValue(forKey: existingShareId) {
+                if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareComponentRecords.removeValue(forKey: existingShareId) {
                     newItem.cloudKitShareRecord = pendingShareRecord
                     log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
@@ -418,10 +442,10 @@ final actor PullState {
                         newTypeItemCount += 1
                     }
                 } else {
-                    if let pending = pendingTypeItemRecords[parentId] {
+                    if let pending = pendingComponentRecords[parentId] {
                         pending.append(record)
                     } else {
-                        pendingTypeItemRecords[parentId] = LinkedList(value: record)
+                        pendingComponentRecords[parentId] = LinkedList(value: record)
                     }
                     log("Received new type item (\(recordUUID)) to link to upcoming new item (\(parentId.recordName))")
                 }
@@ -457,7 +481,7 @@ final actor PullState {
                         updateCount += 1
                     }
                 } else {
-                    pendingShareRecords[recordID] = share
+                    pendingShareComponentRecords[recordID] = share
                     log("Received new share record (\(recordUUID)) to potentially link to upcoming new item")
                 }
             }
