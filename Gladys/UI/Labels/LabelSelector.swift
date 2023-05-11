@@ -274,8 +274,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         if LabelSelector.filter.isEmpty {
             items = filter.labelToggles
         } else {
-            let function = Filter.Toggle.Function.userLabel(LabelSelector.filter)
-            items = filter.labelToggles.filter { $0.function == function }
+            items = filter.labelToggles.filter {
+                $0.function.displayText.localizedCaseInsensitiveContains(LabelSelector.filter)
+            }
         }
         return items.filter {
             if case .userLabel = $0.function {
