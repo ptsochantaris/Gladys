@@ -62,7 +62,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
         Task {
             for await notification in NotificationCenter.default.notifications(named: .OpenParentApp) {
                 if let url = notification.object as? URL {
-                    extensionContext?.open(url, completionHandler: nil)
+                    await extensionContext?.open(url)
                 }
             }
         }
