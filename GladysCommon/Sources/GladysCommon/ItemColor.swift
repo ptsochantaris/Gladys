@@ -1,5 +1,3 @@
-import Foundation
-
 public enum ItemColor: String, CaseIterable, Codable {
     case none, blue, red, purple, green, cyan, yellow, gray
 

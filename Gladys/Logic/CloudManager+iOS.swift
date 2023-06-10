@@ -1,4 +1,3 @@
-import BackgroundTasks
 import CloudKit
 import GladysCommon
 import GladysUI

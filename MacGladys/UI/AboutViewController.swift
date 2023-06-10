@@ -1,5 +1,4 @@
 import AppKit
-import GladysCommon
 import GladysUI
 import StoreKit
 

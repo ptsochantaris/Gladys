@@ -1,5 +1,4 @@
 import CloudKit
-import Cocoa
 import GladysCommon
 import GladysUI
 

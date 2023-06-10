@@ -1,11 +1,8 @@
-import CloudKit
 import Contacts
 import ContactsUI
-import CoreSpotlight
 import GladysCommon
 import GladysUI
 import MapKit
-import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
 

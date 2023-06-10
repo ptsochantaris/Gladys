@@ -1,7 +1,6 @@
 import CallbackURLKit
 import GladysCommon
 import GladysUI
-import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
 

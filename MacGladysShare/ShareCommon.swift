@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 let sharingPasteboard = NSPasteboard.Name("build.bru.MacGladys.SharePasteboard")
 

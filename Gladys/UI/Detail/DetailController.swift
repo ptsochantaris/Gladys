@@ -1,7 +1,5 @@
-import CloudKit
 import GladysCommon
 import GladysUI
-import MobileCoreServices
 import UIKit
 import UniformTypeIdentifiers
 
@@ -66,8 +64,8 @@ final class DetailController: GladysViewController,
         let children = ItemColor.allCases.map { color in
             UIAction(title: color.title, image: color.img, state: (currentColor == color) ? .on : .off) { [weak self] _ in
                 guard let self else { return }
-                self.item.highlightColor = color
-                self.makeIndexAndSaveItem()
+                item.highlightColor = color
+                makeIndexAndSaveItem()
             }
         }
         colorButton.menu = UIMenu(title: "Highlight Color", options: .singleSelection, children: children)

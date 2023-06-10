@@ -1,5 +1,3 @@
-import Foundation
-
 public enum Greetings {
     public static let openLine = "Ready! Drop me stuff."
 

@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func terminate() {

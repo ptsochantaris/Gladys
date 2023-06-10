@@ -1222,23 +1222,20 @@ public final class Component: Codable, Equatable {
         }
     }
 
-    func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) async {
+    private func setDisplayIcon(_ icon: IMAGE, _ priority: Int, _ contentMode: ArchivedDropItemDisplayType) async {
         guard priority >= displayIconPriority else {
             return
         }
 
-        await Task.detached { [weak self] in
-            guard let self else { return }
-            let result: IMAGE
+        componentIcon = await Task.detached(priority: .userInitiated) {
             switch contentMode {
             case .fit:
-                result = icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+                return icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
             case .fill:
-                result = icon.limited(to: Component.iconPointSize, useScreenScale: true)
+                return icon.limited(to: Component.iconPointSize, useScreenScale: true)
             case .center, .circle:
-                result = icon
+                return icon
             }
-            self.componentIcon = result
         }.value
 
         displayIconPriority = priority

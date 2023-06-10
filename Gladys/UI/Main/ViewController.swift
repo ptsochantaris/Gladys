@@ -1,6 +1,5 @@
 import GladysCommon
 import GladysUI
-import Intents
 import UIKit
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
@@ -700,31 +699,31 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let headerMenuOptions = [
             UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
                 guard let self else { return }
-                self.filter.setDisplayMode(to: .collapsed, for: nil, setAsPreference: false)
-                self.updateDataSource(animated: true)
+                filter.setDisplayMode(to: .collapsed, for: nil, setAsPreference: false)
+                updateDataSource(animated: true)
             },
             UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2")) { [weak self] _ in
                 guard let self else { return }
-                self.filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
-                self.updateDataSource(animated: true)
+                filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
+                updateDataSource(animated: true)
             },
             UIAction(title: "Fully Expand All", image: UIImage(systemName: "square")) { [weak self] _ in
                 guard let self else { return }
-                self.filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
-                self.updateDataSource(animated: true)
+                filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
+                updateDataSource(animated: true)
             }
         ]
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
             guard let self else { return }
-            let sid = self.dataSource.sectionIdentifier(for: indexPath.section)
+            let sid = dataSource.sectionIdentifier(for: indexPath.section)
             guard let label = sid?.label else { return }
             titleView.configure(with: label, firstSection: indexPath.section == 0, viewController: self, menuOptions: headerMenuOptions)
         }
 
         let faderRegistration = UICollectionView.SupplementaryRegistration<ScrollFadeView>(elementKind: "ScrollFadeView") { [weak self] view, _, indexPath in
             guard let self else { return }
-            let sid = self.dataSource.sectionIdentifier(for: indexPath.section)
+            let sid = dataSource.sectionIdentifier(for: indexPath.section)
             guard let label = sid?.label else { return }
             view.configure(with: label, viewController: self)
         }
@@ -967,13 +966,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let descendingMenu = SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil) { [weak self] _ in
                 guard let self else { return }
-                self.sortRequested(option, ascending: false, button: self.sortAscendingButton)
+                sortRequested(option, ascending: false, button: sortAscendingButton)
             }
         }
         let ascendingMenu = SortOption.options.map { option -> UIMenuElement in
             UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil) { [weak self] _ in
                 guard let self else { return }
-                self.sortRequested(option, ascending: true, button: self.sortAscendingButton)
+                sortRequested(option, ascending: true, button: sortAscendingButton)
             }
         }
         let menuItems = [

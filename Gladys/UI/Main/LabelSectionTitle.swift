@@ -104,8 +104,8 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
             guard let self else { return }
-            if context.state == .activated, self.mode == .collapsed {
-                sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            if context.state == .activated, mode == .collapsed {
+                sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
             }
         })
 
@@ -113,7 +113,7 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
             guard let self else { return }
-            sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -130,7 +130,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
-            sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: self.window?.windowScene, frame: nil, name: self.label.text))
+            sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
         }, for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)

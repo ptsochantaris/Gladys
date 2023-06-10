@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 import GladysCommon
 
 final class ShareViewController: NSViewController {

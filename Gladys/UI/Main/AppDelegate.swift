@@ -1,5 +1,3 @@
-import CloudKit
-import CoreSpotlight
 import GladysCommon
 import GladysUI
 import UIKit

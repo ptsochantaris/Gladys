@@ -1,9 +1,4 @@
-import CloudKit
-import CoreSpotlight
-import GladysCommon
 import GladysUI
-import Intents
-import MapKit
 import UIKit
 
 extension SortOption {

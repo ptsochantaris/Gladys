@@ -96,7 +96,7 @@ public final actor WebArchiver {
         let resourceInfo = await withTaskGroup(of: (String, [AnyHashable: Any])?.self) { group -> [AnyHashable: Any] in
             for resourceUrl in resources {
                 group.addTask { [weak self] in
-                    guard let self, let (data, response) = try? await self.getData(from: resourceUrl), response.status.code == 200 else {
+                    guard let self, let (data, response) = try? await getData(from: resourceUrl), response.status.code == 200 else {
                         log("Download failed: \(resourceUrl)")
                         return nil
                     }

@@ -1,5 +1,5 @@
+import AppKit
 import Carbon.HIToolbox
-import Cocoa
 import GladysCommon
 import GladysUI
 import Speech

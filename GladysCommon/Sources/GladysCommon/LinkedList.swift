@@ -1,5 +1,3 @@
-import Foundation
-
 public final class LinkedList<Value>: Sequence {
     public final class Node<T> {
         fileprivate let value: T

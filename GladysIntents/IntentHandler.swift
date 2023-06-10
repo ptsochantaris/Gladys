@@ -1,6 +1,5 @@
 import GladysCommon
 import Intents
-import UIKit
 
 final class IntentHandler: INExtension, PasteClipboardIntentHandling, CopyItemIntentHandling, CopyComponentIntentHandling {
     @MainActor

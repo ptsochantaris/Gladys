@@ -1,4 +1,3 @@
-import CloudKit
 import GladysCommon
 import GladysUI
 import MapKit

@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 extension Notification.Name {
     static let KillHelper = Notification.Name("KillHelper")

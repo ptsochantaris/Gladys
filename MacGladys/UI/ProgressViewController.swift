@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 final class ProgressViewController: NSViewController {
     @IBOutlet private var titleLabel: NSTextField!

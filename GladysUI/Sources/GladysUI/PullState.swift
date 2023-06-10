@@ -1,6 +1,6 @@
+import AsyncAlgorithms
 import CloudKit
 import GladysCommon
-import AsyncAlgorithms
 
 final actor PullState {
     private enum ZoneModification {
@@ -186,13 +186,13 @@ final actor PullState {
             log("Extension record deletion detected")
         }
     }
-    
+
     private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
         let changeQueue = AsyncChannel<ZoneModification>()
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
-        
+
         let queueTask = Task {
             for await change in changeQueue {
                 switch change {
@@ -258,7 +258,7 @@ final actor PullState {
             }
             try await taskGroup.waitForAll()
         }
-        
+
         changeQueue.finish()
         _ = await queueTask.value
     }

@@ -1,5 +1,5 @@
+import AppKit
 import CloudKit
-import Cocoa
 import Combine
 import CoreSpotlight
 import GladysCommon

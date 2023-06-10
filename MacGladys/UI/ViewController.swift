@@ -1,7 +1,7 @@
-import Cocoa
+import AppKit
 import GladysCommon
 import GladysUI
-import Quartz
+import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
     NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {

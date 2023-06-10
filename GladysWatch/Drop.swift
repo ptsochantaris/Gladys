@@ -1,5 +1,6 @@
-import SwiftUI
+import UIKit
 import WatchConnectivity
+import WatchKit
 
 final class ImageCache {
     private static let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!

@@ -1,5 +1,3 @@
-import GladysCommon
-
 #if os(macOS)
     import Cocoa
 
