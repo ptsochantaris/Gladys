@@ -5,8 +5,7 @@ import GladysCommon
 import GladysUI
 import UniformTypeIdentifiers
 
-@MainActor
-enum CallbackSupport {
+extension CallbackSupport {
     private static func handle(result: PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) async {
         try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
         switch result {

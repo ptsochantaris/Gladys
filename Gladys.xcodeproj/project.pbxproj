@@ -51,8 +51,6 @@
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1643C03F2323EDA0005D7BF3 /* StoreKit.framework */; };
-		1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
-		1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */; };
 		16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		164947CF20BEAA6200BD1BEB /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 164947CE20BEAA6200BD1BEB /* icon.icns */; };
 		164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947D020BEAA6200BD1BEB /* ShareViewController.swift */; };
@@ -94,8 +92,6 @@
 		1689646429903BD9009D7D01 /* GladysUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1689646329903BD9009D7D01 /* GladysUI */; };
 		1689646629903DFA009D7D01 /* WatchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646529903DFA009D7D01 /* WatchDelegate.swift */; };
 		1689646829903EDF009D7D01 /* Model+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646729903EDF009D7D01 /* Model+iOS.swift */; };
-		168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
-		168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168C42F4233F5CA700050E82 /* LocalAuth.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
@@ -130,6 +126,10 @@
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A6729E29D4ED5900110F63 /* FileMonitor.swift */; };
 		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
+		16A925082A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */; };
+		16A9250C2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
+		16A9250D2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
+		16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
 		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
 		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
 		16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */; };
@@ -142,11 +142,9 @@
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
 		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
-		16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16B89E7C2523D50C007FD864 /* CallbackURLKit */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
-		16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBB28AE48F300E9EB04 /* CallbackURLKit */; };
 		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
 		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
 		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
@@ -405,7 +403,6 @@
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
 		164136931F09195000B34574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1643C03F2323EDA0005D7BF3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CallbackSupport+Common.swift"; sourceTree = "<group>"; };
 		164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacGladysShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		164947CE20BEAA6200BD1BEB /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		164947D020BEAA6200BD1BEB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -449,7 +446,6 @@
 		1689646529903DFA009D7D01 /* WatchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDelegate.swift; sourceTree = "<group>"; };
 		1689646729903EDF009D7D01 /* Model+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+iOS.swift"; sourceTree = "<group>"; };
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
-		168C42F4233F5CA700050E82 /* LocalAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAuth.swift; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
 		168D2CAE209E0770005041CF /* ComponentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComponentCell.xib; sourceTree = "<group>"; };
@@ -485,6 +481,8 @@
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16A6729E29D4ED5900110F63 /* FileMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
+		16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Intents+MainApp.swift"; sourceTree = "<group>"; };
+		16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Intents+Extensions.swift"; sourceTree = "<group>"; };
 		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
@@ -549,7 +547,6 @@
 				1689646229903BD0009D7D01 /* GladysUI in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
-				16C12FBC28AE48F300E9EB04 /* CallbackURLKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,7 +588,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16B89E7D2523D50C007FD864 /* CallbackURLKit in Frameworks */,
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				1689646429903BD9009D7D01 /* GladysUI in Frameworks */,
 				16950FFF2987F4B300F0CEE6 /* GladysCommon in Frameworks */,
@@ -799,8 +795,9 @@
 				169763131F15669000537776 /* Component+iOS.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
-				168C42F4233F5CA700050E82 /* LocalAuth.swift */,
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
+				16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */,
+				16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -932,7 +929,6 @@
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
 				165173021F99483E006CAF0A /* GladysViewController.swift */,
 				162289B3207CC72600DAC6A2 /* CallbackSupport.swift */,
-				1643D11A20E434A200F9C681 /* CallbackSupport+Common.swift */,
 				16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */,
 				16CA7AA0236F880C00F96699 /* SceneDelegate.swift */,
 				1660C0252465C32000ABFDFD /* Singleton.swift */,
@@ -1053,7 +1049,6 @@
 			);
 			name = MacGladys;
 			packageProductDependencies = (
-				16C12FBB28AE48F300E9EB04 /* CallbackURLKit */,
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
 				16C2993D2987DF40002286B1 /* GladysCommon */,
 				1689646129903BD0009D7D01 /* GladysUI */,
@@ -1168,7 +1163,6 @@
 			);
 			name = Gladys;
 			packageProductDependencies = (
-				16B89E7C2523D50C007FD864 /* CallbackURLKit */,
 				16950FFE2987F4B300F0CEE6 /* GladysCommon */,
 				1689646329903BD9009D7D01 /* GladysUI */,
 			);
@@ -1282,8 +1276,9 @@
 		1678F9C51EF475FE005697CB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
 					161718C32094D333005ABD6C = {
@@ -1417,7 +1412,6 @@
 			);
 			mainGroup = 1678F9C41EF475FE005697CB;
 			packageReferences = (
-				16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */,
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
@@ -1643,7 +1637,6 @@
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
-				1643D11C20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
 				16D3CC0626343B0D00BCC5B4 /* NSPasteboard+Extensions.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
@@ -1660,7 +1653,6 @@
 				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */,
-				168C42F6233F5CB500050E82 /* LocalAuth.swift in Sources */,
 				16D3CC0C26343B8A00BCC5B4 /* MainCollectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1716,6 +1708,7 @@
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
+				16A925082A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift in Sources */,
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */,
@@ -1759,9 +1752,7 @@
 				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				1651117E2163DEE300C5C874 /* Component+Intents.swift in Sources */,
-				168C42F5233F5CA700050E82 /* LocalAuth.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
-				1643D11B20E434A200F9C681 /* CallbackSupport+Common.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
@@ -1791,6 +1782,7 @@
 			files = (
 				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
+				16A9250C2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 				16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */,
@@ -1817,6 +1809,7 @@
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
 				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
+				16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
@@ -1832,6 +1825,7 @@
 				165B970425CD884000E73E2D /* Component+Intents.swift in Sources */,
 				165B971125CD885800E73E2D /* ArchivedItem+Copy.swift in Sources */,
 				16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */,
+				16A9250D2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16D984962160C5A000D9D51C /* IntentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2239,6 +2233,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "MAINAPP $(inherited)";
 			};
 			name = Debug;
@@ -2359,6 +2356,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "MAINAPP $(inherited)";
 			};
 			name = Release;
@@ -2662,14 +2662,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/phimage/CallbackURLKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.2;
-			};
-		};
 		16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/soffes/HotKey";
@@ -2696,16 +2688,6 @@
 		16A4355529788DB1005B8CE6 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
-		};
-		16B89E7C2523D50C007FD864 /* CallbackURLKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
-			productName = CallbackURLKit;
-		};
-		16C12FBB28AE48F300E9EB04 /* CallbackURLKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 16B89E7B2523D50C007FD864 /* XCRemoteSwiftPackageReference "CallbackURLKit" */;
-			productName = CallbackURLKit;
 		};
 		16C12FBF28AE494C00E9EB04 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;

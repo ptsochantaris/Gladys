@@ -4,8 +4,7 @@ import GladysUI
 import UIKit
 import UniformTypeIdentifiers
 
-@MainActor
-enum CallbackSupport {
+extension CallbackSupport {
     private static func handle(result: PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)

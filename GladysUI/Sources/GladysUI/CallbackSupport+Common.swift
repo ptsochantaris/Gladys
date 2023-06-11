@@ -2,8 +2,9 @@ import CallbackURLKit
 import Foundation
 import GladysCommon
 
-extension CallbackSupport {
-    static func createOverrides(from parameters: [String: String]) -> ImportOverrides {
+@MainActor
+public enum CallbackSupport {
+    public static func createOverrides(from parameters: [String: String]) -> ImportOverrides {
         let title = parameters["title"]
         let labels = parameters["labels"]
         let note = parameters["note"]
@@ -12,7 +13,7 @@ extension CallbackSupport {
     }
 
     @discardableResult
-    static func handlePossibleCallbackURL(url: URL) -> Bool {
+    public static func handlePossibleCallbackURL(url: URL) -> Bool {
         Manager.shared.handleOpen(url: url)
     }
 }
