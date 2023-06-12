@@ -45,7 +45,7 @@ final actor PushState {
             payload.append(itemRecord)
             return payload
 
-        }.flatBunch(minSize: 10)
+        }.uniqued.flatBunch(minSize: 10)
 
         var newQueue = await CloudManager.deletionQueue
         if !idsToPush.isEmpty {
@@ -71,7 +71,7 @@ final actor PushState {
             } else {
                 return nil
             }
-        }.bunch(maxSize: 100)
+        }.uniqued.bunch(maxSize: 100)
 
         if zoneId == privateZoneId {
             currentUUIDSequence = drops.map(\.uuid.uuidString)
