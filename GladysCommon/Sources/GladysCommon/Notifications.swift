@@ -29,7 +29,6 @@ public struct ImportOverrides {
 public struct PasteRequest {
     public let providers: [NSItemProvider]
     public let overrides: ImportOverrides?
-    public let skipVisibleErrors: Bool
 }
 
 extension Notification: @unchecked Sendable {}

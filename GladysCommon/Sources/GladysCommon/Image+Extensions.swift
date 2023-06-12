@@ -109,24 +109,6 @@ public extension IMAGE {
             return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)
         }
 
-        private static let fromFileOptions: CFDictionary = [
-            kCGImageSourceShouldCache: kCFBooleanFalse
-        ] as CFDictionary
-
-        private static let regularFormat: UIGraphicsImageRendererFormat = {
-            let f = UIGraphicsImageRendererFormat()
-            f.preferredRange = .standard
-            f.scale = 1
-            return f
-        }()
-
-        private static let templateFormat: UIGraphicsImageRendererFormat = {
-            let f = UIGraphicsImageRendererFormat()
-            f.preferredRange = .standard
-            f.scale = screenScale
-            return f
-        }()
-
         private static let sharedCiContext = CIContext()
 
         public final func desaturated(darkMode: Bool) async -> UIImage {

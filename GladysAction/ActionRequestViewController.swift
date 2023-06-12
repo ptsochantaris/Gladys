@@ -41,10 +41,6 @@ final class ActionRequestViewController: UIViewController {
         }
     }
 
-    private var newTotal: Int {
-        LiteModel.countSavedItemsWithoutLoading() + loadCount
-    }
-
     private func error(text: String) {
         statusLabel.isHidden = false
         statusLabel.text = text

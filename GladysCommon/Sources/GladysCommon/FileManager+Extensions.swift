@@ -90,39 +90,4 @@ public extension FileManager {
             return length > 0
         }
     }
-
-    func getUUIDAttribute(_ attributeName: String, from url: URL) -> UUID? {
-        guard fileExists(atPath: url.path) else {
-            return nil
-        }
-
-        return url.withUnsafeFileSystemRepresentation { fileSystemPath in
-            if getxattr(fileSystemPath, attributeName, nil, 0, 0, 0) == 16 {
-                var d = [UInt8](repeating: 0, count: 16)
-                let result = getxattr(fileSystemPath, attributeName, &d, 16, 0, 0)
-                if result > 0 {
-                    return UUID(uuid: (d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9], d[10], d[11], d[12], d[13], d[14], d[15]))
-                }
-            }
-            return nil
-        }
-    }
-
-    func setUUIDAttribute(_ attributeName: String, at url: URL, to uuid: UUID?) {
-        guard fileExists(atPath: url.path) else {
-            return
-        }
-
-        url.withUnsafeFileSystemRepresentation { fileSystemPath in
-            if let u = uuid?.uuid {
-                var bytes = [u.0, u.1, u.2, u.3, u.4, u.5, u.6, u.7, u.8, u.9, u.10, u.11, u.12, u.13, u.14, u.15]
-                let res = setxattr(fileSystemPath, attributeName, &bytes, 16, 0, 0)
-                if res < 0 {
-                    log(String(format: "Error while setting uuid attribute: %s for %s", strerror(errno), fileSystemPath!))
-                }
-            } else {
-                removexattr(fileSystemPath, attributeName, 0)
-            }
-        }
-    }
 }

@@ -6,43 +6,6 @@ public enum LiteModel {
         NSFileCoordinator(filePresenter: nil)
     }
 
-    public static func countSavedItemsWithoutLoading() -> Int {
-        var count = 0
-        var coordinationError: NSError?
-        var loadingError: NSError?
-
-        coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
-
-            let fm = FileManager.default
-            if !fm.fileExists(atPath: url.path) {
-                return
-            }
-
-            do {
-                let uuidFileURL = url.appendingPathComponent("uuids")
-                do {
-                    if let fileSize = try fm.attributesOfItem(atPath: uuidFileURL.path)[FileAttributeKey.size] as? UInt64 {
-                        if fileSize % 16 != 0 {
-                            log("Warning: uuid file size not multiple of 16!")
-                        }
-                        count = Int(fileSize / 16)
-                    } else {
-                        log("Could not parse the size of uuid file")
-                    }
-                } catch {
-                    log("Loading Error: \(error)")
-                    loadingError = error as NSError
-                }
-            }
-        }
-
-        if let e = loadingError ?? coordinationError {
-            log("Error in counting saved items: \(e)")
-        }
-
-        return count
-    }
-
     public static func locateItemWithoutLoading(uuid: String) -> ArchivedItem? {
         var item: ArchivedItem?
         var coordinationError: NSError?

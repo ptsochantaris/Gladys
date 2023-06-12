@@ -31,12 +31,6 @@ public extension ArchivedItem {
         }
     }
 
-    private var shareOwnerName: String? {
-        guard let p = cloudKitShareRecord?.owner.userIdentity.nameComponents else { return nil }
-        let f = PersonNameComponentsFormatter()
-        return f.string(from: p)
-    }
-
     @MainActor
     func delete() {
         if shouldDisplayLoading {

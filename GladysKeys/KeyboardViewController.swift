@@ -61,15 +61,6 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
         }
     }
 
-    private func sizeWindow() {
-        if table.isHidden {
-            preferredContentSize = CGSize(width: 240, height: 240)
-        } else {
-            let full = table.contentSize.height + 8
-            preferredContentSize = CGSize(width: 240, height: full)
-        }
-    }
-
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         labels.count + 1
     }

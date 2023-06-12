@@ -925,10 +925,6 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         cloudKitRecord?.recordID.zoneID ?? privateZoneId
     }
 
-    private func sharedInZone(zoneId: CKRecordZone.ID) -> Bool {
-        cloudKitRecord?.share?.recordID.zoneID == zoneId
-    }
-
     public var populatedCloudKitRecord: CKRecord? {
         guard needsCloudPush, !needsDeletion, goodToSave else { return nil }
 
