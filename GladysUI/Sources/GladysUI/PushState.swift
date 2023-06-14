@@ -8,7 +8,6 @@ final actor PushState {
     private var dropsToPush: Int
 
     private let database: CKDatabase
-    private let uuid2progress = [String: Progress]()
     private let recordsToDelete: [[CKRecord.ID]]
     private let payloadsToPush: [[CKRecord]]
     private let currentUUIDSequence: [String]
@@ -18,11 +17,10 @@ final actor PushState {
 
         let drops = await DropStore.allDrops
 
-        var idsToPush = [String]()
+        var idsToPush = Set<String>()
 
         var _dropsToPush = 0
         var _dataItemsToPush = 0
-        var _uuid2progress = [String: Progress]()
         var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
             guard let itemRecord = item.populatedCloudKitRecord,
                   itemRecord.recordID.zoneID == zoneId
@@ -33,32 +31,26 @@ final actor PushState {
             _dropsToPush += 1
 
             let itemId = item.uuid.uuidString
-            idsToPush.append(itemId)
-            _uuid2progress[itemId] = Progress(totalUnitCount: 100)
-            for component in item.components {
-                let uuidString = component.uuid.uuidString
-                idsToPush.append(uuidString)
-                _uuid2progress[uuidString] = Progress(totalUnitCount: 100)
-            }
+            idsToPush.insert(itemId)
+            idsToPush.formUnion(item.components.map { $0.uuid.uuidString })
 
             var payload = item.components.compactMap(\.populatedCloudKitRecord)
             payload.append(itemRecord)
-            return payload
+            return payload.uniqued
 
-        }.uniqued.flatBunch(minSize: 10)
+        }.flatBunch(minSize: 20)
 
-        var newQueue = await CloudManager.deletionQueue
-        if !idsToPush.isEmpty {
-            let previousCount = newQueue.count
-            newQueue = newQueue.filter { !idsToPush.contains($0) }
-            if newQueue.count != previousCount {
-                let newQueue = newQueue
+        let newDeletionQueue = await CloudManager.deletionQueue
+        if !idsToPush.isEmpty, !newDeletionQueue.isEmpty {
+            let previousCount = newDeletionQueue.count
+            let filteredDeletionQueue = newDeletionQueue.filter { !idsToPush.contains($0) }
+            if filteredDeletionQueue.count != previousCount {
                 Task { @CloudActor in
-                    CloudManager.deletionQueue = newQueue
+                    CloudManager.deletionQueue = filteredDeletionQueue
                 }
             }
         }
-        recordsToDelete = newQueue.compactMap {
+        recordsToDelete = newDeletionQueue.compactMap {
             let components = $0.components(separatedBy: ":")
             if components.count > 2 {
                 if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
@@ -134,20 +126,6 @@ final actor PushState {
         }
     }
 
-    var progress: Progress {
-        let progress = Progress(totalUnitCount: Int64(dropsToPush + dataItemsToPush) * 100)
-        for v in uuid2progress.values {
-            progress.addChild(v, withPendingUnitCount: 100)
-        }
-        let deleteCount = recordsToDelete.count
-        let pushCount = payloadsToPush.count
-        if deleteCount + pushCount > 0 {
-            log("Pushing up \(deleteCount) item deletion blocks, \(pushCount) item blocks")
-            updateSyncMessage()
-        }
-        return progress
-    }
-
     private var deletionOperations: [CKDatabaseOperation] {
         recordsToDelete.map { recordIdList in
             let operation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: recordIdList)
@@ -190,12 +168,6 @@ final actor PushState {
             let operation = CKModifyRecordsOperation(recordsToSave: recordList, recordIDsToDelete: nil)
             operation.database = database
             operation.savePolicy = .allKeys
-            operation.perRecordProgressBlock = { record, progress in
-                Task {
-                    let recordProgress = self.uuid2progress[record.recordID.recordName]
-                    recordProgress?.completedUnitCount = Int64(progress * 100.0)
-                }
-            }
 
             let updatedRecords = LinkedList<CKRecord>()
 

@@ -363,6 +363,7 @@ public extension CloudManager {
             do {
                 try await taskGroup.waitForAll()
             } catch {
+                if force { return }
                 log("Cloud sync deactivation failed: \(error.finalDescription)")
                 throw error
             }
