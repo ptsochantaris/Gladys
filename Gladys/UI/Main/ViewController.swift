@@ -754,6 +754,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
+        if #available(iOS 17.0, *) {
+            searchController.searchBar.isLookToDictateEnabled = true
+        }
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in

@@ -103,15 +103,15 @@ public extension IMAGE {
     public let screenScale = UIScreen.main.scale
     public let pixelSize: CGFloat = 1 / screenScale
 
-    extension UIImage {
-        public static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
+    public extension UIImage {
+        static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
             let img = UIImage(systemName: systemName)
             return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)
         }
 
         private static let sharedCiContext = CIContext()
 
-        public final func desaturated(darkMode: Bool) async -> UIImage {
+        final func desaturated(darkMode: Bool) async -> UIImage {
             guard let ciImage = CIImage(image: self) else {
                 return self
             }

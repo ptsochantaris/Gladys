@@ -13,6 +13,8 @@ import Foundation
     public let groupName = "group.build.bru.Gladys"
 #endif
 
+extension IMAGE: @unchecked Sendable {}
+
 public let GladysFileUTI = "build.bru.gladys.archive"
 
 public let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"

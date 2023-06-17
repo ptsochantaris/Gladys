@@ -193,5 +193,7 @@
 	</array>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Gladys will only transcribe speech from media items when this setting is on, and only process it on the local device.</string>
+	<key>UIPreferredDefaultInterfaceOrientation</key>
+	<string>UIInterfaceOrientationLandscapeLeft</string>
 </dict>
 </plist>

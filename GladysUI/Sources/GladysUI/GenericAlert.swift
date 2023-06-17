@@ -1,5 +1,5 @@
 #if os(macOS)
-    import Cocoa
+    import AppKit
 
     @MainActor
     public func genericAlert(title: String, message: String?, windowOverride _: NSWindow? = nil, buttonTitle: String = "OK", offerSettingsShortcut _: Bool = false) async {

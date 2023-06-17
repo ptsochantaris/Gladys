@@ -85,6 +85,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 17.0, *) {
+            searchBar.isLookToDictateEnabled = true
+        }
         searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
             self?.searchUpdated()
         }
