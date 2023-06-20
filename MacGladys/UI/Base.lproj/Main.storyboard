@@ -378,16 +378,39 @@ CA
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ehk-8i-3o1">
                                                 <rect key="frame" x="0.0" y="167" width="380" height="60"/>
                                                 <subviews>
-                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qZt-B1-Zbn">
-                                                        <rect key="frame" x="135" y="41" width="111" height="19"/>
-                                                        <buttonCell key="cell" type="roundRect" title="Gladys Web Site" bezelStyle="roundedRect" imagePosition="left" borderStyle="border" inset="2" id="TEX-kv-UBl">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="cellTitle"/>
-                                                        </buttonCell>
-                                                        <connections>
-                                                            <action selector="openWebSite:" target="GCw-ZO-1Jc" id="DXN-cw-L0E"/>
-                                                        </connections>
-                                                    </button>
+                                                    <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Mg-Bw-Xsu">
+                                                        <rect key="frame" x="70" y="42" width="241" height="18"/>
+                                                        <subviews>
+                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qZt-B1-Zbn">
+                                                                <rect key="frame" x="0.0" y="-1" width="111" height="19"/>
+                                                                <buttonCell key="cell" type="roundRect" title="Gladys Web Site" bezelStyle="roundedRect" imagePosition="left" borderStyle="border" inset="2" id="TEX-kv-UBl">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="cellTitle"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="openWebSite:" target="GCw-ZO-1Jc" id="DXN-cw-L0E"/>
+                                                                </connections>
+                                                            </button>
+                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SlE-ha-vNG">
+                                                                <rect key="frame" x="121" y="-1" width="120" height="19"/>
+                                                                <buttonCell key="cell" type="roundRect" title="Gladys On GitHub" bezelStyle="roundedRect" imagePosition="left" borderStyle="border" inset="2" id="AHZ-CM-rJp">
+                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                    <font key="font" metaFont="cellTitle"/>
+                                                                </buttonCell>
+                                                                <connections>
+                                                                    <action selector="openGitHub:" target="GCw-ZO-1Jc" id="kSU-Z8-RT3"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <visibilityPriorities>
+                                                            <integer value="1000"/>
+                                                            <integer value="1000"/>
+                                                        </visibilityPriorities>
+                                                        <customSpacing>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                            <real value="3.4028234663852886e+38"/>
+                                                        </customSpacing>
+                                                    </stackView>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zmc-QD-Yz2">
                                                         <rect key="frame" x="-2" y="0.0" width="384" height="32"/>
                                                         <textFieldCell key="cell" alignment="center" title="If you would like to report a bug or have any issues or suggestions, please email me at paul@bru.build" id="VFj-ux-zVy">
@@ -974,7 +997,7 @@ Cg
                                                                 </paragraphStyle>
                                                             </attributes>
                                                         </fragment>
-                                                        <fragment content="Gladys is Copyright (c) 2017-2021 Paul Tsochantaris, all rights reserved.">
+                                                        <fragment content="Gladys is Copyright (c) 2017-2023 Paul Tsochantaris, all rights reserved.">
                                                             <attributes>
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>

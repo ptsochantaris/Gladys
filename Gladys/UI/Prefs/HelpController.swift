@@ -110,16 +110,16 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
               """,
               link: nil),
 
-        Entry(title: "Siri Shortcuts",
+        Entry(title: "App Shortcuts",
               body: """
               Gladys supports shortcuts to:
 
-              • Paste the current clipboard into your collection.
-              • Copy Gladys items directly to the clipboard.
-              • Quick look supported item previews.
-              • Return to specific info panels.
+              • Copy an item to the clipboard.
+              • Select and open an item's info or quicklook in Gladys.
+              • Create new items for text, links, or files.
+              • Delete an item.
 
-              You can configure shortcuts for any time directly from its context menu. You can configure the paste action from the mic icon in the options view. Siri may also occasionally suggest shortcuts on the lockscreen for often-used actions based on your usage (as always, all data and processing related to this feature remains strictly on your own device.)
+              You can view and use these shortcuts in the system Shortcuts app.
               """,
               link: nil),
 
@@ -162,7 +162,15 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
 
               Find more about it by selecting this entry.
               """,
-              link: "https://www.bru.build/gladys-for-macos")
+              link: "https://www.bru.build/gladys-for-macos"),
+        
+        Entry(title: "Open source",
+              body: """
+              Gladys is an open-source project, and is published under the MIT license.
+              
+              Find more about it by selecting this entry.
+              """,
+              link: "https://github.com/ptsochantaris/Gladys")
     ]
 
     override func viewDidLoad() {

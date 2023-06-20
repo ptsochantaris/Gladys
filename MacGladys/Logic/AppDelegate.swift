@@ -454,6 +454,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         NSWorkspace.shared.open(URL(string: "https://www.bru.build/gladys-for-macos")!)
     }
 
+    @IBAction private func openGitHub(_: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/ptsochantaris/Gladys")!)
+    }
+
     /////////////////////////////////////////////////////////////////
 
     private var pasteboardObservation: Cancellable?

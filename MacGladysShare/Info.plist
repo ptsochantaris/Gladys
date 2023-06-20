@@ -32,8 +32,8 @@
 			<string>SUBQUERY (
   extensionItems, $extensionItem, SUBQUERY (
     $extensionItem.attachments, $attachment, (
-         (ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.content" OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.item")
-		 AND NONE $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.directory"
+         (ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.content&quot; OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.item&quot;)
+		 AND NONE $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.directory&quot;
     )
   ).@count == $extensionItem.attachments.@count
 ).@count &gt;= 1</string>
@@ -44,6 +44,6 @@
 		<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2018 Paul Tsochantaris. All rights reserved.</string>
+	<string>Copyright © 2017 Paul Tsochantaris. All rights reserved.</string>
 </dict>
 </plist>
