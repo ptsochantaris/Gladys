@@ -363,7 +363,9 @@ final class DetailController: GladysViewController,
 
                 if self.isReadWrite {
                     children.append(UIAction(title: "Remove", image: UIImage(systemName: "xmark"), attributes: .destructive) { _ in
-                        self.removeLabel(text)
+                        Task {
+                            await self.removeLabel(text)
+                        }
                     })
                 }
 
@@ -406,7 +408,9 @@ final class DetailController: GladysViewController,
 
                 if component.parent?.shareMode != .elsewhereReadOnly {
                     children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
-                        self.removeComponent(component)
+                        Task {
+                            await self.removeComponent(component)
+                        }
                     })
                 }
 
@@ -493,55 +497,47 @@ final class DetailController: GladysViewController,
         return item.needsReIngest || item.isTransferring
     }
 
-    private func afterSync() async {
-        guard await shouldWaitForSync() else { return }
+    private func proceedAfterSync() async -> Bool {
+        guard await shouldWaitForSync() else { return true }
 
-        var keepChecking = true
         var alert: UIAlertController?
         Task {
             await genericAlert(title: "Syncing last update", message: "One moment please…", buttonTitle: "Cancel") { alert = $0 }
-            keepChecking = false
+            alert = nil
         }
 
-        while keepChecking {
+        while true {
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-            let wait = await shouldWaitForSync()
-            if !wait {
-                keepChecking = false
-                await alert?.dismiss(animated: true)
+            guard await shouldWaitForSync() else {
+                if let alert {
+                    await alert.dismiss(animated: true)
+                    return true
+                } else {
+                    return false
+                }
             }
         }
     }
 
-    private func removeLabel(_ label: String) {
-        Task {
-            await afterSync()
-            _removeLabel(label)
-        }
-    }
+    private func removeLabel(_ label: String) async {
+        guard await proceedAfterSync() else { return }
 
-    private func _removeLabel(_ label: String) {
-        table.performBatchUpdates({
+        table.performBatchUpdates {
             guard let index = item.labels.firstIndex(of: label) else {
                 return
             }
             item.labels.remove(at: index)
             let indexPath = IndexPath(row: index, section: 1)
             table.deleteRows(at: [indexPath], with: .automatic)
-        }, completion: { _ in
+        } completion: { _ in
             self.makeIndexAndSaveItem()
             UIAccessibility.post(notification: .layoutChanged, argument: self.table)
-        })
-    }
-
-    private func removeComponent(_ component: Component) {
-        Task {
-            await afterSync()
-            _removeComponent(component)
         }
     }
 
-    private func _removeComponent(_ component: Component) {
+    private func removeComponent(_ component: Component) async {
+        guard await proceedAfterSync() else { return }
+
         table.performBatchUpdates {
             guard let index = item.components.firstIndex(of: component) else {
                 return
@@ -802,8 +798,11 @@ final class DetailController: GladysViewController,
         let text = item.labels[indexPath.row]
         return UISwipeActionsConfiguration(actions: [
             UIContextualAction(style: .destructive, title: "Remove") { [weak self] _, _, completion in
-                self?.removeLabel(text)
-                completion(true)
+                guard let self else { return }
+                Task {
+                    await self.removeLabel(text)
+                    completion(true)
+                }
             }
         ])
     }

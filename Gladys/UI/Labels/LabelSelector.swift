@@ -43,9 +43,9 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             searchController.searchResultsUpdater = self
             searchController.searchBar.tintColor = view.tintColor
             #if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                searchController.searchBar.isLookToDictateEnabled = true
-            }
+                if #available(iOS 17.0, *) {
+                    searchController.searchBar.isLookToDictateEnabled = true
+                }
             #endif
             searchController.hidesNavigationBarDuringPresentation = false
             navigationItem.hidesSearchBarWhenScrolling = false
@@ -220,21 +220,21 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     private func delete(toggle: Filter.Toggle) {
         let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.function.displayText)' from any item that contains it.", preferredStyle: .alert)
         a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
-            guard let s = self else { return }
-            s.filter.removeLabel(toggle.function.displayText)
-            if s.filter.labelToggles.isEmpty {
-                s.table.isHidden = true
-                s.emptyLabel.isHidden = false
-                s.clearAllButton.isEnabled = false
-                s.navigationController?.setNavigationBarHidden(true, animated: false)
-                UIAccessibility.post(notification: .layoutChanged, argument: s.emptyLabel)
-            } else if let i = s.filteredToggles.firstIndex(of: toggle) {
+            guard let self else { return }
+            filter.removeLabel(toggle.function.displayText)
+            if filter.labelToggles.isEmpty {
+                table.isHidden = true
+                emptyLabel.isHidden = false
+                clearAllButton.isEnabled = false
+                navigationController?.setNavigationBarHidden(true, animated: false)
+                UIAccessibility.post(notification: .layoutChanged, argument: emptyLabel)
+            } else if let i = filteredToggles.firstIndex(of: toggle) {
                 let indexPath = IndexPath(row: i, section: 0)
-                s.table.deleteRows(at: [indexPath], with: .automatic)
+                table.deleteRows(at: [indexPath], with: .automatic)
             }
-            Task { @MainActor in
+            Task {
                 try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-                s.sizeWindow()
+                self.sizeWindow()
             }
         })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel))

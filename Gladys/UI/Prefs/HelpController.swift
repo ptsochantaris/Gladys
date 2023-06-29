@@ -163,11 +163,11 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
               Find more about it by selecting this entry.
               """,
               link: "https://www.bru.build/gladys-for-macos"),
-        
+
         Entry(title: "Open source",
               body: """
               Gladys is an open-source project, and is published under the MIT license.
-              
+
               Find more about it by selecting this entry.
               """,
               link: "https://github.com/ptsochantaris/Gladys")
