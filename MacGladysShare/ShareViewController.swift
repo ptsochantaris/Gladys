@@ -106,7 +106,7 @@ final class ShareViewController: NSViewController {
             guard let s = self else { return }
 
             if s.cancelled {
-                let error = GladysError.actionCancelled.error
+                let error = GladysError.actionCancelled
                 log(error.localizedDescription)
                 extensionContext.cancelRequest(withError: error)
                 return
@@ -118,7 +118,7 @@ final class ShareViewController: NSViewController {
             s.pasteboard.writeObjects(s.pasteboardItems)
             s.status.stringValue = "Saving…"
             if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
-                let error = GladysError.mainAppFailedToOpen.error
+                let error = GladysError.mainAppFailedToOpen
                 log(error.localizedDescription)
                 extensionContext.cancelRequest(withError: error)
             }

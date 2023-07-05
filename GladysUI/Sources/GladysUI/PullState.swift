@@ -2,6 +2,16 @@ import AsyncAlgorithms
 import CloudKit
 import GladysCommon
 
+extension CKDatabase.DatabaseChange.Deletion {
+    var isPurged: Bool {
+        #if os(xrOS)
+            reason == .purged
+        #else
+            purged
+        #endif
+    }
+}
+
 final actor PullState {
     private enum ZoneModification {
         case itemModified(modification: CKDatabase.RecordZoneChange.Modification)
@@ -241,7 +251,7 @@ final actor PullState {
                             case let .success(modification):
                                 await changeQueue.send(.itemModified(modification: modification))
                             case let .failure(error):
-                                log("Changes could not be fetched for record \(recordId): \(error.finalDescription)")
+                                log("Changes could not be fetched for record \(recordId): \(error.localizedDescription)")
                             }
                         }
 
@@ -287,13 +297,13 @@ final actor PullState {
                     await CloudManager.setSyncProgressString("Fetching Full Update…")
                     continue
                 } else {
-                    log("\(database.databaseScope.logName) database fetch operation failed: \(error.finalDescription)")
+                    log("\(database.databaseScope.logName) database fetch operation failed: \(error.localizedDescription)")
                     throw error
                 }
             }
 
             guard let databaseChanges else {
-                throw GladysError.noData.error
+                throw GladysError.noData
             }
 
             for modification in databaseChanges.modifications {
@@ -301,7 +311,7 @@ final actor PullState {
             }
             for deletion in databaseChanges.deletions {
                 deletedZoneIds.insert(deletion.zoneID)
-                if deletion.purged {
+                if deletion.isPurged {
                     log("Detected zone purging in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
                 } else {
                     log("Detected zone deletion in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
@@ -339,7 +349,7 @@ final actor PullState {
             try await fetchZoneChanges(database: database, zoneIDs: Array(changedZoneIds))
             updatedDatabaseTokens[database.databaseScope] = databaseToken
         } catch {
-            log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.finalDescription)")
+            log("Error fetching zone changes for \(database.databaseScope.logName) database: \(error.localizedDescription)")
         }
         return false
     }

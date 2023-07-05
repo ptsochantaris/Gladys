@@ -100,7 +100,11 @@ public extension IMAGE {
 
 #elseif os(iOS)
 
-    public let screenScale = UIScreen.main.scale
+    #if os(xrOS)
+        public let screenScale: CGFloat = 2
+    #else
+        public let screenScale = UIScreen.main.scale
+    #endif
     public let pixelSize: CGFloat = 1 / screenScale
 
     public extension UIImage {

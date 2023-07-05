@@ -40,7 +40,7 @@ final class Singleton {
                     do {
                         try await CloudManager.opportunisticSyncIfNeeded(force: true)
                     } catch {
-                        log("Error in extension triggered sync: \(error.finalDescription)")
+                        log("Error in extension triggered sync: \(error.localizedDescription)")
                     }
                 }
             }
@@ -52,7 +52,7 @@ final class Singleton {
                 do {
                     try await CloudManager.opportunisticSyncIfNeeded()
                 } catch {
-                    log("Error in forgrounding triggered sync: \(error.finalDescription)")
+                    log("Error in forgrounding triggered sync: \(error.localizedDescription)")
                 }
             }
         }
@@ -309,7 +309,7 @@ final class Singleton {
                         try ImportExport().importArchive(from: url, removingOriginal: !options.openInPlace)
                     } catch {
                         Task {
-                            await genericAlert(title: "Could not import data", message: error.finalDescription)
+                            await genericAlert(title: "Could not import data", message: error.localizedDescription)
                         }
                     }
                     if securityScoped {

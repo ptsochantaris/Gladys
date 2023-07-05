@@ -20,7 +20,7 @@ extension Model {
                             try await CloudManager.syncAfterSaveIfNeeded()
                         }
                     } catch {
-                        log("Error in sync after save: \(error.finalDescription)")
+                        log("Error in sync after save: \(error.localizedDescription)")
                     }
                 }
             }

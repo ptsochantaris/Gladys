@@ -1,8 +1,8 @@
 import CloudKit
 import Foundation
 
-public enum GladysError: Int {
-    case cloudAccountRetirevalFailed = 100
+public enum GladysError: LocalizedError {
+    case cloudAccountRetirevalFailed
     case cloudLoginRequired
     case cloudAccessRestricted
     case cloudAccessTemporarilyUnavailable
@@ -12,35 +12,28 @@ public enum GladysError: Int {
     case actionCancelled
     case mainAppFailedToOpen
     case blankResponse
+    case networkIssue
     case noData
 
-    public var error: NSError {
-        let message: String
+    public var errorDescription: String? {
         switch self {
-        case .cloudAccessRestricted: message = "iCloud access is restricted on this device due to policy or parental controls."
-        case .cloudAccountRetirevalFailed: message = "There was an error while trying to retrieve your account status."
-        case .cloudLoginRequired: message = "You are not logged into iCloud on this device."
-        case .cloudAccessNotSupported: message = "iCloud access is not available on this device."
-        case .importingArchiveFailed: message = "Could not read imported archive."
-        case .unknownIngestError: message = "Unknown item ingesting error."
-        case .actionCancelled: message = "Action cancelled."
-        case .mainAppFailedToOpen: message = "Main app could not be opened."
-        case .cloudAccessTemporarilyUnavailable: message = "iCloud access is temporarily unavailable, you may need to re-sign in to your iCloud account."
-        case .blankResponse: message = "The server returned an invalid response but not error"
-        case .noData: message = "Data for this item could not be loaded"
+        case .cloudAccessRestricted: return "iCloud access is restricted on this device due to policy or parental controls."
+        case .cloudAccountRetirevalFailed: return "There was an error while trying to retrieve your account status."
+        case .cloudLoginRequired: return "You are not logged into iCloud on this device."
+        case .cloudAccessNotSupported: return "iCloud access is not available on this device."
+        case .importingArchiveFailed: return "Could not read imported archive."
+        case .unknownIngestError: return "Unknown item ingesting error."
+        case .actionCancelled: return "Action cancelled."
+        case .mainAppFailedToOpen: return "Main app could not be opened."
+        case .cloudAccessTemporarilyUnavailable: return "iCloud access is temporarily unavailable, you may need to re-sign in to your iCloud account."
+        case .blankResponse: return "The server returned an invalid response but not error"
+        case .networkIssue: return "There was a network problem downloading this data"
+        case .noData: return "Data for this item could not be loaded"
         }
-        return NSError(domain: "build.bru.Gladys.error",
-                       code: rawValue,
-                       userInfo: [NSLocalizedDescriptionKey: message])
     }
 }
 
 public extension Error {
-    var finalDescription: String {
-        let err = self as NSError
-        return (err.userInfo[NSUnderlyingErrorKey] as? NSError)?.finalDescription ?? err.localizedDescription
-    }
-
     var itemDoesNotExistOnServer: Bool {
         (self as? CKError)?.code == CKError.Code.unknownItem
     }

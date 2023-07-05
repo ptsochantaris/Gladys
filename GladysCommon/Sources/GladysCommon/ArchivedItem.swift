@@ -817,7 +817,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
                     try await i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive, progress: p)
                 } catch {
                     componentsThatFailed.append(i)
-                    log("Import error: \(error.finalDescription)")
+                    log("Import error: \(error.localizedDescription)")
                 }
                 components.append(i)
             }

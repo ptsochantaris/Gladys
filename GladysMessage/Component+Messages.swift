@@ -45,7 +45,7 @@ extension Component {
             try f.createDirectory(atPath: sharedPath.path, withIntermediateDirectories: true, attributes: nil)
             try f.linkItem(at: originalURL, to: linkURL)
         } catch {
-            log("Warning: Error while creating a shared link: \(error.finalDescription)")
+            log("Warning: Error while creating a shared link: \(error.localizedDescription)")
         }
 
         return linkURL

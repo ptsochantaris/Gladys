@@ -202,7 +202,7 @@ public final class Filter {
         lock.lock()
         q.completionHandler = { error in
             if let error {
-                log("Search error: \(error.finalDescription)")
+                log("Search error: \(error.localizedDescription)")
             }
             lock.unlock()
         }

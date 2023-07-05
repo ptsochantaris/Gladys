@@ -511,7 +511,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                 cell.animateArchiving = false
             } catch {
                 if let w = view.window {
-                    await genericAlert(title: "Archiving failed", message: error.finalDescription, windowOverride: w)
+                    await genericAlert(title: "Archiving failed", message: error.localizedDescription, windowOverride: w)
                     cell.animateArchiving = false
                 }
             }

@@ -203,7 +203,9 @@ final class HelpController: GladysViewController, UITableViewDataSource, UITable
         if let urlString = entries[indexPath.section].link, let url = URL(string: urlString) {
             let config = SFSafariViewController.Configuration()
             let sf = SFSafariViewController(url: url, configuration: config)
-            sf.preferredControlTintColor = view.tintColor
+            #if !os(xrOS)
+                sf.preferredControlTintColor = view.tintColor
+            #endif
             present(sf, animated: true) {
                 tableView.deselectRow(at: indexPath, animated: true)
             }

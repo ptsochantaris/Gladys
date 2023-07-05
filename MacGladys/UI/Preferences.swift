@@ -408,7 +408,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                 let a = NSAlert()
                 a.alertStyle = .warning
                 a.messageText = "Sync Failed"
-                a.informativeText = error.finalDescription
+                a.informativeText = error.localizedDescription
                 a.beginSheetModal(for: view.window!) { _ in }
             }
         }
@@ -552,7 +552,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                 try await CloudManager.eraseZoneIfNeeded()
                 await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
             } catch {
-                await genericAlert(title: "Error", message: error.finalDescription)
+                await genericAlert(title: "Error", message: error.localizedDescription)
             }
             eraseAlliCloudDataButton.isEnabled = true
             syncSwitch.isEnabled = true

@@ -792,7 +792,7 @@ public final class Component: Codable, Equatable {
             progress.completedUnitCount += 1
             flags.remove(.isTransferring)
             if flags.contains(.loadingAborted) {
-                throw GladysError.actionCancelled.error
+                throw GladysError.actionCancelled
             }
 
             if createWebArchive {
@@ -806,7 +806,7 @@ public final class Component: Codable, Equatable {
                 }
 
                 guard let assignedUrl else {
-                    throw GladysError.actionCancelled.error
+                    throw GladysError.actionCancelled
                 }
 
                 log(">> Resolved url to read data from: [\(typeIdentifier)]")
@@ -826,8 +826,8 @@ public final class Component: Codable, Equatable {
     }
 
     private func ingestFailed(error: Error?) async throws {
-        let error = error ?? GladysError.unknownIngestError.error
-        log(">> Error receiving item: \(error.finalDescription)")
+        let error = error ?? GladysError.unknownIngestError
+        log(">> Error receiving item: \(error.localizedDescription)")
         await setDisplayIcon(#imageLiteral(resourceName: "iconPaperclip"), 0, .center)
         throw error
     }
@@ -1055,14 +1055,19 @@ public final class Component: Codable, Equatable {
     }
 
     #if os(watchOS)
-        private func generateMoviePreview() -> IMAGE? {
+        private func generateMoviePreview() async -> IMAGE? {
             nil
         }
     #else
-        private func generateMoviePreview() -> IMAGE? {
-            var result: IMAGE?
+        private func generateMoviePreview() async -> IMAGE? {
             let fm = FileManager.default
             let tempPath = previewTempPath
+
+            defer {
+                if tempPath != bytesPath {
+                    try? fm.removeItem(at: tempPath)
+                }
+            }
 
             do {
                 if fm.fileExists(atPath: tempPath.path) {
@@ -1074,22 +1079,23 @@ public final class Component: Codable, Equatable {
                 let asset = AVURLAsset(url: tempPath, options: nil)
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
                 imgGenerator.appliesPreferredTrackTransform = true
-                let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
 
-                #if os(macOS)
-                    result = NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-                #else
-                    result = UIImage(cgImage: cgImage)
+                #if os(xrOS)
+                    let cgImage = try await imgGenerator.image(at: CMTimeMake(value: 0, timescale: 1)).image
+                    return UIImage(cgImage: cgImage)
+                #elseif os(macOS)
+                    let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+                    return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+                #elseif os(iOS)
+                    let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+                    return UIImage(cgImage: cgImage)
                 #endif
 
             } catch {
-                log("Error generating movie thumbnail: \(error.finalDescription)")
+                log("Error generating movie thumbnail: \(error.localizedDescription)")
             }
 
-            if tempPath != bytesPath {
-                try? fm.removeItem(at: tempPath)
-            }
-            return result
+            return nil
         }
     #endif
 
@@ -1109,7 +1115,7 @@ public final class Component: Codable, Equatable {
         log("      received remote url: \(url.absoluteString)")
         await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
         guard let s = url.scheme, s.hasPrefix("http") else {
-            throw GladysError.blankResponse.error
+            throw GladysError.blankResponse
         }
 
         let res = try? await WebArchiver.shared.fetchWebPreview(for: url.absoluteString)
@@ -1190,7 +1196,7 @@ public final class Component: Codable, Equatable {
             await setDisplayIcon(#imageLiteral(resourceName: "image"), 5, .center)
 
         } else if typeConforms(to: .audiovisualContent) {
-            if let moviePreview = generateMoviePreview() {
+            if let moviePreview = await generateMoviePreview() {
                 await setDisplayIcon(moviePreview, 50, .fill)
             } else {
                 await setDisplayIcon(#imageLiteral(resourceName: "movie"), 30, .center)

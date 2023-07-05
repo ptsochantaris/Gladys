@@ -22,7 +22,7 @@ extension CloudManager {
             do {
                 try await sync(scope: scope)
             } catch {
-                log("Notification-triggered sync error: \(error.finalDescription)")
+                log("Notification-triggered sync error: \(error.localizedDescription)")
             }
         case .public:
             break

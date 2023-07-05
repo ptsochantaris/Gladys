@@ -112,8 +112,8 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                     }
                 } else {
                     Task { @MainActor in
-                        if let e = error {
-                            await genericAlert(title: "Could not import data", message: "The data transfer failed: \(e.finalDescription)")
+                        if let error {
+                            await genericAlert(title: "Could not import data", message: "The data transfer failed: \(error.localizedDescription)")
                         } else {
                             await genericAlert(title: "Could not import data", message: "The data transfer failed")
                         }

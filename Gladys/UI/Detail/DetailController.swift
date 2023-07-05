@@ -924,7 +924,7 @@ final class DetailController: GladysViewController,
             item.components.append(newTypeItem)
             handleNewTypeItem()
         } catch {
-            await genericAlert(title: "Archiving Failed", message: error.finalDescription)
+            await genericAlert(title: "Archiving Failed", message: error.localizedDescription)
         }
     }
 }

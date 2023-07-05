@@ -69,14 +69,14 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         }
         a.insertText(finalString) { error in
             if let error {
-                log("Error adding text: \(error.finalDescription)")
+                log("Error adding text: \(error.localizedDescription)")
             }
         }
         if url == nil, let attachableType = drop.attachableTypeItem {
             let link = attachableType.sharedLink
             a.insertAttachment(link, withAlternateFilename: link.lastPathComponent) { error in
                 if let error {
-                    log("Error adding attachment: \(error.finalDescription)")
+                    log("Error adding attachment: \(error.localizedDescription)")
                 }
             }
         }

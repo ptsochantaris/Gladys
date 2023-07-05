@@ -72,7 +72,7 @@ public final class Images {
     #if !os(watchOS)
         public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
             guard let coordinate = options.coordinate else {
-                throw GladysError.noData.error
+                throw GladysError.noData
             }
             let O = MKMapSnapshotter.Options()
             O.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: options.range, longitudinalMeters: options.range)

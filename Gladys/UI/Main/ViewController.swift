@@ -408,7 +408,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             d.sourceIndexPath = indexPath
             d.item = item
 
-            p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
+            #if !os(xrOS)
+                p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
+            #endif
             p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.any]
             p.sourceView = myNavView
             p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3), to: myNavView)
@@ -511,7 +513,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Quick look")
 
         let options = UIWindowScene.ActivationRequestOptions()
-        options.preferredPresentationStyle = .prominent
+        #if os(xrOS)
+            options.placement = UIWindowSceneProminentPlacement.prominent()
+        #else
+            options.preferredPresentationStyle = .prominent
+        #endif
 
         return UIWindowScene.ActivationConfiguration(userActivity: activity, options: options, preview: cell.targetedPreviewItem)
     }
@@ -813,7 +819,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     do {
                         try await CloudManager.opportunisticSyncIfNeeded()
                     } catch {
-                        log("Error in reachability triggered sync: \(error.finalDescription)")
+                        log("Error in reachability triggered sync: \(error.localizedDescription)")
                     }
                 }
             }
@@ -1010,7 +1016,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             do {
                 try await CloudManager.sync(overridingUserPreference: true)
             } catch {
-                await genericAlert(title: "Sync Error", message: error.finalDescription)
+                await genericAlert(title: "Sync Error", message: error.localizedDescription)
             }
             lastSyncUpdate()
         }
@@ -2185,7 +2191,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     func cloudSharingController(_: UICloudSharingController, failedToSaveShareWithError error: Error) {
         Task {
-            await genericAlert(title: "Could not share this item", message: error.finalDescription)
+            await genericAlert(title: "Could not share this item", message: error.localizedDescription)
         }
     }
 

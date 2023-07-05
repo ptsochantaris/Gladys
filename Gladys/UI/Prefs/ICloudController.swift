@@ -62,7 +62,7 @@ final class ICloudController: GladysViewController {
                 try await CloudManager.eraseZoneIfNeeded()
                 await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")
             } catch {
-                await genericAlert(title: "Error", message: error.finalDescription)
+                await genericAlert(title: "Error", message: error.localizedDescription)
             }
             icloudSwitch.isEnabled = true
             eraseAlliCloudData.isEnabled = true
@@ -115,7 +115,7 @@ final class ICloudController: GladysViewController {
             do {
                 try await CloudManager.sync()
             } catch {
-                await genericAlert(title: "Sync Error", message: error.finalDescription)
+                await genericAlert(title: "Sync Error", message: error.localizedDescription)
             }
         }
     }

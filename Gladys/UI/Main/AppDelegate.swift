@@ -17,7 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 do {
                     try await CloudManager.opportunisticSyncIfNeeded(force: true)
                 } catch {
-                    log("Error in startup sync: \(error.finalDescription)")
+                    log("Error in startup sync: \(error.localizedDescription)")
                 }
             }
         }

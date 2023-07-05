@@ -337,7 +337,7 @@ public enum Model {
                 do {
                     try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
                 } catch {
-                    log("Saving Error: \(error.finalDescription)")
+                    log("Saving Error: \(error.localizedDescription)")
                 }
             }.value
         }
@@ -372,7 +372,7 @@ public enum Model {
                     _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [item.uuid])
                     log("Ingest completed for items (\(item.uuid)) and committed to disk")
                 } catch {
-                    log("Warning: Error while committing item to disk: (\(error.finalDescription))")
+                    log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
                 }
             }.value
         }

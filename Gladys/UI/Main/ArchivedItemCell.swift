@@ -164,10 +164,12 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     var wideCell = false
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        container.layer.borderColor = UIColor.opaqueSeparator.cgColor
-    }
+    #if !os(xrOS)
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            container.layer.borderColor = UIColor.opaqueSeparator.cgColor
+        }
+    #endif
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -178,8 +180,10 @@ final class ArchivedItemCell: UICollectionViewCell {
         super.awakeFromNib()
 
         container.layer.cornerRadius = 10
-        container.layer.borderWidth = 1.0 / screenScale
-        container.layer.borderColor = UIColor.opaqueSeparator.cgColor
+        #if !os(xrOS)
+            container.layer.borderWidth = 1.0 / screenScale
+            container.layer.borderColor = UIColor.opaqueSeparator.cgColor
+        #endif
 
         image.accessibilityIgnoresInvertColors = true
 

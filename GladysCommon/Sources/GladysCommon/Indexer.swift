@@ -17,7 +17,7 @@
                 do {
                     try await searchableIndex.deleteAllSearchableItems()
                 } catch {
-                    log("Warning: Error while deleting all items for re-index: \(error.finalDescription)")
+                    log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
                 LiteModel.iterateThroughSavedItemsWithoutLoading { item in
@@ -81,7 +81,7 @@
         public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
             index.indexSearchableItems(items) { error in
                 if let error {
-                    log("Error indexing items: \(error.finalDescription)")
+                    log("Error indexing items: \(error.localizedDescription)")
                 } else {
                     log("\(items.count) item(s) indexed")
                 }

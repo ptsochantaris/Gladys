@@ -7,7 +7,7 @@ extension NSItemProvider: @unchecked Sendable {
                 if let data {
                     continuation.resume(with: .success(data))
                 } else {
-                    continuation.resume(throwing: error ?? GladysError.noData.error)
+                    continuation.resume(throwing: error ?? GladysError.noData)
                 }
             }
         }

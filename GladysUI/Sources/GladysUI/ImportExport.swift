@@ -165,7 +165,7 @@ public final class ImportExport {
 
         let finalPath = url.appendingPathComponent("items.json")
         guard let data = Data.forceMemoryMapped(contentsOf: finalPath) else {
-            throw GladysError.importingArchiveFailed.error
+            throw GladysError.importingArchiveFailed
         }
         let itemsInPackage = try loadDecoder.decode([ArchivedItem].self, from: data)
 

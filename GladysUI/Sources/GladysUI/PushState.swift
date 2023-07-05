@@ -154,7 +154,7 @@ final actor PushState {
                         await CloudManager.commitDeletion(for: deletedRecordIds)
                     case let .failure(error):
                         self.latestError = error
-                        log("Error in cloud deletion of items: \(error.finalDescription)")
+                        log("Error in cloud deletion of items: \(error.localizedDescription)")
                     }
                     self.updateSyncMessage()
                 }
@@ -202,7 +202,7 @@ final actor PushState {
                         }
 
                     case let .failure(error):
-                        log("Error updating cloud records: \(error.finalDescription)")
+                        log("Error updating cloud records: \(error.localizedDescription)")
                         self.latestError = error
                     }
                     self.updateSyncMessage()

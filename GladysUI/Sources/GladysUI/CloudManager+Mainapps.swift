@@ -301,25 +301,25 @@ public extension CloudManager {
                 try await updateSubscriptions()
                 try await fetchInitialUUIDSequence()
             } catch {
-                log("Error while activating: \(error.finalDescription)")
+                log("Error while activating: \(error.localizedDescription)")
                 try? await deactivate(force: true)
                 throw error
             }
 
         case .couldNotDetermine:
-            throw GladysError.cloudAccountRetirevalFailed.error
+            throw GladysError.cloudAccountRetirevalFailed
 
         case .noAccount:
-            throw GladysError.cloudLoginRequired.error
+            throw GladysError.cloudLoginRequired
 
         case .restricted:
-            throw GladysError.cloudAccessRestricted.error
+            throw GladysError.cloudAccessRestricted
 
         case .temporarilyUnavailable:
-            throw GladysError.cloudAccessTemporarilyUnavailable.error
+            throw GladysError.cloudAccessTemporarilyUnavailable
 
         @unknown default:
-            throw GladysError.cloudAccessNotSupported.error
+            throw GladysError.cloudAccessNotSupported
         }
     }
 
@@ -364,7 +364,7 @@ public extension CloudManager {
                 try await taskGroup.waitForAll()
             } catch {
                 if force { return }
-                log("Cloud sync deactivation failed: \(error.finalDescription)")
+                log("Cloud sync deactivation failed: \(error.localizedDescription)")
                 throw error
             }
         }
@@ -412,7 +412,7 @@ public extension CloudManager {
             do {
                 try await taskGroup.waitForAll()
             } catch {
-                log("CK zone subscription failed: \(error.finalDescription)")
+                log("CK zone subscription failed: \(error.localizedDescription)")
                 throw error
             }
         }
@@ -453,7 +453,7 @@ public extension CloudManager {
         do {
             _ = try await container.privateCloudDatabase.deleteRecordZone(withID: privateZoneId)
         } catch {
-            log("Error while deleting zone: \(error.finalDescription)")
+            log("Error while deleting zone: \(error.localizedDescription)")
             throw error
         }
     }
@@ -496,7 +496,7 @@ public extension CloudManager {
                                     try? await fetchCloudRecord(for: itemWithShare)
                                 }
                             } else {
-                                log("Error fetching missing share records: \(error.finalDescription)")
+                                log("Error fetching missing share records: \(error.localizedDescription)")
                                 throw error
                             }
                         }
@@ -525,21 +525,21 @@ public extension CloudManager {
             }
         }
     }
-    
+
     static func opportunisticSyncIfNeeded(force: Bool = false) async throws {
         guard syncSwitchedOn, !syncing else {
             return
         }
-        
+
         if force || lastSyncCompletion.timeIntervalSinceNow < -60 {
             try await sync()
             return
         }
-        
+
         #if canImport(UIKit)
-        if await UIApplication.shared.backgroundRefreshStatus != .available {
-            try await sync()
-        }
+            if await UIApplication.shared.backgroundRefreshStatus != .available {
+                try await sync()
+            }
         #endif
     }
 
@@ -579,7 +579,7 @@ public extension CloudManager {
              .notAuthenticated, .userDeletedZone, .zoneNotFound:
 
             // shutdown-worthy failure
-            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.finalDescription)\"")
+            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.localizedDescription)\"")
             try? await deactivate(force: true)
 
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
@@ -627,16 +627,22 @@ public extension CloudManager {
             return
         }
 
-        if let existingItem = await DropStore.item(uuid: metadata.rootRecordID.recordName) {
+        let recordId: String?
+        #if os(xrOS)
+            recordId = metadata.hierarchicalRootRecordID?.recordName
+        #else
+            recordId = metadata.rootRecordID.recordName
+        #endif
+        if let recordId, let existingItem = await DropStore.item(uuid: recordId) {
             let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
             await sendNotification(name: .HighlightItemRequested, object: request)
             return
         }
 
         await sendNotification(name: .AcceptStarting, object: nil)
-
         try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
         showNetwork = true
+
         do {
             try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
             try? await sync() // get the new shared objects
@@ -645,7 +651,7 @@ public extension CloudManager {
         } catch {
             await sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
-            await genericAlert(title: "Could not accept shared item", message: error.finalDescription)
+            await genericAlert(title: "Could not accept shared item", message: error.localizedDescription)
         }
     }
 
@@ -666,7 +672,7 @@ public extension CloudManager {
                     throw error
                 }
             } else {
-                await genericAlert(title: "There was an error while un-sharing this item", message: error.finalDescription)
+                await genericAlert(title: "There was an error while un-sharing this item", message: error.localizedDescription)
                 throw error
             }
         }
@@ -676,7 +682,7 @@ public extension CloudManager {
         do {
             try await deactivate(force: false)
         } catch {
-            await genericAlert(title: "Could not deactivate", message: error.finalDescription)
+            await genericAlert(title: "Could not deactivate", message: error.localizedDescription)
         }
     }
 
@@ -684,12 +690,12 @@ public extension CloudManager {
         do {
             try await activate()
         } catch {
-            await genericAlert(title: "Could not activate", message: error.finalDescription, offerSettingsShortcut: (error as NSError).code == GladysError.cloudLoginRequired.rawValue)
+            await genericAlert(title: "Could not activate", message: error.localizedDescription, offerSettingsShortcut: (error as? GladysError) == .cloudLoginRequired)
         }
         do {
             try await sync(force: true, overridingUserPreference: true)
         } catch {
-            await genericAlert(title: "Initial sync failed", message: error.finalDescription)
+            await genericAlert(title: "Initial sync failed", message: error.localizedDescription)
         }
     }
 
@@ -730,7 +736,7 @@ public extension CloudManager {
             syncing = false
 
         } catch {
-            log("Sync failure: \(error.finalDescription)")
+            log("Sync failure: \(error.localizedDescription)")
             syncing = false
             throw error
         }

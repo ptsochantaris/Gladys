@@ -1,30 +1,6 @@
-import AsyncHTTPClient
 import Foundation
 import Fuzi
-import NIOCore
-import NIOHTTP1
 import UniformTypeIdentifiers
-
-extension HTTPClientResponse {
-    var mimeType: String? {
-        if let ct = headers["Content-Type"].first,
-           let mime = ct.split(separator: ";").first {
-            return mime.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-        return nil
-    }
-
-    var textEncodingName: String? {
-        if let ct = headers["Content-Type"].first,
-           let lang = ct.split(separator: ";").last {
-            let cs = lang.split(separator: "=")
-            if cs.count > 1 {
-                return cs[1].trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        }
-        return nil
-    }
-}
 
 /// Archiver
 public final actor WebArchiver {
@@ -37,46 +13,17 @@ public final actor WebArchiver {
         case PlistSerializeFailed
     }
 
-    private let client = HTTPClient(eventLoopGroupProvider: .createNew,
-                                    configuration: {
-                                        var config = HTTPClient.Configuration(certificateVerification: .none,
-                                                                              redirectConfiguration: .follow(max: 4, allowCycles: false),
-                                                                              decompression: .enabled(limit: .none))
-                                        config.httpVersion = .http1Only
-                                        return config
-                                    }())
-
-    deinit {
-        try? client.syncShutdown()
-    }
-
-    private let headers = HTTPHeaders([
-        ("Accept", "*/*"),
-        ("Accept-Language", "en-GB,en;q=0.9"),
-        ("User-Agent", "Gladys/1 CFNetwork/1402.0.8 Darwin/22.2.0")
-    ])
-
-    private func getData(for request: HTTPClientRequest) async throws -> (Data, HTTPClientResponse) {
-        var request = request
-        request.headers = headers
-        let res = try await client.execute(request, timeout: .seconds(60))
-        if request.method == .HEAD {
-            return (Data(), res)
-        } else {
-            let buffer = try await res.body.collect(upTo: Int.max)
-            return (Data(buffer: buffer), res)
+    public func archiveFromUrl(_ urlString: String) async throws -> (Data, String) {
+        guard let url = URL(string: urlString) else {
+            throw GladysError.networkIssue
         }
-    }
-
-    private func getData(from url: String) async throws -> (Data, HTTPClientResponse) {
-        try await getData(for: HTTPClientRequest(url: url))
-    }
-
-    public func archiveFromUrl(_ url: String) async throws -> (Data, String) {
-        let (data, response) = try await getData(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let response = response as? HTTPURLResponse else {
+            throw GladysError.networkIssue
+        }
         let mimeType = response.mimeType
         if mimeType == "text/html" {
-            return try await archiveWebpageFromUrl(url: url, data: data, response: response)
+            return try await archiveWebpageFromUrl(url: urlString, data: data, response: response)
         } else {
             var type: String?
             if let mimeType {
@@ -86,7 +33,7 @@ public final actor WebArchiver {
         }
     }
 
-    private func archiveWebpageFromUrl(url: String, data: Data, response: HTTPClientResponse) async throws -> (Data, String) {
+    private func archiveWebpageFromUrl(url: String, data: Data, response: HTTPURLResponse) async throws -> (Data, String) {
         let (r, error) = resourcePathsFromUrl(url: url, data: data)
         guard let resources = r else {
             log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
@@ -94,15 +41,18 @@ public final actor WebArchiver {
         }
 
         let resourceInfo = await withTaskGroup(of: (String, [AnyHashable: Any])?.self) { group -> [AnyHashable: Any] in
-            for resourceUrl in resources {
-                group.addTask { [weak self] in
-                    guard let self, let (data, response) = try? await getData(from: resourceUrl), response.status.code == 200 else {
-                        log("Download failed: \(resourceUrl)")
+            for resourceUrlString in resources {
+                group.addTask {
+                    guard let resourceUrl = URL(string: resourceUrlString),
+                          let (data, response) = try? await URLSession.shared.data(from: resourceUrl),
+                          let response = response as? HTTPURLResponse,
+                          response.statusCode < 400 else {
+                        log("Download failed: \(resourceUrlString)")
                         return nil
                     }
 
                     var resource: [AnyHashable: Any] = [
-                        "WebResourceURL": resourceUrl
+                        "WebResourceURL": resourceUrlString
                     ]
                     if let mimeType = response.mimeType {
                         resource["WebResourceMIMEType"] = mimeType
@@ -110,8 +60,8 @@ public final actor WebArchiver {
                     if !data.isEmpty {
                         resource["WebResourceData"] = data
                     }
-                    log("Downloaded \(resourceUrl)")
-                    return (resourceUrl, resource)
+                    log("Downloaded \(resourceUrlString)")
+                    return (resourceUrlString, resource)
                 }
             }
             let pairs = group.compactMap { $0 }
@@ -196,23 +146,26 @@ public final actor WebArchiver {
         public let isThumbnail: Bool
     }
 
-    public func fetchWebPreview(for url: String) async throws -> WebPreviewResult {
-        var headRequest = HTTPClientRequest(url: url)
+    public func fetchWebPreview(for urlString: String) async throws -> WebPreviewResult {
+        guard let url = URL(string: urlString) else {
+            throw GladysError.networkIssue
+        }
+        var headRequest = URLRequest(url: url)
         log("Investigating possible HTML title from this URL: \(url)")
-        headRequest.method = .HEAD
+        headRequest.httpMethod = "head"
 
-        let (_, response) = try await getData(for: headRequest)
+        let (_, response) = try await URLSession.shared.data(for: headRequest)
         if let mimeType = response.mimeType, mimeType.hasPrefix("text/html") {
             log("Content for this is HTML, will try to fetch title")
         } else {
             log("Content for this isn't HTML, never mind")
-            throw GladysError.blankResponse.error
+            throw GladysError.blankResponse
         }
 
         log("Fetching HTML from URL: \(url)")
 
-        let contentRequest = HTTPClientRequest(url: url)
-        let (data, _) = try await getData(for: contentRequest)
+        let contentRequest = URLRequest(url: url)
+        let (data, _) = try await URLSession.shared.data(for: contentRequest)
         let htmlDoc = try HTMLDocument(data: data)
 
         var title: String?
@@ -259,10 +212,9 @@ public final actor WebArchiver {
          }
          } */
 
-        let _url = URL(string: url)
         func fetchFavIcon() async throws -> WebPreviewResult {
-            let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: _url)
-            if let iconUrl = favIconUrl {
+            if let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: url),
+               let iconUrl = URL(string: favIconUrl) {
                 log("Fetching favicon image for site icon: \(iconUrl)")
                 let newImage = try await fetchImage(url: iconUrl)
                 return WebPreviewResult(title: title, description: description, image: newImage, isThumbnail: false)
@@ -271,8 +223,8 @@ public final actor WebArchiver {
             }
         }
 
-        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: _url)
-        guard let iconUrl = thumbnailUrl else {
+        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: url)
+        guard let thumbnailUrl, let iconUrl = URL(string: thumbnailUrl) else {
             return try await fetchFavIcon()
         }
 
@@ -332,13 +284,13 @@ public final actor WebArchiver {
         return favIconPath
     }
 
-    private func repair(path: String?, using url: URL?) -> String? {
+    private func repair(path: String?, using url: URL) -> String? {
         guard var path else { return nil }
         var iconUrl: URL?
         if let i = URL(string: path), i.scheme != nil {
             iconUrl = i
         } else {
-            if let url, var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+            if var c = URLComponents(url: url, resolvingAgainstBaseURL: false) {
                 c.path = path
                 var url = c.url
                 if url == nil, !(path.hasPrefix("/") || path.hasPrefix(".")) {
@@ -354,9 +306,8 @@ public final actor WebArchiver {
 
     ////////////////////////////////////////////
 
-    private func fetchImage(url: String?) async throws -> IMAGE? {
-        guard let url else { return nil }
-        let (data, _) = try await getData(from: url)
+    private func fetchImage(url: URL) async throws -> IMAGE? {
+        let (data, _) = try await URLSession.shared.data(from: url)
         log("Image fetched for \(url)")
         return await IMAGE.from(data: data)
     }

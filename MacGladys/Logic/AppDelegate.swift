@@ -328,7 +328,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             do {
                 try await CloudManager.opportunisticSyncIfNeeded()
             } catch {
-                log("Error in system wake triggered sync: \(error.finalDescription)")
+                log("Error in system wake triggered sync: \(error.localizedDescription)")
             }
         }
     }
@@ -515,7 +515,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 endProgress()
             } catch {
                 endProgress()
-                await genericAlert(title: "Operation Failed", message: error.finalDescription)
+                await genericAlert(title: "Operation Failed", message: error.localizedDescription)
             }
         }
     }
@@ -625,13 +625,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
             } catch {
                 Task {
-                    await genericAlert(title: "Operation Failed", message: error.finalDescription)
+                    await genericAlert(title: "Operation Failed", message: error.localizedDescription)
                 }
             }
 
         case let .failure(error):
             Task {
-                await genericAlert(title: "Operation Failed", message: error.finalDescription)
+                await genericAlert(title: "Operation Failed", message: error.localizedDescription)
             }
         }
     }
