@@ -49,7 +49,7 @@ final class Singleton {
         Task {
             for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                 guard UIApplication.shared.applicationState == .background else {
-                    return
+                    continue
                 }
                 log("App foregrounded")
                 do {
@@ -76,7 +76,7 @@ final class Singleton {
         Task {
             for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
                 guard let item = notification.object as? ArchivedItem else {
-                    return
+                    continue
                 }
                 if DropStore.doneIngesting {
                     await Model.save()
