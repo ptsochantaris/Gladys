@@ -525,6 +525,23 @@ public extension CloudManager {
             }
         }
     }
+    
+    static func opportunisticSyncIfNeeded(force: Bool = false) async throws {
+        guard syncSwitchedOn, !syncing else {
+            return
+        }
+        
+        if force || lastSyncCompletion.timeIntervalSinceNow < -60 {
+            try await sync()
+            return
+        }
+        
+        #if canImport(UIKit)
+        if await UIApplication.shared.backgroundRefreshStatus != .available {
+            try await sync()
+        }
+        #endif
+    }
 
     static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
         if let l = lastiCloudAccount {

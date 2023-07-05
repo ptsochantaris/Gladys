@@ -48,9 +48,6 @@ final class Singleton {
 
         Task {
             for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
-                guard UIApplication.shared.applicationState == .background else {
-                    continue
-                }
                 log("App foregrounded")
                 do {
                     try await CloudManager.opportunisticSyncIfNeeded()

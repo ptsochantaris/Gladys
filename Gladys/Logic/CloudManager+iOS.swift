@@ -89,12 +89,4 @@ extension CloudManager {
 
         try await sync()
     }
-
-    static func opportunisticSyncIfNeeded(isStartup: Bool = false, force: Bool = false) async throws {
-        let brs = await UIApplication.shared.backgroundRefreshStatus
-        if syncSwitchedOn, !syncing, isStartup || force || brs != .available || lastSyncCompletion.timeIntervalSinceNow < -60 {
-            // If there is no background fetch enabled, or it is, but we were in the background and we haven't heard from the server in a while
-            try await sync()
-        }
-    }
 }

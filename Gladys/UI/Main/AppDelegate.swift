@@ -15,7 +15,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                 _ = await CloudManager.received(notificationInfo: pushUserInfo)
             } else {
                 do {
-                    try await CloudManager.opportunisticSyncIfNeeded(isStartup: true)
+                    try await CloudManager.opportunisticSyncIfNeeded(force: true)
                 } catch {
                     log("Error in startup sync: \(error.finalDescription)")
                 }

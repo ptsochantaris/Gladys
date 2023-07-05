@@ -31,12 +31,6 @@ extension CloudManager {
         }
     }
 
-    static func opportunisticSyncIfNeeded() async throws {
-        if syncSwitchedOn, !syncing, lastSyncCompletion.timeIntervalSinceNow < -60 {
-            try await sync()
-        }
-    }
-
     static func syncAfterSaveIfNeeded() async throws {
         if !syncSwitchedOn {
             log("Sync switched off, no need to sync after save")
