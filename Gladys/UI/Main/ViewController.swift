@@ -390,10 +390,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                   let myNavView = navigationController?.view
             else { return }
 
+            #if os(xrOS)
+            t.modalPresentationStyle = .formSheet
+            #else
             p.permittedArrowDirections = [.any]
             p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
             p.sourceView = myNavView
             p.delegate = self
+            #endif
 
         case "showDetail":
             guard let item = sender as? ArchivedItem,
