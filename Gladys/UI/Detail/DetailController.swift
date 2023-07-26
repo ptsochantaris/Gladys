@@ -101,11 +101,6 @@ final class DetailController: GladysViewController,
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateMenuButton()
-    }
-
     private func updateMenuButton() {
         if let m = menuButton, let v = view.window?.windowScene?.mainController, let sourceIndexPath {
             m.menu = v.createShortcutActions(for: item, mainView: false, indexPath: sourceIndexPath)
@@ -243,10 +238,20 @@ final class DetailController: GladysViewController,
 
     private var sizing = false
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        updateMenuButton()
         if firstAppearance {
             sizeWindow()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !firstAppearance {
+            Task {
+                sizeWindow()
+            }
         }
     }
 
@@ -254,7 +259,14 @@ final class DetailController: GladysViewController,
         if sizing { return }
         sizing = true
         table.layoutIfNeeded()
-        let preferredSize = CGSize(width: 320, height: table.contentSize.height)
+        let preferredWidth: CGFloat
+        #if os(xrOS)
+        preferredWidth = 480
+        #else
+        preferredWidth = 320
+        #endif
+        let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
+        preferredContentSize = preferredSize
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
         log("Detail view preferred size set to \(preferredSize)")
         sizing = false
@@ -622,11 +634,7 @@ final class DetailController: GladysViewController,
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == numberOfSections(in: tableView) - 1 {
-            return 17
-        } else {
-            return CGFloat.leastNonzeroMagnitude
-        }
+        return CGFloat.leastNonzeroMagnitude
     }
 
     func tableView(_: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {

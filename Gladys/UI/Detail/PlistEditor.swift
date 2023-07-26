@@ -223,24 +223,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
     ///////////////////////////////////
 
     private var lastSize = CGSize.zero
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        Task { @MainActor in
-            self.sizeWindow()
-        }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if !firstAppearance {
-            lastSize = .zero
-            preferredContentSize = .zero
-            sizeWindow()
-        }
-    }
-
-    private func sizeWindow() {
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
         if lastSize != view.frame.size, !view.frame.isEmpty {
             lastSize = view.frame.size
             let H = max(table.contentSize.height, 50)

@@ -223,8 +223,8 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
 
     private var lastSize = CGSize.zero
 
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
         if lastSize != view.frame.size, !view.frame.isEmpty {
             lastSize = view.frame.size
             let H = max(grid.collectionViewLayout.collectionViewContentSize.height, 120)

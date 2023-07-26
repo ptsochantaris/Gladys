@@ -2224,6 +2224,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = "AppIcon-Vision";
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
@@ -2358,6 +2359,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = "AppIcon-Vision";
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;

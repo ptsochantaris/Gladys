@@ -86,9 +86,9 @@ final class DataInspector: GladysViewController {
         view.accessibilityElements = [bit16!, bit32!, bit64!, signedAccessibility!, endianAccessibility!, decimalAccessibility!]
         switchesChanged()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
         guard let currentWindow else { return }
         signedAccessibility.accessibilityActivationPoint = view.convert(signedSwitch.center, to: currentWindow)
         endianAccessibility.accessibilityActivationPoint = view.convert(littleEndianSwitch.center, to: currentWindow)
