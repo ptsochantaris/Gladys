@@ -99,7 +99,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         Singleton.shared.openCount = count
         if let c = currentWindow {
-            lastUsedWindow = c
+            Singleton.shared.lastUsedWindow = c
         }
     }
 

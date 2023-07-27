@@ -205,12 +205,13 @@ extension ArchivedItem {
         return true
     }
 
+    @discardableResult
     @MainActor
-    func tryOpen(in viewController: UINavigationController?, completion: @escaping (Bool) -> Void) {
+    func tryOpen(in viewController: UINavigationController?) async -> Bool {
         let item = mostRelevantTypeItem?.objectForShare
         if let item = item as? MKMapItem {
             item.openInMaps(launchOptions: [:])
-            completion(true)
+            return true
         } else if let contact = item as? CNContact {
             let c = CNContactViewController(forUnknownContact: contact)
             c.contactStore = CNContactStore()
@@ -222,24 +223,25 @@ extension ArchivedItem {
                 let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true, sourceScene: scene)
                 sendNotification(name: .UIRequest, object: request)
             }
-            completion(false)
+            return false
         } else if let item = item as? URL {
-            UIApplication.shared.connectedScenes.first?.open(item, options: nil) { success in
-                if !success {
-                    let message: String
-                    if item.isFileURL {
-                        message = "iOS does not recognise the type of this file"
-                    } else {
-                        message = "iOS does not recognise the type of this link"
-                    }
-                    Task {
-                        await genericAlert(title: "Can't Open", message: message)
-                    }
-                }
-                completion(success)
+            guard let firstScene = UIApplication.shared.connectedScenes.first else {
+                return false
             }
+            
+            let success = await firstScene.open(item, options: nil)
+            if !success {
+                let message: String
+                if item.isFileURL {
+                    message = "iOS does not recognise the type of this file"
+                } else {
+                    message = "iOS does not recognise the type of this link"
+                }
+                await genericAlert(title: "Can't Open", message: message)
+            }
+            return success
         } else {
-            completion(false)
+            return false
         }
     }
 }

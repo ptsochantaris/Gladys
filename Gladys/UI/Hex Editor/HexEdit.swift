@@ -145,7 +145,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
     }
 
     @IBAction private func inspectSelected(_: UIBarButtonItem) {
-        performSegue(withIdentifier: "inspector", sender: nil)
+        segue("inspector", sender: nil)
     }
 
     var selectedBytes: [UInt8] {

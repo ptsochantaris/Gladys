@@ -9,9 +9,6 @@ extension UIKeyCommand {
 }
 
 @MainActor
-weak var lastUsedWindow: UIWindow?
-
-@MainActor
 func getInput(from: UIViewController, title: String, action: String, previousValue: String?) async -> String? {
     await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
         let a = UIAlertController(title: title, message: nil, preferredStyle: .alert)

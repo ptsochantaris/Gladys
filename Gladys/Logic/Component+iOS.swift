@@ -258,11 +258,13 @@ extension Component {
         return false
     }
 
+    @discardableResult
     @MainActor
-    func tryOpen(in viewController: UINavigationController?) {
+    func tryOpen(in viewController: UINavigationController?) async -> Bool {
         let item = objectForShare
         if let item = item as? MKMapItem {
             item.openInMaps(launchOptions: [:])
+            return true
 
         } else if let contact = item as? CNContact {
             let c = CNContactViewController(forUnknownContact: contact)
@@ -275,21 +277,25 @@ extension Component {
                 let request = UIRequest(vc: c, sourceView: nil, sourceRect: nil, sourceButton: nil, pushInsteadOfPresent: true, sourceScene: scene)
                 sendNotification(name: .UIRequest, object: request)
             }
+            return true
 
         } else if let item = item as? URL {
-            UIApplication.shared.connectedScenes.first?.open(item, options: nil) { success in
-                if !success {
-                    let message: String
-                    if item.isFileURL {
-                        message = "iOS does not recognise the type of this file"
-                    } else {
-                        message = "iOS does not recognise the type of this link"
-                    }
-                    Task {
-                        await genericAlert(title: "Can't Open", message: message)
-                    }
-                }
+            guard let firstScene = UIApplication.shared.connectedScenes.first else {
+                return false
             }
+            let success = await firstScene.open(item, options: nil)
+            if !success {
+                let message: String
+                if item.isFileURL {
+                    message = "iOS does not recognise the type of this file"
+                } else {
+                    message = "iOS does not recognise the type of this link"
+                }
+                await genericAlert(title: "Can't Open", message: message)
+            }
+            return success
+        } else {
+            return false
         }
     }
 }

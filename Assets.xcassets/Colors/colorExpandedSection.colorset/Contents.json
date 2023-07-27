@@ -29,6 +29,13 @@
         }
       },
       "idiom" : "universal"
+    },
+    {
+      "color" : {
+        "platform" : "XR",
+        "reference" : "systemBackgroundColor"
+      },
+      "idiom" : "reality"
     }
   ],
   "info" : {

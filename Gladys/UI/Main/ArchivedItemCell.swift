@@ -83,26 +83,35 @@ final class ArchivedItemCell: UICollectionViewCell {
             if isEditing, tickHolder == nil, progressViewHolder.isHidden {
                 let img = UIImageView(frame: .zero)
                 img.translatesAutoresizingMaskIntoConstraints = false
-                img.tintColor = tintColor
                 img.preferredSymbolConfiguration = UIImage.SymbolConfiguration(scale: .large)
                 img.image = UIImage(systemName: "circle")
                 img.highlightedImage = UIImage(systemName: "checkmark.circle.fill")
                 img.isHighlighted = isSelected
+                img.tintColor = tintColor
 
+#if os(xrOS)
+                let size: CGFloat = 44
+                let holder = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+                holder.clipsToBounds = true
+                holder.contentView.addSubview(img)
+#else
+                let size: CGFloat = 41
                 let holder = UIView(frame: .zero)
-                holder.translatesAutoresizingMaskIntoConstraints = false
                 holder.backgroundColor = container.backgroundColor
-                holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
-                holder.layer.cornerRadius = 20
                 holder.addSubview(img)
+#endif
+                holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
+                holder.translatesAutoresizingMaskIntoConstraints = false
+                holder.layer.cornerRadius = size * 0.5
                 container.addSubview(holder)
 
+                let distanceFromEdge = (41 - size) * 0.5
                 NSLayoutConstraint.activate([
-                    holder.topAnchor.constraint(equalTo: topAnchor),
-                    holder.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    holder.topAnchor.constraint(equalTo: topAnchor, constant: distanceFromEdge),
+                    holder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -distanceFromEdge),
 
-                    holder.widthAnchor.constraint(equalToConstant: 41),
-                    holder.heightAnchor.constraint(equalToConstant: 41),
+                    holder.widthAnchor.constraint(equalToConstant: size),
+                    holder.heightAnchor.constraint(equalToConstant: size),
 
                     img.centerXAnchor.constraint(equalTo: holder.centerXAnchor),
                     img.centerYAnchor.constraint(equalTo: holder.centerYAnchor)
@@ -180,7 +189,9 @@ final class ArchivedItemCell: UICollectionViewCell {
         super.awakeFromNib()
 
         container.layer.cornerRadius = 10
-        #if !os(xrOS)
+        #if os(xrOS)
+            layer.cornerRadius = 10
+        #else
             container.layer.borderWidth = 1.0 / screenScale
             container.layer.borderColor = UIColor.opaqueSeparator.cgColor
         #endif

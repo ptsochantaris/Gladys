@@ -8,16 +8,27 @@ final class Singleton {
     static let shared = Singleton()
 
     var componentDropActiveFromDetailView: DetailController?
+    
+    weak var lastUsedWindow: UIWindow?
+
+    private func setBadgeCount(to count: Int) {
+        if #available(iOS 16.0, xrOS 1.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(count)
+        } else {
+            UIApplication.shared.applicationIconBadgeNumber = count
+        }
+    }
 
     func setup() {
         Model.registerStateHandler()
-        Model.badgeHandler = {
+        Model.badgeHandler = { [weak self] in
+            guard let self else { return }
             if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
                 log("Updating app badge to show item count (\(count))")
-                UIApplication.shared.applicationIconBadgeNumber = count
+                setBadgeCount(to: count)
             } else {
                 log("Updating app badge to clear")
-                UIApplication.shared.applicationIconBadgeNumber = 0
+                setBadgeCount(to: 0)
             }
         }
         Model.setup()

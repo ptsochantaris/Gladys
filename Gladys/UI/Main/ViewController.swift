@@ -550,32 +550,33 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         mostRecentIndexPathActioned = indexPath
-
-        switch PersistedOptions.actionOnTap {
-        case .infoPanel:
-            performSegue(withIdentifier: "showDetail", sender: item)
-
-        case .copy:
-            item.copyToPasteboard()
-            Task {
+        
+        Task {
+            await dismissAnyPopOverOrModal()
+            
+            switch PersistedOptions.actionOnTap {
+            case .infoPanel:
+                segue("showDetail", sender: item)
+                
+            case .copy:
+                item.copyToPasteboard()
                 await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-            }
-
-        case .open:
-            item.tryOpen(in: nil) { [weak self] success in
+                
+            case .open:
+                let success = await item.tryOpen(in: nil)
                 if !success {
-                    self?.performSegue(withIdentifier: "showDetail", sender: item)
+                    segue("showDetail", sender: item)
                 }
+                
+            case .preview:
+                let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
+                if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
+                    segue("showDetail", sender: item)
+                }
+                
+            case .none:
+                break
             }
-
-        case .preview:
-            let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
-            if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
-                performSegue(withIdentifier: "showDetail", sender: item)
-            }
-
-        case .none:
-            break
         }
     }
 
@@ -1489,15 +1490,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if mainView, item.canOpen {
             children.append(makeAction(title: "Open", callback: { [weak self] in
-                self?.mostRecentIndexPathActioned = indexPath
-                item.tryOpen(in: nil) { _ in }
+                guard let self else { return }
+                Task {
+                    self.mostRecentIndexPathActioned = indexPath
+                    await item.tryOpen(in: nil)
+                }
             }, style: [], iconName: "arrow.up.doc"))
         }
 
         var topElements = mainView ? [
             makeAction(title: "Info Panel", callback: { [weak self] in
                 self?.mostRecentIndexPathActioned = indexPath
-                self?.performSegue(withIdentifier: "showDetail", sender: item)
+                self?.segue("showDetail", sender: item)
             }, style: [], iconName: "list.bullet.below.rectangle")
         ] : [UIAction]()
 
@@ -1552,11 +1556,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
             if let s = self, let cell = s.collection.cellForItem(at: indexPath) {
                 if let detail = s.currentDetailView {
-                    detail.performSegue(withIdentifier: "toSiriShortcuts", sender: nil)
+                    detail.segue("toSiriShortcuts", sender: nil)
                 } else {
                     Task {
                         await s.dismissAnyPopOver()
-                        s.performSegue(withIdentifier: "toSiriShortcuts", sender: cell)
+                        s.segue("toSiriShortcuts", sender: cell)
                     }
                 }
             }
@@ -1667,7 +1671,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
-        section.supplementariesFollowContentInsets = false
+        section.supplementaryContentInsetsReference = .none
         section.contentInsetsReference = .none
 
         let sectionLeft = view.safeAreaInsets.left + spacing
@@ -1934,10 +1938,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                         break
                     case .detail:
                         mostRecentIndexPathActioned = ip
-                        performSegue(withIdentifier: "showDetail", sender: item)
+                        segue("showDetail", sender: item)
                     case .open:
                         mostRecentIndexPathActioned = ip
-                        item.tryOpen(in: navigationController) { _ in }
+                        await item.tryOpen(in: navigationController)
                     case let .preview(childUuid):
                         if let presenter = view.window?.alertPresenter {
                             _ = item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
@@ -2002,11 +2006,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @objc private func showLabels() {
-        performSegue(withIdentifier: "showLabels", sender: nil)
+        segue("showLabels", sender: nil)
     }
 
     @objc private func showPreferences() {
-        performSegue(withIdentifier: "showPreferences", sender: nil)
+        segue("showPreferences", sender: nil)
     }
 
     @objc private func openSearch() {

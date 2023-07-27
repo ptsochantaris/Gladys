@@ -273,9 +273,9 @@ final class DetailController: GladysViewController,
     }
 
     @IBAction private func openSelected(_: UIBarButtonItem) {
-        item.tryOpen(in: navigationController!) { shouldClose in
-            if shouldClose {
-                self.done()
+        Task {
+            if await item.tryOpen(in: navigationController!) {
+                done()
             }
         }
     }
@@ -413,8 +413,10 @@ final class DetailController: GladysViewController,
 
                 if component.canOpen {
                     children.insert(UIAction(title: "Open", image: UIImage(systemName: "arrow.up.doc")) { [weak self] _ in
-                        guard let n = self?.navigationController else { return }
-                        component.tryOpen(in: n)
+                        Task {
+                            guard let n = self?.navigationController else { return }
+                            await component.tryOpen(in: n)
+                        }
                     }, at: 0)
                 }
 
@@ -446,10 +448,10 @@ final class DetailController: GladysViewController,
         if component.isPlist {
             let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
             a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
-                self.performSegue(withIdentifier: "plistEdit", sender: component)
+                self.segue("plistEdit", sender: component)
             })
             a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { _ in
-                self.performSegue(withIdentifier: "hexEdit", sender: component)
+                self.segue("hexEdit", sender: component)
             })
             a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             if let p = a.popoverPresentationController {
@@ -458,7 +460,7 @@ final class DetailController: GladysViewController,
             }
             present(a, animated: true)
         } else {
-            performSegue(withIdentifier: "hexEdit", sender: component)
+            segue("hexEdit", sender: component)
         }
     }
 
@@ -467,7 +469,7 @@ final class DetailController: GladysViewController,
         if component.encodedUrl != nil {
             editURL(component, existingEdit: nil)
         } else if component.isText {
-            performSegue(withIdentifier: "textEdit", sender: component)
+            segue("textEdit", sender: component)
         }
     }
 
@@ -829,7 +831,7 @@ final class DetailController: GladysViewController,
 
         case 1:
             Task { @MainActor in
-                self.performSegue(withIdentifier: "addLabel", sender: indexPath)
+                self.segue("addLabel", sender: indexPath)
             }
 
         case 2:

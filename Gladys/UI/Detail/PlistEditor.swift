@@ -205,7 +205,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
                 navigationController?.pushViewController(editor, animated: true)
 
             } else if let v = v as? Data {
-                performSegue(withIdentifier: "hexEdit", sender: ("Data", v))
+                segue("hexEdit", sender: ("Data", v))
             }
         }
 

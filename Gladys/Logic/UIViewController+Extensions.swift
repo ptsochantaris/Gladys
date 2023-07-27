@@ -13,6 +13,10 @@ extension UIViewController {
         ])
         vc.didMove(toParent: self)
     }
+    
+    func segue(_ name: String, sender: Any?) {
+        performSegue(withIdentifier: name, sender: sender)
+    }
 
     func makeDoneButton(target: Any, action: Selector) -> UIBarButtonItem {
         let b = UIBarButtonItem(barButtonSystemItem: .close, target: target, action: action)
