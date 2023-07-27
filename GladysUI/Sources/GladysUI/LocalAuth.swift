@@ -5,18 +5,17 @@ public enum LocalAuth {
         LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
 
-    public static func attempt(label: String, completion: @escaping (Bool) -> Void) {
+    public static func attempt(label: String) async -> Bool? {
         let auth = LAContext()
+
         if !auth.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-            completion(false)
-            return
+            return false
         }
 
-        auth.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: label) { success, error in
-            if (error as NSError?)?.code == -2 { return } // cancelled
-            Task { @MainActor in
-                completion(success)
-            }
+        do {
+            return try await auth.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: label)
+        } catch {
+            return nil
         }
     }
 }

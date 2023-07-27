@@ -540,8 +540,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if item.flags.contains(.needsUnlock) {
             mostRecentIndexPathActioned = indexPath
-            item.unlock(label: "Unlock Item", action: "Unlock") { success in
-                if success {
+            Task {
+                if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                     item.flags.remove(.needsUnlock)
                     item.postModified()
                 }
@@ -1443,8 +1443,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         if item.flags.contains(.needsUnlock) {
             return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
                 let unlockAction = UIAction(title: "Unlock") { _ in
-                    item.unlock(label: "Unlock Item", action: "Unlock") { success in
-                        if success {
+                    Task {
+                        if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                             item.flags.remove(.needsUnlock)
                             item.postModified()
                         }
@@ -1533,20 +1533,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if !item.isImportedShare {
             if item.isLocked {
-                children.append(makeAction(title: "Remove Lock", callback: {
-                    item.unlock(label: "Remove Lock", action: "Remove") { [weak self] success in
-                        if success {
-                            self?.mostRecentIndexPathActioned = indexPath
-                            self?.passwordUpdate(nil, hint: nil, for: item)
+                children.append(makeAction(title: "Remove Lock", callback: { [weak self] in
+                    guard let self else { return }
+                    Task {
+                        if let success = await item.unlock(label: "Remove Lock", action: "Remove"), success {
+                            self.mostRecentIndexPathActioned = indexPath
+                            self.passwordUpdate(nil, hint: nil, for: item)
                         }
                     }
                 }, style: [], iconName: "lock.slash"))
             } else {
-                children.append(makeAction(title: "Add Lock", callback: {
-                    item.lock { [weak self] passwordData, passwordHint in
-                        if let d = passwordData {
-                            self?.mostRecentIndexPathActioned = indexPath
-                            self?.passwordUpdate(d, hint: passwordHint, for: item)
+                children.append(makeAction(title: "Add Lock", callback: { [weak self] in
+                    guard let self else { return }
+                    Task {
+                        let (passwordData, passwordHint) = await item.lock()
+                        if let passwordData {
+                            self.mostRecentIndexPathActioned = indexPath
+                            self.passwordUpdate(passwordData, hint: passwordHint, for: item)
                         }
                     }
                 }, style: [], iconName: "lock"))
@@ -1671,7 +1674,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
-        section.supplementaryContentInsetsReference = .none
+        if #available(iOS 16.0, *) {
+            section.supplementaryContentInsetsReference = .none
+        } else {
+            section.supplementariesFollowContentInsets = false
+        }
         section.contentInsetsReference = .none
 
         let sectionLeft = view.safeAreaInsets.left + spacing

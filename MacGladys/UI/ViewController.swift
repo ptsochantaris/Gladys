@@ -579,8 +579,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let items = removableLockSelectedItems
         let plural = items.count > 1
         let label = "Remove Lock" + (plural ? "s" : "")
-
-        LocalAuth.attempt(label: label) { [weak self] success in
+        
+        Task {
+            guard let success = await LocalAuth.attempt(label: label) else {
+                return
+            }
             if success {
                 for item in items {
                     item.lockPassword = nil
@@ -589,7 +592,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
                     item.markUpdated()
                 }
             } else {
-                self?.removeLockWithPassword(items: items, label: label, plural: plural)
+                removeLockWithPassword(items: items, label: label, plural: plural)
             }
         }
     }
@@ -695,14 +698,18 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let plural = items.count > 1
         let label = "Access Locked Item" + (plural ? "s" : "")
 
-        LocalAuth.attempt(label: label) { [weak self] success in
+        Task {
+            guard let success = await LocalAuth.attempt(label: label) else {
+                return
+            }
+            
             if success {
                 for item in items {
                     item.flags.remove(.needsUnlock)
                     item.postModified()
                 }
             } else {
-                self?.unlockWithPassword(items: items, label: label, plural: plural)
+                unlockWithPassword(items: items, label: label, plural: plural)
             }
         }
     }

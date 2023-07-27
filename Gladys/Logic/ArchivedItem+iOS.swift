@@ -89,60 +89,65 @@ extension ArchivedItem {
     }
 
     @MainActor
-    func lock(completion: @escaping (Data?, String?) -> Void) {
+    func lock() async -> (Data?, String?) {
         let message: String
         if LocalAuth.canUseLocalAuth {
             message = "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
         } else {
             message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
         }
-        getPassword(title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
-            guard let password else {
-                completion(nil, nil)
-                return
+        return await withCheckedContinuation { continuation in
+            getPassword(title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
+                guard let password else {
+                    continuation.resume(returning: (nil, nil))
+                    return
+                }
+                self?.flags.insert(.needsUnlock)
+                continuation.resume(returning: (sha1(password), hint))
             }
-            self?.flags.insert(.needsUnlock)
-            completion(sha1(password), hint)
         }
     }
 
     private static var unlockingItemsBlock = Set<UUID>()
-    func unlock(label: String, action: String, completion: @escaping (Bool) -> Void) {
+    func unlock(label: String, action: String) async -> Bool? {
         if ArchivedItem.unlockingItemsBlock.contains(uuid) {
-            return
+            return nil
         }
+        
         ArchivedItem.unlockingItemsBlock.insert(uuid)
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             ArchivedItem.unlockingItemsBlock.remove(uuid)
         }
-
-        LocalAuth.attempt(label: label) { [weak self] success in
+        
+        if let success = await LocalAuth.attempt(label: label) {
             if success {
-                self?.flags.remove(.needsUnlock)
-                completion(true)
+                flags.remove(.needsUnlock)
+                return true
             } else {
-                Task { @MainActor [weak self] in
-                    self?.unlockWithPassword(label: label, action: action, completion: completion)
-                }
+                return await unlockWithPassword(label: label, action: action)
             }
         }
+        
+        return nil
     }
 
     @MainActor
-    private func unlockWithPassword(label: String, action: String, completion: @escaping (Bool) -> Void) {
-        getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
-            guard let password else {
-                completion(false)
-                return
-            }
-            if self?.lockPassword == sha1(password) {
-                self?.flags.remove(.needsUnlock)
-                completion(true)
-            } else {
-                Task {
-                    await genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
-                    completion(false)
+    private func unlockWithPassword(label: String, action: String) async -> Bool {
+        await withCheckedContinuation { continuation in
+            getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
+                guard let password else {
+                    continuation.resume(returning: false)
+                    return
+                }
+                if self?.lockPassword == sha1(password) {
+                    self?.flags.remove(.needsUnlock)
+                    continuation.resume(returning: true)
+                } else {
+                    Task {
+                        await genericAlert(title: "Wrong Password", message: "This password does not match the one you provided when locking this item.")
+                        continuation.resume(returning: false)
+                    }
                 }
             }
         }
