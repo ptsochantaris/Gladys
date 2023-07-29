@@ -8,7 +8,7 @@ final class Singleton {
     static let shared = Singleton()
 
     var componentDropActiveFromDetailView: DetailController?
-    
+
     weak var lastUsedWindow: UIWindow?
 
     private func setBadgeCount(to count: Int) {

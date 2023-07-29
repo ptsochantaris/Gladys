@@ -85,9 +85,9 @@ final class ActionRequestViewController: UIViewController {
 
         let providerList = inputItems.reduce([]) { list, inputItem -> [NSItemProvider] in
             if let attachments = inputItem.attachments {
-                return list + attachments
+                list + attachments
             } else {
-                return list
+                list
             }
         }
 

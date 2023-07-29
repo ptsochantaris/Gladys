@@ -421,14 +421,14 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
     public var shareMode: ShareMode {
         if let shareRecord = cloudKitShareRecord {
             if shareRecord.recordID.zoneID == privateZoneId {
-                return .sharing
+                .sharing
             } else if let permission = cloudKitShareRecord?.currentUserParticipant?.permission, permission == .readWrite {
-                return .elsewhereReadWrite
+                .elsewhereReadWrite
             } else {
-                return .elsewhereReadOnly
+                .elsewhereReadOnly
             }
         } else {
-            return .none
+            .none
         }
     }
 
@@ -452,9 +452,9 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
     public var isImportedShare: Bool {
         switch shareMode {
         case .elsewhereReadOnly, .elsewhereReadWrite:
-            return true
+            true
         case .none, .sharing:
-            return false
+            false
         }
     }
 

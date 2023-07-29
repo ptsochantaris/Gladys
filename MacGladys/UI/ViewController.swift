@@ -185,11 +185,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     private func updateTitle() async {
         guard let window = view.window else { return }
 
-        var title: String
-        if filter.isFilteringLabels {
-            title = filter.enabledLabelsForTitles.joined(separator: ", ")
+        var title: String = if filter.isFilteringLabels {
+            filter.enabledLabelsForTitles.joined(separator: ", ")
         } else {
-            title = "Gladys"
+            "Gladys"
         }
 
         let items = collection.actionableSelectedItems
@@ -295,11 +294,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     private func handleLayout() {
         guard let window = view.window else { return }
 
-        let scrollbarInset: CGFloat
-        if let v = collection.enclosingScrollView?.verticalScroller, v.scrollerStyle == .legacy {
-            scrollbarInset = v.frame.width
+        let scrollbarInset: CGFloat = if let v = collection.enclosingScrollView?.verticalScroller, v.scrollerStyle == .legacy {
+            v.frame.width
         } else {
-            scrollbarInset = 0
+            0
         }
 
         var currentWidth = window.frame.size.width
@@ -579,7 +577,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let items = removableLockSelectedItems
         let plural = items.count > 1
         let label = "Remove Lock" + (plural ? "s" : "")
-        
+
         Task {
             guard let success = await LocalAuth.attempt(label: label) else {
                 return
@@ -702,7 +700,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             guard let success = await LocalAuth.attempt(label: label) else {
                 return
             }
-            
+
             if success {
                 for item in items {
                     item.flags.remove(.needsUnlock)

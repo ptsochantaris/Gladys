@@ -126,11 +126,11 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     private func itemsPerRow(for size: CGSize) -> Int {
         if size.width <= 414 {
-            return 3
+            3
         } else if size.width <= 768 {
-            return 5
+            5
         } else {
-            return 6
+            6
         }
     }
 
@@ -296,11 +296,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             break
         }
 
-        let enabled: Bool
-        if textDocumentProxy.enablesReturnKeyAutomatically == true {
-            enabled = textDocumentProxy.hasText
+        let enabled: Bool = if textDocumentProxy.enablesReturnKeyAutomatically == true {
+            textDocumentProxy.hasText
         } else {
-            enabled = true
+            true
         }
         enterButton.isEnabled = enabled
         enterButton.alpha = enabled ? 1 : 0.4

@@ -219,9 +219,9 @@ final class DetailCell: UITableViewCell {
     override var accessibilityTraits: UIAccessibilityTraits {
         get {
             if inspectButton.alpha == 0 {
-                return .staticText
+                .staticText
             } else {
-                return .button
+                .button
             }
         }
         set {}

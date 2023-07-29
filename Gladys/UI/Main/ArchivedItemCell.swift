@@ -49,9 +49,9 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     private var shareColor: UIColor? {
         if archivedDropItem?.shareMode == .sharing {
-            return UIColor.g_colorTint
+            UIColor.g_colorTint
         } else {
-            return UIColor.secondaryLabel
+            UIColor.secondaryLabel
         }
     }
 
@@ -89,17 +89,17 @@ final class ArchivedItemCell: UICollectionViewCell {
                 img.isHighlighted = isSelected
                 img.tintColor = tintColor
 
-#if os(xrOS)
-                let size: CGFloat = 44
-                let holder = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
-                holder.clipsToBounds = true
-                holder.contentView.addSubview(img)
-#else
-                let size: CGFloat = 41
-                let holder = UIView(frame: .zero)
-                holder.backgroundColor = container.backgroundColor
-                holder.addSubview(img)
-#endif
+                #if os(xrOS)
+                    let size: CGFloat = 44
+                    let holder = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+                    holder.clipsToBounds = true
+                    holder.contentView.addSubview(img)
+                #else
+                    let size: CGFloat = 41
+                    let holder = UIView(frame: .zero)
+                    holder.backgroundColor = container.backgroundColor
+                    holder.addSubview(img)
+                #endif
                 holder.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMinYCorner]
                 holder.translatesAutoresizingMaskIntoConstraints = false
                 holder.layer.cornerRadius = size * 0.5

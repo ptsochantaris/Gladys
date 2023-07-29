@@ -27,11 +27,10 @@ public extension IMAGE {
             let widthRatio = outputImagePixelWidth / mySizePixelWidth
             let heightRatio = outputImagePixelHeight / mySizePixelHeight
 
-            let ratio: CGFloat
-            if limitTo < 1 {
-                ratio = min(widthRatio, heightRatio) * limitTo
+            let ratio: CGFloat = if limitTo < 1 {
+                min(widthRatio, heightRatio) * limitTo
             } else {
-                ratio = max(widthRatio, heightRatio) * limitTo
+                max(widthRatio, heightRatio) * limitTo
             }
 
             let drawnImageWidthPixels = Int(mySizePixelWidth * ratio)
@@ -164,11 +163,10 @@ public extension IMAGE {
             let widthRatio = outputImagePixelWidth / mySizePixelWidth
             let heightRatio = outputImagePixelHeight / mySizePixelHeight
 
-            let ratio: CGFloat
-            if limitTo < 1 {
-                ratio = min(widthRatio, heightRatio) * limitTo
+            let ratio: CGFloat = if limitTo < 1 {
+                min(widthRatio, heightRatio) * limitTo
             } else {
-                ratio = max(widthRatio, heightRatio) * limitTo
+                max(widthRatio, heightRatio) * limitTo
             }
 
             let drawnImageWidthPixels = Int(mySizePixelWidth * ratio)
@@ -178,16 +176,15 @@ public extension IMAGE {
             let offsetY = (Int(outputImagePixelHeight) - drawnImageHeightPixels) / 2
 
             let orientation = imageOrientation
-            var transform: CGAffineTransform
-            switch orientation {
+            var transform: CGAffineTransform = switch orientation {
             case .down, .downMirrored:
-                transform = CGAffineTransform(translationX: outputImagePixelWidth, y: outputImagePixelHeight).rotated(by: .pi)
+                CGAffineTransform(translationX: outputImagePixelWidth, y: outputImagePixelHeight).rotated(by: .pi)
             case .left, .leftMirrored:
-                transform = CGAffineTransform(translationX: outputImagePixelWidth, y: 0).rotated(by: .pi / 2)
+                CGAffineTransform(translationX: outputImagePixelWidth, y: 0).rotated(by: .pi / 2)
             case .right, .rightMirrored:
-                transform = CGAffineTransform(translationX: 0, y: outputImagePixelHeight).rotated(by: -.pi / 2)
+                CGAffineTransform(translationX: 0, y: outputImagePixelHeight).rotated(by: -.pi / 2)
             default:
-                transform = .identity
+                .identity
             }
 
             switch orientation {

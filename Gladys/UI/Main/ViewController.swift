@@ -310,11 +310,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         for coordinatorItem in coordinator.items {
             let dragItem = coordinatorItem.dragItem
-            let newAction: PostDropAction
-            if let existingItem = dragItem.localObject as? ArchivedItem {
-                newAction = gladysToGladysDrop(existingItem: existingItem, sourceIndexPath: coordinatorItem.sourceIndexPath, to: destinationIndexPath)
+            let newAction: PostDropAction = if let existingItem = dragItem.localObject as? ArchivedItem {
+                gladysToGladysDrop(existingItem: existingItem, sourceIndexPath: coordinatorItem.sourceIndexPath, to: destinationIndexPath)
             } else {
-                newAction = externalDrop(dragItem: dragItem, to: destinationIndexPath)
+                externalDrop(dragItem: dragItem, to: destinationIndexPath)
             }
             if newAction.supercedes(action: action) {
                 action = newAction
@@ -391,12 +390,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             else { return }
 
             #if os(xrOS)
-            t.modalPresentationStyle = .formSheet
+                t.modalPresentationStyle = .formSheet
             #else
-            p.permittedArrowDirections = [.any]
-            p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
-            p.sourceView = myNavView
-            p.delegate = self
+                p.permittedArrowDirections = [.any]
+                p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
+                p.sourceView = myNavView
+                p.delegate = self
             #endif
 
         case "showDetail":
@@ -550,30 +549,30 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         mostRecentIndexPathActioned = indexPath
-        
+
         Task {
             await dismissAnyPopOverOrModal()
-            
+
             switch PersistedOptions.actionOnTap {
             case .infoPanel:
                 segue("showDetail", sender: item)
-                
+
             case .copy:
                 item.copyToPasteboard()
                 await genericAlert(title: nil, message: "Copied to clipboard", buttonTitle: nil)
-                
+
             case .open:
                 let success = await item.tryOpen(in: nil)
                 if !success {
                     segue("showDetail", sender: item)
                 }
-                
+
             case .preview:
                 let cell = collectionView.cellForItem(at: indexPath) as? ArchivedItemCell
                 if let presenter = view.window?.alertPresenter, !item.tryPreview(in: presenter, from: cell) {
                     segue("showDetail", sender: item)
                 }
-                
+
             case .none:
                 break
             }

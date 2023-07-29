@@ -245,7 +245,7 @@ final class DetailController: GladysViewController,
             sizeWindow()
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !firstAppearance {
@@ -261,9 +261,9 @@ final class DetailController: GladysViewController,
         table.layoutIfNeeded()
         let preferredWidth: CGFloat
         #if os(xrOS)
-        preferredWidth = 480
+            preferredWidth = 480
         #else
-        preferredWidth = 320
+            preferredWidth = 320
         #endif
         let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
         preferredContentSize = preferredSize
@@ -298,9 +298,9 @@ final class DetailController: GladysViewController,
 
     func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 1: return "Labels"
-        case 2: return "Components"
-        default: return nil
+        case 1: "Labels"
+        case 2: "Components"
+        default: nil
         }
     }
 
@@ -354,7 +354,7 @@ final class DetailController: GladysViewController,
 
     func tableView(_: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
         if indexPath.section == 1 {
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                 if indexPath.row >= self.item.labels.count { return nil }
                 let text = self.item.labels[indexPath.row]
 
@@ -385,7 +385,7 @@ final class DetailController: GladysViewController,
             }
 
         } else if indexPath.section == 2 {
-            return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
                 let component = self.item.components[indexPath.row]
 
                 var children = [
@@ -432,7 +432,7 @@ final class DetailController: GladysViewController,
             }
 
         } else {
-            return nil
+            nil
         }
     }
 
@@ -630,13 +630,13 @@ final class DetailController: GladysViewController,
 
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0: return 16
-        default: return 44
+        case 0: 16
+        default: 44
         }
     }
 
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNonzeroMagnitude
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        CGFloat.leastNonzeroMagnitude
     }
 
     func tableView(_: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {

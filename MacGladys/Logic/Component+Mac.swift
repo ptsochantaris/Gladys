@@ -27,11 +27,10 @@ extension Component {
 
         } else if let item = shareItem as? URL {
             if !NSWorkspace.shared.open(item) {
-                let message: String
-                if item.isFileURL {
-                    message = "macOS does not recognise the type of this file"
+                let message = if item.isFileURL {
+                    "macOS does not recognise the type of this file"
                 } else {
-                    message = "macOS does not recognise the type of this link"
+                    "macOS does not recognise the type of this link"
                 }
                 Task {
                     await genericAlert(title: "Can't Open", message: message)

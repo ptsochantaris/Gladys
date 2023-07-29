@@ -228,9 +228,9 @@ public extension CloudManager {
 
     private static func deletionTag(for recordName: String, cloudKitRecord: CKRecord?) -> String {
         if let zoneId = cloudKitRecord?.recordID.zoneID {
-            return zoneId.zoneName + ":" + zoneId.ownerName + ":" + recordName
+            zoneId.zoneName + ":" + zoneId.ownerName + ":" + recordName
         } else {
-            return recordName
+            recordName
         }
     }
 

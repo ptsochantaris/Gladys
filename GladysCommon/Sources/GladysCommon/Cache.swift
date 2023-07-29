@@ -20,9 +20,9 @@ public final class Cache<Key: Hashable, Value> {
 
         override public func isEqual(_ object: Any?) -> Bool {
             if let value = object as? WrappedKey {
-                return value.key == key
+                value.key == key
             } else {
-                return false
+                false
             }
         }
     }

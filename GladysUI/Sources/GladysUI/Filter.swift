@@ -41,9 +41,9 @@ public final class Filter {
         public var imageName: String {
             switch self {
             case .flat:
-                return "square.grid.3x3"
+                "square.grid.3x3"
             case .byLabel:
-                return "square.grid.3x1.below.line.grid.1x2"
+                "square.grid.3x1.below.line.grid.1x2"
             }
         }
     }
@@ -266,15 +266,14 @@ public final class Filter {
         // text pass
 
         if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
-            let queryString: String
-            if terms.count > 1 {
+            let queryString: String = if terms.count > 1 {
                 if PersistedOptions.inclusiveSearchTerms {
-                    queryString = "(" + terms.joined(separator: ") || (") + ")"
+                    "(" + terms.joined(separator: ") || (") + ")"
                 } else {
-                    queryString = "(" + terms.joined(separator: ") && (") + ")"
+                    "(" + terms.joined(separator: ") && (") + ")"
                 }
             } else {
-                queryString = terms.first ?? ""
+                terms.first ?? ""
             }
 
             isFilteringText = true
@@ -430,9 +429,9 @@ public final class Filter {
             case none, some, all
             public var accessibilityValue: String? {
                 switch self {
-                case .none: return nil
-                case .some: return "Applied to some selected items"
-                case .all: return "Applied to all selected items"
+                case .none: nil
+                case .some: "Applied to some selected items"
+                case .all: "Applied to all selected items"
                 }
             }
         }
@@ -456,11 +455,10 @@ public final class Filter {
     }
 
     public var enabledToggles: [Toggle] {
-        var res: [Filter.Toggle]
-        if isFilteringLabels {
-            res = labelToggles.filter(\.active)
+        var res: [Filter.Toggle] = if isFilteringLabels {
+            labelToggles.filter(\.active)
         } else {
-            res = labelToggles
+            labelToggles
         }
 
         if let i = res.firstIndex(where: { $0.function == .unlabeledItems }), i != 0 {

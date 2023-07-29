@@ -778,9 +778,9 @@ public final class Component: Codable, Equatable {
 
     public var backgroundInfoObject: (Any?, Int) {
         switch representedClass {
-        case .mapItem: return (decode() as? MKMapItem, 30)
-        case .color: return (decode() as? COLOR, 30)
-        default: return (nil, 0)
+        case .mapItem: (decode() as? MKMapItem, 30)
+        case .color: (decode() as? COLOR, 30)
+        default: (nil, 0)
         }
     }
 
@@ -1236,11 +1236,11 @@ public final class Component: Codable, Equatable {
         componentIcon = await Task.detached(priority: .userInitiated) {
             switch contentMode {
             case .fit:
-                return icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+                icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
             case .fill:
-                return icon.limited(to: Component.iconPointSize, useScreenScale: true)
+                icon.limited(to: Component.iconPointSize, useScreenScale: true)
             case .center, .circle:
-                return icon
+                icon
             }
         }.value
 

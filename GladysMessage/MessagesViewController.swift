@@ -15,13 +15,13 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     private func itemsPerRow(for size: CGSize) -> Int {
         if size.width < 320 {
-            return 2
+            2
         } else if size.width < 400 {
-            return 3
+            3
         } else if size.width < 1000 {
-            return 4
+            4
         } else {
-            return 5
+            5
         }
     }
 
@@ -39,9 +39,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     private var filteredDrops: ContiguousArray<ArchivedItem> {
         if let t = searchBar.text, !t.isEmpty {
-            return DropStore.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
+            DropStore.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
         } else {
-            return DropStore.visibleDrops
+            DropStore.visibleDrops
         }
     }
 

@@ -223,7 +223,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
     ///////////////////////////////////
 
     private var lastSize = CGSize.zero
-    
+
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         if lastSize != view.frame.size, !view.frame.isEmpty {

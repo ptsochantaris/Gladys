@@ -161,16 +161,15 @@ enum GladysAppIntents {
 
             let itemUUID = entity.id.uuidString
 
-            let request: HighlightRequest
-            switch action {
+            let request = switch action {
             case .highlight:
-                request = HighlightRequest(uuid: itemUUID, extraAction: .none)
+                HighlightRequest(uuid: itemUUID, extraAction: .none)
             case .tryQuicklook:
-                request = HighlightRequest(uuid: itemUUID, extraAction: .preview(nil))
+                HighlightRequest(uuid: itemUUID, extraAction: .preview(nil))
             case .tryOpen:
-                request = HighlightRequest(uuid: itemUUID, extraAction: .open)
+                HighlightRequest(uuid: itemUUID, extraAction: .open)
             case .details:
-                request = HighlightRequest(uuid: itemUUID, extraAction: .detail)
+                HighlightRequest(uuid: itemUUID, extraAction: .detail)
             }
             sendNotification(name: .HighlightItemRequested, object: request)
             return .result()
@@ -194,11 +193,10 @@ enum GladysAppIntents {
 
         @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
-            let data: IntentFile
-            if let file {
-                data = file
+            let data: IntentFile = if let file {
+                file
             } else {
-                data = try await $file.requestValue()
+                try await $file.requestValue()
             }
 
             let p = NSItemProvider(item: data.data as NSData, typeIdentifier: (data.type ?? .data).identifier)
@@ -224,11 +222,10 @@ enum GladysAppIntents {
 
         @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
-            let data: URL
-            if let url {
-                data = url
+            let data: URL = if let url {
+                url
             } else {
-                data = try await $url.requestValue()
+                try await $url.requestValue()
             }
 
             let p = NSItemProvider(object: data as NSURL)
@@ -253,11 +250,10 @@ enum GladysAppIntents {
 
         @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
-            let data: String
-            if let text {
-                data = text
+            let data: String = if let text {
+                text
             } else {
-                data = try await $text.requestValue()
+                try await $text.requestValue()
             }
 
             let p = NSItemProvider(object: data as NSString)
@@ -301,8 +297,8 @@ enum GladysAppIntents {
 
         var localizedStringResource: LocalizedStringResource {
             switch self {
-            case .noItemsCreated: return "No items were created from this data"
-            case .itemNotFound: return "Item could not be found"
+            case .noItemsCreated: "No items were created from this data"
+            case .itemNotFound: "Item could not be found"
             }
         }
     }

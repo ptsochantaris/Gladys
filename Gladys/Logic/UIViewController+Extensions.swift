@@ -13,7 +13,7 @@ extension UIViewController {
         ])
         vc.didMove(toParent: self)
     }
-    
+
     func segue(_ name: String, sender: Any?) {
         performSegue(withIdentifier: name, sender: sender)
     }

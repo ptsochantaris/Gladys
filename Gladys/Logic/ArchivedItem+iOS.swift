@@ -90,11 +90,10 @@ extension ArchivedItem {
 
     @MainActor
     func lock() async -> (Data?, String?) {
-        let message: String
-        if LocalAuth.canUseLocalAuth {
-            message = "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
+        let message = if LocalAuth.canUseLocalAuth {
+            "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
         } else {
-            message = "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
+            "Please provide the password you will use to unlock this item. You can also provide an optional label to display while the item is locked."
         }
         return await withCheckedContinuation { continuation in
             getPassword(title: "Lock Item", action: "Lock", requestHint: true, message: message) { [weak self] password, hint in
@@ -113,13 +112,13 @@ extension ArchivedItem {
         if ArchivedItem.unlockingItemsBlock.contains(uuid) {
             return nil
         }
-        
+
         ArchivedItem.unlockingItemsBlock.insert(uuid)
         Task { @MainActor in
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             ArchivedItem.unlockingItemsBlock.remove(uuid)
         }
-        
+
         if let success = await LocalAuth.attempt(label: label) {
             if success {
                 flags.remove(.needsUnlock)
@@ -128,7 +127,7 @@ extension ArchivedItem {
                 return await unlockWithPassword(label: label, action: action)
             }
         }
-        
+
         return nil
     }
 
@@ -233,14 +232,13 @@ extension ArchivedItem {
             guard let firstScene = UIApplication.shared.connectedScenes.first else {
                 return false
             }
-            
+
             let success = await firstScene.open(item, options: nil)
             if !success {
-                let message: String
-                if item.isFileURL {
-                    message = "iOS does not recognise the type of this file"
+                let message = if item.isFileURL {
+                    "iOS does not recognise the type of this file"
                 } else {
-                    message = "iOS does not recognise the type of this link"
+                    "iOS does not recognise the type of this link"
                 }
                 await genericAlert(title: "Can't Open", message: message)
             }

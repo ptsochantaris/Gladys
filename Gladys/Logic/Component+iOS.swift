@@ -285,11 +285,10 @@ extension Component {
             }
             let success = await firstScene.open(item, options: nil)
             if !success {
-                let message: String
-                if item.isFileURL {
-                    message = "iOS does not recognise the type of this file"
+                let message = if item.isFileURL {
+                    "iOS does not recognise the type of this file"
                 } else {
-                    message = "iOS does not recognise the type of this link"
+                    "iOS does not recognise the type of this link"
                 }
                 await genericAlert(title: "Can't Open", message: message)
             }

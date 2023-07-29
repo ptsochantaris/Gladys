@@ -6,23 +6,23 @@ public enum SortOption {
     case dateAdded, dateModified, title, note, size, label
     public var ascendingTitle: String {
         switch self {
-        case .dateAdded: return "Oldest Item First"
-        case .dateModified: return "Oldest Update First"
-        case .title: return "Title (A-Z)"
-        case .note: return "Note (A-Z)"
-        case .label: return "First Label (A-Z)"
-        case .size: return "Smallest First"
+        case .dateAdded: "Oldest Item First"
+        case .dateModified: "Oldest Update First"
+        case .title: "Title (A-Z)"
+        case .note: "Note (A-Z)"
+        case .label: "First Label (A-Z)"
+        case .size: "Smallest First"
         }
     }
 
     public var descendingTitle: String {
         switch self {
-        case .dateAdded: return "Newest Item First"
-        case .dateModified: return "Newest Update First"
-        case .title: return "Title (Z-A)"
-        case .note: return "Note (Z-A)"
-        case .label: return "First Label (Z-A)"
-        case .size: return "Largest First"
+        case .dateAdded: "Newest Item First"
+        case .dateModified: "Newest Update First"
+        case .title: "Title (Z-A)"
+        case .note: "Note (Z-A)"
+        case .label: "First Label (Z-A)"
+        case .size: "Largest First"
         }
     }
 

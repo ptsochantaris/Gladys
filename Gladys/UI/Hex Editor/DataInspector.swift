@@ -86,7 +86,7 @@ final class DataInspector: GladysViewController {
         view.accessibilityElements = [bit16!, bit32!, bit64!, signedAccessibility!, endianAccessibility!, decimalAccessibility!]
         switchesChanged()
     }
-    
+
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         guard let currentWindow else { return }

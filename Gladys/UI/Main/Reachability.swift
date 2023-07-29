@@ -49,9 +49,9 @@ final actor Reachability {
         case notReachable, reachableViaWiFi, reachableViaWWAN
         var name: String {
             switch self {
-            case .notReachable: return "Down"
-            case .reachableViaWiFi: return "WiFi"
-            case .reachableViaWWAN: return "Cellular"
+            case .notReachable: "Down"
+            case .reachableViaWiFi: "WiFi"
+            case .reachableViaWWAN: "Cellular"
             }
         }
     }
