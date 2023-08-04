@@ -185,7 +185,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     private func updateTitle() async {
         guard let window = view.window else { return }
 
-        var title: String = if filter.isFilteringLabels {
+        let title: String = if filter.isFilteringLabels {
             filter.enabledLabelsForTitles.joined(separator: ", ")
         } else {
             "Gladys"
