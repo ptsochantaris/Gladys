@@ -707,8 +707,8 @@ public extension CloudManager {
         await requestGateKeeper.takeTicket()
         await BackgroundTask.registerForBackground()
         defer {
+            requestGateKeeper.returnTicket()
             Task {
-                await requestGateKeeper.returnTicket()
                 await BackgroundTask.unregisterForBackground()
             }
         }

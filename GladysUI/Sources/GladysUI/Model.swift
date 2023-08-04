@@ -32,8 +32,8 @@ public enum Model {
         await storageGatekeeper.takeTicket()
         await Task.detached {
             _reloadDataIfNeeded()
+            storageGatekeeper.returnTicket()
         }.value
-        await storageGatekeeper.returnTicket()
     }
 
     private nonisolated static func _reloadDataIfNeeded() {
@@ -287,7 +287,7 @@ public enum Model {
         await storageGatekeeper.takeTicket()
         BackgroundTask.registerForBackground()
         defer {
-            storageGatekeeper.relaxedReturnTicket()
+            storageGatekeeper.returnTicket()
             BackgroundTask.unregisterForBackground()
         }
 
@@ -360,7 +360,7 @@ public enum Model {
         Task {
             await storageGatekeeper.takeTicket()
             defer {
-                storageGatekeeper.relaxedReturnTicket()
+                storageGatekeeper.returnTicket()
             }
             if item.needsDeletion || brokenMode {
                 return

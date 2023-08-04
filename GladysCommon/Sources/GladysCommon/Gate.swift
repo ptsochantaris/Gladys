@@ -1,29 +1,23 @@
 import AsyncAlgorithms
 
-public final actor Gate {
+public struct Gate {
     private let queue = AsyncChannel<Void>()
-
+    
     public init(tickets: Int) {
         for _ in 0 ..< tickets {
-            Task {
-                await returnTicket()
-            }
+            returnTicket()
         }
     }
-
+    
     public func takeTicket() async {
         for await _ in queue {
             return
         }
     }
-
-    public func returnTicket() async {
-        await queue.send(())
-    }
-
-    public nonisolated func relaxedReturnTicket() {
+    
+    public func returnTicket() {
         Task {
-            await returnTicket()
+            await queue.send(())
         }
     }
 }

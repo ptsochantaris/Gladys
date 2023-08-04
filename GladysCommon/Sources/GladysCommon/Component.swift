@@ -858,7 +858,7 @@ public final class Component: Codable, Equatable {
         // in thread!
         await Component.gateKeeper.takeTicket()
         defer {
-            Component.gateKeeper.relaxedReturnTicket()
+            Component.gateKeeper.returnTicket()
         }
 
         clearCachedFields()
