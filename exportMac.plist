@@ -14,5 +14,7 @@
 	<true/>
 	<key>stripSwiftSymbols</key>
 	<true/>
+	<key>manageAppVersionAndBuildNumber</key>
+	<true/>
 </dict>
 </plist>

@@ -684,8 +684,8 @@
 			isa = PBXGroup;
 			children = (
 				16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */,
-				16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */,
 				16287AEB1EFB03FD007188AE /* Info.plist */,
+				16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */,
 			);
 			path = GladysIndex;
 			sourceTree = "<group>";
@@ -694,11 +694,11 @@
 			isa = PBXGroup;
 			children = (
 				1604A3331F091ABC005A477E /* GladysAction.entitlements */,
+				164136931F09195000B34574 /* Info.plist */,
 				1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */,
 				1641368F1F09195000B34574 /* ActionRequestViewController.swift */,
-				162383F320F969650086E719 /* LabelEditorController.swift */,
 				162383F520F96C650086E719 /* LabelEditorCell.swift */,
-				164136931F09195000B34574 /* Info.plist */,
+				162383F320F969650086E719 /* LabelEditorController.swift */,
 			);
 			path = GladysAction;
 			sourceTree = "<group>";
@@ -782,22 +782,22 @@
 		1689646D29905B25009D7D01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */,
-				16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */,
-				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
-				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
-				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
-				16EDB3761F2361EB001CC65C /* SortOption.swift */,
-				1689646729903EDF009D7D01 /* Model+iOS.swift */,
-				1689646529903DFA009D7D01 /* WatchDelegate.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
+				16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */,
+				16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */,
 				169763201F156CBE00537776 /* ArchivedItem+iOS.swift */,
-				169763131F15669000537776 /* Component+iOS.swift */,
+				16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */,
+				161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
+				169763131F15669000537776 /* Component+iOS.swift */,
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
-				16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */,
-				16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */,
+				1689646729903EDF009D7D01 /* Model+iOS.swift */,
+				16EDB3761F2361EB001CC65C /* SortOption.swift */,
+				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
+				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
+				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
+				1689646529903DFA009D7D01 /* WatchDelegate.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -870,10 +870,10 @@
 			isa = PBXGroup;
 			children = (
 				16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */,
+				16969BA41FB0E41E007B2F77 /* Info.plist */,
+				16969BB11FB0F309007B2F77 /* TodayCell.swift */,
 				16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */,
 				16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */,
-				16969BB11FB0F309007B2F77 /* TodayCell.swift */,
-				16969BA41FB0E41E007B2F77 /* Info.plist */,
 			);
 			path = GladysToday;
 			sourceTree = "<group>";
@@ -881,13 +881,13 @@
 		16A4E7E11FBB844A00D60596 /* GladysWatch */ = {
 			isa = PBXGroup;
 			children = (
-				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
-				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
-				16524C6729508FCF00384B20 /* GladysWatchModel.swift */,
-				16524C692950900D00384B20 /* Drop.swift */,
 				168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */,
-				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 				16A4E7E71FBB844A00D60596 /* Info.plist */,
+				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
+				16524C692950900D00384B20 /* Drop.swift */,
+				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
+				16524C6729508FCF00384B20 /* GladysWatchModel.swift */,
+				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 			);
 			path = GladysWatch;
 			sourceTree = "<group>";
@@ -896,10 +896,10 @@
 			isa = PBXGroup;
 			children = (
 				16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */,
-				16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */,
-				16219A0124E0108E006ED18A /* KeyboardCell.swift */,
 				16B2AA3C24DF42B5004F3FC2 /* Info.plist */,
 				16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */,
+				16219A0124E0108E006ED18A /* KeyboardCell.swift */,
+				16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */,
 			);
 			path = GladysKeys;
 			sourceTree = "<group>";
@@ -958,11 +958,11 @@
 		16D2C7111EF5A6D3009B97F9 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				160707A51F8AAC52003B856A /* Detail */,
+				1607079A1F8A3676003B856A /* Hex Editor */,
 				16C4BAA91F929AC80012C9E0 /* Labels */,
 				16C4BAA11F9294580012C9E0 /* Main */,
 				16C4BAA01F9294420012C9E0 /* Prefs */,
-				160707A51F8AAC52003B856A /* Detail */,
-				1607079A1F8A3676003B856A /* Hex Editor */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -980,19 +980,19 @@
 		16E27BCC1EFC5F9D00FD0818 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
+				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
 				1678F9DC1EF475FF005697CB /* Info.plist */,
-				1678F9D71EF475FF005697CB /* Assets.xcassets */,
 				1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */,
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
-				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
-				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
-				16BDAF26283895B600B3EEF3 /* Detail.storyboard */,
-				16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */,
-				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
-				16D984512160B8BC00D9D51C /* Intents.intentdefinition */,
+				1678F9D71EF475FF005697CB /* Assets.xcassets */,
 				16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */,
 				16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */,
+				16BDAF26283895B600B3EEF3 /* Detail.storyboard */,
+				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
+				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
+				16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */,
 			);
 			name = Support;
 			path = ..;
@@ -1001,26 +1001,26 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				160807B1297AA80900B92C0F /* FileProvider.framework */,
-				16080FFF242D726800E19FCE /* openssl.xcframework */,
-				1643C03F2323EDA0005D7BF3 /* StoreKit.framework */,
-				16C389E5221D42AD00AB790A /* ClockKit.framework */,
-				169D54B320B85026004E518E /* ServiceManagement.framework */,
 				16114866209FA5A0008BB332 /* libcrypto.a */,
-				16114864209FA58D008BB332 /* libssl.a */,
-				16114862209FA440008BB332 /* libboringssl.tbd */,
-				168FE05820951ABC00E740E9 /* CloudKit.framework */,
-				16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */,
-				16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */,
-				166AEB3D1F696B5400A77D16 /* openssl.framework */,
-				16D5DCD31F1CE0080069661C /* libxml2.tbd */,
-				16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */,
 				1675740E1F12C2D100385079 /* libcrypto.a */,
+				16114864209FA58D008BB332 /* libssl.a */,
 				1675740F1F12C2D100385079 /* libssl.a */,
+				16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */,
+				16C389E5221D42AD00AB790A /* ClockKit.framework */,
+				168FE05820951ABC00E740E9 /* CloudKit.framework */,
+				16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */,
+				160807B1297AA80900B92C0F /* FileProvider.framework */,
 				16F21C171F12D1B40033FE8B /* Fuzi.framework */,
-				16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */,
 				1657B8AC1FD41C1C00EC480D /* Messages.framework */,
+				16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */,
+				166AEB3D1F696B5400A77D16 /* openssl.framework */,
+				169D54B320B85026004E518E /* ServiceManagement.framework */,
+				1643C03F2323EDA0005D7BF3 /* StoreKit.framework */,
 				16A4350F29787045005B8CE6 /* UniformTypeIdentifiers.framework */,
+				16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */,
+				16114862209FA440008BB332 /* libboringssl.tbd */,
+				16D5DCD31F1CE0080069661C /* libxml2.tbd */,
+				16080FFF242D726800E19FCE /* openssl.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

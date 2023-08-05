@@ -14,18 +14,20 @@ public enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    public var bgColor: COLOR {
-        switch self {
-        case .green: COLOR.systemGreen
-        case .red: COLOR.systemRed
-        case .blue: COLOR.systemBlue
-        case .cyan: COLOR.systemCyan
-        case .gray: COLOR.systemGray
-        case .none: COLOR.g_colorMacCard
-        case .purple: COLOR.systemPurple
-        case .yellow: COLOR.systemYellow
+    #if !os(watchOS)
+        public var bgColor: COLOR {
+            switch self {
+            case .green: COLOR.systemGreen
+            case .red: COLOR.systemRed
+            case .blue: COLOR.systemBlue
+            case .cyan: COLOR.systemCyan
+            case .gray: COLOR.systemGray
+            case .none: COLOR.g_colorMacCard
+            case .purple: COLOR.systemPurple
+            case .yellow: COLOR.systemYellow
+            }
         }
-    }
+    #endif
 
     public var fgColor: COLOR {
         switch self {

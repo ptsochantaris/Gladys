@@ -1,7 +1,9 @@
 #!/bin/sh
 
+DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
+
 # Build
-xcodebuild clean archive -project Gladys.xcodeproj -scheme "Gladys" -destination generic/platform=iOS -archivePath ~/Desktop/gladys.xcarchive | xcpretty
+xcodebuild clean archive -project Gladys.xcodeproj -scheme "Gladys" -destination generic/platform=iOS -archivePath ~/Desktop/gladys.xcarchive
 
 if [ $? -eq 0 ]
 then

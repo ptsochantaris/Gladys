@@ -12,6 +12,8 @@
 	<string>upload</string>
 	<key>generateAppStoreInformation</key>
 	<true/>
+	<key>manageAppVersionAndBuildNumber</key>
+	<true/>
 	<key>stripSwiftSymbols</key>
 	<true/>
 </dict>
