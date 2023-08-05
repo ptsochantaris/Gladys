@@ -266,20 +266,10 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     private var highlightColor = ItemColor.none {
         didSet {
-            container.backgroundColor = highlightColor.color
-            if highlightColor == .none {
-                topLabel.textColor = .g_colorComponentLabel
-                bottomLabel.textColor = .g_colorComponentLabel
-                tintColor = .g_colorTint
-            } else if highlightColor.invertText {
-                topLabel.textColor = .g_colorComponentLabelInverse
-                bottomLabel.textColor = .g_colorComponentLabelInverse
-                tintColor = .g_colorComponentLabelInverse
-            } else {
-                topLabel.textColor = .g_colorComponentLabel
-                bottomLabel.textColor = .g_colorComponentLabel
-                tintColor = .g_colorComponentLabel
-            }
+            container.backgroundColor = highlightColor.bgColor
+            topLabel.textColor = highlightColor.fgColor
+            bottomLabel.textColor = highlightColor.fgColor
+            tintColor = highlightColor.tintColor
         }
     }
 

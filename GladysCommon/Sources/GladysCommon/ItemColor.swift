@@ -14,29 +14,36 @@ public enum ItemColor: String, CaseIterable, Codable {
         }
     }
 
-    public var color: COLOR {
+    public var bgColor: COLOR {
         switch self {
-        case .green: COLOR.green
-        case .red: COLOR.red
-        case .blue: COLOR.blue
-        case .cyan: COLOR.cyan
-        case .gray: COLOR.gray
+        case .green: COLOR.systemGreen
+        case .red: COLOR.systemRed
+        case .blue: COLOR.systemBlue
+        case .cyan: COLOR.systemCyan
+        case .gray: COLOR.systemGray
         case .none: COLOR.g_colorMacCard
-        case .purple: COLOR.purple
-        case .yellow: COLOR.yellow
+        case .purple: COLOR.systemPurple
+        case .yellow: COLOR.systemYellow
         }
     }
 
-    public var invertText: Bool {
+    public var fgColor: COLOR {
         switch self {
-        case .cyan: true
-        case .none: false
-        case .yellow: false
-        case .purple: true
-        case .gray: true
-        case .blue: true
-        case .red: true
-        case .green: true
+        case .green: COLOR.black
+        case .red: COLOR.white
+        case .blue: COLOR.white
+        case .cyan: COLOR.black
+        case .gray: COLOR.g_colorComponentLabelInverse
+        case .none: COLOR.g_colorComponentLabel
+        case .purple: COLOR.white
+        case .yellow: COLOR.black
+        }
+    }
+
+    public var tintColor: COLOR {
+        switch self {
+        case .none: COLOR.g_colorTint
+        default: fgColor
         }
     }
 
@@ -46,7 +53,7 @@ public enum ItemColor: String, CaseIterable, Codable {
             case .none:
                 IMAGE(systemName: "circle")
             default:
-                IMAGE.tintedShape(systemName: "circle.fill", coloured: color)
+                IMAGE.tintedShape(systemName: "circle.fill", coloured: bgColor)
             }
         }
     #endif

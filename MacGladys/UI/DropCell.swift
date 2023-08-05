@@ -263,20 +263,10 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     }
 
     private func setHighlightColor(_ highlightColor: ItemColor, highlightBottomLabel: Bool) {
-        (view as? FirstMouseView)?.bgColor = highlightColor.color
-        if highlightColor == .none {
-            topLabel.textColor = .g_colorComponentLabel
-            bottomLabel.textColor = highlightBottomLabel ? .g_colorTint : .g_colorComponentLabel
-            labelTokenField.tintColor = .g_colorTint
-        } else if highlightColor.invertText {
-            topLabel.textColor = .g_colorComponentLabelInverse
-            bottomLabel.textColor = .g_colorComponentLabelInverse
-            labelTokenField.tintColor = .g_colorComponentLabelInverse
-        } else {
-            topLabel.textColor = .g_colorComponentLabel
-            bottomLabel.textColor = .g_colorComponentLabel
-            labelTokenField.tintColor = .g_colorComponentLabel
-        }
+        (view as? FirstMouseView)?.bgColor = highlightColor.bgColor
+        topLabel.textColor = highlightColor.fgColor
+        bottomLabel.textColor = highlightBottomLabel ? highlightColor.tintColor : highlightColor.fgColor
+        labelTokenField.tintColor = highlightColor.tintColor
     }
 
     private func reDecorate() {
