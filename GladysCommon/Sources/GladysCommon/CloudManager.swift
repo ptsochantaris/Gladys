@@ -1,4 +1,5 @@
 import CloudKit
+import Lista
 
 extension CKRecord: @unchecked Sendable {}
 extension CKDatabaseOperation: @unchecked Sendable {}
@@ -18,7 +19,7 @@ public extension Sequence where Element: Hashable {
 public extension Array {
     func bunch(maxSize: Int) -> [[Element]] {
         var pos = 0
-        let slices = LinkedList<ArraySlice<Element>>()
+        let slices = Lista<ArraySlice<Element>>()
         while pos < count {
             let end = Swift.min(count, pos + maxSize)
             slices.append(self[pos ..< end])
@@ -30,7 +31,7 @@ public extension Array {
 
 public extension [[CKRecord]] {
     func flatBunch(minSize: Int) -> [[CKRecord]] {
-        let result = LinkedList<[CKRecord]>()
+        let result = Lista<[CKRecord]>()
         var newChild = [CKRecord]()
         for childArray in self {
             newChild.append(contentsOf: childArray)

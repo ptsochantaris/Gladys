@@ -5,6 +5,7 @@
 #endif
 import CloudKit
 import GladysCommon
+import Lista
 
 public extension CloudManager {
     internal static let privateDatabaseSubscriptionId = "private-changes"
@@ -69,8 +70,7 @@ public extension CloudManager {
 
         let privatePushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
 
-        var sharedPushStates = ContiguousArray<PushState>()
-        sharedPushStates.reserveCapacity(sharedZonesToPush.count)
+        let sharedPushStates = Lista<PushState>()
         for sharedZoneId in sharedZonesToPush {
             let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
             sharedPushStates.append(pushState)
@@ -459,7 +459,7 @@ public extension CloudManager {
     }
 
     internal static func fetchMissingShareRecords() async throws {
-        var fetchGroups = [CKRecordZone.ID: LinkedList<CKRecord.ID>]()
+        var fetchGroups = [CKRecordZone.ID: Lista<CKRecord.ID>]()
 
         for item in await DropStore.allDrops {
             if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
@@ -467,7 +467,7 @@ public extension CloudManager {
                 if let existingFetchGroup = fetchGroups[zoneId] {
                     existingFetchGroup.append(shareId)
                 } else {
-                    fetchGroups[zoneId] = LinkedList(value: shareId)
+                    fetchGroups[zoneId] = Lista(value: shareId)
                 }
             }
         }

@@ -1,5 +1,6 @@
 import GladysCommon
 import UIKit
+import Lista
 
 extension Notification.Name {
     static let DoneSelected = Notification.Name("DoneSelected")
@@ -14,7 +15,7 @@ final class ActionRequestViewController: UIViewController {
 
     private var loadCount = 0
     private var ingestOnWillAppear = true
-    private var newItems = [ArchivedItem]()
+    private var newItems = Lista<ArchivedItem>()
 
     override func viewDidLoad() {
         super.viewDidLoad()

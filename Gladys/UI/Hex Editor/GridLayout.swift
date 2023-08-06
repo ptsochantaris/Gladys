@@ -1,5 +1,6 @@
 import GladysCommon
 import UIKit
+import Lista
 
 final class GridLayout: UICollectionViewLayout {
     var cellSide: CGFloat = 36
@@ -46,7 +47,7 @@ final class GridLayout: UICollectionViewLayout {
         let maxIndex = Int(((y + rect.size.height) / cellSide).rounded(.up)) * itemsPerRow
         let count = collectionView?.numberOfItems(inSection: 0) ?? 0
 
-        let ips = LinkedList<UICollectionViewLayoutAttributes>()
+        let ips = Lista<UICollectionViewLayoutAttributes>()
         for f in min(count, minIndex) ..< min(count, maxIndex) {
             if let a = layoutAttributesForItem(at: IndexPath(item: f, section: 0)) {
                 ips.append(a)

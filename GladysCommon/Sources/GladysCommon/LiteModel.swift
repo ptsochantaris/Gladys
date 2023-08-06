@@ -1,4 +1,5 @@
 import Foundation
+import Lista
 
 @MainActor
 public enum LiteModel {
@@ -54,8 +55,8 @@ public enum LiteModel {
         return result
     }
 
-    public static func prefix(_ count: Int) -> ContiguousArray<ArchivedItem> {
-        var items = ContiguousArray<ArchivedItem>()
+    public static func prefix(_ count: Int) -> Lista<ArchivedItem> {
+        let items = Lista<ArchivedItem>()
         var number = 0
         iterateThroughSavedItemsWithoutLoading { item in
             items.append(item)
@@ -65,8 +66,8 @@ public enum LiteModel {
         return items
     }
 
-    public static func allItems() -> ContiguousArray<ArchivedItem> {
-        var items = ContiguousArray<ArchivedItem>()
+    public static func allItems() -> Lista<ArchivedItem> {
+        let items = Lista<ArchivedItem>()
         iterateThroughSavedItemsWithoutLoading { item in
             items.append(item)
             return true
@@ -110,7 +111,7 @@ public enum LiteModel {
         }
     }
 
-    public static func insertNewItemsWithoutLoading(items: [ArchivedItem]) {
+    public static func insertNewItemsWithoutLoading(items: any Collection<ArchivedItem>) {
         if items.isEmpty { return }
 
         var closureError: NSError?

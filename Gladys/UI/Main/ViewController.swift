@@ -1,6 +1,7 @@
 import GladysCommon
 import GladysUI
 import UIKit
+import Lista
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
@@ -613,20 +614,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         switch filter.groupingMode {
         case .byLabel:
             let toggles = filter.enabledToggles
-            var labelLookups = [Filter.Toggle.Function: LinkedList<UUID>]()
+            var labelLookups = [Filter.Toggle.Function: Lista<UUID>]()
             for item in filter.filteredDrops {
                 if item.isRecentlyAdded {
                     if let list = labelLookups[.recentlyAddedItems] {
                         list.append(item.uuid)
                     } else {
-                        labelLookups[.recentlyAddedItems] = LinkedList(value: item.uuid)
+                        labelLookups[.recentlyAddedItems] = Lista(value: item.uuid)
                     }
                 }
                 if item.labels.isEmpty {
                     if let list = labelLookups[.unlabeledItems] {
                         list.append(item.uuid)
                     } else {
-                        labelLookups[.unlabeledItems] = LinkedList(value: item.uuid)
+                        labelLookups[.unlabeledItems] = Lista(value: item.uuid)
                     }
                 } else {
                     for text in item.labels {
@@ -634,7 +635,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                         if let list = labelLookups[function] {
                             list.append(item.uuid)
                         } else {
-                            labelLookups[function] = LinkedList(value: item.uuid)
+                            labelLookups[function] = Lista(value: item.uuid)
                         }
                     }
                 }
@@ -1485,7 +1486,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             return a
         }
 
-        let children = LinkedList<UIMenuElement>()
+        let children = Lista<UIMenuElement>()
 
         if mainView, item.canOpen {
             children.append(makeAction(title: "Open", callback: { [weak self] in

@@ -236,7 +236,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
     private func externalDataUpdated() {
         let items = LiteModel.allItems()
-        DropStore.initialize(with: items)
+        DropStore.boot(with: items)
         updateFilteredItems()
         if filteredDrops.isEmpty {
             emptyStack.isHidden = false

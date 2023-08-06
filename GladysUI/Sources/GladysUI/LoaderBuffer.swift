@@ -2,28 +2,30 @@ import Foundation
 import GladysCommon
 
 final class LoaderBuffer {
-    private let queue = DispatchQueue(label: "build.bru.gladys.deserialisation", qos: .utility)
+    private let queue = DispatchSemaphore(value: 1)
     private var ids = Set<UUID>()
-    private var store = ContiguousArray<ArchivedItem?>()
+    private let store: UnsafeMutableBufferPointer<ArchivedItem?>
 
     init(capacity: Int) {
-        queue.async {
-            self.store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
-            self.ids.reserveCapacity(capacity)
+        store = .allocate(capacity: capacity)
+        store.initialize(repeating: nil)
+        ids.reserveCapacity(capacity)
+    }
+
+    func set(_ item: ArchivedItem, at index: Int, uuid: UUID) {
+        queue.wait()
+        let inserted = ids.insert(uuid).inserted
+        queue.signal()
+        if inserted {
+            store[index] = item
         }
     }
 
-    func set(_ item: ArchivedItem, at index: Int) {
-        queue.sync {
-            if ids.insert(item.uuid).inserted {
-                store[index] = item
-            }
-        }
+    func result() -> some Sequence<ArchivedItem> {
+        store.compactMap { $0 }
     }
-
-    func result() -> ContiguousArray<ArchivedItem> {
-        queue.sync {
-            ContiguousArray(store.compactMap { $0 })
-        }
+    
+    deinit {
+        store.deallocate()
     }
 }

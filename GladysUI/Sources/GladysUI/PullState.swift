@@ -1,6 +1,7 @@
 import AsyncAlgorithms
 import CloudKit
 import GladysCommon
+import Lista
 
 extension CKDatabase.DatabaseChange.Deletion {
     var isPurged: Bool {
@@ -31,7 +32,7 @@ final actor PullState {
     private var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()
     private var updatedZoneTokens = [CKRecordZone.ID: CKServerChangeToken]()
     private var pendingShareComponentRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
-    private var pendingComponentRecords = [CKRecord.ID: LinkedList<CKRecord>]() // using full IDs because zone is also imporant
+    private var pendingComponentRecords = [CKRecord.ID: Lista<CKRecord>]() // using full IDs because zone is also imporant
     private let newItemsDebounce = PopTimer(timeInterval: 0.3) {
         Task { @MainActor in
             sendNotification(name: .ItemsAddedBySync, object: nil)
@@ -45,7 +46,7 @@ final actor PullState {
     }
 
     private func _updateProgress() async {
-        let components = LinkedList<String>()
+        let components = Lista<String>()
 
         if newDropCount > 0 { components.append(newDropCount == 1 ? "1 Drop" : "\(newDropCount) Drops") }
         if updateCount > 0 { components.append(updateCount == 1 ? "1 Update" : "\(updateCount) Updates") }
@@ -455,7 +456,7 @@ final actor PullState {
                     if let pending = pendingComponentRecords[parentId] {
                         pending.append(record)
                     } else {
-                        pendingComponentRecords[parentId] = LinkedList(value: record)
+                        pendingComponentRecords[parentId] = Lista(value: record)
                     }
                     log("Received new type item (\(recordUUID)) to link to upcoming new item (\(parentId.recordName))")
                 }

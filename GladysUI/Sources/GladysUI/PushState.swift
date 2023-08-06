@@ -1,5 +1,6 @@
 import CloudKit
 import GladysCommon
+import Lista
 
 final actor PushState {
     var latestError: Error?
@@ -116,7 +117,7 @@ final actor PushState {
     }
 
     func updateSyncMessage() {
-        let components = LinkedList<String>()
+        let components = Lista<String>()
         if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
         if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
         let deletionCount = recordsToDelete.count
@@ -169,7 +170,7 @@ final actor PushState {
             operation.database = database
             operation.savePolicy = .allKeys
 
-            let updatedRecords = LinkedList<CKRecord>()
+            let updatedRecords = Lista<CKRecord>()
 
             operation.perRecordSaveBlock = { id, result in
                 switch result {

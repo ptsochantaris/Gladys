@@ -70,7 +70,7 @@ public enum Model {
 
                     let result = try dataLoad(from: url)
                     Task {
-                        await DropStore.initialize(with: result)
+                        await DropStore.boot(with: result)
                         await sendNotification(name: .ModelDataUpdated, object: nil)
                         await ingestItemsIfNeeded()
                     }
@@ -100,7 +100,7 @@ public enum Model {
         }
     }
 
-    private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
+    private nonisolated static func dataLoad(from url: URL) throws -> some Sequence<ArchivedItem> {
         let start = Date()
         defer {
             log("Load time: \(-start.timeIntervalSinceNow) seconds")
@@ -110,16 +110,15 @@ public enum Model {
         let itemCount = d.count / 16
 
         let loader = LoaderBuffer(capacity: itemCount)
-        d.withUnsafeBytes { (pointer: UnsafeRawBufferPointer) in
+        d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
-            let uuidSequence = pointer.bindMemory(to: uuid_t.self).prefix(itemCount)
+            let uuidSequence = pointer.assumingMemoryBound(to: uuid_t.self)
             DispatchQueue.concurrentPerform(iterations: itemCount) { count in
-                let us = uuidSequence[count]
-                let u = UUID(uuid: us)
+                let u = UUID(uuid: uuidSequence[count])
                 let dataPath = url.appendingPathComponent(u.uuidString)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                    loader.set(item, at: count)
+                    loader.set(item, at: count, uuid: u)
                 }
             }
         }
@@ -145,7 +144,7 @@ public enum Model {
                 }
                 log("Loading inital data")
                 let result = try dataLoad(from: url)
-                DropStore.initialize(with: result)
+                DropStore.boot(with: result)
             } catch {
                 log("Loading Error: \(error)")
                 loadingError = error as NSError
@@ -392,8 +391,8 @@ public enum Model {
                     try fm.createDirectory(atPath: p, withIntermediateDirectories: true, attributes: nil)
                 }
 
-                let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount * 16)
-                let queue = DispatchQueue(label: "build.bru.gladys.serialisation")
+                let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount)
+                let queue = DispatchQueue(label: "build.bru.gladys.serialisation", qos: .utility)
                 var count = 0
                 let encoder = saveEncoder
                 for item in allItems {

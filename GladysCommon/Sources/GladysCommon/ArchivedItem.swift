@@ -1,5 +1,6 @@
 import CloudKit
 import Foundation
+import Lista
 #if os(macOS)
     import Cocoa
 #else
@@ -168,9 +169,9 @@ public final class ArchivedItem: Codable {
         })
     }
 
-    public static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> ContiguousArray<ArchivedItem> {
+    public static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
         if PersistedOptions.separateItemPreference {
-            var res = ContiguousArray<ArchivedItem>()
+            let res = Lista<ArchivedItem>()
             for p in providers {
                 for t in sanitised(p.registeredTypeIdentifiers) {
                     let item = ArchivedItem(providers: [p], limitToType: t, overrides: overrides)
@@ -181,7 +182,7 @@ public final class ArchivedItem: Codable {
 
         } else {
             let item = ArchivedItem(providers: providers, limitToType: nil, overrides: overrides)
-            return [item]
+            return Lista(value: item)
         }
     }
 
