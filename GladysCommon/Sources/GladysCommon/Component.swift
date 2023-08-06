@@ -79,9 +79,7 @@ public final class Component: Codable, Hashable {
 
         flags = []
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public var typeIdentifier: String
@@ -142,9 +140,7 @@ public final class Component: Codable, Hashable {
         representedClass = item.representedClass
         setBytes(item.bytes)
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
@@ -167,9 +163,7 @@ public final class Component: Codable, Hashable {
         representedClass = .data
         setBytes(data)
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public init(typeIdentifier: String, parentUuid: UUID, order: Int) {
@@ -191,9 +185,7 @@ public final class Component: Codable, Hashable {
         representedClass = .unknown(name: "")
         flags = [.isTransferring]
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public init(from record: CKRecord, parentUuid: UUID) {
@@ -224,9 +216,7 @@ public final class Component: Codable, Hashable {
         }
         cloudKitRecord = record
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public init(from typeItem: Component, newParent: ArchivedItem) {
@@ -251,9 +241,7 @@ public final class Component: Codable, Hashable {
         accessoryTitle = typeItem.accessoryTitle
         setBytes(typeItem.bytes)
 
-        Task {
-            await ComponentLookup.shared.register(self)
-        }
+        ComponentLookup.shared.register(self)
     }
 
     public var dataExists: Bool {

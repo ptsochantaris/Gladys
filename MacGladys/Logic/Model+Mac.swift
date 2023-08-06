@@ -42,7 +42,7 @@ extension Model {
                       let parent = DropStore.item(uuid: potentialParentUUID),
                       parent.eligibleForExternalUpdateCheck,
                       let potentialComponentUUID = UUID(uuidString: String(components[count - 2])),
-                      let component = await ComponentLookup.shared.component(uuid: potentialParentUUID),
+                      let component = ComponentLookup.shared.component(uuid: potentialParentUUID),
                       component.scanForBlobChanges()
                 else { return }
 

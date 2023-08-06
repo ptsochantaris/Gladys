@@ -109,7 +109,10 @@ public enum Model {
         let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
         let itemCount = d.count / 16
 
-        let loader = LoaderBuffer(capacity: itemCount)
+        let store = UnsafeMutableBufferPointer<ArchivedItem?>.allocate(capacity: itemCount)
+        defer { store.deallocate() }
+        store.initialize(repeating: nil)
+        
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
             let uuidSequence = pointer.bindMemory(to: uuid_t.self)
@@ -118,11 +121,11 @@ public enum Model {
                 let dataPath = url.appendingPathComponent(u.uuidString)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                    loader.set(item, at: count, uuid: u)
+                    store[count] = item
                 }
             }
         }
-        return loader.result()
+        return store.compactMap { $0 }
     }
 
     private static func loadInitialData() {
@@ -341,7 +344,7 @@ public enum Model {
             }.value
         }
 
-        await ComponentLookup.shared.cleanup()
+        ComponentLookup.shared.cleanup()
         trimTemporaryDirectory()
         ingestItemsIfNeeded()
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
