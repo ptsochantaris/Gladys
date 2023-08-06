@@ -1,9 +1,19 @@
 import CoreSpotlight
 import GladysCommon
 
-final class IndexRequestHandler: CSIndexExtensionRequestHandler {
-    private let indexDelegate = Indexer()
+final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider {
+    private lazy var indexDelegate = Indexer(itemProvider: self)
 
+    @MainActor
+    func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool) {
+        LiteModel.iterateThroughSavedItemsWithoutLoading(perItemCallback: perItem)
+    }
+    
+    @MainActor
+    func getItem(uuid: String) -> ArchivedItem? {
+        LiteModel.locateItemWithoutLoading(uuid: uuid)
+    }
+    
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
         Task { @MainActor in
             indexDelegate.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)

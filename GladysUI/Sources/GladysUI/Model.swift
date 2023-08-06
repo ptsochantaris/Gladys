@@ -100,25 +100,6 @@ public enum Model {
         }
     }
     
-    private final class LoadStore {
-        private var store: ContiguousArray<ArchivedItem?>
-        private let queue = DispatchQueue(label: "build.bru.gladys.loadingQueue")
-
-        init(capacity: Int) {
-            store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
-        }
-        
-        func setStore(at count: Int, to item: ArchivedItem) {
-            queue.sync {
-                store[count] = item
-            }
-        }
-        
-        var result: [ArchivedItem] {
-            queue.sync { store.compactMap { $0 } }
-        }
-    }
-
     private nonisolated static func dataLoad(from url: URL) throws -> some Sequence<ArchivedItem> {
         let start = Date()
         defer {
@@ -128,7 +109,9 @@ public enum Model {
         let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
         let itemCount = d.count / 16
 
-        let loadStore = LoadStore(capacity: itemCount)
+        let store = UnsafeMutableBufferPointer<ArchivedItem?>.allocate(capacity: itemCount)
+        defer { store.deallocate() }
+        store.initialize(repeating: nil)
         
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
@@ -138,11 +121,12 @@ public enum Model {
                 let dataPath = url.appendingPathComponent(u.uuidString)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                    loadStore.setStore(at: count, to: item)
+                    store[count] = item
                 }
             }
         }
-        return loadStore.result
+        
+        return store.compactMap { $0 }
     }
 
     private static func loadInitialData() {
@@ -277,7 +261,24 @@ public enum Model {
 
     ///////////////////////// Migrating
 
-    private static let indexDelegate = Indexer()
+    @MainActor
+    private final class IndexProxy: IndexerItemProvider {
+        func iterateThroughAllItems(perItem: (GladysCommon.ArchivedItem) -> Bool) {
+            for drop in DropStore.allDrops {
+                let carryOn = perItem(drop)
+                if !carryOn {
+                    return
+                }
+            }
+        }
+        
+        func getItem(uuid: String) -> GladysCommon.ArchivedItem? {
+            DropStore.item(uuid: uuid)
+        }
+    }
+    
+    private static let indexProxy = IndexProxy()
+    private static let indexDelegate = Indexer(itemProvider: indexProxy)
 
     public static func setup() {
         loadInitialData()
@@ -285,7 +286,20 @@ public enum Model {
 
         // migrate if needed
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
-        if PersistedOptions.lastRanVersion != currentBuild {
+        #if DEBUG
+        let versionChanged = true
+        #else
+        let versionChanged = PersistedOptions.lastRanVersion != currentBuild
+        #endif
+        if versionChanged {
+            for item in DropStore.allDrops {
+                // workaround for component duplication issue
+                let cs = item.components.uniqued
+                if cs.count != item.components.count {
+                    item.components = ContiguousArray(cs)
+                }
+            }
+
             Task { @CloudActor in
                 if CloudManager.syncSwitchedOn, CloudManager.lastiCloudAccount == nil {
                     CloudManager.lastiCloudAccount = FileManager.default.ubiquityIdentityToken

@@ -2,8 +2,19 @@
     import CoreSpotlight
     import Foundation
 
+public protocol IndexerItemProvider: AnyObject {
+    @MainActor
+    func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool)
+
+    @MainActor
+    func getItem(uuid: String) -> ArchivedItem?
+}
+
     public final class Indexer: NSObject, CSSearchableIndexDelegate {
-        override public init() {
+        private weak var itemProvider: IndexerItemProvider!
+
+        public init(itemProvider: IndexerItemProvider) {
+            self.itemProvider = itemProvider
             super.init()
             log("Indexer initialised")
         }
@@ -20,7 +31,7 @@
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
-                LiteModel.iterateThroughSavedItemsWithoutLoading { item in
+                itemProvider.iterateThroughAllItems { item in
                     searchableItems.append(item.searchableItem)
                     if searchableItems.count > 99 {
                         reIndex(items: searchableItems, in: searchableIndex)
@@ -39,7 +50,7 @@
             Task { @MainActor in
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
-                LiteModel.iterateThroughSavedItemsWithoutLoading { item in
+                itemProvider.iterateThroughAllItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
                         if searchableItems.count > 99 {
@@ -90,7 +101,7 @@
 
         @MainActor
         private func data(itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            if let item = LiteModel.locateItemWithoutLoading(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
+            if let item = itemProvider.getItem(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
                 return data
             }
             return Data()
@@ -98,7 +109,7 @@
 
         @MainActor
         private func fileURL(itemIdentifier: String, typeIdentifier: String) throws -> URL {
-            if let item = LiteModel.locateItemWithoutLoading(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
+            if let item = itemProvider.getItem(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
                 return url as URL
             }
             return URL(string: "file://")!

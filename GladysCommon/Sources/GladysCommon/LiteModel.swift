@@ -1,6 +1,8 @@
 import Foundation
 import Lista
 
+// Only to be used in extensions!
+
 @MainActor
 public enum LiteModel {
     private static var coordinator: NSFileCoordinator {
