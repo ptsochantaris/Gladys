@@ -99,6 +99,25 @@ public enum Model {
             }
         }
     }
+    
+    private final class LoadStore {
+        private var store: ContiguousArray<ArchivedItem?>
+        private let queue = DispatchQueue(label: "build.bru.gladys.loadingQueue")
+
+        init(capacity: Int) {
+            store = ContiguousArray<ArchivedItem?>(repeating: nil, count: capacity)
+        }
+        
+        func setStore(at count: Int, to item: ArchivedItem) {
+            queue.sync {
+                store[count] = item
+            }
+        }
+        
+        var result: [ArchivedItem] {
+            queue.sync { store.compactMap { $0 } }
+        }
+    }
 
     private nonisolated static func dataLoad(from url: URL) throws -> some Sequence<ArchivedItem> {
         let start = Date()
@@ -109,9 +128,7 @@ public enum Model {
         let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
         let itemCount = d.count / 16
 
-        let store = UnsafeMutableBufferPointer<ArchivedItem?>.allocate(capacity: itemCount)
-        defer { store.deallocate() }
-        store.initialize(repeating: nil)
+        let loadStore = LoadStore(capacity: itemCount)
         
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
@@ -121,11 +138,11 @@ public enum Model {
                 let dataPath = url.appendingPathComponent(u.uuidString)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                    store[count] = item
+                    loadStore.setStore(at: count, to: item)
                 }
             }
         }
-        return store.compactMap { $0 }
+        return loadStore.result
     }
 
     private static func loadInitialData() {
