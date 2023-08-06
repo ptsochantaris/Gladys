@@ -24,7 +24,7 @@ final class LoaderBuffer {
     func result() -> some Sequence<ArchivedItem> {
         store.compactMap { $0 }
     }
-    
+
     deinit {
         store.deallocate()
     }

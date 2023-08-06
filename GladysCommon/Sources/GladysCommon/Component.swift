@@ -10,7 +10,7 @@ import MapKit
 import UniformTypeIdentifiers
 import ZIPFoundation
 
-public final class Component: Codable, Equatable {
+public final class Component: Codable, Hashable {
     private enum CodingKeys: String, CodingKey {
         case typeIdentifier
         case representedClass
@@ -772,6 +772,10 @@ public final class Component: Codable, Equatable {
 
     public static func == (lhs: Component, rhs: Component) -> Bool {
         lhs.uuid == rhs.uuid
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
     }
 
     public static let iconPointSize = CGSize(width: 256, height: 256)

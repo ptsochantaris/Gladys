@@ -1,6 +1,6 @@
 import GladysCommon
-import UIKit
 import Lista
+import UIKit
 
 final class GridLayout: UICollectionViewLayout {
     var cellSide: CGFloat = 36

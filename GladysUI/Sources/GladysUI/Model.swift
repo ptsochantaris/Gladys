@@ -112,7 +112,7 @@ public enum Model {
         let loader = LoaderBuffer(capacity: itemCount)
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
-            let uuidSequence = pointer.assumingMemoryBound(to: uuid_t.self)
+            let uuidSequence = pointer.bindMemory(to: uuid_t.self)
             DispatchQueue.concurrentPerform(iterations: itemCount) { count in
                 let u = UUID(uuid: uuidSequence[count])
                 let dataPath = url.appendingPathComponent(u.uuidString)
