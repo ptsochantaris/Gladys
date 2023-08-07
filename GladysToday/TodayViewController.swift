@@ -137,7 +137,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     }
 
     private func reloadData() {
-        let items = LiteModel.prefix(12)
+        let items = ContiguousArray(LiteModel.prefix(12))
         DropStore.boot(with: items)
     }
 

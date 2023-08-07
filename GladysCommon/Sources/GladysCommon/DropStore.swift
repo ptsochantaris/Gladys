@@ -6,8 +6,8 @@ public enum DropStore {
 
     private static var dropStore = ContiguousArray<ArchivedItem>()
 
-    public static func boot(with drops: any Sequence<ArchivedItem>) {
-        dropStore = ContiguousArray(drops)
+    public static func boot(with drops: ContiguousArray<ArchivedItem>) {
+        dropStore = drops
         uuidindex = nil
     }
 

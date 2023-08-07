@@ -65,17 +65,18 @@ public enum Model {
                         dataFileLastModified = dataModified
                     }
                 }
-                if shouldLoad {
-                    log("Needed to reload data, new file date: \(dataFileLastModified)")
-
-                    let result = try dataLoad(from: url)
-                    Task {
-                        await DropStore.boot(with: result)
-                        await sendNotification(name: .ModelDataUpdated, object: nil)
-                        await ingestItemsIfNeeded()
-                    }
-                } else {
+                guard shouldLoad else {
                     log("No need to reload data")
+                    return
+                }
+                
+                log("Needed to reload data, new file date: \(dataFileLastModified)")
+                let result = try dataLoad(from: url)
+
+                Task { @MainActor in
+                    DropStore.boot(with: result)
+                    sendNotification(name: .ModelDataUpdated, object: nil)
+                    ingestItemsIfNeeded()
                 }
             } catch {
                 log("Loading Error: \(error)")
@@ -100,7 +101,7 @@ public enum Model {
         }
     }
     
-    private nonisolated static func dataLoad(from url: URL) throws -> some Sequence<ArchivedItem> {
+    private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
         let start = Date()
         defer {
             log("Load time: \(-start.timeIntervalSinceNow) seconds")
@@ -117,8 +118,8 @@ public enum Model {
             let decoder = loadDecoder
             let uuidSequence = pointer.bindMemory(to: uuid_t.self)
             DispatchQueue.concurrentPerform(iterations: itemCount) { count in
-                let u = UUID(uuid: uuidSequence[count])
-                let dataPath = url.appendingPathComponent(u.uuidString)
+                let uuid = UUID(uuid: uuidSequence[count]).uuidString
+                let dataPath = url.appendingPathComponent(uuid)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
                     store[count] = item
@@ -126,7 +127,7 @@ public enum Model {
             }
         }
         
-        return store.compactMap { $0 }
+        return ContiguousArray(store.compactMap { $0 })
     }
 
     private static func loadInitialData() {
@@ -426,20 +427,19 @@ public enum Model {
                 }
 
                 let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount)
-                let queue = DispatchQueue(label: "build.bru.gladys.serialisation", qos: .utility)
-                var count = 0
                 let encoder = saveEncoder
-                for item in allItems {
+                DispatchQueue.concurrentPerform(iterations: allCount) { count in
+                    let item = allItems[count]
                     let u = item.uuid
                     uuidArray[count] = u.uuid
-                    count += 1
                     if dirtyUuids.contains(u) {
-                        queue.async {
-                            let finalPath = url.appendingPathComponent(u.uuidString)
-                            try? encoder.encode(item).write(to: finalPath)
-                        }
+                        let finalPath = url.appendingPathComponent(u.uuidString)
+                        try? encoder.encode(item).write(to: finalPath)
                     }
                 }
+
+                try Data(buffer: uuidArray).write(to: url.appendingPathComponent("uuids"), options: .atomic)
+                uuidArray.deallocate()
 
                 if let filesInDir = try? fm.contentsOfDirectory(atPath: url.path), (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it
                     let oldFiles = Set(filesInDir).subtracting(allItems.map(\.uuid.uuidString)).subtracting(["uuids"])
@@ -449,9 +449,6 @@ public enum Model {
                         try? fm.removeItem(at: finalPath)
                     }
                 }
-
-                let data = queue.sync { Data(buffer: uuidArray) }
-                try data.write(to: url.appendingPathComponent("uuids"), options: .atomic)
 
                 if let dataModified = modificationDate(for: url) {
                     Task { @MainActor in

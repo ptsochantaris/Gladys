@@ -101,7 +101,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
-        DropStore.boot(with: LiteModel.allItems())
+        DropStore.boot(with: ContiguousArray(LiteModel.allItems()))
         emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
         updateItemSize(for: view.bounds.size)
         searchBar.text = lastFilter

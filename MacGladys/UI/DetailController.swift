@@ -204,8 +204,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     func tableView(_: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-        let cell = tableColumn?.dataCell as? NSTextFieldCell
-        cell?.title = item.labels[row]
+        guard let cell = tableColumn?.dataCell as? NSTextFieldCell, row < item.labels.count else {
+            return nil
+        }
+        cell.title = item.labels[row]
         return cell
     }
 

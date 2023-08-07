@@ -102,8 +102,8 @@ public final class Component: Codable, Hashable {
     public var displayTitleAlignment: NSTextAlignment
 
     public struct Flags: OptionSet {
-        public let rawValue: UInt8
-        public init(rawValue: UInt8) {
+        public let rawValue: Int
+        public init(rawValue: Int) {
             self.rawValue = rawValue
         }
 

@@ -235,7 +235,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     private func externalDataUpdated() {
-        let items = LiteModel.allItems()
+        let items = ContiguousArray(LiteModel.allItems())
         DropStore.boot(with: items)
         updateFilteredItems()
         if filteredDrops.isEmpty {

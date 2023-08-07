@@ -10,7 +10,7 @@ protocol DetailCellDelegate: AnyObject {
 
 final class DetailCell: UITableViewCell {
     struct Flags: OptionSet {
-        let rawValue: UInt8
+        let rawValue: Int
 
         static let inspection = Flags(rawValue: 1 << 0)
         static let archive = Flags(rawValue: 1 << 1)
