@@ -483,18 +483,28 @@ public enum Model {
 
     private static func ingestItemsIfNeeded() {
         BackgroundTask.registerForBackground()
-        Task {
-            await withTaskGroup(of: Void.self) { group in
-                for drop in DropStore.allDrops where drop.needsReIngest && !drop.needsDeletion && drop.loadingProgress == nil {
-                    group.addTask {
-                        await drop.reIngest()
+        Task.detached {
+            if #available(macOS 14.0, iOS 17.0, *) {
+                await withDiscardingTaskGroup {
+                    for drop in await DropStore.readyToIngest {
+                        $0.addTask {
+                            await drop.reIngest()
+                        }
+                    }
+                }
+            } else {
+                await withTaskGroup(of: Void.self) {
+                    for drop in await DropStore.readyToIngest {
+                        $0.addTask {
+                            await drop.reIngest()
+                        }
                     }
                 }
             }
-            BackgroundTask.unregisterForBackground()
+            await BackgroundTask.unregisterForBackground()
         }
     }
-
+    
     public static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map(\.uuid))
         DropStore.promoteDropsToTop(uuids: uuids)

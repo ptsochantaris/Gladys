@@ -31,21 +31,24 @@ extension Model {
 
     static func startMonitoringForExternalChangesToBlobs() {
         syncWithExternalUpdates()
-
+        
         eventMonitor = FileMonitor(directory: appStorageUrl) { url in
+            let components = url.pathComponents
+            let count = components.count
+            guard count > 3, components[count - 4].hasSuffix(".MacGladys"),
+                  let potentialParentUUID = UUID(uuidString: String(components[count - 3])),
+                  let potentialComponentUUID = UUID(uuidString: String(components[count - 2]))
+            else {
+                return
+            }
+            
             Task { @MainActor in
-                let components = url.pathComponents
-                let count = components.count
-
-                guard count > 3, components[count - 4].hasSuffix(".MacGladys"),
-                      let potentialParentUUID = UUID(uuidString: String(components[count - 3])),
-                      let parent = DropStore.item(uuid: potentialParentUUID),
+                guard let parent = DropStore.item(uuid: potentialParentUUID),
                       parent.eligibleForExternalUpdateCheck,
-                      let potentialComponentUUID = UUID(uuidString: String(components[count - 2])),
                       let component = ComponentLookup.shared.component(uuid: potentialParentUUID),
                       component.scanForBlobChanges()
                 else { return }
-
+                
                 parent.needsReIngest = true
                 parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID), will re-ingest parent")
