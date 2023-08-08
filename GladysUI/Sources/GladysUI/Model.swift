@@ -3,6 +3,7 @@ import CoreSpotlight
 import Foundation
 import GladysCommon
 import UniformTypeIdentifiers
+import Semalot
 
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
@@ -21,7 +22,7 @@ public enum Model {
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
 
-    private static let storageGatekeeper = Gate(tickets: 1)
+    private static let storageGatekeeper = Semalot(tickets: 1)
 
     static func reset() {
         DropStore.reset()

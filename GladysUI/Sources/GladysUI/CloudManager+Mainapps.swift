@@ -6,6 +6,7 @@
 import CloudKit
 import GladysCommon
 import Lista
+import Semalot
 
 public extension CloudManager {
     internal static let privateDatabaseSubscriptionId = "private-changes"
@@ -701,7 +702,7 @@ public extension CloudManager {
 
     static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
     static var syncAttempDone: (() async -> Void)?
-    private static let requestGateKeeper = Gate(tickets: 1)
+    private static let requestGateKeeper = Semalot(tickets: 1)
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
         await requestGateKeeper.takeTicket()

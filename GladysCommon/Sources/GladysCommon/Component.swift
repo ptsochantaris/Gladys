@@ -9,6 +9,7 @@ import Contacts
 import MapKit
 import UniformTypeIdentifiers
 import ZIPFoundation
+import Semalot
 
 public final class Component: Codable, Hashable {
     private enum CodingKeys: String, CodingKey {
@@ -844,7 +845,7 @@ public final class Component: Codable, Hashable {
         try await handleData(data, resolveUrls: false, storeBytes: true)
     }
 
-    private static let gateKeeper = Gate(tickets: 10)
+    private static let gateKeeper = Semalot(tickets: 10)
 
     private func ingest(data: Data, encodeAnyUIImage: Bool = false, storeBytes: Bool) async throws {
         // in thread!

@@ -20,6 +20,7 @@ let package = Package(
         .package(url: "https://github.com/cezheng/Fuzi", from: "3.0.0"),
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.0.0"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.1.0"),
+        .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/lista", branch: "main")
     ],
     targets: [
@@ -29,6 +30,7 @@ let package = Package(
                            "Fuzi",
                            "ZIPFoundation",
                            .product(name: "Lista", package: "lista"),
+                           .product(name: "Semalot", package: "semalot"),
                            .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")]
         )
     ]

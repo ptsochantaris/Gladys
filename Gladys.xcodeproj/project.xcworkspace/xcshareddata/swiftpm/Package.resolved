@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "semalot",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ptsochantaris/semalot",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e84cff9df2dbc59350d5c4f8c120dc6d7feb508f"
+      }
+    },
+    {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-async-algorithms",
