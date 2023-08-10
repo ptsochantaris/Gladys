@@ -42,7 +42,7 @@
       "location" : "https://github.com/ptsochantaris/lista",
       "state" : {
         "branch" : "main",
-        "revision" : "3296d9069ad9394997d8115961a09f4e6f1eb513"
+        "revision" : "dccd0e492195c364c6bae4331e003927b447600c"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/ptsochantaris/semalot",
       "state" : {
         "branch" : "main",
-        "revision" : "e84cff9df2dbc59350d5c4f8c120dc6d7feb508f"
+        "revision" : "5de9db5772f3068e5b98bc2e778beca0a7a55fdf"
       }
     },
     {
