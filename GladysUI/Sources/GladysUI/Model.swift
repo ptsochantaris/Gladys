@@ -486,20 +486,10 @@ public enum Model {
         BackgroundTask.registerForBackground()
         let ready = DropStore.readyToIngest
         Task.detached {
-            if #available(macOS 14.0, iOS 17.0, *) {
-                await withDiscardingTaskGroup {
-                    for drop in ready {
-                        $0.addTask {
-                            await drop.reIngest()
-                        }
-                    }
-                }
-            } else {
-                await withTaskGroup(of: Void.self) {
-                    for drop in ready {
-                        $0.addTask {
-                            await drop.reIngest()
-                        }
+            await withTaskGroup(of: Void.self) {
+                for drop in ready {
+                    $0.addTask {
+                        await drop.reIngest()
                     }
                 }
             }
