@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/phimage/CallbackURLKit", from: "2.0.0"),
+        .package(path: "../CallbackURLKit"),
         .package(path: "../GladysCommon")
     ],
     targets: [

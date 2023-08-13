@@ -1,4 +1,4 @@
-#if !os(xrOS)
+#if !os(visionOS)
     import UIKit
 
     final class GladysPopoverBackgroundView: UIPopoverBackgroundView {

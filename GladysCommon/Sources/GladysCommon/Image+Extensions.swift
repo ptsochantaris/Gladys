@@ -1,6 +1,6 @@
 #if os(macOS)
     import Cocoa
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
     import UIKit
 #elseif os(watchOS)
     import WatchKit
@@ -97,9 +97,9 @@ public extension IMAGE {
     public let screenScale = WKInterfaceDevice.current().screenScale
     public let pixelSize: CGFloat = 1 / screenScale
 
-#elseif os(iOS)
+#elseif os(iOS) || os(visionOS)
 
-    #if os(xrOS)
+    #if os(visionOS)
         public let screenScale: CGFloat = 2
     #else
         public let screenScale = UIScreen.main.scale
@@ -138,7 +138,7 @@ public extension IMAGE {
     }
 #endif
 
-#if os(iOS) || os(watchOS)
+#if os(iOS) || os(watchOS) || os(visionOS)
     public extension UIImage {
         static func fromFile(_ url: URL, template: Bool) -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {

@@ -629,7 +629,7 @@ public extension CloudManager {
         }
 
         let recordId: String?
-        #if os(xrOS)
+        #if os(visionOS)
             recordId = metadata.hierarchicalRootRecordID?.recordName
         #else
             recordId = metadata.rootRecordID.recordName

@@ -1,12 +1,12 @@
 import Foundation
 import GladysCommon
-#if os(iOS)
+#if os(iOS) || os(visionOS)
     import Intents
 #endif
 
 public extension ArchivedItem {
     private func removeIntents() {
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
             for item in components {
                 item.removeIntents()
@@ -93,7 +93,7 @@ public extension ArchivedItem {
         activity.isEligibleForPublicIndexing = false
         activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
 
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
             activity.isEligibleForPrediction = true
         #endif
         activity.contentAttributeSet = item.searchAttributes

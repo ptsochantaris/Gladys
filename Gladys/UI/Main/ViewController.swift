@@ -390,7 +390,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                   let myNavView = navigationController?.view
             else { return }
 
-            #if os(xrOS)
+            #if os(visionOS)
                 t.modalPresentationStyle = .formSheet
             #else
                 p.permittedArrowDirections = [.any]
@@ -412,7 +412,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             d.sourceIndexPath = indexPath
             d.item = item
 
-            #if !os(xrOS)
+            #if !os(visionOS)
                 p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
             #endif
             p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.any]
@@ -517,7 +517,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Quick look")
 
         let options = UIWindowScene.ActivationRequestOptions()
-        #if os(xrOS)
+        #if os(visionOS)
             options.placement = UIWindowSceneProminentPlacement.prominent()
         #else
             options.preferredPresentationStyle = .prominent

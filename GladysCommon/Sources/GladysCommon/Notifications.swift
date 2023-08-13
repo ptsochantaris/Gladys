@@ -59,7 +59,7 @@ public func sendNotification(name: Notification.Name, object: Any?) {
     NotificationCenter.default.post(name: name, object: object)
 }
 
-#if os(iOS)
+#if os(iOS) || os(visionOS)
     import UIKit
 
     public struct UIRequest {

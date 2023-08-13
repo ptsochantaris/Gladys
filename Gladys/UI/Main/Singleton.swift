@@ -12,7 +12,7 @@ final class Singleton {
     weak var lastUsedWindow: UIWindow?
 
     private func setBadgeCount(to count: Int) {
-        if #available(iOS 16.0, xrOS 1.0, *) {
+        if #available(iOS 16.0, visionOS 1.0, *) {
             UNUserNotificationCenter.current().setBadgeCount(count)
         } else {
             UIApplication.shared.applicationIconBadgeNumber = count

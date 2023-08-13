@@ -5,7 +5,7 @@ import Lista
 
 extension CKDatabase.DatabaseChange.Deletion {
     var isPurged: Bool {
-        #if os(xrOS)
+        #if os(visionOS)
             reason == .purged
         #else
             purged

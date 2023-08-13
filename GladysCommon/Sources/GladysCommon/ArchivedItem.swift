@@ -712,7 +712,11 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         Images.shared[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
-        sendNotification(name: .IngestComplete, object: self)
+        Task {
+            // timing corner case
+            await Task.yield()
+            sendNotification(name: .IngestComplete, object: self)
+        }
     }
 
     public func cancelIngest() {

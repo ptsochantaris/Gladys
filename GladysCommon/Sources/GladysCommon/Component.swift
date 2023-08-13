@@ -1073,13 +1073,13 @@ public final class Component: Codable, Hashable {
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
                 imgGenerator.appliesPreferredTrackTransform = true
 
-                #if os(xrOS)
+                #if os(visionOS)
                     let cgImage = try await imgGenerator.image(at: CMTimeMake(value: 0, timescale: 1)).image
                     return UIImage(cgImage: cgImage)
                 #elseif os(macOS)
                     let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
                     return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-                #elseif os(iOS)
+                #elseif os(iOS) || os(visionOS)
                     let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
                     return UIImage(cgImage: cgImage)
                 #endif

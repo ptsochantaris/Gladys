@@ -31,11 +31,9 @@ public final class ComponentLookup {
     
     public func component(uuid: String) -> Component? {
         if let uuidData = UUID(uuidString: uuid) {
-            return queue.sync {
-                component(uuid: uuidData)
-            }
+            component(uuid: uuidData)
         } else {
-            return nil
+            nil
         }
     }
 }

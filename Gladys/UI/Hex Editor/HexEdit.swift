@@ -158,7 +158,7 @@ final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollect
         if segue.identifier == "inspector", let i = segue.destination as? DataInspector {
             i.bytes = selectedBytes
             i.popoverPresentationController?.passthroughViews = [grid]
-            #if !os(xrOS)
+            #if !os(visionOS)
                 i.popoverPresentationController?.backgroundColor = .white
             #endif
             i.popoverPresentationController?.delegate = self

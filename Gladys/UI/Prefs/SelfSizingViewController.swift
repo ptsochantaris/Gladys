@@ -15,7 +15,7 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
 
-        #if os(xrOS)
+        #if os(visionOS)
             preferredContentSize = CGSize(width: 480, height: 600)
         #endif
     }
@@ -37,7 +37,7 @@ final class SelfSizingTabController: UITabBarController, UITabBarControllerDeleg
     }
 
     func sizeWindow() {
-        #if !os(xrOS)
+        #if !os(visionOS)
             if let n = selectedViewController as? UINavigationController, let v = n.topViewController {
                 n.view.layoutIfNeeded()
                 var size = CGSize(width: 320, height: tabBar.frame.height + n.navigationBar.frame.height)

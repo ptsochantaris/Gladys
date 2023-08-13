@@ -89,7 +89,7 @@ final class ArchivedItemCell: UICollectionViewCell {
                 img.isHighlighted = isSelected
                 img.tintColor = tintColor
 
-                #if os(xrOS)
+                #if os(visionOS)
                     let size: CGFloat = 44
                     let holder = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
                     holder.clipsToBounds = true
@@ -173,7 +173,7 @@ final class ArchivedItemCell: UICollectionViewCell {
 
     var wideCell = false
 
-    #if !os(xrOS)
+    #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             container.layer.borderColor = UIColor.opaqueSeparator.cgColor
@@ -189,7 +189,7 @@ final class ArchivedItemCell: UICollectionViewCell {
         super.awakeFromNib()
 
         container.layer.cornerRadius = 10
-        #if os(xrOS)
+        #if os(visionOS)
             layer.cornerRadius = 10
         #else
             container.layer.borderWidth = 1.0 / screenScale

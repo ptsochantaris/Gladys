@@ -1,7 +1,7 @@
 import Contacts
 import Foundation
 import MapKit
-#if os(iOS)
+#if os(iOS) || os(visionOS)
     import Intents
     import QuickLook
 #endif
@@ -13,7 +13,7 @@ public extension Component {
     }
 
     func removeIntents() {
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
         #endif
     }
@@ -23,7 +23,7 @@ public extension Component {
         if let canPreviewCache {
             return canPreviewCache
         }
-        #if os(iOS)
+        #if os(iOS) || os(visionOS)
             let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
         #else
             let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)

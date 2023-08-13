@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "callbackurlkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/phimage/CallbackURLKit",
-      "state" : {
-        "revision" : "28664b3d4f37bb359d5ed729aa463cbedfba5d82",
-        "version" : "2.3.2"
-      }
-    },
-    {
       "identity" : "exceptioncatcher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/ExceptionCatcher",
@@ -42,7 +33,7 @@
       "location" : "https://github.com/ptsochantaris/lista",
       "state" : {
         "branch" : "main",
-        "revision" : "dccd0e492195c364c6bae4331e003927b447600c"
+        "revision" : "c4143178dc85b45f067b97c4f95c34b2eac6387f"
       }
     },
     {
@@ -51,7 +42,7 @@
       "location" : "https://github.com/ptsochantaris/semalot",
       "state" : {
         "branch" : "main",
-        "revision" : "f9d09b162db6327ddcfccfa6e76483059f082b02"
+        "revision" : "5e2fcd625f9531c2364efea00c21de7715da7abf"
       }
     },
     {
@@ -70,15 +61,6 @@
       "state" : {
         "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
         "version" : "1.0.4"
-      }
-    },
-    {
-      "identity" : "zipfoundation",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/weichsel/ZIPFoundation.git",
-      "state" : {
-        "revision" : "43ec568034b3731101dbf7670765d671c30f54f3",
-        "version" : "0.9.16"
       }
     }
   ],

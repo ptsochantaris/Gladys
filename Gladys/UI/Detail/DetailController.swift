@@ -260,7 +260,7 @@ final class DetailController: GladysViewController,
         sizing = true
         table.layoutIfNeeded()
         let preferredWidth: CGFloat
-        #if os(xrOS)
+        #if os(visionOS)
             preferredWidth = 480
         #else
             preferredWidth = 320
