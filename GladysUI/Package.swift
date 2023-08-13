@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../Temp-Forks/CallbackURLKit"),
+        .package(url: "https://github.com/phimage/CallbackURLKit", from: "3.0.0"),
         .package(path: "../GladysCommon")
     ],
     targets: [
