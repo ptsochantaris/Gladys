@@ -15,7 +15,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../CallbackURLKit"),
+        .package(path: "../Temp-Forks/CallbackURLKit"),
         .package(path: "../GladysCommon")
     ],
     targets: [
