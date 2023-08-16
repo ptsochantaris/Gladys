@@ -39,31 +39,31 @@ public enum RepresentedClass: Codable, Equatable {
 
     public var name: String {
         switch self {
-        case .data: return "NSData"
-        case .string: return "NSString"
-        case .attributedString: return "NSAttributedString"
-        case .color: return "UIColor"
-        case .image: return "UIImage"
-        case .mapItem: return "MKMapItem"
-        case .array: return "NSArray"
-        case .dictionary: return "NSDictionary"
-        case .url: return "URL"
-        case let .unknown(name: value): return value
+        case .data: "NSData"
+        case .string: "NSString"
+        case .attributedString: "NSAttributedString"
+        case .color: "UIColor"
+        case .image: "UIImage"
+        case .mapItem: "MKMapItem"
+        case .array: "NSArray"
+        case .dictionary: "NSDictionary"
+        case .url: "URL"
+        case let .unknown(name: value): value
         }
     }
 
     public var description: String {
         switch self {
-        case .data: return "Data"
-        case .string: return "Text"
-        case .attributedString: return "Rich Text"
-        case .color: return "Color"
-        case .image: return "Image"
-        case .mapItem: return "Map Location"
-        case .array: return "List"
-        case .dictionary: return "Associative List"
-        case .url: return "Link"
-        case let .unknown(name: value): return "Other (\(value))"
+        case .data: "Data"
+        case .string: "Text"
+        case .attributedString: "Rich Text"
+        case .color: "Color"
+        case .image: "Image"
+        case .mapItem: "Map Location"
+        case .array: "List"
+        case .dictionary: "Associative List"
+        case .url: "Link"
+        case let .unknown(name: value): "Other (\(value))"
         }
     }
 

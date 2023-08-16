@@ -742,9 +742,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         dataSource.supplementaryViewProvider = { collectionView, type, indexPath in
             switch type {
             case UICollectionView.elementKindSectionHeader:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+                collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
             case "ScrollFadeView":
-                return collectionView.dequeueConfiguredReusableSupplementary(using: faderRegistration, for: indexPath)
+                collectionView.dequeueConfiguredReusableSupplementary(using: faderRegistration, for: indexPath)
             default:
                 fatalError("Unknown supplementary view type requested")
             }

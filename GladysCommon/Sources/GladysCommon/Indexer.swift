@@ -2,13 +2,13 @@
     import CoreSpotlight
     import Foundation
 
-public protocol IndexerItemProvider: AnyObject {
-    @MainActor
-    func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool)
+    public protocol IndexerItemProvider: AnyObject {
+        @MainActor
+        func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool)
 
-    @MainActor
-    func getItem(uuid: String) -> ArchivedItem?
-}
+        @MainActor
+        func getItem(uuid: String) -> ArchivedItem?
+    }
 
     public final class Indexer: NSObject, CSSearchableIndexDelegate {
         private weak var itemProvider: IndexerItemProvider!

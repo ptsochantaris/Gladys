@@ -8,12 +8,12 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
     func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool) {
         LiteModel.iterateThroughSavedItemsWithoutLoading(perItemCallback: perItem)
     }
-    
+
     @MainActor
     func getItem(uuid: String) -> ArchivedItem? {
         LiteModel.locateItemWithoutLoading(uuid: uuid)
     }
-    
+
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
         Task { @MainActor in
             indexDelegate.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)

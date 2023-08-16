@@ -7,9 +7,9 @@ import AVFoundation
 import CloudKit
 import Contacts
 import MapKit
+import Semalot
 import UniformTypeIdentifiers
 import ZIPFoundation
-import Semalot
 
 public final class Component: Codable, Hashable {
     private enum CodingKeys: String, CodingKey {

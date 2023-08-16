@@ -2,8 +2,8 @@ import CloudKit
 import CoreSpotlight
 import Foundation
 import GladysCommon
-import UniformTypeIdentifiers
 import Semalot
+import UniformTypeIdentifiers
 
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
@@ -70,7 +70,7 @@ public enum Model {
                     log("No need to reload data")
                     return
                 }
-                
+
                 log("Needed to reload data, new file date: \(dataFileLastModified)")
                 let result = try dataLoad(from: url)
 
@@ -101,7 +101,7 @@ public enum Model {
             }
         }
     }
-    
+
     private nonisolated static func dataLoad(from url: URL) throws -> ContiguousArray<ArchivedItem> {
         let start = Date()
         defer {
@@ -114,7 +114,7 @@ public enum Model {
         let store = UnsafeMutableBufferPointer<ArchivedItem?>.allocate(capacity: itemCount)
         defer { store.deallocate() }
         store.initialize(repeating: nil)
-        
+
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
             let uuidSequence = pointer.bindMemory(to: uuid_t.self)
@@ -127,7 +127,7 @@ public enum Model {
                 }
             }
         }
-        
+
         return ContiguousArray(store.compactMap { $0 })
     }
 
@@ -273,12 +273,12 @@ public enum Model {
                 }
             }
         }
-        
+
         func getItem(uuid: String) -> GladysCommon.ArchivedItem? {
             DropStore.item(uuid: uuid)
         }
     }
-    
+
     private static let indexProxy = IndexProxy()
     private static let indexDelegate = Indexer(itemProvider: indexProxy)
 
@@ -289,9 +289,9 @@ public enum Model {
         // migrate if needed
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
         #if DEBUG
-        let versionChanged = true
+            let versionChanged = true
         #else
-        let versionChanged = PersistedOptions.lastRanVersion != currentBuild
+            let versionChanged = PersistedOptions.lastRanVersion != currentBuild
         #endif
         if versionChanged {
             for item in DropStore.allDrops {
@@ -496,7 +496,7 @@ public enum Model {
             await BackgroundTask.unregisterForBackground()
         }
     }
-    
+
     public static func sendToTop(items: [ArchivedItem]) {
         let uuids = Set(items.map(\.uuid))
         DropStore.promoteDropsToTop(uuids: uuids)

@@ -357,14 +357,14 @@ public final class Filter {
             public var labels: [String] {
                 switch self {
                 case let .filtered(labels, _), let .recent(labels, _):
-                    return labels
+                    labels
                 }
             }
 
             public var title: String {
                 switch self {
                 case let .filtered(_, title), let .recent(_, title):
-                    return title
+                    title
                 }
             }
         }
@@ -379,22 +379,22 @@ public final class Filter {
                 case let .userLabel(leftText):
                     switch rhs {
                     case let .userLabel(rightText):
-                        return leftText.localizedCaseInsensitiveCompare(rightText) == .orderedSame
+                        leftText.localizedCaseInsensitiveCompare(rightText) == .orderedSame
                     case .recentlyAddedItems, .unlabeledItems:
-                        return false
+                        false
                     }
                 case .recentlyAddedItems:
-                    if case .recentlyAddedItems = rhs { return true } else { return false }
+                    if case .recentlyAddedItems = rhs { true } else { false }
                 case .unlabeledItems:
-                    if case .unlabeledItems = rhs { return true } else { return false }
+                    if case .unlabeledItems = rhs { true } else { false }
                 }
             }
 
             public var displayText: String {
                 switch self {
-                case let .userLabel(name): return name
-                case .unlabeledItems: return "Items with no labels"
-                case .recentlyAddedItems: return "Recently added"
+                case let .userLabel(name): name
+                case .unlabeledItems: "Items with no labels"
+                case .recentlyAddedItems: "Recently added"
                 }
             }
         }

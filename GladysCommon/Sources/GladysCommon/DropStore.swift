@@ -119,7 +119,7 @@ public enum DropStore {
     public static var doneIngesting: Bool {
         !dropStore.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
     }
-    
+
     public static var readyToIngest: some Sequence<ArchivedItem> {
         dropStore.filter { $0.needsReIngest && !$0.needsDeletion && $0.loadingProgress == nil }
     }
