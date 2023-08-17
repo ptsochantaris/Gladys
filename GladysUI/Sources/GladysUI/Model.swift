@@ -4,6 +4,7 @@ import Foundation
 import GladysCommon
 import Semalot
 import UniformTypeIdentifiers
+import Maintini
 
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
@@ -320,10 +321,10 @@ public enum Model {
 
     public static func save(dueToSyncFetch: Bool = false) async {
         await storageGatekeeper.takeTicket()
-        BackgroundTask.registerForBackground()
+        Maintini.startMaintaining()
         defer {
             storageGatekeeper.returnTicket()
-            BackgroundTask.unregisterForBackground()
+            Maintini.endMaintaining()
         }
 
         stateHandler?(.willSave)
@@ -333,14 +334,14 @@ public enum Model {
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
         if !removedUuids.isEmpty {
-            BackgroundTask.registerForBackground()
+            Maintini.startMaintaining()
             Task {
                 do {
                     try await index.deleteSearchableItems(withIdentifiers: removedUuids.map(\.uuidString))
                 } catch {
                     log("Error while deleting search indexes \(error.localizedDescription)")
                 }
-                BackgroundTask.unregisterForBackground()
+                Maintini.endMaintaining()
             }
         }
 
@@ -349,11 +350,11 @@ public enum Model {
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
         if !itemsToWrite.isEmpty {
-            BackgroundTask.registerForBackground()
+            Maintini.startMaintaining()
             Task {
                 let searchableItems = itemsToWrite.map(\.searchableItem)
                 indexDelegate.reIndex(items: searchableItems, in: index)
-                BackgroundTask.unregisterForBackground()
+                Maintini.endMaintaining()
             }
         }
 
@@ -483,7 +484,7 @@ public enum Model {
     }
 
     private static func ingestItemsIfNeeded() {
-        BackgroundTask.registerForBackground()
+        Maintini.startMaintaining()
         let ready = DropStore.readyToIngest
         Task.detached {
             await withTaskGroup(of: Void.self) {
@@ -493,7 +494,7 @@ public enum Model {
                     }
                 }
             }
-            await BackgroundTask.unregisterForBackground()
+            await Maintini.endMaintaining()
         }
     }
 

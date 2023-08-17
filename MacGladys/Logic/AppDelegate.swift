@@ -6,6 +6,7 @@ import GladysCommon
 import GladysUI
 import HotKey
 import UserNotifications
+import Maintini
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
@@ -233,6 +234,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             sortAscendingMenu.addItem(withTitle: sortOption.ascendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
             sortDescendingMenu.addItem(withTitle: sortOption.descendingTitle, action: #selector(sortOptionSelected(_:)), keyEquivalent: "")
         }
+        
+        Maintini.setup()
 
         NSApplication.shared.registerForRemoteNotifications(matching: [])
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in

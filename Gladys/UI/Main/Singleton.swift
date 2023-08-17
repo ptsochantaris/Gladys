@@ -2,6 +2,7 @@ import CoreSpotlight
 import GladysCommon
 import GladysUI
 import UIKit
+import Maintini
 
 @MainActor
 final class Singleton {
@@ -77,7 +78,7 @@ final class Singleton {
 
         Task {
             for await _ in NotificationCenter.default.notifications(named: .IngestStart) {
-                BackgroundTask.registerForBackground()
+                Maintini.startMaintaining()
             }
         }
 
@@ -91,7 +92,7 @@ final class Singleton {
                 } else {
                     Model.commitItem(item: item)
                 }
-                BackgroundTask.unregisterForBackground()
+                Maintini.endMaintaining()
             }
         }
 

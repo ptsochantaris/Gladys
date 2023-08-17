@@ -4,6 +4,7 @@ import GladysUI
 import MapKit
 import UIKit
 import WatchConnectivity
+import Maintini
 
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
@@ -129,7 +130,10 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
 
     @MainActor
     private func buildContext() async -> [String: Any]? {
-        BackgroundTask.registerForBackground()
+        Maintini.startMaintaining()
+        defer {
+            Maintini.endMaintaining()
+        }
 
         let drops = DropStore.allDrops
         let total = drops.count
@@ -143,9 +147,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
                 return nil
             }
         }
-        let res = await task.value
-        BackgroundTask.unregisterForBackground()
-        return res
+        return await task.value
     }
 
     func updateContext() async {

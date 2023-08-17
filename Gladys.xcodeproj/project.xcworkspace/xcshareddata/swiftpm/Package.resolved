@@ -42,7 +42,16 @@
       "location" : "https://github.com/ptsochantaris/lista",
       "state" : {
         "branch" : "main",
-        "revision" : "c4143178dc85b45f067b97c4f95c34b2eac6387f"
+        "revision" : "7d6cf8bd6aea70c08a077083474ef94bfd1e1d57"
+      }
+    },
+    {
+      "identity" : "maintini",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ptsochantaris/maintini",
+      "state" : {
+        "branch" : "main",
+        "revision" : "880428e8dcc81b77628960e0e2be87a8b4d919da"
       }
     },
     {
@@ -51,7 +60,7 @@
       "location" : "https://github.com/ptsochantaris/semalot",
       "state" : {
         "branch" : "main",
-        "revision" : "5e2fcd625f9531c2364efea00c21de7715da7abf"
+        "revision" : "a0c5fbea7dd77fec20818ec0602c19f32c9ca32d"
       }
     },
     {

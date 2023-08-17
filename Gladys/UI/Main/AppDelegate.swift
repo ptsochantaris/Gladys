@@ -1,6 +1,7 @@
 import GladysCommon
 import GladysUI
 import UIKit
+import Maintini
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -8,6 +9,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         Task { @CloudActor in
             CloudManager.registerBackgroundHandling()
         }
+        Maintini.setup()
         Singleton.shared.setup()
         UIApplication.shared.registerForRemoteNotifications()
         Task {
@@ -37,10 +39,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        BackgroundTask.registerForBackground()
+        Maintini.startMaintaining()
         Task { @CloudActor in
             let result = await CloudManager.received(notificationInfo: userInfo)
-            await BackgroundTask.unregisterForBackground()
+            await Maintini.endMaintaining()
             completionHandler(result)
         }
     }

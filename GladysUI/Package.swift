@@ -16,12 +16,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/phimage/CallbackURLKit", from: "3.0.0"),
+        .package(url: "https://github.com/ptsochantaris/maintini", branch: "main"),
         .package(path: "../GladysCommon")
     ],
     targets: [
         .target(
             name: "GladysUI",
-            dependencies: ["GladysCommon", "CallbackURLKit"]
+            dependencies: ["GladysCommon",
+                           "CallbackURLKit",
+                .product(name: "Maintini", package: "maintini")
+                          ]
         )
     ]
 )

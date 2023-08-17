@@ -7,6 +7,7 @@ import CloudKit
 import GladysCommon
 import Lista
 import Semalot
+import Maintini
 
 public extension CloudManager {
     internal static let privateDatabaseSubscriptionId = "private-changes"
@@ -706,11 +707,11 @@ public extension CloudManager {
 
     private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
         await requestGateKeeper.takeTicket()
-        await BackgroundTask.registerForBackground()
+        await Maintini.startMaintaining()
         defer {
             requestGateKeeper.returnTicket()
             Task {
-                await BackgroundTask.unregisterForBackground()
+                await Maintini.endMaintaining()
             }
         }
 

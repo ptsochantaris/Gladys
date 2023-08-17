@@ -2,6 +2,7 @@ import CloudKit
 import GladysCommon
 import GladysUI
 import UIKit
+import Maintini
 
 extension CloudManager {
     enum SyncPermissionContext: Int {
@@ -57,11 +58,11 @@ extension CloudManager {
                     return false
                 }
             }
-            await BackgroundTask.registerForBackground()
+            await Maintini.startMaintaining()
             return true
         }
         syncAttempDone = {
-            await BackgroundTask.unregisterForBackground()
+            await Maintini.endMaintaining()
         }
     }
 

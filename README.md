@@ -11,6 +11,7 @@ For maintained binaries and/or more info:
 Parts of Gladys are being split off into their own Swift Packages to make them more reusable and self-contained.
 - [Lista](https://github.com/ptsochantaris/lista)
 - [Semalot](https://github.com/ptsochantaris/semalot)
+- [Maintini](https://github.com/ptsochantaris/maintini)
 
 ## License
 

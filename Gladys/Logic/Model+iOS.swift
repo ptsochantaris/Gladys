@@ -4,6 +4,7 @@ import GladysUI
 import Intents
 import UIKit
 import WatchConnectivity
+import Maintini
 
 extension UISceneSession {
     var associatedFilter: Filter {
@@ -53,10 +54,10 @@ extension Model {
                     }
                 }
 
-                BackgroundTask.unregisterForBackground()
+                Maintini.endMaintaining()
 
             case .willSave:
-                BackgroundTask.registerForBackground()
+                Maintini.startMaintaining()
 
             case .startupComplete:
                 if WCSession.isSupported() {
