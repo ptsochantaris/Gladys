@@ -1,7 +1,7 @@
 import GladysCommon
 import GladysUI
-import UIKit
 import Maintini
+import UIKit
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {

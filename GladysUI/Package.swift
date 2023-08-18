@@ -24,8 +24,7 @@ let package = Package(
             name: "GladysUI",
             dependencies: ["GladysCommon",
                            "CallbackURLKit",
-                .product(name: "Maintini", package: "maintini")
-                          ]
+                           .product(name: "Maintini", package: "maintini")]
         )
     ]
 )

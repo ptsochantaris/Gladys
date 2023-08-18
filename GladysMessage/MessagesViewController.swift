@@ -1,5 +1,6 @@
 import GladysCommon
 import Messages
+import PopTimer
 import UIKit
 
 private var messagesCurrentOffset = CGPoint.zero

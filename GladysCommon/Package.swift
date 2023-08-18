@@ -21,7 +21,8 @@ let package = Package(
         .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.0.0"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.1.0"),
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
-        .package(url: "https://github.com/ptsochantaris/lista", branch: "main")
+        .package(url: "https://github.com/ptsochantaris/lista", branch: "main"),
+        .package(url: "https://github.com/ptsochantaris/pop-timer", branch: "main")
     ],
     targets: [
         .target(
@@ -31,6 +32,7 @@ let package = Package(
                            "ZIPFoundation",
                            .product(name: "Lista", package: "lista"),
                            .product(name: "Semalot", package: "semalot"),
+                           .product(name: "PopTimer", package: "pop-timer"),
                            .product(name: "AsyncAlgorithms", package: "swift-async-algorithms")]
         )
     ]

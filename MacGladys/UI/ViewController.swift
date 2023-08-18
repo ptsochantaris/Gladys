@@ -1,6 +1,7 @@
 import AppKit
 import GladysCommon
 import GladysUI
+import PopTimer
 import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,

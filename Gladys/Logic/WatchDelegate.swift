@@ -1,10 +1,10 @@
 import Foundation
 import GladysCommon
 import GladysUI
+import Maintini
 import MapKit
 import UIKit
 import WatchConnectivity
-import Maintini
 
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {

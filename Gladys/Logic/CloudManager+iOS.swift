@@ -1,8 +1,8 @@
 import CloudKit
 import GladysCommon
 import GladysUI
-import UIKit
 import Maintini
+import UIKit
 
 extension CloudManager {
     enum SyncPermissionContext: Int {

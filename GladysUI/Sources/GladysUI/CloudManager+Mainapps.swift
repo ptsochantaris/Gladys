@@ -6,8 +6,9 @@
 import CloudKit
 import GladysCommon
 import Lista
-import Semalot
 import Maintini
+import PopTimer
+import Semalot
 
 public extension CloudManager {
     internal static let privateDatabaseSubscriptionId = "private-changes"

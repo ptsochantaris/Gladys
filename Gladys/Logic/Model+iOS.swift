@@ -2,9 +2,9 @@ import Foundation
 import GladysCommon
 import GladysUI
 import Intents
+import Maintini
 import UIKit
 import WatchConnectivity
-import Maintini
 
 extension UISceneSession {
     var associatedFilter: Filter {

@@ -51,7 +51,16 @@
       "location" : "https://github.com/ptsochantaris/maintini",
       "state" : {
         "branch" : "main",
-        "revision" : "880428e8dcc81b77628960e0e2be87a8b4d919da"
+        "revision" : "4708efc844a807891dd86990f1fab2eae500dca1"
+      }
+    },
+    {
+      "identity" : "pop-timer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ptsochantaris/pop-timer",
+      "state" : {
+        "branch" : "main",
+        "revision" : "18ca7cdc25b78345f6a7d3a0b1dee735612462f7"
       }
     },
     {
