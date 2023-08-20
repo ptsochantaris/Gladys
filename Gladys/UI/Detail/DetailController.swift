@@ -282,10 +282,10 @@ final class DetailController: GladysViewController,
 
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0: return 2
-        case 1: return item.labels.count + 1
-        case 2: return item.components.count
-        default: return 0 // WTF :)
+        case 0: 2
+        case 1: item.labels.count + 1
+        case 2: item.components.count
+        default: 0 // WTF :)
         }
     }
 
