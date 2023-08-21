@@ -51,7 +51,7 @@
       "location" : "https://github.com/ptsochantaris/maintini",
       "state" : {
         "branch" : "main",
-        "revision" : "4708efc844a807891dd86990f1fab2eae500dca1"
+        "revision" : "e376a74d82b17ecddc5703e30e822aad02f03532"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/ptsochantaris/pop-timer",
       "state" : {
         "branch" : "main",
-        "revision" : "18ca7cdc25b78345f6a7d3a0b1dee735612462f7"
+        "revision" : "a6b16d3c421953b649226760d8235b544517332f"
       }
     },
     {
@@ -69,7 +69,7 @@
       "location" : "https://github.com/ptsochantaris/semalot",
       "state" : {
         "branch" : "main",
-        "revision" : "a0c5fbea7dd77fec20818ec0602c19f32c9ca32d"
+        "revision" : "afd667b48a54772d59fa6ddd4038d887bb452b48"
       }
     },
     {
