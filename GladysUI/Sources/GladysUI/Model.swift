@@ -114,8 +114,10 @@ public enum Model {
         let itemCount = d.count / 16
 
         let store = UnsafeMutableBufferPointer<ArchivedItem?>.allocate(capacity: itemCount)
-        defer { store.deallocate() }
-        store.initialize(repeating: nil)
+        defer {
+            store.deinitialize()
+            store.deallocate()
+        }
 
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
@@ -125,7 +127,9 @@ public enum Model {
                 let dataPath = url.appendingPathComponent(uuid)
                 if let data = try? Data(contentsOf: dataPath),
                    let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                    store[count] = item
+                    store.initializeElement(at: count, to: item)
+                } else {
+                    store.initializeElement(at: count, to: nil)
                 }
             }
         }
@@ -434,7 +438,7 @@ public enum Model {
                 DispatchQueue.concurrentPerform(iterations: allCount) { count in
                     let item = allItems[count]
                     let u = item.uuid
-                    uuidArray[count] = u.uuid
+                    uuidArray.initializeElement(at: count, to: u.uuid)
                     if dirtyUuids.contains(u) {
                         let finalPath = url.appendingPathComponent(u.uuidString)
                         try? encoder.encode(item).write(to: finalPath)
@@ -442,6 +446,7 @@ public enum Model {
                 }
 
                 try Data(buffer: uuidArray).write(to: url.appendingPathComponent("uuids"), options: .atomic)
+                uuidArray.deinitialize()
                 uuidArray.deallocate()
 
                 if let filesInDir = try? fm.contentsOfDirectory(atPath: url.path), (filesInDir.count - 1) > allCount { // at least one old file exists, let's find it

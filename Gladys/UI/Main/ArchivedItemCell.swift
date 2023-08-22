@@ -196,8 +196,8 @@ final class ArchivedItemCell: UICollectionViewCell {
             container.layer.borderColor = UIColor.opaqueSeparator.cgColor
         #endif
 
+        bottomLabel.numberOfLines = 2
         image.accessibilityIgnoresInvertColors = true
-
         labelStack.setCustomSpacing(4, after: labelsHolder)
 
         Task {
@@ -331,9 +331,6 @@ final class ArchivedItemCell: UICollectionViewCell {
                     }
                 }
 
-                let primaryLabel: UILabel
-                let secondaryLabel: UILabel
-
                 let titleInfo = item.displayText
                 topLabelAlignment = titleInfo.1
                 topLabelText = titleInfo.0
@@ -356,20 +353,8 @@ final class ArchivedItemCell: UICollectionViewCell {
                     labels = item.labels
                 }
 
-                if bottomLabelText == nil, topLabelText != nil {
-                    bottomLabelText = topLabelText
-                    bottomLabelAlignment = topLabelAlignment
-                    topLabelText = nil
-
-                    primaryLabel = bottomLabel
-                    secondaryLabel = topLabel
-                } else {
-                    primaryLabel = topLabel
-                    secondaryLabel = bottomLabel
-                }
-
                 if wideCell {
-                    primaryLabel.numberOfLines = 3
+                    topLabel.numberOfLines = 3
                     image.circle = false
                     switch item.displayMode {
                     case .center:
@@ -388,22 +373,21 @@ final class ArchivedItemCell: UICollectionViewCell {
                     case .center:
                         image.contentMode = .center
                         image.circle = false
-                        primaryLabel.numberOfLines = wideMode ? baseLines + 2 : 2
+                        topLabel.numberOfLines = wideMode ? baseLines + 2 : 2
                     case .fill:
                         image.contentMode = .scaleAspectFill
                         image.circle = false
-                        primaryLabel.numberOfLines = baseLines
+                        topLabel.numberOfLines = baseLines
                     case .fit:
                         image.contentMode = .scaleAspectFit
                         image.circle = false
-                        primaryLabel.numberOfLines = baseLines
+                        topLabel.numberOfLines = baseLines
                     case .circle:
                         image.contentMode = .scaleAspectFill
                         image.circle = true
-                        primaryLabel.numberOfLines = baseLines
+                        topLabel.numberOfLines = baseLines
                     }
                 }
-                secondaryLabel.numberOfLines = 2
 
                 // if we're showing an icon, let's try to enhance things a bit
                 if image.contentMode == .center, let backgroundItem = item.backgroundInfoObject {

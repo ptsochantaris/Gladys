@@ -150,17 +150,13 @@ final class DataInspector: GladysViewController {
 
     private func resultToText(resultType: (some FixedWidthInteger).Type, buffer: [UInt8]) -> String {
         let value = buffer.withUnsafeBytes { bufferPointer in
-            bufferPointer.bindMemory(to: resultType).baseAddress?.pointee
-        }
-
-        guard let v = value else {
-            return "0"
+            bufferPointer.load(as: resultType)
         }
 
         if decimalSwitch.selectedSegmentIndex == 1 {
-            return String(format: "0x%llX", v as! CVarArg)
+            return String(format: "0x%llX", value as! CVarArg)
         } else {
-            return "\(v)"
+            return "\(value)"
         }
     }
 

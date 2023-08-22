@@ -794,10 +794,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                 if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
                     lastLayoutProcessed = 0
                     setupLayout()
+                    collection.collectionViewLayout.invalidateLayout()
                     updateDataSource(animated: false)
+                    collection.reloadData()
+                } else {
+                    let uuids = filter.filteredDrops.map(\.uuid)
+                    DropStore.reloadCells(for: Set(uuids))
                 }
-                let uuids = filter.filteredDrops.map(\.uuid)
-                DropStore.reloadCells(for: Set(uuids))
             }
         }
 
