@@ -493,10 +493,20 @@ public enum Model {
         Maintini.startMaintaining()
         let ready = DropStore.readyToIngest
         Task.detached {
-            await withTaskGroup(of: Void.self) {
-                for drop in ready {
-                    $0.addTask {
-                        await drop.reIngest()
+            if #available(iOS 17, watchOS 10, *) {
+                await withDiscardingTaskGroup {
+                    for drop in ready {
+                        $0.addTask {
+                            await drop.reIngest()
+                        }
+                    }
+                }
+            } else {
+                await withTaskGroup(of: Void.self) {
+                    for drop in ready {
+                        $0.addTask {
+                            await drop.reIngest()
+                        }
                     }
                 }
             }
