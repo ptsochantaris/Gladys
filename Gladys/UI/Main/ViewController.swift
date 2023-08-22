@@ -774,9 +774,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
-            self?.filter.text = searchController?.searchBar.text
-            self?.userActivity?.needsSave = true
-            self?.updateUI()
+            guard let self, let searchController else { return }
+            filter.text = searchController.searchBar.text
+            userActivity?.needsSave = true
+            updateUI()
         }
 
         navigationController?.setToolbarHidden(true, animated: false)

@@ -31,16 +31,14 @@ public extension CloudManager {
     static var syncProgressString: String?
 
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
-        #if DEBUG
-            if let s = syncProgressString {
-                log(">>> Sync label updated: \(s)")
-            } else {
-                log(">>> Sync label cleared")
-            }
-        #endif
-        Task { @MainActor in
-            sendNotification(name: .CloudManagerStatusChanged, object: nil)
+#if DEBUG
+        if let s = await syncProgressString {
+            log(">>> Sync label updated: \(s)")
+        } else {
+            log(">>> Sync label cleared")
         }
+#endif
+        sendNotification(name: .CloudManagerStatusChanged, object: nil)
     }
 
     internal static func setSyncProgressString(_ newString: String?) {

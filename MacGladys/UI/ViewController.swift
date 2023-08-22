@@ -366,10 +366,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     private lazy var searchPopTimer = PopTimer(timeInterval: 0.2) { [weak self] in
-        guard let s = self else { return }
-        let str = s.searchBar.stringValue
-        s.filter.text = str.isEmpty ? nil : str
-        s.updateEmptyView()
+        guard let self else { return }
+        let str = searchBar.stringValue
+        filter.text = str.isEmpty ? nil : str
+        updateEmptyView()
     }
 
     func controlTextDidChange(_: Notification) {
