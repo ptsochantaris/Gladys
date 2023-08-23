@@ -493,6 +493,7 @@ public enum Model {
         Maintini.startMaintaining()
         let ready = DropStore.readyToIngest
         Task.detached {
+            /*
             if #available(iOS 17, watchOS 10, *) {
                 await withDiscardingTaskGroup {
                     for drop in ready {
@@ -502,6 +503,7 @@ public enum Model {
                     }
                 }
             } else {
+             */
                 await withTaskGroup(of: Void.self) {
                     for drop in ready {
                         $0.addTask {
@@ -509,7 +511,7 @@ public enum Model {
                         }
                     }
                 }
-            }
+            //}
             await Maintini.endMaintaining()
         }
     }

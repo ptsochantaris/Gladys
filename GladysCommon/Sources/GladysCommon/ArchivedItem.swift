@@ -750,7 +750,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             components.sort { $0.order < $1.order }
         }
 
-        if #available(iOS 17, watchOS 10, *) {
+        /*if #available(iOS 17, watchOS 10, *) {
             await withDiscardingTaskGroup {
                 for i in components {
                     $0.addTask {
@@ -759,7 +759,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
                     }
                 }
             }
-        } else {
+        } else {*/
             await withTaskGroup(of: Void.self) {
                 for i in components {
                     $0.addTask {
@@ -768,7 +768,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
                     }
                 }
             }
-        }
+        //}
 
         componentIngestDone()
     }
