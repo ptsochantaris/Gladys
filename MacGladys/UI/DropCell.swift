@@ -30,7 +30,7 @@ final class FirstMouseImageView: NSImageView {
     }
 }
 
-final class TokenTextField: NSTextField {
+final class TokenTextField: NSControl {
     var tintColor = NSColor.g_colorTint
     private var highlightColor: NSColor { tintColor.withAlphaComponent(0.7) }
 
@@ -71,13 +71,13 @@ final class TokenTextField: NSTextField {
     override func draw(_ dirtyRect: NSRect) {
         guard !attributedStringValue.string.isEmpty, let labels, let context = NSGraphicsContext.current?.cgContext else { return }
 
-        let insideRect = dirtyRect.insetBy(dx: 1, dy: 0).offsetBy(dx: -1, dy: 0)
+        let emptyRange = CFRangeMake(0, 0)
+
+        let insideRect = dirtyRect
         let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
         let path = CGPath(rect: insideRect, transform: nil)
-        let totalFrame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, nil)
+        let totalFrame = CTFramesetterCreateFrame(framesetter, emptyRange, path, nil)
 
-        context.translateBy(x: 0, y: insideRect.size.height)
-        context.scaleBy(x: 1, y: -1)
         CTFrameDraw(totalFrame, context)
 
         if labels.isEmpty {
@@ -87,33 +87,30 @@ final class TokenTextField: NSTextField {
         context.setStrokeColor(highlightColor.cgColor)
         context.setLineWidth(0.5)
 
-        let lines = CTFrameGetLines(totalFrame) as NSArray
-        let lineCount = lines.count
+        let lines = CTFrameGetLines(totalFrame) as! [CTLine]
+        var origins = [CGPoint](repeating: .zero, count: lines.count)
+        CTFrameGetLineOrigins(totalFrame, emptyRange, &origins)
 
-        var origins = [CGPoint](repeating: .zero, count: lineCount)
-        CTFrameGetLineOrigins(totalFrame, CFRangeMake(0, 0), &origins)
-
-        for index in 0 ..< lineCount {
-            let line = lines[index] as! CTLine
-            let lineFrame = CTLineGetBoundsWithOptions(line, [.useOpticalBounds])
+        for (line, linePos) in zip(lines, origins) {
+            let lineFrame = CTLineGetBoundsWithOptions(line, .useOpticalBounds)
             let lineStart = (insideRect.width - lineFrame.width) * 0.5
 
-            for r in CTLineGetGlyphRuns(line) as NSArray {
-                let run = r as! CTRun
-                let attributes = CTRunGetAttributes(run) as NSDictionary
+            for run in CTLineGetGlyphRuns(line) as! [CTRun] {
+                let attributes = CTRunGetAttributes(run) as! [AnyHashable: Any]
 
-                if attributes["HighlightText"] != nil {
-                    var runBounds = lineFrame
-
-                    runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, CFRangeMake(0, 0)).width) + 8
-                    runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
-                    runBounds.origin.y = origins[index].y - 2.5
-                    runBounds = runBounds.insetBy(dx: 1, dy: 0)
-                    runBounds.origin.x += 0.5
-                    runBounds.size.height += 0.5
-
-                    context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
+                if attributes[TokenTextField.highlightTextKey] == nil {
+                    continue
                 }
+
+                var runBounds = lineFrame
+                runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, emptyRange).width) + 8
+                runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
+                runBounds.origin.y = linePos.y - 2.5
+                runBounds = runBounds.insetBy(dx: 1, dy: 0)
+                runBounds.origin.x += 0.5
+                runBounds.size.height += 0.5
+
+                context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
             }
         }
 

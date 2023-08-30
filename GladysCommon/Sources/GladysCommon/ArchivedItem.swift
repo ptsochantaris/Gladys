@@ -750,25 +750,25 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             components.sort { $0.order < $1.order }
         }
 
-        /*if #available(iOS 17, watchOS 10, *) {
-            await withDiscardingTaskGroup {
-                for i in components {
-                    $0.addTask {
-                        try? await i.reIngest()
-                        p.completedUnitCount += 1
-                    }
+        /* if #available(iOS 17, watchOS 10, *) {
+             await withDiscardingTaskGroup {
+                 for i in components {
+                     $0.addTask {
+                         try? await i.reIngest()
+                         p.completedUnitCount += 1
+                     }
+                 }
+             }
+         } else { */
+        await withTaskGroup(of: Void.self) {
+            for i in components {
+                $0.addTask {
+                    try? await i.reIngest()
+                    p.completedUnitCount += 1
                 }
             }
-        } else {*/
-            await withTaskGroup(of: Void.self) {
-                for i in components {
-                    $0.addTask {
-                        try? await i.reIngest()
-                        p.completedUnitCount += 1
-                    }
-                }
-            }
-        //}
+        }
+        // }
 
         componentIngestDone()
     }

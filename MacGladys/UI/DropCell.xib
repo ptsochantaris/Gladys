@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22154" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22154"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +31,7 @@
                 <stackView autoresizesSubviews="NO" wantsLayer="YES" distribution="fill" orientation="vertical" alignment="centerX" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2k-wL-hgZ">
                     <rect key="frame" x="8" y="8" width="287" height="286"/>
                     <subviews>
-                        <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Man-El-psZ">
+                        <textField autoresizesSubviews="NO" wantsLayer="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Man-El-psZ">
                             <rect key="frame" x="126" y="273" width="35" height="13"/>
                             <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="Gny-xC-pSm">
                                 <font key="font" metaFont="system" size="10"/>
@@ -52,7 +52,7 @@
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="locked" id="iCj-4t-VnC"/>
                             <color key="contentTintColor" name="colorTint"/>
                         </imageView>
-                        <textField autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
+                        <textField autoresizesSubviews="NO" wantsLayer="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="a86-XO-bJA" userLabel="Labels" customClass="TokenTextField" customModule="Gladys" customModuleProvider="target">
                             <rect key="frame" x="126" y="18" width="35" height="13"/>
                             <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="jch-fj-zkm">
                                 <font key="font" metaFont="system" size="10"/>
@@ -67,7 +67,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="12" height="14"/>
                                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" image="iconUserCheckedSmall" id="S49-Mb-DF9"/>
                                 </imageView>
-                                <textField wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
+                                <textField wantsLayer="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="cNg-lc-Fh3">
                                     <rect key="frame" x="18" y="1" width="271" height="13"/>
                                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="QVU-Wc-GtD">
                                         <font key="font" metaFont="system" size="10"/>
@@ -134,7 +134,7 @@ Gw
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
-                <textField hidden="YES" autoresizesSubviews="NO" wantsLayer="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="57i-Zw-oXw">
+                <textField hidden="YES" autoresizesSubviews="NO" wantsLayer="YES" focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="57i-Zw-oXw">
                     <rect key="frame" x="107" y="136" width="90" height="30"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" allowsUndo="NO" alignment="center" title="Copied" drawsBackground="YES" id="Y8C-Fe-6g4">
                         <font key="font" metaFont="system" size="26"/>
