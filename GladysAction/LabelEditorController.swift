@@ -1,5 +1,6 @@
 import GladysCommon
 import UIKit
+import Minions
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet private var notesText: UITextField!
@@ -24,10 +25,9 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
         notesText.text = ActionRequestViewController.noteToApply
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .IngestComplete) {
-                itemIngested()
-            }
+        #notifications(for: .IngestComplete) { _ in
+            itemIngested()
+            return true
         }
 
         itemIngested()

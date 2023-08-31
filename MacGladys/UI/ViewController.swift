@@ -3,6 +3,7 @@ import GladysCommon
 import GladysUI
 import PopTimer
 import QuickLookUI
+import Minions
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
     NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
@@ -92,64 +93,55 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         updateDragOperationIndicators()
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
-                filter.rebuildLabels()
-                updateEmptyView()
-                modelDataUpdate(notification)
-            }
+        #notifications(for: .ModelDataUpdated) { notification in
+            filter.rebuildLabels()
+            updateEmptyView()
+            modelDataUpdate(notification)
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ItemCollectionNeedsDisplay) {
-                itemCollectionNeedsDisplay()
-            }
+        #notifications(for: .ItemCollectionNeedsDisplay) { _ in
+            itemCollectionNeedsDisplay()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
-                await updateTitle()
-            }
+        #notifications(for: .CloudManagerStatusChanged) { _ in
+            await updateTitle()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
-                collection.deselectAll(nil)
-                filter.update(signalUpdate: .animated)
-                await updateTitle()
-            }
+        #notifications(for: .LabelSelectionChanged) { _ in
+            collection.deselectAll(nil)
+            filter.update(signalUpdate: .animated)
+            await updateTitle()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .AlwaysOnTopChanged) {
-                updateAlwaysOnTop()
-            }
+        #notifications(for: .AlwaysOnTopChanged) { _ in
+            updateAlwaysOnTop()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: NSScroller.preferredScrollerStyleDidChangeNotification) {
-                handleLayout()
-            }
+        #notifications(for: NSScroller.preferredScrollerStyleDidChangeNotification) { _ in
+            handleLayout()
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
-                guard let item = notification.object as? ArchivedItem else { continue }
-                itemIngested(item)
-            }
+        #notifications(for: .IngestComplete) { notification in
+            guard let item = notification.object as? ArchivedItem else { return true }
+            itemIngested(item)
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .HighlightItemRequested) {
-                guard let request = notification.object as? HighlightRequest else { continue }
-                highlightItem(with: request)
-            }
+        #notifications(for: .HighlightItemRequested) { notification in
+            guard let request = notification.object as? HighlightRequest else { return true }
+            highlightItem(with: request)
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
-                filter.update(signalUpdate: .animated)
-            }
+        #notifications(for: .ItemsAddedBySync) { _ in
+            filter.update(signalUpdate: .animated)
+            return true
         }
 
         Task {

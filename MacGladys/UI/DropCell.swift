@@ -1,6 +1,7 @@
 import GladysCommon
 import GladysUI
 import MapKit
+import Minions
 
 class FirstMouseView: NSView {
     override final func acceptsFirstMouse(for _: NSEvent?) -> Bool {
@@ -199,20 +200,18 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .ItemModified) {
-                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                    archivedDropItem = item
-                }
+        #notifications(for: .ItemModified) { notification in
+            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                archivedDropItem = item
             }
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
-                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                    archivedDropItem = item
-                }
+        #notifications(for: .IngestComplete) { notification in
+            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                archivedDropItem = item
             }
+            return true
         }
     }
 

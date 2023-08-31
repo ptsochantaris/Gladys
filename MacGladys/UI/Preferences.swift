@@ -3,6 +3,7 @@ import Carbon.HIToolbox
 import GladysCommon
 import GladysUI
 import Speech
+import Minions
 
 final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBOutlet private var syncSwitch: NSButton!
@@ -127,13 +128,14 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
-                updateSyncSwitches()
-            }
+        #notifications(for: .CloudManagerStatusChanged) { _ in
+            await updateSyncSwitches()
+            return true
         }
 
-        updateSyncSwitches()
+        Task {
+            await updateSyncSwitches()
+        }
         setupHotkeySection()
     }
 
@@ -349,30 +351,27 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         AppDelegate.updateHotkey()
     }
 
-    private func updateSyncSwitches() {
-        assert(Thread.isMainThread)
-        Task {
-            let transitioning = await CloudManager.syncTransitioning
-            let syncing = await CloudManager.syncing
-            if transitioning || syncing {
-                syncSwitch.isEnabled = false
-                syncNowButton.isEnabled = false
-                deleteAllButton.isEnabled = false
-                eraseAlliCloudDataButton.isHidden = true
-                syncStatus.stringValue = await CloudManager.makeSyncString()
-                syncStatusHolder.isHidden = false
-                syncSpinner.startAnimation(nil)
-            } else {
-                let switchOn = await CloudManager.syncSwitchedOn
-                syncSwitch.isEnabled = true
-                syncNowButton.isEnabled = switchOn
-                deleteAllButton.isEnabled = true
-                eraseAlliCloudDataButton.isHidden = false
-                syncStatus.stringValue = ""
-                syncStatusHolder.isHidden = true
-                syncSpinner.stopAnimation(nil)
-                syncSwitch.integerValue = switchOn ? 1 : 0
-            }
+    private func updateSyncSwitches() async {
+        let transitioning = await CloudManager.syncTransitioning
+        let syncing = await CloudManager.syncing
+        if transitioning || syncing {
+            syncSwitch.isEnabled = false
+            syncNowButton.isEnabled = false
+            deleteAllButton.isEnabled = false
+            eraseAlliCloudDataButton.isHidden = true
+            syncStatus.stringValue = await CloudManager.makeSyncString()
+            syncStatusHolder.isHidden = false
+            syncSpinner.startAnimation(nil)
+        } else {
+            let switchOn = await CloudManager.syncSwitchedOn
+            syncSwitch.isEnabled = true
+            syncNowButton.isEnabled = switchOn
+            deleteAllButton.isEnabled = true
+            eraseAlliCloudDataButton.isHidden = false
+            syncStatus.stringValue = ""
+            syncStatusHolder.isHidden = true
+            syncSpinner.stopAnimation(nil)
+            syncSwitch.integerValue = switchOn ? 1 : 0
         }
     }
 

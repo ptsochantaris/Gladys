@@ -2,6 +2,7 @@ import GladysCommon
 import GladysUI
 import MapKit
 import UIKit
+import Minions
 
 #if canImport(PencilKit)
     import PencilKit
@@ -200,20 +201,18 @@ final class ArchivedItemCell: UICollectionViewCell {
         image.accessibilityIgnoresInvertColors = true
         labelStack.setCustomSpacing(4, after: labelsHolder)
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .ItemModified) {
-                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                    reDecorate()
-                }
+        #notifications(for: .ItemModified) { notification in
+            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                reDecorate()
             }
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
-                if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                    reDecorate()
-                }
+        #notifications(for: .IngestComplete) { notification in
+            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
+                reDecorate()
             }
+            return true
         }
 
         #if canImport(PencilKit)

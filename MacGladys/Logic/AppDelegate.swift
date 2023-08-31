@@ -7,6 +7,7 @@ import GladysUI
 import HotKey
 import Maintini
 import UserNotifications
+import Minions
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
@@ -258,22 +259,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         setupClipboardSnooping()
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ClipboardSnoopingChanged) {
-                setupClipboardSnooping()
-            }
+        #notifications(for: .ClipboardSnoopingChanged) { _ in
+            setupClipboardSnooping()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .AcceptStarting) {
-                startProgress(for: nil, titleOverride: "Accepting Share…")
-            }
+        #notifications(for: .AcceptStarting) { _ in
+            startProgress(for: nil, titleOverride: "Accepting Share…")
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .AcceptEnding) {
-                endProgress()
-            }
+        #notifications(for: .AcceptEnding) { _ in
+            endProgress()
+            return true
         }
 
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)

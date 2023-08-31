@@ -51,7 +51,7 @@
       "location" : "https://github.com/ptsochantaris/maintini",
       "state" : {
         "branch" : "main",
-        "revision" : "d2ca21d66111e140c23b155078b06f252ccc4fe2"
+        "revision" : "8ff286e3db47ac39581f45e4e7312ca4eaac364d"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/ptsochantaris/pop-timer",
       "state" : {
         "branch" : "main",
-        "revision" : "866789ba524adc477ad3eb0ad41c929f7092dac7"
+        "revision" : "09a2b89dcef86151fc30cfc6000154b3645170b1"
       }
     },
     {
@@ -88,6 +88,15 @@
       "state" : {
         "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
         "version" : "1.0.4"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "057bdfb4632cc758973d46efaf98e43d07ee4bdb",
+        "version" : "509.0.0-swift-DEVELOPMENT-SNAPSHOT-2023-08-28-a"
       }
     },
     {

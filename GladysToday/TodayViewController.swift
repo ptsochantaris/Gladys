@@ -1,6 +1,7 @@
 import GladysCommon
 import NotificationCenter
 import UIKit
+import Minions
 
 final class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
     UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
@@ -59,12 +60,12 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
         super.viewDidLoad()
         extensionContext?.widgetLargestAvailableDisplayMode = .expanded
         itemsView.dragDelegate = self
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .OpenParentApp) {
-                if let url = notification.object as? URL {
-                    await extensionContext?.open(url)
-                }
+
+        #notifications(for: .OpenParentApp) { notification in
+            if let url = notification.object as? URL {
+                await extensionContext?.open(url)
             }
+            return true
         }
 
         let divider = UIView()

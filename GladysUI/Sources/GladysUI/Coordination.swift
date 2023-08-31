@@ -1,4 +1,6 @@
 import Foundation
+import Minions
+
 #if os(iOS) || os(visionOS)
     import GladysCommon
     import UIKit
@@ -26,19 +28,19 @@ import Foundation
 
         @MainActor
         public static func beginMonitoringChanges() {
-            Task {
-                for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
-                    NSFileCoordinator.addFilePresenter(filePresenter)
-                    if DropStore.doneIngesting {
-                        await Model.reloadDataIfNeeded()
-                    }
+            #notifications(for: UIApplication.willEnterForegroundNotification) { _ in
+                NSFileCoordinator.addFilePresenter(filePresenter)
+                if DropStore.doneIngesting {
+                    await Model.reloadDataIfNeeded()
                 }
+                return true
             }
-            Task {
-                for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
-                    NSFileCoordinator.removeFilePresenter(filePresenter)
-                }
+            
+            #notifications(for: UIApplication.didEnterBackgroundNotification) { _ in
+                NSFileCoordinator.removeFilePresenter(filePresenter)
+                return true
             }
+            
             NSFileCoordinator.addFilePresenter(filePresenter)
         }
     }

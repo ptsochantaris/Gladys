@@ -22,7 +22,8 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.1.0"),
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/lista", branch: "main"),
-        .package(url: "https://github.com/ptsochantaris/pop-timer", branch: "main")
+        .package(url: "https://github.com/ptsochantaris/pop-timer", branch: "main"),
+        .package(path: "../Minions")
     ],
     targets: [
         .target(
@@ -30,6 +31,7 @@ let package = Package(
             dependencies: ["ExceptionCatcher",
                            "Fuzi",
                            "ZIPFoundation",
+                           "Minions",
                            .product(name: "Lista", package: "lista"),
                            .product(name: "Semalot", package: "semalot"),
                            .product(name: "PopTimer", package: "pop-timer"),

@@ -495,6 +495,7 @@
 		16B2AA3C24DF42B5004F3FC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
+		16B69DFC2A9FAE8600FC96C9 /* Minions */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Minions; sourceTree = "<group>"; };
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16BDAF24283893FB00B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
 		16BDAF27283895B600B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Detail.storyboard; sourceTree = "<group>"; };
@@ -733,6 +734,7 @@
 		1678F9C41EF475FE005697CB = {
 			isa = PBXGroup;
 			children = (
+				16B69DFC2A9FAE8600FC96C9 /* Minions */,
 				1689646029903B66009D7D01 /* GladysUI */,
 				16A4354429787B73005B8CE6 /* GladysCommon */,
 				1678F9CF1EF475FE005697CB /* Gladys */,

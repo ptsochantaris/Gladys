@@ -1,5 +1,6 @@
 import GladysCommon
 import UIKit
+import Minions
 
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()
@@ -49,10 +50,9 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     override func viewDidLoad() {
         autoConfigureButtons = isAccessoryWindow
         super.viewDidLoad()
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .MultipleWindowModeChange) {
-                updateButtons(newTraitCollection: view.traitCollection)
-            }
+        #notifications(for: .MultipleWindowModeChange) { _ in
+            updateButtons(newTraitCollection: view.traitCollection)
+            return true
         }
         (view as? GladysView)?.delegate = self
     }

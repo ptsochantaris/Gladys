@@ -3,6 +3,7 @@ import GladysCommon
 import GladysUI
 import Maintini
 import UIKit
+import Minions
 
 @MainActor
 final class Singleton {
@@ -41,59 +42,54 @@ final class Singleton {
             log("Initial reachability status: \(name)")
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
-                let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
-                for session in backgroundSessions {
-                    UIApplication.shared.requestSceneSessionRefresh(session)
-                }
-                if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
-                    PersistedOptions.extensionRequestedSync = false
-                    do {
-                        try await CloudManager.opportunisticSyncIfNeeded(force: true)
-                    } catch {
-                        log("Error in extension triggered sync: \(error.localizedDescription)")
-                    }
-                }
+        #notifications(for: .ModelDataUpdated) { _ in
+            let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
+            for session in backgroundSessions {
+                UIApplication.shared.requestSceneSessionRefresh(session)
             }
-        }
-
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
-                log("App foregrounded")
+            if PersistedOptions.extensionRequestedSync { // in case extension requested a sync but it didn't happen for whatever reason, let's do it now
+                PersistedOptions.extensionRequestedSync = false
                 do {
-                    try await CloudManager.opportunisticSyncIfNeeded()
+                    try await CloudManager.opportunisticSyncIfNeeded(force: true)
                 } catch {
-                    log("Error in forgrounding triggered sync: \(error.localizedDescription)")
+                    log("Error in extension triggered sync: \(error.localizedDescription)")
                 }
             }
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
-                log("App backgrounded")
-                Model.lockUnlockedItems()
+        #notifications(for: UIApplication.willEnterForegroundNotification) { _ in
+            log("App foregrounded")
+            do {
+                try await CloudManager.opportunisticSyncIfNeeded()
+            } catch {
+                log("Error in forgrounding triggered sync: \(error.localizedDescription)")
             }
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .IngestStart) {
-                Maintini.startMaintaining()
-            }
+        #notifications(for: UIApplication.didEnterBackgroundNotification) { _ in
+            log("App backgrounded")
+            Model.lockUnlockedItems()
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
-                guard let item = notification.object as? ArchivedItem else {
-                    continue
-                }
-                if DropStore.doneIngesting {
-                    await Model.save()
-                } else {
-                    Model.commitItem(item: item)
-                }
-                Maintini.endMaintaining()
+        #notifications(for: .IngestStart) { _ in
+            Maintini.startMaintaining()
+            return true
+        }
+
+        #notifications(for: .IngestComplete) { notification in
+            guard let item = notification.object as? ArchivedItem else {
+                return true
             }
+            if DropStore.doneIngesting {
+                await Model.save()
+            } else {
+                Model.commitItem(item: item)
+            }
+            Maintini.endMaintaining()
+            return true
         }
 
         Coordination.beginMonitoringChanges()

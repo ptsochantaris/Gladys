@@ -2,6 +2,7 @@ import GladysCommon
 import GladysUI
 import UIKit
 import UniformTypeIdentifiers
+import Minions
 
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
     @IBOutlet private var exportOnlyVisibleSwitch: UISwitch!
@@ -209,10 +210,9 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let zipDragInteraction = UIDragInteraction(delegate: self)
         zipContainer.addInteraction(zipDragInteraction)
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
-                updateUI()
-            }
+        #notifications(for: .ModelDataUpdated) { _ in
+            updateUI()
+            return true
         }
 
         container.isAccessibilityElement = true

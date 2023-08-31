@@ -3,6 +3,7 @@ import GladysUI
 import Lista
 import PopTimer
 import UIKit
+import Minions
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
@@ -766,11 +767,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
-        #if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                searchController.searchBar.isLookToDictateEnabled = true
-            }
-        #endif
+#if swift(>=5.9)
+        if #available(iOS 17.0, *) {
+            searchController.searchBar.isLookToDictateEnabled = true
+        }
+#endif
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -782,185 +783,170 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         navigationController?.setToolbarHidden(true, animated: false)
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .LabelSelectionChanged) {
-                filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
-                updateLabelIcon()
-                userActivity?.needsSave = true
-            }
+        #notifications(for: .LabelSelectionChanged) { _ in
+            filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+            updateLabelIcon()
+            userActivity?.needsSave = true
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .ItemCollectionNeedsDisplay) {
-                if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
-                    lastLayoutProcessed = 0
-                    setupLayout()
-                    collection.collectionViewLayout.invalidateLayout()
-                    updateDataSource(animated: false)
-                    collection.reloadData()
-                } else {
-                    let uuids = filter.filteredDrops.map(\.uuid)
-                    DropStore.reloadCells(for: Set(uuids))
+        #notifications(for: .ItemCollectionNeedsDisplay) { notification in
+            if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
+                lastLayoutProcessed = 0
+                setupLayout()
+                collection.collectionViewLayout.invalidateLayout()
+                updateDataSource(animated: false)
+                collection.reloadData()
+            } else {
+                let uuids = filter.filteredDrops.map(\.uuid)
+                DropStore.reloadCells(for: Set(uuids))
+            }
+            return true
+        }
+
+        #notifications(for: .ModelDataUpdated) { notification in
+            await _modelDataUpdate(notification)
+            return true
+        }
+
+        #notifications(for: .ItemsAddedBySync) { _ in
+            filter.update(signalUpdate: .animated)
+            return true
+        }
+
+        #notifications(for: .CloudManagerStatusChanged) { _ in
+            await cloudStatusChanged()
+            return true
+        }
+
+        #notifications(for: .ReachabilityChanged) { _ in
+            guard await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi else {
+                return true
+            }
+            do {
+                try await CloudManager.opportunisticSyncIfNeeded()
+            } catch {
+                log("Error in reachability triggered sync: \(error.localizedDescription)")
+            }
+            return true
+        }
+
+        #notifications(for: .AcceptStarting) { _ in
+            await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
+                self?.acceptAlert = alert
+            })
+            return true
+        }
+
+        #notifications(for: .AcceptEnding) { _ in
+            await acceptAlert?.dismiss(animated: true)
+            acceptAlert = nil
+            return true
+        }
+
+        #notifications(for: .IngestComplete) { notification in
+            if let item = notification.object as? ArchivedItem,
+               let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
+               let indexPath = dataSource.indexPath(for: firstIdentifier) {
+                mostRecentIndexPathActioned = indexPath
+                if currentDetailView == nil {
+                    focusInitialAccessibilityElement()
                 }
             }
-        }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .ModelDataUpdated) {
-                await _modelDataUpdate(notification)
+            if DropStore.doneIngesting {
+                UIAccessibility.post(notification: .screenChanged, argument: nil)
             }
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ItemsAddedBySync) {
-                filter.update(signalUpdate: .animated)
-            }
+        #notifications(for: .HighlightItemRequested) { notification in
+            guard let request = notification.object as? HighlightRequest else { return true }
+            await highlightItem(request)
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
-                await cloudStatusChanged()
-            }
-        }
+        #notifications(for: .UIRequest) { notification in
+            guard let request = notification.object as? UIRequest,
+                  request.sourceScene == view.window?.windowScene
+            else { return true }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ReachabilityChanged) {
-                if await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi {
-                    do {
-                        try await CloudManager.opportunisticSyncIfNeeded()
-                    } catch {
-                        log("Error in reachability triggered sync: \(error.localizedDescription)")
-                    }
+            if request.pushInsteadOfPresent {
+                navigationController?.pushViewController(request.vc, animated: true)
+            } else {
+                present(request.vc, animated: true)
+                if let p = request.vc.popoverPresentationController {
+                    p.sourceView = request.sourceView
+                    p.sourceRect = request.sourceRect ?? .zero
+                    p.barButtonItem = request.sourceButton
                 }
             }
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .AcceptStarting) {
-                await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
-                    self?.acceptAlert = alert
-                })
-            }
+        #notifications(for: .DismissPopoversRequest) { _ in
+            await dismissAnyPopOver()
+            return true
         }
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .AcceptEnding) {
-                await acceptAlert?.dismiss(animated: true)
-                acceptAlert = nil
+        #notifications(for: .ResetSearchRequest) { _ in
+            if searchActive || filter.isFiltering {
+                await resetSearch(andLabels: true)
             }
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .IngestComplete) {
-                if let item = notification.object as? ArchivedItem,
-                   let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
-                   let indexPath = dataSource.indexPath(for: firstIdentifier) {
-                    mostRecentIndexPathActioned = indexPath
-                    if currentDetailView == nil {
-                        focusInitialAccessibilityElement()
-                    }
-                }
-
-                if DropStore.doneIngesting {
-                    UIAccessibility.post(notification: .screenChanged, argument: nil)
-                }
+        #notifications(for: UIApplication.keyboardWillHideNotification) { _ in
+            if presentedViewController != nil {
+                return true
             }
+            if currentDetailView != nil {
+                return true
+            }
+            if !filter.isFilteringText {
+                await resetSearch(andLabels: false)
+            }
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .HighlightItemRequested) {
-                guard let request = notification.object as? HighlightRequest else { continue }
-                await highlightItem(request)
+        #notifications(for: .SectionHeaderTapped) { notification in
+            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+            var name = event.name
+
+            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
+                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
             }
+
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            switch toggle.currentDisplayMode {
+            case .collapsed:
+                filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
+            case .full, .scrolling:
+                filter.setDisplayMode(to: .collapsed, for: [name], setAsPreference: false)
+            }
+            updateDataSource(animated: true)
+            userActivity?.needsSave = true
+            return true
         }
 
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .UIRequest) {
-                guard let request = notification.object as? UIRequest,
-                      request.sourceScene == view.window?.windowScene
-                else { continue }
-
-                if request.pushInsteadOfPresent {
-                    navigationController?.pushViewController(request.vc, animated: true)
-                } else {
-                    present(request.vc, animated: true)
-                    if let p = request.vc.popoverPresentationController {
-                        p.sourceView = request.sourceView
-                        p.sourceRect = request.sourceRect ?? .zero
-                        p.barButtonItem = request.sourceButton
-                    }
-                }
+        #notifications(for: .SectionShowAllTapped) { notification in
+            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+            var name = event.name
+            
+            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
+                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
             }
-        }
-
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .DismissPopoversRequest) {
-                await dismissAnyPopOver()
+            
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            switch toggle.currentDisplayMode {
+            case .collapsed, .scrolling:
+                filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
+            case .full:
+                filter.setDisplayMode(to: .scrolling, for: [name], setAsPreference: true)
             }
-        }
-
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .ResetSearchRequest) {
-                if searchActive || filter.isFiltering {
-                    await resetSearch(andLabels: true)
-                }
-            }
-        }
-
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: UIApplication.keyboardWillHideNotification) {
-                if presentedViewController != nil {
-                    continue
-                }
-                if currentDetailView != nil {
-                    continue
-                }
-                if !filter.isFilteringText {
-                    await resetSearch(andLabels: false)
-                }
-            }
-        }
-
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .SectionHeaderTapped) {
-                guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { continue }
-                var name = event.name
-
-                if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-                    name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
-                }
-
-                guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { continue }
-                switch toggle.currentDisplayMode {
-                case .collapsed:
-                    filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
-                case .full, .scrolling:
-                    filter.setDisplayMode(to: .collapsed, for: [name], setAsPreference: false)
-                }
-                updateDataSource(animated: true)
-                userActivity?.needsSave = true
-            }
-        }
-
-        Task {
-            for await notification in NotificationCenter.default.notifications(named: .SectionShowAllTapped) {
-                guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { continue }
-                var name = event.name
-
-                if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-                    name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
-                }
-
-                guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { continue }
-                switch toggle.currentDisplayMode {
-                case .collapsed, .scrolling:
-                    filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
-                case .full:
-                    filter.setDisplayMode(to: .scrolling, for: [name], setAsPreference: true)
-                }
-                updateDataSource(animated: true)
-                userActivity?.needsSave = true
-            }
+            updateDataSource(animated: true)
+            userActivity?.needsSave = true
+            return true
         }
 
         if filter.isFilteringLabels { // in case we're restored with active labels

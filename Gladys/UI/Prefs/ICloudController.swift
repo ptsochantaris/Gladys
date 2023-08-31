@@ -1,6 +1,7 @@
 import GladysCommon
 import GladysUI
 import UIKit
+import Minions
 
 final class ICloudController: GladysViewController {
     @IBOutlet private var icloudLabel: UILabel!
@@ -15,10 +16,9 @@ final class ICloudController: GladysViewController {
 
         doneButtonLocation = .right
 
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .CloudManagerStatusChanged) {
-                await updateiCloudControls()
-            }
+        #notifications(for: .CloudManagerStatusChanged) { _ in
+            await updateiCloudControls()
+            return true
         }
 
         icloudSwitch.tintColor = UIColor.g_colorLightGray
