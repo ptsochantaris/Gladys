@@ -81,6 +81,7 @@
 		1678F9D31EF475FF005697CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D21EF475FF005697CB /* ViewController.swift */; };
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1678F9DB1EF475FF005697CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */; };
+		16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16797EA42AA294E80053AD5F /* VisionSettingsController.swift */; };
 		167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */; };
 		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
 		16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
@@ -435,6 +436,7 @@
 		1678F9D71EF475FF005697CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1678F9DA1EF475FF005697CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1678F9DC1EF475FF005697CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Gladys/Info.plist; sourceTree = "<group>"; };
+		16797EA42AA294E80053AD5F /* VisionSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionSettingsController.swift; sourceTree = "<group>"; };
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		16836EA82379598300985EA6 /* UIScene+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScene+Extensions.swift"; sourceTree = "<group>"; };
@@ -918,6 +920,7 @@
 				162289C7207D0D6900DAC6A2 /* HelpController.swift */,
 				1626650A221056B800068136 /* SiriSettingsViewController.swift */,
 				1616BE002454B3BD001C3BD4 /* CreditsViewController.swift */,
+				16797EA42AA294E80053AD5F /* VisionSettingsController.swift */,
 			);
 			path = Prefs;
 			sourceTree = "<group>";
@@ -1764,6 +1767,7 @@
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1636CCAF28D0FBD4002175B8 /* GladysAppIntents.swift in Sources */,
+				16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2234,6 +2238,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = "AppIcon-Vision";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
@@ -2371,6 +2376,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = "AppIcon-Vision";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;

@@ -1,8 +1,8 @@
 import GladysCommon
 import GladysUI
+import Minions
 import UIKit
 import UniformTypeIdentifiers
-import Minions
 
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
     @IBOutlet private var exportOnlyVisibleSwitch: UISwitch!

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22146" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22129"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -72,9 +72,7 @@
                         <leftBarButtonItems>
                             <barButtonItem title="Settings" image="slider.horizontal.3" catalog="system" id="8HU-04-Ir2">
                                 <connections>
-                                    <segue destination="BDA-BE-RJc" kind="popoverPresentation" identifier="showPreferences" popoverAnchorBarButtonItem="8HU-04-Ir2" id="cZU-UX-k5o">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <action selector="showPreferences" destination="BYZ-38-t0r" id="34b-Jf-A2e"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Paste" id="jsK-Yx-Re8">
@@ -120,6 +118,9 @@
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="PAu-TN-zeI" kind="popoverPresentation" identifier="toSiriShortcuts" popoverAnchorView="90w-Xn-bmO" id="j8r-Hv-OpL">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                        <segue destination="BDA-BE-RJc" kind="popoverPresentation" identifier="showPreferences" popoverAnchorBarButtonItem="8HU-04-Ir2" id="vwS-qH-hdZ">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                     </connections>
@@ -531,8 +532,8 @@ Selecting them will show only items that contain these labels.</string>
         <!--Preferences-->
         <scene sceneID="Ehg-hW-RZ3">
             <objects>
-                <viewControllerPlaceholder storyboardName="Preferences" id="BDA-BE-RJc" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ezI-9J-a8x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Preferences" id="BDA-BE-RJc" sceneMemberID="viewController"/>
             </objects>
             <point key="canvasLocation" x="3642" y="32"/>
         </scene>

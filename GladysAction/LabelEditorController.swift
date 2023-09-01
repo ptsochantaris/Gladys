@@ -1,6 +1,6 @@
 import GladysCommon
-import UIKit
 import Minions
+import UIKit
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     @IBOutlet private var notesText: UITextField!

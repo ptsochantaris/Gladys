@@ -1,7 +1,7 @@
 import GladysCommon
+import Minions
 import NotificationCenter
 import UIKit
-import Minions
 
 final class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
     UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {

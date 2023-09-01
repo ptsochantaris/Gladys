@@ -1,7 +1,7 @@
 import GladysCommon
 import Lista
-import UIKit
 import Minions
+import UIKit
 
 extension Notification.Name {
     static let DoneSelected = Notification.Name("DoneSelected")
@@ -20,7 +20,7 @@ final class ActionRequestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         #notifications(for: .IngestComplete) { notification in
             itemIngested(notification)
             return true

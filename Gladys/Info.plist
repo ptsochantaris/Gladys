@@ -76,6 +76,8 @@
 	<string>Used for locking and unlocking items.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Gladys needs this permission in order to complete your action.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Gladys will only transcribe speech from media items when this setting is on, and only process it on the local device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>CopyComponentIntent</string>
@@ -144,6 +146,8 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIPreferredDefaultInterfaceOrientation</key>
+	<string>UIInterfaceOrientationLandscapeLeft</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -191,9 +195,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Gladys will only transcribe speech from media items when this setting is on, and only process it on the local device.</string>
-	<key>UIPreferredDefaultInterfaceOrientation</key>
-	<string>UIInterfaceOrientationLandscapeLeft</string>
 </dict>
 </plist>

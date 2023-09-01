@@ -1,7 +1,7 @@
+import MinionsMacros
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import XCTest
-import MinionsMacros
 
 let testMacros: [String: Macro.Type] = [
     "notifications": NotificationMacro.self

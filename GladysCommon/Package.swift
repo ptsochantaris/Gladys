@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/sindresorhus/ExceptionCatcher", from: "2.0.0"),
         .package(url: "https://github.com/cezheng/Fuzi", from: "3.0.0"),
-        .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.0.0"),
+        .package(url: "https://github.com/weichsel/ZIPFoundation", branch: "development"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.1.0"),
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/lista", branch: "main"),

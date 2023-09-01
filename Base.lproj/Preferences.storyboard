@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QNh-jL-bwn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QNh-jL-bwn">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22129"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -206,7 +206,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="etm-8w-cq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5977" y="-2610"/>
+            <point key="canvasLocation" x="5525" y="-2611"/>
         </scene>
         <!--Options-->
         <scene sceneID="DO8-pZ-FEn">
@@ -1226,7 +1226,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gB8-px-fgp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6961" y="-1706"/>
+            <point key="canvasLocation" x="6154" y="-1708"/>
         </scene>
         <!--iCloud Controller-->
         <scene sceneID="9V7-zs-8tY">
@@ -1752,7 +1752,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b8M-sn-tic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3990" y="-2576"/>
+            <point key="canvasLocation" x="4303" y="-2577"/>
         </scene>
         <!--Credits-->
         <scene sceneID="CWg-lV-FSk">
@@ -1950,7 +1950,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z9w-hs-mMl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3990" y="-1815"/>
+            <point key="canvasLocation" x="4303" y="-1847"/>
         </scene>
         <!--Self Sizing Tab Controller-->
         <scene sceneID="Jqy-hX-Bs4">
@@ -1958,9 +1958,6 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="QNh-jL-bwn" customClass="SelfSizingTabController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="480"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics">
-                        <color key="tintColor" name="colorTint"/>
-                    </simulatedTabBarMetrics>
                     <size key="freeformSize" width="320" height="480"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="byX-iS-CAU">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -1978,12 +1975,12 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tUy-6c-BrF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5977" y="-3873"/>
+            <point key="canvasLocation" x="5525" y="-3703"/>
         </scene>
         <!--About-->
         <scene sceneID="tM9-q2-qE9">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="aBx-VL-b2z" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="aboutNav" automaticallyAdjustsScrollViewInsets="NO" id="aBx-VL-b2z" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="About" image="info.circle" catalog="system" id="vNp-At-z1r"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VPN-Uw-zMu">
@@ -2000,12 +1997,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LFc-vi-fq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3990" y="-3174"/>
+            <point key="canvasLocation" x="4304" y="-3174"/>
         </scene>
         <!--Import Export-->
         <scene sceneID="Rve-eS-w8H">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Kg5-Qo-U6i" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="importExportNav" automaticallyAdjustsScrollViewInsets="NO" id="Kg5-Qo-U6i" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Import Export" image="arrow.up.arrow.down.circle" catalog="system" id="2sK-Vn-8Vx"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8SF-jr-j4p">
@@ -2022,12 +2019,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2GO-xc-lCS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5977" y="-3174"/>
+            <point key="canvasLocation" x="5525" y="-3174"/>
         </scene>
         <!--iCloud-->
         <scene sceneID="cvH-2z-bBX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wKP-Xm-ons" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="syncNav" automaticallyAdjustsScrollViewInsets="NO" id="wKP-Xm-ons" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="iCloud" image="icloud" catalog="system" id="h1d-kQ-Ggr"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="tYd-gc-96P">
@@ -2049,7 +2046,7 @@
         <!--Options-->
         <scene sceneID="MA9-6m-TAV">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2yK-Sc-nqH" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="optionsNav" automaticallyAdjustsScrollViewInsets="NO" id="2yK-Sc-nqH" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Options" image="slider.horizontal.3" catalog="system" id="wZx-Yq-NR5"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="uBG-Fc-YdB">
@@ -2066,12 +2063,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TfS-H3-6sm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6961" y="-3174"/>
+            <point key="canvasLocation" x="6154" y="-3174"/>
         </scene>
         <!--Help-->
         <scene sceneID="hix-fp-OiX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XFi-mP-p1F" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="helpNav" automaticallyAdjustsScrollViewInsets="NO" id="XFi-mP-p1F" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Help" image="questionmark.circle" catalog="system" id="yVP-Ow-L4z"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="oea-Nv-Iqm">
@@ -2088,7 +2085,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dje-Tg-tl0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7922" y="-3174"/>
+            <point key="canvasLocation" x="6783" y="-3174"/>
         </scene>
         <!--Help-->
         <scene sceneID="Df4-hp-wXm">
@@ -2153,7 +2150,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hxh-Ym-j3c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7922" y="-2683"/>
+            <point key="canvasLocation" x="6783" y="-2686"/>
         </scene>
         <!--Siri Settings-->
         <scene sceneID="dfc-b7-DGh">
@@ -2226,7 +2223,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R78-ad-APK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8539" y="-1706"/>
+            <point key="canvasLocation" x="6783" y="-1536"/>
         </scene>
         <!--Gladys Nav Controller-->
         <scene sceneID="2xn-Gj-2qb">
@@ -2248,7 +2245,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HtI-xH-TeX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7864" y="-1706"/>
+            <point key="canvasLocation" x="6783" y="-1902"/>
         </scene>
     </scenes>
     <color key="tintColor" name="colorTint"/>

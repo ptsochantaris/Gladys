@@ -2,8 +2,8 @@ import AppKit
 import Carbon.HIToolbox
 import GladysCommon
 import GladysUI
-import Speech
 import Minions
+import Speech
 
 final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBOutlet private var syncSwitch: NSButton!

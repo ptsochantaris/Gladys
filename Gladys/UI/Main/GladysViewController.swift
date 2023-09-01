@@ -1,6 +1,6 @@
 import GladysCommon
-import UIKit
 import Minions
+import UIKit
 
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()

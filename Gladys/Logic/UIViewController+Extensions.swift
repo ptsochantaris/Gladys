@@ -1,17 +1,31 @@
 import UIKit
 
 extension UIViewController {
-    func addChildController(_ vc: UIViewController, to view: UIView) {
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
+    func addChildController(_ vc: UIViewController, to container: UIView, insets: UIEdgeInsets = .zero) {
+        guard let viewBeingAdded = vc.view else { return }
+        viewBeingAdded.translatesAutoresizingMaskIntoConstraints = false
         addChild(vc)
-        view.addSubview(vc.view)
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: vc.view.topAnchor),
-            view.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
-            view.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
-        ])
+        if let stackView = container as? UIStackView {
+            stackView.addArrangedSubview(viewBeingAdded)
+        } else {
+            container.addSubview(vc.view)
+            NSLayoutConstraint.activate([
+                viewBeingAdded.topAnchor.constraint(equalTo: container.topAnchor, constant: -insets.top),
+                viewBeingAdded.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: insets.bottom),
+                viewBeingAdded.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: -insets.left),
+                viewBeingAdded.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: insets.right)
+            ])
+        }
         vc.didMove(toParent: self)
+        if userActivity == nil, let childActivity = vc.userActivity {
+            userActivity = childActivity
+        }
+    }
+
+    func removeChildController(_ vc: UIViewController) {
+        vc.willMove(toParent: nil)
+        vc.view.removeFromSuperview()
+        vc.removeFromParent()
     }
 
     func segue(_ name: String, sender: Any?) {

@@ -1,9 +1,9 @@
 import GladysCommon
 import GladysUI
 import Lista
+import Minions
 import PopTimer
 import UIKit
-import Minions
 
 final class ViewController: GladysViewController, UICollectionViewDelegate,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
@@ -387,20 +387,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "showPreferences":
-            guard let t = segue.destination as? UITabBarController,
-                  let p = t.popoverPresentationController,
-                  let myNavView = navigationController?.view
-            else { return }
-
-            #if os(visionOS)
-                t.modalPresentationStyle = .formSheet
-            #else
-                p.permittedArrowDirections = [.any]
-                p.sourceRect = CGRect(origin: CGPoint(x: 15, y: 15), size: CGSize(width: 44, height: 44))
-                p.sourceView = myNavView
+            if let p = segue.destination.popoverPresentationController {
                 p.delegate = self
-            #endif
-
+            }
         case "showDetail":
             guard let item = sender as? ArchivedItem,
                   let indexPath = mostRecentIndexPathActioned,
@@ -767,11 +756,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
-#if swift(>=5.9)
-        if #available(iOS 17.0, *) {
-            searchController.searchBar.isLookToDictateEnabled = true
-        }
-#endif
+        #if swift(>=5.9)
+            if #available(iOS 17.0, *) {
+                searchController.searchBar.isLookToDictateEnabled = true
+            }
+        #endif
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -932,11 +921,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         #notifications(for: .SectionShowAllTapped) { notification in
             guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
             var name = event.name
-            
+
             if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
                 name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
             }
-            
+
             guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
             switch toggle.currentDisplayMode {
             case .collapsed, .scrolling:
@@ -2007,8 +1996,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         segue("showLabels", sender: nil)
     }
 
-    @objc private func showPreferences() {
-        segue("showPreferences", sender: nil)
+    @IBAction private func showPreferences() {
+        #if os(visionOS)
+            let settings = VisionSettingsController()
+            settings.modalPresentationStyle = .popover
+            present(settings, animated: true)
+            if let p = settings.popoverPresentationController {
+                p.sourceItem = settingsButton
+            }
+        #else
+            segue("showPreferences", sender: nil)
+        #endif
     }
 
     @objc private func openSearch() {

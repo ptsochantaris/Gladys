@@ -2,8 +2,8 @@ import CoreSpotlight
 import GladysCommon
 import GladysUI
 import Maintini
-import UIKit
 import Minions
+import UIKit
 
 @MainActor
 final class Singleton {

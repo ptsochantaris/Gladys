@@ -1,7 +1,7 @@
 import GladysCommon
 import GladysUI
-import UIKit
 import Minions
+import UIKit
 
 final class ICloudController: GladysViewController {
     @IBOutlet private var icloudLabel: UILabel!

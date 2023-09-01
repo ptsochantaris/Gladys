@@ -6,8 +6,8 @@ import GladysCommon
 import GladysUI
 import HotKey
 import Maintini
-import UserNotifications
 import Minions
+import UserNotifications
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?

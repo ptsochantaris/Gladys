@@ -1,7 +1,7 @@
 import GladysCommon
 import GladysUI
-import UIKit
 import Minions
+import UIKit
 
 final class PassthroughStackView: UIStackView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -101,32 +101,32 @@ final class LabelSectionTitle: UICollectionReusableView {
         isUserInteractionEnabled = true
         addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
-        
+
         addInteraction(UISpringLoadedInteraction { [weak self] _, context in
             guard let self else { return }
             if context.state == .activated, mode == .collapsed {
                 sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
             }
         })
-        
+
         layer.cornerRadius = 15
-        
+
         let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
             guard let self else { return }
             sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
         })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
+
         indicator.contentMode = .center
         let textStyle = UIImage.SymbolConfiguration(textStyle: LabelSectionTitle.titleStyle)
         indicator.highlightedImage = UIImage(systemName: "chevron.right")?.applyingSymbolConfiguration(textStyle)
         indicator.image = UIImage(systemName: "chevron.down")?.applyingSymbolConfiguration(textStyle)
         indicator.setContentHuggingPriority(.required, for: .horizontal)
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
-        
+
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
         showAllButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
@@ -135,48 +135,48 @@ final class LabelSectionTitle: UICollectionReusableView {
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
-        
+
         let stack = PassthroughStackView(arrangedSubviews: [label, showAllButton, indicator])
         stack.axis = .horizontal
         stack.alignment = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.spacing = 10
-        
+
         topLine.isUserInteractionEnabled = false
         topLine.backgroundColor = .g_sectionTitleTop
         topLine.translatesAutoresizingMaskIntoConstraints = false
-        
+
         bottomLine.isUserInteractionEnabled = false
         bottomLine.backgroundColor = .g_sectionTitleBottom
         bottomLine.translatesAutoresizingMaskIntoConstraints = false
-        
+
         addSubview(selectionButton)
         addSubview(topLine)
         addSubview(bottomLine)
         addSubview(stack)
-        
+
         NSLayoutConstraint.activate([
             selectionButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             selectionButton.trailingAnchor.constraint(equalTo: trailingAnchor),
             selectionButton.topAnchor.constraint(equalTo: topAnchor),
             selectionButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+
             stack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 3),
             stack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -2),
             stack.topAnchor.constraint(equalTo: topAnchor),
             stack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
+
             topLine.heightAnchor.constraint(equalToConstant: pixelSize),
             topLine.topAnchor.constraint(equalTo: topAnchor),
             topLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             topLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44),
-            
+
             bottomLine.heightAnchor.constraint(equalToConstant: pixelSize),
             bottomLine.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomLine.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -44),
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
-        
+
         #notifications(for: .ModelDataUpdated) { _ in
             setNeedsLayout()
             return true

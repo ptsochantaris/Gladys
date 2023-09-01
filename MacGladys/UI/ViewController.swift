@@ -1,9 +1,9 @@
 import AppKit
 import GladysCommon
 import GladysUI
+import Minions
 import PopTimer
 import QuickLookUI
-import Minions
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
     NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {

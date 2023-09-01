@@ -1,8 +1,8 @@
 import GladysCommon
 import GladysUI
 import MapKit
-import UIKit
 import Minions
+import UIKit
 
 #if canImport(PencilKit)
     import PencilKit

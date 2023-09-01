@@ -35,12 +35,12 @@ import Minions
                 }
                 return true
             }
-            
+
             #notifications(for: UIApplication.didEnterBackgroundNotification) { _ in
                 NSFileCoordinator.removeFilePresenter(filePresenter)
                 return true
             }
-            
+
             NSFileCoordinator.addFilePresenter(filePresenter)
         }
     }
