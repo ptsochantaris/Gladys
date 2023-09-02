@@ -83,11 +83,11 @@ final class ShareViewController: NSViewController {
                 for type in identifiers {
                     importGroup.enter()
                     let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
-                        guard let s = self else { return }
+                        guard let self else { return }
                         if let data {
                             newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
                         }
-                        s.importGroup.leave()
+                        importGroup.leave()
                     }
                     progresses.append(p)
                 }
@@ -103,9 +103,9 @@ final class ShareViewController: NSViewController {
         guard let extensionContext else { return }
 
         importGroup.notify(queue: DispatchQueue.main) { [weak self] in
-            guard let s = self else { return }
+            guard let self else { return }
 
-            if s.cancelled {
+            if cancelled {
                 let error = GladysError.actionCancelled
                 log(error.localizedDescription)
                 extensionContext.cancelRequest(withError: error)
@@ -113,10 +113,10 @@ final class ShareViewController: NSViewController {
             }
 
             log("Writing data to parent app…")
-            s.cancelButton.isHidden = true
-            s.pasteboard.clearContents()
-            s.pasteboard.writeObjects(s.pasteboardItems)
-            s.status.stringValue = "Saving…"
+            cancelButton.isHidden = true
+            pasteboard.clearContents()
+            pasteboard.writeObjects(pasteboardItems)
+            status.stringValue = "Saving…"
             if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
                 let error = GladysError.mainAppFailedToOpen
                 log(error.localizedDescription)

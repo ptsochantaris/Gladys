@@ -1332,6 +1332,11 @@
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLr-xZ-jCb">
                                                                 <rect key="frame" x="0.0" y="181.5" width="251" height="167.5"/>
                                                                 <state key="normal" title="Delete iCloud Data"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                        <integer key="value" value="22"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
                                                                 <connections>
                                                                     <action selector="eraseiCloudDataSelected:" destination="PmV-gD-gyX" eventType="touchUpInside" id="13R-i5-FJZ"/>
                                                                 </connections>
@@ -1425,6 +1430,11 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="304" height="30"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <state key="normal" title="Gladys Web Site"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="22"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                         <connections>
                                                             <action selector="aboutSelected:" destination="3Cr-dT-I5Y" eventType="touchUpInside" id="su3-pH-jAb"/>
                                                         </connections>
@@ -1952,10 +1962,10 @@
             </objects>
             <point key="canvasLocation" x="4303" y="-1847"/>
         </scene>
-        <!--Self Sizing Tab Controller-->
+        <!--iOS Settings Controller-->
         <scene sceneID="Jqy-hX-Bs4">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="QNh-jL-bwn" customClass="SelfSizingTabController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="QNh-jL-bwn" customClass="IOSSettingsController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="480"/>
                     <size key="freeformSize" width="320" height="480"/>
@@ -2271,10 +2281,10 @@
             <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="quaternarySystemFillColor">
-            <color red="0.45490196078431372" green="0.45490196078431372" blue="0.50196078431372548" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

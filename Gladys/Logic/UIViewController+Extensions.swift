@@ -1,6 +1,17 @@
 import UIKit
 
+protocol WindowSizing {
+    func sizeWindow()
+}
+
 extension UIViewController {
+    var sizingHolder: WindowSizing? {
+        if let found = self as? WindowSizing {
+            return found
+        }
+        return parent?.sizingHolder
+    }
+
     func addChildController(_ vc: UIViewController, to container: UIView, insets: UIEdgeInsets = .zero) {
         guard let viewBeingAdded = vc.view else { return }
         viewBeingAdded.translatesAutoresizingMaskIntoConstraints = false

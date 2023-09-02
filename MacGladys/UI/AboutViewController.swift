@@ -51,16 +51,16 @@ final class AboutViewController: NSViewController {
 
         supportStack.isHidden = true
         tipJar = TipJar { [weak self] items, _ in
-            guard let s = self, let items, items.count > 4 else { return }
+            guard let self, let items, items.count > 4 else { return }
 
-            s.tipItems = items
-            s.l1.stringValue = " " + (items[0].regularPrice ?? "") + " "
-            s.l2.stringValue = " " + (items[1].regularPrice ?? "") + " "
-            s.l3.stringValue = " " + (items[2].regularPrice ?? "") + " "
-            s.l4.stringValue = " " + (items[3].regularPrice ?? "") + " "
-            s.l5.stringValue = " " + (items[4].regularPrice ?? "") + " "
+            tipItems = items
+            l1.stringValue = " " + (items[0].regularPrice ?? "") + " "
+            l2.stringValue = " " + (items[1].regularPrice ?? "") + " "
+            l3.stringValue = " " + (items[2].regularPrice ?? "") + " "
+            l4.stringValue = " " + (items[3].regularPrice ?? "") + " "
+            l5.stringValue = " " + (items[4].regularPrice ?? "") + " "
 
-            s.supportStack.animator().isHidden = false
+            supportStack.animator().isHidden = false
         }
 
         // no clue why this isn't picked up automatically

@@ -95,17 +95,13 @@ final class ICloudController: GladysViewController {
     }
 
     @IBAction private func syncPolicyChanged(_ sender: UISegmentedControl) {
-        Task {
-            await _syncPolicyChanged(index: sender.selectedSegmentIndex)
+        guard let newPolicy = CloudManager.SyncPermissionContext(rawValue: sender.selectedSegmentIndex) else {
+            return
         }
-    }
-
-    @CloudActor
-    private func _syncPolicyChanged(index: Int) async {
-        if let newPolicy = CloudManager.SyncPermissionContext(rawValue: index) {
+        Task { @CloudActor in
             CloudManager.syncContextSetting = newPolicy
             if newPolicy == .manualOnly {
-                await genericAlert(title: "Manual sync warning", message: "This is an advanced setting that disables all syncing unless explicitly requested. Best used as a temporary setting if items with large sizes need to be temporarily added without triggering long syncs.")
+                await genericAlert(title: "Manual sync warning", message: "This is an advanced setting that disables all syncing unless explicitly requested. It is best used as a temporary setting if items with large sizes need to be temporarily added without triggering long syncs.")
             }
         }
     }
@@ -122,57 +118,53 @@ final class ICloudController: GladysViewController {
 
     @objc private func icloudSwitchChanged() {
         Task {
-            await _icloudSwitchChanged()
-        }
-    }
+            let syncOn = await CloudManager.syncSwitchedOn
 
-    private func _icloudSwitchChanged() async {
-        let syncOn = await CloudManager.syncSwitchedOn
+            if icloudSpinner.isAnimating {
+                icloudSwitch.isOn = syncOn
+                return
+            }
 
-        if icloudSpinner.isAnimating {
-            icloudSwitch.isOn = syncOn
-            return
-        }
-
-        if icloudSwitch.isOn, !syncOn {
-            if DropStore.allDrops.isEmpty {
-                await CloudManager.startActivation()
-            } else {
-                let contentSize = await DropStore.sizeInBytes()
-                let contentSizeString = ByteCountFormatter().string(fromByteCount: contentSize)
-                let confirmed = await confirm(title: "Upload Existing Items?",
-                                              message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
-                                              action: "Proceed", cancel: "Cancel")
-                if confirmed {
+            if icloudSwitch.isOn, !syncOn {
+                if DropStore.allDrops.isEmpty {
                     await CloudManager.startActivation()
                 } else {
-                    icloudSwitch.setOn(false, animated: true)
+                    let contentSize = await DropStore.sizeInBytes()
+                    let contentSizeString = ByteCountFormatter().string(fromByteCount: contentSize)
+                    let confirmed = await confirm(title: "Upload Existing Items?",
+                                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
+                                                  action: "Proceed", cancel: "Cancel")
+                    if confirmed {
+                        await CloudManager.startActivation()
+                    } else {
+                        icloudSwitch.setOn(false, animated: true)
+                    }
                 }
-            }
-        } else if !icloudSwitch.isOn, syncOn {
-            let sharingOwn = DropStore.sharingMyItems
-            let importing = DropStore.containsImportedShares
-            if sharingOwn, importing {
-                let confirmed = await confirm(title: "You have shared items",
-                                              message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
-                                              action: "Turn Off Sync",
-                                              cancel: "Cancel")
-                if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+            } else if !icloudSwitch.isOn, syncOn {
+                let sharingOwn = DropStore.sharingMyItems
+                let importing = DropStore.containsImportedShares
+                if sharingOwn, importing {
+                    let confirmed = await confirm(title: "You have shared items",
+                                                  message: "Turning sync off means that your currently shared items will be removed from others' collections, and their shared items will not be visible in your own collection. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
 
-            } else if sharingOwn {
-                let confirmed = await confirm(title: "You are sharing items",
-                                              message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
-                                              action: "Turn Off Sync",
-                                              cancel: "Cancel")
-                if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
-            } else if importing {
-                let confirmed = await confirm(title: "You have items that are shared from others",
-                                              message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
-                                              action: "Turn Off Sync",
-                                              cancel: "Cancel")
-                if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
-            } else {
-                await deactivate()
+                } else if sharingOwn {
+                    let confirmed = await confirm(title: "You are sharing items",
+                                                  message: "Turning sync off means that your currently shared items will be removed from others' collections. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                } else if importing {
+                    let confirmed = await confirm(title: "You have items that are shared from others",
+                                                  message: "Turning sync off means that those items will no longer be accessible. Re-activating sync will restore them later though. Is that OK?",
+                                                  action: "Turn Off Sync",
+                                                  cancel: "Cancel")
+                    if confirmed { await deactivate() } else { icloudSwitch.setOn(true, animated: true) }
+                } else {
+                    await deactivate()
+                }
             }
         }
     }

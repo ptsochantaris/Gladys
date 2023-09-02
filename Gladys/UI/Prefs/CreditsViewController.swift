@@ -25,17 +25,15 @@ final class CreditsViewController: GladysViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard let tabs = tabBarController as? SelfSizingTabController else {
+        guard let sizingHolder else {
             return
         }
         preferredContentSize = scrollView.contentSize
-        tabs.sizeWindow()
+        sizingHolder.sizeWindow()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let tabs = tabBarController as? SelfSizingTabController {
-            tabs.sizeWindow()
-        }
+        sizingHolder?.sizeWindow()
     }
 }

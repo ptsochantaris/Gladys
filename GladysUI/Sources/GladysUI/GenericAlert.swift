@@ -34,7 +34,7 @@
     }
 
     @MainActor
-    public func genericAlert(title: String?, message: String?, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
+    public func genericAlert(title: String?, message: String? = nil, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
         guard let presenter = currentWindow?.alertPresenter else {
             return
         }

@@ -397,13 +397,13 @@ final class DetailController: GladysViewController,
                     },
 
                     UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { [weak self] _ in
-                        guard let s = self, let cell = s.table.cellForRow(at: indexPath) else { return }
+                        guard let self, let cell = table.cellForRow(at: indexPath) else { return }
                         let a = UIActivityViewController(activityItems: [component.sharingActivitySource], applicationActivities: nil)
                         if let p = a.popoverPresentationController {
                             p.sourceView = cell
                             p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
                         }
-                        s.present(a, animated: true)
+                        present(a, animated: true)
                         if let p = a.popoverPresentationController {
                             p.sourceView = cell
                             p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)

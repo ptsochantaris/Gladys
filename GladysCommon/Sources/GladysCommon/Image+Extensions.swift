@@ -107,6 +107,14 @@ public extension IMAGE {
     public let pixelSize: CGFloat = 1 / screenScale
 
     public extension UIImage {
+        static func block(color: UIColor, size: CGSize) -> UIImage {
+            let rect = CGRect(origin: .zero, size: size)
+            return UIGraphicsImageRenderer(bounds: rect).image {
+                $0.cgContext.setFillColor(color.cgColor)
+                $0.fill(rect)
+            }
+        }
+
         static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
             let img = UIImage(systemName: systemName)
             return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)

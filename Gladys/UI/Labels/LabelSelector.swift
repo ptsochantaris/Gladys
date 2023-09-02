@@ -2,7 +2,7 @@ import GladysCommon
 import GladysUI
 import UIKit
 
-final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate {
+final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate, WindowSizing {
     @IBOutlet private var table: UITableView!
     @IBOutlet private var clearAllButton: UIBarButtonItem!
     @IBOutlet private var modeButton: UIBarButtonItem!
@@ -95,7 +95,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         sizeWindow()
     }
 
-    private func sizeWindow() {
+    func sizeWindow() {
         if table.isHidden {
             preferredContentSize = CGSize(width: 240, height: 240)
         } else {

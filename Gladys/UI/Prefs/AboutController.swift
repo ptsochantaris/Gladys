@@ -50,29 +50,29 @@ final class AboutController: GladysViewController {
             testFlightStack.isHidden = true
 
             tipJar = TipJar { [weak self] items, _ in
-                guard let s = self, let items, items.count > 4 else { return }
+                guard let self, let items, items.count > 4 else { return }
 
-                s.tipItems = items
-                s.l1.text = items[0].regularPrice
-                s.l2.text = items[1].regularPrice
-                s.l3.text = items[2].regularPrice
-                s.l4.text = items[3].regularPrice
-                s.l5.text = items[4].regularPrice
+                tipItems = items
+                l1.text = items[0].regularPrice
+                l2.text = items[1].regularPrice
+                l3.text = items[2].regularPrice
+                l4.text = items[3].regularPrice
+                l5.text = items[4].regularPrice
 
-                s.b1.accessibilityValue = s.l1.text
-                s.b2.accessibilityValue = s.l2.text
-                s.b3.accessibilityValue = s.l3.text
-                s.b4.accessibilityValue = s.l4.text
-                s.b5.accessibilityValue = s.l5.text
+                b1.accessibilityValue = l1.text
+                b2.accessibilityValue = l2.text
+                b3.accessibilityValue = l3.text
+                b4.accessibilityValue = l4.text
+                b5.accessibilityValue = l5.text
 
-                if s.firstAppearance {
-                    s.supportStack.isHidden = false
+                if firstAppearance {
+                    supportStack.isHidden = false
                 } else {
-                    UIView.animate(withDuration: 0.2) {
-                        s.supportStack.isHidden = false
+                    UIView.animate(withDuration: 0.2) { [weak self] in
+                        self?.supportStack.isHidden = false
                     }
                 }
-                (s.tabBarController as? SelfSizingTabController)?.sizeWindow()
+                sizingHolder?.sizeWindow()
             }
 
             for v in [p1, p2, p3, p4, p5] {
@@ -95,13 +95,6 @@ final class AboutController: GladysViewController {
             topStack.spacing = 32
         }
         super.updateViewConstraints()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        if !firstAppearance {
-            (tabBarController as? SelfSizingTabController)?.sizeWindow()
-        }
-        super.viewDidAppear(animated)
     }
 
     @IBAction private func aboutSelected(_: UIButton) {

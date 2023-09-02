@@ -1069,8 +1069,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
 
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged) { [weak self] _ in
-            if let s = self {
-                s.handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
+            if let self {
+                handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
             }
         }
     }

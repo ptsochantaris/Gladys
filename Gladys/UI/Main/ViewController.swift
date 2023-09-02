@@ -1537,13 +1537,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
-            if let s = self, let cell = s.collection.cellForItem(at: indexPath) {
-                if let detail = s.currentDetailView {
+            if let self, let cell = collection.cellForItem(at: indexPath) {
+                if let detail = currentDetailView {
                     detail.segue("toSiriShortcuts", sender: nil)
                 } else {
-                    Task {
-                        await s.dismissAnyPopOver()
-                        s.segue("toSiriShortcuts", sender: cell)
+                    Task { [weak self] in
+                        guard let self else { return }
+                        await dismissAnyPopOver()
+                        segue("toSiriShortcuts", sender: cell)
                     }
                 }
             }
@@ -1552,24 +1553,26 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         if item.cloudKitRecord != nil {
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
-                    guard let s = self else { return }
-                    Task {
-                        await s.dismissAnyPopOver()
-                        s.addInvites(to: item, at: indexPath)
+                    guard let self else { return }
+                    Task { [weak self] in
+                        guard let self else { return }
+                        await dismissAnyPopOver()
+                        addInvites(to: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
 
             } else {
                 children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
-                    guard let s = self else { return }
-                    Task {
-                        await s.dismissAnyPopOver()
+                    guard let self else { return }
+                    Task { [weak self] in
+                        guard let self else { return }
+                        await dismissAnyPopOver()
                         if item.isPrivateShareWithOnlyOwner {
-                            s.shareOptionsPrivate(for: item, at: indexPath)
+                            shareOptionsPrivate(for: item, at: indexPath)
                         } else if item.isShareWithOnlyOwner {
-                            s.shareOptionsPublic(for: item, at: indexPath)
+                            shareOptionsPublic(for: item, at: indexPath)
                         } else {
-                            s.editInvites(in: item, at: indexPath)
+                            editInvites(in: item, at: indexPath)
                         }
                     }
                 }, style: [], iconName: "person.crop.circle.fill.badge.checkmark"))
@@ -1578,15 +1581,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if let m = item.mostRelevantTypeItem {
             children.append(makeAction(title: "Share", callback: { [weak self] in
-                guard let s = self, let cell = s.collection.cellForItem(at: indexPath) else {
+                guard let self, let cell = collection.cellForItem(at: indexPath) else {
                     return
                 }
 
-                Task {
-                    await s.dismissAnyPopOver()
-                    s.mostRecentIndexPathActioned = indexPath
+                Task { [weak self] in
+                    guard let self else { return }
+                    await dismissAnyPopOver()
+                    mostRecentIndexPathActioned = indexPath
                     let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
-                    s.present(a, animated: true)
+                    present(a, animated: true)
                     if let p = a.popoverPresentationController {
                         p.sourceView = cell
                         p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
@@ -1997,16 +2001,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     @IBAction private func showPreferences() {
-        #if os(visionOS)
-            let settings = VisionSettingsController()
-            settings.modalPresentationStyle = .popover
-            present(settings, animated: true)
-            if let p = settings.popoverPresentationController {
-                p.sourceItem = settingsButton
-            }
-        #else
-            segue("showPreferences", sender: nil)
-        #endif
+        Task {
+            #if os(visionOS)
+                await dismissAnyPopOver()
+                let settings = VisionSettingsController()
+                settings.modalPresentationStyle = .popover
+                present(settings, animated: true)
+                if let p = settings.popoverPresentationController {
+                    p.sourceItem = settingsButton
+                }
+            #else
+                segue("showPreferences", sender: nil)
+            #endif
+        }
     }
 
     @objc private func openSearch() {

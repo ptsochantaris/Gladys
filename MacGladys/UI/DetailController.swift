@@ -483,10 +483,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                     self?.item.markUpdated()
                     self?.item.needsReIngest = true
                     self?.saveItem()
-                } else if let s = self {
+                } else if let self {
                     Task { @MainActor in
-                        await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: s.view.window!)
-                        s.editCurrent(sender)
+                        await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: self.view.window!)
+                        self.editCurrent(sender)
                     }
                 }
             }

@@ -170,7 +170,7 @@
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
 		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */; };
-		16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */; };
+		16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */; };
 		16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
@@ -510,7 +510,7 @@
 		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		16CA7AA0236F880C00F96699 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudController.swift; sourceTree = "<group>"; };
-		16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfSizingViewController.swift; sourceTree = "<group>"; };
+		16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSSettingsController.swift; sourceTree = "<group>"; };
 		16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gladys Keys.entitlements"; sourceTree = "<group>"; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -914,7 +914,7 @@
 				16D829121F86D3DD00CF06FF /* AboutController.swift */,
 				16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */,
 				16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */,
-				16CAB03C1F9FD49100A9F736 /* SelfSizingViewController.swift */,
+				16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */,
 				1688B82A1FAE60B80014FA1B /* OptionsController.swift */,
 				1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */,
 				162289C7207D0D6900DAC6A2 /* HelpController.swift */,
@@ -1719,7 +1719,7 @@
 				169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
-				16CAB03D1F9FD49100A9F736 /* SelfSizingViewController.swift in Sources */,
+				16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */,
 				161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */,
 				16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */,
 				1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */,

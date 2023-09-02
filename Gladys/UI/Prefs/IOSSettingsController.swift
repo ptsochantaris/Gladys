@@ -1,7 +1,7 @@
 import GladysCommon
 import UIKit
 
-final class SelfSizingTabController: UITabBarController, UITabBarControllerDelegate {
+final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, WindowSizing {
     override func viewDidLoad() {
         super.viewDidLoad()
 
