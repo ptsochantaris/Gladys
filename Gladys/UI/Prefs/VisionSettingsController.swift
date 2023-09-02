@@ -7,7 +7,7 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
     private let viewControllers = {
         let prefs = UIStoryboard(name: "Preferences", bundle: nil)
         return ["importExportNav", "syncNav", "optionsNav", "helpNav", "aboutNav"].map {
-            prefs.instantiateViewController(withIdentifier: $0)
+            prefs.instantiateViewController(withIdentifier: $0) as! UINavigationController
         }
     }()
 
@@ -16,6 +16,8 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        viewControllers[2].isNavigationBarHidden = true
 
         sendNotification(name: .PreferencesOpen, object: nil)
         let n = NotificationCenter.default
@@ -45,10 +47,10 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
         stack.distribution = .fillEqually
         stack.spacing = 0
 
-        let bar = UIView(frame: CGRect(x: 0, y: view.bounds.height - 80, width: view.bounds.width, height: 80))
+        let bar = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 80))
         stack.frame = bar.bounds
         bar.cover(with: stack)
-        bar.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        bar.autoresizingMask = [.flexibleWidth]
         view.addSubview(bar)
 
         buttonStack = bar
@@ -75,16 +77,21 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
 
         let vc = viewControllers[index]
         currentVc = vc
-        addChildController(vc, to: view, insets: UIEdgeInsets(top: 0, left: 0, bottom: -80, right: 0))
-
-        sizeWindow()
+        addChildController(vc, to: view, insets: UIEdgeInsets(top: -80, left: 0, bottom: 0, right: 0))
 
         view.bringSubviewToFront(buttonStack)
+
+        if isVisible {
+            sizeWindow()
+        }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    private var isVisible = false
+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
         sizeWindow()
+        isVisible = true
     }
 
     func sizeWindow() {
@@ -92,7 +99,10 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
             return
         }
         n.view.layoutIfNeeded()
-        var size = CGSize(width: 400, height: 80 + n.navigationBar.frame.height)
+        var size = CGSize(width: 400, height: 80)
+        if !n.isNavigationBarHidden {
+            size.height += n.navigationBar.frame.height
+        }
         if let s = v.view.subviews.first as? UIScrollView {
             size.height += s.contentSize.height
         }
