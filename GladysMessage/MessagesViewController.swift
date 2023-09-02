@@ -1,5 +1,6 @@
 import GladysCommon
 import Messages
+import Minions
 import PopTimer
 import UIKit
 
@@ -91,9 +92,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
                 searchBar.isLookToDictateEnabled = true
             }
         #endif
-        searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
-            self?.searchUpdated()
-        }
+        searchTimer = PopTimer(timeInterval: 0.3, callback: #weakSelf {
+            searchUpdated()
+        })
     }
 
     deinit {

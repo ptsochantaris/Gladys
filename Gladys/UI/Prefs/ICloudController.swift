@@ -44,9 +44,9 @@ final class ICloudController: GladysViewController {
             await genericAlert(title: "Sync is on", message: "This operation cannot be performed while sync is switched on. Please switch it off first.")
         } else {
             let a = UIAlertController(title: "Are you sure?", message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.", preferredStyle: .alert)
-            a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive) { [weak self] _ in
-                self?.eraseiCloudData()
-            })
+            a.addAction(UIAlertAction(title: "Delete iCloud Data", style: .destructive, handler: #weakSelf { _ in
+                eraseiCloudData()
+            }))
             a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             present(a, animated: true)
         }

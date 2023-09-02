@@ -41,11 +41,10 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
     private func itemIngested() {
         guard DropStore.doneIngesting else { return }
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction { [weak self] _ in
-            guard let self else { return }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction(handler: #weakSelf { _ in
             commitNote()
             sendNotification(name: .DoneSelected, object: nil)
-        })
+        }))
     }
 
     private func commitNote() {

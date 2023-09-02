@@ -1,6 +1,7 @@
 import AppKit
 import GladysCommon
 import GladysUI
+import Minions
 
 final class LabelSelectionViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate {
     private var presentingGladysVc: ViewController {
@@ -94,15 +95,15 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         label.stringValue = name
         a.accessoryView = label
         a.window.initialFirstResponder = label
-        a.beginSheetModal(for: view.window!) { [weak self] response in
+        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
             if response.rawValue == 1000 {
                 let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !text.isEmpty {
-                    self?.presentingGladysVc.filter.renameLabel(name, to: text)
-                    self?.tableView.reloadData()
+                    presentingGladysVc.filter.renameLabel(name, to: text)
+                    tableView.reloadData()
                 }
             }
-        }
+        })
     }
 
     @IBAction private func deleteLabelSelected(_: NSMenuItem) {
@@ -114,13 +115,14 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
             title: "Are you sure?",
             message: "This will remove the label '\(name)' from any item that contains it.",
             action: "Remove From All Items",
-            cancel: "Cancel"
-        ) { [weak self] confirmed in
-            if confirmed {
-                self?.presentingGladysVc.filter.removeLabel(name)
-                self?.tableView.reloadData()
+            cancel: "Cancel",
+            completion: #weakSelf { confirmed in
+                if confirmed {
+                    presentingGladysVc.filter.removeLabel(name)
+                    tableView.reloadData()
+                }
             }
-        }
+        )
     }
 
     private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {

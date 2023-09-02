@@ -1,5 +1,6 @@
 import AppKit
 import GladysCommon
+import Minions
 
 final class ShareViewController: NSViewController {
     override var nibName: NSNib.Name? {

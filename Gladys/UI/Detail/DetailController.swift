@@ -1,5 +1,6 @@
 import GladysCommon
 import GladysUI
+import Minions
 import UIKit
 import UniformTypeIdentifiers
 
@@ -62,11 +63,10 @@ final class DetailController: GladysViewController,
     private func setupColorPicker() {
         let currentColor = item.highlightColor
         let children = ItemColor.allCases.map { color in
-            UIAction(title: color.title, image: color.img, state: (currentColor == color) ? .on : .off) { [weak self] _ in
-                guard let self else { return }
+            UIAction(title: color.title, image: color.img, state: (currentColor == color) ? .on : .off, handler: #weakSelf { _ in
                 item.highlightColor = color
                 makeIndexAndSaveItem()
-            }
+            })
         }
         colorButton.menu = UIMenu(title: "Highlight Color", options: .singleSelection, children: children)
         if var items = navigationItem.rightBarButtonItems {
@@ -396,8 +396,8 @@ final class DetailController: GladysViewController,
                         }
                     },
 
-                    UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up")) { [weak self] _ in
-                        guard let self, let cell = table.cellForRow(at: indexPath) else { return }
+                    UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up"), handler: #weakSelf { _ in
+                        guard let cell = table.cellForRow(at: indexPath) else { return }
                         let a = UIActivityViewController(activityItems: [component.sharingActivitySource], applicationActivities: nil)
                         if let p = a.popoverPresentationController {
                             p.sourceView = cell
@@ -408,24 +408,24 @@ final class DetailController: GladysViewController,
                             p.sourceView = cell
                             p.sourceRect = cell.bounds.insetBy(dx: cell.bounds.width * 0.2, dy: cell.bounds.height * 0.2)
                         }
-                    }
+                    })
                 ]
 
                 if component.canOpen {
-                    children.insert(UIAction(title: "Open", image: UIImage(systemName: "arrow.up.doc")) { [weak self] _ in
-                        Task {
-                            guard let n = self?.navigationController else { return }
-                            await component.tryOpen(in: n)
+                    children.insert(UIAction(title: "Open", image: UIImage(systemName: "arrow.up.doc"), handler: #weakSelf { _ in
+                        #weakSelfTask {
+                            guard let navigationController else { return }
+                            await component.tryOpen(in: navigationController)
                         }
-                    }, at: 0)
+                    }), at: 0)
                 }
 
                 if component.parent?.shareMode != .elsewhereReadOnly {
-                    children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive) { _ in
+                    children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive, handler: #weakSelf { _ in
                         Task {
                             await self.removeComponent(component)
                         }
-                    })
+                    }))
                 }
 
                 return UIMenu(title: component.typeIdentifier, image: nil, identifier: nil, options: [], children: children)
@@ -807,13 +807,12 @@ final class DetailController: GladysViewController,
         }
         let text = item.labels[indexPath.row]
         return UISwipeActionsConfiguration(actions: [
-            UIContextualAction(style: .destructive, title: "Remove") { [weak self] _, _, completion in
-                guard let self else { return }
-                Task {
-                    await self.removeLabel(text)
+            UIContextualAction(style: .destructive, title: "Remove", handler: #weakSelf { _, _, completion in
+                #weakSelfTask {
+                    await removeLabel(text)
                     completion(true)
                 }
-            }
+            })
         ])
     }
 
@@ -875,16 +874,16 @@ final class DetailController: GladysViewController,
 
     private func archiveWebComponent(cell: DetailCell, url: URL) {
         let a = UIAlertController(title: "Download", message: "Please choose what you would like to download from this URL.", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Archive Target", style: .default) { [weak self] _ in
-            Task { [weak self] in
-                await self?.proceedToArchiveWebComponent(cell: cell, url: url)
+        a.addAction(UIAlertAction(title: "Archive Target", style: .default, handler: #weakSelf { _ in
+            #weakSelfTask {
+                await proceedToArchiveWebComponent(cell: cell, url: url)
             }
-        })
-        a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default) { [weak self] _ in
-            Task { [weak self] in
-                await self?.proceedToFetchLinkThumbnail(cell: cell, url: url)
+        }))
+        a.addAction(UIAlertAction(title: "Image Thumbnail", style: .default, handler: #weakSelf { _ in
+            #weakSelfTask {
+                await proceedToFetchLinkThumbnail(cell: cell, url: url)
             }
-        })
+        }))
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         if let p = a.popoverPresentationController {
             p.sourceView = cell.archiveButton

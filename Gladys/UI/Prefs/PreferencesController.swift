@@ -289,12 +289,12 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     @objc private func importExportSelected() {
         let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { [weak self] _ in
-            self?.importSelected()
-        })
-        a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { [weak self] _ in
-            self?.exportSelected()
-        })
+        a.addAction(UIAlertAction(title: "Import from an Archive", style: .default, handler: #weakSelf { _ in
+            importSelected()
+        }))
+        a.addAction(UIAlertAction(title: "Export to an Archive", style: .default, handler: #weakSelf { _ in
+            exportSelected()
+        }))
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
     }

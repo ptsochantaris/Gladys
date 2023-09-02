@@ -357,12 +357,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
-    private lazy var searchPopTimer = PopTimer(timeInterval: 0.2) { [weak self] in
-        guard let self else { return }
+    private lazy var searchPopTimer = PopTimer(timeInterval: 0.2, callback: #weakSelf {
         let str = searchBar.stringValue
         filter.text = str.isEmpty ? nil : str
         updateEmptyView()
-    }
+    })
 
     func controlTextDidChange(_: Notification) {
         collection.selectionIndexes = []
@@ -1055,24 +1054,22 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             return e
         }
 
-        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] _ in
-            self?.handleMouseReleased()
-        }
+        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp, handler: #weakSelf { _ in
+            handleMouseReleased()
+        })
 
         NSEvent.addLocalMonitorForEvents(matching: .mouseMoved) { [weak self] e in
             self?.handleMouseMoved(draggingData: false)
             return e
         }
 
-        NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved) { [weak self] _ in
-            self?.handleMouseMoved(draggingData: false)
-        }
+        NSEvent.addGlobalMonitorForEvents(matching: .mouseMoved, handler: #weakSelf { _ in
+            handleMouseMoved(draggingData: false)
+        })
 
-        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged) { [weak self] _ in
-            if let self {
-                handleMouseMoved(draggingData: s.dragPboardChangeCount != s.dragPboard.changeCount)
-            }
-        }
+        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseDragged, handler: #weakSelf { _ in
+            handleMouseMoved(draggingData: dragPboardChangeCount != dragPboard.changeCount)
+        })
     }
 
     private func handleMouseMoved(draggingData: Bool) {
@@ -1169,9 +1166,9 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         if startHideTimerIfNeeded {
             let time = TimeInterval(PersistedOptions.autoHideAfter)
             if time > 0 {
-                hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false) { [weak self] _ in
-                    self?.hideWindowBecauseOfMouse(window: window)
-                }
+                hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false, block: #weakSelf { _ in
+                    hideWindowBecauseOfMouse(window: window)
+                })
             }
         }
     }

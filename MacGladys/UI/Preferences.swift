@@ -521,11 +521,11 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                 confirm(title: "Are you sure?",
                         message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
                         action: "Delete iCloud Data",
-                        cancel: "Cancel") { [weak self] confirmed in
-                    if confirmed {
-                        self?.eraseiCloudData()
-                    }
-                }
+                        cancel: "Cancel", completion: #weakSelf { confirmed in
+                            if confirmed {
+                                eraseiCloudData()
+                            }
+                        })
             }
         }
     }

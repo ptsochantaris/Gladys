@@ -91,7 +91,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     private var menuOptions = [UIMenuElement]()
     private var mode = Filter.DisplayMode.collapsed
     private var layoutForColumnCount = 0
-    private var toggle: Filter.Toggle?
+    fileprivate var toggle: Filter.Toggle?
     private weak var viewController: ViewController?
 
     private static let titleStyle = UIFont.TextStyle.subheadline
@@ -111,10 +111,9 @@ final class LabelSectionTitle: UICollectionReusableView {
 
         layer.cornerRadius = 15
 
-        let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
-            guard let self else { return }
+        let selectionButton = UIButton(primaryAction: UIAction(handler: #weakSelf { _ in
             sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
-        })
+        }))
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
 
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -128,10 +127,9 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
-        showAllButton.addAction(UIAction { [weak self] _ in
-            guard let self else { return }
+        showAllButton.addAction(UIAction(handler: #weakSelf { _ in
             sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
-        }, for: .primaryActionTriggered)
+        }), for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
@@ -311,9 +309,9 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
         var myOptions = menuOptions
         if UIApplication.shared.supportsMultipleScenes, let scene = window?.windowScene {
-            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
-                self?.toggle?.function.openInWindow(from: scene)
-            }
+            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1"), handler: #weakSelf { _ in
+                toggle?.function.openInWindow(from: scene)
+            })
             myOptions.append(windowOption)
         }
 

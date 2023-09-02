@@ -1,5 +1,6 @@
 import GladysCommon
 import GladysUI
+import Minions
 import UIKit
 
 final class VisionSettingsController: GladysViewController, WindowSizing {
@@ -33,10 +34,9 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
             button.setBackgroundImage(clearImage, for: .selected)
             button.setImage(tabItem.image?.withRenderingMode(.alwaysTemplate), for: .selected)
 
-            button.addAction(UIAction { [weak self] _ in
-                guard let self else { return }
+            button.addAction(UIAction(handler: #weakSelf { _ in
                 selectTab(i)
-            }, for: .touchUpInside)
+            }), for: .touchUpInside)
             index += 1
             return button
         }

@@ -3,6 +3,7 @@ import ContactsUI
 import GladysCommon
 import GladysUI
 import MapKit
+import Minions
 import UIKit
 import UniformTypeIdentifiers
 
@@ -63,12 +64,13 @@ extension ArchivedItem {
             textField.isSecureTextEntry = true
         }
         if requestHint {
-            a.addTextField { [weak self] textField in
+            a.addTextField(configurationHandler: #weakSelf { textField in
                 textField.placeholder = "Label when locked"
-                textField.text = self?.displayText.0
-            }
+                textField.text = displayText.0
+            })
         }
         a.addAction(UIAlertAction(title: action, style: .default) { [weak self] _ in
+            guard let self else { return }
 
             var hint: String?
             if a.textFields!.count > 1 {
@@ -77,7 +79,7 @@ extension ArchivedItem {
 
             let password = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if password.isEmpty {
-                self?.getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
+                getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
             } else {
                 completion(password, hint)
             }

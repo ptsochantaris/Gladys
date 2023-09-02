@@ -315,7 +315,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                         let final = img.isTemplate ? img.template(with: NSColor.g_colorTint) : img
                         Images.shared[cacheKey] = final
                         await MainActor.run { [weak self] in
-                            if let self, let latestItemUuid = archivedDropItem?.uuid, u1 == latestItemUuid {
+                            guard let self else { return }
+                            if let latestItemUuid = archivedDropItem?.uuid, u1 == latestItemUuid {
                                 image.layer?.contents = final
                                 image.updateLayer()
                             }

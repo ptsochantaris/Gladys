@@ -166,7 +166,9 @@ final class ActionRequestViewController: UIViewController {
     private func reset(ingestOnNextAppearance: Bool) {
         statusLabel.isHidden = true
         if PersistedOptions.setLabelsWhenActioning {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction { [weak self] _ in self?.segue("showLabelsAndNotes", sender: nil) })
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction(handler: #weakSelf { _ in
+                segue("showLabelsAndNotes", sender: nil)
+            }))
         } else {
             navigationItem.rightBarButtonItem = nil
         }

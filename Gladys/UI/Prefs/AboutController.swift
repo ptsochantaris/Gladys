@@ -1,5 +1,6 @@
 import GladysCommon
 import GladysUI
+import Minions
 import StoreKit
 import UIKit
 
@@ -49,8 +50,8 @@ final class AboutController: GladysViewController {
         } else {
             testFlightStack.isHidden = true
 
-            tipJar = TipJar { [weak self] items, _ in
-                guard let self, let items, items.count > 4 else { return }
+            tipJar = TipJar(completion: #weakSelf { items, _ in
+                guard let items, items.count > 4 else { return }
 
                 tipItems = items
                 l1.text = items[0].regularPrice
@@ -73,7 +74,7 @@ final class AboutController: GladysViewController {
                     }
                 }
                 sizingHolder?.sizeWindow()
-            }
+            })
 
             for v in [p1, p2, p3, p4, p5] {
                 v?.layer.cornerRadius = 8

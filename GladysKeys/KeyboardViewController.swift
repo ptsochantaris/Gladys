@@ -1,4 +1,5 @@
 import GladysCommon
+import Minions
 import UIKit
 
 private var latestOffset = CGPoint.zero
@@ -209,16 +210,16 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     @IBAction private func deleteStarted(_: UIButton) {
         UIDevice.current.playInputClick()
         textDocumentProxy.deleteBackward()
-        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
-            self?.startRapidBackspace()
-        }
+        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: #weakSelf { _ in
+            startRapidBackspace()
+        })
     }
 
     private func startRapidBackspace() {
         textDocumentProxy.deleteBackward()
-        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] _ in
-            self?.textDocumentProxy.deleteBackward()
-        }
+        backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true, block: #weakSelf { _ in
+            textDocumentProxy.deleteBackward()
+        })
     }
 
     @IBAction private func deleteEnded(_: UIButton) {
@@ -373,8 +374,8 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             return
         }
         d.popoverPresentationController?.delegate = self
-        d.changeCallback = { [weak self] in
-            self?.externalDataUpdated()
+        d.changeCallback = #weakSelf {
+            externalDataUpdated()
         }
     }
 
@@ -401,12 +402,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
                 item.copyToPasteboard()
             }
             copyAction.image = UIImage(systemName: "doc.on.doc")
-            let typeAction = UIAction(title: "Type") { [weak self] _ in
+            let typeAction = UIAction(title: "Type", handler: #weakSelf { _ in
                 let (text, url) = item.textForMessage
                 UIDevice.current.playInputClick()
-                self?.textDocumentProxy.insertText(url?.absoluteString ?? text)
-                self?.updateReturn()
-            }
+                textDocumentProxy.insertText(url?.absoluteString ?? text)
+                updateReturn()
+            })
             typeAction.image = UIImage(systemName: "keyboard")
             let (text, url) = item.textForMessage
             let title = url?.absoluteString ?? text

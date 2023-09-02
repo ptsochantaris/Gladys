@@ -435,9 +435,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             p.delegate = self
             e.currentFilter = filter
             e.selectedItems = selectedItems.map(\.uuid)
-            e.endCallback = { [weak self] hasChanges in
+            e.endCallback = #weakSelf { hasChanges in
                 if hasChanges {
-                    self?.setEditing(false, animated: true)
+                    setEditing(false, animated: true)
                 }
             }
 
@@ -699,21 +699,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         collection.remembersLastFocusedIndexPath = true
 
         let headerMenuOptions = [
-            UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3")) { [weak self] _ in
-                guard let self else { return }
+            UIAction(title: "Collapse All", image: UIImage(systemName: "line.horizontal.3"), handler: #weakSelf { _ in
                 filter.setDisplayMode(to: .collapsed, for: nil, setAsPreference: false)
                 updateDataSource(animated: true)
-            },
-            UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2")) { [weak self] _ in
-                guard let self else { return }
+            }),
+            UIAction(title: "Expand All", image: UIImage(systemName: "rectangle.grid.1x2"), handler: #weakSelf { _ in
                 filter.setDisplayMode(to: .scrolling, for: nil, setAsPreference: false)
                 updateDataSource(animated: true)
-            },
-            UIAction(title: "Fully Expand All", image: UIImage(systemName: "square")) { [weak self] _ in
-                guard let self else { return }
+            }),
+            UIAction(title: "Fully Expand All", image: UIImage(systemName: "square"), handler: #weakSelf { _ in
                 filter.setDisplayMode(to: .full, for: nil, setAsPreference: false)
                 updateDataSource(animated: true)
-            }
+            })
         ]
 
         let headerRegistration = UICollectionView.SupplementaryRegistration<LabelSectionTitle>(elementKind: UICollectionView.elementKindSectionHeader) { [weak self] titleView, _, indexPath in
@@ -821,8 +818,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         #notifications(for: .AcceptStarting) { _ in
-            await genericAlert(title: "Accepting Share…", message: nil, alertController: { [weak self] alert in
-                self?.acceptAlert = alert
+            await genericAlert(title: "Accepting Share…", message: nil, alertController: #weakSelf { alert in
+                acceptAlert = alert
             })
             return true
         }
@@ -960,16 +957,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         updateDataSource(animated: false)
 
         let descendingMenu = SortOption.options.map { option -> UIMenuElement in
-            UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil) { [weak self] _ in
-                guard let self else { return }
+            UIAction(title: option.descendingTitle, image: option.descendingIcon, identifier: nil, handler: #weakSelf { _ in
                 sortRequested(option, ascending: false, button: sortAscendingButton)
-            }
+            })
         }
         let ascendingMenu = SortOption.options.map { option -> UIMenuElement in
-            UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil) { [weak self] _ in
-                guard let self else { return }
+            UIAction(title: option.ascendingTitle, image: option.ascendingIcon, identifier: nil, handler: #weakSelf { _ in
                 sortRequested(option, ascending: true, button: sortAscendingButton)
-            }
+            })
         }
         let menuItems = [
             UIMenu(title: "Ascending", image: UIImage(systemName: "arrow.down"), identifier: nil, options: [.displayInline], children: ascendingMenu),
@@ -1195,15 +1190,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     } else {
                         selectTitle = extra > 1 ? "Select \(extra) Items" : "Select Item"
                     }
-                    actions.append(UIAction(title: selectTitle, image: UIImage(systemName: "square.grid.2x2.fill")) { [weak self] _ in
-                        self?.selectAll(nil)
-                    })
+                    actions.append(UIAction(title: selectTitle, image: UIImage(systemName: "square.grid.2x2.fill"), handler: #weakSelf { _ in
+                        selectAll(nil)
+                    }))
                 }
                 if selectedCount > 0 {
                     let title = selectedCount > 1 ? "Deselect All Items" : "Deselect Item"
-                    actions.append(UIAction(title: title, image: UIImage(systemName: "square.grid.2x2")) { [weak self] _ in
-                        self?.deselectAll()
-                    })
+                    actions.append(UIAction(title: title, image: UIImage(systemName: "square.grid.2x2"), handler: #weakSelf { _ in
+                        deselectAll()
+                    }))
                 }
 
                 itemsCount.menu = UIMenu(title: "", image: nil, identifier: nil, options: [], children: actions)
@@ -1469,8 +1464,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let children = Lista<UIMenuElement>()
 
         if mainView, item.canOpen {
-            children.append(makeAction(title: "Open", callback: { [weak self] in
-                guard let self else { return }
+            children.append(makeAction(title: "Open", callback: #weakSelf {
                 Task {
                     self.mostRecentIndexPathActioned = indexPath
                     await item.tryOpen(in: nil)
@@ -1479,20 +1473,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         var topElements = mainView ? [
-            makeAction(title: "Info Panel", callback: { [weak self] in
-                self?.mostRecentIndexPathActioned = indexPath
-                self?.segue("showDetail", sender: item)
+            makeAction(title: "Info Panel", callback: #weakSelf {
+                mostRecentIndexPathActioned = indexPath
+                segue("showDetail", sender: item)
             }, style: [], iconName: "list.bullet.below.rectangle")
         ] : [UIAction]()
 
         topElements.append(contentsOf: [
-            makeAction(title: "Move to Top", callback: { [weak self] in
-                self?.mostRecentIndexPathActioned = indexPath
+            makeAction(title: "Move to Top", callback: #weakSelf {
+                mostRecentIndexPathActioned = indexPath
                 Model.sendToTop(items: [item])
             }, style: [], iconName: "arrow.turn.left.up"),
 
-            makeAction(title: "Copy to Clipboard", callback: { [weak self] in
-                self?.mostRecentIndexPathActioned = indexPath
+            makeAction(title: "Copy to Clipboard", callback: #weakSelf {
+                mostRecentIndexPathActioned = indexPath
                 item.copyToPasteboard()
                 if UIAccessibility.isVoiceOverRunning {
                     UIAccessibility.post(notification: .announcement, argument: "Copied.")
@@ -1503,8 +1497,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let topHolder = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: topElements)
         children.append(topHolder)
 
-        children.append(makeAction(title: "Duplicate", callback: { [weak self] in
-            self?.mostRecentIndexPathActioned = indexPath
+        children.append(makeAction(title: "Duplicate", callback: #weakSelf {
+            mostRecentIndexPathActioned = indexPath
             Model.duplicate(item: item)
             if UIAccessibility.isVoiceOverRunning {
                 UIAccessibility.post(notification: .announcement, argument: "Duplicated.")
@@ -1513,9 +1507,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if !item.isImportedShare {
             if item.isLocked {
-                children.append(makeAction(title: "Remove Lock", callback: { [weak self] in
-                    guard let self else { return }
-                    Task {
+                children.append(makeAction(title: "Remove Lock", callback: #weakSelf {
+                    #weakSelfTask {
                         if let success = await item.unlock(label: "Remove Lock", action: "Remove"), success {
                             self.mostRecentIndexPathActioned = indexPath
                             self.passwordUpdate(nil, hint: nil, for: item)
@@ -1523,9 +1516,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
                     }
                 }, style: [], iconName: "lock.slash"))
             } else {
-                children.append(makeAction(title: "Add Lock", callback: { [weak self] in
-                    guard let self else { return }
-                    Task {
+                children.append(makeAction(title: "Add Lock", callback: #weakSelf {
+                    #weakSelfTask {
                         let (passwordData, passwordHint) = await item.lock()
                         if let passwordData {
                             self.mostRecentIndexPathActioned = indexPath
@@ -1536,13 +1528,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
         }
 
-        children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
-            if let self, let cell = collection.cellForItem(at: indexPath) {
+        children.append(makeAction(title: "Siri Shortcuts", callback: #weakSelf {
+            if let cell = collection.cellForItem(at: indexPath) {
                 if let detail = currentDetailView {
                     detail.segue("toSiriShortcuts", sender: nil)
                 } else {
-                    Task { [weak self] in
-                        guard let self else { return }
+                    #weakSelfTask {
                         await dismissAnyPopOver()
                         segue("toSiriShortcuts", sender: cell)
                     }
@@ -1552,20 +1543,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         if item.cloudKitRecord != nil {
             if item.shareMode == .none {
-                children.append(makeAction(title: "Collaborate", callback: { [weak self] in
-                    guard let self else { return }
-                    Task { [weak self] in
-                        guard let self else { return }
+                children.append(makeAction(title: "Collaborate", callback: #weakSelf {
+                    #weakSelfTask {
                         await dismissAnyPopOver()
                         addInvites(to: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
 
             } else {
-                children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
-                    guard let self else { return }
-                    Task { [weak self] in
-                        guard let self else { return }
+                children.append(makeAction(title: "Collaboration…", callback: #weakSelf {
+                    #weakSelfTask {
                         await dismissAnyPopOver()
                         if item.isPrivateShareWithOnlyOwner {
                             shareOptionsPrivate(for: item, at: indexPath)
@@ -1580,13 +1567,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
 
         if let m = item.mostRelevantTypeItem {
-            children.append(makeAction(title: "Share", callback: { [weak self] in
-                guard let self, let cell = collection.cellForItem(at: indexPath) else {
+            children.append(makeAction(title: "Share", callback: #weakSelf {
+                guard let cell = collection.cellForItem(at: indexPath) else {
                     return
                 }
 
-                Task { [weak self] in
-                    guard let self else { return }
+                #weakSelfTask {
                     await dismissAnyPopOver()
                     mostRecentIndexPathActioned = indexPath
                     let a = UIActivityViewController(activityItems: [m.sharingActivitySource], applicationActivities: nil)
@@ -2124,9 +2110,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func shareOptionsPrivate(for item: ArchivedItem, at indexPath: IndexPath) {
         let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
-            self?.editInvites(in: item, at: indexPath)
-        })
+        a.addAction(UIAlertAction(title: "Options", style: .default, handler: #weakSelf { _ in
+            editInvites(in: item, at: indexPath)
+        }))
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
             Task {
                 do {
@@ -2146,9 +2132,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
     private func shareOptionsPublic(for item: ArchivedItem, at indexPath: IndexPath) {
         let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
-            self?.editInvites(in: item, at: indexPath)
-        })
+        a.addAction(UIAlertAction(title: "Make Private", style: .default, handler: #weakSelf { _ in
+            editInvites(in: item, at: indexPath)
+        }))
         a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
             Task {
                 do {

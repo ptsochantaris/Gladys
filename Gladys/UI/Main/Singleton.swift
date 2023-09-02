@@ -23,8 +23,7 @@ final class Singleton {
 
     func setup() {
         Model.registerStateHandler()
-        Model.badgeHandler = { [weak self] in
-            guard let self else { return }
+        Model.badgeHandler = #weakSelf {
             if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
                 log("Updating app badge to show item count (\(count))")
                 setBadgeCount(to: count)

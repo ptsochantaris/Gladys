@@ -2,6 +2,7 @@ import AppKit
 import CloudKit
 import GladysCommon
 import GladysUI
+import Minions
 import QuickLookUI
 
 final class ComponentCollectionView: NSCollectionView {
@@ -476,21 +477,21 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         input.addSubview(textField)
         a.accessoryView = input
         a.window.initialFirstResponder = textField
-        a.beginSheetModal(for: view.window!) { [weak self] response in
+        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
             if response.rawValue == 1000 {
                 if let newURL = URL(string: textField.stringValue) {
                     typeItem.replaceURL(newURL)
-                    self?.item.markUpdated()
-                    self?.item.needsReIngest = true
-                    self?.saveItem()
-                } else if let self {
+                    item.markUpdated()
+                    item.needsReIngest = true
+                    saveItem()
+                } else {
                     Task { @MainActor in
                         await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: self.view.window!)
                         self.editCurrent(sender)
                     }
                 }
             }
-        }
+        })
     }
 
     @objc private func revealCurrent(_: Any?) {
