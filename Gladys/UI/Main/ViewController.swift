@@ -1216,9 +1216,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         let sources = selectedItems.compactMap { $0.mostRelevantTypeItem?.sharingActivitySource }
         if sources.isEmpty { return }
         let a = UIActivityViewController(activityItems: sources, applicationActivities: nil)
-        a.completionWithItemsHandler = { [weak self] _, done, _, _ in
+        a.completionWithItemsHandler = #weakSelf { _, done, _, _ in
             if done {
-                self?.setEditing(false, animated: true)
+                setEditing(false, animated: true)
             }
         }
         present(a, animated: true)

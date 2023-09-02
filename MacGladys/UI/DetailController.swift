@@ -747,13 +747,13 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.addButton(withTitle: "Cancel")
         a.addButton(withTitle: "Stop Sharing")
         a.addButton(withTitle: "Options")
-        a.beginSheetModal(for: view.window!) { [weak self] response in
+        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
             if response.rawValue == 1002 {
-                self?.editInvites(sender)
+                editInvites(sender)
             } else if response.rawValue == 1001 {
-                self?.deleteShare(sender)
+                deleteShare(sender)
             }
-        }
+        })
     }
 
     private func deleteShare(_ sender: NSButton) {

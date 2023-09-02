@@ -102,12 +102,11 @@ final class LabelSectionTitle: UICollectionReusableView {
         addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
 
-        addInteraction(UISpringLoadedInteraction { [weak self] _, context in
-            guard let self else { return }
+        addInteraction(UISpringLoadedInteraction(activationHandler: #weakSelf { _, context in
             if context.state == .activated, mode == .collapsed {
                 sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
             }
-        })
+        }))
 
         layer.cornerRadius = 15
 

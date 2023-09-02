@@ -70,16 +70,14 @@ extension ArchivedItem {
             })
         }
         a.addAction(UIAlertAction(title: action, style: .default) { [weak self] _ in
-            guard let self else { return }
-
             var hint: String?
             if a.textFields!.count > 1 {
                 hint = a.textFields![1].text
             }
 
             let password = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-            if password.isEmpty {
-                getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
+            if let self, password.isEmpty {
+                self.getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
             } else {
                 completion(password, hint)
             }
