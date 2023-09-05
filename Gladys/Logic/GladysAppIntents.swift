@@ -1,5 +1,5 @@
-#if os(macOS)
-    import Cocoa
+#if canImport(AppKit)
+    import AppKit
 #else
     import Foundation
 #endif
@@ -112,7 +112,7 @@ enum GladysAppIntents {
             else {
                 throw Error.itemNotFound
             }
-            #if os(macOS)
+            #if canImport(AppKit)
                 if let pi = item.pasteboardItem(forDrag: false) {
                     let g = NSPasteboard.general
                     g.clearContents()
@@ -264,7 +264,7 @@ enum GladysAppIntents {
     private static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result: PasteResult
-        #if os(macOS)
+        #if canImport(AppKit)
             result = await Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
         #else
             result = await Model.pasteItems(from: [provider], overrides: importOverrides)

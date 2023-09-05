@@ -23,6 +23,8 @@ extension CGSize: Hashable {
     }
 }
 
+public let imageDimensions = CGSize(width: 512, height: 512)
+
 public protocol DisplayImageProviding {
     var imageCacheKey: String { get }
     var displayIcon: IMAGE { get }

@@ -2,6 +2,7 @@ import Contacts
 import ContactsUI
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import MapKit
 import Minions
 import UIKit
@@ -77,7 +78,7 @@ extension ArchivedItem {
 
             let password = a.textFields?.first?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if let self, password.isEmpty {
-                self.getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
+                getPassword(title: title, action: action, requestHint: requestHint, message: message, completion: completion)
             } else {
                 completion(password, hint)
             }

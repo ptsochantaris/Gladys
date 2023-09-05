@@ -1,5 +1,5 @@
-#if os(macOS)
-    import Cocoa
+#if canImport(AppKit)
+    import AppKit
 #else
     import UIKit
 #endif
@@ -332,7 +332,7 @@ public extension CloudManager {
                 if let item = await DropStore.item(shareId: recordUUID) {
                     item.cloudKitShareRecord = nil
                     log("Shut down sharing for item \(item.uuid) before deactivation")
-                    item.postModified()
+                    await item.postModified()
                 }
             }
         } catch {
@@ -516,13 +516,13 @@ public extension CloudManager {
             let record = try await database.record(for: recordIdNeedingRefresh)
             log("Replaced local cloud record with latest copy from server (\(item.uuid))")
             item.cloudKitRecord = record
-            item.postModified()
+            await item.postModified()
 
         } catch {
             if error.itemDoesNotExistOnServer {
                 log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(item.uuid))")
                 item.removeFromCloudkit()
-                item.postModified()
+                await item.postModified()
             }
         }
     }
@@ -548,14 +548,12 @@ public extension CloudManager {
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
             if !l.isEqual(newToken) {
-                // shutdown
-                if newToken == nil {
-                    await genericAlert(title: "Sync Failure", message: "You are not logged into iCloud anymore, so sync was disabled.")
-                } else {
-                    await genericAlert(title: "Sync Failure", message: "You have changed iCloud accounts. iCloud sync was disabled to keep your data safe. You can re-activate it to upload all your data to this account as well.")
-                }
                 try? await deactivate(force: true)
-                return
+                if newToken == nil {
+                    throw GladysError.cloudLogoutDetected
+                } else {
+                    throw GladysError.cloudLoginChanged
+                }
             }
         }
 
@@ -579,9 +577,8 @@ public extension CloudManager {
         case .assetNotAvailable, .badContainer, .badDatabase, .incompatibleVersion, .managedAccountRestricted, .missingEntitlement,
              .notAuthenticated, .userDeletedZone, .zoneNotFound:
 
-            // shutdown-worthy failure
-            await genericAlert(title: "Sync Failure", message: "There was an irrecoverable failure in sync and it was disabled:\n\n\"\(ckError.localizedDescription)\"")
             try? await deactivate(force: true)
+            throw GladysError.syncFailure(ckError)
 
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
 
@@ -609,7 +606,7 @@ public extension CloudManager {
         let shareRecord = CKShare(rootRecord: rootRecord)
         shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
         let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
-        #if os(macOS)
+        #if canImport(AppKit)
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
         #else
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
@@ -621,11 +618,9 @@ public extension CloudManager {
         return shareRecord
     }
 
-    static func acceptShare(_ metadata: CKShare.Metadata) async {
+    static func acceptShare(_ metadata: CKShare.Metadata) async throws {
         guard syncSwitchedOn else {
-            await genericAlert(title: "Could not accept shared item",
-                               message: "You need to enable iCloud sync from preferences before accepting items shared in iCloud")
-            return
+            throw GladysError.acceptRequiresSyncEnabled
         }
 
         let recordId: String?
@@ -652,7 +647,7 @@ public extension CloudManager {
         } catch {
             await sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
-            await genericAlert(title: "Could not accept shared item", message: error.localizedDescription)
+            throw error
         }
     }
 
@@ -664,6 +659,8 @@ public extension CloudManager {
         do {
             let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
             _ = try await database.deleteRecord(withID: shareId)
+            item.cloudKitShareRecord = nil
+            await item.postModified()
         } catch {
             if error.itemDoesNotExistOnServer {
                 do {
@@ -673,31 +670,18 @@ public extension CloudManager {
                     throw error
                 }
             } else {
-                await genericAlert(title: "There was an error while un-sharing this item", message: error.localizedDescription)
                 throw error
             }
         }
     }
 
-    static func proceedWithDeactivation() async {
-        do {
-            try await deactivate(force: false)
-        } catch {
-            await genericAlert(title: "Could not deactivate", message: error.localizedDescription)
-        }
+    static func proceedWithDeactivation() async throws {
+        try await deactivate(force: false)
     }
 
-    static func startActivation() async {
-        do {
-            try await activate()
-        } catch {
-            await genericAlert(title: "Could not activate", message: error.localizedDescription, offerSettingsShortcut: (error as? GladysError) == .cloudLoginRequired)
-        }
-        do {
-            try await sync(force: true, overridingUserPreference: true)
-        } catch {
-            await genericAlert(title: "Initial sync failed", message: error.localizedDescription)
-        }
+    static func startActivation() async throws {
+        try await activate()
+        try await sync(force: true, overridingUserPreference: true)
     }
 
     static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?

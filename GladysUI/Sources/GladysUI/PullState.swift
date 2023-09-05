@@ -324,9 +324,8 @@ final actor PullState {
         if deletedZoneIds.contains(privateZoneId) {
             if database.databaseScope == .private {
                 log("Private zone has been deleted, sync must be disabled.")
-                await genericAlert(title: "Your Gladys iCloud zone was deleted from another device.", message: "Sync was disabled in order to protect the data on this device.\n\nYou can re-create your iCloud data store with data from here if you turn sync back on again.")
-                try await CloudManager.deactivate(force: true)
-                return true
+                try? await CloudManager.deactivate(force: true)
+                throw GladysError.cloudLogoutDetected
             } else {
                 log("Private zone has been signaled as deleted in \(database.databaseScope.logName) database, ignoring this")
                 deletedZoneIds.remove(privateZoneId)

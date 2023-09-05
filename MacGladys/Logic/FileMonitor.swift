@@ -23,7 +23,7 @@ final class FileMonitor: NSObject, NSFilePresenter {
 
         NSFileCoordinator.addFilePresenter(self)
 
-        #if os(iOS) || os(visionOS)
+        #if canImport(UIKit)
             let task1 = Task { @MainActor in
                 for await _ in NotificationCenter.default.notifications(named: UIApplication.willEnterForegroundNotification) {
                     NSFileCoordinator.addFilePresenter(self)

@@ -1,3 +1,4 @@
+import GladysUIKit
 import UIKit
 
 final class CreditsViewController: GladysViewController {

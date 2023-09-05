@@ -1,9 +1,10 @@
 import CloudKit
 import Foundation
 import Lista
-#if os(macOS)
-    import Cocoa
-#else
+#if canImport(AppKit)
+    import AppKit
+#endif
+#if canImport(UIKit)
     import UIKit
 #endif
 import NaturalLanguage
@@ -13,11 +14,27 @@ import UniformTypeIdentifiers
     import Speech
     import Vision
 #endif
+import Maintini
+import SwiftUI
 
-public final class ArchivedItem: Codable {
+public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayImageProviding {
     public let suggestedName: String?
     public let uuid: UUID
     public let createdAt: Date
+
+    public enum WarmUpState {
+        case pending, inProgress(Task<Void, Never>), done
+
+        public var associatedTask: Task<Void, Never>? {
+            switch self {
+            case .done, .pending: nil
+            case let .inProgress(task): task
+            }
+        }
+    }
+
+    @MainActor
+    public var warmingUp = WarmUpState.pending
 
     public var components: ContiguousArray<Component> {
         didSet {
@@ -79,6 +96,10 @@ public final class ArchivedItem: Codable {
         }
     }
 
+    public var shouldDisplayLoading: Bool {
+        flags.contains(.isBeingCreatedBySync) || needsReIngest || loadingProgress != nil
+    }
+
     // Transient
     public struct Flags: OptionSet {
         public let rawValue: Int
@@ -89,9 +110,12 @@ public final class ArchivedItem: Codable {
         public static let needsSaving = Flags(rawValue: 1 << 0)
         public static let needsUnlock = Flags(rawValue: 1 << 1)
         public static let isBeingCreatedBySync = Flags(rawValue: 1 << 2)
+        public static let selected = Flags(rawValue: 1 << 3)
+        public static let editing = Flags(rawValue: 1 << 4)
     }
 
     public var flags: Flags
+
     public var loadingProgress: Progress?
 
     private enum CodingKeys: String, CodingKey {
@@ -142,8 +166,9 @@ public final class ArchivedItem: Codable {
         needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
         highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
         lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
-        lockPassword = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
-        flags = lockPassword == nil ? [] : .needsUnlock
+        let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+        lockPassword = lp
+        flags = lp == nil ? [] : .needsUnlock
     }
 
     public init(cloning item: ArchivedItem) {
@@ -153,12 +178,12 @@ public final class ArchivedItem: Codable {
         createdAt = Date()
         updatedAt = createdAt
         lockPassword = nil
-        highlightColor = item.highlightColor
         lockHint = nil
         needsReIngest = true
         needsDeletion = false
         flags = .needsSaving
 
+        highlightColor = item.highlightColor
         titleOverride = item.titleOverride
         note = item.note
         suggestedName = item.suggestedName
@@ -190,7 +215,7 @@ public final class ArchivedItem: Codable {
         uuid = UUID()
         createdAt = Date()
         updatedAt = createdAt
-        #if os(watchOS)
+        #if canImport(WatchKit)
             suggestedName = nil
         #else
             suggestedName = providers.first?.suggestedName
@@ -231,7 +256,8 @@ public final class ArchivedItem: Codable {
         note = record["note"] as? String ?? ""
 
         suggestedName = record["suggestedName"] as? String
-        lockPassword = record["lockPassword"] as? Data
+        let lp = record["lockPassword"] as? Data
+        lockPassword = lp
         lockHint = record["lockHint"] as? String
         labels = (record["labels"] as? [String]) ?? []
 
@@ -245,7 +271,7 @@ public final class ArchivedItem: Codable {
         needsDeletion = false
         components = []
 
-        if lockPassword == nil {
+        if lp == nil {
             flags = [.isBeingCreatedBySync, .needsSaving]
         } else {
             flags = [.isBeingCreatedBySync, .needsSaving, .needsUnlock]
@@ -253,9 +279,7 @@ public final class ArchivedItem: Codable {
 
         cloudKitRecord = record
     }
-}
 
-extension ArchivedItem: Hashable, DisplayImageProviding {
     public static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
         lhs.uuid == rhs.uuid
     }
@@ -539,7 +563,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
     private static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
         var identifiers = ids.filter { typeIdentifier in
-            #if os(macOS)
+            #if canImport(AppKit)
                 if typeIdentifier.hasPrefix("dyn.") {
                     return false
                 }
@@ -576,7 +600,7 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
 
     private var imageOfImageComponentIfExists: CGImage? {
         if let firstImageComponent = mostRelevantTypeItemImage, firstImageComponent.typeConforms(to: .image), let image = IMAGE(contentsOfFile: firstImageComponent.bytesPath.path) {
-            #if os(macOS)
+            #if canImport(AppKit)
                 return image.cgImage(forProposedRect: nil, context: nil, hints: nil)
             #else
                 return image.cgImage
@@ -708,14 +732,16 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
     #endif
 
     @MainActor
-    private func componentIngestDone() {
+    private func componentIngestDone() async {
         Images.shared[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
         Task {
             // timing corner case
             await Task.yield()
+            postModified()
             sendNotification(name: .IngestComplete, object: self)
+            Maintini.endMaintaining()
         }
     }
 
@@ -735,7 +761,12 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             return
         }
 
-        sendNotification(name: .IngestStart, object: self)
+        Maintini.startMaintaining()
+        defer {
+            Task {
+                await componentIngestDone()
+            }
+        }
 
         let loadCount = components.count
         if isTemporarilyUnlocked {
@@ -769,8 +800,6 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
             }
         }
         // }
-
-        componentIngestDone()
     }
 
     private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
@@ -794,7 +823,12 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
     }
 
     private func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
-        await sendNotification(name: .IngestStart, object: self)
+        await Maintini.startMaintaining()
+        defer {
+            Task {
+                await componentIngestDone()
+            }
+        }
 
         var componentsThatFailed = [Component]()
 
@@ -875,7 +909,6 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
                 await processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
             }
         #endif
-        await componentIngestDone()
     }
 
     #if !os(watchOS)
@@ -906,17 +939,16 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         }
     #endif
 
+    @MainActor
     public func postModified() {
-        Task { @MainActor in
-            sendNotification(name: .ItemModified, object: self)
-        }
+        presentationInfoCache[uuid] = nil
+        objectWillChange.send()
     }
 
     public func cloudKitUpdate(from record: CKRecord) {
         updatedAt = record["updatedAt"] as? Date ?? .distantPast
         titleOverride = record["titleOverride"] as? String ?? ""
         note = record["note"] as? String ?? ""
-
         lockPassword = record["lockPassword"] as? Data
         lockHint = record["lockHint"] as? String
         labels = (record["labels"] as? [String]) ?? []
@@ -934,7 +966,9 @@ extension ArchivedItem: Hashable, DisplayImageProviding {
         }
 
         cloudKitRecord = record
-        postModified()
+        Task { @MainActor in
+            postModified()
+        }
     }
 
     public var parentZone: CKRecordZone.ID {

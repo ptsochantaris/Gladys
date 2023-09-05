@@ -37,14 +37,12 @@ public extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
     static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
     static let ItemsAddedBySync = Notification.Name("ItemsAddedBySync")
-    static let ItemModified = Notification.Name("ItemModified")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
     static let LabelsUpdated = Notification.Name("LabelsUpdated")
     static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
     static let DetailViewClosing = Notification.Name("DetailViewClosing")
     static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
     static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
-    static let IngestStart = Notification.Name("IngestStart")
     static let IngestComplete = Notification.Name("IngestComplete")
     static let AcceptStarting = Notification.Name("AcceptStarting")
     static let AcceptEnding = Notification.Name("AcceptEnding")
@@ -59,7 +57,7 @@ public func sendNotification(name: Notification.Name, object: Any?) {
     NotificationCenter.default.post(name: name, object: object)
 }
 
-#if os(iOS) || os(visionOS)
+#if canImport(UIKit) && !canImport(WatchKit)
     import UIKit
 
     public struct UIRequest {

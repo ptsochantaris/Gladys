@@ -1,11 +1,38 @@
-#if os(macOS)
-    import Cocoa
+#if canImport(AppKit)
+    import AppKit
+    import CoreImage
 #elseif os(iOS) || os(visionOS)
+    import CoreImage
     import UIKit
 #elseif os(watchOS)
     import WatchKit
 #endif
 import Foundation
+import SwiftUI
+
+public extension COLOR {
+    func interpolate(with color: COLOR) -> COLOR {
+        let (r1, g1, b1, a1) = components
+        let (r2, g2, b2, a2) = color.components
+
+        return COLOR(red: r1.interpolated(towards: r2, amount: 0.5),
+                     green: g1.interpolated(towards: g2, amount: 0.5),
+                     blue: b1.interpolated(towards: b2, amount: 0.5),
+                     alpha: a1.interpolated(towards: a2, amount: 0.5))
+    }
+
+    var isBright: Bool {
+        var bright: CGFloat = 0
+        #if canImport(AppKit)
+            if let convertedColor = usingColorSpace(.deviceRGB) {
+                convertedColor.getHue(nil, saturation: nil, brightness: &bright, alpha: nil)
+            }
+        #else
+            getHue(nil, saturation: nil, brightness: &bright, alpha: nil)
+        #endif
+        return bright > 0.8
+    }
+}
 
 public extension IMAGE {
     static func from(data: Data) async -> IMAGE? {
@@ -13,10 +40,83 @@ public extension IMAGE {
             IMAGE(data: data)
         }.value
     }
+
+    var swiftUiImage: Image {
+        #if canImport(AppKit)
+            Image(nsImage: self)
+        #else
+            Image(uiImage: self)
+        #endif
+    }
+
+    #if canImport(CoreImage)
+
+        private static let sharedCiContext = CIContext()
+
+        // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
+        private final nonisolated func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
+            #if canImport(AppKit)
+                let cgi = cgImage(forProposedRect: nil, context: nil, hints: nil)
+            #else
+                let cgi = cgImage
+            #endif
+            guard let cgi else { return nil }
+
+            let inputImage = CIImage(cgImage: cgi)
+
+            guard !inputImage.extent.isEmpty,
+                  let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: inputImage, kCIInputExtentKey: CIVector(cgRect: rect)]),
+                  let outputImage = filter.outputImage
+            else {
+                return nil
+            }
+
+            var bitmap = [UInt8](repeating: 0, count: 4)
+            IMAGE.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
+            return (bitmap[0], bitmap[1], bitmap[2], bitmap[3])
+        }
+
+        final nonisolated func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
+            var cols: (UInt8, UInt8, UInt8, UInt8)?
+            let edgeWidth: CGFloat = 20
+
+            if top == nil || size.width < edgeWidth || size.height < edgeWidth {
+                cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            } else {
+                if top == true {
+                    cols = calculateAverageColor(rect: CGRect(x: 0, y: size.height - edgeWidth, width: size.width, height: edgeWidth))
+                } else {
+                    cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: edgeWidth))
+                }
+            }
+
+            IMAGE.sharedCiContext.clearCaches()
+
+            if let cols {
+                if cols.3 < 200 {
+                    return nil
+                }
+                return COLOR(red: CGFloat(cols.0) / 255,
+                             green: CGFloat(cols.1) / 255,
+                             blue: CGFloat(cols.2) / 255,
+                             alpha: CGFloat(cols.3) / 255)
+            } else {
+                return nil
+            }
+        }
+    #endif
 }
 
-#if os(macOS)
+#if canImport(AppKit)
     public extension NSImage {
+        static func block(color: NSColor, size: CGSize) -> NSImage {
+            let image = NSImage(size: size)
+            image.lockFocus()
+            color.drawSwatch(in: NSRect(origin: .zero, size: size))
+            image.unlockFocus()
+            return image
+        }
+
         func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
             let mySizePixelWidth = size.width
             let mySizePixelHeight = size.height
@@ -93,60 +193,17 @@ public extension IMAGE {
         }
     }
 
-#elseif os(watchOS)
-    public let screenScale = WKInterfaceDevice.current().screenScale
-    public let pixelSize: CGFloat = 1 / screenScale
+#else
 
-#elseif os(iOS) || os(visionOS)
-
-    #if os(visionOS)
-        public let screenScale: CGFloat = 2
+    #if canImport(WatchKit)
+        private let screenScale = WKInterfaceDevice.current().screenScale
+    #elseif os(visionOS)
+        private let screenScale: CGFloat = 2
     #else
-        public let screenScale = UIScreen.main.scale
+        private let screenScale = UIScreen.main.scale
     #endif
     public let pixelSize: CGFloat = 1 / screenScale
 
-    public extension UIImage {
-        static func block(color: UIColor, size: CGSize) -> UIImage {
-            let rect = CGRect(origin: .zero, size: size)
-            return UIGraphicsImageRenderer(bounds: rect).image {
-                $0.cgContext.setFillColor(color.cgColor)
-                $0.fill(rect)
-            }
-        }
-
-        static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
-            let img = UIImage(systemName: systemName)
-            return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)
-        }
-
-        private static let sharedCiContext = CIContext()
-
-        final func desaturated(darkMode: Bool) async -> UIImage {
-            guard let ciImage = CIImage(image: self) else {
-                return self
-            }
-            let p1 = darkMode ? "inputColor0" : "inputColor1"
-            let p2 = darkMode ? "inputColor1" : "inputColor0"
-            let a: CGFloat = darkMode ? 0.05 : 0.2
-            let blackAndWhiteImage = ciImage
-                .applyingFilter("CIFalseColor", parameters: [
-                    p1: CIColor(color: .systemBackground),
-                    p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
-                ])
-            return await Task.detached {
-                if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
-                    let img = UIImage(cgImage: cgImage)
-                    return img
-                } else {
-                    return self
-                }
-            }.value
-        }
-    }
-#endif
-
-#if os(iOS) || os(watchOS) || os(visionOS)
     public extension UIImage {
         static func fromFile(_ url: URL, template: Bool) -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
@@ -223,5 +280,50 @@ public extension IMAGE {
 
             return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
         }
+
+        #if canImport(CoreImage)
+
+            static func block(color: UIColor, size: CGSize) -> UIImage {
+                let rect = CGRect(origin: .zero, size: size)
+                return UIGraphicsImageRenderer(bounds: rect).image {
+                    $0.cgContext.setFillColor(color.cgColor)
+                    $0.fill(rect)
+                }
+            }
+
+            static func tintedShape(systemName: String, coloured: UIColor) -> UIImage? {
+                let img = UIImage(systemName: systemName)
+                return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)
+            }
+
+            final func desaturated(darkMode: Bool) async -> UIImage {
+                await Task.detached {
+                    guard let ciImage = CIImage(image: self) else {
+                        return self
+                    }
+                    let p1 = darkMode ? "inputColor0" : "inputColor1"
+                    let p2 = darkMode ? "inputColor1" : "inputColor0"
+                    #if os(visionOS)
+                        let a: CGFloat = 0.5
+                    #else
+                        let a: CGFloat = darkMode ? 0.05 : 0.2
+                    #endif
+                    let blackAndWhiteImage = ciImage
+                        .applyingFilter("CIFalseColor", parameters: [
+                            p1: CIColor(color: .systemBackground),
+                            p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
+                        ])
+                    defer {
+                        UIImage.sharedCiContext.clearCaches()
+                    }
+                    if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
+                        let img = UIImage(cgImage: cgImage)
+                        return img
+                    } else {
+                        return self
+                    }
+                }.value
+            }
+        #endif
     }
 #endif

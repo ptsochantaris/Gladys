@@ -73,7 +73,7 @@ final class HighlightLabel: UILabel {
     private var cachedSize = CGSize.zero
 
     override func draw(_ rect: CGRect) {
-        guard !rect.isEmpty, let attributedText, let highlightColor = tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
+        guard !rect.isEmpty, let attributedText, let tintColor, !attributedText.string.isEmpty, let context = UIGraphicsGetCurrentContext() else { return }
 
         let framesetter = CTFramesetterCreateWithAttributedString(attributedText)
 
@@ -123,7 +123,7 @@ final class HighlightLabel: UILabel {
         }
 
         context.setLineWidth(pixelSize)
-        context.setStrokeColor(highlightColor.withAlphaComponent(0.7).cgColor)
+        context.setStrokeColor(tintColor.withAlphaComponent(0.7).cgColor)
         context.addPath(cachedPath!)
         context.strokePath()
     }

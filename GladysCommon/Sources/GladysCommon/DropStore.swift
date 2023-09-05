@@ -113,7 +113,7 @@ public enum DropStore {
     public static func reset() {
         dropStore.removeAll(keepingCapacity: false)
         uuidindex = [:]
-        ComponentLookup.shared.cleanup()
+        ComponentLookup.shared.reset()
     }
 
     public static var doneIngesting: Bool {

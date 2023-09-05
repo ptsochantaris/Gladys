@@ -1,6 +1,7 @@
 import CloudKit
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import UIKit
 
 extension UIScene {
@@ -104,7 +105,11 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func windowScene(_: UIWindowScene, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata) {
         Task { // need to wait for the UI to show up first, if the app is being launched and not foregrounded
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-            await CloudManager.acceptShare(cloudKitShareMetadata)
+            do {
+                try await CloudManager.acceptShare(cloudKitShareMetadata)
+            } catch {
+                await genericAlert(title: "Failed to accept item", message: error.localizedDescription)
+            }
         }
     }
 }

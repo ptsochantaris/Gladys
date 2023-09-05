@@ -152,7 +152,7 @@ final class ActionRequestViewController: UIViewController {
         } completion: { _ in
             if PersistedOptions.setLabelsWhenActioning {
                 if self.navigationController?.viewControllers.count == 1 {
-                    self.segue("showLabelsAndNotes", sender: nil)
+                    self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
                 }
             } else {
                 Task { @MainActor in
@@ -167,7 +167,7 @@ final class ActionRequestViewController: UIViewController {
         statusLabel.isHidden = true
         if PersistedOptions.setLabelsWhenActioning {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction(handler: #weakSelf { _ in
-                segue("showLabelsAndNotes", sender: nil)
+                self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
             }))
         } else {
             navigationItem.rightBarButtonItem = nil

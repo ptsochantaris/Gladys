@@ -1,5 +1,7 @@
+import Combine
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import Minions
 import UIKit
 import UniformTypeIdentifiers
@@ -12,8 +14,15 @@ final class DetailController: GladysViewController,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
     UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate,
     ResizingCellDelegate, DetailCellDelegate {
-    var item: ArchivedItem!
     var sourceIndexPath: IndexPath?
+    private var itemObservation: Cancellable?
+    var item: ArchivedItem! {
+        didSet {
+            itemObservation = item.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] _ in
+                self?.updateUI()
+            }
+        }
+    }
 
     private var showTypeDetails = false
 
@@ -52,8 +61,6 @@ final class DetailController: GladysViewController,
         n.addObserver(self, selector: #selector(keyboardHiding(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         n.addObserver(self, selector: #selector(keyboardChanged(_:)), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         n.addObserver(self, selector: #selector(dataUpdate(_:)), name: .ModelDataUpdated, object: nil)
-        n.addObserver(self, selector: #selector(updateUI), name: .ItemModified, object: item)
-        n.addObserver(self, selector: #selector(updateUI), name: .IngestComplete, object: item)
 
         colorButton.changesSelectionAsPrimaryAction = true
     }
@@ -259,11 +266,11 @@ final class DetailController: GladysViewController,
         if sizing { return }
         sizing = true
         table.layoutIfNeeded()
-        let preferredWidth: CGFloat
+
         #if os(visionOS)
-            preferredWidth = 480
+            let preferredWidth: CGFloat = 480
         #else
-            preferredWidth = 320
+            let preferredWidth: CGFloat = 320
         #endif
         let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
         preferredContentSize = preferredSize

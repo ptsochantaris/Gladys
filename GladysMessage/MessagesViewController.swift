@@ -1,4 +1,6 @@
 import GladysCommon
+import GladysUI
+import GladysUIKit
 import Messages
 import Minions
 import PopTimer
@@ -16,9 +18,9 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     private var searchTimer: PopTimer!
 
     private func itemsPerRow(for size: CGSize) -> Int {
-        if size.width < 320 {
+        if size.width < 400 {
             2
-        } else if size.width < 400 {
+        } else if size.width < 700 {
             3
         } else if size.width < 1000 {
             4
@@ -52,8 +54,10 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MessageCell", for: indexPath) as! MessageCell
-        cell.dropItem = filteredDrops[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CommonItemCell", for: indexPath) as! CommonItemCell
+        cell.style = .widget
+        cell.owningViewController = self
+        cell.archivedDropItem = filteredDrops[indexPath.row]
         return cell
     }
 
@@ -105,12 +109,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         super.willBecomeActive(with: conversation)
         DropStore.boot(with: ContiguousArray(LiteModel.allItems()))
         emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
-        updateItemSize(for: view.bounds.size)
         searchBar.text = lastFilter
-        itemsView.reloadData()
-        Task { @MainActor in
-            self.itemsView.contentOffset = messagesCurrentOffset
-        }
     }
 
     override func willResignActive(with conversation: MSConversation) {
@@ -119,6 +118,15 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
         lastFilter = searchBar.text
         DropStore.reset()
         itemsView.reloadData()
+    }
+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        updateItemSize(for: view.bounds.size)
+        itemsView.reloadData()
+        Task { @MainActor in
+            self.itemsView.contentOffset = messagesCurrentOffset
+        }
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

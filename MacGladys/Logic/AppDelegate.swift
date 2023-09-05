@@ -2,6 +2,7 @@ import AppKit
 import CloudKit
 import Combine
 import CoreSpotlight
+import GladysAppKit
 import GladysCommon
 import GladysUI
 import HotKey
@@ -191,8 +192,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         LauncherCommon.killHelper()
 
-        Model.setup()
+        do {
+            try Model.setup()
+        } catch {
+            Task {
+                await genericAlert(title: "Loading Error", message: error.localizedDescription)
+                abort()
+            }
+            return
+        }
+
         Model.registerStateHandler()
+
         Model.badgeHandler = {
             Task {
                 if await CloudManager.showNetwork {
@@ -271,6 +282,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         #notifications(for: .AcceptEnding) { _ in
             endProgress()
+            return true
+        }
+
+        #notifications(for: .IngestComplete) { notification in
+            if DropStore.doneIngesting {
+                Task {
+                    await Model.save()
+                }
+            } else if let item = notification.object as? ArchivedItem {
+                Model.commitItem(item: item)
+            }
             return true
         }
 
@@ -638,8 +660,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func application(_: NSApplication, userDidAcceptCloudKitShareWith metadata: CKShare.Metadata) {
-        Task { @MainActor in
-            await CloudManager.acceptShare(metadata)
+        Task {
+            do {
+                try await CloudManager.acceptShare(metadata)
+            } catch {
+                await genericAlert(title: "Failed to accept item", message: error.localizedDescription)
+            }
         }
     }
 

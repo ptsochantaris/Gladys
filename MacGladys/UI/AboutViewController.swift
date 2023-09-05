@@ -1,4 +1,5 @@
 import AppKit
+import GladysAppKit
 import GladysUI
 import Minions
 import StoreKit
@@ -71,11 +72,6 @@ final class AboutViewController: NSViewController {
         }
     }
 
-    override func viewDidAppear() {
-        super.viewDidAppear()
-        tipJar?.aboutWindow = view.window
-    }
-
     private func purchase(sender: NSView, index: Int) {
         guard let tipJar, let items = tipItems else { return }
 
@@ -83,9 +79,20 @@ final class AboutViewController: NSViewController {
         let prev = f[index].stringValue
         f[index].stringValue = "✅"
         sender.gestureRecognizers.forEach { $0.isEnabled = false }
-        tipJar.requestItem(items[index]) {
-            f[index].stringValue = prev
-            sender.gestureRecognizers.forEach { $0.isEnabled = true }
+        Task {
+            do {
+                try await tipJar.requestItem(items[index])
+                f[index].stringValue = prev
+                sender.gestureRecognizers.forEach { $0.isEnabled = true }
+
+                await genericAlert(title: "Thank you for supporting Gladys!",
+                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
+                                   windowOverride: view.window)
+            } catch {
+                await genericAlert(title: "There was an error completing this operation",
+                                   message: error.localizedDescription,
+                                   windowOverride: view.window)
+            }
         }
     }
 

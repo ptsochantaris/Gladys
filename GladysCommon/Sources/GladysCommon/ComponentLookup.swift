@@ -17,6 +17,12 @@ public final class ComponentLookup {
         }
     }
 
+    public func reset() {
+        queue.async(flags: .barrier) { [self] in
+            componentLookup.removeAll()
+        }
+    }
+
     public func register(_ component: Component) {
         queue.async(flags: .barrier) { [self] in
             componentLookup[component.uuid] = WeakComponent(component: component)

@@ -23,6 +23,7 @@ public let bytesPathCache = Cache<UUID, URL>()
 public let cloudKitRecordCache = Cache<UUID, CKRecordCacheEntry>()
 public let cloudKitShareCache = Cache<UUID, CKShareCacheEntry>()
 public let needsCloudPushCache = Cache<UUID, Bool>()
+public let presentationInfoCache = Cache<UUID, PresentationInfo>()
 
 public func clearCacheData(for uuid: UUID) {
     folderUrlCache[uuid] = nil
@@ -32,4 +33,5 @@ public func clearCacheData(for uuid: UUID) {
     bytesPathCache[uuid] = nil
     cloudKitRecordCache[uuid] = nil
     cloudKitShareCache[uuid] = nil
+    presentationInfoCache[uuid] = nil
 }

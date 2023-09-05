@@ -1,5 +1,5 @@
-#if os(macOS)
-    import Cocoa
+#if canImport(AppKit)
+    import AppKit
 #else
     import UIKit
 #endif
@@ -718,7 +718,7 @@ public final class Component: Codable, Hashable {
         canPreviewCache = nil
     }
 
-    #if os(macOS)
+    #if canImport(AppKit)
         public var componentIcon: NSImage? {
             get {
                 guard let d = try? Data(contentsOf: imagePath), let i = NSImage(data: d) else {
@@ -899,7 +899,7 @@ public final class Component: Codable, Hashable {
                     typeIdentifier = UTType.jpeg.identifier
                     classWasWrapped = false
                     if storeBytes {
-                        #if os(macOS)
+                        #if canImport(AppKit)
                             let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
                             setBytes(b ?? Data())
                         #else
@@ -1026,7 +1026,7 @@ public final class Component: Codable, Hashable {
         context.drawPDFPage(firstPage)
 
         if let cgImage = context.makeImage() {
-            #if os(macOS)
+            #if canImport(AppKit)
                 return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
             #else
                 return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
@@ -1047,7 +1047,7 @@ public final class Component: Codable, Hashable {
         }
     }
 
-    #if os(watchOS)
+    #if canImport(WatchKit)
         private func generateMoviePreview() async -> IMAGE? {
             nil
         }
@@ -1076,10 +1076,10 @@ public final class Component: Codable, Hashable {
                 #if os(visionOS)
                     let cgImage = try await imgGenerator.image(at: CMTimeMake(value: 0, timescale: 1)).image
                     return UIImage(cgImage: cgImage)
-                #elseif os(macOS)
+                #elseif canImport(AppKit)
                     let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
                     return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-                #elseif os(iOS) || os(visionOS)
+                #elseif canImport(UIKit)
                     let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
                     return UIImage(cgImage: cgImage)
                 #endif
@@ -1239,14 +1239,14 @@ public final class Component: Codable, Hashable {
 
         displayIconPriority = priority
         displayIconContentMode = contentMode
-        #if os(macOS)
+        #if canImport(AppKit)
             displayIconTemplate = icon.isTemplate
         #else
             displayIconTemplate = icon.renderingMode == .alwaysTemplate
         #endif
     }
 
-    #if os(macOS)
+    #if canImport(AppKit)
         func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
             setTitle(from: url)
 

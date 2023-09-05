@@ -13,9 +13,6 @@ public extension SKProduct {
 
 public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     private let completion: ([SKProduct]?, Error?) -> Void
-    #if os(macOS)
-        public var aboutWindow: NSWindow?
-    #endif
 
     public init(completion: @escaping ([SKProduct]?, Error?) -> Void) {
         self.completion = completion
@@ -23,7 +20,7 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
         SKPaymentQueue.default().add(self)
 
         let identifiers: Set<String>
-        #if os(macOS)
+        #if canImport(AppKit)
             identifiers = [
                 "MAC_GLADYS_TIP_TIER_001",
                 "MAC_GLADYS_TIP_TIER_002",
@@ -64,48 +61,26 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
         }
     }
 
-    private var purchaseCompletion: (() -> Void)?
-    public func requestItem(_ item: SKProduct, completion: @escaping () -> Void) {
-        purchaseCompletion = completion
-        let payment = SKPayment(product: item)
-        SKPaymentQueue.default().add(payment)
-    }
-
-    @MainActor
-    private func displaySuccess() async {
-        let completion = purchaseCompletion
-        purchaseCompletion = nil
-        #if os(macOS)
-            await genericAlert(title: "Thank you for supporting Gladys!",
-                               message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
-                               windowOverride: aboutWindow)
-        #else
-            await genericAlert(title: "Thank you for supporting Gladys!",
-                               message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.")
-        #endif
-        completion?()
-    }
-
-    @MainActor
-    private func displayFailure(error: Error?) async {
-        let completion = purchaseCompletion
-        purchaseCompletion = nil
-        #if os(macOS)
-            await genericAlert(title: "There was an error completing this operation",
-                               message: error?.localizedDescription,
-                               windowOverride: aboutWindow)
-        #else
-            await genericAlert(title: "There was an error completing this operation",
-                               message: error?.localizedDescription)
-        #endif
-        completion?()
+    private var purchaseCompletion: ((Error?) -> Void)?
+    public func requestItem(_ item: SKProduct) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            purchaseCompletion = { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+            let payment = SKPayment(product: item)
+            SKPaymentQueue.default().add(payment)
+        }
     }
 
     public func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         Task {
             for t in transactions {
                 let prefix: String
-                #if os(macOS)
+                #if canImport(AppKit)
                     prefix = "MAC_GLADYS_TIP_TIER"
                 #else
                     prefix = "GLADYS_TIP_TIER_"
@@ -114,12 +89,19 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
                     switch t.transactionState {
                     case .failed:
                         SKPaymentQueue.default().finishTransaction(t)
-                        await displayFailure(error: t.error)
+                        let completion = purchaseCompletion
+                        purchaseCompletion = nil
+                        completion?(t.error)
+
                     case .purchased, .restored:
                         SKPaymentQueue.default().finishTransaction(t)
-                        await displaySuccess()
+                        let completion = purchaseCompletion
+                        purchaseCompletion = nil
+                        completion?(nil)
+
                     case .deferred, .purchasing:
                         break
+
                     @unknown default:
                         break
                     }
@@ -127,8 +109,10 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
                     switch t.transactionState {
                     case .failed, .purchased, .restored:
                         SKPaymentQueue.default().finishTransaction(t)
+
                     case .deferred, .purchasing:
                         break
+
                     @unknown default:
                         break
                     }

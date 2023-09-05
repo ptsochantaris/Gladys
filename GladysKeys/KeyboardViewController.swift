@@ -1,4 +1,6 @@
 import GladysCommon
+import GladysUI
+import GladysUIKit
 import Minions
 import UIKit
 
@@ -152,8 +154,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "KeyboardCell", for: indexPath) as! KeyboardCell
-        cell.dropItem = filteredDrops[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CommonItemCell", for: indexPath) as! CommonItemCell
+        cell.style = .widget
+        cell.owningViewController = self
+        cell.archivedDropItem = filteredDrops[indexPath.item]
         return cell
     }
 
@@ -183,7 +187,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     func collectionView(_: UICollectionView, dragPreviewParametersForItemAt indexPath: IndexPath) -> UIDragPreviewParameters? {
-        if let cell = itemsView.cellForItem(at: indexPath) as? KeyboardCell, let b = cell.backgroundView {
+        if let cell = itemsView.cellForItem(at: indexPath) as? CommonItemCell, let b = cell.backgroundView {
             let corner = b.layer.cornerRadius
             let params = UIDragPreviewParameters()
             params.visiblePath = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
@@ -340,7 +344,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         height.constant = min(400, UIScreen.main.bounds.height * 0.5)
 
         let config: UIImage.SymbolConfiguration
-        if traitCollection.containsTraits(in: UITraitCollection(horizontalSizeClass: .regular)) {
+        if traitCollection.horizontalSizeClass == .regular {
             config = UIImage.SymbolConfiguration(pointSize: 23, weight: .light, scale: .default)
         } else {
             config = UIImage.SymbolConfiguration(pointSize: 19, weight: .light, scale: .default)
@@ -428,7 +432,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
             let uuid = configuration.identifier as? String,
             let item = DropStore.item(uuid: uuid),
             let index = filteredDrops.firstIndex(of: item),
-            let cell = itemsView.cellForItem(at: IndexPath(item: index, section: 0)) as? KeyboardCell {
+            let cell = itemsView.cellForItem(at: IndexPath(item: index, section: 0)) as? CommonItemCell {
             return cell.targetedPreviewItem
         }
         return nil

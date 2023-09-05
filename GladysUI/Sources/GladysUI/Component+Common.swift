@@ -1,8 +1,10 @@
 import Contacts
 import Foundation
 import MapKit
-#if os(iOS) || os(visionOS)
+#if canImport(Intents)
     import Intents
+#endif
+#if canImport(UIKit)
     import QuickLook
 #endif
 import GladysCommon
@@ -13,7 +15,7 @@ public extension Component {
     }
 
     func removeIntents() {
-        #if os(iOS) || os(visionOS)
+        #if canImport(Intents)
             INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
         #endif
     }
@@ -23,10 +25,10 @@ public extension Component {
         if let canPreviewCache {
             return canPreviewCache
         }
-        #if os(iOS) || os(visionOS)
-            let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
-        #else
+        #if canImport(AppKit)
             let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
+        #else
+            let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
         #endif
         canPreviewCache = res
         return res

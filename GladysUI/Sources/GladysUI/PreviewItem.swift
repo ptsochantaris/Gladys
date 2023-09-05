@@ -1,5 +1,5 @@
 import Foundation
-#if os(macOS)
+#if canImport(Quartz)
     import Quartz
 #else
     import QuickLook

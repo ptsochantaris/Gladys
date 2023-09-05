@@ -1,5 +1,7 @@
 import AppKit
 import CloudKit
+import Combine
+import GladysAppKit
 import GladysCommon
 import GladysUI
 import Minions
@@ -67,8 +69,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     override func viewDidLoad() {
         super.viewDidLoad()
         let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(updateInfo), name: .ItemModified, object: representedObject)
-        n.addObserver(self, selector: #selector(updateInfo), name: .IngestComplete, object: representedObject)
         n.addObserver(self, selector: #selector(checkForChanges), name: .ModelDataUpdated, object: nil)
         n.addObserver(self, selector: #selector(foreground(_:)), name: .ForegroundDisplayedItem, object: nil)
         n.addObserver(self, selector: #selector(updateAlwaysOnTop), name: .AlwaysOnTopChanged, object: nil)
@@ -120,6 +120,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     deinit {
         DetailController.showingUUIDs.remove(item.uuid)
+    }
+
+    private var itemObservation: Cancellable?
+    override var representedObject: Any? {
+        didSet {
+            itemObservation = item.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] _ in
+                self?.updateInfo()
+            }
+        }
     }
 
     private var item: ArchivedItem {

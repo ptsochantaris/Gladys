@@ -1,5 +1,6 @@
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import Minions
 import StoreKit
 import UIKit
@@ -118,9 +119,18 @@ final class AboutController: GladysViewController {
         let prev = t[index].text
         t[index].text = "✅"
         view.isUserInteractionEnabled = false
-        tipJar.requestItem(items[index]) {
-            t[index].text = prev
-            self.view.isUserInteractionEnabled = true
+        Task {
+            do {
+                try await tipJar.requestItem(items[index])
+                t[index].text = prev
+                view.isUserInteractionEnabled = true
+
+                await genericAlert(title: "Thank you for supporting Gladys!",
+                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.")
+            } catch {
+                await genericAlert(title: "There was an error completing this operation",
+                                   message: error.localizedDescription)
+            }
         }
     }
 

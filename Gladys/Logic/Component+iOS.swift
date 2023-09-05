@@ -2,6 +2,7 @@ import Contacts
 import ContactsUI
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import MapKit
 import QuickLook
 import UIKit

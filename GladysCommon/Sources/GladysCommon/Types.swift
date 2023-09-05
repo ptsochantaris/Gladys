@@ -1,16 +1,31 @@
 import CloudKit
 import Foundation
+import SwiftUI
 
-#if os(macOS)
-    import Cocoa
+#if canImport(AppKit)
+    import AppKit
     public typealias IMAGE = NSImage
     public typealias COLOR = NSColor
+    public typealias VIEWCLASS = NSView
+    public typealias VRCLASS = NSViewRepresentable
+    public typealias FONT = NSFont
     public let groupName = "X727JSJUGJ.build.bru.MacGladys"
-#else
+#elseif canImport(UIKit)
     import UIKit
     public typealias IMAGE = UIImage
     public typealias COLOR = UIColor
+    #if !os(watchOS)
+        public typealias VIEWCLASS = UIView
+        public typealias VRCLASS = UIViewRepresentable
+    #endif
+    public typealias FONT = UIFont
     public let groupName = "group.build.bru.Gladys"
+#endif
+
+#if os(visionOS)
+    public let cellCornerRadius: CGFloat = 36
+#else
+    public let cellCornerRadius: CGFloat = 18
 #endif
 
 extension IMAGE: @unchecked Sendable {}
@@ -48,7 +63,7 @@ public func modificationDate(for url: URL) -> Date? {
 }
 
 public let appStorageUrl: URL = {
-    #if os(macOS)
+    #if canImport(AppKit)
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
     #else
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("File Provider Storage")

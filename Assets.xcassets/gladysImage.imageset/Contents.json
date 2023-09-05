@@ -1,22 +1,26 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "gladysImage.png"
+      "filename" : "gladysImage.png",
+      "idiom" : "universal"
     },
     {
-      "idiom" : "universal",
-      "filename" : "gladysImageDark.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
           "value" : "dark"
         }
-      ]
+      ],
+      "filename" : "gladysImageDark.png",
+      "idiom" : "universal"
+    },
+    {
+      "filename" : "gladysImage 1.png",
+      "idiom" : "reality"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   }
 }

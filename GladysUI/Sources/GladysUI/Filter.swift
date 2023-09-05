@@ -1,6 +1,6 @@
 import CoreSpotlight
 import Foundation
-#if os(iOS) || os(visionOS)
+#if canImport(UIKit)
     import UIKit
 #endif
 import GladysCommon
@@ -289,8 +289,7 @@ public final class Filter {
             if signalUpdate != .none {
                 delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
 
-                #if os(macOS)
-                #else
+                #if canImport(UIKit)
                     if isFilteringText, UIAccessibility.isVoiceOverRunning {
                         let resultString: String
                         let c = filteredDrops.count

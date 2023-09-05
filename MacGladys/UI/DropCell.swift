@@ -1,7 +1,9 @@
+import GladysAppKit
 import GladysCommon
 import GladysUI
 import MapKit
 import Minions
+import SwiftUI
 
 class FirstMouseView: NSView {
     override final func acceptsFirstMouse(for _: NSEvent?) -> Bool {
@@ -31,131 +33,6 @@ final class FirstMouseImageView: NSImageView {
     }
 }
 
-final class TokenTextField: NSControl {
-    var tintColor = NSColor.g_colorTint
-    private var highlightColor: NSColor { tintColor.withAlphaComponent(0.7) }
-
-    private static let highlightTextKey = NSAttributedString.Key("HighlightText")
-    private static let separator = "   "
-    private static let separatorCount = separator.utf16.count
-
-    var labels: [String]? {
-        didSet {
-            guard let labels, !labels.isEmpty, let font else {
-                attributedStringValue = NSAttributedString()
-                return
-            }
-
-            let p = NSMutableParagraphStyle()
-            p.alignment = alignment
-            p.lineBreakMode = .byWordWrapping
-            p.lineSpacing = 3
-
-            let ls = labels.map { $0.replacingOccurrences(of: " ", with: "\u{a0}") }
-            let joinedLabels = ls.joined(separator: TokenTextField.separator)
-            let string = NSMutableAttributedString(string: joinedLabels, attributes: [
-                .font: font,
-                .foregroundColor: tintColor,
-                .paragraphStyle: p
-            ])
-
-            var start = 0
-            for label in ls {
-                let len = label.utf16.count
-                string.addAttribute(TokenTextField.highlightTextKey, value: 1, range: NSRange(location: start, length: len))
-                start += len + TokenTextField.separatorCount
-            }
-            attributedStringValue = string
-        }
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        guard !attributedStringValue.string.isEmpty, let labels, let context = NSGraphicsContext.current?.cgContext else { return }
-
-        let emptyRange = CFRangeMake(0, 0)
-
-        let insideRect = dirtyRect
-        let framesetter = CTFramesetterCreateWithAttributedString(attributedStringValue)
-        let path = CGPath(rect: insideRect, transform: nil)
-        let totalFrame = CTFramesetterCreateFrame(framesetter, emptyRange, path, nil)
-
-        CTFrameDraw(totalFrame, context)
-
-        if labels.isEmpty {
-            return
-        }
-
-        context.setStrokeColor(highlightColor.cgColor)
-        context.setLineWidth(0.5)
-
-        let lines = CTFrameGetLines(totalFrame) as! [CTLine]
-        var origins = [CGPoint](repeating: .zero, count: lines.count)
-        CTFrameGetLineOrigins(totalFrame, emptyRange, &origins)
-
-        for (line, linePos) in zip(lines, origins) {
-            let lineFrame = CTLineGetBoundsWithOptions(line, .useOpticalBounds)
-            let lineStart = (insideRect.width - lineFrame.width) * 0.5
-
-            for run in CTLineGetGlyphRuns(line) as! [CTRun] {
-                let attributes = CTRunGetAttributes(run) as! [AnyHashable: Any]
-
-                if attributes[TokenTextField.highlightTextKey] == nil {
-                    continue
-                }
-
-                var runBounds = lineFrame
-                runBounds.size.width = CGFloat(CTRunGetImageBounds(run, context, emptyRange).width) + 8
-                runBounds.origin.x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 4
-                runBounds.origin.y = linePos.y - 2.5
-                runBounds = runBounds.insetBy(dx: 1, dy: 0)
-                runBounds.origin.x += 0.5
-                runBounds.size.height += 0.5
-
-                context.addPath(CGPath(roundedRect: runBounds, cornerWidth: 3, cornerHeight: 3, transform: nil))
-            }
-        }
-
-        context.strokePath()
-    }
-}
-
-final class MiniMapView: FirstMouseView {
-    private var snapshotOptions = Images.SnapshotOptions(coordinate: kCLLocationCoordinate2DInvalid, range: 200, outputSize: CGSize(width: 512, height: 512))
-
-    func show(location: MKMapItem) {
-        let newCoordinate = location.placemark.coordinate
-        if snapshotOptions.coordinate == newCoordinate { return }
-        snapshotOptions.coordinate = newCoordinate
-
-        let cacheKey = "\(newCoordinate.latitude) \(newCoordinate.longitude)"
-        if let existingImage = Images.shared[cacheKey] {
-            layer?.contents = existingImage
-            return
-        }
-
-        layer?.contents = nil
-
-        Task {
-            if let snapshot = try? await Images.shared.mapSnapshot(with: snapshotOptions) {
-                Images.shared[cacheKey] = snapshot
-                layer?.contents = snapshot
-            }
-        }
-    }
-
-    init(at location: MKMapItem) {
-        super.init(frame: .zero)
-        wantsLayer = true
-        layer?.contentsGravity = .resizeAspectFill
-        show(location: location)
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 final class ColourView: FirstMouseView {}
 
 extension NSMenu {
@@ -167,61 +44,44 @@ extension NSMenu {
 }
 
 final class DropCell: NSCollectionViewItem, NSMenuDelegate {
-    @IBOutlet private var topLabel: NSTextField!
-    @IBOutlet private var bottomLabel: NSTextField!
-    @IBOutlet private var image: FirstMouseView!
-    @IBOutlet private var progressView: NSProgressIndicator!
-    @IBOutlet private var cancelButton: NSButton!
-    @IBOutlet private var lockImage: NSImageView!
-    @IBOutlet private var labelTokenField: TokenTextField!
-    @IBOutlet private var sharedIcon: NSImageView!
-    @IBOutlet private var bottomStackView: NSStackView!
-    @IBOutlet private var copiedLabel: NSTextField!
-
     private var existingPreviewView: FirstMouseView?
 
     private var hostGladysController: ViewController {
         view.window!.gladysController!
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    private let itemViewController = NSHostingController(rootView: ItemView())
 
-        image.layer?.cornerRadius = 5
+    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        let menu = NSMenu()
+        menu.delegate = self
+        view.menu = menu
 
-        view.layer?.cornerRadius = 10
+        view.clipsToBounds = false
+        view.wantsLayer = true
+        view.layer?.shouldRasterize = true
 
-        view.menu = NSMenu()
-        view.menu?.delegate = self
-
-        isSelected = false
+        itemViewController.view.clipsToBounds = false
+        itemViewController.view.layer?.cornerRadius = cellCornerRadius
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        #notifications(for: .ItemModified) { notification in
-            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                archivedDropItem = item
-            }
-            return true
-        }
-
-        #notifications(for: .IngestComplete) { notification in
-            if let item = notification.object as? ArchivedItem, item == archivedDropItem {
-                archivedDropItem = item
-            }
-            return true
-        }
+    required init?(coder _: NSCoder) {
+        abort()
     }
 
-    private var reDecorateNeeded = false
+    private var lastLayout = CGSize.zero
 
     override func viewWillLayout() {
-        if reDecorateNeeded {
-            reDecorateNeeded = false
-            reDecorate()
+        if lastLayout != view.bounds.size {
+            if itemViewController.parent == nil {
+                hostGladysController.addChildController(itemViewController, to: view)
+            }
+            itemViewController.rootView.setItem(archivedDropItem, for: view.bounds.size, style: .square)
+            lastLayout = view.bounds.size
         }
+        view.layer?.rasterizationScale = view.window?.screen?.backingScaleFactor ?? 1
+
         super.viewWillLayout()
     }
 
@@ -234,9 +94,13 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
     }
 
+    override func loadView() {
+        view = NSView()
+    }
+
     private weak var archivedDropItem: ArchivedItem? {
         didSet {
-            reDecorateNeeded = true
+            lastLayout = .zero
             view.needsLayout = true
         }
     }
@@ -251,220 +115,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         view.cacheDisplay(in: bounds, to: rep)
         img.addRepresentation(rep)
         return img
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        image.flatColor()
-    }
-
-    private func setHighlightColor(_ highlightColor: ItemColor, highlightBottomLabel: Bool) {
-        (view as? FirstMouseView)?.bgColor = highlightColor.bgColor
-        topLabel.textColor = highlightColor.fgColor
-        bottomLabel.textColor = highlightBottomLabel ? highlightColor.tintColor : highlightColor.fgColor
-        labelTokenField.tintColor = highlightColor.tintColor
-    }
-
-    private func reDecorate() {
-        let item = archivedDropItem
-
-        var wantColourView = false
-        var wantMapView = false
-        var hideCancel = true
-        var hideSpinner = true
-        var hideImage = true
-        var hideLock = true
-        var hideLabels = true
-        var share = ArchivedItem.ShareMode.none
-
-        var topLabelText = ""
-        var topLabelAlignment = NSTextAlignment.center
-
-        var bottomLabelText = ""
-        var bottomLabelAlignment = NSTextAlignment.center
-
-        image.flatColor()
-
-        if let item {
-            if item.shouldDisplayLoading {
-                progressView.startAnimation(nil)
-                hideCancel = item.needsReIngest
-                hideSpinner = false
-                setHighlightColor(.none, highlightBottomLabel: false)
-
-            } else if item.flags.contains(.needsUnlock) {
-                progressView.stopAnimation(nil)
-                hideLock = false
-                bottomLabelAlignment = .center
-                bottomLabelText = item.lockHint ?? ""
-                share = item.shareMode
-                setHighlightColor(.none, highlightBottomLabel: false)
-
-            } else {
-                progressView.stopAnimation(nil)
-                var bottomLabelHighlight = false
-                hideImage = false
-                share = item.shareMode
-                let cacheKey = item.imageCacheKey
-                if let cachedImage = Images.shared[cacheKey] {
-                    image.layer?.contents = cachedImage
-                } else {
-                    let u1 = item.uuid
-                    Task.detached {
-                        let img = item.displayIcon
-                        let final = img.isTemplate ? img.template(with: NSColor.g_colorTint) : img
-                        Images.shared[cacheKey] = final
-                        await MainActor.run { [weak self] in
-                            guard let self else { return }
-                            if let latestItemUuid = archivedDropItem?.uuid, u1 == latestItemUuid {
-                                image.layer?.contents = final
-                                image.updateLayer()
-                            }
-                        }
-                    }
-                }
-
-                let primaryLabel: NSTextField
-                let secondaryLabel: NSTextField
-
-                let titleInfo = item.displayText
-                topLabelAlignment = titleInfo.1
-                topLabelText = titleInfo.0 ?? ""
-
-                if PersistedOptions.displayNotesInMainView, !item.note.isEmpty {
-                    bottomLabelText = item.note
-                    bottomLabelHighlight = true
-                } else if let url = item.associatedWebURL {
-                    bottomLabelText = url.absoluteString
-                    if topLabelText == bottomLabelText {
-                        topLabelText = ""
-                    }
-                }
-
-                if PersistedOptions.displayLabelsInMainView, !item.labels.isEmpty {
-                    hideLabels = false
-                }
-
-                if bottomLabelText.isEmpty, !topLabelText.isEmpty {
-                    bottomLabelText = topLabelText
-                    bottomLabelAlignment = topLabelAlignment
-                    topLabelText = ""
-
-                    primaryLabel = bottomLabel
-                    secondaryLabel = topLabel
-                } else {
-                    primaryLabel = topLabel
-                    secondaryLabel = bottomLabel
-                }
-
-                switch item.displayMode {
-                case .center:
-                    image.layer?.contentsGravity = .center
-                    primaryLabel.maximumNumberOfLines = 6
-                    secondaryLabel.maximumNumberOfLines = 2
-                case .fill:
-                    image.layer?.contentsGravity = .resizeAspectFill
-                    primaryLabel.maximumNumberOfLines = 6
-                    secondaryLabel.maximumNumberOfLines = 2
-                case .fit:
-                    image.layer?.contentsGravity = .resizeAspect
-                    primaryLabel.maximumNumberOfLines = 6
-                    secondaryLabel.maximumNumberOfLines = 2
-                case .circle:
-                    image.layer?.contentsGravity = .resizeAspectFill
-                    primaryLabel.maximumNumberOfLines = 6
-                    secondaryLabel.maximumNumberOfLines = 2
-                }
-
-                // if we're showing an icon, let's try to enhance things a bit
-                if image.layer?.contentsGravity == .center, let backgroundItem = item.backgroundInfoObject {
-                    if let mapItem = backgroundItem as? MKMapItem {
-                        wantMapView = true
-                        if let m = existingPreviewView as? MiniMapView {
-                            m.show(location: mapItem)
-                        } else {
-                            if let m = existingPreviewView {
-                                m.removeFromSuperview()
-                            }
-                            let m = MiniMapView(at: mapItem)
-                            m.translatesAutoresizingMaskIntoConstraints = false
-                            image.addSubview(m)
-                            NSLayoutConstraint.activate([
-                                m.leadingAnchor.constraint(equalTo: image.leadingAnchor),
-                                m.trailingAnchor.constraint(equalTo: image.trailingAnchor),
-                                m.topAnchor.constraint(equalTo: image.topAnchor),
-                                m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
-                            ])
-
-                            existingPreviewView = m
-                        }
-                    } else if let colourItem = backgroundItem as? NSColor {
-                        wantColourView = true
-                        if let m = existingPreviewView as? ColourView {
-                            m.layer?.backgroundColor = colourItem.cgColor
-                        } else {
-                            if let m = existingPreviewView {
-                                m.removeFromSuperview()
-                            }
-                            let m = ColourView()
-                            m.wantsLayer = true
-                            m.layer?.backgroundColor = colourItem.cgColor
-                            m.translatesAutoresizingMaskIntoConstraints = false
-                            image.addSubview(m)
-                            NSLayoutConstraint.activate([
-                                m.leadingAnchor.constraint(equalTo: image.leadingAnchor),
-                                m.trailingAnchor.constraint(equalTo: image.trailingAnchor),
-                                m.topAnchor.constraint(equalTo: image.topAnchor),
-                                m.bottomAnchor.constraint(equalTo: image.bottomAnchor)
-                            ])
-
-                            existingPreviewView = m
-                        }
-                    }
-                }
-                setHighlightColor(item.highlightColor, highlightBottomLabel: bottomLabelHighlight)
-            }
-
-        } else { // item is nil
-            progressView.stopAnimation(nil)
-            setHighlightColor(.none, highlightBottomLabel: false)
-        }
-
-        if !(wantMapView || wantColourView), let e = existingPreviewView {
-            e.removeFromSuperview()
-            existingPreviewView = nil
-        }
-
-        labelTokenField.isHidden = hideLabels
-        labelTokenField.labels = item?.labels
-
-        topLabel.stringValue = topLabelText
-        topLabel.isHidden = topLabelText.isEmpty
-        topLabel.alignment = topLabelAlignment
-
-        let hideBottomLabel = bottomLabelText.isEmpty
-        bottomLabel.stringValue = bottomLabelText
-        bottomLabel.isHidden = hideBottomLabel
-        bottomLabel.alignment = bottomLabelAlignment
-
-        image.isHidden = hideImage
-        cancelButton.isHidden = hideCancel
-        progressView.isHidden = hideSpinner
-        lockImage.isHidden = hideLock
-
-        switch share {
-        case .none:
-            sharedIcon.isHidden = true
-            bottomStackView.isHidden = hideBottomLabel
-        case .elsewhereReadOnly, .elsewhereReadWrite:
-            sharedIcon.contentTintColor = NSColor.systemGray
-            sharedIcon.isHidden = false
-            bottomStackView.isHidden = false
-        case .sharing:
-            sharedIcon.contentTintColor = NSColor.g_colorTint
-            sharedIcon.isHidden = false
-            bottomStackView.isHidden = false
-        }
     }
 
     @objc private func infoSelected() {
@@ -586,13 +236,13 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
 
     override var isSelected: Bool {
         didSet {
-            guard let l = view.layer else { return }
+            guard let l = itemViewController.view.layer else { return }
             if isSelected {
                 l.borderColor = NSColor.g_colorTint.cgColor
                 l.borderWidth = 3
             } else {
-                l.borderColor = NSColor.labelColor.withAlphaComponent(0.2).cgColor
-                l.borderWidth = 1.0 / (NSScreen.main?.backingScaleFactor ?? 1)
+                l.borderColor = .clear
+                l.borderWidth = 0
             }
         }
     }
@@ -616,11 +266,6 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             switch action {
             case .copy:
                 copySelected()
-                copiedLabel.animator().isHidden = false
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
-                    copiedLabel.animator().isHidden = true
-                }
             case .infoPanel:
                 infoSelected()
             case .open:

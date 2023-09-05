@@ -74,7 +74,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     private lazy var dataSource = NSCollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { _, _, archivedItem in
-        let item = DropCell(nibName: "DropCell", bundle: nil)
+        let item = DropCell()
         item.representedObject = DropStore.item(uuid: archivedItem.uuid)
         return item
     }
@@ -124,12 +124,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         #notifications(for: NSScroller.preferredScrollerStyleDidChangeNotification) { _ in
             handleLayout()
-            return true
-        }
-
-        #notifications(for: .IngestComplete) { notification in
-            guard let item = notification.object as? ArchivedItem else { return true }
-            itemIngested(item)
             return true
         }
 
@@ -252,16 +246,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         w.standardWindowButton(.miniaturizeButton)?.isHidden = true
         w.standardWindowButton(.zoomButton)?.isHidden = true
         updateScrollviewInsets()
-    }
-
-    private func itemIngested(_ item: ArchivedItem) {
-        if DropStore.doneIngesting {
-            Task {
-                await Model.save()
-            }
-        } else {
-            Model.commitItem(item: item)
-        }
     }
 
     func collectionView(_: NSCollectionView, didSelectItemsAt _: Set<IndexPath>) {

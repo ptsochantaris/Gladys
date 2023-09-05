@@ -1,7 +1,13 @@
 import GladysCommon
+import GladysUI
+import GladysUIKit
 import Minions
 import NotificationCenter
 import UIKit
+
+extension Notification.Name {
+    static let OpenParentApp = Notification.Name("OpenParentApp")
+}
 
 final class TodayViewController: UIViewController, NCWidgetProviding, UICollectionViewDelegate,
     UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
@@ -23,8 +29,10 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TodayCell", for: indexPath) as! TodayCell
-        cell.dropItem = DropStore.visibleDrops[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CommonItemCell", for: indexPath) as! CommonItemCell
+        cell.style = .widget
+        cell.owningViewController = self
+        cell.archivedDropItem = DropStore.visibleDrops[indexPath.item]
         return cell
     }
 
@@ -149,7 +157,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, UICollecti
     }
 
     private func dragParameters(for indexPath: IndexPath) -> UIDragPreviewParameters? {
-        if let cell = itemsView.cellForItem(at: indexPath) as? TodayCell, let b = cell.backgroundView {
+        if let cell = itemsView.cellForItem(at: indexPath) as? CommonItemCell, let b = cell.backgroundView {
             let corner = b.layer.cornerRadius
             let path = UIBezierPath(roundedRect: b.frame, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: corner, height: corner))
             let params = UIDragPreviewParameters()

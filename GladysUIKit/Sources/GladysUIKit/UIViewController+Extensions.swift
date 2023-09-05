@@ -1,10 +1,10 @@
 import UIKit
 
-protocol WindowSizing {
+public protocol WindowSizing {
     func sizeWindow()
 }
 
-extension UIViewController {
+public extension UIViewController {
     var sizingHolder: WindowSizing? {
         if let found = self as? WindowSizing {
             return found

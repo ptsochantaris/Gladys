@@ -31,15 +31,17 @@ public enum Model {
         dataFileLastModified = .distantPast
     }
 
-    public static func reloadDataIfNeeded() async {
+    public static func reloadDataIfNeeded() async throws {
         await storageGatekeeper.takeTicket()
-        await Task.detached {
-            _reloadDataIfNeeded()
-            storageGatekeeper.returnTicket()
+        try await Task.detached {
+            defer {
+                storageGatekeeper.returnTicket()
+            }
+            try _reloadDataIfNeeded()
         }.value
     }
 
-    private nonisolated static func _reloadDataIfNeeded() {
+    private nonisolated static func _reloadDataIfNeeded() throws {
         if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
             return
@@ -93,14 +95,10 @@ public enum Model {
         }
 
         if let loadingError {
-            Task {
-                await handleLoadingError(loadingError)
-            }
+            try handleLoadingError(loadingError)
 
         } else if let coordinationError {
-            Task {
-                await handleCoordinationError(coordinationError)
-            }
+            try handleCoordinationError(coordinationError)
         }
     }
 
@@ -137,7 +135,7 @@ public enum Model {
         return ContiguousArray(store.compactMap { $0 })
     }
 
-    private static func loadInitialData() {
+    private static func loadInitialData() throws {
         var coordinationError: NSError?
         var loadingError: NSError?
 
@@ -164,10 +162,10 @@ public enum Model {
         }
 
         if let loadingError {
-            handleLoadingError(loadingError)
+            try handleLoadingError(loadingError)
 
         } else if let coordinationError {
-            handleCoordinationError(coordinationError)
+            try handleCoordinationError(coordinationError)
 
         } else {
             trimTemporaryDirectory()
@@ -176,28 +174,18 @@ public enum Model {
         }
     }
 
-    private static func handleLoadingError(_ error: NSError) {
+    private nonisolated static func handleLoadingError(_ error: NSError) throws {
         brokenMode = true
         log("Error while loading: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
-        Task {
-            await genericAlert(title: "Loading Error (code \(finalError.code))",
-                               message: "This app's data store is not yet accessible. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(error.domain): \(error.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                               buttonTitle: "Quit")
-            abort()
-        }
+        throw GladysError.modelLoadingError(finalError)
     }
 
-    private static func handleCoordinationError(_ error: NSError) {
+    private nonisolated static func handleCoordinationError(_ error: NSError) throws {
         brokenMode = true
         log("Error in file coordinator: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
-        Task {
-            await genericAlert(title: "Loading Error (code \(finalError.code))",
-                               message: "Could not communicate with an extension. If you keep getting this error, please restart your device, as the system may not have finished updating some components yet.\n\nThe message from the system is:\n\n\(error.domain): \(error.localizedDescription)\n\nIf this error persists, please report it to the developer.",
-                               buttonTitle: "Quit")
-            abort()
-        }
+        throw GladysError.modelCoordinationError(finalError)
     }
 
     public static func resetEverything() {
@@ -288,8 +276,8 @@ public enum Model {
     private static let indexProxy = IndexProxy()
     private static let indexDelegate = Indexer(itemProvider: indexProxy)
 
-    public static func setup() {
-        loadInitialData()
+    public static func setup() throws {
+        try loadInitialData()
         CSSearchableIndex.default().indexDelegate = indexDelegate
 
         // migrate if needed

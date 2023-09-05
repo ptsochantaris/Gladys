@@ -31,7 +31,6 @@
 		1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
-		16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16219A0124E0108E006ED18A /* KeyboardCell.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
 		162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289C7207D0D6900DAC6A2 /* HelpController.swift */; };
 		162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */; };
@@ -68,7 +67,6 @@
 		1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */; };
 		1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */; };
 		1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C31FD4329300EC480D /* MessageCell.swift */; };
 		1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165A8F0821AA92D300405701 /* PlistEditor.swift */; };
 		165B970425CD884000E73E2D /* Component+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* Component+Intents.swift */; };
@@ -84,13 +82,15 @@
 		16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16797EA42AA294E80053AD5F /* VisionSettingsController.swift */; };
 		167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */; };
 		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
-		16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
+		168810F72AB0E8C400988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810F62AB0E8C400988232 /* GladysUIKit */; };
+		168810F92AB0E8D700988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810F82AB0E8D700988232 /* GladysUIKit */; };
+		168810FB2AB0E91300988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FA2AB0E91300988232 /* GladysUIKit */; };
+		168810FD2AB0E91B00988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FC2AB0E91B00988232 /* GladysUIKit */; };
+		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
-		1689646229903BD0009D7D01 /* GladysUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1689646129903BD0009D7D01 /* GladysUI */; };
-		1689646429903BD9009D7D01 /* GladysUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1689646329903BD9009D7D01 /* GladysUI */; };
 		1689646629903DFA009D7D01 /* WatchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646529903DFA009D7D01 /* WatchDelegate.swift */; };
 		1689646829903EDF009D7D01 /* Model+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646729903EDF009D7D01 /* Model+iOS.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
@@ -103,16 +103,13 @@
 		168DFB1420B8852D002C603D /* MacGladysHelper.app in Embed Helper */ = {isa = PBXBuildFile; fileRef = 168DFAFE20B85F3D002C603D /* MacGladysHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169D54B320B85026004E518E /* ServiceManagement.framework */; };
 		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
-		168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168FE05C20952E4D00E740E9 /* DropCell.xib */; };
 		168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0602095B3C900E740E9 /* DropCell.swift */; };
 		168FE0632095D16800E740E9 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0622095D16800E740E9 /* Preferences.swift */; };
 		16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */; };
-		16950FFF2987F4B300F0CEE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16950FFE2987F4B300F0CEE6 /* GladysCommon */; };
 		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
 		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
 		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
 		16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB11FB0F309007B2F77 /* TodayCell.swift */; };
 		16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
@@ -132,8 +129,6 @@
 		16A9250D2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
 		16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
 		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
-		16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */; };
-		16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
 		16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */; };
@@ -141,26 +136,16 @@
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
-		16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
 		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
-		16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
-		16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */; };
-		16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993D2987DF40002286B1 /* GladysCommon */; };
 		16C299402987E475002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2993F2987E475002286B1 /* GladysCommon */; };
 		16C299422987E484002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299412987E484002286B1 /* GladysCommon */; };
-		16C299442987E492002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299432987E492002286B1 /* GladysCommon */; };
-		16C299462987E4A8002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299452987E4A8002286B1 /* GladysCommon */; };
-		16C299482987E52C002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299472987E52C002286B1 /* GladysCommon */; };
 		16C2994A2987E53A002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299492987E53A002286B1 /* GladysCommon */; };
 		16C2994C2987E56B002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2994B2987E56B002286B1 /* GladysCommon */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
-		16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
-		16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */; };
 		16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */; };
 		16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7A91F72579E00CD1C11 /* gladysIcon320.png */; };
@@ -194,7 +179,6 @@
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16EDB3771F2361EB001CC65C /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* SortOption.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
-		16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16836EA82379598300985EA6 /* UIScene+Extensions.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
@@ -383,7 +367,6 @@
 		1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSectionTitle.swift; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
-		16219A0124E0108E006ED18A /* KeyboardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardCell.swift; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
 		162289C7207D0D6900DAC6A2 /* HelpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
 		162383F320F969650086E719 /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
@@ -422,7 +405,6 @@
 		1657B8B21FD41C1C00EC480D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		1657B8B61FD41C1C00EC480D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1657B8C21FD4248800EC480D /* GladysMessage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysMessage.entitlements; sourceTree = "<group>"; };
-		1657B8C31FD4329300EC480D /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Messages.swift"; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
 		1660C0252465C32000ABFDFD /* Singleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
@@ -439,9 +421,10 @@
 		16797EA42AA294E80053AD5F /* VisionSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionSettingsController.swift; sourceTree = "<group>"; };
 		167A9537209D01D5002D99B6 /* LabelSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelectionViewController.swift; sourceTree = "<group>"; };
 		167ABECA1F77D3C30075E0E8 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
-		16836EA82379598300985EA6 /* UIScene+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScene+Extensions.swift"; sourceTree = "<group>"; };
 		1686E7EF233D0D9C0012BA63 /* TouchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchBar.swift; sourceTree = "<group>"; };
 		1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysFilePromiseProvider.swift; sourceTree = "<group>"; };
+		168810F42AB0E7C200988232 /* GladysUIKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysUIKit; sourceTree = "<group>"; };
+		168810F52AB0E7C200988232 /* GladysAppKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysAppKit; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchHolder.swift; sourceTree = "<group>"; };
 		1689646029903B66009D7D01 /* GladysUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysUI; sourceTree = "<group>"; };
@@ -458,7 +441,6 @@
 		168DFB0A20B85F3D002C603D /* MacGladysHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysHelper.entitlements; sourceTree = "<group>"; };
 		168DFB0E20B85F84002C603D /* LauncherCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherCommon.swift; sourceTree = "<group>"; };
 		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		168FE05C20952E4D00E740E9 /* DropCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropCell.xib; sourceTree = "<group>"; };
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -466,7 +448,6 @@
 		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
 		16969BA21FB0E41E007B2F77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		16969BA41FB0E41E007B2F77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		16969BB11FB0F309007B2F77 /* TodayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCell.swift; sourceTree = "<group>"; };
 		16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysToday.entitlements; sourceTree = "<group>"; };
 		16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Copy.swift"; sourceTree = "<group>"; };
 		16969BB91FB10A58007B2F77 /* Component+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Copy.swift"; sourceTree = "<group>"; };
@@ -488,8 +469,6 @@
 		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
-		16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ArchivedItemCell.xib; path = Gladys/ArchivedItemCell.xib; sourceTree = "<group>"; };
-		16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = WideArchivedItemCell.xib; path = Gladys/WideArchivedItemCell.xib; sourceTree = "<group>"; };
 		16AED98721B4373D0049E433 /* NotesEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditorViewController.swift; sourceTree = "<group>"; };
 		16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
 		16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Keyhive.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -501,9 +480,7 @@
 		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16BDAF24283893FB00B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
 		16BDAF27283895B600B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Detail.storyboard; sourceTree = "<group>"; };
-		16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
-		16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAccessories.swift; sourceTree = "<group>"; };
 		16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCell.swift; sourceTree = "<group>"; };
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
@@ -546,8 +523,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */,
-				16C2993E2987DF40002286B1 /* GladysCommon in Frameworks */,
-				1689646229903BD0009D7D01 /* GladysUI in Frameworks */,
+				168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */,
 				168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */,
 				168DFB1720B88584002C603D /* ServiceManagement.framework in Frameworks */,
 			);
@@ -583,7 +559,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1657B8AD1FD41C1C00EC480D /* Messages.framework in Frameworks */,
-				16C299442987E492002286B1 /* GladysCommon in Frameworks */,
+				168810FB2AB0E91300988232 /* GladysUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,8 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
-				1689646429903BD9009D7D01 /* GladysUI in Frameworks */,
-				16950FFF2987F4B300F0CEE6 /* GladysCommon in Frameworks */,
+				168810F72AB0E8C400988232 /* GladysUIKit in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -609,8 +584,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				168810F92AB0E8D700988232 /* GladysUIKit in Frameworks */,
 				16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */,
-				16C299462987E4A8002286B1 /* GladysCommon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,7 +593,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16C299482987E52C002286B1 /* GladysCommon in Frameworks */,
+				168810FD2AB0E91B00988232 /* GladysUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,7 +699,6 @@
 			children = (
 				1657B8C21FD4248800EC480D /* GladysMessage.entitlements */,
 				1657B8AF1FD41C1C00EC480D /* MessagesViewController.swift */,
-				1657B8C31FD4329300EC480D /* MessageCell.swift */,
 				1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */,
 				169E5E051FE0851A00CCE984 /* Component+Messages.swift */,
 				1657B8B11FD41C1C00EC480D /* MainInterface.storyboard */,
@@ -736,6 +710,8 @@
 		1678F9C41EF475FE005697CB = {
 			isa = PBXGroup;
 			children = (
+				168810F52AB0E7C200988232 /* GladysAppKit */,
+				168810F42AB0E7C200988232 /* GladysUIKit */,
 				16B69DFC2A9FAE8600FC96C9 /* Minions */,
 				1689646029903B66009D7D01 /* GladysUI */,
 				16A4354429787B73005B8CE6 /* GladysCommon */,
@@ -798,9 +774,7 @@
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
 				1689646729903EDF009D7D01 /* Model+iOS.swift */,
 				16EDB3761F2361EB001CC65C /* SortOption.swift */,
-				16836EA82379598300985EA6 /* UIScene+Extensions.swift */,
 				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
-				16C17A692374D48A006CB171 /* UIViewController+Extensions.swift */,
 				1689646529903DFA009D7D01 /* WatchDelegate.swift */,
 			);
 			path = Logic;
@@ -822,7 +796,6 @@
 			isa = PBXGroup;
 			children = (
 				161718CC2094D334005ABD6C /* Main.storyboard */,
-				168FE05C20952E4D00E740E9 /* DropCell.xib */,
 				168D2CAE209E0770005041CF /* ComponentCell.xib */,
 				168FE0602095B3C900E740E9 /* DropCell.swift */,
 				168FE0622095D16800E740E9 /* Preferences.swift */,
@@ -875,7 +848,6 @@
 			children = (
 				16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */,
 				16969BA41FB0E41E007B2F77 /* Info.plist */,
-				16969BB11FB0F309007B2F77 /* TodayCell.swift */,
 				16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */,
 				16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */,
 			);
@@ -902,7 +874,6 @@
 				16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */,
 				16B2AA3C24DF42B5004F3FC2 /* Info.plist */,
 				16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */,
-				16219A0124E0108E006ED18A /* KeyboardCell.swift */,
 				16B2AA3A24DF42B5004F3FC2 /* KeyboardViewController.swift */,
 			);
 			path = GladysKeys;
@@ -934,7 +905,6 @@
 				16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */,
 				165173021F99483E006CAF0A /* GladysViewController.swift */,
 				162289B3207CC72600DAC6A2 /* CallbackSupport.swift */,
-				16C3A2CB20AF740F00A04F10 /* CellAccessories.swift */,
 				16CA7AA0236F880C00F96699 /* SceneDelegate.swift */,
 				1660C0252465C32000ABFDFD /* Singleton.swift */,
 				16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */,
@@ -992,8 +962,6 @@
 				1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */,
 				1605A7A91F72579E00CD1C11 /* gladysIcon320.png */,
 				1678F9D71EF475FF005697CB /* Assets.xcassets */,
-				16AB848C2671F4670015ADE4 /* ArchivedItemCell.xib */,
-				16AB848E2671F4B40015ADE4 /* WideArchivedItemCell.xib */,
 				16BDAF26283895B600B3EEF3 /* Detail.storyboard */,
 				1678F9D91EF475FF005697CB /* LaunchScreen.storyboard */,
 				16D2C7141EF5A744009B97F9 /* Main.storyboard */,
@@ -1055,8 +1023,7 @@
 			name = MacGladys;
 			packageProductDependencies = (
 				16C12FBF28AE494C00E9EB04 /* HotKey */,
-				16C2993D2987DF40002286B1 /* GladysCommon */,
-				1689646129903BD0009D7D01 /* GladysUI */,
+				168810FE2AB0EBBB00988232 /* GladysAppKit */,
 			);
 			productName = MacGladys;
 			productReference = 161718C42094D333005ABD6C /* Gladys.app */;
@@ -1136,7 +1103,7 @@
 			);
 			name = GladysMessage;
 			packageProductDependencies = (
-				16C299432987E492002286B1 /* GladysCommon */,
+				168810FA2AB0E91300988232 /* GladysUIKit */,
 			);
 			productName = GladysMessage;
 			productReference = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */;
@@ -1168,8 +1135,7 @@
 			);
 			name = Gladys;
 			packageProductDependencies = (
-				16950FFE2987F4B300F0CEE6 /* GladysCommon */,
-				1689646329903BD9009D7D01 /* GladysUI */,
+				168810F62AB0E8C400988232 /* GladysUIKit */,
 			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
@@ -1208,7 +1174,7 @@
 			);
 			name = GladysToday;
 			packageProductDependencies = (
-				16C299452987E4A8002286B1 /* GladysCommon */,
+				168810F82AB0E8D700988232 /* GladysUIKit */,
 			);
 			productName = GladysToday;
 			productReference = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */;
@@ -1249,7 +1215,7 @@
 			);
 			name = GladysKeys;
 			packageProductDependencies = (
-				16C299472987E52C002286B1 /* GladysCommon */,
+				168810FC2AB0E91B00988232 /* GladysUIKit */,
 			);
 			productName = GladysKeys;
 			productReference = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */;
@@ -1445,7 +1411,6 @@
 			files = (
 				168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */,
 				161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */,
-				168FE05D20952E4D00E740E9 /* DropCell.xib in Resources */,
 				161718CE2094D334005ABD6C /* Main.storyboard in Resources */,
 				166EEC9A23645391000BE78A /* Media.xcassets in Resources */,
 				16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */,
@@ -1495,11 +1460,9 @@
 				16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */,
 				16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
-				16AB848D2671F4670015ADE4 /* ArchivedItemCell.xib in Resources */,
 				162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */,
 				16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
-				16AB848F2671F4B40015ADE4 /* WideArchivedItemCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1675,8 +1638,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
-				16F31BC224DD4E5B005AB560 /* UIScene+Extensions.swift in Sources */,
-				16C17A6B2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
 				16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
@@ -1699,9 +1660,7 @@
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
 				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
-				1657B8C41FD4329300EC480D /* MessageCell.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
-				16C3A2CE20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1728,7 +1687,6 @@
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				1689646629903DFA009D7D01 /* WatchDelegate.swift in Sources */,
 				16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */,
-				16C3A2CC20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
@@ -1736,7 +1694,6 @@
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
-				16836EA92379598300985EA6 /* UIScene+Extensions.swift in Sources */,
 				162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */,
 				163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
@@ -1765,7 +1722,6 @@
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
-				16C17A6A2374D48A006CB171 /* UIViewController+Extensions.swift in Sources */,
 				1636CCAF28D0FBD4002175B8 /* GladysAppIntents.swift in Sources */,
 				16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
@@ -1786,12 +1742,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16969BB21FB0F309007B2F77 /* TodayCell.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
 				16A9250C2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
-				16C3A2CD20AF740F00A04F10 /* CellAccessories.swift in Sources */,
 				1602F32B2030E60F0036E2B0 /* UIView+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1813,13 +1767,11 @@
 			files = (
 				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
-				16B2AA5824DF49AF004F3FC2 /* CellAccessories.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
 				16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
-				16219A0224E0108E006ED18A /* KeyboardCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2166,6 +2118,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2308,6 +2261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2723,17 +2677,25 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1689646129903BD0009D7D01 /* GladysUI */ = {
+		168810F62AB0E8C400988232 /* GladysUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = GladysUI;
+			productName = GladysUIKit;
 		};
-		1689646329903BD9009D7D01 /* GladysUI */ = {
+		168810F82AB0E8D700988232 /* GladysUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = GladysUI;
+			productName = GladysUIKit;
 		};
-		16950FFE2987F4B300F0CEE6 /* GladysCommon */ = {
+		168810FA2AB0E91300988232 /* GladysUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
+			productName = GladysUIKit;
+		};
+		168810FC2AB0E91B00988232 /* GladysUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysUIKit;
+		};
+		168810FE2AB0EBBB00988232 /* GladysAppKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysAppKit;
 		};
 		16A4355529788DB1005B8CE6 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2744,27 +2706,11 @@
 			package = 16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */;
 			productName = HotKey;
 		};
-		16C2993D2987DF40002286B1 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
 		16C2993F2987E475002286B1 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};
 		16C299412987E484002286B1 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16C299432987E492002286B1 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16C299452987E4A8002286B1 /* GladysCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysCommon;
-		};
-		16C299472987E52C002286B1 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};

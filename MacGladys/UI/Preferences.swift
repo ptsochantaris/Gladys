@@ -1,5 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
+import GladysAppKit
 import GladysCommon
 import GladysUI
 import Minions
@@ -470,11 +471,11 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                             action: "Turn Off Sync",
                             cancel: "Cancel") { confirmed in if confirmed { self.deactivationConfirmed() } else { self.abortDeactivate() } }
                 } else {
-                    await CloudManager.proceedWithDeactivation()
+                    self.deactivationConfirmed()
                 }
             } else {
                 if DropStore.allDrops.isEmpty {
-                    await CloudManager.startActivation()
+                    activationConfirmed()
                 } else {
                     let contentSize = await DropStore.sizeInBytes()
                     let contentSizeString = ByteCountFormatter().string(fromByteCount: contentSize)
@@ -482,9 +483,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                  action: "Proceed", cancel: "Cancel") { confirmed in
                         if confirmed {
-                            Task {
-                                await CloudManager.startActivation()
-                            }
+                            self.activationConfirmed()
                         } else {
                             self.abortActivate()
                         }
@@ -494,9 +493,24 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         }
     }
 
+    private func activationConfirmed() {
+        Task {
+            do {
+                try await CloudManager.startActivation()
+            } catch {
+                let offerSettings = (error as? GladysError)?.suggestSettings ?? false
+                await genericAlert(title: "Could not activate", message: error.localizedDescription, offerSettingsShortcut: offerSettings)
+            }
+        }
+    }
+
     private func deactivationConfirmed() {
-        Task { @MainActor in
-            await CloudManager.proceedWithDeactivation()
+        Task {
+            do {
+                try await CloudManager.proceedWithDeactivation()
+            } catch {
+                await genericAlert(title: "Could not deactivate", message: error.localizedDescription)
+            }
         }
     }
 

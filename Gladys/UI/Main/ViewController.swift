@@ -1,11 +1,12 @@
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import Lista
 import Minions
 import PopTimer
 import UIKit
 
-final class ViewController: GladysViewController, UICollectionViewDelegate,
+final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate {
     @IBOutlet private var collection: UICollectionView!
@@ -458,6 +459,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         }
     }
 
+    func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for ip in indexPaths {
+            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid {
+                DropStore.item(uuid: uuid)?.queueWarmup()
+            }
+        }
+    }
+
     private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
         var observation: NSKeyValueObservation?
         observation = cell.observe(\.center, options: .new) { strongCell, _ in
@@ -668,25 +677,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let archivedItemCellNib = UINib(nibName: "ArchivedItemCell", bundle: nil)
-        let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: archivedItemCellNib) { [unowned self] cell, _, identifier in
-            cell.wideCell = false
+        let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier> { [unowned self] cell, _, identifier in
+            cell.wideCell = PersistedOptions.wideMode
             cell.lowMemoryMode = lowMemoryMode
-            cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
-            cell.isEditing = isEditing
-        }
-
-        let wideArchivedItemCellNib = UINib(nibName: "WideArchivedItemCell", bundle: nil)
-        let wideCellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier>(cellNib: wideArchivedItemCellNib) { [unowned self] cell, _, identifier in
-            cell.wideCell = true
-            cell.lowMemoryMode = lowMemoryMode
+            cell.owningViewController = self
             cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
             cell.isEditing = isEditing
         }
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
-            let type = PersistedOptions.wideMode ? wideCellRegistration : cellRegistration
-            return collectionView.dequeueConfiguredReusableCell(using: type, for: indexPath, item: sectionItem)
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: sectionItem)
         }
 
         collection.reorderingCadence = .slow
@@ -738,12 +738,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
             }
         }
 
-        navigationController?.navigationBar.titleTextAttributes = [
-            .foregroundColor: UIColor.g_colorLightGray
-        ]
-        navigationController?.navigationBar.largeTitleTextAttributes = [
-            .foregroundColor: UIColor.g_colorLightGray
-        ]
+        #if os(visionOS)
+            navigationController?.navigationBar.titleTextAttributes = [
+                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+            ]
+            navigationController?.navigationBar.largeTitleTextAttributes = [
+                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+            ]
+        #else
+            navigationController?.navigationBar.titleTextAttributes = [
+                .foregroundColor: UIColor.g_colorLightGray
+            ]
+            navigationController?.navigationBar.largeTitleTextAttributes = [
+                .foregroundColor: UIColor.g_colorLightGray
+            ]
+        #endif
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.obscuresBackgroundDuringPresentation = false
@@ -753,11 +762,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
-        #if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                searchController.searchBar.isLookToDictateEnabled = true
-            }
-        #endif
+        if #available(iOS 17.0, *) {
+            searchController.searchBar.isLookToDictateEnabled = true
+        }
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -1058,6 +1065,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     private var lowMemoryMode = false {
         didSet {
             if lowMemoryMode != oldValue {
+                presentationInfoCache.reset()
                 for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
                     cell.lowMemoryMode = lowMemoryMode
                 }
@@ -1623,6 +1631,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
     }
 
     var currentColumnCount = 1
+    private var cellSize = CGSize.zero
 
     private func createLayout(width: CGFloat, columns: Int, spacing: CGFloat, fixedWidth: CGFloat? = nil, fixedHeight: CGFloat? = nil, dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>) -> UICollectionViewCompositionalLayout {
         currentColumnCount = columns
@@ -1633,6 +1642,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         let fixedWidth = fixedWidth ?? side
         let fixedHeight = fixedHeight ?? side
+        cellSize = CGSize(width: fixedWidth, height: fixedHeight)
         let itemWidth = NSCollectionLayoutDimension.absolute(fixedWidth)
         let itemHeight = NSCollectionLayoutDimension.absolute(fixedHeight)
         let itemSize = NSCollectionLayoutSize(widthDimension: itemWidth, heightDimension: .fractionalHeight(1))
@@ -1722,25 +1732,47 @@ final class ViewController: GladysViewController, UICollectionViewDelegate,
 
         log("setupLayout ran for: \(key)")
 
-        if wideMode {
-            if width >= 768 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+        #if os(visionOS)
+            if wideMode {
+                if width >= 768 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                } else {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                }
             } else {
-                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                if width > 1365 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 24, dataSource: dataSource)
+                } else if width > 980 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 24, dataSource: dataSource)
+                } else if width > 438 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 24, dataSource: dataSource)
+                } else if width > 320 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, dataSource: dataSource)
+                } else {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, dataSource: dataSource)
+                }
             }
-        } else {
-            if width <= 320, !forceTwoColumn {
-                collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
-            } else if width > 1365 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
-            } else if width > 980 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
-            } else if width > 438 {
-                collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
+        #else
+            if wideMode {
+                if width >= 768 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                } else {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                }
             } else {
-                collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
+                if width <= 320, !forceTwoColumn {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
+                } else if width > 1365 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
+                } else if width > 980 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
+                } else if width > 438 {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
+                } else {
+                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
+                }
             }
-        }
+        #endif
 
         ///////////////////////////////
 

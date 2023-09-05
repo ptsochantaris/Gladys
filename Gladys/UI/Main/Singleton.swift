@@ -1,7 +1,7 @@
 import CoreSpotlight
 import GladysCommon
 import GladysUI
-import Maintini
+import GladysUIKit
 import Minions
 import UIKit
 
@@ -32,7 +32,16 @@ final class Singleton {
                 setBadgeCount(to: 0)
             }
         }
-        Model.setup()
+
+        do {
+            try Model.setup()
+        } catch {
+            Task {
+                await genericAlert(title: "Loading Error", message: error.localizedDescription)
+                abort()
+            }
+            return
+        }
 
         CallbackSupport.setupCallbackSupport()
 
@@ -73,21 +82,12 @@ final class Singleton {
             return true
         }
 
-        #notifications(for: .IngestStart) { _ in
-            Maintini.startMaintaining()
-            return true
-        }
-
         #notifications(for: .IngestComplete) { notification in
-            guard let item = notification.object as? ArchivedItem else {
-                return true
-            }
             if DropStore.doneIngesting {
                 await Model.save()
-            } else {
+            } else if let item = notification.object as? ArchivedItem {
                 Model.commitItem(item: item)
             }
-            Maintini.endMaintaining()
             return true
         }
 

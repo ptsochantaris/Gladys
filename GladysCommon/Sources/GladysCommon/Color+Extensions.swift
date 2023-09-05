@@ -1,47 +1,34 @@
-#if os(macOS)
-    import AppKit
-    import Foundation
-    public typealias COLORCLASS = NSColor
-#else
-    import UIKit
-    public typealias COLORCLASS = UIColor
-#endif
+import SwiftUI
 
-public extension COLORCLASS {
-    static let g_colorComponentLabel = COLORCLASS(named: "colorComponentLabel")!
-    static let g_colorComponentLabelInverse = COLORCLASS(named: "colorComponentLabelInverse")!
-    static let g_colorKeyboardBright = COLORCLASS(named: "colorKeyboardBright")!
-    static let g_colorKeyboardGray = COLORCLASS(named: "colorKeyboardGray")!
-    static let g_colorLightGray = COLORCLASS(named: "colorLightGray")!
-    static let g_colorMacCard = COLORCLASS(named: "colorMacCard")!
-    static let g_colorPaper = COLORCLASS(named: "colorPaper")!
-    static let g_colorTint = COLORCLASS(named: "colorTint")!
-    static let g_sectionTitleTop = COLORCLASS(named: "sectionTitleTop")!
-    static let g_sectionTitleBottom = COLORCLASS(named: "sectionTitleBottom")!
-    static let g_expandedSection = COLORCLASS(named: "colorExpandedSection")!
+public extension COLOR {
+    static let g_colorComponentLabel = COLOR(named: "colorComponentLabel")!
+    static let g_colorComponentLabelInverse = COLOR(named: "colorComponentLabelInverse")!
+    static let g_colorKeyboardBright = COLOR(named: "colorKeyboardBright")!
+    static let g_colorKeyboardGray = COLOR(named: "colorKeyboardGray")!
+    static let g_colorLightGray = COLOR(named: "colorLightGray")!
+    static let g_colorMacCard = COLOR(named: "colorMacCard")!
+    static let g_colorPaper = COLOR(named: "colorPaper")!
+    static let g_colorTint = COLOR(named: "colorTint")!
+    static let g_sectionTitleTop = COLOR(named: "sectionTitleTop")!
+    static let g_sectionTitleBottom = COLOR(named: "sectionTitleBottom")!
+    static let g_expandedSection = COLOR(named: "colorExpandedSection")!
+
+    var components: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        #if canImport(AppKit)
+            guard let convertedColor = usingColorSpace(.deviceRGB) else { return (0, 0, 0, 0) }
+            convertedColor.getRed(&r, green: &g, blue: &b, alpha: &a)
+        #else
+            getRed(&r, green: &g, blue: &b, alpha: &a)
+        #endif
+        return (r, g, b, a)
+    }
+
+    var hexValue: String {
+        let (r1, g1, b1, _) = components
+        let r = Int(r1 * 255.99999)
+        let g = Int(g1 * 255.99999)
+        let b = Int(b1 * 255.99999)
+        return String(format: "#%02X%02X%02X", r, g, b)
+    }
 }
-
-#if os(macOS)
-    public extension NSColor {
-        var hexValue: String {
-            guard let convertedColor = usingColorSpace(.deviceRGB) else { return "#000000" }
-            var redFloatValue: CGFloat = 0, greenFloatValue: CGFloat = 0, blueFloatValue: CGFloat = 0
-            convertedColor.getRed(&redFloatValue, green: &greenFloatValue, blue: &blueFloatValue, alpha: nil)
-            let r = Int(redFloatValue * 255.99999)
-            let g = Int(greenFloatValue * 255.99999)
-            let b = Int(blueFloatValue * 255.99999)
-            return String(format: "#%02X%02X%02X", r, g, b)
-        }
-    }
-#else
-    public extension UIColor {
-        var hexValue: String {
-            var redFloatValue: CGFloat = 0, greenFloatValue: CGFloat = 0, blueFloatValue: CGFloat = 0
-            getRed(&redFloatValue, green: &greenFloatValue, blue: &blueFloatValue, alpha: nil)
-            let r = Int(redFloatValue * 255.99999)
-            let g = Int(greenFloatValue * 255.99999)
-            let b = Int(blueFloatValue * 255.99999)
-            return String(format: "#%02X%02X%02X", r, g, b)
-        }
-    }
-#endif

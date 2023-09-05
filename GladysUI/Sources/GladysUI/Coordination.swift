@@ -1,8 +1,16 @@
 import Foundation
-import Minions
 
-#if os(iOS) || os(visionOS)
+#if canImport(AppKit)
+    public enum Coordination {
+        nonisolated static var coordinator: NSFileCoordinator {
+            NSFileCoordinator(filePresenter: nil)
+        }
+    }
+
+#elseif canImport(UIKit)
+
     import GladysCommon
+    import Minions
     import UIKit
 
     public enum Coordination {
@@ -12,9 +20,9 @@ import Minions
             let presentedItemOperationQueue = OperationQueue()
 
             func presentedItemDidChange() {
-                Task { @MainActor in
-                    if DropStore.doneIngesting {
-                        await Model.reloadDataIfNeeded()
+                Task {
+                    if await DropStore.doneIngesting {
+                        try! await Model.reloadDataIfNeeded()
                     }
                 }
             }
@@ -31,7 +39,7 @@ import Minions
             #notifications(for: UIApplication.willEnterForegroundNotification) { _ in
                 NSFileCoordinator.addFilePresenter(filePresenter)
                 if DropStore.doneIngesting {
-                    await Model.reloadDataIfNeeded()
+                    try! await Model.reloadDataIfNeeded()
                 }
                 return true
             }
@@ -42,13 +50,6 @@ import Minions
             }
 
             NSFileCoordinator.addFilePresenter(filePresenter)
-        }
-    }
-
-#else
-    enum Coordination {
-        nonisolated static var coordinator: NSFileCoordinator {
-            NSFileCoordinator(filePresenter: nil)
         }
     }
 #endif

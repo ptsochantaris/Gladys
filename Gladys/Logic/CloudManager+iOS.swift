@@ -28,7 +28,7 @@ extension CloudManager {
                 return .newData
             }
             if await UIApplication.shared.applicationState != .active {
-                await Model.reloadDataIfNeeded()
+                try! await Model.reloadDataIfNeeded()
             }
             do {
                 try await sync(scope: scope)

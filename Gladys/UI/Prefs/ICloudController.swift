@@ -1,5 +1,6 @@
 import GladysCommon
 import GladysUI
+import GladysUIKit
 import Minions
 import UIKit
 
@@ -127,7 +128,7 @@ final class ICloudController: GladysViewController {
 
             if icloudSwitch.isOn, !syncOn {
                 if DropStore.allDrops.isEmpty {
-                    await CloudManager.startActivation()
+                    await activate()
                 } else {
                     let contentSize = await DropStore.sizeInBytes()
                     let contentSizeString = ByteCountFormatter().string(fromByteCount: contentSize)
@@ -135,7 +136,7 @@ final class ICloudController: GladysViewController {
                                                   message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                                   action: "Proceed", cancel: "Cancel")
                     if confirmed {
-                        await CloudManager.startActivation()
+                        await activate()
                     } else {
                         icloudSwitch.setOn(false, animated: true)
                     }
@@ -169,8 +170,21 @@ final class ICloudController: GladysViewController {
         }
     }
 
+    private func activate() async {
+        do {
+            try await CloudManager.startActivation()
+        } catch {
+            let offerSettings = (error as? GladysError)?.suggestSettings ?? false
+            await genericAlert(title: "Could not activate", message: error.localizedDescription, offerSettingsShortcut: offerSettings)
+        }
+    }
+
     private func deactivate() async {
-        await CloudManager.proceedWithDeactivation()
+        do {
+            try await CloudManager.proceedWithDeactivation()
+        } catch {
+            await genericAlert(title: "Could not deactivate", message: error.localizedDescription)
+        }
         await updateiCloudControls()
     }
 }

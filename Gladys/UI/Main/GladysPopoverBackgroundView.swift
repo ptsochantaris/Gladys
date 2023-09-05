@@ -84,7 +84,7 @@
         }
 
         private var darkMode: Bool {
-            traitCollection.containsTraits(in: UITraitCollection(userInterfaceStyle: .dark))
+            traitCollection.userInterfaceStyle == .dark
         }
 
         private func updateColors() {
