@@ -97,7 +97,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     public var shouldDisplayLoading: Bool {
-        flags.contains(.isBeingCreatedBySync) || needsReIngest || loadingProgress != nil
+        flags.contains(.isBeingCreatedBySync) || loadingProgress != nil
     }
 
     // Transient
