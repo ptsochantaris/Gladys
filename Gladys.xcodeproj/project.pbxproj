@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
-		1602F32B2030E60F0036E2B0 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		1604A3381F093073005A477E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		1605C5FC1F13A95600F54B19 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */; };
 		16062E091EFE647800AB5353 /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16062E081EFE647800AB5353 /* DetailController.swift */; };
@@ -19,7 +17,6 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
-		161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */; };
 		1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1616BE002454B3BD001C3BD4 /* CreditsViewController.swift */; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
@@ -59,6 +56,16 @@
 		164947E020BEAB5700BD1BEB /* ShareCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947DE20BEAB5700BD1BEB /* ShareCommon.swift */; };
 		164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */; };
 		164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
+		164CEC622AB238C200298594 /* ArchivedItem+Intents+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC612AB238C200298594 /* ArchivedItem+Intents+MainApp.swift */; };
+		164CEC642AB2394300298594 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC632AB2394300298594 /* Component+iOS.swift */; };
+		164CEC662AB239A700298594 /* ArchivedItem+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC652AB239A700298594 /* ArchivedItem+iOS.swift */; };
+		164CEC6A2AB23A5E00298594 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC692AB23A5E00298594 /* CloudManager+iOS.swift */; };
+		164CEC6C2AB23AA000298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
+		164CEC6D2AB23AA400298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
+		164CEC6E2AB23AA900298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
+		164CEC6F2AB23AB500298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
+		164CEC702AB23ACD00298594 /* Model+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* Model+iOS.swift */; };
+		164CEC722AB23AE700298594 /* WatchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC712AB23AE700298594 /* WatchDelegate.swift */; };
 		1651117E2163DEE300C5C874 /* Component+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* Component+Intents.swift */; };
 		165173031F99483E006CAF0A /* GladysViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165173021F99483E006CAF0A /* GladysViewController.swift */; };
 		16524C6829508FD000384B20 /* GladysWatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16524C6729508FCF00384B20 /* GladysWatchModel.swift */; };
@@ -91,8 +98,6 @@
 		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
-		1689646629903DFA009D7D01 /* WatchDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646529903DFA009D7D01 /* WatchDelegate.swift */; };
-		1689646829903EDF009D7D01 /* Model+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1689646729903EDF009D7D01 /* Model+iOS.swift */; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
@@ -113,8 +118,6 @@
 		16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
-		169763151F15669000537776 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763131F15669000537776 /* Component+iOS.swift */; };
-		169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169763201F156CBE00537776 /* ArchivedItem+iOS.swift */; };
 		169A52DD2163FCE5006A0234 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16A4355629788DB1005B8CE6 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16A4355529788DB1005B8CE6 /* GladysCommon */; };
@@ -124,10 +127,6 @@
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
 		16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A6729E29D4ED5900110F63 /* FileMonitor.swift */; };
 		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
-		16A925082A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */; };
-		16A9250C2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
-		16A9250D2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
-		16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */; };
 		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
@@ -136,7 +135,6 @@
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
-		16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
@@ -146,7 +144,6 @@
 		16C2994A2987E53A002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C299492987E53A002286B1 /* GladysCommon */; };
 		16C2994C2987E56B002286B1 /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16C2994B2987E56B002286B1 /* GladysCommon */; };
 		16C389E9221D47E300AB790A /* ClockKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16C389E5221D42AD00AB790A /* ClockKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */; };
 		16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BA9E1F9233B00012C9E0 /* LabelCell.swift */; };
 		16C4BAA51F92959D0012C9E0 /* gladysIcon320.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7A91F72579E00CD1C11 /* gladysIcon320.png */; };
 		16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */ = {isa = PBXBuildFile; fileRef = 1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */; };
@@ -177,7 +174,6 @@
 		16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
-		16EDB3771F2361EB001CC65C /* SortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EDB3761F2361EB001CC65C /* SortOption.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
@@ -334,7 +330,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		1604A3331F091ABC005A477E /* GladysAction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysAction.entitlements; sourceTree = "<group>"; };
 		1605A7A91F72579E00CD1C11 /* gladysIcon320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon320.png; path = Gladys/gladysIcon320.png; sourceTree = "<group>"; };
 		1605A7AA1F72579E00CD1C11 /* gladysIcon64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gladysIcon64.png; path = Gladys/gladysIcon64.png; sourceTree = "<group>"; };
@@ -349,7 +344,6 @@
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
 		160807B1297AA80900B92C0F /* FileProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FileProvider.framework; path = System/Library/Frameworks/FileProvider.framework; sourceTree = SDKROOT; };
 		16080FFF242D726800E19FCE /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "openssl-xcframeworks/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
-		161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+iOS.swift"; sourceTree = "<group>"; };
 		16114862209FA440008BB332 /* libboringssl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libboringssl.tbd; path = usr/lib/libboringssl.tbd; sourceTree = SDKROOT; };
 		16114864209FA58D008BB332 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libssl.a; sourceTree = "<group>"; };
 		16114866209FA5A0008BB332 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libcrypto.a; sourceTree = "<group>"; };
@@ -395,6 +389,12 @@
 		164947D620BEAA6200BD1BEB /* MacGladysShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysShare.entitlements; sourceTree = "<group>"; };
 		164947DE20BEAB5700BD1BEB /* ShareCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCommon.swift; sourceTree = "<group>"; };
 		164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
+		164CEC612AB238C200298594 /* ArchivedItem+Intents+MainApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ArchivedItem+Intents+MainApp.swift"; path = "Gladys/Logic/ArchivedItem+Intents+MainApp.swift"; sourceTree = SOURCE_ROOT; };
+		164CEC632AB2394300298594 /* Component+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Component+iOS.swift"; path = "Gladys/Logic/Component+iOS.swift"; sourceTree = SOURCE_ROOT; };
+		164CEC652AB239A700298594 /* ArchivedItem+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ArchivedItem+iOS.swift"; path = "Gladys/Logic/ArchivedItem+iOS.swift"; sourceTree = SOURCE_ROOT; };
+		164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ArchivedItem+Intents+Extensions.swift"; path = "Gladys/Logic/ArchivedItem+Intents+Extensions.swift"; sourceTree = SOURCE_ROOT; };
+		164CEC692AB23A5E00298594 /* CloudManager+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CloudManager+iOS.swift"; path = "Gladys/Logic/CloudManager+iOS.swift"; sourceTree = SOURCE_ROOT; };
+		164CEC712AB23AE700298594 /* WatchDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WatchDelegate.swift; path = Gladys/Logic/WatchDelegate.swift; sourceTree = SOURCE_ROOT; };
 		1651117D2163DEE300C5C874 /* Component+Intents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Intents.swift"; sourceTree = "<group>"; };
 		165173021F99483E006CAF0A /* GladysViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysViewController.swift; sourceTree = "<group>"; };
 		16524C6729508FCF00384B20 /* GladysWatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWatchModel.swift; sourceTree = "<group>"; };
@@ -428,8 +428,6 @@
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchHolder.swift; sourceTree = "<group>"; };
 		1689646029903B66009D7D01 /* GladysUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysUI; sourceTree = "<group>"; };
-		1689646529903DFA009D7D01 /* WatchDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDelegate.swift; sourceTree = "<group>"; };
-		1689646729903EDF009D7D01 /* Model+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+iOS.swift"; sourceTree = "<group>"; };
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
 		168D2CAC209DCC53005041CF /* NewLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLabelController.swift; sourceTree = "<group>"; };
@@ -451,8 +449,6 @@
 		16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysToday.entitlements; sourceTree = "<group>"; };
 		16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Copy.swift"; sourceTree = "<group>"; };
 		16969BB91FB10A58007B2F77 /* Component+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Copy.swift"; sourceTree = "<group>"; };
-		169763131F15669000537776 /* Component+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Component+iOS.swift"; sourceTree = "<group>"; };
-		169763201F156CBE00537776 /* ArchivedItem+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+iOS.swift"; sourceTree = "<group>"; };
 		169D54B320B85026004E518E /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/ServiceManagement.framework; sourceTree = DEVELOPER_DIR; };
 		169E5E051FE0851A00CCE984 /* Component+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Messages.swift"; sourceTree = "<group>"; };
 		16A4350F29787045005B8CE6 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
@@ -464,8 +460,7 @@
 		16A4E80A1FBB9DBE00D60596 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS4.1.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 		16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorViewController.swift; sourceTree = "<group>"; };
 		16A6729E29D4ED5900110F63 /* FileMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMonitor.swift; sourceTree = "<group>"; };
-		16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Intents+MainApp.swift"; sourceTree = "<group>"; };
-		16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Intents+Extensions.swift"; sourceTree = "<group>"; };
+		16A925092A35CB6300A6B52E /* Model+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+iOS.swift"; sourceTree = "<group>"; };
 		16AA7D23295891A6001C6506 /* UIUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilities.swift; sourceTree = "<group>"; };
 		16AA81561EFB2785000BC7E5 /* Gladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Gladys.entitlements; path = Gladys/Gladys.entitlements; sourceTree = "<group>"; };
 		16AA81571EFB2795000BC7E5 /* GladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysIndex.entitlements; sourceTree = "<group>"; };
@@ -510,7 +505,6 @@
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		16EC3D082145286F0015714A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
-		16EDB3761F2361EB001CC65C /* SortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOption.swift; sourceTree = "<group>"; };
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
@@ -675,6 +669,7 @@
 				164136931F09195000B34574 /* Info.plist */,
 				1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */,
 				1641368F1F09195000B34574 /* ActionRequestViewController.swift */,
+				16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */,
 				162383F520F96C650086E719 /* LabelEditorCell.swift */,
 				162383F320F969650086E719 /* LabelEditorController.swift */,
 			);
@@ -763,19 +758,16 @@
 			isa = PBXGroup;
 			children = (
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
-				16A925092A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift */,
-				16A925072A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift */,
-				169763201F156CBE00537776 /* ArchivedItem+iOS.swift */,
-				16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */,
-				161089921FA31D0D0095FE34 /* CloudManager+iOS.swift */,
+				164CEC712AB23AE700298594 /* WatchDelegate.swift */,
+				16A925092A35CB6300A6B52E /* Model+iOS.swift */,
+				164CEC692AB23A5E00298594 /* CloudManager+iOS.swift */,
+				164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */,
+				164CEC612AB238C200298594 /* ArchivedItem+Intents+MainApp.swift */,
+				164CEC652AB239A700298594 /* ArchivedItem+iOS.swift */,
+				164CEC632AB2394300298594 /* Component+iOS.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
-				169763131F15669000537776 /* Component+iOS.swift */,
 				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
-				1689646729903EDF009D7D01 /* Model+iOS.swift */,
-				16EDB3761F2361EB001CC65C /* SortOption.swift */,
-				1602F31A2030E5230036E2B0 /* UIView+Extensions.swift */,
-				1689646529903DFA009D7D01 /* WatchDelegate.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1657,8 +1649,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				164CEC6D2AB23AA400298594 /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				1657B8B01FD41C1C00EC480D /* MessagesViewController.swift in Sources */,
-				16C3A2DA20AF78EF00A04F10 /* UIView+Extensions.swift in Sources */,
 				169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */,
 				1657B8C71FD4381700EC480D /* ArchivedItem+Messages.swift in Sources */,
 			);
@@ -1672,26 +1664,23 @@
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
-				16A925082A35CB1500A6B52E /* ArchivedItem+Intents+MainApp.swift in Sources */,
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
+				164CEC702AB23ACD00298594 /* Model+iOS.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
-				169763211F156CBE00537776 /* ArchivedItem+iOS.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 				16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */,
-				161089931FA31D0D0095FE34 /* CloudManager+iOS.swift in Sources */,
 				16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */,
-				1602F31B2030E5230036E2B0 /* UIView+Extensions.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
-				1689646629903DFA009D7D01 /* WatchDelegate.swift in Sources */,
 				16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1660C0262465C32000ABFDFD /* Singleton.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
+				164CEC642AB2394300298594 /* Component+iOS.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
 				160707A01F8A38B5003B856A /* ByteCell.swift in Sources */,
 				162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */,
@@ -1699,27 +1688,28 @@
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				165173031F99483E006CAF0A /* GladysViewController.swift in Sources */,
 				16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */,
-				1689646829903EDF009D7D01 /* Model+iOS.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */,
 				1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */,
 				1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */,
-				169763151F15669000537776 /* Component+iOS.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				162BDD94220F8F0500A3C17B /* SiriShortcutsViewController.swift in Sources */,
-				16EDB3771F2361EB001CC65C /* SortOption.swift in Sources */,
+				164CEC6A2AB23A5E00298594 /* CloudManager+iOS.swift in Sources */,
 				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				1651117E2163DEE300C5C874 /* Component+Intents.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
+				164CEC662AB239A700298594 /* ArchivedItem+iOS.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
 				16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */,
+				164CEC622AB238C200298594 /* ArchivedItem+Intents+MainApp.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
+				164CEC722AB23AE700298594 /* WatchDelegate.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
 				1636CCAF28D0FBD4002175B8 /* GladysAppIntents.swift in Sources */,
@@ -1742,11 +1732,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				164CEC6C2AB23AA000298594 /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
-				16A9250C2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
 				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
-				1602F32B2030E60F0036E2B0 /* UIView+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1765,10 +1754,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16B2AA5924DF49B8004F3FC2 /* UIView+Extensions.swift in Sources */,
 				16B2AA3B24DF42B5004F3FC2 /* KeyboardViewController.swift in Sources */,
 				16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */,
-				16A9250F2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
+				164CEC6E2AB23AA900298594 /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
@@ -1781,9 +1769,9 @@
 			files = (
 				165B971E25CD886100E73E2D /* Component+Copy.swift in Sources */,
 				165B970425CD884000E73E2D /* Component+Intents.swift in Sources */,
+				164CEC6F2AB23AB500298594 /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				165B971125CD885800E73E2D /* ArchivedItem+Copy.swift in Sources */,
 				16D9849E2160C5CF00D9D51C /* Intents.intentdefinition in Sources */,
-				16A9250D2A35CB6300A6B52E /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16D984962160C5A000D9D51C /* IntentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

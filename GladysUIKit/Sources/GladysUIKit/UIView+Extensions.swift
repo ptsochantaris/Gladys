@@ -1,6 +1,6 @@
 import UIKit
 
-extension UIView {
+public extension UIView {
     func cover(with view: UIView, insets: UIEdgeInsets = .zero) {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)

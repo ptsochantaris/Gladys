@@ -708,6 +708,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: false)
             sortMethod()
         }
+        Task {
+            await Model.save()
+        }
     }
 
     /////////////////////////////////////////// Progress reports

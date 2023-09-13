@@ -1,5 +1,4 @@
 import Foundation
-import GladysCommon
 
 @MainActor
 public enum SortOption {
@@ -104,9 +103,6 @@ public enum SortOption {
                 let itemIndex = itemIndexes[pos]
                 let item = actualItemsToSort[pos]
                 DropStore.replace(drop: item, at: itemIndex)
-            }
-            Task {
-                await Model.save()
             }
         }
     }

@@ -1,7 +1,8 @@
+import GladysCommon
 import GladysUI
 import UIKit
 
-extension SortOption {
+public extension SortOption {
     var ascendingIcon: UIImage? {
         switch self {
         case .label: UIImage(systemName: "line.horizontal.3")
