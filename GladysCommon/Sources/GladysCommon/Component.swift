@@ -743,9 +743,9 @@ public final class Component: Codable, Hashable {
             }
         }
 
-    public var thumbnail: NSImage? {
-        nil
-    }
+        public var thumbnail: NSImage? {
+            nil
+        }
     #else
         public var componentIcon: UIImage? {
             get {
@@ -762,12 +762,10 @@ public final class Component: Codable, Hashable {
         }
 
         public var thumbnail: UIImage? {
-            get {
-                if displayIconTemplate {
-                    return UIImage.fromFile(imagePath, template: true)
-                } else {
-                    return UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
-                }
+            if displayIconTemplate {
+                UIImage.fromFile(imagePath, template: true)
+            } else {
+                UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
             }
         }
     #endif

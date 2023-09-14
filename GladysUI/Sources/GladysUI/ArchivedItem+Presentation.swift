@@ -73,7 +73,8 @@ public extension ArchivedItem {
             bottomText: bottomInfo,
             bottom: bottom,
             image: prepared,
-            highlightColor: highlightColor)
+            highlightColor: highlightColor
+        )
 
         presentationInfoCache[uuid] = info
 
