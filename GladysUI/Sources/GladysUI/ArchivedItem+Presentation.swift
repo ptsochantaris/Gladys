@@ -6,42 +6,44 @@ import SwiftUI
 
 public extension ArchivedItem {
     private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
+    private static let singleLock = Semalot(tickets: 1)
 
     @MainActor
-    func queueWarmup() {
+    func queueWarmup(style: ArchivedItemWrapper.Style) {
         log("Will (re)warm presentation for \(uuid)")
 
         let previous = warmingUp.associatedTask
 
         let task = Task<Void, Never>.detached { [weak self] in
             await previous?.value
-            await self?.warmUp()
+            _ = await self?.warmUp(style: style)
         }
         warmingUp = .inProgress(task)
     }
 
-    private func warmUp() async {
+    private func warmUp(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
         if Task.isCancelled {
-            return
+            return nil
         }
 
-        await ArchivedItem.warmupLock.takeTicket()
+        let lock = style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
+        await lock.takeTicket()
         defer {
-            ArchivedItem.warmupLock.returnTicket()
+            lock.returnTicket()
         }
 
         if Task.isCancelled {
-            return
+            return nil
         }
 
         assert(!Thread.isMainThread)
 
         let topInfo = prepareTopText()
         let bottomInfo = prepareBottomText()
-        let prepared = await prepareImage()
+        let prepared = await prepareImage(asThumbnail: style == .widget)
 
         if Task.isCancelled {
-            return
+            return nil
         }
 
         let fadeUsingImageColours = displayMode != .center
@@ -52,7 +54,7 @@ public extension ArchivedItem {
         }
 
         if Task.isCancelled {
-            return
+            return nil
         }
 
         let bottom = if fadeUsingImageColours, let prepared {
@@ -62,24 +64,27 @@ public extension ArchivedItem {
         }
 
         if Task.isCancelled {
-            return
+            return nil
         }
 
-        presentationInfoCache[uuid] =
-            PresentationInfo(topText: topInfo,
-                             top: top,
-                             bottomText: bottomInfo,
-                             bottom: bottom,
-                             image: prepared,
-                             highlightColor: highlightColor)
+        let info = PresentationInfo(
+            topText: topInfo,
+            top: top,
+            bottomText: bottomInfo,
+            bottom: bottom,
+            image: prepared,
+            highlightColor: highlightColor)
+
+        presentationInfoCache[uuid] = info
 
         Task { @MainActor in
-            if Task.isCancelled {
-                return
+            if !Task.isCancelled {
+                warmingUp = .done
+                objectWillChange.send()
             }
-            warmingUp = .done
-            objectWillChange.send()
         }
+
+        return info
     }
 
     private func prepareTopText() -> PresentationInfo.FieldContent {
@@ -106,12 +111,11 @@ public extension ArchivedItem {
         }
     }
 
-    private func prepareImage() async -> IMAGE? {
+    private func prepareImage(asThumbnail: Bool) async -> IMAGE? {
         assert(!Thread.isMainThread)
 
-        let cacheKey = imageCacheKey
-        if let existing = Images.shared[cacheKey] {
-            return existing
+        if asThumbnail {
+            return thumbnail
         }
 
         let result: IMAGE?
@@ -133,11 +137,8 @@ public extension ArchivedItem {
             #if canImport(AppKit)
                 result = displayIcon
             #else
-                result = await displayIcon.byPreparingForDisplay()
+                result = displayIcon.preparingForDisplay()
             #endif
-        }
-        if let result {
-            Images.shared[cacheKey] = result
         }
         return result
     }

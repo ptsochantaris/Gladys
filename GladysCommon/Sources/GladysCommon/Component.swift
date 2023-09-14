@@ -743,6 +743,9 @@ public final class Component: Codable, Hashable {
             }
         }
 
+    public var thumbnail: NSImage? {
+        nil
+    }
     #else
         public var componentIcon: UIImage? {
             get {
@@ -754,6 +757,16 @@ public final class Component: Codable, Hashable {
                     try? data.write(to: ipath)
                 } else {
                     try? FileManager.default.removeItem(at: ipath)
+                }
+            }
+        }
+
+        public var thumbnail: UIImage? {
+            get {
+                if displayIconTemplate {
+                    return UIImage.fromFile(imagePath, template: true)
+                } else {
+                    return UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
                 }
             }
         }

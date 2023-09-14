@@ -301,7 +301,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     @objc private func interfaceModeChanged(sender _: NSNotification) {
         Task { @MainActor in
-            Images.shared.reset()
             sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
         }
     }

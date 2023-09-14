@@ -310,6 +310,11 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         return highestPriorityIconItem?.componentIcon ?? #imageLiteral(resourceName: "iconStickyNote")
     }
 
+    public var thumbnail: IMAGE {
+        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        return highestPriorityIconItem?.thumbnail ?? #imageLiteral(resourceName: "iconStickyNote")
+    }
+
     public var dominantTypeDescription: String? {
         let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
         return highestPriorityIconItem?.typeDescription
@@ -733,7 +738,6 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     @MainActor
     private func componentIngestDone() async {
-        Images.shared[imageCacheKey] = nil
         loadingProgress = nil
         needsReIngest = false
         Task {

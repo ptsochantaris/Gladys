@@ -31,33 +31,7 @@ public protocol DisplayImageProviding {
 }
 
 public final class Images {
-    private let cache = Cache<String, IMAGE>()
-
     public static let shared = Images()
-
-    public func image(for item: DisplayImageProviding) -> IMAGE? {
-        let cacheKey = item.imageCacheKey
-        if let cachedImage = cache[cacheKey] {
-            return cachedImage
-        } else {
-            let image = item.displayIcon
-            cache[cacheKey] = image
-            return image
-        }
-    }
-
-    public subscript(key: String) -> IMAGE? {
-        get {
-            cache[key]
-        }
-        set {
-            cache[key] = newValue
-        }
-    }
-
-    public func reset() {
-        cache.reset()
-    }
 
     public struct SnapshotOptions: Hashable {
         public var coordinate: CLLocationCoordinate2D?

@@ -34,7 +34,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.wideMode = sender.isOn
-        Images.shared.reset()
         sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
     }
 

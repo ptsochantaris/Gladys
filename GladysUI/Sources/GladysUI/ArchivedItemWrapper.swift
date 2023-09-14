@@ -49,7 +49,8 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             .objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.ensureItemIsWarmedUp()
+                guard let self else { return }
+                ensureItemIsWarmedUp()
             }
 
         ensureItemIsWarmedUp()
@@ -67,7 +68,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             item.warmingUp = .pending
         case .done:
             if presentationInfoCache[item.uuid] != nil {
-                signalWrapperChanged()
+                objectWillChange.send()
                 return
             }
             item.warmingUp = .pending
@@ -75,12 +76,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             break
         }
 
-        item.queueWarmup()
-    }
-
-    @MainActor
-    private func signalWrapperChanged() {
-        objectWillChange.send()
+        item.queueWarmup(style: style)
     }
 
     @MainActor
