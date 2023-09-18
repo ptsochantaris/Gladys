@@ -12,31 +12,34 @@ public extension SKProduct {
 public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     private let completion: ([SKProduct]?, Error?) -> Void
 
+    #if canImport(AppKit)
+        private static let identifiers: Set<String> = [
+            "MAC_GLADYS_TIP_TIER_001",
+            "MAC_GLADYS_TIP_TIER_002",
+            "MAC_GLADYS_TIP_TIER_003",
+            "MAC_GLADYS_TIP_TIER_004",
+            "MAC_GLADYS_TIP_TIER_005"
+        ]
+    #else
+        private static let identifiers: Set<String> = [
+            "GLADYS_TIP_TIER_001",
+            "GLADYS_TIP_TIER_002",
+            "GLADYS_TIP_TIER_003",
+            "GLADYS_TIP_TIER_004",
+            "GLADYS_TIP_TIER_005"
+        ]
+    #endif
+
+    public static func warmup() {
+        SKProductsRequest(productIdentifiers: TipJar.identifiers).start()
+    }
+
     public init(completion: @escaping ([SKProduct]?, Error?) -> Void) {
         self.completion = completion
         super.init()
         SKPaymentQueue.default().add(self)
 
-        let identifiers: Set<String>
-        #if canImport(AppKit)
-            identifiers = [
-                "MAC_GLADYS_TIP_TIER_001",
-                "MAC_GLADYS_TIP_TIER_002",
-                "MAC_GLADYS_TIP_TIER_003",
-                "MAC_GLADYS_TIP_TIER_004",
-                "MAC_GLADYS_TIP_TIER_005"
-            ]
-        #else
-            identifiers = [
-                "GLADYS_TIP_TIER_001",
-                "GLADYS_TIP_TIER_002",
-                "GLADYS_TIP_TIER_003",
-                "GLADYS_TIP_TIER_004",
-                "GLADYS_TIP_TIER_005"
-            ]
-        #endif
-
-        let r = SKProductsRequest(productIdentifiers: identifiers)
+        let r = SKProductsRequest(productIdentifiers: TipJar.identifiers)
         r.delegate = self
         r.start()
     }

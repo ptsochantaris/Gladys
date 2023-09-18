@@ -1,8 +1,8 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import UIKit
 import Minions
+import UIKit
 
 final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, WindowSizing {
     override func viewDidLoad() {

@@ -344,10 +344,10 @@ CA
                                 <rect key="frame" x="20" y="20" width="640" height="480"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mh2-i4-UVt">
-                                        <rect key="frame" x="0.0" y="50" width="380" height="381"/>
+                                        <rect key="frame" x="0.0" y="58" width="380" height="365"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jlm-fy-dnP">
-                                                <rect key="frame" x="70" y="247" width="240" height="134"/>
+                                                <rect key="frame" x="70" y="231" width="240" height="134"/>
                                                 <subviews>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nef-N0-HY4">
                                                         <rect key="frame" x="0.0" y="14" width="240" height="120"/>
@@ -376,7 +376,7 @@ CA
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ehk-8i-3o1">
-                                                <rect key="frame" x="0.0" y="167" width="380" height="60"/>
+                                                <rect key="frame" x="0.0" y="151" width="380" height="60"/>
                                                 <subviews>
                                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Mg-Bw-Xsu">
                                                         <rect key="frame" x="70" y="42" width="241" height="18"/>
@@ -430,10 +430,10 @@ CA
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="6" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1qd-ir-97e">
-                                                <rect key="frame" x="0.0" y="0.0" width="380" height="147"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="380" height="131"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="REe-tn-FCQ">
-                                                        <rect key="frame" x="125" y="130" width="130" height="17"/>
+                                                        <rect key="frame" x="125" y="114" width="130" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Supporting Gladys" id="rVl-XJ-EHY">
                                                             <font key="font" metaFont="systemSemibold" size="14"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -441,13 +441,12 @@ CA
                                                         </textFieldCell>
                                                     </textField>
                                                     <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YvZ-GX-xRh">
-                                                        <rect key="frame" x="0.0" y="0.0" width="380" height="124"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="380" height="108"/>
                                                         <subviews>
                                                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IWF-aI-fZI">
-                                                                <rect key="frame" x="-2" y="76" width="384" height="48"/>
-                                                                <textFieldCell key="cell" alignment="center" id="XVO-n1-nU4">
+                                                                <rect key="frame" x="-2" y="76" width="384" height="32"/>
+                                                                <textFieldCell key="cell" alignment="center" title="Please consider leaving a tip; It will be greatly appreciated and will ensure I can keep improving Gladys in the future." id="XVO-n1-nU4">
                                                                     <font key="font" metaFont="system"/>
-                                                                    <string key="title">If you find Gladys useful then feel free to leave a tip! It will be greatly appreciated and will ensure I can keep improving Gladys in the future.</string>
                                                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                 </textFieldCell>
@@ -968,6 +967,25 @@ Cg
                                                                 <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 <font key="NSFont" metaFont="controlContent"/>
                                                                 <url key="NSLink" string="https://github.com/realm/SwiftLint"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                                    <tabStops/>
+                                                                </paragraphStyle>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content=" ">
+                                                            <attributes>
+                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" metaFont="controlContent"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                                    <tabStops/>
+                                                                </paragraphStyle>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content="SwiftFormat">
+                                                            <attributes>
+                                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" metaFont="controlContent"/>
+                                                                <string key="NSLink">https://github.com/nicklockwood/SwiftFormat</string>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" lineSpacing="1" defaultTabInterval="28" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                     <tabStops/>
                                                                 </paragraphStyle>

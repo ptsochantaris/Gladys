@@ -230,6 +230,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
 
         CallbackSupport.setupCallbackSupport()
+
+        TipJar.warmup()
     }
 
     @MainActor

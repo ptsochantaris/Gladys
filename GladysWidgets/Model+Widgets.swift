@@ -1,7 +1,7 @@
 import AppIntents
 import Foundation
-import GladysUI
 import GladysCommon
+import GladysUI
 
 // Stubs for methods that are in the widget but will actually run in the main app target
 
@@ -12,7 +12,7 @@ extension Model {
     }
 
     @discardableResult
-    static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
+    static func pasteItems(from _: [NSItemProvider], overrides _: ImportOverrides?) -> PasteResult {
         .noData
     }
 }

@@ -97,6 +97,8 @@ final class Singleton {
         if FileManager.default.fileExists(atPath: mirrorPath.path) {
             try? FileManager.default.removeItem(at: mirrorPath)
         }
+
+        TipJar.warmup()
     }
 
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {

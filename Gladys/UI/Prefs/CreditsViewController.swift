@@ -24,6 +24,10 @@ final class CreditsViewController: GladysViewController {
         UIApplication.shared.open(URL(string: "https://github.com/realm/SwiftLint")!)
     }
 
+    @IBAction private func formatSelected(_: UIButton) {
+        UIApplication.shared.open(URL(string: "https://github.com/nicklockwood/SwiftFormat")!)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         guard let sizingHolder else {
