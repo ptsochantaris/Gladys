@@ -269,9 +269,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         labelView.textAlignment = .center
         labelView.setContentHuggingPriority(.required, for: .vertical)
 
-        let n = NumberFormatter()
-        n.numberStyle = .decimal
-        let number = n.string(for: sectionCount) ?? ""
+        let number = decimalNumberFormatter.string(for: sectionCount) ?? ""
 
         let countView = UILabel(frame: .zero)
         countView.text = "\(number) items"

@@ -145,9 +145,8 @@ final class Singleton {
                         child = item.previewableTypeItem
                     }
                     if forceMainWindow {
-                        let v = showMainWindow(in: scene)
-                        let request = HighlightRequest(uuid: uuidString, extraAction: .preview(child?.uuid.uuidString))
-                        await v.highlightItem(request)
+                        _ = showMainWindow(in: scene)
+                        HighlightRequest.send(uuid: uuidString, extraAction: .preview(child?.uuid.uuidString))
 
                     } else if let child,
                               let q = child.quickLook() {
@@ -172,11 +171,8 @@ final class Singleton {
                 }
 
                 if forceMainWindow {
-                    let v = showMainWindow(in: scene)
-                    Task {
-                        let request = HighlightRequest(uuid: uuidString, extraAction: .open)
-                        await v.highlightItem(request)
-                    }
+                    _ = showMainWindow(in: scene)
+                    HighlightRequest.send(uuid: uuidString, extraAction: .open)
                 } else {
                     let n = scene.session.configuration.storyboard?.instantiateViewController(identifier: "DetailController") as! UINavigationController
                     let d = n.viewControllers.first as! DetailController
@@ -202,11 +198,8 @@ final class Singleton {
 
         case CSSearchableItemActionType:
             if let userActivity, let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-                let request = HighlightRequest(uuid: itemIdentifier, extraAction: .none)
-                let v = showMainWindow(in: scene)
-                Task {
-                    await v.highlightItem(request)
-                }
+                _ = showMainWindow(in: scene)
+                HighlightRequest.send(uuid: itemIdentifier, extraAction: .none)
                 return
             }
 

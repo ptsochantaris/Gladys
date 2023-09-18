@@ -1,19 +1,5 @@
 import Foundation
 
-public struct HighlightRequest {
-    public enum Action {
-        case none, detail, open, preview(String?)
-    }
-
-    public let uuid: String
-    public let extraAction: Action
-
-    public init(uuid: String, extraAction: Action) {
-        self.uuid = uuid
-        self.extraAction = extraAction
-    }
-}
-
 public struct ImportOverrides {
     public let title: String?
     public let note: String?
@@ -49,12 +35,13 @@ public extension Notification.Name {
     static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
     static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
     static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
-    static let HighlightItemRequested = Notification.Name("HighlightItemRequested")
 }
 
-@MainActor
 public func sendNotification(name: Notification.Name, object: Any?) {
-    NotificationCenter.default.post(name: name, object: object)
+    Task { @MainActor in
+        await Task.yield()
+        NotificationCenter.default.post(name: name, object: object)
+    }
 }
 
 #if canImport(UIKit) && !canImport(WatchKit)

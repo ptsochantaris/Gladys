@@ -592,8 +592,7 @@ final class DetailController: GladysViewController,
                   let e = segue.destination as? HexEdit {
             e.bytes = typeEntry.bytes ?? Data()
 
-            let f = ByteCountFormatter()
-            let size = f.string(fromByteCount: Int64(e.bytes.count))
+            let size = diskSizeFormatter.string(fromByteCount: Int64(e.bytes.count))
             e.title = typeEntry.typeDescription + " (\(size))"
 
         } else if segue.identifier == "plistEdit",

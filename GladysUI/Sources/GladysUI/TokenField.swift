@@ -2,12 +2,6 @@ import Foundation
 import GladysCommon
 import SwiftUI
 
-#if os(visionOS)
-    private let tagFont = FONT.TextStyle.body
-#else
-    private let tagFont = FONT.TextStyle.caption2
-#endif
-
 final class TokenField: VIEWCLASS {
     private static let highlightTextKey = NSAttributedString.Key("HT")
     private static let separator = "     "
@@ -62,15 +56,15 @@ final class TokenField: VIEWCLASS {
                 let labelTextColor = COLOR.g_colorMacCard
             #endif
 
-            let ls = labels.map { $0.replacingOccurrences(of: " ", with: "\u{a0}") }
+            let font = FONT.systemFont(ofSize: FONT.smallSystemFontSize, weight: .medium)
 
             let attrs: [NSAttributedString.Key: Any] = [
-                .font: FONT.preferredFont(forTextStyle: tagFont),
+                .font: font,
                 .foregroundColor: labelTextColor,
                 .paragraphStyle: p
             ]
             let labelAttrs: [NSAttributedString.Key: Any] = [
-                .font: FONT.preferredFont(forTextStyle: tagFont),
+                .font: font,
                 .foregroundColor: labelTextColor,
                 .paragraphStyle: p,
                 TokenField.highlightTextKey: true
@@ -78,6 +72,7 @@ final class TokenField: VIEWCLASS {
             let string = NSMutableAttributedString(string: "", attributes: attrs)
             let sep = NSMutableAttributedString(string: TokenField.separator, attributes: attrs)
 
+            let ls = labels.map { $0.replacingOccurrences(of: " ", with: "\u{a0}") }
             let count = ls.count - 1
             for label in ls.enumerated() {
                 let l = NSAttributedString(string: label.element, attributes: labelAttrs)
@@ -91,9 +86,7 @@ final class TokenField: VIEWCLASS {
         }
     }
 
-    private var xInset: CGFloat {
-        TagCloudView.margin + (alignment == .center ? 0 : 3.5)
-    }
+    private let xInset: CGFloat = 5
 
     override func draw(_ rect: CGRect) {
         #if canImport(AppKit)
@@ -121,7 +114,7 @@ final class TokenField: VIEWCLASS {
 
         for (line, linePos) in zip(lines, origins) {
             let lineBounds = CTLineGetBoundsWithOptions(line, .useOpticalBounds)
-            let lineStart = alignment == .center ? (dirtyRect.width - lineBounds.width) * 0.5 : (lineBounds.minX + 4)
+            let lineStart = alignment == .center ? (dirtyRect.maxX - lineBounds.width) * 0.5 : (lineBounds.minX + 4)
 
             let runs = CTLineGetGlyphRuns(line)
             for i in 0 ..< CFArrayGetCount(runs) {
@@ -184,8 +177,6 @@ struct TagCloudView: VRCLASS {
     @ObservedObject var wrapper: ArchivedItemWrapper
     @State var cellWidth: CGFloat
     let alignment: NSTextAlignment
-
-    static let margin: CGFloat = 2
 
     #if canImport(AppKit)
         func makeNSView(context _: Context) -> TokenField {

@@ -6,7 +6,7 @@ import PopTimer
 import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate {
+    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!
@@ -21,6 +21,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     @IBOutlet private var titleBarBackground: NSView!
 
     @IBOutlet private var translucentView: NSVisualEffectView!
+
+    private var highlightRegistration: HighlightRequest.Registration?
 
     override func viewWillAppear() {
         handleLayout()
@@ -127,11 +129,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             return true
         }
 
-        #notifications(for: .HighlightItemRequested) { notification in
-            guard let request = notification.object as? HighlightRequest else { return true }
-            highlightItem(with: request)
-            return true
-        }
+        // Not using notifications macro because registration needs to be immediate
+        highlightRegistration = HighlightRequest.registerListener(listener: self)
 
         #notifications(for: .ItemsAddedBySync) { _ in
             filter.update(signalUpdate: .animated)
@@ -146,6 +145,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         updateEmptyView()
 
         setupMouseMonitoring()
+    }
+
+    deinit {
+        highlightRegistration?.cancel()
+        log("Main VC deinitialised")
     }
 
     private func itemCollectionNeedsDisplay() {
@@ -364,7 +368,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
-    private func highlightItem(with request: HighlightRequest) {
+    func highlightItem(request: HighlightRequest) async {
         // focusOnChild ignored for now
         resetSearch(andLabels: true)
         if let i = DropStore.indexOfItem(with: request.uuid) {
@@ -383,7 +387,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
                 if !previewVisible {
                     toggleQuickLookPreviewPanel(self)
                 }
-            case .none:
+            case .none, .userDefault:
                 break
             }
         }

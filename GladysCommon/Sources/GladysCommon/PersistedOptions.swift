@@ -53,10 +53,10 @@ public enum PersistedOptions {
     @UserDefault(key: "showCopyMoveSwitchSelector", defaultValue: false)
     public static var showCopyMoveSwitchSelector: Bool
 
-    @UserDefault(key: "displayNotesInMainView", defaultValue: false)
+    @UserDefault(key: "displayNotesInMainView", defaultValue: true)
     public static var displayNotesInMainView: Bool
 
-    @UserDefault(key: "displayLabelsInMainView", defaultValue: false)
+    @UserDefault(key: "displayLabelsInMainView", defaultValue: true)
     public static var displayLabelsInMainView: Bool
 
     @UserDefault(key: "removeItemsWhenDraggedOut", defaultValue: false)

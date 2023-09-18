@@ -6,33 +6,16 @@ extension CKDatabaseOperation: @unchecked Sendable {}
 extension CKShare.Metadata: @unchecked Sendable {}
 extension CKRecordZone: @unchecked Sendable {}
 
-public let diskSizeFormatter = ByteCountFormatter()
-
-public extension Sequence where Element: Hashable {
-    var uniqued: [Element] {
-        var set = Set<Element>()
-        set.reserveCapacity(underestimatedCount)
-        return filter { set.insert($0).inserted }
-    }
-}
-
-public extension Array {
-    func bunch(maxSize: Int) -> [[Element]] {
-        var pos = 0
-        let slices = Lista<ArraySlice<Element>>()
-        while pos < count {
-            let end = Swift.min(count, pos + maxSize)
-            slices.append(self[pos ..< end])
-            pos += maxSize
-        }
-        return slices.map { Array($0) }
-    }
+@globalActor
+public enum CloudActor {
+    public final actor ActorType {}
+    public static let shared = ActorType()
 }
 
 public extension [[CKRecord]] {
-    func flatBunch(minSize: Int) -> [[CKRecord]] {
-        let result = Lista<[CKRecord]>()
-        var newChild = [CKRecord]()
+    func flatBunch(minSize: Int) -> [Element] {
+        let result = Lista<Element>()
+        var newChild = Element()
         for childArray in self {
             newChild.append(contentsOf: childArray)
             if newChild.count >= minSize {
@@ -45,12 +28,6 @@ public extension [[CKRecord]] {
         }
         return Array(result)
     }
-}
-
-@globalActor
-public enum CloudActor {
-    public final actor ActorType {}
-    public static let shared = ActorType()
 }
 
 @CloudActor

@@ -16,12 +16,22 @@ public extension ArchivedItem {
 
         let task = Task<Void, Never>.detached { [weak self] in
             await previous?.value
-            _ = await self?.warmUp(style: style)
+
+            guard let self, let info = await createPresentationInfo(style: style) else { return }
+
+            presentationInfoCache[uuid] = info
+
+            Task { @MainActor [weak self] in
+                if let self, !Task.isCancelled {
+                    warmingUp = .done
+                    objectWillChange.send()
+                }
+            }
         }
         warmingUp = .inProgress(task)
     }
 
-    private func warmUp(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
+    func createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
         if Task.isCancelled {
             return nil
         }
@@ -67,25 +77,16 @@ public extension ArchivedItem {
             return nil
         }
 
-        let info = PresentationInfo(
+        return PresentationInfo(
+            id: uuid,
             topText: topInfo,
             top: top,
             bottomText: bottomInfo,
             bottom: bottom,
             image: prepared,
-            highlightColor: highlightColor
+            highlightColor: highlightColor,
+            hasFullImage: displayMode.prefersFullSizeImage
         )
-
-        presentationInfoCache[uuid] = info
-
-        Task { @MainActor in
-            if !Task.isCancelled {
-                warmingUp = .done
-                objectWillChange.send()
-            }
-        }
-
-        return info
     }
 
     private func prepareTopText() -> PresentationInfo.FieldContent {

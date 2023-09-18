@@ -4,10 +4,8 @@ import StoreKit
 
 public extension SKProduct {
     var regularPrice: String? {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = priceLocale
-        return formatter.string(from: price)
+        priceFormatter.locale = priceLocale
+        return priceFormatter.string(from: price)
     }
 }
 

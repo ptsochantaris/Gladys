@@ -52,10 +52,18 @@ public final class Filter {
 
     public var groupingMode = GroupingMode.flat
     public var isFilteringText = false
+    public var filteredDrops: ContiguousArray<ArchivedItem>
 
     private var modelFilter: String?
+    private let manualDropSource: ContiguousArray<ArchivedItem>?
 
-    public init() {
+    private var dropSource: ContiguousArray<ArchivedItem> {
+        manualDropSource ?? DropStore.allDrops
+    }
+
+    public init(manualDropSource: ContiguousArray<ArchivedItem>? = nil) {
+        self.manualDropSource = manualDropSource
+        filteredDrops = manualDropSource ?? DropStore.allDrops
         rebuildLabels()
     }
 
@@ -73,8 +81,6 @@ public final class Filter {
     public var isFiltering: Bool {
         isFilteringText || isFilteringLabels
     }
-
-    public var filteredDrops = DropStore.allDrops
 
     public var text: String? {
         get {
@@ -230,14 +236,16 @@ public final class Filter {
     public func update(signalUpdate: UpdateType, forceAnnounce: Bool = false) {
         // label pass
 
+        let allDrops = dropSource
+
         let enabledToggles = labelToggles.filter(\.active)
         let postLabelDrops: ContiguousArray<ArchivedItem>
         if enabledToggles.isEmpty {
-            postLabelDrops = DropStore.allDrops
+            postLabelDrops = allDrops
 
         } else if PersistedOptions.exclusiveMultipleLabels {
             let expectedCount = enabledToggles.count
-            postLabelDrops = DropStore.allDrops.filter { item in
+            postLabelDrops = allDrops.filter { item in
                 var matchCount = 0
                 for toggle in enabledToggles {
                     switch toggle.function {
@@ -250,7 +258,7 @@ public final class Filter {
             }
 
         } else {
-            postLabelDrops = DropStore.allDrops.filter { item in
+            postLabelDrops = allDrops.filter { item in
                 for toggle in enabledToggles {
                     switch toggle.function {
                     case .unlabeledItems: if item.labels.isEmpty { return true }
@@ -323,7 +331,7 @@ public final class Filter {
     }
 
     public var eligibleDropsForExport: ContiguousArray<ArchivedItem> {
-        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : DropStore.allDrops // copy
+        let items = PersistedOptions.exportOnlyVisibleItems ? filteredDrops : dropSource // copy
         return items.filter(\.goodToSave)
     }
 
@@ -485,7 +493,7 @@ public final class Filter {
     }
 
     public func rebuildRecentlyAdded() -> Bool {
-        let count = DropStore.allDrops.reduce(0) {
+        let count = dropSource.reduce(0) {
             $0 + ($1.isRecentlyAdded ? 1 : 0)
         }
         let recentlyAddedIndex = labelToggles.firstIndex(where: { $0.function == .recentlyAddedItems })
@@ -514,7 +522,7 @@ public final class Filter {
         counts.reserveCapacity(labelToggles.count)
         var noLabelCount = 0
         var recentlyAddedCount = 0
-        for item in DropStore.allDrops {
+        for item in dropSource {
             item.labels.forEach {
                 if let c = counts[$0] {
                     counts[$0] = c + 1
@@ -576,7 +584,7 @@ public final class Filter {
     public func renameLabel(_ oldName: String, to newName: String) {
         let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
 
-        DropStore.allDrops.forEach { i in
+        dropSource.forEach { i in
             if let oldIndex = i.labels.firstIndex(of: oldName) {
                 if i.labels.contains(newName) {
                     i.labels.remove(at: oldIndex)
@@ -603,7 +611,7 @@ public final class Filter {
     }
 
     public func removeLabel(_ label: String) {
-        for i in DropStore.allDrops where i.labels.contains(label) {
+        for i in dropSource where i.labels.contains(label) {
             i.labels.removeAll { $0 == label }
             i.needsCloudPush = true
             i.flags.insert(.needsSaving)

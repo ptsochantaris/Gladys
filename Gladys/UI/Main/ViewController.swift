@@ -8,7 +8,7 @@ import UIKit
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
-    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate {
+    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate, HighlightListener {
     @IBOutlet private var collection: UICollectionView!
     @IBOutlet private var totalSizeLabel: UIBarButtonItem!
     @IBOutlet private var deleteButton: UIBarButtonItem!
@@ -43,6 +43,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     /////////////////////////////
 
     private var dragModeReverse = false
+
+    private var highlightRegistration: HighlightRequest.Registration?
 
     override var title: String? {
         didSet {
@@ -675,6 +677,171 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
 
+    private func setupNotificationHandlers() {
+        #notifications(for: .LabelSelectionChanged) { _ in
+            filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
+            updateLabelIcon()
+            userActivity?.needsSave = true
+            return true
+        }
+
+        #notifications(for: .ItemCollectionNeedsDisplay) { notification in
+            if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
+                lastLayoutProcessed = 0
+                setupLayout()
+                collection.collectionViewLayout.invalidateLayout()
+                updateDataSource(animated: false)
+                collection.reloadData()
+            } else {
+                let uuids = filter.filteredDrops.map(\.uuid)
+                DropStore.reloadCells(for: Set(uuids))
+            }
+            return true
+        }
+
+        #notifications(for: .ModelDataUpdated) { notification in
+            await _modelDataUpdate(notification)
+            return true
+        }
+
+        #notifications(for: .ItemsAddedBySync) { _ in
+            filter.update(signalUpdate: .animated)
+            return true
+        }
+
+        #notifications(for: .CloudManagerStatusChanged) { _ in
+            await cloudStatusChanged()
+            return true
+        }
+
+        #notifications(for: .ReachabilityChanged) { _ in
+            guard await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi else {
+                return true
+            }
+            do {
+                try await CloudManager.opportunisticSyncIfNeeded()
+            } catch {
+                log("Error in reachability triggered sync: \(error.localizedDescription)")
+            }
+            return true
+        }
+
+        #notifications(for: .AcceptStarting) { _ in
+            await genericAlert(title: "Accepting Share…", message: nil, alertController: #weakSelf { alert in
+                acceptAlert = alert
+            })
+            return true
+        }
+
+        #notifications(for: .AcceptEnding) { _ in
+            await acceptAlert?.dismiss(animated: true)
+            acceptAlert = nil
+            return true
+        }
+
+        #notifications(for: .IngestComplete) { notification in
+            if let item = notification.object as? ArchivedItem,
+               let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
+               let indexPath = dataSource.indexPath(for: firstIdentifier) {
+                mostRecentIndexPathActioned = indexPath
+                if currentDetailView == nil {
+                    focusInitialAccessibilityElement()
+                }
+            }
+
+            if DropStore.doneIngesting {
+                UIAccessibility.post(notification: .screenChanged, argument: nil)
+            }
+            return true
+        }
+
+        // Not using notifications macro because registration needs to be immediate
+        highlightRegistration = HighlightRequest.registerListener(listener: self)
+
+        #notifications(for: .UIRequest) { notification in
+            guard let request = notification.object as? UIRequest,
+                  request.sourceScene == view.window?.windowScene
+            else { return true }
+
+            if request.pushInsteadOfPresent {
+                navigationController?.pushViewController(request.vc, animated: true)
+            } else {
+                present(request.vc, animated: true)
+                if let p = request.vc.popoverPresentationController {
+                    p.sourceView = request.sourceView
+                    p.sourceRect = request.sourceRect ?? .zero
+                    p.barButtonItem = request.sourceButton
+                }
+            }
+            return true
+        }
+
+        #notifications(for: .DismissPopoversRequest) { _ in
+            await dismissAnyPopOver()
+            return true
+        }
+
+        #notifications(for: .ResetSearchRequest) { _ in
+            if searchActive || filter.isFiltering {
+                await resetSearch(andLabels: true)
+            }
+            return true
+        }
+
+        #notifications(for: UIApplication.keyboardWillHideNotification) { _ in
+            if presentedViewController != nil {
+                return true
+            }
+            if currentDetailView != nil {
+                return true
+            }
+            if !filter.isFilteringText {
+                await resetSearch(andLabels: false)
+            }
+            return true
+        }
+
+        #notifications(for: .SectionHeaderTapped) { notification in
+            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+            var name = event.name
+
+            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
+                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
+            }
+
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            switch toggle.currentDisplayMode {
+            case .collapsed:
+                filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
+            case .full, .scrolling:
+                filter.setDisplayMode(to: .collapsed, for: [name], setAsPreference: false)
+            }
+            updateDataSource(animated: true)
+            userActivity?.needsSave = true
+            return true
+        }
+
+        #notifications(for: .SectionShowAllTapped) { notification in
+            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+            var name = event.name
+
+            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
+                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
+            }
+
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            switch toggle.currentDisplayMode {
+            case .collapsed, .scrolling:
+                filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
+            case .full:
+                filter.setDisplayMode(to: .scrolling, for: [name], setAsPreference: true)
+            }
+            updateDataSource(animated: true)
+            userActivity?.needsSave = true
+            return true
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -777,171 +944,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         navigationController?.setToolbarHidden(true, animated: false)
 
-        #notifications(for: .LabelSelectionChanged) { _ in
-            filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
-            updateLabelIcon()
-            userActivity?.needsSave = true
-            return true
-        }
-
-        #notifications(for: .ItemCollectionNeedsDisplay) { notification in
-            if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
-                lastLayoutProcessed = 0
-                setupLayout()
-                collection.collectionViewLayout.invalidateLayout()
-                updateDataSource(animated: false)
-                collection.reloadData()
-            } else {
-                let uuids = filter.filteredDrops.map(\.uuid)
-                DropStore.reloadCells(for: Set(uuids))
-            }
-            return true
-        }
-
-        #notifications(for: .ModelDataUpdated) { notification in
-            await _modelDataUpdate(notification)
-            return true
-        }
-
-        #notifications(for: .ItemsAddedBySync) { _ in
-            filter.update(signalUpdate: .animated)
-            return true
-        }
-
-        #notifications(for: .CloudManagerStatusChanged) { _ in
-            await cloudStatusChanged()
-            return true
-        }
-
-        #notifications(for: .ReachabilityChanged) { _ in
-            guard await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi else {
-                return true
-            }
-            do {
-                try await CloudManager.opportunisticSyncIfNeeded()
-            } catch {
-                log("Error in reachability triggered sync: \(error.localizedDescription)")
-            }
-            return true
-        }
-
-        #notifications(for: .AcceptStarting) { _ in
-            await genericAlert(title: "Accepting Share…", message: nil, alertController: #weakSelf { alert in
-                acceptAlert = alert
-            })
-            return true
-        }
-
-        #notifications(for: .AcceptEnding) { _ in
-            await acceptAlert?.dismiss(animated: true)
-            acceptAlert = nil
-            return true
-        }
-
-        #notifications(for: .IngestComplete) { notification in
-            if let item = notification.object as? ArchivedItem,
-               let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
-               let indexPath = dataSource.indexPath(for: firstIdentifier) {
-                mostRecentIndexPathActioned = indexPath
-                if currentDetailView == nil {
-                    focusInitialAccessibilityElement()
-                }
-            }
-
-            if DropStore.doneIngesting {
-                UIAccessibility.post(notification: .screenChanged, argument: nil)
-            }
-            return true
-        }
-
-        #notifications(for: .HighlightItemRequested) { notification in
-            guard let request = notification.object as? HighlightRequest else { return true }
-            await highlightItem(request)
-            return true
-        }
-
-        #notifications(for: .UIRequest) { notification in
-            guard let request = notification.object as? UIRequest,
-                  request.sourceScene == view.window?.windowScene
-            else { return true }
-
-            if request.pushInsteadOfPresent {
-                navigationController?.pushViewController(request.vc, animated: true)
-            } else {
-                present(request.vc, animated: true)
-                if let p = request.vc.popoverPresentationController {
-                    p.sourceView = request.sourceView
-                    p.sourceRect = request.sourceRect ?? .zero
-                    p.barButtonItem = request.sourceButton
-                }
-            }
-            return true
-        }
-
-        #notifications(for: .DismissPopoversRequest) { _ in
-            await dismissAnyPopOver()
-            return true
-        }
-
-        #notifications(for: .ResetSearchRequest) { _ in
-            if searchActive || filter.isFiltering {
-                await resetSearch(andLabels: true)
-            }
-            return true
-        }
-
-        #notifications(for: UIApplication.keyboardWillHideNotification) { _ in
-            if presentedViewController != nil {
-                return true
-            }
-            if currentDetailView != nil {
-                return true
-            }
-            if !filter.isFilteringText {
-                await resetSearch(andLabels: false)
-            }
-            return true
-        }
-
-        #notifications(for: .SectionHeaderTapped) { notification in
-            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
-            var name = event.name
-
-            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
-            }
-
-            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
-            switch toggle.currentDisplayMode {
-            case .collapsed:
-                filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
-            case .full, .scrolling:
-                filter.setDisplayMode(to: .collapsed, for: [name], setAsPreference: false)
-            }
-            updateDataSource(animated: true)
-            userActivity?.needsSave = true
-            return true
-        }
-
-        #notifications(for: .SectionShowAllTapped) { notification in
-            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
-            var name = event.name
-
-            if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
-                name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
-            }
-
-            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
-            switch toggle.currentDisplayMode {
-            case .collapsed, .scrolling:
-                filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
-            case .full:
-                filter.setDisplayMode(to: .scrolling, for: [name], setAsPreference: true)
-            }
-            updateDataSource(animated: true)
-            userActivity?.needsSave = true
-            return true
-        }
+        setupNotificationHandlers()
 
         if filter.isFilteringLabels { // in case we're restored with active labels
             filter.update(signalUpdate: .none)
@@ -986,6 +989,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     deinit {
+        highlightRegistration?.cancel()
         log("Main VC deinitialised")
     }
 
@@ -1905,7 +1909,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func highlightItem(_ request: HighlightRequest) async {
+    func highlightItem(request: HighlightRequest) async {
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
             await dismissAnyPopOverOrModal()
@@ -1956,6 +1960,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                         if let presenter = view.window?.alertPresenter {
                             _ = item.tryPreview(in: presenter, from: cell, preferChild: childUuid)
                         }
+                    case .userDefault:
+                        self.collectionView(collection, didSelectItemAt: ip)
                     }
                 }
             }

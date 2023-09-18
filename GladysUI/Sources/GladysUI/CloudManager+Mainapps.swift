@@ -253,15 +253,6 @@ public extension CloudManager {
         }
     }
 
-    @MainActor
-    private static let agoFormatter: DateComponentsFormatter = {
-        let f = DateComponentsFormatter()
-        f.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute, .second]
-        f.unitsStyle = .abbreviated
-        f.maximumUnitCount = 2
-        return f
-    }()
-
     static func makeSyncString() async -> String {
         if let s = syncProgressString {
             return s
@@ -630,22 +621,21 @@ public extension CloudManager {
             recordId = metadata.rootRecordID.recordName
         #endif
         if let recordId, let existingItem = await DropStore.item(uuid: recordId) {
-            let request = HighlightRequest(uuid: existingItem.uuid.uuidString, extraAction: .none)
-            await sendNotification(name: .HighlightItemRequested, object: request)
+            HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
             return
         }
 
-        await sendNotification(name: .AcceptStarting, object: nil)
+        sendNotification(name: .AcceptStarting, object: nil)
         try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
         showNetwork = true
 
         do {
             try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
             try? await sync() // get the new shared objects
-            await sendNotification(name: .AcceptEnding, object: nil)
+            sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
         } catch {
-            await sendNotification(name: .AcceptEnding, object: nil)
+            sendNotification(name: .AcceptEnding, object: nil)
             showNetwork = false
             throw error
         }

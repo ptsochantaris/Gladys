@@ -1,7 +1,7 @@
 #if canImport(AppKit)
     import AppKit
 #else
-    import Foundation
+    import UIKit
 #endif
 import AppIntents
 import GladysCommon
@@ -112,15 +112,7 @@ enum GladysAppIntents {
             else {
                 throw Error.itemNotFound
             }
-            #if canImport(AppKit)
-                if let pi = item.pasteboardItem(forDrag: false) {
-                    let g = NSPasteboard.general
-                    g.clearContents()
-                    g.writeObjects([pi])
-                }
-            #else
-                item.copyToPasteboard(donateShortcut: false)
-            #endif
+            item.copyToPasteboard(donateShortcut: false)
             return .result()
         }
     }
@@ -130,19 +122,20 @@ enum GladysAppIntents {
         var entity: ArchivedItemEntity?
 
         enum OpenGladysAction: String, AppEnum {
-            case highlight, details, tryQuicklook, tryOpen
+            case highlight, details, tryQuicklook, tryOpen, userDefault
             static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Action" }
             static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
                 .highlight: DisplayRepresentation(stringLiteral: "Highlight"),
                 .details: DisplayRepresentation(stringLiteral: "Info"),
                 .tryQuicklook: DisplayRepresentation(stringLiteral: "Quicklook"),
-                .tryOpen: DisplayRepresentation(stringLiteral: "Open")
+                .tryOpen: DisplayRepresentation(stringLiteral: "Open"),
+                .userDefault: DisplayRepresentation(stringLiteral: "Default Action")
             ]
         }
 
         struct ActionProvider: DynamicOptionsProvider {
             func results() async throws -> [OpenGladysAction] {
-                [.highlight, .details, .tryOpen, .tryQuicklook]
+                [.highlight, .details, .tryOpen, .tryQuicklook, .userDefault]
             }
         }
 
@@ -158,20 +151,48 @@ enum GladysAppIntents {
             guard let entity else {
                 throw Error.itemNotFound
             }
-
             let itemUUID = entity.id.uuidString
 
-            let request = switch action {
+            switch action {
             case .highlight:
-                HighlightRequest(uuid: itemUUID, extraAction: .none)
+                HighlightRequest.send(uuid: itemUUID, extraAction: .none)
+
             case .tryQuicklook:
-                HighlightRequest(uuid: itemUUID, extraAction: .preview(nil))
+                HighlightRequest.send(uuid: itemUUID, extraAction: .preview(nil))
+
             case .tryOpen:
-                HighlightRequest(uuid: itemUUID, extraAction: .open)
+                HighlightRequest.send(uuid: itemUUID, extraAction: .open)
+
             case .details:
-                HighlightRequest(uuid: itemUUID, extraAction: .detail)
+                HighlightRequest.send(uuid: itemUUID, extraAction: .detail)
+
+            case .userDefault:
+                HighlightRequest.send(uuid: itemUUID, extraAction: .userDefault)
             }
-            sendNotification(name: .HighlightItemRequested, object: request)
+            return .result()
+        }
+    }
+
+    struct PasteIntoGladys: AppIntent {
+        static var title: LocalizedStringResource { "Paste from clipboard" }
+
+        static var openAppWhenRun = true
+
+        @MainActor
+        func perform() async throws -> some IntentResult {
+            let topIndex = IndexPath(item: 0, section: 0)
+            #if canImport(UIKit)
+                guard let p = UIPasteboard.general.itemProviders.first else {
+                    throw Error.nothingInClipboard
+                }
+                Model.pasteItems(from: [p], overrides: nil)
+            #else
+                let pb = NSPasteboard.general
+                guard let c = pb.pasteboardItems?.count, c > 0 else {
+                    throw Error.nothingInClipboard
+                }
+                _ = Model.addItems(from: pb, at: topIndex, overrides: .none, filterContext: nil)
+            #endif
             return .result()
         }
     }
@@ -201,7 +222,7 @@ enum GladysAppIntents {
 
             let p = NSItemProvider(item: data.data as NSData, typeIdentifier: (data.type ?? .data).identifier)
             p.suggestedName = data.filename
-            return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
         }
     }
 
@@ -229,7 +250,7 @@ enum GladysAppIntents {
             }
 
             let p = NSItemProvider(object: data as NSURL)
-            return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
         }
     }
 
@@ -257,19 +278,11 @@ enum GladysAppIntents {
             }
 
             let p = NSItemProvider(object: data as NSString)
-            return try await GladysAppIntents.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
         }
     }
 
-    private static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
-        let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
-        let result: PasteResult
-        #if canImport(AppKit)
-            result = await Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
-        #else
-            result = await Model.pasteItems(from: [provider], overrides: importOverrides)
-        #endif
-
+    static func processCreationResult(_ result: PasteResult) async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
         switch result {
         case .noData:
             throw Error.noItemsCreated
@@ -294,11 +307,13 @@ enum GladysAppIntents {
     enum Error: Swift.Error, CustomLocalizedStringResourceConvertible {
         case noItemsCreated
         case itemNotFound
+        case nothingInClipboard
 
         var localizedStringResource: LocalizedStringResource {
             switch self {
             case .noItemsCreated: "No items were created from this data"
             case .itemNotFound: "Item could not be found"
+            case .nothingInClipboard: "There was nothing in the clipboard"
             }
         }
     }
@@ -309,6 +324,11 @@ enum GladysAppIntents {
                         phrases: ["Copy \(.applicationName) item to clipboard"],
                         shortTitle: "Copy to clipboard",
                         systemImageName: "doc.on.doc")
+
+            AppShortcut(intent: PasteIntoGladys(),
+                        phrases: ["Paste clipboard into \(.applicationName)"],
+                        shortTitle: "Paste from clipboard",
+                        systemImageName: "arrow.down.doc")
 
             AppShortcut(intent: OpenGladys(),
                         phrases: ["Select \(.applicationName) item"],

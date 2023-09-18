@@ -388,10 +388,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         if userActivity.activityType == CSSearchableItemActionType {
             if let itemIdentifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
                 focus()
-                let request = HighlightRequest(uuid: itemIdentifier, extraAction: .none)
-                Task { @MainActor in
-                    sendNotification(name: .HighlightItemRequested, object: request)
-                }
+                HighlightRequest.send(uuid: itemIdentifier, extraAction: .none)
             }
             return true
 
@@ -405,16 +402,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         } else if userActivity.activityType == kGladysDetailViewingActivity {
             if let uuid = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? UUID {
                 focus()
-                let request = HighlightRequest(uuid: uuid.uuidString, extraAction: .detail)
-                Task { @MainActor in
-                    sendNotification(name: .HighlightItemRequested, object: request)
-                }
+                HighlightRequest.send(uuid: uuid.uuidString, extraAction: .detail)
             } else if let uuidString = userActivity.userInfo?[kGladysDetailViewingActivityItemUuid] as? String {
                 focus()
-                let request = HighlightRequest(uuid: uuidString, extraAction: .detail)
-                Task { @MainActor in
-                    sendNotification(name: .HighlightItemRequested, object: request)
-                }
+                HighlightRequest.send(uuid: uuidString, extraAction: .detail)
             }
             return true
 
@@ -422,10 +413,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if let userInfo = userActivity.userInfo, let uuidString = userInfo[kGladysDetailViewingActivityItemUuid] as? String {
                 focus()
                 let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String
-                let request = HighlightRequest(uuid: uuidString, extraAction: .preview(childUuid))
-                Task { @MainActor in
-                    sendNotification(name: .HighlightItemRequested, object: request)
-                }
+                HighlightRequest.send(uuid: uuidString, extraAction: .preview(childUuid))
             }
             return true
         }

@@ -1,7 +1,9 @@
+import AppIntents
 import AppKit
 import GladysCommon
 import GladysUI
 import UniformTypeIdentifiers
+import WidgetKit
 
 extension Model {
     static func registerStateHandler() {
@@ -16,6 +18,7 @@ extension Model {
             case let .saveComplete(dueToSyncFetch):
                 Task {
                     do {
+                        WidgetCenter.shared.reloadAllTimelines()
                         if try await shouldSync(dueToSyncFetch: dueToSyncFetch) {
                             try await CloudManager.syncAfterSaveIfNeeded()
                         }
@@ -25,6 +28,13 @@ extension Model {
                 }
             }
         }
+    }
+
+    @available(macOS 13, *)
+    static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
+        let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
+        let result = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
+        return try await GladysAppIntents.processCreationResult(result)
     }
 
     private static var eventMonitor: FileMonitor?

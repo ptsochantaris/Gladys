@@ -23,14 +23,19 @@ public extension COLOR {
 
     var isBright: Bool {
         var bright: CGFloat = 0
+        var sat: CGFloat = 0
         #if canImport(AppKit)
             if let convertedColor = usingColorSpace(.deviceRGB) {
-                convertedColor.getHue(nil, saturation: nil, brightness: &bright, alpha: nil)
+                convertedColor.getHue(nil, saturation: &sat, brightness: &bright, alpha: nil)
             }
         #else
-            getHue(nil, saturation: nil, brightness: &bright, alpha: nil)
+            getHue(nil, saturation: &sat, brightness: &bright, alpha: nil)
         #endif
-        return bright > 0.8
+        if sat > 0.7 {
+            return bright > 0.9
+        } else {
+            return bright > 0.7
+        }
     }
 }
 

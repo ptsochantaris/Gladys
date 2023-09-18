@@ -14,12 +14,14 @@ open class CommonItemCell: UICollectionViewCell {
     }
 
     public func flash() {
-        let originalColor = contentView.backgroundColor
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
-            self.contentView.backgroundColor = UIColor.g_colorTint
+        guard let v = itemViewController.view else {
+            return
+        }
+        UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8) {
+            v.transform = .init(scaleX: 0.9, y: 0.9)
         } completion: { _ in
-            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn) {
-                self.contentView.backgroundColor = originalColor
+            UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.8) {
+                v.transform = .identity
             }
         }
     }

@@ -63,7 +63,7 @@ public enum LiteModel {
         iterateThroughSavedItemsWithoutLoading { item in
             items.append(item)
             number += 1
-            return number <= count
+            return number < count
         }
         return items
     }
@@ -93,12 +93,17 @@ public enum LiteModel {
                 d.withUnsafeBytes { pointer in
                     let uuids = pointer.bindMemory(to: uuid_t.self)
                     for u in uuids {
-                        autoreleasepool {
+                        let go = autoreleasepool {
                             let u = UUID(uuid: u)
                             let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data), !perItemCallback(item) {
-                                return
+                            if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {
+                                return perItemCallback(item)
+                            } else {
+                                return true
                             }
+                        }
+                        if !go {
+                            return
                         }
                     }
                 }

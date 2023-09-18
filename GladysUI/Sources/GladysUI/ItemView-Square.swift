@@ -147,10 +147,9 @@ extension ItemView {
                     .foregroundColor(fgColor)
                     .multilineTextAlignment(.center)
                     .lineLimit(lineLimit)
-                    .frame(minHeight: 0)
                     .shadow(color: hazeColor, radius: 5, x: 0, y: 0)
-                    .shadow(color: hazeColor, radius: 5, x: 0, y: 0)
-                    .shadow(color: hazeColor, radius: 5, x: 0, y: 0)
+                    .shadow(color: hazeColor, radius: 6, x: 0, y: 0)
+                    .shadow(color: hazeColor, radius: 7, x: 0, y: 0)
             }
         }
 

@@ -26,6 +26,7 @@
 		161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718DC2094D7F7005ABD6C /* Model+Mac.swift */; };
 		161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */; };
 		1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */; };
+		16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
@@ -42,7 +43,6 @@
 		162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */; };
 		1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0351F9371EB00421B8C /* AddLabelController.swift */; };
 		1633F0381F93757000421B8C /* LabelListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1633F0371F93757000421B8C /* LabelListCell.swift */; };
-		1636CCAF28D0FBD4002175B8 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
 		163EB5F320A8BC5000D0BF74 /* HighlightLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163EB5F220A8BC5000D0BF74 /* HighlightLabel.swift */; };
 		164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1641368F1F09195000B34574 /* ActionRequestViewController.swift */; };
 		164136961F09195000B34574 /* GladysAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -55,12 +55,10 @@
 		164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947DE20BEAB5700BD1BEB /* ShareCommon.swift */; };
 		164947E020BEAB5700BD1BEB /* ShareCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947DE20BEAB5700BD1BEB /* ShareCommon.swift */; };
 		164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */; };
-		164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		164CEC622AB238C200298594 /* ArchivedItem+Intents+MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC612AB238C200298594 /* ArchivedItem+Intents+MainApp.swift */; };
 		164CEC642AB2394300298594 /* Component+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC632AB2394300298594 /* Component+iOS.swift */; };
 		164CEC662AB239A700298594 /* ArchivedItem+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC652AB239A700298594 /* ArchivedItem+iOS.swift */; };
 		164CEC6A2AB23A5E00298594 /* CloudManager+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC692AB23A5E00298594 /* CloudManager+iOS.swift */; };
-		164CEC6C2AB23AA000298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
 		164CEC6D2AB23AA400298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
 		164CEC6E2AB23AA900298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
 		164CEC6F2AB23AB500298594 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
@@ -79,6 +77,12 @@
 		165B970425CD884000E73E2D /* Component+Intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1651117D2163DEE300C5C874 /* Component+Intents.swift */; };
 		165B971125CD885800E73E2D /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		165B971E25CD886100E73E2D /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
+		165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165CD5BC2AB6FDF000640DE4 /* Provider.swift */; };
+		165CD5BF2AB6FEAF00640DE4 /* CurrentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */; };
+		165CD5C22AB71AB300640DE4 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
+		165CD5C32AB71AC200640DE4 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
+		165F3B492AB61B4F00C13B18 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
+		165F3B4A2AB61B6500C13B18 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
 		1660C0262465C32000ABFDFD /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1660C0252465C32000ABFDFD /* Singleton.swift */; };
 		1661B2C1245E219200BE888E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		166EEC9A23645391000BE78A /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 166EEC9923645391000BE78A /* Media.xcassets */; };
@@ -92,7 +96,6 @@
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
 		168810F72AB0E8C400988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810F62AB0E8C400988232 /* GladysUIKit */; };
-		168810F92AB0E8D700988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810F82AB0E8D700988232 /* GladysUIKit */; };
 		168810FB2AB0E91300988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FA2AB0E91300988232 /* GladysUIKit */; };
 		168810FD2AB0E91B00988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FC2AB0E91B00988232 /* GladysUIKit */; };
 		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
@@ -110,13 +113,7 @@
 		168FE05920951ABC00E740E9 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168FE05820951ABC00E740E9 /* CloudKit.framework */; };
 		168FE0612095B3CA00E740E9 /* DropCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0602095B3C900E740E9 /* DropCell.swift */; };
 		168FE0632095D16800E740E9 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168FE0622095D16800E740E9 /* Preferences.swift */; };
-		16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */; };
-		16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */; };
-		16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */; };
-		16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */; };
-		16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
-		16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		169A52DD2163FCE5006A0234 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		169E5E071FE0851A00CCE984 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
@@ -125,8 +122,8 @@
 		16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4E7F31FBB844A00D60596 /* GladysWatch.swift */; };
 		16A4E7FC1FBB844A00D60596 /* GladysWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 16A4E7E01FBB844A00D60596 /* GladysWatch.app */; platformFilter = ios; };
 		16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A51AAC20F6C7640033C1FD /* LabelEditorViewController.swift */; };
+		16A609342AB5244100D61A03 /* GladysUI in Frameworks */ = {isa = PBXBuildFile; productRef = 16A609332AB5244100D61A03 /* GladysUI */; };
 		16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A6729E29D4ED5900110F63 /* FileMonitor.swift */; };
-		16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */; };
 		16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AA7D23295891A6001C6506 /* UIUtilities.swift */; };
 		16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AED98721B4373D0049E433 /* NotesEditorViewController.swift */; };
 		16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AFEF9D1F2A9C0B008C2E20 /* PreferencesController.swift */; };
@@ -150,6 +147,13 @@
 		16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */; };
 		16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */; };
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
+		16CA740F2AB4C063000D6A99 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA740E2AB4C063000D6A99 /* WidgetKit.framework */; };
+		16CA74112AB4C063000D6A99 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA74102AB4C063000D6A99 /* SwiftUI.framework */; };
+		16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */; };
+		16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74152AB4C063000D6A99 /* GladysWidgets.swift */; };
+		16CA74182AB4C063000D6A99 /* ConfigurationAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */; };
+		16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */; };
 		16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */; };
@@ -171,11 +175,14 @@
 		16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */; };
 		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
-		16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
+		16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */; };
+		16F3A8DC2AB7271B005BD3D2 /* ArchivedItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */; };
+		16F3A8DF2AB727AC005BD3D2 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
+		16F3A8E02AB72809005BD3D2 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -217,13 +224,6 @@
 			remoteGlobalIDString = 168DFAFD20B85F3D002C603D;
 			remoteInfo = MacGladysHelper;
 		};
-		16969BA51FB0E41E007B2F77 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 16969B9A1FB0E41E007B2F77;
-			remoteInfo = GladysToday;
-		};
 		16A4E7FA1FBB844A00D60596 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
@@ -237,6 +237,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 16B2AA3724DF42B5004F3FC2;
 			remoteInfo = GladysKeys;
+		};
+		16CA741C2AB4C063000D6A99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16CA740C2AB4C063000D6A99;
+			remoteInfo = GladysWidgetsExtension;
 		};
 		16D984982160C5A000D9D51C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -277,8 +284,8 @@
 				16D9849A2160C5A000D9D51C /* GladysIntents.appex in Embed Foundation Extensions */,
 				1657B8B91FD41C1C00EC480D /* GladysMessage.appex in Embed Foundation Extensions */,
 				164136961F09195000B34574 /* GladysAction.appex in Embed Foundation Extensions */,
-				16969BA71FB0E41E007B2F77 /* GladysToday.appex in Embed Foundation Extensions */,
 				16B2AA3F24DF42B5004F3FC2 /* Keyhive.appex in Embed Foundation Extensions */,
+				16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */,
 				16287AEE1EFB03FD007188AE /* GladysIndex.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -354,7 +361,6 @@
 		161718CD2094D334005ABD6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		161718CF2094D334005ABD6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		161718D02094D334005ABD6C /* MacGladys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladys.entitlements; sourceTree = "<group>"; };
-		161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Mac.swift"; sourceTree = "<group>"; };
 		161718D62094D6B8005ABD6C /* Component+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Mac.swift"; sourceTree = "<group>"; };
 		161718DC2094D7F7005ABD6C /* Model+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Mac.swift"; sourceTree = "<group>"; };
 		161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mac.swift"; sourceTree = "<group>"; };
@@ -366,6 +372,7 @@
 		162383F320F969650086E719 /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
 		162383F520F96C650086E719 /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
 		1626650A221056B800068136 /* SiriSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriSettingsViewController.swift; sourceTree = "<group>"; };
+		1626AA4D2AB6163900B99569 /* MacGladysWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		16287AE71EFB03FD007188AE /* GladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexRequestHandler.swift; sourceTree = "<group>"; };
 		16287AEB1EFB03FD007188AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -375,7 +382,6 @@
 		162D21A720DEB00A00BC3C5D /* PersistedOptions+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistedOptions+Mac.swift"; sourceTree = "<group>"; };
 		1633F0351F9371EB00421B8C /* AddLabelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLabelController.swift; sourceTree = "<group>"; };
 		1633F0371F93757000421B8C /* LabelListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelListCell.swift; sourceTree = "<group>"; };
-		1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysAppIntents.swift; sourceTree = "<group>"; };
 		163EB5F220A8BC5000D0BF74 /* HighlightLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightLabel.swift; sourceTree = "<group>"; };
 		1641368D1F09195000B34574 /* GladysAction.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysAction.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
@@ -407,6 +413,9 @@
 		1657B8C21FD4248800EC480D /* GladysMessage.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysMessage.entitlements; sourceTree = "<group>"; };
 		1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Messages.swift"; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
+		165CD5BC2AB6FDF000640DE4 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
+		165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentState.swift; sourceTree = "<group>"; };
+		165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GladysAppIntents.swift; sourceTree = "<group>"; };
 		1660C0252465C32000ABFDFD /* Singleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
 		166EEC9923645391000BE78A /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
@@ -441,12 +450,7 @@
 		168FE05820951ABC00E740E9 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		168FE0602095B3C900E740E9 /* DropCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropCell.swift; sourceTree = "<group>"; };
 		168FE0622095D16800E740E9 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		16969B9B1FB0E41E007B2F77 /* GladysToday.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysToday.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16969B9C1FB0E41E007B2F77 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
-		16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
-		16969BA21FB0E41E007B2F77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		16969BA41FB0E41E007B2F77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysToday.entitlements; sourceTree = "<group>"; };
 		16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Copy.swift"; sourceTree = "<group>"; };
 		16969BB91FB10A58007B2F77 /* Component+Copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Component+Copy.swift"; sourceTree = "<group>"; };
 		169D54B320B85026004E518E /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/ServiceManagement.framework; sourceTree = DEVELOPER_DIR; };
@@ -480,6 +484,14 @@
 		16C4BAA71F9296D90012C9E0 /* LabelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSelector.swift; sourceTree = "<group>"; };
 		16C4BAAA1F929ADD0012C9E0 /* LabelToggleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelToggleCell.swift; sourceTree = "<group>"; };
 		16C8166A20CB4EF1001C12DF /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		16CA740E2AB4C063000D6A99 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		16CA74102AB4C063000D6A99 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgetsBundle.swift; sourceTree = "<group>"; };
+		16CA74152AB4C063000D6A99 /* GladysWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgets.swift; sourceTree = "<group>"; };
+		16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAppIntent.swift; sourceTree = "<group>"; };
+		16CA741B2AB4C063000D6A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16CA74222AB4C0DF000D6A99 /* GladysWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		16CA7AA0236F880C00F96699 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSSettingsController.swift; sourceTree = "<group>"; };
@@ -508,6 +520,8 @@
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
+		16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Widgets.swift"; sourceTree = "<group>"; };
+		16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Mac.swift"; sourceTree = "<group>"; };
 		16F72B35266D8232000E2C67 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -574,20 +588,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		16969B981FB0E41E007B2F77 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				168810F92AB0E8D700988232 /* GladysUIKit in Frameworks */,
-				16969B9D1FB0E41E007B2F77 /* NotificationCenter.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16B2AA3524DF42B5004F3FC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				168810FD2AB0E91B00988232 /* GladysUIKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16CA740A2AB4C063000D6A99 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16CA74112AB4C063000D6A99 /* SwiftUI.framework in Frameworks */,
+				16CA740F2AB4C063000D6A99 /* WidgetKit.framework in Frameworks */,
+				16A609342AB5244100D61A03 /* GladysUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,7 +728,6 @@
 				1678F9CF1EF475FE005697CB /* Gladys */,
 				16287AE81EFB03FD007188AE /* GladysIndex */,
 				1641368E1F09195000B34574 /* GladysAction */,
-				16969B9E1FB0E41E007B2F77 /* GladysToday */,
 				16D984942160C5A000D9D51C /* GladysIntents */,
 				16A4E7E11FBB844A00D60596 /* GladysWatch */,
 				1657B8AE1FD41C1C00EC480D /* GladysMessage */,
@@ -721,6 +735,7 @@
 				168DFAFF20B85F3D002C603D /* MacGladysHelper */,
 				164947CD20BEAA6200BD1BEB /* MacGladysShare */,
 				16B2AA3924DF42B5004F3FC2 /* GladysKeys */,
+				16CA74122AB4C063000D6A99 /* GladysWidgets */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 			);
@@ -732,7 +747,6 @@
 				1678F9CD1EF475FE005697CB /* Gladys.app */,
 				16287AE71EFB03FD007188AE /* GladysIndex.appex */,
 				1641368D1F09195000B34574 /* GladysAction.appex */,
-				16969B9B1FB0E41E007B2F77 /* GladysToday.appex */,
 				16A4E7E01FBB844A00D60596 /* GladysWatch.app */,
 				1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */,
 				161718C42094D333005ABD6C /* Gladys.app */,
@@ -740,6 +754,7 @@
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
 				16D984932160C5A000D9D51C /* GladysIntents.appex */,
 				16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */,
+				16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -757,6 +772,7 @@
 		1689646D29905B25009D7D01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
 				164CEC712AB23AE700298594 /* WatchDelegate.swift */,
 				16A925092A35CB6300A6B52E /* Model+iOS.swift */,
@@ -767,7 +783,6 @@
 				164CEC632AB2394300298594 /* Component+iOS.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
-				1636CCAE28D0FBD4002175B8 /* GladysAppIntents.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -813,8 +828,8 @@
 			children = (
 				161718C62094D333005ABD6C /* AppDelegate.swift */,
 				16C8166A20CB4EF1001C12DF /* Application.swift */,
-				161718D42094D6AC005ABD6C /* ArchivedItem+Mac.swift */,
 				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
+				16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */,
 				161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */,
 				161718D62094D6B8005ABD6C /* Component+Mac.swift */,
 				16A6729E29D4ED5900110F63 /* FileMonitor.swift */,
@@ -833,17 +848,6 @@
 				16EC3D082145286F0015714A /* main.swift */,
 			);
 			path = Boot;
-			sourceTree = "<group>";
-		};
-		16969B9E1FB0E41E007B2F77 /* GladysToday */ = {
-			isa = PBXGroup;
-			children = (
-				16969BB51FB0F69B007B2F77 /* GladysToday.entitlements */,
-				16969BA41FB0E41E007B2F77 /* Info.plist */,
-				16969B9F1FB0E41E007B2F77 /* TodayViewController.swift */,
-				16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */,
-			);
-			path = GladysToday;
 			sourceTree = "<group>";
 		};
 		16A4E7E11FBB844A00D60596 /* GladysWatch */ = {
@@ -922,6 +926,22 @@
 			path = Labels;
 			sourceTree = "<group>";
 		};
+		16CA74122AB4C063000D6A99 /* GladysWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				16CA74222AB4C0DF000D6A99 /* GladysWidgetsExtension.entitlements */,
+				1626AA4D2AB6163900B99569 /* MacGladysWidgetsExtension.entitlements */,
+				16CA741B2AB4C063000D6A99 /* Info.plist */,
+				16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */,
+				16CA74152AB4C063000D6A99 /* GladysWidgets.swift */,
+				16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */,
+				165CD5BC2AB6FDF000640DE4 /* Provider.swift */,
+				165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */,
+				16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */,
+			);
+			path = GladysWidgets;
+			sourceTree = "<group>";
+		};
 		16D2C7111EF5A6D3009B97F9 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -986,6 +1006,8 @@
 				16114862209FA440008BB332 /* libboringssl.tbd */,
 				16D5DCD31F1CE0080069661C /* libxml2.tbd */,
 				16080FFF242D726800E19FCE /* openssl.xcframework */,
+				16CA740E2AB4C063000D6A99 /* WidgetKit.framework */,
+				16CA74102AB4C063000D6A99 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1119,11 +1141,11 @@
 			dependencies = (
 				16287AED1EFB03FD007188AE /* PBXTargetDependency */,
 				164136951F09195000B34574 /* PBXTargetDependency */,
-				16969BA61FB0E41E007B2F77 /* PBXTargetDependency */,
 				16A4E7FB1FBB844A00D60596 /* PBXTargetDependency */,
 				1657B8B81FD41C1C00EC480D /* PBXTargetDependency */,
 				16D984992160C5A000D9D51C /* PBXTargetDependency */,
 				16B2AA3E24DF42B5004F3FC2 /* PBXTargetDependency */,
+				16CA741D2AB4C063000D6A99 /* PBXTargetDependency */,
 			);
 			name = Gladys;
 			packageProductDependencies = (
@@ -1151,26 +1173,6 @@
 			productName = MacGladysHelper;
 			productReference = 168DFAFE20B85F3D002C603D /* MacGladysHelper.app */;
 			productType = "com.apple.product-type.application";
-		};
-		16969B9A1FB0E41E007B2F77 /* GladysToday */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 16969BAA1FB0E41E007B2F77 /* Build configuration list for PBXNativeTarget "GladysToday" */;
-			buildPhases = (
-				16969B971FB0E41E007B2F77 /* Sources */,
-				16969B981FB0E41E007B2F77 /* Frameworks */,
-				16969B991FB0E41E007B2F77 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GladysToday;
-			packageProductDependencies = (
-				168810F82AB0E8D700988232 /* GladysUIKit */,
-			);
-			productName = GladysToday;
-			productReference = 16969B9B1FB0E41E007B2F77 /* GladysToday.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 		16A4E7DF1FBB844A00D60596 /* GladysWatch */ = {
 			isa = PBXNativeTarget;
@@ -1213,6 +1215,26 @@
 			productReference = 16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 16CA74212AB4C063000D6A99 /* Build configuration list for PBXNativeTarget "GladysWidgetsExtension" */;
+			buildPhases = (
+				16CA74092AB4C063000D6A99 /* Sources */,
+				16CA740A2AB4C063000D6A99 /* Frameworks */,
+				16CA740B2AB4C063000D6A99 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GladysWidgetsExtension;
+			packageProductDependencies = (
+				16A609332AB5244100D61A03 /* GladysUI */,
+			);
+			productName = GladysWidgetsExtension;
+			productReference = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		16D984922160C5A000D9D51C /* GladysIntents */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 16D9849B2160C5A000D9D51C /* Build configuration list for PBXNativeTarget "GladysIntents" */;
@@ -1240,7 +1262,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
@@ -1332,16 +1354,6 @@
 						CreatedOnToolsVersion = 9.3.1;
 						ProvisioningStyle = Automatic;
 					};
-					16969B9A1FB0E41E007B2F77 = {
-						CreatedOnToolsVersion = 9.1;
-						LastSwiftMigration = 1020;
-						ProvisioningStyle = Automatic;
-						SystemCapabilities = {
-							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
-							};
-						};
-					};
 					16A4E7DF1FBB844A00D60596 = {
 						CreatedOnToolsVersion = 9.1;
 						ProvisioningStyle = Automatic;
@@ -1353,6 +1365,9 @@
 					};
 					16B2AA3724DF42B5004F3FC2 = {
 						CreatedOnToolsVersion = 11.6;
+					};
+					16CA740C2AB4C063000D6A99 = {
+						CreatedOnToolsVersion = 15.0;
 					};
 					16D984922160C5A000D9D51C = {
 						CreatedOnToolsVersion = 10.0;
@@ -1384,7 +1399,6 @@
 				1678F9CC1EF475FE005697CB /* Gladys */,
 				16287AE61EFB03FD007188AE /* GladysIndex */,
 				1641368C1F09195000B34574 /* GladysAction */,
-				16969B9A1FB0E41E007B2F77 /* GladysToday */,
 				16D984922160C5A000D9D51C /* GladysIntents */,
 				16A4E7DF1FBB844A00D60596 /* GladysWatch */,
 				1657B8AA1FD41C1B00EC480D /* GladysMessage */,
@@ -1392,6 +1406,7 @@
 				161718C32094D333005ABD6C /* MacGladys */,
 				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 				164947CB20BEAA6200BD1BEB /* MacGladysShare */,
+				16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1465,15 +1480,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		16969B991FB0E41E007B2F77 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				16EB611E216E7F7A008F89D1 /* Assets.xcassets in Resources */,
-				16969BA31FB0E41E007B2F77 /* MainInterface.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		16A4E7DE1FBB844A00D60596 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1488,6 +1494,14 @@
 			files = (
 				16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */,
 				16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16CA740B2AB4C063000D6A99 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1587,14 +1601,13 @@
 			files = (
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
-				16A84CC229560CC2003BFB9D /* GladysAppIntents.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
-				16906A9223C8BDC600D6C177 /* ArchivedItem+Mac.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
 				1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */,
 				16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
+				165F3B4A2AB61B6500C13B18 /* GladysAppIntents.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
@@ -1607,9 +1620,11 @@
 				161718D72094D6B8005ABD6C /* Component+Mac.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
+				16F3A8DC2AB7271B005BD3D2 /* ArchivedItem+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
 				161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */,
 				161718C72094D333005ABD6C /* AppDelegate.swift in Sources */,
+				16F3A8E02AB72809005BD3D2 /* ArchivedItem+Copy.swift in Sources */,
 				162D21A820DEB00A00BC3C5D /* PersistedOptions+Mac.swift in Sources */,
 				164947DF20BEAB5700BD1BEB /* ShareCommon.swift in Sources */,
 				161718DD2094D7F7005ABD6C /* Model+Mac.swift in Sources */,
@@ -1666,6 +1681,7 @@
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
 				164CEC702AB23ACD00298594 /* Model+iOS.swift in Sources */,
+				165F3B492AB61B4F00C13B18 /* GladysAppIntents.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
@@ -1712,7 +1728,6 @@
 				164CEC722AB23AE700298594 /* WatchDelegate.swift in Sources */,
 				1626650B221056B800068136 /* SiriSettingsViewController.swift in Sources */,
 				16D984522160B8BC00D9D51C /* Intents.intentdefinition in Sources */,
-				1636CCAF28D0FBD4002175B8 /* GladysAppIntents.swift in Sources */,
 				16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 			);
@@ -1725,17 +1740,6 @@
 				168DFB1020B85F84002C603D /* LauncherCommon.swift in Sources */,
 				168DFB0120B85F3D002C603D /* AppDelegate.swift in Sources */,
 				16F063FC20B895CD00ABF32A /* main.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		16969B971FB0E41E007B2F77 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				164CEC6C2AB23AA000298594 /* ArchivedItem+Intents+Extensions.swift in Sources */,
-				16969BA01FB0E41E007B2F77 /* TodayViewController.swift in Sources */,
-				164CD3B0264FAEB3006019F1 /* Component+Copy.swift in Sources */,
-				16969BB81FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1760,6 +1764,23 @@
 				16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */,
 				16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */,
 				16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		16CA74092AB4C063000D6A99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				165CD5C22AB71AB300640DE4 /* Component+Copy.swift in Sources */,
+				16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */,
+				165CD5BF2AB6FEAF00640DE4 /* CurrentState.swift in Sources */,
+				16F3A8DF2AB727AC005BD3D2 /* ArchivedItem+Copy.swift in Sources */,
+				165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */,
+				165CD5C32AB71AC200640DE4 /* ArchivedItem+Intents+Extensions.swift in Sources */,
+				16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */,
+				16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */,
+				16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */,
+				16CA74182AB4C063000D6A99 /* ConfigurationAppIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1805,12 +1826,6 @@
 			target = 168DFAFD20B85F3D002C603D /* MacGladysHelper */;
 			targetProxy = 168DFB1520B88559002C603D /* PBXContainerItemProxy */;
 		};
-		16969BA61FB0E41E007B2F77 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 16969B9A1FB0E41E007B2F77 /* GladysToday */;
-			targetProxy = 16969BA51FB0E41E007B2F77 /* PBXContainerItemProxy */;
-		};
 		16A4E7FB1FBB844A00D60596 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
@@ -1822,6 +1837,11 @@
 			platformFilter = ios;
 			target = 16B2AA3724DF42B5004F3FC2 /* GladysKeys */;
 			targetProxy = 16B2AA3D24DF42B5004F3FC2 /* PBXContainerItemProxy */;
+		};
+		16CA741D2AB4C063000D6A99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */;
+			targetProxy = 16CA741C2AB4C063000D6A99 /* PBXContainerItemProxy */;
 		};
 		16D984992160C5A000D9D51C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1862,14 +1882,6 @@
 				1678F9DA1EF475FF005697CB /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		16969BA11FB0E41E007B2F77 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				16969BA21FB0E41E007B2F77 /* Base */,
-			);
-			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 		16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */ = {
@@ -2156,10 +2168,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
@@ -2293,11 +2307,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				STRIP_PNG_TEXT = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -2384,42 +2400,6 @@
 			};
 			name = Release;
 		};
-		16969BA81FB0E41E007B2F77 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
-				INFOPLIST_FILE = GladysToday/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MERGED_BINARY_TYPE = automatic;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		16969BA91FB0E41E007B2F77 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = GladysToday/GladysToday.entitlements;
-				DEVELOPMENT_TEAM = X727JSJUGJ;
-				INFOPLIST_FILE = GladysToday/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MERGED_BINARY_TYPE = automatic;
-				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.Today;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		16A4E7FD1FBB844A00D60596 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2498,6 +2478,66 @@
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysKeys;
 				PRODUCT_NAME = Keyhive;
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		16CA741F2AB4C063000D6A99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysWidgets/GladysWidgetsExtension.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = GladysWidgets/MacGladysWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GladysWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		16CA74202AB4C063000D6A99 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = GladysWidgets/GladysWidgetsExtension.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = GladysWidgets/MacGladysWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GladysWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -2615,15 +2655,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		16969BAA1FB0E41E007B2F77 /* Build configuration list for PBXNativeTarget "GladysToday" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				16969BA81FB0E41E007B2F77 /* Debug */,
-				16969BA91FB0E41E007B2F77 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		16A4E8031FBB844A00D60596 /* Build configuration list for PBXNativeTarget "GladysWatch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2638,6 +2669,15 @@
 			buildConfigurations = (
 				16B2AA4024DF42B5004F3FC2 /* Debug */,
 				16B2AA4124DF42B5004F3FC2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		16CA74212AB4C063000D6A99 /* Build configuration list for PBXNativeTarget "GladysWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				16CA741F2AB4C063000D6A99 /* Debug */,
+				16CA74202AB4C063000D6A99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2669,10 +2709,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysUIKit;
 		};
-		168810F82AB0E8D700988232 /* GladysUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GladysUIKit;
-		};
 		168810FA2AB0E91300988232 /* GladysUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysUIKit;
@@ -2688,6 +2724,10 @@
 		16A4355529788DB1005B8CE6 /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
+		};
+		16A609332AB5244100D61A03 /* GladysUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysUI;
 		};
 		16C12FBF28AE494C00E9EB04 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;

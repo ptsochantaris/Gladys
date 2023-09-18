@@ -49,6 +49,15 @@ public let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.compone
 
 public enum ArchivedDropItemDisplayType: Int {
     case fit, fill, center, circle
+
+    public var prefersFullSizeImage: Bool {
+        switch self {
+        case .circle, .fill, .fit:
+            true
+        case .center:
+            false
+        }
+    }
 }
 
 public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
@@ -81,14 +90,6 @@ public let temporaryDirectoryUrl: URL = {
     }
     try! fm.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
     return url
-}()
-
-public let shortDateFormatter: DateFormatter = {
-    let d = DateFormatter()
-    d.doesRelativeDateFormatting = true
-    d.dateStyle = .short
-    d.timeStyle = .short
-    return d
 }()
 
 public let loadDecoder: JSONDecoder = {
