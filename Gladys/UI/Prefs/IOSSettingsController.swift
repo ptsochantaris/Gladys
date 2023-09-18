@@ -2,6 +2,7 @@ import GladysCommon
 import GladysUI
 import GladysUIKit
 import UIKit
+import Minions
 
 final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, WindowSizing {
     override func viewDidLoad() {
@@ -13,13 +14,15 @@ final class IOSSettingsController: UITabBarController, UITabBarControllerDelegat
         }
         delegate = self
 
-        sendNotification(name: .PreferencesOpen, object: nil)
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
-    }
+        sendNotification(name: .PreferencesOpen, object: self)
 
-    @objc private func otherPrefsOpened() {
-        dismiss(animated: true)
+        #notifications(for: .PreferencesOpen) { notification in
+            if notification.object as? AnyObject === self {
+                return true
+            }
+            dismiss(animated: true)
+            return false
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
