@@ -78,7 +78,6 @@
 		165B971125CD885800E73E2D /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		165B971E25CD886100E73E2D /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165CD5BC2AB6FDF000640DE4 /* Provider.swift */; };
-		165CD5BF2AB6FEAF00640DE4 /* CurrentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */; };
 		165CD5C22AB71AB300640DE4 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
 		165CD5C32AB71AC200640DE4 /* ArchivedItem+Intents+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164CEC672AB239E500298594 /* ArchivedItem+Intents+Extensions.swift */; };
 		165F3B492AB61B4F00C13B18 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
@@ -101,6 +100,7 @@
 		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
+		168ADF1D2AB8A4EA009D20CE /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
 		168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 168D2CAE209E0770005041CF /* ComponentCell.xib */; };
@@ -181,7 +181,6 @@
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */; };
 		16F3A8DC2AB7271B005BD3D2 /* ArchivedItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */; };
-		16F3A8DF2AB727AC005BD3D2 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16F3A8E02AB72809005BD3D2 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
 		16F7E2121FA32C7A009B0726 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
@@ -216,6 +215,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1657B8AA1FD41C1B00EC480D;
 			remoteInfo = GladysMessage;
+		};
+		168ADF1E2AB8A4EA009D20CE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 16CA740C2AB4C063000D6A99;
+			remoteInfo = GladysWidgetsExtension;
 		};
 		168DFB1520B88559002C603D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -297,6 +303,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				168ADF1D2AB8A4EA009D20CE /* GladysWidgetsExtension.appex in Embed Foundation Extensions */,
 				164947D920BEAA6200BD1BEB /* MacGladysShare.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
@@ -414,7 +421,6 @@
 		1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Messages.swift"; sourceTree = "<group>"; };
 		165A8F0821AA92D300405701 /* PlistEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEditor.swift; sourceTree = "<group>"; };
 		165CD5BC2AB6FDF000640DE4 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
-		165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentState.swift; sourceTree = "<group>"; };
 		165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GladysAppIntents.swift; sourceTree = "<group>"; };
 		1660C0252465C32000ABFDFD /* Singleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
 		166AEB3D1F696B5400A77D16 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = openssl.framework; path = "OpenSSL-for-iPhone/openssl.framework"; sourceTree = "<group>"; };
@@ -936,7 +942,6 @@
 				16CA74152AB4C063000D6A99 /* GladysWidgets.swift */,
 				16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */,
 				165CD5BC2AB6FDF000640DE4 /* Provider.swift */,
-				165CD5BE2AB6FEAF00640DE4 /* CurrentState.swift */,
 				16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */,
 			);
 			path = GladysWidgets;
@@ -1033,6 +1038,7 @@
 			dependencies = (
 				168DFB1620B88559002C603D /* PBXTargetDependency */,
 				164947D820BEAA6200BD1BEB /* PBXTargetDependency */,
+				168ADF1F2AB8A4EA009D20CE /* PBXTargetDependency */,
 			);
 			name = MacGladys;
 			packageProductDependencies = (
@@ -1773,8 +1779,6 @@
 			files = (
 				165CD5C22AB71AB300640DE4 /* Component+Copy.swift in Sources */,
 				16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */,
-				165CD5BF2AB6FEAF00640DE4 /* CurrentState.swift in Sources */,
-				16F3A8DF2AB727AC005BD3D2 /* ArchivedItem+Copy.swift in Sources */,
 				165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */,
 				165CD5C32AB71AC200640DE4 /* ArchivedItem+Intents+Extensions.swift in Sources */,
 				16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */,
@@ -1820,6 +1824,11 @@
 			platformFilter = ios;
 			target = 1657B8AA1FD41C1B00EC480D /* GladysMessage */;
 			targetProxy = 1657B8B71FD41C1C00EC480D /* PBXContainerItemProxy */;
+		};
+		168ADF1F2AB8A4EA009D20CE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */;
+			targetProxy = 168ADF1E2AB8A4EA009D20CE /* PBXContainerItemProxy */;
 		};
 		168DFB1620B88559002C603D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2487,6 +2496,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = GladysWidgets/GladysWidgetsExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = GladysWidgets/MacGladysWidgetsExtension.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2504,7 +2514,7 @@
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2517,6 +2527,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = GladysWidgets/GladysWidgetsExtension.entitlements;
 				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = GladysWidgets/MacGladysWidgetsExtension.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2534,7 +2545,7 @@
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";

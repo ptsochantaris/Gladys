@@ -29,9 +29,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
+               BlueprintIdentifier = "161718C32094D333005ABD6C"
                BuildableName = "Gladys.app"
-               BlueprintName = "Gladys"
+               BlueprintName = "MacGladys"
                ReferencedContainer = "container:Gladys.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -68,15 +68,6 @@
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
-            BuildableName = "Gladys.app"
-            BlueprintName = "Gladys"
-            ReferencedContainer = "container:Gladys.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCWidgetKind"
@@ -103,16 +94,15 @@
       debugDocumentVersioning = "YES"
       askForAppToLaunch = "Yes"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
-            BuildableName = "Gladys.app"
-            BlueprintName = "Gladys"
+            BlueprintIdentifier = "16CA740C2AB4C063000D6A99"
+            BuildableName = "GladysWidgetsExtension.appex"
+            BlueprintName = "GladysWidgetsExtension"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

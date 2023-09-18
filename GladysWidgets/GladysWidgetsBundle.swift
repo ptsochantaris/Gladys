@@ -1,6 +1,14 @@
 import AppIntents
 import SwiftUI
 import WidgetKit
+import Foundation
+import GladysCommon
+
+struct CurrentState: TimelineEntry {
+    let date: Date
+    let displaySize: CGSize
+    let items: [PresentationInfo]
+}
 
 @main
 struct GladysWidgetsBundle: WidgetBundle {

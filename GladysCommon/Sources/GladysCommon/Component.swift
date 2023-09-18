@@ -744,7 +744,7 @@ public final class Component: Codable, Hashable {
         }
 
         public var thumbnail: NSImage? {
-            nil
+            componentIcon
         }
     #else
         public var componentIcon: UIImage? {
