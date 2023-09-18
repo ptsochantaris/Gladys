@@ -25,9 +25,8 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
         notesText.text = ActionRequestViewController.noteToApply
 
-        #notifications(for: .IngestComplete) { _ in
-            itemIngested()
-            return true
+        notifications(for: .IngestComplete) { [weak self] _ in
+            self?.itemIngested()
         }
 
         itemIngested()
@@ -43,7 +42,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction(handler: #weakSelf { _ in
             commitNote()
-            sendNotification(name: .DoneSelected, object: nil)
+            sendNotification(name: .DoneSelected)
         }))
     }
 

@@ -38,7 +38,7 @@ public extension CloudManager {
                 log(">>> Sync label cleared")
             }
         #endif
-        sendNotification(name: .CloudManagerStatusChanged, object: nil)
+        sendNotification(name: .CloudManagerStatusChanged)
     }
 
     internal static func setSyncProgressString(_ newString: String?) {
@@ -117,7 +117,7 @@ public extension CloudManager {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
                 Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                    sendNotification(name: .CloudManagerStatusChanged)
                 }
             }
         }
@@ -129,7 +129,7 @@ public extension CloudManager {
                 setSyncProgressString(syncing ? "Pausing" : nil)
                 showNetwork = false
                 Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                    sendNotification(name: .CloudManagerStatusChanged)
                 }
             }
         }
@@ -141,7 +141,7 @@ public extension CloudManager {
                 setSyncProgressString(syncing ? "Syncing" : nil)
                 showNetwork = syncing || syncTransitioning
                 Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged, object: nil)
+                    sendNotification(name: .CloudManagerStatusChanged)
                 }
             }
         }
@@ -625,17 +625,17 @@ public extension CloudManager {
             return
         }
 
-        sendNotification(name: .AcceptStarting, object: nil)
+        sendNotification(name: .AcceptStarting)
         try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
         showNetwork = true
 
         do {
             try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
             try? await sync() // get the new shared objects
-            sendNotification(name: .AcceptEnding, object: nil)
+            sendNotification(name: .AcceptEnding)
             showNetwork = false
         } catch {
-            sendNotification(name: .AcceptEnding, object: nil)
+            sendNotification(name: .AcceptEnding)
             showNetwork = false
             throw error
         }

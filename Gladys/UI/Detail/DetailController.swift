@@ -10,12 +10,14 @@ protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
 }
 
-final class DetailController: GladysViewController,
+final class DetailController: GladysViewController, ResizingCellDelegate, DetailCellDelegate,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate,
-    ResizingCellDelegate, DetailCellDelegate {
+    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
+
     var sourceIndexPath: IndexPath?
+
     private var itemObservation: Cancellable?
+
     var item: ArchivedItem! {
         didSet {
             itemObservation = item.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] _ in
@@ -31,6 +33,10 @@ final class DetailController: GladysViewController,
     @IBOutlet private var dateLabel: UILabel!
     @IBOutlet private var dateLabelHolder: UIView!
     @IBOutlet private var menuButton: UIBarButtonItem?
+
+    deinit {
+        log("Detail view deinit")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -226,20 +232,13 @@ final class DetailController: GladysViewController,
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        super.dismiss(animated: flag) { // workaround for quiclook dismissal issue
-            if let n = self.navigationController {
+        super.dismiss(animated: flag) { [weak self] in // workaround for quicklook dismissal issue
+            if let self, let n = navigationController {
                 if n.viewControllers.count > 1 {
                     n.popViewController(animated: false)
                 }
             }
             completion?()
-        }
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if navigationController?.isBeingDismissed ?? false {
-            sendNotification(name: .DetailViewClosing, object: nil)
         }
     }
 
@@ -361,9 +360,10 @@ final class DetailController: GladysViewController,
 
     func tableView(_: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
         if indexPath.section == 1 {
-            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-                if indexPath.row >= self.item.labels.count { return nil }
-                let text = self.item.labels[indexPath.row]
+            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+                guard let self else { return nil }
+                if indexPath.row >= item.labels.count { return nil }
+                let text = item.labels[indexPath.row]
 
                 var children = [
                     UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
@@ -374,16 +374,16 @@ final class DetailController: GladysViewController,
                     }
                 ]
 
-                if UIApplication.shared.supportsMultipleScenes, let scene = self.view.window?.windowScene {
+                if UIApplication.shared.supportsMultipleScenes, let scene = view.window?.windowScene {
                     children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
                         Filter.Toggle.Function.userLabel(text).openInWindow(from: scene)
                     }, at: 1)
                 }
 
-                if self.isReadWrite {
-                    children.append(UIAction(title: "Remove", image: UIImage(systemName: "xmark"), attributes: .destructive) { _ in
-                        Task {
-                            await self.removeLabel(text)
+                if isReadWrite {
+                    children.append(UIAction(title: "Remove", image: UIImage(systemName: "xmark"), attributes: .destructive) { [weak self] _ in
+                        #weakSelfTask {
+                            await removeLabel(text)
                         }
                     })
                 }
@@ -392,8 +392,9 @@ final class DetailController: GladysViewController,
             }
 
         } else if indexPath.section == 2 {
-            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-                let component = self.item.components[indexPath.row]
+            UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+                guard let self else { return nil }
+                let component = item.components[indexPath.row]
 
                 var children = [
                     UIAction(title: "Copy to Clipboard", image: UIImage(systemName: "doc.on.doc")) { _ in
@@ -429,8 +430,8 @@ final class DetailController: GladysViewController,
 
                 if component.parent?.shareMode != .elsewhereReadOnly {
                     children.append(UIAction(title: "Delete", image: UIImage(systemName: "bin.xmark"), attributes: .destructive, handler: #weakSelf { _ in
-                        Task {
-                            await self.removeComponent(component)
+                        #weakSelfTask {
+                            await removeComponent(component)
                         }
                     }))
                 }
@@ -454,11 +455,11 @@ final class DetailController: GladysViewController,
         guard let component = component(for: cell) else { return }
         if component.isPlist {
             let a = UIAlertController(title: "Inspect", message: "This item can be viewed as a property-list.", preferredStyle: .actionSheet)
-            a.addAction(UIAlertAction(title: "Property List View", style: .default) { _ in
-                self.segue("plistEdit", sender: component)
+            a.addAction(UIAlertAction(title: "Property List View", style: .default) { [weak self] _ in
+                self?.segue("plistEdit", sender: component)
             })
-            a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { _ in
-                self.segue("hexEdit", sender: component)
+            a.addAction(UIAlertAction(title: "Raw Data View", style: .default) { [weak self] _ in
+                self?.segue("hexEdit", sender: component)
             })
             a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             if let p = a.popoverPresentationController {
@@ -550,9 +551,10 @@ final class DetailController: GladysViewController,
             item.labels.remove(at: index)
             let indexPath = IndexPath(row: index, section: 1)
             table.deleteRows(at: [indexPath], with: .automatic)
-        } completion: { _ in
-            self.makeIndexAndSaveItem()
-            UIAccessibility.post(notification: .layoutChanged, argument: self.table)
+        } completion: { [weak self] _ in
+            guard let self else { return }
+            makeIndexAndSaveItem()
+            UIAccessibility.post(notification: .layoutChanged, argument: table)
         }
     }
 
@@ -573,10 +575,11 @@ final class DetailController: GladysViewController,
                 let indexPath = IndexPath(row: index, section: 2)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
-        } completion: { _ in
-            self.item.renumberTypeItems()
-            self.item.needsReIngest = true
-            self.makeIndexAndSaveItem()
+        } completion: { [weak self] _ in
+            guard let self else { return }
+            item.renumberTypeItems()
+            item.needsReIngest = true
+            makeIndexAndSaveItem()
         }
     }
 
@@ -735,12 +738,13 @@ final class DetailController: GladysViewController,
                     if existingLabel == nil {
                         _ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, _ in
                             if let newLabel {
-                                Task { @MainActor in
-                                    self.item.labels[destinationIndexPath.row] = newLabel
+                                Task { @MainActor [weak self] in
+                                    guard let self else { return }
+                                    item.labels[destinationIndexPath.row] = newLabel
                                     tableView.performBatchUpdates({
                                         tableView.reloadRows(at: [destinationIndexPath], with: .automatic)
                                     })
-                                    self.makeIndexAndSaveItem()
+                                    makeIndexAndSaveItem()
                                 }
                             }
                         }
@@ -757,8 +761,8 @@ final class DetailController: GladysViewController,
                         item.components.insert(sourceItem, at: destinationIndex)
                         item.renumberTypeItems()
                         table.moveRow(at: previousIndex, to: destinationIndexPath)
-                    }, completion: { _ in
-                        self.handleNewTypeItem()
+                    }, completion: { [weak self] _ in
+                        self?.handleNewTypeItem()
                     })
                 }
 
@@ -769,8 +773,8 @@ final class DetailController: GladysViewController,
                         tableView.performBatchUpdates({
                             item.labels.insert(text, at: destinationIndexPath.row)
                             tableView.insertRows(at: [destinationIndexPath], with: .automatic)
-                        }, completion: { _ in
-                            self.makeIndexAndSaveItem()
+                        }, completion: { [weak self] _ in
+                            self?.makeIndexAndSaveItem()
                         })
                     }
 
@@ -781,8 +785,8 @@ final class DetailController: GladysViewController,
                         item.components.insert(itemCopy, at: destinationIndexPath.item)
                         item.renumberTypeItems()
                         tableView.insertRows(at: [destinationIndexPath], with: .automatic)
-                    }, completion: { _ in
-                        self.handleNewTypeItem()
+                    }, completion: { [weak self] _ in
+                        self?.handleNewTypeItem()
                     })
                 }
             }
@@ -835,8 +839,8 @@ final class DetailController: GladysViewController,
             }
 
         case 1:
-            Task { @MainActor in
-                self.segue("addLabel", sender: indexPath)
+            #weakSelfTask {
+                segue("addLabel", sender: indexPath)
             }
 
         case 2:

@@ -21,14 +21,12 @@ final class ActionRequestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        #notifications(for: .IngestComplete) { notification in
-            itemIngested(notification)
-            return true
+        notifications(for: .IngestComplete) { [weak self] object in
+            self?.itemIngested(object)
         }
 
-        #notifications(for: .DoneSelected) { _ in
-            done()
-            return true
+        notifications(for: .DoneSelected) { [weak self] _ in
+            self?.done()
         }
 
         ingest()
@@ -132,8 +130,8 @@ final class ActionRequestViewController: UIViewController {
         extensionContext?.cancelRequest(withError: GladysError.actionCancelled)
     }
 
-    private func itemIngested(_ notification: Notification) {
-        if let item = notification.object as? ArchivedItem {
+    private func itemIngested(_ object: Any?) {
+        if let item = object as? ArchivedItem {
             for label in item.labels where !ActionRequestViewController.labelsToApply.contains(label) {
                 ActionRequestViewController.labelsToApply.append(label)
             }
@@ -182,7 +180,7 @@ final class ActionRequestViewController: UIViewController {
     }
 
     @objc private func signalDone() {
-        sendNotification(name: .DoneSelected, object: nil)
+        sendNotification(name: .DoneSelected)
     }
 
     private func done() {

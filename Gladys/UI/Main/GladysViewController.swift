@@ -51,9 +51,9 @@ class GladysViewController: UIViewController, GladysViewDelegate {
     override func viewDidLoad() {
         autoConfigureButtons = isAccessoryWindow
         super.viewDidLoad()
-        #notifications(for: .MultipleWindowModeChange) { _ in
+        notifications(for: .MultipleWindowModeChange) { [weak self] _ in
+            guard let self else { return }
             updateButtons(newTraitCollection: view.traitCollection)
-            return true
         }
         (view as? GladysView)?.delegate = self
     }

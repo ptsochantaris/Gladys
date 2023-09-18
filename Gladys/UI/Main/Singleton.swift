@@ -50,7 +50,7 @@ final class Singleton {
             log("Initial reachability status: \(name)")
         }
 
-        #notifications(for: .ModelDataUpdated) { _ in
+        notifications(for: .ModelDataUpdated) { _ in
             let backgroundSessions = UIApplication.shared.openSessions.filter { $0.scene?.activationState == .background }
             for session in backgroundSessions {
                 UIApplication.shared.requestSceneSessionRefresh(session)
@@ -63,32 +63,28 @@ final class Singleton {
                     log("Error in extension triggered sync: \(error.localizedDescription)")
                 }
             }
-            return true
         }
 
-        #notifications(for: UIApplication.willEnterForegroundNotification) { _ in
+        notifications(for: UIApplication.willEnterForegroundNotification) { _ in
             log("App foregrounded")
             do {
                 try await CloudManager.opportunisticSyncIfNeeded()
             } catch {
                 log("Error in forgrounding triggered sync: \(error.localizedDescription)")
             }
-            return true
         }
 
-        #notifications(for: UIApplication.didEnterBackgroundNotification) { _ in
+        notifications(for: UIApplication.didEnterBackgroundNotification) { _ in
             log("App backgrounded")
             Model.lockUnlockedItems()
-            return true
         }
 
-        #notifications(for: .IngestComplete) { notification in
+        notifications(for: .IngestComplete) { object in
             if DropStore.doneIngesting {
                 await Model.save()
-            } else if let item = notification.object as? ArchivedItem {
+            } else if let item = object as? ArchivedItem {
                 Model.commitItem(item: item)
             }
-            return true
         }
 
         Coordination.beginMonitoringChanges()

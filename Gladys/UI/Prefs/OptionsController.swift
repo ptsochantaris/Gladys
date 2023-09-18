@@ -48,7 +48,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func displayLabelsInMainViewSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.displayLabelsInMainView = sender.isOn
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func showCopyMoveSwitchSelectorSwitchChanged(_ sender: UISwitch) {
@@ -102,7 +102,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func displayNotesInMainViewSelected(_ sender: UISwitch) {
         PersistedOptions.displayNotesInMainView = sender.isOn
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func fullScreenPreviewsSelected(_ sender: UISwitch) {

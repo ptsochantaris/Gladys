@@ -26,7 +26,6 @@ public extension Notification.Name {
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
     static let LabelsUpdated = Notification.Name("LabelsUpdated")
     static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
-    static let DetailViewClosing = Notification.Name("DetailViewClosing")
     static let CloudManagerStatusChanged = Notification.Name("CloudManagerStatusChanged")
     static let ReachabilityChanged = Notification.Name("ReachabilityChanged")
     static let IngestComplete = Notification.Name("IngestComplete")
@@ -37,10 +36,19 @@ public extension Notification.Name {
     static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
 }
 
-public func sendNotification(name: Notification.Name, object: Any?) {
+public func sendNotification(name: Notification.Name, object: Any? = nil) {
     Task { @MainActor in
         await Task.yield()
         NotificationCenter.default.post(name: name, object: object)
+    }
+}
+
+public func notifications(for name: Notification.Name, block: @escaping (Any?) async -> Void) {
+    Task {
+        for await notification in NotificationCenter.default.notifications(named: name) {
+            let obj = notification.object
+            await block(obj)
+        }
     }
 }
 

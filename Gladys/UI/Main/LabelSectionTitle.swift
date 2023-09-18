@@ -39,9 +39,8 @@ final class ScrollFadeView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        #notifications(for: .ModelDataUpdated) { _ in
-            updateColor()
-            return true
+        notifications(for: .ModelDataUpdated) { [weak self] _ in
+            self?.updateColor()
         }
     }
 
@@ -174,9 +173,8 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
 
-        #notifications(for: .ModelDataUpdated) { _ in
-            setNeedsLayout()
-            return true
+        notifications(for: .ModelDataUpdated) { [weak self] _ in
+            self?.setNeedsLayout()
         }
     }
 

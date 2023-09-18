@@ -175,7 +175,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     }
 
     private func updates() {
-        sendNotification(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged)
         clearAllButton.isEnabled = filter.isFilteringLabels
     }
 

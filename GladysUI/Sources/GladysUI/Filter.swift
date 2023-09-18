@@ -604,7 +604,7 @@ public final class Filter {
             labelToggles[i] = l
         }
 
-        sendNotification(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged)
         Task {
             await Model.save()
         }
@@ -618,7 +618,7 @@ public final class Filter {
         }
 
         rebuildLabels() // needed because of UI updates that can occur before the save which rebuilds the labels
-        sendNotification(name: .LabelSelectionChanged, object: nil)
+        sendNotification(name: .LabelSelectionChanged)
         Task {
             await Model.save()
         }

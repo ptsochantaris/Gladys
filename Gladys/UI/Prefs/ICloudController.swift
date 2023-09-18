@@ -17,9 +17,8 @@ final class ICloudController: GladysViewController {
 
         doneButtonLocation = .right
 
-        #notifications(for: .CloudManagerStatusChanged) { _ in
-            await updateiCloudControls()
-            return true
+        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+            await self?.updateiCloudControls()
         }
 
         icloudSwitch.tintColor = UIColor.g_colorLightGray

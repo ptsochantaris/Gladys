@@ -16,12 +16,11 @@ final class IOSSettingsController: UITabBarController, UITabBarControllerDelegat
 
         sendNotification(name: .PreferencesOpen, object: self)
 
-        #notifications(for: .PreferencesOpen) { notification in
-            if notification.object as? AnyObject === self {
-                return true
+        notifications(for: .PreferencesOpen) { [weak self] object in
+            guard let self else { return }
+            if object as? AnyObject !== self {
+                dismiss(animated: true)
             }
-            dismiss(animated: true)
-            return false
         }
     }
 

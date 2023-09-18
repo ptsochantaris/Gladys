@@ -678,15 +678,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
 
     private func setupNotificationHandlers() {
-        #notifications(for: .LabelSelectionChanged) { _ in
+        notifications(for: .LabelSelectionChanged) { [weak self] _ in
+            guard let self else { return }
             filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
             updateLabelIcon()
             userActivity?.needsSave = true
-            return true
         }
 
-        #notifications(for: .ItemCollectionNeedsDisplay) { notification in
-            if notification.object as? Bool == true || notification.object as? UIWindowScene == view.window?.windowScene {
+        notifications(for: .ItemCollectionNeedsDisplay) { [weak self] object in
+            guard let self else { return }
+            if object as? Bool == true || object as? UIWindowScene == view.window?.windowScene {
                 lastLayoutProcessed = 0
                 setupLayout()
                 collection.collectionViewLayout.invalidateLayout()
@@ -696,51 +697,46 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 let uuids = filter.filteredDrops.map(\.uuid)
                 DropStore.reloadCells(for: Set(uuids))
             }
-            return true
         }
 
-        #notifications(for: .ModelDataUpdated) { notification in
-            await _modelDataUpdate(notification)
-            return true
+        notifications(for: .ModelDataUpdated) { [weak self] object in
+            await self?._modelDataUpdate(object)
         }
 
-        #notifications(for: .ItemsAddedBySync) { _ in
-            filter.update(signalUpdate: .animated)
-            return true
+        notifications(for: .ItemsAddedBySync) { [weak self] _ in
+            self?.filter.update(signalUpdate: .animated)
         }
 
-        #notifications(for: .CloudManagerStatusChanged) { _ in
-            await cloudStatusChanged()
-            return true
+        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+            await self?.cloudStatusChanged()
         }
 
-        #notifications(for: .ReachabilityChanged) { _ in
+        notifications(for: .ReachabilityChanged) { _ in
             guard await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi else {
-                return true
+                return
             }
             do {
                 try await CloudManager.opportunisticSyncIfNeeded()
             } catch {
                 log("Error in reachability triggered sync: \(error.localizedDescription)")
             }
-            return true
         }
 
-        #notifications(for: .AcceptStarting) { _ in
+        notifications(for: .AcceptStarting) { _ in
             await genericAlert(title: "Accepting Share…", message: nil, alertController: #weakSelf { alert in
                 acceptAlert = alert
             })
-            return true
         }
 
-        #notifications(for: .AcceptEnding) { _ in
+        notifications(for: .AcceptEnding) { [weak self] _ in
+            guard let self else { return }
             await acceptAlert?.dismiss(animated: true)
             acceptAlert = nil
-            return true
         }
 
-        #notifications(for: .IngestComplete) { notification in
-            if let item = notification.object as? ArchivedItem,
+        notifications(for: .IngestComplete) { [weak self] object in
+            if let self,
+               let item = object as? ArchivedItem,
                let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
                let indexPath = dataSource.indexPath(for: firstIdentifier) {
                 mostRecentIndexPathActioned = indexPath
@@ -752,16 +748,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if DropStore.doneIngesting {
                 UIAccessibility.post(notification: .screenChanged, argument: nil)
             }
-            return true
         }
 
         // Not using notifications macro because registration needs to be immediate
         highlightRegistration = HighlightRequest.registerListener(listener: self)
 
-        #notifications(for: .UIRequest) { notification in
-            guard let request = notification.object as? UIRequest,
+        notifications(for: .UIRequest) { [weak self] object in
+            guard let self,
+                  let request = object as? UIRequest,
                   request.sourceScene == view.window?.windowScene
-            else { return true }
+            else { return }
 
             if request.pushInsteadOfPresent {
                 navigationController?.pushViewController(request.vc, animated: true)
@@ -773,43 +769,41 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     p.barButtonItem = request.sourceButton
                 }
             }
-            return true
         }
 
-        #notifications(for: .DismissPopoversRequest) { _ in
-            await dismissAnyPopOver()
-            return true
+        notifications(for: .DismissPopoversRequest) { [weak self] _ in
+            await self?.dismissAnyPopOver()
         }
 
-        #notifications(for: .ResetSearchRequest) { _ in
+        notifications(for: .ResetSearchRequest) { [weak self] _ in
+            guard let self else { return }
             if searchActive || filter.isFiltering {
                 await resetSearch(andLabels: true)
             }
-            return true
         }
 
-        #notifications(for: UIApplication.keyboardWillHideNotification) { _ in
+        notifications(for: UIApplication.keyboardWillHideNotification) { [weak self] _ in
+            guard let self else { return }
             if presentedViewController != nil {
-                return true
+                return
             }
             if currentDetailView != nil {
-                return true
+                return
             }
             if !filter.isFilteringText {
                 await resetSearch(andLabels: false)
             }
-            return true
         }
 
-        #notifications(for: .SectionHeaderTapped) { notification in
-            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+        notifications(for: .SectionHeaderTapped) { [weak self] object in
+            guard let self, let event = object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
             var name = event.name
 
             if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
                 name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
             }
 
-            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
             switch toggle.currentDisplayMode {
             case .collapsed:
                 filter.setDisplayMode(to: toggle.preferredDisplayMode, for: [name], setAsPreference: false)
@@ -818,18 +812,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             updateDataSource(animated: true)
             userActivity?.needsSave = true
-            return true
         }
 
-        #notifications(for: .SectionShowAllTapped) { notification in
-            guard let event = notification.object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return true }
+        notifications(for: .SectionShowAllTapped) { [weak self] object in
+            guard let self, let event = object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
             var name = event.name
 
             if name == nil, let frame = event.frame, let sectionIndexPath = anyPath(in: frame) {
                 name = dataSource.itemIdentifier(for: sectionIndexPath)?.label?.function.displayText
             }
 
-            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return true }
+            guard let name, let toggle = filter.labelToggles.first(where: { $0.function.displayText == name }) else { return }
             switch toggle.currentDisplayMode {
             case .collapsed, .scrolling:
                 filter.setDisplayMode(to: .full, for: [name], setAsPreference: true)
@@ -838,7 +831,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
             updateDataSource(animated: true)
             userActivity?.needsSave = true
-            return true
         }
     }
 
@@ -1093,7 +1085,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    private func _modelDataUpdate(_ notification: Notification) async {
+    private func _modelDataUpdate(_ object: Any?) async {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
         let oldSet = Set(oldUUIDs)
 
@@ -1102,7 +1094,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let forceAnnounce = previous != filter.enabledToggles
         filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
-        let parameters = notification.object as? [AnyHashable: Any]
+        let parameters = object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
             DropStore.reloadCells(for: uuidsToReload)
         }

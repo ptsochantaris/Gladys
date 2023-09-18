@@ -20,7 +20,7 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
 
         viewControllers[2].isNavigationBarHidden = true
 
-        sendNotification(name: .PreferencesOpen, object: nil)
+        sendNotification(name: .PreferencesOpen)
         let n = NotificationCenter.default
         n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
 

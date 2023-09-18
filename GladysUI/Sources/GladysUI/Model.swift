@@ -80,7 +80,7 @@ public enum Model {
 
                 Task { @MainActor in
                     DropStore.boot(with: result)
-                    sendNotification(name: .ModelDataUpdated, object: nil)
+                    sendNotification(name: .ModelDataUpdated)
                     ingestItemsIfNeeded()
                 }
             } catch {

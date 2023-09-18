@@ -129,9 +129,8 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
 
-        #notifications(for: .CloudManagerStatusChanged) { _ in
-            await updateSyncSwitches()
-            return true
+        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+            await self?.updateSyncSwitches()
         }
 
         Task {

@@ -211,9 +211,8 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let zipDragInteraction = UIDragInteraction(delegate: self)
         zipContainer.addInteraction(zipDragInteraction)
 
-        #notifications(for: .ModelDataUpdated) { _ in
-            updateUI()
-            return true
+        notifications(for: .ModelDataUpdated) { [weak self] _ in
+            self?.updateUI()
         }
 
         container.isAccessibilityElement = true

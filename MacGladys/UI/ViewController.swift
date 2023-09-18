@@ -95,46 +95,41 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         updateDragOperationIndicators()
 
-        #notifications(for: .ModelDataUpdated) { notification in
+        notifications(for: .ModelDataUpdated) { [weak self] object in
+            guard let self else { return }
             filter.rebuildLabels()
             updateEmptyView()
-            modelDataUpdate(notification)
-            return true
+            modelDataUpdate(object)
         }
 
-        #notifications(for: .ItemCollectionNeedsDisplay) { _ in
-            itemCollectionNeedsDisplay()
-            return true
+        notifications(for: .ItemCollectionNeedsDisplay) { [weak self] _ in
+            self?.itemCollectionNeedsDisplay()
         }
 
-        #notifications(for: .CloudManagerStatusChanged) { _ in
-            await updateTitle()
-            return true
+        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+            await self?.updateTitle()
         }
 
-        #notifications(for: .LabelSelectionChanged) { _ in
+        notifications(for: .LabelSelectionChanged) { [weak self] _ in
+            guard let self else { return }
             collection.deselectAll(nil)
             filter.update(signalUpdate: .animated)
             await updateTitle()
-            return true
         }
 
-        #notifications(for: .AlwaysOnTopChanged) { _ in
-            updateAlwaysOnTop()
-            return true
+        notifications(for: .AlwaysOnTopChanged) { [weak self] _ in
+            self?.updateAlwaysOnTop()
         }
 
-        #notifications(for: NSScroller.preferredScrollerStyleDidChangeNotification) { _ in
-            handleLayout()
-            return true
+        notifications(for: NSScroller.preferredScrollerStyleDidChangeNotification) { [weak self] _ in
+            self?.handleLayout()
         }
 
         // Not using notifications macro because registration needs to be immediate
         highlightRegistration = HighlightRequest.registerListener(listener: self)
 
-        #notifications(for: .ItemsAddedBySync) { _ in
-            filter.update(signalUpdate: .animated)
-            return true
+        notifications(for: .ItemsAddedBySync) { [weak self] _ in
+            self?.filter.update(signalUpdate: .animated)
         }
 
         Task {
@@ -493,7 +488,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
-    private func modelDataUpdate(_ notification: Notification) {
+    private func modelDataUpdate(_ object: Any?) {
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
         let oldSet = Set(oldUUIDs)
 
@@ -502,7 +497,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let forceAnnounce = previous != filter.enabledToggles
         filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
-        let parameters = notification.object as? [AnyHashable: Any]
+        let parameters = object as? [AnyHashable: Any]
         if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
             DropStore.reloadCells(for: uuidsToReload)
         }

@@ -77,7 +77,7 @@ extension CallbackSupport {
     @discardableResult
     static func handlePasteRequest(title: String?, note: String?, labels: String?) -> PasteResult {
         Task { @MainActor in
-            sendNotification(name: .DismissPopoversRequest, object: nil)
+            sendNotification(name: .DismissPopoversRequest)
         }
 
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }

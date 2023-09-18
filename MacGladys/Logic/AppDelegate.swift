@@ -272,30 +272,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         setupClipboardSnooping()
 
-        #notifications(for: .ClipboardSnoopingChanged) { _ in
-            setupClipboardSnooping()
-            return true
+        notifications(for: .ClipboardSnoopingChanged) { [weak self] _ in
+            self?.setupClipboardSnooping()
         }
 
-        #notifications(for: .AcceptStarting) { _ in
-            startProgress(for: nil, titleOverride: "Accepting Share…")
-            return true
+        notifications(for: .AcceptStarting) { [weak self] _ in
+            self?.startProgress(for: nil, titleOverride: "Accepting Share…")
         }
 
-        #notifications(for: .AcceptEnding) { _ in
-            endProgress()
-            return true
+        notifications(for: .AcceptEnding) { [weak self] _ in
+            self?.endProgress()
         }
 
-        #notifications(for: .IngestComplete) { notification in
+        notifications(for: .IngestComplete) { object in
             if DropStore.doneIngesting {
                 Task {
                     await Model.save()
                 }
-            } else if let item = notification.object as? ArchivedItem {
+            } else if let item = object as? ArchivedItem {
                 Model.commitItem(item: item)
             }
-            return true
         }
 
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)

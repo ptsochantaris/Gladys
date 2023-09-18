@@ -35,7 +35,7 @@ final actor PullState {
     private var pendingShareComponentRecords = [CKRecord.ID: CKShare]() // using full IDs because zone is also imporant
     private var pendingComponentRecords = [CKRecord.ID: Lista<CKRecord>]() // using full IDs because zone is also imporant
     private let newItemsDebounce = PopTimer(timeInterval: 0.3) {
-        sendNotification(name: .ItemsAddedBySync, object: nil)
+        sendNotification(name: .ItemsAddedBySync)
     }
 
     private func updateProgress() {
