@@ -83,16 +83,20 @@ public extension IMAGE {
 
         final nonisolated func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
             var cols: (UInt8, UInt8, UInt8, UInt8)?
-            let edgeWidth: CGFloat = 20
+            let edgeInset: CGFloat = 50
+            let H: CGFloat = 20
+            let total = edgeInset + H
 
-            if top == nil || size.width < edgeWidth || size.height < edgeWidth {
-                cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-            } else {
-                if top == true {
-                    cols = calculateAverageColor(rect: CGRect(x: 0, y: size.height - edgeWidth, width: size.width, height: edgeWidth))
+            if let top, size.width > total, size.height > total {
+                let W = size.width - edgeInset * 2
+                let sampleSize = CGSize(width: W, height: H)
+                if top {
+                    cols = calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset), size: sampleSize))
                 } else {
-                    cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: edgeWidth))
+                    cols = calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: edgeInset - H), size: sampleSize))
                 }
+            } else {
+                cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
             }
 
             IMAGE.sharedCiContext.clearCaches()

@@ -74,12 +74,12 @@ public struct ItemView: View {
 
         var body: some View {
             let gradient = Gradient(stops: [
-                Gradient.Stop(color: fadeColor, location: 0.0),
-                Gradient.Stop(color: fadeColor.opacity(0.7), location: 0.6),
+                Gradient.Stop(color: fadeColor, location: 0.2),
+                Gradient.Stop(color: fadeColor.opacity(0.3), location: 0.8),
                 Gradient.Stop(color: .clear, location: 1.0)
             ])
             LinearGradient(gradient: gradient, startPoint: atTop ? .top : .bottom, endPoint: atTop ? .bottom : .top)
-                .padding(atTop ? .bottom : .top, -21)
+                .padding(atTop ? .bottom : .top, -26)
         }
     }
 
