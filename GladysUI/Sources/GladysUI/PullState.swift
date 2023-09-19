@@ -65,22 +65,15 @@ final actor PullState {
         await CloudManager.setSyncProgressString("Updating…")
         log("Changes fetch complete, processing")
 
-        var needsSave = false
-        if updatedSequence || newDropCount > 0 {
-            needsSave = true
-            Task {
-                await Model.sortDrops()
-            }
-        }
-
-        needsSave = needsSave
+        let needsSave = updatedSequence
             || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
             || (!updatedZoneTokens.isEmpty && updatedSequence)
 
         if needsSave {
-            Task {
-                await Model.save(dueToSyncFetch: true)
+            if updatedSequence || newDropCount > 0 {
+                await Model.sortDrops()
             }
+            await Model.save(dueToSyncFetch: true)
 
         } else {
             log("No updates available")
