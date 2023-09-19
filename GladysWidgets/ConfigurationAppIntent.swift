@@ -17,8 +17,11 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
                 filter.rebuildLabels()
                 let names = Set(filter.labelToggles.map(\.function.displayText))
                 return identifiers.compactMap { entityId in
+                    if entityId == "" {
+                        return LabelOption.clear
+                    }
                     if names.contains(entityId) {
-                        return LabelOption(id: entityId)
+                        return LabelOption(id: entityId, label: entityId)
                     }
                     return nil
                 }
@@ -28,19 +31,23 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
             func suggestedEntities() async throws -> [LabelOption] {
                 let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
                 filter.rebuildLabels()
-                return filter.labelToggles.compactMap {
+                return [LabelOption.clear] + filter.labelToggles.compactMap {
                     if case .userLabel = $0.function {
-                        return LabelOption(id: $0.function.displayText)
+                        let labelText = $0.function.displayText
+                        return LabelOption(id: labelText, label: labelText)
                     }
                     return nil
                 }
             }
         }
 
-        let id: String
-        static var defaultQuery = LabelQuery()
+        static let defaultQuery = LabelQuery()
         static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Label" }
-        var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: id) }
+        static let clear = LabelOption(id: "", label: "(All labels)")
+
+        let id: String
+        let label: String
+        var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: label) }
     }
 
     static var title: LocalizedStringResource = "Filter"
