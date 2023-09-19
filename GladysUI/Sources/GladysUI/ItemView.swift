@@ -127,7 +127,20 @@ public struct ItemView: View {
         wrapper.configure(with: item, size: size, style: style)
     }
 
+    public func clear() {
+        wrapper.clear()
+    }
+
     public var body: some View {
+        if wrapper.hasItem {
+            itemMode
+        } else {
+            Color.clear
+        }
+    }
+
+    @ViewBuilder
+    private var itemMode: some View {
         #if os(visionOS)
             let cornerRadius = wrapper.compact ? cellCornerRadius * 0.5 : cellCornerRadius
             let shadowRadius: CGFloat = 6

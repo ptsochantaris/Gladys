@@ -26,6 +26,11 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
+    public func invalidateLayout() {
+        lastLayout = .zero
+        setNeedsLayout()
+    }
+
     open func setup() {
         contentView.backgroundColor = .clear
         contentView.clipsToBounds = false
@@ -55,8 +60,7 @@ open class CommonItemCell: UICollectionViewCell {
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
-            lastLayout = .zero
-            setNeedsLayout()
+            invalidateLayout()
         }
     }
 
@@ -67,7 +71,11 @@ open class CommonItemCell: UICollectionViewCell {
         if lastLayout != bounds.size {
             lastLayout = bounds.size
 
-            itemViewController.rootView.setItem(archivedDropItem, for: bounds.size, style: style)
+            if lowMemoryMode {
+                itemViewController.rootView.clear()
+            } else {
+                itemViewController.rootView.setItem(archivedDropItem, for: bounds.size, style: style)
+            }
 
             if itemViewController.parent == nil, let owningViewController {
                 owningViewController.addChildController(itemViewController, to: contentView)
@@ -88,8 +96,7 @@ open class CommonItemCell: UICollectionViewCell {
     public var lowMemoryMode = false {
         didSet {
             if lowMemoryMode != oldValue {
-                lastLayout = .zero
-                setNeedsLayout()
+                invalidateLayout()
             }
         }
     }

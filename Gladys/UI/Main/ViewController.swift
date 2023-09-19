@@ -1059,13 +1059,12 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    private var lowMemoryMode = false {
-        didSet {
-            if lowMemoryMode != oldValue {
-                presentationInfoCache.reset()
-                for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
-                    cell.lowMemoryMode = lowMemoryMode
-                }
+    private var lowMemoryMode = false
+
+    private func markCellsAsNeedingRefresh() {
+        if let collection {
+            for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
+                cell.setNeedsLayout()
             }
         }
     }
@@ -1080,7 +1079,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func sceneForegrounded() {
         lowMemoryMode = false
-        if emptyView != nil {
+        if emptyView == nil {
+            markCellsAsNeedingRefresh()
+        } else {
             blurb(Greetings.randomGreetLine)
         }
     }

@@ -5,8 +5,14 @@ import Minions
 import SwiftUI
 
 public final class ArchivedItemWrapper: ObservableObject, Identifiable {
+    private let emptyId = UUID()
+
     public var id: UUID {
-        item?.uuid ?? UUID()
+        item?.uuid ?? emptyId
+    }
+
+    public var hasItem: Bool {
+        item != nil
     }
 
     public enum Style {
@@ -33,6 +39,12 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
+
+    @MainActor
+    func clear() {
+        item = nil
+        objectWillChange.send()
+    }
 
     @MainActor
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
