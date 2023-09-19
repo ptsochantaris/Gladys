@@ -63,7 +63,7 @@ public struct PresentationInfo: Identifiable, Hashable {
         hasher.combine(id)
     }
 
-    init() {
+    public init() {
         id = UUID()
         top = LabelInfo()
         bottom = LabelInfo()
@@ -99,6 +99,4 @@ public struct PresentationInfo: Identifiable, Hashable {
         self.hasFullImage = hasFullImage
         isPlaceholder = false
     }
-
-    public static let none = PresentationInfo()
 }

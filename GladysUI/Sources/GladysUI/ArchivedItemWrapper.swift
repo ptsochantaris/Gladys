@@ -92,7 +92,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         if let uuid = item?.uuid, let existing = presentationInfoCache[uuid] {
             return existing
         }
-        return PresentationInfo.none
+        return PresentationInfo()
     }
 
     @MainActor

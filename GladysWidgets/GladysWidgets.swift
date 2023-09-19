@@ -20,6 +20,17 @@ struct GladysWidgetsEntryView: View {
         }
     }
 
+    private func rows(in widgetFamily: WidgetFamily) -> Int {
+        switch widgetFamily {
+        case .accessoryCircular, .accessoryInline, .accessoryRectangular: 1
+        case .systemSmall: 2
+        case .systemMedium: 2
+        case .systemLarge: 4
+        case .systemExtraLarge: 4
+        @unknown default: 1
+        }
+    }
+
     private struct ItemCell: View {
         let item: PresentationInfo
         let width: CGFloat
@@ -31,14 +42,15 @@ struct GladysWidgetsEntryView: View {
             ZStack {
                 let shadowRadius: CGFloat = 3
                 let cornerRadius: CGFloat = 20
+                let bgOpacity = item.isPlaceholder ? 0.6 : 1
                 if colorScheme == .light {
                     Rectangle()
-                        .foregroundStyle(.background)
+                        .foregroundStyle(.background.opacity(bgOpacity))
                         .cornerRadius(cornerRadius)
                         .shadow(color: .secondary.opacity(0.4), radius: shadowRadius)
                 } else {
                     Rectangle()
-                        .foregroundStyle(.quaternary)
+                        .foregroundStyle(.quaternary.opacity(bgOpacity))
                         .cornerRadius(cornerRadius)
                         .shadow(color: .black, radius: shadowRadius)
                 }
@@ -94,37 +106,32 @@ struct GladysWidgetsEntryView: View {
 
     var body: some View {
         let colNum = CGFloat(colunms(in: widgetFamily))
+        let rowNum = CGFloat(rows(in: widgetFamily))
         let spacing: CGFloat = 12
-        let rows = entry.items.bunch(maxSize: Int(colNum))
-        let rowNum = CGFloat(rows.count)
         let W = ((entry.displaySize.width - (colNum + 0.5) * spacing) / colNum)
         let H = ((entry.displaySize.height - (rowNum + 0.5) * spacing) / rowNum)
-        VStack(alignment: .leading, spacing: spacing) {
-            ForEach(rows) { row in
-                HStack(alignment: .top, spacing: spacing) {
-                    ForEach(row) { item in
-                        Button(intent: itemIntent(for: item.id)) {
-                            ItemCell(item: item, width: W, height: H)
-                                .allowsHitTesting(false)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
+        let colDefs = [GridItem](repeating: GridItem(.flexible(minimum: min(W, H), maximum: max(W, H)), spacing: spacing), count: Int(colNum))
+        let extras = (0 ..< max(0, Int(colNum * rowNum) - entry.items.count - 1)).map { _ in
+            PresentationInfo()
         }
-        .frame(width: entry.displaySize.width, height: entry.displaySize.height)
-        .containerBackground(Color(.g_colorPaper), for: .widget)
-        .overlay(alignment: .bottomTrailing) {
+        LazyVGrid(columns: colDefs, spacing: spacing) {
+            ForEach(entry.items + extras) { item in
+                Button(intent: itemIntent(for: item.id)) {
+                    ItemCell(item: item, width: W, height: H)
+                        .allowsHitTesting(false)
+                }
+                .buttonStyle(.plain)
+            }
             Button(intent: itemIntent(for: nil)) {
                 Image(systemName: "arrow.down.doc")
-                    .font(.title).fontWeight(.light)
-                    .padding()
+                    .font(.largeTitle).fontWeight(.light)
                     .foregroundColor(Color(.g_colorTint))
                     .allowsHitTesting(false)
+                    .frame(width: W, height: H)
+                    .offset(x: -1, y: -1)
             }
             .buttonStyle(.plain)
-            .frame(width: W, height: H)
-            .padding(spacing)
         }
+        .frame(width: entry.displaySize.width, height: entry.displaySize.height)
     }
 }

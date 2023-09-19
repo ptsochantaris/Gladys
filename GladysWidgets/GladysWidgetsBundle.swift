@@ -23,6 +23,7 @@ struct GladysWidgets: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             GladysWidgetsEntryView(entry: entry)
+                .containerBackground(Color(.g_colorPaper), for: .widget)
         }
         .configurationDisplayName("Gladgets")
         .description("A grid of your latest items, with optional label or text filtering. Tap an item to copy it.")
