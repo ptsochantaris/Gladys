@@ -8,8 +8,8 @@ extension ArchivedItemWrapper {
     func createLabelView(width: CGFloat, alignment: NSTextAlignment) -> (some View)? {
         if PersistedOptions.displayLabelsInMainView, !labels.isEmpty {
             TagCloudView(wrapper: self, cellWidth: width, alignment: alignment)
-                .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: width, minHeight: 0, alignment: .top)
+                .fixedSize()
                 .clipped()
         }
     }
