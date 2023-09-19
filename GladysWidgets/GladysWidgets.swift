@@ -77,11 +77,10 @@ struct GladysWidgetsEntryView: View {
 
                         if let title = item.top.content.rawText ?? item.bottom.content.rawText {
                             Text(title)
-                                .foregroundStyle(.primary)
                                 .multilineTextAlignment(.center)
                                 .lineLimit(2)
                                 .font(.caption2).scaleEffect(0.8)
-                                .foregroundColor(item.top.isBright ? .black : .white)
+                                .foregroundColor(item.hasFullImage ? (item.top.isBright ? .black : .white) : .primary)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 4)
                         }
