@@ -1079,6 +1079,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func sceneForegrounded() {
         lowMemoryMode = false
+        if let collection {
+            for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
+                cell.invalidateLayout()
+            }
+        }
         if emptyView != nil {
             blurb(Greetings.randomGreetLine)
         }

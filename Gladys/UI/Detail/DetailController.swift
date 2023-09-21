@@ -13,7 +13,6 @@ protocol ResizingCellDelegate: AnyObject {
 final class DetailController: GladysViewController, ResizingCellDelegate, DetailCellDelegate,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
     UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
-
     var sourceIndexPath: IndexPath?
 
     private var itemObservation: Cancellable?

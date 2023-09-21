@@ -3,7 +3,7 @@ import Foundation
 import GladysCommon
 import GladysUI
 #if canImport(AppKit)
-import AppKit
+    import AppKit
 #endif
 
 // Stubs for methods that are in the widget but will actually run in the main app target
@@ -15,10 +15,10 @@ extension Model {
     }
 
     #if canImport(AppKit)
-    @discardableResult
-    static func addItems(from pasteBoard: NSPasteboard, at indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
-        .noData
-    }
+        @discardableResult
+        static func addItems(from _: NSPasteboard, at _: IndexPath, overrides _: ImportOverrides?, filterContext _: Filter?) -> PasteResult {
+            .noData
+        }
     #endif
 
     @discardableResult

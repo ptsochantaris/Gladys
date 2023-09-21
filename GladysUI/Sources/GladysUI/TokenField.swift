@@ -89,9 +89,9 @@ final class TokenField: VIEWCLASS {
     private static let xInset: CGFloat = 5
     private static let heightInset: CGFloat = 2
     #if os(visionOS)
-    private static let tagPadding: CGFloat = 17
+        private static let tagPadding: CGFloat = 17
     #else
-    private static let tagPadding: CGFloat = 12
+        private static let tagPadding: CGFloat = 12
     #endif
 
     override func draw(_ rect: CGRect) {

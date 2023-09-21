@@ -1,8 +1,8 @@
 import AppIntents
-import SwiftUI
-import WidgetKit
 import Foundation
 import GladysCommon
+import SwiftUI
+import WidgetKit
 
 struct CurrentState: TimelineEntry {
     let date: Date
