@@ -1,6 +1,5 @@
 import GladysCommon
 import GladysUI
-import Minions
 import UIKit
 
 final class NoteCell: UITableViewCell, UITextViewDelegate {
@@ -22,9 +21,10 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
         let c = UIColor.g_colorTint
         textView.textColor = c
         placeholder.textColor = c
-        observer = textView.observe(\.selectedTextRange, options: .new, changeHandler: #weakSelf { _, _ in
+        observer = textView.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
+            guard let self else { return }
             caretMoved()
-        })
+        }
     }
 
     func startEdit() {

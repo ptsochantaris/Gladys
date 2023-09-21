@@ -7,7 +7,6 @@ import GladysCommon
 import GladysUI
 import HotKey
 import Maintini
-import Minions
 import UserNotifications
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {

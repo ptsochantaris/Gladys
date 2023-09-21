@@ -10,7 +10,6 @@ import Foundation
 #elseif canImport(UIKit)
 
     import GladysCommon
-    import Minions
     import UIKit
 
     public enum Coordination {

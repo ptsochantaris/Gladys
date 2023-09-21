@@ -1,7 +1,6 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import Minions
 import UIKit
 
 final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, WindowSizing {

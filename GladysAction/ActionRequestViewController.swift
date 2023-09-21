@@ -1,6 +1,5 @@
 import GladysCommon
 import Lista
-import Minions
 import UIKit
 
 extension Notification.Name {
@@ -164,8 +163,9 @@ final class ActionRequestViewController: UIViewController {
     private func reset(ingestOnNextAppearance: Bool) {
         statusLabel.isHidden = true
         if PersistedOptions.setLabelsWhenActioning {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction(handler: #weakSelf { _ in
-                self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Note & Labels", primaryAction: UIAction(handler: { [weak self] _ in
+                guard let self else { return }
+                performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
             }))
         } else {
             navigationItem.rightBarButtonItem = nil

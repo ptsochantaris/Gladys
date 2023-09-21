@@ -2,7 +2,6 @@ import GladysAppKit
 import GladysCommon
 import GladysUI
 import MapKit
-import Minions
 import SwiftUI
 
 class FirstMouseView: NSView {

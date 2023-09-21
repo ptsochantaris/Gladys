@@ -1,6 +1,5 @@
 import GladysCommon
 import GladysUI
-import Minions
 import UIKit
 
 final class HeaderCell: UITableViewCell, UITextViewDelegate {
@@ -19,9 +18,10 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         label.textContainerInset = .zero
-        observer = label.observe(\.selectedTextRange, options: .new, changeHandler: #weakSelf { _, _ in
+        observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
+            guard let self else { return }
             caretMoved()
-        })
+        }
 
         focusEffect = UIFocusHaloEffect()
         label.focusGroupIdentifier = "build.bru.gladys.detail.focus"

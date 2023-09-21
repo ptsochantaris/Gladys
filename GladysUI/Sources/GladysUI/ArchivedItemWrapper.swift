@@ -1,7 +1,6 @@
 import Combine
 import Foundation
 import GladysCommon
-import Minions
 import SwiftUI
 
 public final class ArchivedItemWrapper: ObservableObject, Identifiable {

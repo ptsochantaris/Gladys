@@ -1,7 +1,6 @@
 import AppKit
 import GladysCommon
 import GladysUI
-import Minions
 
 final class LabelSelectionViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate {
     private var presentingGladysVc: ViewController {
@@ -95,7 +94,8 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         label.stringValue = name
         a.accessoryView = label
         a.window.initialFirstResponder = label
-        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
+        a.beginSheetModal(for: view.window!) { [weak self] response in
+            guard let self else { return }
             if response.rawValue == 1000 {
                 let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !text.isEmpty {
@@ -103,7 +103,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
                     tableView.reloadData()
                 }
             }
-        })
+        }
     }
 
     @IBAction private func deleteLabelSelected(_: NSMenuItem) {
@@ -115,14 +115,13 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
             title: "Are you sure?",
             message: "This will remove the label '\(name)' from any item that contains it.",
             action: "Remove From All Items",
-            cancel: "Cancel",
-            completion: #weakSelf { confirmed in
-                if confirmed {
-                    presentingGladysVc.filter.removeLabel(name)
-                    tableView.reloadData()
-                }
+            cancel: "Cancel"
+        ) { [weak self] confirmed in
+            if let self, confirmed {
+                presentingGladysVc.filter.removeLabel(name)
+                tableView.reloadData()
             }
-        )
+        }
     }
 
     private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {

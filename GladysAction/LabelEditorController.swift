@@ -1,5 +1,4 @@
 import GladysCommon
-import Minions
 import UIKit
 
 final class LabelEditorController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
@@ -40,7 +39,8 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
     private func itemIngested() {
         guard DropStore.doneIngesting else { return }
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction(handler: #weakSelf { _ in
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", primaryAction: UIAction(handler: { [weak self] _ in
+            guard let self else { return }
             commitNote()
             sendNotification(name: .DoneSelected)
         }))

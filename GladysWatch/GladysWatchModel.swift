@@ -1,5 +1,4 @@
 import GladysCommon
-import Minions
 import WatchConnectivity
 
 final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
@@ -50,9 +49,10 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
 
     func getFullUpdate(session: WCSession) {
         if session.activationState == .activated {
-            session.sendMessage(["update": "full"], replyHandler: #weakSelf { info in
+            session.sendMessage(["update": "full"]) { [weak self] info in
+                guard let self else { return }
                 receivedInfo(info)
-            })
+            }
         }
     }
 

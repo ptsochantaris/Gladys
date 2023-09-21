@@ -1,7 +1,6 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import Minions
 import UIKit
 import UniformTypeIdentifiers
 
@@ -289,12 +288,14 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     @objc private func importExportSelected() {
         let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Import from an Archive", style: .default, handler: #weakSelf { _ in
+        a.addAction(UIAlertAction(title: "Import from an Archive", style: .default) { [weak self] _ in
+            guard let self else { return }
             importSelected()
-        }))
-        a.addAction(UIAlertAction(title: "Export to an Archive", style: .default, handler: #weakSelf { _ in
+        })
+        a.addAction(UIAlertAction(title: "Export to an Archive", style: .default) { [weak self] _ in
+            guard let self else { return }
             exportSelected()
-        }))
+        })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(a, animated: true)
     }

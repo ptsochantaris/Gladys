@@ -1,5 +1,4 @@
 import AppKit
-import Minions
 
 final class ProgressViewController: NSViewController {
     @IBOutlet private var titleLabel: NSTextField!
@@ -14,9 +13,10 @@ final class ProgressViewController: NSViewController {
 
     func startMonitoring(progress: Progress?, titleOverride: String?) {
         if let monitoredProgress = progress {
-            observer = monitoredProgress.observe(\Progress.completedUnitCount, options: .new, changeHandler: #weakSelf { p, _ in
+            observer = monitoredProgress.observe(\Progress.completedUnitCount, options: .new) { [weak self] p, _ in
+                guard let self else { return }
                 update(from: p)
-            })
+            }
             update(from: monitoredProgress)
         } else {
             progressIndicator.isIndeterminate = true

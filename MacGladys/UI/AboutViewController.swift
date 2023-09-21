@@ -1,7 +1,6 @@
 import AppKit
 import GladysAppKit
 import GladysUI
-import Minions
 import StoreKit
 
 final class AboutViewController: NSViewController {
@@ -52,8 +51,8 @@ final class AboutViewController: NSViewController {
         }
 
         supportStack.isHidden = true
-        tipJar = TipJar(completion: #weakSelf { items, _ in
-            guard let items, items.count > 4 else { return }
+        tipJar = TipJar { [weak self] items, _ in
+            guard let self, let items, items.count > 4 else { return }
 
             tipItems = items
             l1.stringValue = " " + (items[0].regularPrice ?? "") + " "
@@ -63,7 +62,7 @@ final class AboutViewController: NSViewController {
             l5.stringValue = " " + (items[4].regularPrice ?? "") + " "
 
             supportStack.animator().isHidden = false
-        })
+        }
 
         // no clue why this isn't picked up automatically
         if view.effectiveAppearance.bestMatch(from: [.darkAqua]) == .darkAqua {

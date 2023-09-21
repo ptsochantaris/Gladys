@@ -4,7 +4,6 @@ import Combine
 import GladysAppKit
 import GladysCommon
 import GladysUI
-import Minions
 import QuickLookUI
 
 final class ComponentCollectionView: NSCollectionView {
@@ -486,8 +485,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         input.addSubview(textField)
         a.accessoryView = input
         a.window.initialFirstResponder = textField
-        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
-            if response.rawValue == 1000 {
+        a.beginSheetModal(for: view.window!) { [weak self] response in
+            if let self, response.rawValue == 1000 {
                 if let newURL = URL(string: textField.stringValue) {
                     typeItem.replaceURL(newURL)
                     item.markUpdated()
@@ -500,7 +499,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                     }
                 }
             }
-        })
+        }
     }
 
     @objc private func revealCurrent(_: Any?) {
@@ -756,13 +755,14 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.addButton(withTitle: "Cancel")
         a.addButton(withTitle: "Stop Sharing")
         a.addButton(withTitle: "Options")
-        a.beginSheetModal(for: view.window!, completionHandler: #weakSelf { response in
+        a.beginSheetModal(for: view.window!) { [weak self] response in
+            guard let self else { return }
             if response.rawValue == 1002 {
                 editInvites(sender)
             } else if response.rawValue == 1001 {
                 deleteShare(sender)
             }
-        })
+        }
     }
 
     private func deleteShare(_ sender: NSButton) {

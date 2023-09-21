@@ -4,7 +4,6 @@ import GladysCommon
 import GladysUI
 import GladysUIKit
 import MapKit
-import Minions
 import UIKit
 import UniformTypeIdentifiers
 
@@ -65,10 +64,11 @@ extension ArchivedItem {
             textField.isSecureTextEntry = true
         }
         if requestHint {
-            a.addTextField(configurationHandler: #weakSelf { textField in
+            a.addTextField { [weak self] textField in
+                guard let self else { return }
                 textField.placeholder = "Label when locked"
                 textField.text = displayText.0
-            })
+            }
         }
         a.addAction(UIAlertAction(title: action, style: .default) { [weak self] _ in
             var hint: String?

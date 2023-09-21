@@ -1,7 +1,6 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import Minions
 import UIKit
 
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate, WindowSizing {
@@ -206,11 +205,12 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             field.text = toggle.function.displayText
             textField = field
         }
-        a.addAction(UIAlertAction(title: "Rename", style: .default, handler: #weakSelf { _ in
+        a.addAction(UIAlertAction(title: "Rename", style: .default) { [weak self] _ in
+            guard let self else { return }
             if let field = textField, let text = field.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
                 filter.renameLabel(toggle.function.displayText, to: text)
             }
-        }))
+        })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         if navigationItem.searchController?.isActive ?? false {
             navigationItem.searchController?.present(a, animated: true)
@@ -221,7 +221,8 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
     private func delete(toggle: Filter.Toggle) {
         let a = UIAlertController(title: "Are you sure?", message: "This will remove the label '\(toggle.function.displayText)' from any item that contains it.", preferredStyle: .alert)
-        a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive, handler: #weakSelf { _ in
+        a.addAction(UIAlertAction(title: "Remove From All Items", style: .destructive) { [weak self] _ in
+            guard let self else { return }
             filter.removeLabel(toggle.function.displayText)
             if filter.labelToggles.isEmpty {
                 table.isHidden = true
@@ -233,11 +234,12 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
                 let indexPath = IndexPath(row: i, section: 0)
                 table.deleteRows(at: [indexPath], with: .automatic)
             }
-            #weakSelfTask {
+            Task { [weak self] in
+                guard let self else { return }
                 try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
                 sizeWindow()
             }
-        }))
+        })
         a.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         if navigationItem.searchController?.isActive ?? false {
             navigationItem.searchController?.present(a, animated: true)

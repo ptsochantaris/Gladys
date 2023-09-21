@@ -1,6 +1,5 @@
 import AppKit
 import GladysCommon
-import Minions
 
 final class ShareViewController: NSViewController {
     override var nibName: NSNib.Name? {
@@ -83,12 +82,12 @@ final class ShareViewController: NSViewController {
                 log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
                 for type in identifiers {
                     importGroup.enter()
-                    let p = attachment.loadDataRepresentation(forTypeIdentifier: type, completionHandler: #weakSelf { data, _ in
+                    let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
                         if let data {
                             newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
                         }
-                        importGroup.leave()
-                    })
+                        self?.importGroup.leave()
+                    }
                     progresses.append(p)
                 }
             }

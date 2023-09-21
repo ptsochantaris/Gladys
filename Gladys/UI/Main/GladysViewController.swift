@@ -1,6 +1,5 @@
 import GladysCommon
 import GladysUI
-import Minions
 import UIKit
 
 protocol GladysViewDelegate: AnyObject {

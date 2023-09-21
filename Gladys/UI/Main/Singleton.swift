@@ -2,7 +2,6 @@ import CoreSpotlight
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import Minions
 import UIKit
 
 @MainActor
@@ -23,7 +22,8 @@ final class Singleton {
 
     func setup() {
         Model.registerStateHandler()
-        Model.badgeHandler = #weakSelf {
+        Model.badgeHandler = { [weak self] in
+            guard let self else { return }
             if PersistedOptions.badgeIconWithItemCount, let count = lastUsedWindow?.associatedFilter?.filteredDrops.count {
                 log("Updating app badge to show item count (\(count))")
                 setBadgeCount(to: count)

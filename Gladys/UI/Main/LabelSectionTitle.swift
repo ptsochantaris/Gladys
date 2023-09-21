@@ -1,6 +1,5 @@
 import GladysCommon
 import GladysUI
-import Minions
 import UIKit
 
 final class PassthroughStackView: UIStackView {
@@ -101,17 +100,19 @@ final class LabelSectionTitle: UICollectionReusableView {
         addInteraction(UIDragInteraction(delegate: self))
         addInteraction(UIContextMenuInteraction(delegate: self))
 
-        addInteraction(UISpringLoadedInteraction(activationHandler: #weakSelf { _, context in
+        addInteraction(UISpringLoadedInteraction { [weak self] _, context in
+            guard let self else { return }
             if context.state == .activated, mode == .collapsed {
                 sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
             }
-        }))
+        })
 
         layer.cornerRadius = 15
 
-        let selectionButton = UIButton(primaryAction: UIAction(handler: #weakSelf { _ in
+        let selectionButton = UIButton(primaryAction: UIAction { [weak self] _ in
+            guard let self else { return }
             sendNotification(name: .SectionHeaderTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
-        }))
+        })
         selectionButton.translatesAutoresizingMaskIntoConstraints = false
 
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -125,9 +126,10 @@ final class LabelSectionTitle: UICollectionReusableView {
         indicator.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         showAllButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: LabelSectionTitle.titleStyle)
-        showAllButton.addAction(UIAction(handler: #weakSelf { _ in
+        showAllButton.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
             sendNotification(name: .SectionShowAllTapped, object: BackgroundSelectionEvent(scene: window?.windowScene, frame: nil, name: label.text))
-        }), for: .primaryActionTriggered)
+        }, for: .primaryActionTriggered)
         showAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         showAllButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         showAllButton.setTitleColor(UIColor.g_colorTint, for: .normal)
@@ -304,9 +306,10 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
         var myOptions = menuOptions
         if UIApplication.shared.supportsMultipleScenes, let scene = window?.windowScene {
-            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1"), handler: #weakSelf { _ in
+            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+                guard let self else { return }
                 toggle?.function.openInWindow(from: scene)
-            })
+            }
             myOptions.append(windowOption)
         }
 

@@ -23,8 +23,7 @@ let package = Package(
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/lista", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/pop-timer", branch: "main"),
-        .package(url: "https://github.com/ptsochantaris/maintini", branch: "main"),
-        .package(path: "../Minions")
+        .package(url: "https://github.com/ptsochantaris/maintini", branch: "main")
     ],
     targets: [
         .target(
@@ -32,7 +31,6 @@ let package = Package(
             dependencies: ["ExceptionCatcher",
                            "Fuzi",
                            "ZIPFoundation",
-                           "Minions",
                            .product(name: "Lista", package: "lista"),
                            .product(name: "Maintini", package: "maintini"),
                            .product(name: "Semalot", package: "semalot"),
