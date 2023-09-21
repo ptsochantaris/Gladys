@@ -60,17 +60,20 @@ extension ItemView {
         }
 
         var body: some View {
-            HStack(spacing: 0) {
+            ZStack(alignment: .trailing) {
                 VStack(spacing: 0) {
                     SquareLabel(wrapper: wrapper, atTop: true)
                     Spacer(minLength: 0)
                     SquareLabel(wrapper: wrapper, atTop: false)
                 }
                 .accessibilityValue(accessibilityText())
+                .frame(maxWidth: .infinity)
 
                 SelectionTick(wrapper: wrapper)
+                    .fixedSize(horizontal: true, vertical: false)
             }
             .font(titleFont)
+            .frame(width: wrapper.cellSize.width)
         }
     }
 
