@@ -24,7 +24,7 @@ public enum GladysError: LocalizedError {
 
     public var suggestSettings: Bool {
         switch self {
-        case .cloudLoginChanged:
+        case .cloudLoginChanged, .cloudLoginRequired:
             true
         default:
             false

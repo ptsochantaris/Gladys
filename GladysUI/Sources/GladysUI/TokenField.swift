@@ -86,7 +86,13 @@ final class TokenField: VIEWCLASS {
         }
     }
 
-    private let xInset: CGFloat = 5
+    private static let xInset: CGFloat = 5
+    private static let heightInset: CGFloat = 2
+    #if os(visionOS)
+    private static let tagPadding: CGFloat = 17
+    #else
+    private static let tagPadding: CGFloat = 12
+    #endif
 
     override func draw(_ rect: CGRect) {
         #if canImport(AppKit)
@@ -95,7 +101,7 @@ final class TokenField: VIEWCLASS {
             guard let frameSetter, let context = UIGraphicsGetCurrentContext() else { return }
         #endif
 
-        let dirtyRect = rect.insetBy(dx: xInset, dy: 0)
+        let dirtyRect = rect.insetBy(dx: TokenField.xInset, dy: 0)
 
         let path = CGPath(rect: dirtyRect, transform: nil)
         let totalFrame = CTFramesetterCreateFrame(frameSetter, TokenField.emptyRange, path, nil)
@@ -124,15 +130,13 @@ final class TokenField: VIEWCLASS {
                     continue
                 }
 
+                let w = CGFloat(CTRunGetImageBounds(run, context, TokenField.emptyRange).width) + TokenField.tagPadding
+                let h = lineBounds.height + TokenField.heightInset
                 #if os(visionOS)
                     let x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 6
-                    let w = CGFloat(CTRunGetImageBounds(run, context, TokenField.emptyRange).width) + 17
-                    let h = lineBounds.height + 2
                     let y = linePos.y - 6.5
                 #else
                     let x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 3.5
-                    let w = CGFloat(CTRunGetImageBounds(run, context, TokenField.emptyRange).width) + 12
-                    let h = lineBounds.height + 2
                     let y = linePos.y - 4
                 #endif
 
@@ -158,10 +162,11 @@ final class TokenField: VIEWCLASS {
 
     override var intrinsicContentSize: CGSize {
         guard let frameSetter else { return .zero }
-        let guide = CGSize(width: cellWidth - (xInset * 2), height: CGFLOAT_MAX)
+        let extra = TokenField.xInset * 2 + TokenField.tagPadding * 2
+        let guide = CGSize(width: cellWidth - extra, height: CGFLOAT_MAX)
         var result = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, TokenField.emptyRange, nil, guide, nil)
-        result.width += 2
-        result.height += 2
+        result.width += extra
+        result.height += TokenField.heightInset
         return result
     }
 
