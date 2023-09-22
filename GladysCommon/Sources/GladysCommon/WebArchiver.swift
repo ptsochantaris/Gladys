@@ -34,11 +34,7 @@ public final actor WebArchiver {
     }
 
     private func archiveWebpageFromUrl(url: String, data: Data, response: HTTPURLResponse) async throws -> (Data, String) {
-        let (r, error) = resourcePathsFromUrl(url: url, data: data)
-        guard let resources = r else {
-            log("Download error: \(error?.localizedDescription ?? "(No error reported)")")
-            throw ArchiveErrorType.FetchResourceFailed
-        }
+        let resources = try resourcePathsFromUrl(url: url, data: data)
 
         let resourceInfo = await withTaskGroup(of: (String, [AnyHashable: Any])?.self) { group -> [AnyHashable: Any] in
             for resourceUrlString in resources {
@@ -98,10 +94,10 @@ public final actor WebArchiver {
         }
     }
 
-    private func resourcePathsFromUrl(url: String, data htmlData: Data) -> ([String]?, ArchiveErrorType?) {
+    private func resourcePathsFromUrl(url: String, data htmlData: Data) throws -> [String] {
         guard let doc = try? HTMLDocument(data: htmlData) else {
             log("Init html doc error")
-            return (nil, .FailToInitHTMLDocument)
+            throw ArchiveErrorType.FailToInitHTMLDocument
         }
 
         var resources: [String] = []
@@ -134,14 +130,13 @@ public final actor WebArchiver {
         }
         resources += cssPaths
 
-        return (resources, nil)
+        return resources
     }
 
     /////////////////////////////////////////
 
     public struct WebPreviewResult {
         public let title: String?
-        public let description: String?
         public let image: IMAGE?
         public let isThumbnail: Bool
     }
@@ -150,6 +145,7 @@ public final actor WebArchiver {
         guard let url = URL(string: urlString) else {
             throw GladysError.networkIssue
         }
+
         var headRequest = URLRequest(url: url)
         log("Investigating possible HTML title from this URL: \(url)")
         headRequest.httpMethod = "head"
@@ -201,25 +197,14 @@ public final actor WebArchiver {
             log("No title located at URL")
         }
 
-        let description: String? = nil
-        /* if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:description\"]") {
-         for node in metaTags {
-         if let content = node.attr("content") {
-         log("Found og summary: \(content)")
-         description = content.trimmingCharacters(in: .whitespacesAndNewlines)
-         break
-         }
-         }
-         } */
-
         func fetchFavIcon() async throws -> WebPreviewResult {
             if let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: url),
                let iconUrl = URL(string: favIconUrl) {
                 log("Fetching favicon image for site icon: \(iconUrl)")
                 let newImage = try await fetchImage(url: iconUrl)
-                return WebPreviewResult(title: title, description: description, image: newImage, isThumbnail: false)
+                return WebPreviewResult(title: title, image: newImage, isThumbnail: false)
             } else {
-                return WebPreviewResult(title: title, description: description, image: nil, isThumbnail: false)
+                return WebPreviewResult(title: title, image: nil, isThumbnail: false)
             }
         }
 
@@ -230,7 +215,7 @@ public final actor WebArchiver {
 
         log("Fetching thumbnail image for site icon: \(iconUrl)")
         if let newImage = try await fetchImage(url: iconUrl) {
-            return WebPreviewResult(title: title, description: description, image: newImage, isThumbnail: true)
+            return WebPreviewResult(title: title, image: newImage, isThumbnail: true)
         } else {
             log("Thumbnail fetch failed, falling back to favicon")
             return try await fetchFavIcon()

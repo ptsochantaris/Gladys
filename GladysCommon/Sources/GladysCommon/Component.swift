@@ -841,8 +841,12 @@ public final class Component: Codable, Hashable {
 
     private func ingest(from url: URL) async throws {
         // in thread!
-
+        await Component.gateKeeper.takeTicket()
+        defer {
+            Component.gateKeeper.returnTicket()
+        }
         clearCachedFields()
+
         representedClass = .data
         classWasWrapped = false
 
@@ -867,114 +871,106 @@ public final class Component: Codable, Hashable {
         defer {
             Component.gateKeeper.returnTicket()
         }
-
         clearCachedFields()
 
-        if data.isPlist, let obj = SafeArchiving.unarchive(data) {
-            log("      unwrapped keyed object: \(type(of: obj))")
-            classWasWrapped = true
-
-            if let item = obj as? NSString {
-                log("      received string: \(item)")
-                setTitleInfo(item as String, 10)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-                representedClass = .string
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-
-            } else if let item = obj as? NSAttributedString {
-                log("      received attributed string: \(item)")
-                setTitleInfo(item.string, 7)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
-                representedClass = .attributedString
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-
-            } else if let item = obj as? COLOR {
-                log("      received color: \(item)")
-                setTitleInfo("Color \(item.hexValue)", 0)
-                await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
-                representedClass = .color
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-
-            } else if let item = obj as? IMAGE {
-                log("      received image: \(item)")
-                await setDisplayIcon(item, 50, .fill)
-                if encodeAnyUIImage {
-                    log("      will encode it to JPEG, as it's the only image in this parent item")
-                    representedClass = .data
-                    typeIdentifier = UTType.jpeg.identifier
-                    classWasWrapped = false
-                    if storeBytes {
-                        #if canImport(AppKit)
-                            let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
-                            setBytes(b ?? Data())
-                        #else
-                            let b = item.jpegData(compressionQuality: 1)
-                            setBytes(b)
-                        #endif
-                    }
-                } else {
-                    representedClass = .image
-                    if storeBytes {
-                        setBytes(data)
-                    }
-                }
-                return
-
-            } else if let item = obj as? MKMapItem {
-                log("      received map item: \(item)")
-                await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
-                representedClass = .mapItem
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-
-            } else if let item = obj as? URL {
-                try await handleUrl(item, data, storeBytes)
-                return
-
-            } else if let item = obj as? NSArray {
-                log("      received array: \(item)")
-                if item.count == 1 {
-                    setTitleInfo("1 Item", 1)
-                } else {
-                    setTitleInfo("\(item.count) Items", 1)
-                }
-                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-                representedClass = .array
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-
-            } else if let item = obj as? NSDictionary {
-                log("      received dictionary: \(item)")
-                if item.count == 1 {
-                    setTitleInfo("1 Entry", 1)
-                } else {
-                    setTitleInfo("\(item.count) Entries", 1)
-                }
-                await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
-                representedClass = .dictionary
-                if storeBytes {
-                    setBytes(data)
-                }
-                return
-            }
+        guard data.isPlist, let obj = SafeArchiving.unarchive(data) else {
+            log("      not a known class, storing data: \(data)")
+            representedClass = .data
+            try await handleData(data, resolveUrls: true, storeBytes: storeBytes)
+            return
         }
 
-        log("      not a known class, storing data: \(data)")
-        representedClass = .data
-        try await handleData(data, resolveUrls: true, storeBytes: storeBytes)
+        log("      unwrapped keyed object: \(type(of: obj))")
+        classWasWrapped = true
+
+        if let item = obj as? NSString {
+            log("      received string: \(item)")
+            setTitleInfo(item as String, 10)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            representedClass = .string
+            if storeBytes {
+                setBytes(data)
+            }
+
+        } else if let item = obj as? NSAttributedString {
+            log("      received attributed string: \(item)")
+            setTitleInfo(item.string, 7)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
+            representedClass = .attributedString
+            if storeBytes {
+                setBytes(data)
+            }
+
+        } else if let item = obj as? COLOR {
+            log("      received color: \(item)")
+            setTitleInfo("Color \(item.hexValue)", 0)
+            await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 0, .center)
+            representedClass = .color
+            if storeBytes {
+                setBytes(data)
+            }
+
+        } else if let item = obj as? IMAGE {
+            log("      received image: \(item)")
+            await setDisplayIcon(item, 50, .fill)
+            if encodeAnyUIImage {
+                log("      will encode it to JPEG, as it's the only image in this parent item")
+                representedClass = .data
+                typeIdentifier = UTType.jpeg.identifier
+                classWasWrapped = false
+                if storeBytes {
+                    #if canImport(AppKit)
+                        let b = (item.representations.first as? NSBitmapImageRep)?.representation(using: .jpeg, properties: [:])
+                        setBytes(b ?? Data())
+                    #else
+                        let b = item.jpegData(compressionQuality: 1)
+                        setBytes(b)
+                    #endif
+                }
+            } else {
+                representedClass = .image
+                if storeBytes {
+                    setBytes(data)
+                }
+            }
+
+        } else if let item = obj as? MKMapItem {
+            log("      received map item: \(item)")
+            await setDisplayIcon(#imageLiteral(resourceName: "iconMap"), 10, .center)
+            representedClass = .mapItem
+            if storeBytes {
+                setBytes(data)
+            }
+
+        } else if let item = obj as? URL {
+            try await handleUrl(item, data, storeBytes)
+
+        } else if let item = obj as? NSArray {
+            log("      received array: \(item)")
+            if item.count == 1 {
+                setTitleInfo("1 Item", 1)
+            } else {
+                setTitleInfo("\(item.count) Items", 1)
+            }
+            await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+            representedClass = .array
+            if storeBytes {
+                setBytes(data)
+            }
+
+        } else if let item = obj as? NSDictionary {
+            log("      received dictionary: \(item)")
+            if item.count == 1 {
+                setTitleInfo("1 Entry", 1)
+            } else {
+                setTitleInfo("\(item.count) Entries", 1)
+            }
+            await setDisplayIcon(#imageLiteral(resourceName: "iconStickyNote"), 0, .center)
+            representedClass = .dictionary
+            if storeBytes {
+                setBytes(data)
+            }
+        }
     }
 
     public func setTitle(from url: URL) {
@@ -985,7 +981,7 @@ public final class Component: Codable, Hashable {
         }
     }
 
-    func setTitleInfo(_ text: String?, _ priority: Int) {
+    private func setTitleInfo(_ text: String?, _ priority: Int) {
         let alignment: NSTextAlignment
         let finalText: String?
         if let text, text.count > 200 {
@@ -1118,29 +1114,7 @@ public final class Component: Codable, Hashable {
         typeConforms(to: .utf16PlainText) ? .utf16 : .utf8
     }
 
-    func handleRemoteUrl(_ url: URL, _: Data, _: Bool) async throws {
-        log("      received remote url: \(url.absoluteString)")
-        await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
-        guard let s = url.scheme, s.hasPrefix("http") else {
-            throw GladysError.blankResponse
-        }
-
-        let res = try? await WebArchiver.shared.fetchWebPreview(for: url.absoluteString)
-        if flags.contains(.loadingAborted) {
-            try await ingestFailed(error: nil)
-        }
-        accessoryTitle = res?.title ?? accessoryTitle
-        if let image = res?.image {
-            if image.size.height > 100 || image.size.width > 200 {
-                let thumb = res?.isThumbnail ?? false
-                await setDisplayIcon(image, 30, thumb ? .fill : .fit)
-            } else {
-                await setDisplayIcon(image, 30, .center)
-            }
-        }
-    }
-
-    func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool) async throws {
+    private func handleData(_ data: Data, resolveUrls: Bool, storeBytes: Bool) async throws {
         if storeBytes {
             setBytes(data)
         }
@@ -1191,7 +1165,6 @@ public final class Component: Codable, Hashable {
 
         } else if resolveUrls, let url = encodedUrl {
             try await handleUrl(url as URL, data, storeBytes)
-            return // important
 
         } else if typeConforms(to: .text) {
             if let s = String(data: data, encoding: .utf8) {
@@ -1240,16 +1213,17 @@ public final class Component: Codable, Hashable {
             return
         }
 
-        componentIcon = await Task.detached(priority: .userInitiated) {
+        assert(!Thread.isMainThread)
+
+        componentIcon =
             switch contentMode {
-            case .fit:
-                icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
-            case .fill:
-                icon.limited(to: Component.iconPointSize, useScreenScale: true)
-            case .center, .circle:
-                icon
-            }
-        }.value
+        case .fit:
+            icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+        case .fill:
+            icon.limited(to: Component.iconPointSize, useScreenScale: true)
+        case .center, .circle:
+            icon
+        }
 
         displayIconPriority = priority
         displayIconContentMode = contentMode
@@ -1261,21 +1235,6 @@ public final class Component: Codable, Hashable {
     }
 
     #if canImport(AppKit)
-        func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
-            setTitle(from: url)
-
-            if url.isFileURL {
-                try await handleFileUrl(url, data, storeBytes)
-
-            } else {
-                if storeBytes {
-                    setBytes(data)
-                }
-                representedClass = .url
-                try await handleRemoteUrl(url, data, storeBytes)
-            }
-        }
-
         private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) async throws {
             if PersistedOptions.readAndStoreFinderTagsAsLabels {
                 let resourceValues = try? item.resourceValues(forKeys: [.tagNamesKey])
@@ -1361,21 +1320,55 @@ public final class Component: Codable, Hashable {
         }
 
     #else
-        func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
+        private func handleFileUrl(_ item: URL, _ data: Data, _ storeBytes: Bool) async throws {
             if storeBytes {
                 setBytes(data)
             }
             representedClass = .url
-            setTitle(from: url)
-
-            if url.isFileURL {
-                log("      received local file url: \(url.path)")
-                await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
-            } else {
-                try await handleRemoteUrl(url, data, storeBytes)
-            }
+            log("      received local file url: \(item.path)")
+            await setDisplayIcon(#imageLiteral(resourceName: "iconBlock"), 5, .center)
         }
     #endif
+
+    private func handleUrl(_ url: URL, _ data: Data, _ storeBytes: Bool) async throws {
+        setTitle(from: url)
+
+        if url.isFileURL {
+            try await handleFileUrl(url, data, storeBytes)
+            return
+        }
+
+        if storeBytes {
+            setBytes(data)
+        }
+        representedClass = .url
+        log("      received remote url: \(url.absoluteString)")
+
+        guard let s = url.scheme, s.hasPrefix("http") else {
+            await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+            throw GladysError.blankResponse
+        }
+
+        let res = try? await WebArchiver.shared.fetchWebPreview(for: url.absoluteString)
+        if flags.contains(.loadingAborted) {
+            try await ingestFailed(error: nil)
+            return
+        }
+
+        accessoryTitle = res?.title ?? accessoryTitle
+
+        guard let image = res?.image else {
+            await setDisplayIcon(#imageLiteral(resourceName: "iconLink"), 5, .center)
+            return
+        }
+
+        if image.size.height > 100 || image.size.width > 200 {
+            let thumb = res?.isThumbnail ?? false
+            await setDisplayIcon(image, 30, thumb ? .fill : .fit)
+        } else {
+            await setDisplayIcon(image, 30, .center)
+        }
+    }
 
     @MainActor
     public var parent: ArchivedItem? {
