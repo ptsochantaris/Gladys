@@ -246,7 +246,10 @@ public final class Component: Codable, Hashable {
     }
 
     public var dataExists: Bool {
-        FileManager.default.fileExists(atPath: bytesPath.path)
+        componentAccessQueue.sync {
+            // required to avoid race condition
+            FileManager.default.fileExists(atPath: bytesPath.path)
+        }
     }
 
     //////////////////////////////////////////// Common
