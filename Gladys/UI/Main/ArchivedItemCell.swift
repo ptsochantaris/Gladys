@@ -14,7 +14,7 @@ final class ArchivedItemCell: CommonItemCell {
         }
         set {
             style = newValue ? .wide : .square
-            invalidateLayout()
+            invalidateView()
         }
     }
 

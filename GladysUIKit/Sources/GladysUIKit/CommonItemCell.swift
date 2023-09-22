@@ -26,9 +26,14 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    public func invalidateLayout() {
+    public func invalidateView() {
         lastLayout = .zero
         setNeedsLayout()
+    }
+
+    public func forceRefresh() {
+        itemViewController.rootView.clear()
+        invalidateView()
     }
 
     open func setup() {
@@ -60,7 +65,7 @@ open class CommonItemCell: UICollectionViewCell {
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
-            invalidateLayout()
+            invalidateView()
         }
     }
 
@@ -96,7 +101,7 @@ open class CommonItemCell: UICollectionViewCell {
     public var lowMemoryMode = false {
         didSet {
             if lowMemoryMode != oldValue {
-                invalidateLayout()
+                invalidateView()
             }
         }
     }

@@ -1087,7 +1087,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         lowMemoryMode = false
         if let collection {
             for cell in collection.visibleCells as? [ArchivedItemCell] ?? [] {
-                cell.invalidateLayout()
+                cell.forceRefresh()
             }
         }
         if emptyView != nil {
