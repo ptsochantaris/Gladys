@@ -26,14 +26,9 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    public func invalidateView() {
+    private func invalidateView() {
         lastLayout = .zero
         setNeedsLayout()
-    }
-
-    public func forceRefresh() {
-        itemViewController.rootView.clear()
-        invalidateView()
     }
 
     open func setup() {
@@ -69,12 +64,13 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    public var lastLayout = CGSize.zero
+    private var lastLayout = CGSize.zero
     public var style = ArchivedItemWrapper.Style.square
 
     override open func layoutSubviews() {
-        if lastLayout != bounds.size {
-            lastLayout = bounds.size
+        let currentSize = bounds.size
+        if lastLayout != currentSize {
+            lastLayout = currentSize
 
             if lowMemoryMode {
                 itemViewController.rootView.clear()
