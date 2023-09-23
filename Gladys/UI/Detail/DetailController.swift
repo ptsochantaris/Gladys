@@ -510,7 +510,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     private func editURL(_ component: Component, existingEdit: String?) {
         Task {
             let newValue = await getInput(from: self, title: "Edit URL", action: "Change", previousValue: existingEdit ?? component.encodedUrl?.absoluteString)
-            if let newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, !scheme.isEmpty {
+            if let newValue, let newURL = URL(string: newValue), let scheme = newURL.scheme, scheme.isPopulated {
                 component.replaceURL(newURL)
                 makeIndexAndSaveItem()
             } else if let newValue {
@@ -876,7 +876,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         guard let indexPath = table.indexPathForSelectedRow else { return }
         table.deselectRow(at: indexPath, animated: true)
 
-        guard let didEnterLabel, !didEnterLabel.isEmpty else { return }
+        guard let didEnterLabel, didEnterLabel.isPopulated else { return }
 
         if indexPath.row < item.labels.count {
             item.labels[indexPath.row] = didEnterLabel

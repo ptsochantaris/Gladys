@@ -15,6 +15,12 @@ extension Array: Identifiable where Element: Identifiable {
     }
 }
 
+public extension Collection {
+    var isPopulated: Bool {
+        !isEmpty
+    }
+}
+
 public extension Collection where Self.Index == Int {
     func bunch(maxSize: Int) -> [[Element]] {
         var pos = 0

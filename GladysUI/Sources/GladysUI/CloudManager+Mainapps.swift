@@ -341,7 +341,7 @@ public extension CloudManager {
         }
 
         let myOwnShareIds = await DropStore.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
-        if !myOwnShareIds.isEmpty {
+        if myOwnShareIds.isPopulated {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }
 

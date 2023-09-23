@@ -177,15 +177,15 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         }
 
         var lockItems = [NSMenuItem]()
-        if !hostGladysController.lockableSelectedItems.isEmpty {
+        if hostGladysController.lockableSelectedItems.isPopulated {
             let m = NSMenuItem(title: "Lock", action: #selector(lockSelected), keyEquivalent: "")
             lockItems.append(m)
         }
-        if !hostGladysController.unlockableSelectedItems.isEmpty {
+        if hostGladysController.unlockableSelectedItems.isPopulated {
             let m = NSMenuItem(title: "Unlock", action: #selector(unlockSelected), keyEquivalent: "")
             lockItems.append(m)
         }
-        if !hostGladysController.removableLockSelectedItems.isEmpty {
+        if hostGladysController.removableLockSelectedItems.isPopulated {
             let m = NSMenuItem(title: "Remove Lock", action: #selector(removeLockSelected), keyEquivalent: "")
             lockItems.append(m)
         }
@@ -215,7 +215,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             menu.addItem(colours)
         }
 
-        if !lockItems.isEmpty {
+        if lockItems.isPopulated {
             menu.addItem(NSMenuItem.separator())
             for item in lockItems {
                 item.isEnabled = true

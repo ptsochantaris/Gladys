@@ -113,7 +113,7 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
     }
 
     private func setLabelText() {
-        if let text = item?.displayText.0, !text.isEmpty {
+        if let text = item?.displayText.0, text.isPopulated {
             label.text = text
             label.alpha = 1
         } else {

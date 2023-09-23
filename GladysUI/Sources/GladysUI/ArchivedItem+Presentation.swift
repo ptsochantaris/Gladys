@@ -104,7 +104,7 @@ public extension ArchivedItem {
             } else {
                 .none
             }
-        } else if PersistedOptions.displayNotesInMainView, !note.isEmpty {
+        } else if PersistedOptions.displayNotesInMainView, note.isPopulated {
             .note(note)
         } else if let url = associatedWebURL, backgroundInfoObject == nil {
             .link(url)

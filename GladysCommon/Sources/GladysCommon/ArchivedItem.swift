@@ -651,7 +651,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                     let r = VNRecognizeTextRequest { request, _ in
                         if let observations = request.results as? [VNRecognizedTextObservation] {
                             let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
-                            if !detectedText.isEmpty {
+                            if detectedText.isPopulated {
                                 transcribedText = detectedText
                             }
                         }
@@ -660,7 +660,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                     visualRequests.append(r)
                 }
 
-                if !visualRequests.isEmpty {
+                if visualRequests.isPopulated {
                     let vr = visualRequests
                     let handler = VNImageRequestHandler(cgImage: img)
                     await Task.detached {
@@ -686,7 +686,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                             }
                         }
                         let detectedText = result.bestTranscription.formattedString
-                        if !detectedText.isEmpty {
+                        if detectedText.isPopulated {
                             transcribedText = detectedText
                         }
                     } catch {
@@ -929,7 +929,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                     attributes.contentDescription = note
                 }
             }
-            if !labels.isEmpty { attributes.keywords = labels }
+            if labels.isPopulated { attributes.keywords = labels }
             attributes.thumbnailURL = imagePath
             attributes.providerDataTypeIdentifiers = components.map(\.typeIdentifier)
             attributes.userCurated = true

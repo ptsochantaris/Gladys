@@ -108,7 +108,7 @@ final class Singleton {
             let displayMode = userActivity?.userInfo?[kGladysMainViewDisplayMode] as? Int
 
             let legacyLabelList: Set<String>?
-            if let list = userActivity?.userInfo?["kGladysMainViewLabelList"] as? [String], !list.isEmpty {
+            if let list = userActivity?.userInfo?["kGladysMainViewLabelList"] as? [String], list.isPopulated {
                 legacyLabelList = Set(list)
             } else {
                 legacyLabelList = nil
@@ -233,7 +233,7 @@ final class Singleton {
             filter.enableLabelsByName(legacyLabelList)
         }
 
-        if let search = restoringSearch, !search.isEmpty {
+        if let search = restoringSearch, search.isPopulated {
             filter.text = search
         }
 

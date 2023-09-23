@@ -41,7 +41,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     }
 
     private var filteredDrops: ContiguousArray<ArchivedItem> {
-        if let t = searchBar.text, !t.isEmpty {
+        if let t = searchBar.text, t.isPopulated {
             DropStore.visibleDrops.filter { $0.displayTitleOrUuid.localizedCaseInsensitiveContains(t) }
         } else {
             DropStore.visibleDrops
@@ -108,7 +108,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
         DropStore.boot(with: ContiguousArray(LiteModel.allItems()))
-        emptyLabel.isHidden = !DropStore.visibleDrops.isEmpty
+        emptyLabel.isHidden = DropStore.visibleDrops.isPopulated
         searchBar.text = lastFilter
     }
 

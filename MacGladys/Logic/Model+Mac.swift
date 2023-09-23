@@ -92,7 +92,7 @@ extension Model {
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 for promise in filePromises {
-                    guard let promiseType = promise.fileTypes.first, !promise.fileNames.isEmpty else {
+                    guard let promiseType = promise.fileTypes.first, promise.fileNames.isPopulated else {
                         continue
                     }
                     if utis.contains(promiseType) { // No need to fetch the file, the data exists as a solid block in the pasteboard

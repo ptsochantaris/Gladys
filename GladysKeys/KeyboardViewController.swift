@@ -56,7 +56,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         if firstAppearance {
-            if let f = selectedLabel, !f.isEmpty, let index = labels.firstIndex(of: f) {
+            if let f = selectedLabel, f.isPopulated, let index = labels.firstIndex(of: f) {
                 table.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: false)
             }
             firstAppearance = false
@@ -233,7 +233,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     private func updateFilteredItems() {
-        if let f = selectedLabel, !f.isEmpty {
+        if let f = selectedLabel, f.isPopulated {
             filteredDrops = DropStore.visibleDrops.filter { $0.labels.contains(f) }
         } else {
             filteredDrops = DropStore.visibleDrops

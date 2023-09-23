@@ -31,7 +31,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     private func filterChanged() {
-        if let search = filter.text, !search.isEmpty, let sc = navigationItem.searchController {
+        if let search = filter.text, search.isPopulated, let sc = navigationItem.searchController {
             sc.searchBar.text = search
             searchTimer.abort()
             updateSearchResults(for: sc)
@@ -142,7 +142,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         showDragModeOverlay(false)
 
         let items = Component.droppedIds.compactMap { DropStore.item(uuid: $0) }
-        if !items.isEmpty {
+        if items.isPopulated {
             if dragModeMove {
                 Model.delete(items: items)
             } else {
@@ -645,7 +645,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
 
             for toggle in toggles {
-                if let sectionItems = labelLookups[toggle.function]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), !sectionItems.isEmpty {
+                if let sectionItems = labelLookups[toggle.function]?.uniqued.map({ ItemIdentifier(label: toggle, uuid: $0) }), sectionItems.isPopulated {
                     let sectionIdentifier = SectionIdentifier(label: toggle)
                     snapshot.appendSections([sectionIdentifier])
                     if toggle.currentDisplayMode != .collapsed {
@@ -1098,7 +1098,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let parameters = object as? [AnyHashable: Any]
-        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
+        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), uuidsToReload.isPopulated {
             DropStore.reloadCells(for: uuidsToReload)
         }
 
@@ -1108,8 +1108,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let removed = oldSet.subtracting(newSet)
         let added = newSet.subtracting(oldSet)
 
-        let removedItems = !removed.isEmpty
-        let ipsInsered = !added.isEmpty
+        let removedItems = removed.isPopulated
+        let ipsInsered = added.isPopulated
         let ipsMoved = !removedItems && !ipsInsered && oldUUIDs != newUUIDs
 
         if removedItems || ipsInsered || ipsMoved {
@@ -1238,7 +1238,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func sortRequested(_ option: SortOption, ascending: Bool, verifyRange: Bool = true, ignoreSelectedItems: Bool = false, button: UIBarButtonItem) {
         let items = ignoreSelectedItems ? [] : selectedItems
-        if !items.isEmpty, verifyRange {
+        if items.isPopulated, verifyRange {
             let a = UIAlertController(title: "Sort selected items?", message: "You have selected a range of items. Would you like to sort just the selected items, or sort all the items in your collection?", preferredStyle: .actionSheet)
             a.addAction(UIAlertAction(title: "Sort Selected", style: .default) { _ in
                 self.sortRequested(option, ascending: ascending, verifyRange: false, ignoreSelectedItems: false, button: button)
@@ -1450,7 +1450,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func passwordUpdate(_ newPassword: Data?, hint: String?, for item: ArchivedItem) {
         item.lockPassword = newPassword
-        if let hint, !hint.isEmpty {
+        if let hint, hint.isPopulated {
             item.lockHint = hint
         } else {
             item.lockHint = nil
@@ -1818,7 +1818,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     @IBAction private func deleteButtonSelected(_ sender: Any) {
         let candidates = selectedItems
-        guard !candidates.isEmpty else { return }
+        guard candidates.isPopulated else { return }
 
         let a = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let msg = candidates.count > 1 ? "Delete \(candidates.count) Items" : "Delete Item"
@@ -1844,11 +1844,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func proceedWithDelete() {
         let candidates = selectedItems
-        guard !candidates.isEmpty else { return }
+        guard candidates.isPopulated else { return }
 
         let candidateSet = Set(candidates)
         let itemsToDelete = DropStore.allDrops.filter { candidateSet.contains($0) }
-        if !itemsToDelete.isEmpty {
+        if itemsToDelete.isPopulated {
             setEditing(false, animated: true)
             Model.delete(items: itemsToDelete)
         }

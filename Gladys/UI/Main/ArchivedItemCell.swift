@@ -43,7 +43,7 @@ final class ArchivedItemCell: CommonItemCell {
         func indirectScribbleInteraction(_: UIInteraction, willBeginWritingInElement _: String) {}
 
         func indirectScribbleInteraction(_: UIInteraction, didFinishWritingInElement _: String) {
-            if let item = archivedDropItem, let text = notesTextView?.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, item.note != text {
+            if let item = archivedDropItem, let text = notesTextView?.text?.trimmingCharacters(in: .whitespacesAndNewlines), text.isPopulated, item.note != text {
                 item.note = text
                 item.markUpdated()
                 Task {

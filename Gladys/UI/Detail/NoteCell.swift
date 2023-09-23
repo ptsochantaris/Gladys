@@ -88,7 +88,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
         let newText = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         textView.text = newText
 
-        placeholder.isHidden = !newText.isEmpty
+        placeholder.isHidden = newText.isPopulated
 
         if previousText == newText {
             delegate?.cellNeedsResize(cell: self, caretRect: nil, heightChange: true)

@@ -247,7 +247,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     func collectionView(_: NSCollectionView, didSelectItemsAt _: Set<IndexPath>) {
-        if !collection.selectionIndexPaths.isEmpty, QLPreviewPanel.sharedPreviewPanelExists(), QLPreviewPanel.shared().isVisible {
+        if collection.selectionIndexPaths.isPopulated, QLPreviewPanel.sharedPreviewPanelExists(), QLPreviewPanel.shared().isVisible {
             QLPreviewPanel.shared().reloadData()
         }
         Task {
@@ -437,7 +437,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     private var draggingIndexPaths: [IndexPath]?
 
     func collectionView(_: NSCollectionView, draggingSession session: NSDraggingSession, endedAt _: NSPoint, dragOperation _: NSDragOperation) {
-        if let d = draggingIndexPaths, !d.isEmpty {
+        if let d = draggingIndexPaths, d.isPopulated {
             if optionPressed {
                 let items = d.map { filter.filteredDrops[$0.item] }
                 Model.delete(items: items)
@@ -498,7 +498,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         filter.update(signalUpdate: .animated, forceAnnounce: forceAnnounce)
 
         let parameters = object as? [AnyHashable: Any]
-        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), !uuidsToReload.isEmpty {
+        if let uuidsToReload = (parameters?["updated"] as? Set<UUID>)?.intersection(oldSet), uuidsToReload.isPopulated {
             DropStore.reloadCells(for: uuidsToReload)
         }
 
@@ -508,8 +508,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let removed = oldSet.subtracting(newSet)
         let added = newSet.subtracting(oldSet)
 
-        let removedItems = !removed.isEmpty
-        let ipsInsered = !added.isEmpty
+        let removedItems = removed.isPopulated
+        let ipsInsered = added.isPopulated
         let ipsMoved = !removedItems && !ipsInsered && oldUUIDs != newUUIDs
 
         if removedItems || ipsInsered || ipsMoved {
@@ -649,7 +649,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let response = a.runModal()
         if response.rawValue == 1000 {
             let text = password.stringValue
-            if !text.isEmpty {
+            if text.isPopulated {
                 let hashed = sha1(text)
                 for item in items {
                     item.flags.insert(.needsUnlock)
@@ -852,22 +852,22 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         switch menuItem.action {
         case #selector(copy(_:)), #selector(delete(_:)), #selector(duplicateItem(_:)), #selector(editLabels(_:)), #selector(info(_:)), #selector(moveToTop(_:)), #selector(open(_:)), #selector(shareSelected(_:)):
-            return !collection.actionableSelectedItems.isEmpty
+            return collection.actionableSelectedItems.isPopulated
 
         case #selector(editNotes(_:)):
-            return !collection.actionableSelectedItems.isEmpty
+            return collection.actionableSelectedItems.isPopulated
 
         case #selector(paste(_:)):
             return NSPasteboard.general.pasteboardItems?.count ?? 0 > 0
 
         case #selector(unlock(_:)):
-            return !unlockableSelectedItems.isEmpty
+            return unlockableSelectedItems.isPopulated
 
         case #selector(removeLock(_:)):
-            return !removableLockSelectedItems.isEmpty
+            return removableLockSelectedItems.isPopulated
 
         case #selector(createLock(_:)):
-            return !lockableSelectedItems.isEmpty
+            return lockableSelectedItems.isPopulated
 
         case #selector(toggleQuickLookPreviewPanel(_:)):
             let selectedItems = collection.actionableSelectedItems
@@ -929,11 +929,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     func restoreState(from windowState: WindowController.State, forceVisibleNow: Bool = false) {
-        if !windowState.labels.isEmpty {
+        if windowState.labels.isPopulated {
             filter.enableLabelsByName(Set(windowState.labels))
             filter.update(signalUpdate: .instant)
         }
-        if let text = windowState.search, !text.isEmpty {
+        if let text = windowState.search, text.isPopulated {
             startSearch(initialText: text)
         }
         if let w = view.window {
@@ -971,7 +971,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     //////////////////////////////////////////////////// Quicklook
 
     override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
-        !collection.selectionIndexPaths.isEmpty
+        collection.selectionIndexPaths.isPopulated
     }
 
     private var previewPanel: QLPreviewPanel?

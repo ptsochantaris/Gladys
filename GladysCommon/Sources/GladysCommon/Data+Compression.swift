@@ -8,7 +8,7 @@ public extension Data {
     }
 
     func data(operation: CompressionOperation) -> Data? {
-        guard !isEmpty else {
+        guard isPopulated else {
             return nil
         }
 

@@ -109,7 +109,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string != "\n" {
-            if let oldText = textField.text, !oldText.isEmpty, let r = Range(range, in: oldText) {
+            if let oldText = textField.text, oldText.isPopulated, let r = Range(range, in: oldText) {
                 let newText = oldText.replacingCharacters(in: r, with: string)
                 updateFilter(newText)
             } else {
@@ -120,7 +120,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
         textField.resignFirstResponder()
 
-        guard let newTag = textField.text, !newTag.isEmpty else {
+        guard let newTag = textField.text, newTag.isPopulated else {
             return false
         }
 

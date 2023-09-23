@@ -23,7 +23,7 @@ public extension [[CKRecord]] {
                 newChild.removeAll(keepingCapacity: true)
             }
         }
-        if !newChild.isEmpty {
+        if newChild.isPopulated {
             result.append(newChild)
         }
         return Array(result)

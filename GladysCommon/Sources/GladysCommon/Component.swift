@@ -376,7 +376,7 @@ public final class Component: Codable, Hashable {
                 ret = u
             } else if let array = decoded as? NSArray {
                 for item in array {
-                    if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+                    if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, scheme.isPopulated {
                         ret = url
                         break
                     }
@@ -1001,7 +1001,7 @@ public final class Component: Codable, Hashable {
         if let document = CGPDFDocument(bytesPath as CFURL), let info = document.info {
             var titleStringRef: CGPDFStringRef?
             CGPDFDictionaryGetString(info, "Title", &titleStringRef)
-            if let titleStringRef, let s = CGPDFStringCopyTextString(titleStringRef), !(s as String).isEmpty {
+            if let titleStringRef, let s = CGPDFStringCopyTextString(titleStringRef), (s as String).isPopulated {
                 return s as String
             }
         }
@@ -1128,9 +1128,9 @@ public final class Component: Codable, Hashable {
 
         } else if typeIdentifier == "public.vcard" {
             if let contacts = try? CNContactVCardSerialization.contacts(with: data), let person = contacts.first {
-                let name = [person.givenName, person.middleName, person.familyName].filter { !$0.isEmpty }.joined(separator: " ")
-                let job = [person.jobTitle, person.organizationName].filter { !$0.isEmpty }.joined(separator: ", ")
-                accessoryTitle = [name, job].filter { !$0.isEmpty }.joined(separator: " - ")
+                let name = [person.givenName, person.middleName, person.familyName].filter(\.isPopulated).joined(separator: " ")
+                let job = [person.jobTitle, person.organizationName].filter(\.isPopulated).joined(separator: ", ")
+                accessoryTitle = [name, job].filter(\.isPopulated).joined(separator: " - ")
 
                 if let imageData = person.imageData, let img = await IMAGE.from(data: imageData) {
                     await setDisplayIcon(img, 9, .circle)
@@ -1186,7 +1186,7 @@ public final class Component: Codable, Hashable {
             await setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 
         } else if typeConforms(to: .pdf), let pdfPreview = generatePdfPreview() {
-            if let title = getPdfTitle(), !title.isEmpty {
+            if let title = getPdfTitle(), title.isPopulated {
                 setTitleInfo(title, 11)
             }
             await setDisplayIcon(pdfPreview, 50, .fill)
@@ -1283,7 +1283,7 @@ public final class Component: Codable, Hashable {
 
             } else {
                 let ext = item.pathExtension
-                if !ext.isEmpty, let uti = UTType(filenameExtension: ext) {
+                if ext.isPopulated, let uti = UTType(filenameExtension: ext) {
                     typeIdentifier = uti.identifier
                 } else {
                     typeIdentifier = UTType.data.identifier

@@ -42,7 +42,7 @@ final actor PushState {
         }.flatBunch(minSize: 20)
 
         let newDeletionQueue = await CloudManager.deletionQueue
-        if !idsToPush.isEmpty, !newDeletionQueue.isEmpty {
+        if idsToPush.isPopulated, newDeletionQueue.isPopulated {
             let previousCount = newDeletionQueue.count
             let filteredDeletionQueue = newDeletionQueue.filter { !idsToPush.contains($0) }
             if filteredDeletionQueue.count != previousCount {
@@ -72,7 +72,7 @@ final actor PushState {
                 var sequenceToSend: [String]?
 
                 if await CloudManager.lastSyncCompletion == .distantPast {
-                    if !currentUUIDSequence.isEmpty {
+                    if currentUUIDSequence.isPopulated {
                         var mergedSequence = await CloudManager.uuidSequence
                         let mergedSet = Set(mergedSequence)
                         for i in currentUUIDSequence.reversed() where !mergedSet.contains(i) {

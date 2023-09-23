@@ -29,8 +29,8 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
 
         let filter = labelField.stringValue
         if filter.isEmpty {
-            let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
-            if !recent.isEmpty {
+            let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && $0.isPopulated }.prefix(3)
+            if recent.isPopulated {
                 sections.append(Filter.Toggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
             let s = associatedFilter.labelToggles.compactMap { toggle -> String? in
@@ -61,7 +61,7 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         if commandSelector.description == "insertNewline:" {
             let s = labelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !s.isEmpty {
+            if s.isPopulated {
                 done(s)
                 return true
             }
@@ -114,7 +114,7 @@ final class NewLabelController: NSViewController, NSTextFieldDelegate, NSOutline
     }
 
     func outlineViewSelectionDidChange(_: Notification) {
-        if let label = labelList.item(atRow: labelList.selectedRow) as? String, !label.isEmpty {
+        if let label = labelList.item(atRow: labelList.selectedRow) as? String, label.isPopulated {
             done(label)
         }
     }

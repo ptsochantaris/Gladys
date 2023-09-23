@@ -67,7 +67,7 @@ final actor PullState {
 
         let needsSave = updatedSequence
             || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
-            || (!updatedZoneTokens.isEmpty && updatedSequence)
+            || (updatedZoneTokens.isPopulated && updatedSequence)
 
         if needsSave {
             if updatedSequence || newDropCount > 0 {

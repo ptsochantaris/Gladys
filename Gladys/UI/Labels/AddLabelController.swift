@@ -42,8 +42,8 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
         sections.removeAll()
 
         if filter.isEmpty {
-            let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && !$0.isEmpty }.prefix(3)
-            if !recent.isEmpty {
+            let recent = Filter.Toggle.Section.latestLabels.filter { !exclude.contains($0) && $0.isPopulated }.prefix(3)
+            if recent.isPopulated {
                 sections.append(Filter.Toggle.Section.filtered(labels: Array(recent), title: "Recent"))
             }
             let s = modelFilter.labelToggles.compactMap { toggle -> String? in
@@ -118,7 +118,7 @@ final class AddLabelController: GladysViewController, UITableViewDelegate, UITab
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         let result = dirty ? labelText.text?.trimmingCharacters(in: .whitespacesAndNewlines) : nil
-        if let result, !result.isEmpty {
+        if let result, result.isPopulated {
             var latest = Filter.Toggle.Section.latestLabels
             if let i = latest.firstIndex(of: result) {
                 latest.remove(at: i)

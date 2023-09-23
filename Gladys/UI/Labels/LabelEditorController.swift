@@ -138,7 +138,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if string != "\n" {
-            if let oldText = textField.text, !oldText.isEmpty, let r = Range(range, in: oldText) {
+            if let oldText = textField.text, oldText.isPopulated, let r = Range(range, in: oldText) {
                 let newText = oldText.replacingCharacters(in: r, with: string)
                 updateFilter(newText)
             } else {
@@ -149,7 +149,7 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
 
         textField.resignFirstResponder()
 
-        guard let newText = textField.text, !newText.isEmpty else {
+        guard let newText = textField.text, newText.isPopulated else {
             return false
         }
 

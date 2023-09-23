@@ -98,7 +98,7 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
             guard let self else { return }
             if response.rawValue == 1000 {
                 let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !text.isEmpty {
+                if text.isPopulated {
                     presentingGladysVc.filter.renameLabel(name, to: text)
                     tableView.reloadData()
                 }

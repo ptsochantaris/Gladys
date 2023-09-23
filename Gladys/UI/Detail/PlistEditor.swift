@@ -91,11 +91,11 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
     private func selectable(at index: Int) -> Bool {
         let v = value(at: index)
         if let v = v as? [Any] {
-            return !v.isEmpty
+            return v.isPopulated
         } else if let v = v as? [AnyHashable: Any] {
-            return !v.isEmpty
+            return v.isPopulated
         } else if let v = v as? Data {
-            return !v.isEmpty
+            return v.isPopulated
         }
         return false
     }

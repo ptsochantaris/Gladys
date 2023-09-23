@@ -49,12 +49,12 @@ extension ItemView {
             var bottomText = ""
             if PersistedOptions.displayLabelsInMainView {
                 let labelText = wrapper.labels.joined(separator: ", ")
-                if !labelText.isEmpty {
+                if labelText.isPopulated {
                     bottomText.append(labelText)
                 }
             }
             if let bt = wrapper.presentationInfo.bottom.content.rawText {
-                if !bottomText.isEmpty {
+                if bottomText.isPopulated {
                     bottomText.append("\n")
                 }
                 bottomText.append(bt)
@@ -138,7 +138,7 @@ extension ItemView {
 
         @ViewBuilder
         private func createTextView() -> (some View)? {
-            if !contentText.isEmpty {
+            if contentText.isPopulated {
                 let info = wrapper.presentationInfo
                 let fgColor: Color = if highlight {
                     .accentColor

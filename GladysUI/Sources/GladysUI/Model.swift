@@ -326,7 +326,7 @@ public enum Model {
 
         let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
         let removedUuids = itemsToDelete.map(\.uuid)
-        if !removedUuids.isEmpty {
+        if removedUuids.isPopulated {
             Maintini.startMaintaining()
             Task {
                 do {
@@ -342,7 +342,7 @@ public enum Model {
 
         let saveableItems: ContiguousArray = DropStore.allDrops.filter(\.goodToSave)
         let itemsToWrite = saveableItems.filter { $0.flags.contains(.needsSaving) }
-        if !itemsToWrite.isEmpty {
+        if itemsToWrite.isPopulated {
             Maintini.startMaintaining()
             Task {
                 let searchableItems = itemsToWrite.map(\.searchableItem)
@@ -466,7 +466,7 @@ public enum Model {
     private static func clearPartialDeletions() {
         for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
             let componentsToDelete = item.components.filter(\.needsDeletion)
-            if !componentsToDelete.isEmpty {
+            if componentsToDelete.isPopulated {
                 item.components.removeAll { $0.needsDeletion }
                 for c in componentsToDelete {
                     Task {

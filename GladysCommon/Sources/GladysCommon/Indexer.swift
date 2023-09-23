@@ -39,7 +39,7 @@
                     }
                     return true
                 }
-                if !searchableItems.isEmpty {
+                if searchableItems.isPopulated {
                     reIndex(items: searchableItems, in: searchableIndex)
                 }
                 acknowledgementHandler()
@@ -60,7 +60,7 @@
                     }
                     return true
                 }
-                if !searchableItems.isEmpty {
+                if searchableItems.isPopulated {
                     reIndex(items: searchableItems, in: searchableIndex)
                 }
                 acknowledgementHandler()

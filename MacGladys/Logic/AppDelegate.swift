@@ -173,7 +173,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @IBAction private func newWindowSelected(_: Any?) {
-        if !NSApp.orderedWindows.isEmpty {
+        if NSApp.orderedWindows.isPopulated {
             createNewWindow()
         } else if !WindowController.openRecentWindow() {
             createNewWindow()
@@ -607,7 +607,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         guard let controller = keyGladysControllerIfExists else { return false }
 
         if (menuItem.parent?.title ?? "").hasPrefix("Sort ") {
-            return !controller.filter.filteredDrops.isEmpty
+            return controller.filter.filteredDrops.isPopulated
         }
 
         switch menuItem.action {

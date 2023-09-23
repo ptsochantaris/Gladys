@@ -273,7 +273,7 @@ public final class Filter {
         let previousFilteredDrops = filteredDrops
         // text pass
 
-        if let terms = Filter.terms(for: modelFilter), !terms.isEmpty {
+        if let terms = Filter.terms(for: modelFilter), terms.isPopulated {
             let queryString: String = if terms.count > 1 {
                 if PersistedOptions.inclusiveSearchTerms {
                     "(" + terms.joined(separator: ") || (") + ")"

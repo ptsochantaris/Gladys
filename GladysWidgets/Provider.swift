@@ -35,10 +35,10 @@ struct Provider: AppIntentTimelineProvider {
 
         let drops = await Task { @MainActor in
             let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
-            if let search = configuration.search, !search.isEmpty {
+            if let search = configuration.search, search.isPopulated {
                 filter.text = search
             }
-            if let labelFilter = configuration.label?.id, !labelFilter.isEmpty {
+            if let labelFilter = configuration.label?.id, labelFilter.isPopulated {
                 filter.enableLabelsByName([labelFilter])
             }
             filter.update(signalUpdate: .none)

@@ -131,7 +131,7 @@ private extension Component {
             try fm.copyItem(at: bytesPath, to: destinationUrl)
         }
 
-        if let tags, !tags.isEmpty, PersistedOptions.readAndStoreFinderTagsAsLabels {
+        if let tags, tags.isPopulated, PersistedOptions.readAndStoreFinderTagsAsLabels {
             try? (destinationUrl as NSURL).setResourceValue(tags, forKey: .tagNamesKey)
         }
     }

@@ -56,7 +56,7 @@ public final actor WebArchiver {
                     if let mimeType = response.mimeType {
                         resource["WebResourceMIMEType"] = mimeType
                     }
-                    if !data.isEmpty {
+                    if data.isPopulated {
                         resource["WebResourceData"] = data
                     }
                     log("Downloaded \(resourceUrlString)")
@@ -102,7 +102,7 @@ public final actor WebArchiver {
 
         func resoucePathFilter(_ element: SwiftSoup.Element) throws -> String? {
             let base = try element.text(trimAndNormaliseWhitespace: true)
-            if !base.isEmpty {
+            if base.isPopulated {
                 if base.hasPrefix("http") {
                     return base
                 } else if base.hasPrefix("//") {
@@ -168,7 +168,7 @@ public final actor WebArchiver {
         if let metaTags = try htmlDoc.head()?.select("meta[property=\"og:title\"]") {
             for node in metaTags {
                 let content = try node.attr("content")
-                if !content.isEmpty {
+                if content.isPopulated {
                     log("Found og title: \(content)")
                     title = content.trimmingCharacters(in: .whitespacesAndNewlines)
                     break
@@ -179,7 +179,7 @@ public final actor WebArchiver {
         if (title ?? "").isEmpty {
             log("Falling back to document title")
             let v = try htmlDoc.title().trimmingCharacters(in: .whitespacesAndNewlines)
-            if !v.isEmpty {
+            if v.isPopulated {
                 title = v
             }
         }
@@ -219,7 +219,7 @@ public final actor WebArchiver {
         if let metaTags = try htmlDoc.head()?.select("meta[property=\"og:image\"]") {
             for node in metaTags {
                 let content = try node.attr("content")
-                if !content.isEmpty {
+                if content.isPopulated {
                     log("Found og image: \(content)")
                     return content
                 }
@@ -229,7 +229,7 @@ public final actor WebArchiver {
         if let metaTags = try htmlDoc.head()?.select("meta[name=\"thumbnail\" or name=\"image\"]") {
             for node in metaTags {
                 let content = try node.attr("content")
-                if !content.isEmpty {
+                if content.isPopulated {
                     log("Found thumbnail image: \(content)")
                     return content
                 }
@@ -247,14 +247,14 @@ public final actor WebArchiver {
                 let isTouch = try node.attr("rel").hasPrefix("apple-touch-icon")
                 var rank = isTouch ? 10 : 1
                 let sizes = try node.attr("sizes")
-                if !sizes.isEmpty {
+                if sizes.isPopulated {
                     let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     if numbers.count > 1 {
                         rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
                     }
                 }
                 let href = try node.attr("href")
-                if !href.isEmpty, rank > imageRank {
+                if href.isPopulated, rank > imageRank {
                     imageRank = rank
                     favIconPath = href
                 }

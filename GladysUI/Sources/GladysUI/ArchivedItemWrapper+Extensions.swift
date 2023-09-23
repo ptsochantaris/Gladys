@@ -6,7 +6,7 @@ extension ArchivedItemWrapper {
     @MainActor
     @ViewBuilder
     func createLabelView(width: CGFloat, alignment: NSTextAlignment) -> (some View)? {
-        if PersistedOptions.displayLabelsInMainView, !labels.isEmpty {
+        if PersistedOptions.displayLabelsInMainView, labels.isPopulated {
             TagCloudView(wrapper: self, cellWidth: width, alignment: alignment)
                 .frame(maxWidth: width, minHeight: 0, alignment: .top)
                 .fixedSize()

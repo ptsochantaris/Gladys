@@ -80,7 +80,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !LabelSelector.filter.isEmpty {
+        if LabelSelector.filter.isPopulated {
             navigationItem.searchController?.searchBar.text = LabelSelector.filter
             navigationItem.searchController?.isActive = true
         }
@@ -207,7 +207,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
         }
         a.addAction(UIAlertAction(title: "Rename", style: .default) { [weak self] _ in
             guard let self else { return }
-            if let field = textField, let text = field.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
+            if let field = textField, let text = field.text?.trimmingCharacters(in: .whitespacesAndNewlines), text.isPopulated {
                 filter.renameLabel(toggle.function.displayText, to: text)
             }
         })

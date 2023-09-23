@@ -72,7 +72,7 @@ public extension Component {
             setBytes(data)
         } else if let array = decoded as? NSArray {
             let newArray = array.map { (item: Any) -> Any in
-                if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, !scheme.isEmpty {
+                if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, scheme.isPopulated {
                     return newUrl.absoluteString
                 } else {
                     return item
