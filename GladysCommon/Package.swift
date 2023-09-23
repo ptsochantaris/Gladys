@@ -17,7 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/sindresorhus/ExceptionCatcher", from: "2.0.0"),
-        .package(url: "https://github.com/cezheng/Fuzi", from: "3.0.0"),
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
         .package(url: "https://github.com/weichsel/ZIPFoundation", branch: "development"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.0.0"),
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
@@ -29,7 +29,7 @@ let package = Package(
         .target(
             name: "GladysCommon",
             dependencies: ["ExceptionCatcher",
-                           "Fuzi",
+                           "SwiftSoup",
                            "ZIPFoundation",
                            .product(name: "Lista", package: "lista"),
                            .product(name: "Maintini", package: "maintini"),

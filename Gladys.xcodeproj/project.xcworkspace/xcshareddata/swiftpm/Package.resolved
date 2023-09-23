@@ -19,15 +19,6 @@
       }
     },
     {
-      "identity" : "fuzi",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/cezheng/Fuzi",
-      "state" : {
-        "revision" : "f08c8323da21e985f3772610753bcfc652c2103f",
-        "version" : "3.1.3"
-      }
-    },
-    {
       "identity" : "hotkey",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/soffes/HotKey",
@@ -88,6 +79,15 @@
       "state" : {
         "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
         "version" : "1.0.4"
+      }
+    },
+    {
+      "identity" : "swiftsoup",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "state" : {
+        "revision" : "8b6cf29eead8841a1fa7822481cb3af4ddaadba6",
+        "version" : "2.6.1"
       }
     },
     {

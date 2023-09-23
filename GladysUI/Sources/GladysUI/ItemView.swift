@@ -143,14 +143,15 @@ public struct ItemView: View {
 
     @ViewBuilder
     private var itemMode: some View {
+        let highlight = wrapper.presentationInfo.highlightColor
         #if os(visionOS)
             let cornerRadius = wrapper.compact ? cellCornerRadius * 0.5 : cellCornerRadius
             let shadowRadius: CGFloat = 6
-            let shadowColor = wrapper.style.allowsShadows ? Color.black.opacity(0.8) : .clear
+            let shadowColor: Color = wrapper.style.allowsShadows && highlight == .none ? .black : .clear
         #else
             let cornerRadius = cellCornerRadius
-            let shadowRadius: CGFloat = 1.5
-            let shadowColor = wrapper.style.allowsShadows ? Color.gray.opacity(0.8) : .clear
+            let shadowRadius: CGFloat = 2
+            let shadowColor: Color = wrapper.style.allowsShadows && highlight == .none ? .gray : .clear
         #endif
         Group {
             if wrapper.style == .wide {
@@ -162,30 +163,15 @@ public struct ItemView: View {
         .cornerRadius(cornerRadius)
         .shadow(color: shadowColor, radius: shadowRadius)
         .overlay {
-            if !wrapper.shouldDisplayLoading {
-                let highlight = wrapper.presentationInfo.highlightColor
-                if highlight != .none {
-                    ZStack {
-                        RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
-                            .stroke(Color(highlight.bgColor), lineWidth: 5)
-                        RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
-                            .inset(by: 2)
-                            .stroke(Color.black.opacity(0.2), lineWidth: 2)
-                    }
+            if highlight != .none, !wrapper.shouldDisplayLoading {
+                ZStack {
+                    RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
+                        .stroke(Color(highlight.bgColor), lineWidth: 5)
+                    RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
+                        .inset(by: 2)
+                        .stroke(Color.black.opacity(0.2), lineWidth: 2)
                 }
             }
         }
-        #if !os(visionOS)
-        .background {
-            if !wrapper.shouldDisplayLoading, !wrapper.locked, wrapper.style.allowsShadows {
-                LinearGradient(colors: [
-                    wrapper.presentationInfo.top.backgroundColor,
-                    wrapper.presentationInfo.bottom.backgroundColor
-                ], startPoint: .top, endPoint: .bottom)
-                    .cornerRadius(cellCornerRadius)
-                    .blur(radius: shadowRadius)
-            }
-        }
-        #endif
     }
 }

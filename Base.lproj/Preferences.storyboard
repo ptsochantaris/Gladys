@@ -1807,10 +1807,12 @@
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O8w-Zm-DHn">
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O8w-Zm-DHn">
                                                         <rect key="frame" x="77" y="164.5" width="134" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <state key="normal" title="Paul Tsochantaris"/>
+                                                        <state key="normal" title="Paul Tsochantaris">
+                                                            <color key="titleColor" systemColor="tintColor"/>
+                                                        </state>
                                                         <connections>
                                                             <action selector="authorSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="znx-u3-ruG"/>
                                                         </connections>
@@ -1828,12 +1830,14 @@
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h5-SG-rEC">
-                                                        <rect key="frame" x="128" y="234" width="32" height="33"/>
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h5-SG-rEC">
+                                                        <rect key="frame" x="105" y="234" width="78" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <state key="normal" title="Fuzi"/>
+                                                        <state key="normal" title="SwiftSoup">
+                                                            <color key="titleColor" systemColor="tintColor"/>
+                                                        </state>
                                                         <connections>
-                                                            <action selector="fuziSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="H6h-c3-5Gz"/>
+                                                            <action selector="swiftSoupSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="H6h-c3-5Gz"/>
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cvV-WY-t4c" userLabel="Spacer">
@@ -1849,10 +1853,12 @@
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kc0-to-reO">
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kc0-to-reO">
                                                         <rect key="frame" x="89" y="303.5" width="110" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <state key="normal" title="ZipFoundation"/>
+                                                        <state key="normal" title="ZipFoundation">
+                                                            <color key="titleColor" systemColor="tintColor"/>
+                                                        </state>
                                                         <connections>
                                                             <action selector="zipSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="L1Y-iR-TLi"/>
                                                         </connections>
@@ -1870,10 +1876,12 @@
                                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4q-TB-Put">
+                                                    <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b4q-TB-Put">
                                                         <rect key="frame" x="85" y="373" width="118" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                        <state key="normal" title="CallbackURLKit"/>
+                                                        <state key="normal" title="CallbackURLKit">
+                                                            <color key="titleColor" systemColor="tintColor"/>
+                                                        </state>
                                                         <connections>
                                                             <action selector="callbackSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="zFL-EE-Gg9"/>
                                                         </connections>
@@ -1894,18 +1902,22 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FUG-Ze-me3">
                                                         <rect key="frame" x="60" y="442.5" width="168" height="33"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bny-va-9fm">
+                                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bny-va-9fm">
                                                                 <rect key="frame" x="0.0" y="0.0" width="67" height="33"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                                <state key="normal" title="SwiftLint"/>
+                                                                <state key="normal" title="SwiftLint">
+                                                                    <color key="titleColor" systemColor="tintColor"/>
+                                                                </state>
                                                                 <connections>
                                                                     <action selector="lintSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="tbe-ld-a9g"/>
                                                                 </connections>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KL8-GE-IEB">
+                                                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KL8-GE-IEB">
                                                                 <rect key="frame" x="75" y="0.0" width="93" height="33"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                                <state key="normal" title="SwiftFormat"/>
+                                                                <state key="normal" title="SwiftFormat">
+                                                                    <color key="titleColor" systemColor="tintColor"/>
+                                                                </state>
                                                                 <connections>
                                                                     <action selector="formatSelected:" destination="00a-DN-xD2" eventType="touchUpInside" id="y8M-wr-MlL"/>
                                                                 </connections>
@@ -2300,6 +2312,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

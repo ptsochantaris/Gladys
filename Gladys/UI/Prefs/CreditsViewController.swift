@@ -8,8 +8,8 @@ final class CreditsViewController: GladysViewController {
         UIApplication.shared.open(URL(string: "http://bru.build")!)
     }
 
-    @IBAction private func fuziSelected(_: UIButton) {
-        UIApplication.shared.open(URL(string: "https://github.com/cezheng/Fuzi")!)
+    @IBAction private func swiftSoupSelected(_: UIButton) {
+        UIApplication.shared.open(URL(string: "https://github.com/scinfu/SwiftSoup")!)
     }
 
     @IBAction private func zipSelected(_: UIButton) {

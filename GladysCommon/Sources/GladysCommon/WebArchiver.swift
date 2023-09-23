@@ -1,5 +1,5 @@
 import Foundation
-import Fuzi
+import SwiftSoup
 import UniformTypeIdentifiers
 
 /// Archiver
@@ -8,7 +8,6 @@ public final actor WebArchiver {
 
     /// Error type
     public enum ArchiveErrorType: Error {
-        case FailToInitHTMLDocument
         case FetchResourceFailed
         case PlistSerializeFailed
     }
@@ -33,8 +32,12 @@ public final actor WebArchiver {
         }
     }
 
-    private func archiveWebpageFromUrl(url: String, data: Data, response: HTTPURLResponse) async throws -> (Data, String) {
-        let resources = try resourcePathsFromUrl(url: url, data: data)
+    private func archiveWebpageFromUrl(url: String, data: consuming Data, response: HTTPURLResponse) async throws -> (Data, String) {
+        guard let pageText = String(data: data, encoding: response.guessedEncoding) else {
+            throw GladysError.blankResponse
+        }
+
+        let resources = try resourcePaths(from: url, pageText: pageText)
 
         let resourceInfo = await withTaskGroup(of: (String, [AnyHashable: Any])?.self) { group -> [AnyHashable: Any] in
             for resourceUrlString in resources {
@@ -94,16 +97,12 @@ public final actor WebArchiver {
         }
     }
 
-    private func resourcePathsFromUrl(url: String, data htmlData: Data) throws -> [String] {
-        guard let doc = try? HTMLDocument(data: htmlData) else {
-            log("Init html doc error")
-            throw ArchiveErrorType.FailToInitHTMLDocument
-        }
+    private func resourcePaths(from url: consuming String, pageText: consuming String) throws -> [String] {
+        let doc = try SwiftSoup.parse(pageText, url)
 
-        var resources: [String] = []
-
-        func resoucePathFilter(_ base: String?) -> String? {
-            if let base {
+        func resoucePathFilter(_ element: SwiftSoup.Element) throws -> String? {
+            let base = try element.text(trimAndNormaliseWhitespace: true)
+            if !base.isEmpty {
                 if base.hasPrefix("http") {
                     return base
                 } else if base.hasPrefix("//") {
@@ -115,22 +114,19 @@ public final actor WebArchiver {
             return nil
         }
 
-        let imagePaths = doc.xpath("//img[@src]").compactMap {
-            resoucePathFilter($0["src"])
+        let imagePaths = try doc.select("img[src]").compactMap {
+            try resoucePathFilter($0)
         }
-        resources += imagePaths
 
-        let jsPaths = doc.xpath("//script[@src]").compactMap {
-            resoucePathFilter($0["src"])
+        let jsPaths = try doc.select("script[src]").compactMap {
+            try resoucePathFilter($0)
         }
-        resources += jsPaths
 
-        let cssPaths = doc.xpath("//link[@rel='stylesheet'][@href]").compactMap {
-            resoucePathFilter($0["href"])
+        let cssPaths = try doc.select("link[rel='stylesheet'][href]").compactMap {
+            try resoucePathFilter($0)
         }
-        resources += cssPaths
 
-        return resources
+        return imagePaths + jsPaths + cssPaths
     }
 
     /////////////////////////////////////////
@@ -161,13 +157,18 @@ public final actor WebArchiver {
         log("Fetching HTML from URL: \(url)")
 
         let contentRequest = URLRequest(url: url)
-        let (data, _) = try await URLSession.shared.data(for: contentRequest)
-        let htmlDoc = try HTMLDocument(data: data)
+        let (data, contentResponse) = try await URLSession.shared.data(for: contentRequest)
+        guard let documentText = String(data: data, encoding: contentResponse.guessedEncoding) else {
+            throw GladysError.blankResponse
+        }
+
+        let htmlDoc = try SwiftSoup.parse(documentText, urlString)
 
         var title: String?
-        if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:title\"]") {
+        if let metaTags = try htmlDoc.head()?.select("meta[property=\"og:title\"]") {
             for node in metaTags {
-                if let content = node.attr("content") {
+                let content = try node.attr("content")
+                if !content.isEmpty {
                     log("Found og title: \(content)")
                     title = content.trimmingCharacters(in: .whitespacesAndNewlines)
                     break
@@ -176,18 +177,10 @@ public final actor WebArchiver {
         }
 
         if (title ?? "").isEmpty {
-            log("Falling back to libXML title")
-            title = htmlDoc.title?.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-
-        if (title ?? "").isEmpty,
-           let htmlText = NSString(data: data, encoding: htmlDoc.encoding.rawValue),
-           let regex = try? NSRegularExpression(pattern: "\\<title\\>(.+)\\<\\/title\\>", options: .caseInsensitive) {
-            log("Attempting to parse TITLE tag")
-            if let match = regex.firstMatch(in: htmlText as String, options: [], range: NSRange(location: 0, length: htmlText.length)), match.numberOfRanges > 1 {
-                let r1 = match.range(at: 1)
-                let titleString = htmlText.substring(with: r1)
-                title = String(titleString.utf8)
+            log("Falling back to document title")
+            let v = try htmlDoc.title().trimmingCharacters(in: .whitespacesAndNewlines)
+            if !v.isEmpty {
+                title = v
             }
         }
 
@@ -198,7 +191,7 @@ public final actor WebArchiver {
         }
 
         func fetchFavIcon() async throws -> WebPreviewResult {
-            if let favIconUrl = repair(path: getFavIconPath(from: htmlDoc), using: url),
+            if let favIconUrl = try repair(path: getFavIconPath(from: htmlDoc), using: url),
                let iconUrl = URL(string: favIconUrl) {
                 log("Fetching favicon image for site icon: \(iconUrl)")
                 let newImage = try await fetchImage(url: iconUrl)
@@ -208,7 +201,7 @@ public final actor WebArchiver {
             }
         }
 
-        let thumbnailUrl = repair(path: getThumbnailPath(from: htmlDoc), using: url)
+        let thumbnailUrl = try repair(path: getThumbnailPath(from: htmlDoc), using: url)
         guard let thumbnailUrl, let iconUrl = URL(string: thumbnailUrl) else {
             return try await fetchFavIcon()
         }
@@ -222,45 +215,46 @@ public final actor WebArchiver {
         }
     }
 
-    private func getThumbnailPath(from htmlDoc: HTMLDocument) -> String? {
-        var thumbnailPath: String?
-
-        if let metaTags = htmlDoc.head?.xpath("//meta[@property=\"og:image\"]") {
+    private func getThumbnailPath(from htmlDoc: SwiftSoup.Document) throws -> String? {
+        if let metaTags = try htmlDoc.head()?.select("meta[property=\"og:image\"]") {
             for node in metaTags {
-                if let content = node.attr("content") {
+                let content = try node.attr("content")
+                if !content.isEmpty {
                     log("Found og image: \(content)")
-                    thumbnailPath = content
-                    break
+                    return content
                 }
             }
         }
 
-        if thumbnailPath == nil, let metaTags = htmlDoc.head?.xpath("//meta[@name=\"thumbnail\" or @name=\"image\"]") {
+        if let metaTags = try htmlDoc.head()?.select("meta[name=\"thumbnail\" or name=\"image\"]") {
             for node in metaTags {
-                if let content = node.attr("content") {
+                let content = try node.attr("content")
+                if !content.isEmpty {
                     log("Found thumbnail image: \(content)")
-                    thumbnailPath = content
-                    break
+                    return content
                 }
             }
         }
-        return thumbnailPath
+
+        return nil
     }
 
-    private func getFavIconPath(from htmlDoc: HTMLDocument) -> String? {
+    private func getFavIconPath(from htmlDoc: SwiftSoup.Document) throws -> String? {
         var favIconPath = "/favicon.ico"
-        if let touchIcons = htmlDoc.head?.xpath("//link[@rel=\"apple-touch-icon\" or @rel=\"apple-touch-icon-precomposed\" or @rel=\"icon\" or @rel=\"shortcut icon\"]") {
+        if let touchIcons = try htmlDoc.head()?.select("link[rel=\"apple-touch-icon\" or rel=\"apple-touch-icon-precomposed\" or rel=\"icon\" or rel=\"shortcut icon\"]") {
             var imageRank = 0
             for node in touchIcons {
-                let isTouch = node.attr("rel")?.hasPrefix("apple-touch-icon") ?? false
+                let isTouch = try node.attr("rel").hasPrefix("apple-touch-icon")
                 var rank = isTouch ? 10 : 1
-                if let sizes = node.attr("sizes") {
+                let sizes = try node.attr("sizes")
+                if !sizes.isEmpty {
                     let numbers = sizes.split(separator: "x").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
                     if numbers.count > 1 {
                         rank = (Int(numbers[0]) ?? 1) * (Int(numbers[1]) ?? 1) * (isTouch ? 100 : 1)
                     }
                 }
-                if let href = node.attr("href"), rank > imageRank {
+                let href = try node.attr("href")
+                if !href.isEmpty, rank > imageRank {
                     imageRank = rank
                     favIconPath = href
                 }
@@ -288,8 +282,6 @@ public final actor WebArchiver {
         }
         return iconUrl?.absoluteString
     }
-
-    ////////////////////////////////////////////
 
     private func fetchImage(url: URL) async throws -> IMAGE? {
         let (data, _) = try await URLSession.shared.data(from: url)

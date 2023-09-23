@@ -18,7 +18,10 @@ extension ItemView {
                 if wrapper.shouldDisplayLoading {
                     LoadingItem(wrapper: wrapper)
                         .foregroundColor(.accentColor)
+
                 } else {
+                    let size = wrapper.cellSize
+
                     if wrapper.locked {
                         Image(systemName: "lock")
                             .resizable()
@@ -29,11 +32,11 @@ extension ItemView {
                     } else {
                         ItemImage(wrapper: wrapper)
                             .foregroundColor(.accentColor)
-                            .frame(width: wrapper.cellSize.width, height: wrapper.cellSize.height)
+                            .frame(width: size.width, height: size.height)
                     }
 
                     SquareItemText(wrapper: wrapper)
-                        .frame(width: wrapper.cellSize.width, height: wrapper.cellSize.height)
+                        .frame(width: size.width, height: size.height)
                 }
             }
         }
