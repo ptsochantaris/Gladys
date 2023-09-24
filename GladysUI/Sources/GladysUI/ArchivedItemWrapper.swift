@@ -91,6 +91,11 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     }
 
     @MainActor
+    var shouldShowShadow: Bool {
+        style.allowsShadows && presentationInfo.highlightColor == .none
+    }
+
+    @MainActor
     var isFirstImport: Bool {
         guard let item else {
             return false

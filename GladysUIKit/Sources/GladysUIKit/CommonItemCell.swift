@@ -64,6 +64,13 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            archivedDropItem?.queueWarmup(style: style)
+        }
+    }
+
     private var lastLayout = CGSize.zero
     public var style = ArchivedItemWrapper.Style.square
 

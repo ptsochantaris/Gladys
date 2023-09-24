@@ -141,11 +141,11 @@ extension ItemView {
             if contentText.isPopulated {
                 let info = wrapper.presentationInfo
                 let fgColor: Color = if highlight {
-                    .accentColor
+                    info.hasTransparentBackground ? .accentColor : ((colorScheme == .dark || info.bottom.isBright) ? .accentColor : .white)
                 } else if info.hasTransparentBackground {
                     .primary
                 } else {
-                    (atTop ? info.top.isBright : info.bottom.isBright) ? Color.black : Color.white
+                    (atTop ? info.top.isBright : info.bottom.isBright) ? .black : .white
                 }
                 let hazeColor = fadeColor
                 Text(contentText)

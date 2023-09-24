@@ -143,15 +143,13 @@ public struct ItemView: View {
 
     @ViewBuilder
     private var itemMode: some View {
-        let highlight = wrapper.presentationInfo.highlightColor
+        let shadowColor: Color = wrapper.shouldShowShadow ? (colorScheme == .dark ? .black : .gray) : .clear
         #if os(visionOS)
             let cornerRadius = wrapper.compact ? cellCornerRadius * 0.5 : cellCornerRadius
             let shadowRadius: CGFloat = 6
-            let shadowColor: Color = wrapper.style.allowsShadows && highlight == .none ? .black : .clear
         #else
             let cornerRadius = cellCornerRadius
             let shadowRadius: CGFloat = 2
-            let shadowColor: Color = wrapper.style.allowsShadows && highlight == .none ? .gray : .clear
         #endif
         Group {
             if wrapper.style == .wide {
@@ -163,6 +161,7 @@ public struct ItemView: View {
         .cornerRadius(cornerRadius)
         .shadow(color: shadowColor, radius: shadowRadius)
         .overlay {
+            let highlight = wrapper.presentationInfo.highlightColor
             if highlight != .none, !wrapper.shouldDisplayLoading {
                 ZStack {
                     RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
