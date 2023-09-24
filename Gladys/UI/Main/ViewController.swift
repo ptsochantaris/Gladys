@@ -407,10 +407,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
             #if !os(visionOS)
                 p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
+
+                if #available(iOS 16, *), let sheet = n.popoverPresentationController?.adaptiveSheetPresentationController {
+                    sheet.largestUndimmedDetentIdentifier = .none
+                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                    sheet.prefersEdgeAttachedInCompactHeight = true
+                    sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = false
+                    sheet.detents = [.custom { _ in
+                        return n.preferredContentSize.height
+                    }]
+                }
             #endif
-            p.permittedArrowDirections = PersistedOptions.wideMode ? [.left, .right] : [.any]
+            p.permittedArrowDirections = [.left, .right, .down]
             p.sourceView = myNavView
-            p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.3, dy: cell.bounds.height * 0.3), to: myNavView)
+            p.sourceRect = cell.convert(cell.bounds.insetBy(dx: cell.bounds.width * 0.1, dy: cell.bounds.height * 0.1), to: myNavView)
             p.delegate = self
 
             if Singleton.shared.componentDropActiveFromDetailView != nil {
