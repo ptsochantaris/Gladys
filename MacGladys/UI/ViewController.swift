@@ -1143,7 +1143,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         enteredWindowAfterAutoShow = false
         autoShown = startHideTimerIfNeeded
 
-        window.collectionBehavior = .moveToActiveSpace
+        if #available(macOS 13.0, *) {
+            window.collectionBehavior = [.moveToActiveSpace, .canJoinAllApplications]
+        } else {
+            window.collectionBehavior = [.moveToActiveSpace]
+        }
         window.alphaValue = 0
         window.orderFrontRegardless()
         window.makeKey()
@@ -1153,8 +1157,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             let time = TimeInterval(PersistedOptions.autoHideAfter)
             if time > 0 {
                 hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false) { [weak self] _ in
-                    guard let self else { return }
-                    hideWindowBecauseOfMouse(window: window)
+                    self?.hideWindowBecauseOfMouse(window: window)
                 }
             }
         }

@@ -86,30 +86,50 @@ final class TokenField: VIEWCLASS {
         }
     }
 
-    private static let xInset: CGFloat = 5
-    private static let heightInset: CGFloat = 2
-    #if os(visionOS)
+    #if canImport(AppKit)
+        private static let tagPadding: CGFloat = 14
+    #elseif os(visionOS)
         private static let tagPadding: CGFloat = 17
     #else
-        private static let tagPadding: CGFloat = 12
+        private static let tagPadding: CGFloat = 15
+    #endif
+    private static let padding: CGFloat = 5
+
+    #if canImport(AppKit)
+    private static let heightInset: CGFloat = 2.5
+    #else
+    private static let heightInset: CGFloat = 2.5
     #endif
 
-    override func draw(_ rect: CGRect) {
+    override func draw(_: CGRect) {
         #if canImport(AppKit)
             guard let frameSetter, let context = NSGraphicsContext.current?.cgContext else { return }
         #else
             guard let frameSetter, let context = UIGraphicsGetCurrentContext() else { return }
         #endif
 
-        let dirtyRect = rect.insetBy(dx: TokenField.xInset, dy: 0)
+        let rect = bounds
+
+        // context.setFillColor(NSColor.red.cgColor)
+        // context.fill([rect])
+
+        #if canImport(AppKit)
+            let dirtyRect = rect.insetBy(dx: TokenField.padding, dy: 0)
+        #else
+            let dirtyRect = rect.insetBy(dx: TokenField.padding, dy: 0)
+        #endif
+        // context.setFillColor(NSColor.green.cgColor)
+        // context.fill([dirtyRect])
 
         let path = CGPath(rect: dirtyRect, transform: nil)
         let totalFrame = CTFramesetterCreateFrame(frameSetter, TokenField.emptyRange, path, nil)
 
         #if canImport(AppKit)
+            let nudge: CGFloat = 0.75
             context.translateBy(x: 0, y: -1)
         #else
-            context.translateBy(x: 0, y: dirtyRect.height + 1)
+            let nudge: CGFloat = 0.5
+            context.translateBy(x: 0, y: dirtyRect.height + 1.5)
             context.scaleBy(x: 1, y: -1)
         #endif
 
@@ -118,9 +138,12 @@ final class TokenField: VIEWCLASS {
         CTFrameGetLineOrigins(totalFrame, TokenField.emptyRange, &origins)
         let key = unsafeBitCast(TokenField.highlightTextKey, to: UnsafeRawPointer.self)
 
+        let maxLineHeight = lines.map { CTLineGetBoundsWithOptions($0, .useOpticalBounds).height }.max() ?? 10
+        let lineHeight = (maxLineHeight + TokenField.heightInset).rounded(.up)
+        let corner = (lineHeight * 0.5)
+
         for (line, linePos) in zip(lines, origins) {
-            let lineBounds = CTLineGetBoundsWithOptions(line, .useOpticalBounds)
-            let lineStart = alignment == .center ? (dirtyRect.maxX - lineBounds.width) * 0.5 : (lineBounds.minX + 4)
+            let lineLeft = linePos.x + dirtyRect.minX - TokenField.tagPadding * 0.5 + nudge
 
             let runs = CTLineGetGlyphRuns(line)
             for i in 0 ..< CFArrayGetCount(runs) {
@@ -130,18 +153,16 @@ final class TokenField: VIEWCLASS {
                     continue
                 }
 
-                let w = CGFloat(CTRunGetImageBounds(run, context, TokenField.emptyRange).width) + TokenField.tagPadding
-                let h = lineBounds.height + TokenField.heightInset
-                #if os(visionOS)
-                    let x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 6
-                    let y = linePos.y - 6.5
-                #else
-                    let x = lineStart + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil) - 3.5
+                let bw = CTRunGetImageBounds(run, context, TokenField.emptyRange).width
+                let w = CGFloat(bw) + TokenField.tagPadding
+                let x = lineLeft + CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(run).location, nil)
+                #if canImport(AppKit)
                     let y = linePos.y - 4
+                #else
+                    let y = linePos.y - 4.5
                 #endif
 
-                let corner = (h * 0.5).rounded(.down)
-                context.addPath(CGPath(roundedRect: CGRect(x: x, y: y, width: w, height: h),
+                context.addPath(CGPath(roundedRect: CGRect(x: x, y: y, width: w, height: lineHeight),
                                        cornerWidth: corner,
                                        cornerHeight: corner,
                                        transform: nil))
@@ -162,11 +183,10 @@ final class TokenField: VIEWCLASS {
 
     override var intrinsicContentSize: CGSize {
         guard let frameSetter else { return .zero }
-        let extra = TokenField.xInset * 2 + TokenField.tagPadding * 2
-        let guide = CGSize(width: cellWidth - extra, height: CGFLOAT_MAX)
+        let guide = CGSize(width: cellWidth - TokenField.tagPadding, height: CGFLOAT_MAX)
         var result = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, TokenField.emptyRange, nil, guide, nil)
-        result.width += extra
-        result.height += TokenField.heightInset
+        result.width += TokenField.tagPadding
+        result.height += TokenField.heightInset.rounded(.up)
         return result
     }
 

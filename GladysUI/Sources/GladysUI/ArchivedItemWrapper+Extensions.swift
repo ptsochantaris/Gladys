@@ -11,6 +11,7 @@ extension ArchivedItemWrapper {
                 .frame(maxWidth: width, minHeight: 0, alignment: .top)
                 .fixedSize()
                 .clipped()
+                .zIndex(2)
         }
     }
 
