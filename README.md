@@ -12,6 +12,7 @@ Parts of Gladys are being split off into their own Swift Packages to make them m
 - [Lista](https://github.com/ptsochantaris/lista)
 - [Semalot](https://github.com/ptsochantaris/semalot)
 - [Maintini](https://github.com/ptsochantaris/maintini)
+- [PopTimer](https://github.com/ptsochantaris/pop-timer)
 
 ## License
 
