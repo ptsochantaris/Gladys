@@ -47,22 +47,19 @@ extension CloudManager {
     }
 
     static func registerBackgroundHandling() {
-        shouldSyncAttempProceed = { force, overridingUserPreference in
-            if !force, !overridingUserPreference {
-                if syncContextSetting == .wifiOnly, await reachability.notReachableViaWiFi {
-                    log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
-                    return false
-                }
-                if syncContextSetting == .manualOnly {
-                    log("Skipping auto sync because user selected manual sync only")
-                    return false
-                }
+        shouldSyncAttemptProceed = { force in
+            if force {
+                return true
             }
-            await Maintini.startMaintaining()
+            if syncContextSetting == .wifiOnly, await reachability.notReachableViaWiFi {
+                log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
+                return false
+            }
+            if syncContextSetting == .manualOnly {
+                log("Skipping auto sync because user selected manual sync only")
+                return false
+            }
             return true
-        }
-        syncAttempDone = {
-            await Maintini.endMaintaining()
         }
     }
 

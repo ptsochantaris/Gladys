@@ -10,29 +10,16 @@ final class ShareViewController: NSViewController {
     @IBOutlet private var cancelButton: NSButton!
     @IBOutlet private var status: NSTextField!
 
-    private var cancelled = false
+    private var importTask: Task<Void, Never>?
     private var progresses = [Progress]()
-    private let importGroup = DispatchGroup()
     private let pasteboard = NSPasteboard(name: sharingPasteboard)
-    private var pasteboardItems = [NSPasteboardWriting]()
 
     @IBAction private func cancelButtonSelected(_: NSButton) {
-        cancelled = true
+        importTask?.cancel()
         for p in progresses where !p.isFinished {
             p.cancel()
-            importGroup.leave()
         }
         progresses.removeAll()
-    }
-
-    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        importGroup.enter() // released after load
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        importGroup.enter() // released after load
     }
 
     override func awakeFromNib() {
@@ -40,14 +27,30 @@ final class ShareViewController: NSViewController {
         DistributedNotificationCenter.default().addObserver(self, selector: #selector(pasteDone), name: .SharingPasteboardPasted, object: "build.bru.MacGladys")
     }
 
+    deinit {
+        DistributedNotificationCenter.default().removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        importTask = Task {
+            do {
+                try await runImport()
+            } catch {
+                done(error: error)
+            }
+        }
+    }
+
+    @MainActor
+    private func runImport() async throws {
+        guard let extensionContext else { return }
+
         status.stringValue = "Loading data…"
         spinner.startAnimation(nil)
-        pasteboardItems.removeAll()
 
-        guard let extensionContext else { return }
+        var pasteboardItems = [NSPasteboardWriting]()
 
         for inputItem in extensionContext.inputItems as? [NSExtensionItem] ?? [] {
             var attachments = inputItem.attachments ?? []
@@ -71,44 +74,30 @@ final class ShareViewController: NSViewController {
             }
 
             log("Ingesting inputItem with \(attachments.count) attachment(s)…")
-            for attachment in attachments {
+            for attachment in attachments where !Task.isCancelled {
                 let newItem = NSPasteboardItem()
-                pasteboardItems.append(newItem)
                 var identifiers = attachment.registeredTypeIdentifiers
                 if identifiers.contains("public.file-url"), identifiers.contains("public.url") { // finder is sharing
                     log("> Removing Finder redundant URL data")
                     identifiers.removeAll { $0 == "public.file-url" || $0 == "public.url" }
                 }
                 log("> Ingesting data with identifiers: \(identifiers.joined(separator: ", "))")
-                for type in identifiers {
-                    importGroup.enter()
-                    let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { [weak self] data, _ in
-                        if let data {
-                            newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
+                for type in identifiers where !Task.isCancelled {
+                    let data = await withCheckedContinuation { continuation in
+                        let p = attachment.loadDataRepresentation(forTypeIdentifier: type) { data, _ in
+                            continuation.resume(returning: data)
                         }
-                        self?.importGroup.leave()
+                        progresses.append(p)
                     }
-                    progresses.append(p)
+                    if let data {
+                        newItem.setData(data, forType: NSPasteboard.PasteboardType(type))
+                    }
                 }
+                pasteboardItems.append(newItem)
             }
-        }
 
-        importGroup.leave() // from the one in awakeFromNib
-    }
-
-    override func viewDidAppear() {
-        super.viewDidAppear()
-
-        guard let extensionContext else { return }
-
-        importGroup.notify(queue: DispatchQueue.main) { [weak self] in
-            guard let self else { return }
-
-            if cancelled {
-                let error = GladysError.actionCancelled
-                log(error.localizedDescription)
-                extensionContext.cancelRequest(withError: error)
-                return
+            if Task.isCancelled {
+                throw GladysError.actionCancelled
             }
 
             log("Writing data to parent app…")
@@ -116,23 +105,30 @@ final class ShareViewController: NSViewController {
             pasteboard.clearContents()
             pasteboard.writeObjects(pasteboardItems)
             status.stringValue = "Saving…"
+
             if !NSWorkspace.shared.open(URL(string: "gladys://x-callback-url/paste-share-pasteboard")!) {
-                let error = GladysError.mainAppFailedToOpen
-                log(error.localizedDescription)
-                extensionContext.cancelRequest(withError: error)
+                throw GladysError.mainAppFailedToOpen
             }
         }
     }
 
-    deinit {
-        DistributedNotificationCenter.default().removeObserver(self)
+    private func done(error: Error?) {
+        spinner.stopAnimation(nil)
+        pasteboard.clearContents()
+        importTask = nil
+        progresses.removeAll()
+
+        if let error {
+            log(error.localizedDescription)
+            extensionContext?.cancelRequest(withError: error)
+        } else {
+            log("Main app ingest done.")
+            status.stringValue = "Done"
+            extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+        }
     }
 
     @objc private func pasteDone() {
-        log("Main app ingest done.")
-        status.stringValue = "Done"
-        pasteboard.clearContents()
-        spinner.stopAnimation(nil)
-        extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+        done(error: nil)
     }
 }

@@ -1014,7 +1014,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let syncing = await CloudManager.syncing
         if !syncing {
             do {
-                try await CloudManager.sync(overridingUserPreference: true)
+                try await CloudManager.sync(force: true)
             } catch {
                 await genericAlert(title: "Sync Error", message: error.localizedDescription)
             }

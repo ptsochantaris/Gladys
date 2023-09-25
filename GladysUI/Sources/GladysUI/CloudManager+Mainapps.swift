@@ -535,7 +535,7 @@ public extension CloudManager {
         #endif
     }
 
-    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false, overridingUserPreference: Bool = false) async throws {
+    static func sync(scope: CKDatabase.Scope? = nil, force: Bool = false) async throws {
         if let l = lastiCloudAccount {
             let newToken = FileManager.default.ubiquityIdentityToken
             if !l.isEqual(newToken) {
@@ -549,17 +549,17 @@ public extension CloudManager {
         }
 
         do {
-            try await attemptSync(scope: scope, force: force, overridingUserPreference: overridingUserPreference)
+            try await attemptSync(scope: scope, force: force)
         } catch {
             if let ckError = error as? CKError {
-                try await reactToCkError(ckError, force: force, overridingUserPreference: overridingUserPreference)
+                try await reactToCkError(ckError, force: force)
             } else {
                 throw error
             }
         }
     }
 
-    private static func reactToCkError(_ ckError: CKError, force: Bool, overridingUserPreference: Bool) async throws {
+    private static func reactToCkError(_ ckError: CKError, force: Bool) async throws {
         switch ckError.code {
         case .accountTemporarilyUnavailable:
             log("iCloud account temporarily unavailable")
@@ -578,7 +578,7 @@ public extension CloudManager {
             syncRateLimited = true
             try? await Task.sleep(nanoseconds: UInt64(timeToRetry * Double(NSEC_PER_SEC)))
             syncRateLimited = false
-            try await attemptSync(scope: nil, force: force, overridingUserPreference: overridingUserPreference)
+            try await attemptSync(scope: nil, force: force)
 
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .networkFailure,
              .networkUnavailable, .operationCancelled, .partialFailure, .participantMayNeedVerification, .permissionFailure, .quotaExceeded,
@@ -671,14 +671,13 @@ public extension CloudManager {
 
     static func startActivation() async throws {
         try await activate()
-        try await sync(force: true, overridingUserPreference: true)
+        try await sync(force: true)
     }
 
-    static var shouldSyncAttempProceed: ((Bool, Bool) async -> Bool)?
-    static var syncAttempDone: (() async -> Void)?
+    static var shouldSyncAttemptProceed: ((Bool) async -> Bool)?
     private static let requestGateKeeper = Semalot(tickets: 1)
 
-    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool, overridingUserPreference: Bool) async throws {
+    private static func attemptSync(scope: CKDatabase.Scope?, force: Bool) async throws {
         await requestGateKeeper.takeTicket()
         await Maintini.startMaintaining()
         defer {
@@ -692,14 +691,8 @@ public extension CloudManager {
             return
         }
 
-        if let shouldSyncAttempProceed, await shouldSyncAttempProceed(force, overridingUserPreference) == false {
+        if let shouldSyncAttemptProceed, await shouldSyncAttemptProceed(force) == false {
             return
-        }
-
-        defer {
-            Task {
-                await syncAttempDone?()
-            }
         }
 
         syncing = true
