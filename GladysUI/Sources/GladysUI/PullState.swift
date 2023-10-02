@@ -1,4 +1,3 @@
-import AsyncAlgorithms
 import CloudKit
 import GladysCommon
 import Lista
@@ -193,11 +192,11 @@ final actor PullState {
     private func fetchZoneChanges(database: CKDatabase, zoneIDs: [CKRecordZone.ID]) async throws {
         log("Fetching changes to \(zoneIDs.count) zone(s) in \(database.databaseScope.logName) database")
 
-        let changeQueue = AsyncChannel<ZoneModification>()
+        let changeQueue = AsyncStream<ZoneModification>.makeStream()
         let neverSynced = await CloudManager.lastSyncCompletion == .distantPast
 
         let queueTask = Task {
-            for await change in changeQueue {
+            for await change in changeQueue.stream {
                 switch change {
                 case let .itemModified(modification):
                     let record = modification.record
@@ -242,27 +241,27 @@ final actor PullState {
                         for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
                             switch fetchResult {
                             case let .success(modification):
-                                await changeQueue.send(.itemModified(modification: modification))
+                                changeQueue.continuation.yield(.itemModified(modification: modification))
                             case let .failure(error):
                                 log("Changes could not be fetched for record \(recordId): \(error.localizedDescription)")
                             }
                         }
 
                         for deletion in zoneChangesResults.deletions {
-                            await changeQueue.send(.itemDeleted(deletion: deletion))
+                            changeQueue.continuation.yield(.itemDeleted(deletion: deletion))
                         }
 
                         zoneToken = zoneChangesResults.changeToken
                         moreComing = zoneChangesResults.moreComing
                     }
 
-                    await changeQueue.send(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
+                    changeQueue.continuation.yield(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
                 }
             }
             try await taskGroup.waitForAll()
         }
 
-        changeQueue.finish()
+        changeQueue.continuation.finish()
         _ = await queueTask.value
     }
 
