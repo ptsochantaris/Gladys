@@ -151,7 +151,7 @@
 		16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */; };
 		16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74152AB4C063000D6A99 /* GladysWidgets.swift */; };
 		16CA74182AB4C063000D6A99 /* ConfigurationAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */; };
-		16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
 		16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */; };
@@ -1843,6 +1843,7 @@
 		};
 		16CA741D2AB4C063000D6A99 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */;
 			targetProxy = 16CA741C2AB4C063000D6A99 /* PBXContainerItemProxy */;
 		};

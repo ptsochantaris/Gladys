@@ -7,7 +7,9 @@ import Intents
 import Maintini
 import UIKit
 import WatchConnectivity
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 extension UISceneSession {
     var associatedFilter: Filter {
@@ -41,7 +43,9 @@ extension Model {
                 clearLegacyIntents()
 
             case let .saveComplete(dueToSyncFetch):
-                WidgetCenter.shared.reloadAllTimelines()
+                #if canImport(WidgetKit)
+                    WidgetCenter.shared.reloadAllTimelines()
+                #endif
 
                 if let watchDelegate {
                     Task {

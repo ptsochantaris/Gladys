@@ -20,8 +20,6 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
         viewControllers[2].isNavigationBarHidden = true
 
         sendNotification(name: .PreferencesOpen)
-        let n = NotificationCenter.default
-        n.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
 
         var index = 0
         let fillImage = UIImage.block(color: .black.withAlphaComponent(0.1), size: CGSize(width: 1, height: 1))
@@ -57,6 +55,13 @@ final class VisionSettingsController: GladysViewController, WindowSizing {
         buttonStack = bar
 
         selectTab(PersistedOptions.lastSelectedPreferencesTab)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        if firstAppearance {
+            NotificationCenter.default.addObserver(self, selector: #selector(otherPrefsOpened), name: .PreferencesOpen, object: nil)
+        }
+        super.viewDidAppear(animated)
     }
 
     @objc private func otherPrefsOpened() {
