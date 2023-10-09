@@ -4,24 +4,24 @@ public extension String {
     var filenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
-                return host + "-" + components.path.split(separator: "/").joined(separator: "-")
+                host + "-" + components.path.split(separator: "/").joined(separator: "-")
             } else {
-                return components.path.split(separator: "/").joined(separator: "-")
+                components.path.split(separator: "/").joined(separator: "-")
             }
         } else {
-            return replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
+            replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "/", with: "-")
         }
     }
 
     var dropFilenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {
-                return host + "-" + components.path.split(separator: "/").joined(separator: "-")
+                host + "-" + components.path.split(separator: "/").joined(separator: "-")
             } else {
-                return components.path.split(separator: "/").joined(separator: "-")
+                components.path.split(separator: "/").joined(separator: "-")
             }
         } else {
-            return replacingOccurrences(of: ":", with: "-").replacingOccurrences(of: "/", with: "-")
+            replacingOccurrences(of: ":", with: "-").replacingOccurrences(of: "/", with: "-")
         }
     }
 

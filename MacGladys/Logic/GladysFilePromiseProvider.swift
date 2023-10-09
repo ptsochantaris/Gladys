@@ -117,12 +117,10 @@ private extension Component {
             try fm.removeItem(at: destinationUrl)
         }
 
-        let bytesToWrite: Data?
-
-        if let s = encodedUrl, !s.isFileURL {
-            bytesToWrite = s.urlFileContent
+        let bytesToWrite: Data? = if let s = encodedUrl, !s.isFileURL {
+            s.urlFileContent
         } else {
-            bytesToWrite = dataForDropping
+            dataForDropping
         }
 
         if let bytesToWrite {

@@ -13,9 +13,9 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
     var actionableSelectedItems: [ArchivedItem] {
         selectionIndexPaths.compactMap {
             if let item = window?.gladysController?.filter.filteredDrops[$0.item] {
-                return item.flags.contains(.needsUnlock) ? nil : item
+                item.flags.contains(.needsUnlock) ? nil : item
             } else {
-                return nil
+                nil
             }
         }
     }

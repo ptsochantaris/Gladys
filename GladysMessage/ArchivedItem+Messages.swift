@@ -26,9 +26,9 @@ extension ArchivedItem {
 
     var attachableTypeItem: Component? {
         if let i = components.max(by: { $0.attachPriority < $1.attachPriority }), i.attachPriority > 0 {
-            return i
+            i
         } else {
-            return nil
+            nil
         }
     }
 }

@@ -340,9 +340,9 @@ public final class Filter {
     public func applyLabelConfig(from newToggles: [Toggle]) {
         labelToggles = labelToggles.map { existingToggle in
             if let newToggle = newToggles.first(where: { $0.function == existingToggle.function }) {
-                return Toggle(function: newToggle.function, count: existingToggle.count, active: newToggle.active, currentDisplayMode: newToggle.currentDisplayMode, preferredDisplayMode: newToggle.preferredDisplayMode)
+                Toggle(function: newToggle.function, count: existingToggle.count, active: newToggle.active, currentDisplayMode: newToggle.currentDisplayMode, preferredDisplayMode: newToggle.preferredDisplayMode)
             } else {
-                return existingToggle
+                existingToggle
             }
         }
     }

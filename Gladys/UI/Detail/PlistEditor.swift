@@ -53,11 +53,10 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
                 callback(data, nil)
                 return nil
             }
-            let titleString: String?
-            if let url = p["WebResourceURL"] as? String {
-                titleString = mimeType + " from " + url
+            let titleString: String? = if let url = p["WebResourceURL"] as? String {
+                mimeType + " from " + url
             } else {
-                titleString = mimeType
+                mimeType
             }
             if case .success = Model.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil)) {
                 Task {
@@ -164,9 +163,9 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         if let p = propertyList as? [Any] {
-            return p.count
+            p.count
         } else if let p = propertyList as? [AnyHashable: Any] {
-            return p.keys.count
+            p.keys.count
         } else {
             abort()
         }

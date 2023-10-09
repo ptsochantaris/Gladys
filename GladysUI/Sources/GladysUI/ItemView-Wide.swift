@@ -2,25 +2,51 @@ import GladysCommon
 import SwiftUI
 
 extension ItemView {
-    private struct WideItemText: View {
+    public struct WideContentView: View {
         @ObservedObject var wrapper: ArchivedItemWrapper
 
-        private func accessibilityText() -> String {
-            var bottomText = ""
-            if PersistedOptions.displayLabelsInMainView {
-                let labelText = wrapper.labels.joined(separator: ", ")
-                if labelText.isPopulated {
-                    bottomText.append(labelText)
+        public var body: some View {
+            ZStack {
+                Color(PresentationInfo.defaultCardColor)
+
+                if wrapper.locked || wrapper.displayMode == .center {
+                    Spacer()
+                        .background(.ultraThinMaterial)
+                }
+
+                if wrapper.shouldDisplayLoading {
+                    LoadingItem(wrapper: wrapper)
+                        .foregroundColor(.accentColor)
+
+                } else {
+                    let side = wrapper.cellSize.height
+                    HStack(spacing: 0) {
+                        if wrapper.locked {
+                            ZStack {
+                                Image(systemName: "lock")
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .scaledToFit()
+                                    .frame(width: 33, height: 33)
+                                    .foregroundColor(.accentColor)
+                            }
+                            .frame(width: side, height: side)
+                        } else {
+                            ItemImage(wrapper: wrapper)
+                                .foregroundColor(.accentColor)
+                                .frame(width: side, height: side)
+                        }
+
+                        WideItemText(wrapper: wrapper)
+                            .frame(width: wrapper.cellSize.width - side, height: side)
+                    }
                 }
             }
-            if let bt = wrapper.presentationInfo.bottom.content.rawText {
-                if bottomText.isPopulated {
-                    bottomText.append("\n")
-                }
-                bottomText.append(bt)
-            }
-            return [wrapper.dominantTypeDescription, bottomText].compactMap { $0 }.joined(separator: "\n")
         }
+    }
+
+    private struct WideItemText: View {
+        @ObservedObject var wrapper: ArchivedItemWrapper
 
         var body: some View {
             HStack(spacing: 0) {
@@ -32,7 +58,6 @@ extension ItemView {
                     Spacer(minLength: 4)
                 }
                 .padding(.horizontal, 6)
-                .accessibilityValue(accessibilityText())
 
                 SelectionTick(wrapper: wrapper)
             }
@@ -134,49 +159,6 @@ extension ItemView {
                     Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity)
-            }
-        }
-    }
-
-    struct WideContentView: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
-
-        public var body: some View {
-            ZStack {
-                Color(PresentationInfo.defaultCardColor)
-
-                if wrapper.locked || wrapper.displayMode == .center {
-                    Spacer()
-                        .background(.ultraThinMaterial)
-                }
-
-                if wrapper.shouldDisplayLoading {
-                    LoadingItem(wrapper: wrapper)
-                        .foregroundColor(.accentColor)
-
-                } else {
-                    let side = wrapper.cellSize.height
-                    HStack(spacing: 0) {
-                        if wrapper.locked {
-                            ZStack {
-                                Image(systemName: "lock")
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .scaledToFit()
-                                    .frame(width: 33, height: 33)
-                                    .foregroundColor(.accentColor)
-                            }
-                            .frame(width: side, height: side)
-                        } else {
-                            ItemImage(wrapper: wrapper)
-                                .foregroundColor(.accentColor)
-                                .frame(width: side, height: side)
-                        }
-
-                        WideItemText(wrapper: wrapper)
-                            .frame(width: wrapper.cellSize.width - side, height: side)
-                    }
-                }
             }
         }
     }

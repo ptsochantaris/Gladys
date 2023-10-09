@@ -184,9 +184,9 @@ final class DetailCell: UITableViewCell {
     override var accessibilityValue: String? {
         get {
             if name.text == "Binary Data" {
-                return "\(size.text ?? ""), Binary data"
+                "\(size.text ?? ""), Binary data"
             } else {
-                return "\(size.text ?? ""), Contents: \(name.text ?? "")"
+                "\(size.text ?? ""), Contents: \(name.text ?? "")"
             }
         }
         set {}

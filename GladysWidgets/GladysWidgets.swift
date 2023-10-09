@@ -58,7 +58,7 @@ struct GladysWidgetsEntryView: View {
                 if item.isPlaceholder {
                     // nothing
 
-                } else if item.hasFullImage, let img = item.image {
+                } else if item.hasFullImage, let img = item.image?.swiftUiImage {
                     img
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -68,7 +68,7 @@ struct GladysWidgetsEntryView: View {
 
                 } else {
                     VStack(spacing: 0) {
-                        if let img = item.image {
+                        if let img = item.image?.swiftUiImage {
                             img
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)

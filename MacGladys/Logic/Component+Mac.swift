@@ -9,9 +9,9 @@ import UniformTypeIdentifiers
 extension Component {
     var isArchivable: Bool {
         if let e = encodedUrl, !e.isFileURL, e.host != nil, let s = e.scheme, s.hasPrefix("http") {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

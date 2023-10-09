@@ -134,9 +134,9 @@ public enum DropStore {
 
     public static func item(uuid: String) -> ArchivedItem? {
         if let uuidData = UUID(uuidString: uuid) {
-            return item(uuid: uuidData)
+            item(uuid: uuidData)
         } else {
-            return nil
+            nil
         }
     }
 

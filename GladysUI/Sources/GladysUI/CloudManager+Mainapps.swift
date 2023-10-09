@@ -246,9 +246,9 @@ public extension CloudManager {
 
         CloudManager.deletionQueue = CloudManager.deletionQueue.filter {
             if let lastPartOfTag = $0.components(separatedBy: ":").last {
-                return !recordNames.contains(lastPartOfTag)
+                !recordNames.contains(lastPartOfTag)
             } else {
-                return true
+                true
             }
         }
     }

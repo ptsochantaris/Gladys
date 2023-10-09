@@ -8,7 +8,7 @@ import Maintini
 import UIKit
 import WatchConnectivity
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 extension UISceneSession {

@@ -73,9 +73,9 @@ public extension Component {
         } else if let array = decoded as? NSArray {
             let newArray = array.map { (item: Any) -> Any in
                 if let text = item as? String, let url = URL(string: text), let scheme = url.scheme, scheme.isPopulated {
-                    return newUrl.absoluteString
+                    newUrl.absoluteString
                 } else {
-                    return item
+                    item
                 }
             }
             let data = try? PropertyListSerialization.data(fromPropertyList: newArray, format: .binary, options: 0)

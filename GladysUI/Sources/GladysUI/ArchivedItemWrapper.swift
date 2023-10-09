@@ -164,4 +164,41 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     var locked: Bool {
         item?.flags.contains(.needsUnlock) ?? false
     }
+
+    @MainActor
+    public var accessibilityText: String {
+        if shouldDisplayLoading {
+            if isFirstImport {
+                return "Importing item. Activate to cancel."
+            } else {
+                return "Processing item."
+            }
+        }
+
+        if locked {
+            return "Item Locked"
+        }
+
+        var components = [String?]()
+
+        if let topText = presentationInfo.top.content.rawText, topText.isPopulated {
+            components.append(topText)
+        }
+
+        components.append(dominantTypeDescription)
+
+        let image = presentationInfo.image
+        components.append(image?.accessibilityLabel)
+        components.append(image?.accessibilityValue)
+
+        if PersistedOptions.displayLabelsInMainView, let l = item?.labels, !l.isEmpty {
+            components.append(l.joined(separator: ", "))
+        }
+
+        if let l = presentationInfo.bottom.content.rawText, l.isPopulated {
+            components.append(l)
+        }
+
+        return components.compactMap { $0 }.joined(separator: "\n")
+    }
 }

@@ -49,7 +49,7 @@ public struct PresentationInfo: Identifiable, Hashable {
     public let id: UUID
     public let top: LabelInfo
     public let bottom: LabelInfo
-    public let image: Image?
+    public let image: IMAGE?
     public let highlightColor: ItemColor
     public let hasTransparentBackground: Bool
     public let hasFullImage: Bool
@@ -93,7 +93,7 @@ public struct PresentationInfo: Identifiable, Hashable {
         self.id = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
-        self.image = image?.swiftUiImage
+        self.image = image
         self.highlightColor = highlightColor
         hasTransparentBackground = self.top.hasTransparentBackground || self.bottom.hasTransparentBackground
         self.hasFullImage = hasFullImage

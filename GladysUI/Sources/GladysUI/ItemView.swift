@@ -25,14 +25,9 @@ public struct ItemView: View {
                     })
                 }
                 .padding()
-                .accessibilityLabel("Importing item. Activate to cancel.") // TODO: audit
-                .accessibilityAction {
-                    wrapper.delete()
-                }
             } else {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
-                    .accessibilityLabel("Processing item.") // TODO: audit
             }
         }
     }
@@ -46,19 +41,22 @@ public struct ItemView: View {
         @Environment(\.colorScheme) var colorScheme
 
         var body: some View {
-            if let img = wrapper.presentationInfo.image {
+            if let img = wrapper.presentationInfo.image?.swiftUiImage {
                 switch wrapper.displayMode {
                 case .fit:
                     img
                         .resizable()
+                        .accessibilityIgnoresInvertColors()
                         .aspectRatio(contentMode: .fit)
                 case .fill:
                     img
                         .resizable()
+                        .accessibilityIgnoresInvertColors()
                         .aspectRatio(contentMode: .fill)
                 case .circle:
                     img
                         .resizable()
+                        .accessibilityIgnoresInvertColors()
                         .aspectRatio(contentMode: .fill)
                         .clipShape(Circle())
                 case .center:
@@ -141,6 +139,10 @@ public struct ItemView: View {
         }
     }
 
+    public var accessibilityText: String {
+        wrapper.accessibilityText
+    }
+
     @ViewBuilder
     private var itemMode: some View {
         let shadowColor: Color = wrapper.shouldShowShadow ? (colorScheme == .dark ? .black : .gray) : .clear
@@ -172,5 +174,6 @@ public struct ItemView: View {
                 }
             }
         }
+        .accessibilityLabel(wrapper.accessibilityText)
     }
 }

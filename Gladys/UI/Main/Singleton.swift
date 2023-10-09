@@ -107,11 +107,10 @@ final class Singleton {
             let searchText = userActivity?.userInfo?[kGladysMainViewSearchText] as? String
             let displayMode = userActivity?.userInfo?[kGladysMainViewDisplayMode] as? Int
 
-            let legacyLabelList: Set<String>?
-            if let list = userActivity?.userInfo?["kGladysMainViewLabelList"] as? [String], list.isPopulated {
-                legacyLabelList = Set(list)
+            let legacyLabelList: Set<String>? = if let list = userActivity?.userInfo?["kGladysMainViewLabelList"] as? [String], list.isPopulated {
+                Set(list)
             } else {
-                legacyLabelList = nil
+                nil
             }
 
             var labels: [Filter.Toggle]?
@@ -136,11 +135,10 @@ final class Singleton {
                 }
 
                 Task {
-                    let child: Component?
-                    if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                        child = ComponentLookup.shared.component(uuid: childUuid)
+                    let child: Component? = if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
+                        ComponentLookup.shared.component(uuid: childUuid)
                     } else {
-                        child = item.previewableTypeItem
+                        item.previewableTypeItem
                     }
                     if forceMainWindow {
                         _ = showMainWindow(in: scene)

@@ -45,23 +45,6 @@ extension ItemView {
     private struct SquareItemText: View {
         @ObservedObject var wrapper: ArchivedItemWrapper
 
-        private func accessibilityText() -> String {
-            var bottomText = ""
-            if PersistedOptions.displayLabelsInMainView {
-                let labelText = wrapper.labels.joined(separator: ", ")
-                if labelText.isPopulated {
-                    bottomText.append(labelText)
-                }
-            }
-            if let bt = wrapper.presentationInfo.bottom.content.rawText {
-                if bottomText.isPopulated {
-                    bottomText.append("\n")
-                }
-                bottomText.append(bt)
-            }
-            return [wrapper.dominantTypeDescription, bottomText].compactMap { $0 }.joined(separator: "\n")
-        }
-
         var body: some View {
             ZStack(alignment: .trailing) {
                 VStack(spacing: 0) {
@@ -69,7 +52,6 @@ extension ItemView {
                     Spacer(minLength: 0)
                     SquareLabel(wrapper: wrapper, atTop: false)
                 }
-                .accessibilityValue(accessibilityText())
                 .frame(maxWidth: .infinity)
 
                 SelectionTick(wrapper: wrapper)

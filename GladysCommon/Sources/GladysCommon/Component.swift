@@ -426,8 +426,8 @@ public final class Component: Codable, Hashable {
     }
 
     public var typeDescription: String {
-        if let type = UTType(typeIdentifier) {
-            return type.description
+        if let type = UTType(typeIdentifier)?.localizedDescription {
+            return type
         }
 
         let id = typeIdentifier.lowercased()

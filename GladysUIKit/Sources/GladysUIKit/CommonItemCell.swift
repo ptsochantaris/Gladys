@@ -64,7 +64,7 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             archivedDropItem?.queueWarmup(style: style)
@@ -99,6 +99,20 @@ open class CommonItemCell: UICollectionViewCell {
         super.layoutSubviews()
 
         focusEffect = UIFocusHaloEffect(roundedRect: bounds.insetBy(dx: 2, dy: 2), cornerRadius: cellCornerRadius, curve: .continuous)
+    }
+
+    override open var accessibilityLabel: String? {
+        get {
+            itemViewController.rootView.accessibilityText
+        }
+        set {}
+    }
+
+    override open var isAccessibilityElement: Bool {
+        get {
+            true
+        }
+        set {}
     }
 
     public var lowMemoryMode = false {

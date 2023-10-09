@@ -414,7 +414,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     sheet.prefersEdgeAttachedInCompactHeight = true
                     sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = false
                     sheet.detents = [.custom { _ in
-                        return n.preferredContentSize.height
+                        n.preferredContentSize.height
                     }]
                 }
             #endif
@@ -1694,11 +1694,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let sectionLeft = view.safeAreaInsets.left + spacing
         let sectionRight = view.safeAreaInsets.right + spacing
 
-        let topSpace: CGFloat
-        if view.traitCollection.horizontalSizeClass == .regular {
-            topSpace = spacing * 0.5
+        let topSpace: CGFloat = if view.traitCollection.horizontalSizeClass == .regular {
+            spacing * 0.5
         } else {
-            topSpace = 0
+            0
         }
 
         if filter.groupingMode == .flat {
@@ -2040,9 +2039,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     override var initialAccessibilityElement: UIView {
         if let ip = closestIndexPathSinceLast, let cell = collection.cellForItem(at: ip) {
-            return cell
+            cell
         } else {
-            return collection
+            collection
         }
     }
 
