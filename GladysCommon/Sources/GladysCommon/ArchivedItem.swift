@@ -218,7 +218,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         #if canImport(WatchKit)
             suggestedName = nil
         #else
-            suggestedName = providers.first?.suggestedName
+            suggestedName = providers.compactMap { $0.suggestedName }.first
         #endif
         needsReIngest = false // original ingest, not re-ingest, show "cancel"
         needsDeletion = false
@@ -568,22 +568,18 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     private static func sanitised(_ ids: [String]) -> [String] {
         let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
         var identifiers = ids.filter { typeIdentifier in
-            #if canImport(AppKit)
-                if typeIdentifier.hasPrefix("dyn.") {
-                    return false
-                }
-                guard let type = UTType(typeIdentifier) else {
-                    return false
-                }
-                if !(type.conforms(to: .item) || type.conforms(to: .content)) {
-                    return false
-                }
-            #endif
-            return !blockedSuffixes.contains { typeIdentifier.hasSuffix($0) }
+            if typeIdentifier.hasPrefix("dyn.") || typeIdentifier.contains(" ") {
+                return false
+            }
+            guard let type = UTType(typeIdentifier), type.conforms(to: .item) || type.conforms(to: .content), !blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) }) else {
+                return false
+            }
+            return true
         }
         if identifiers.contains("com.apple.mail.email") {
             identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
         }
+        log("Sanitised identifiers: \(identifiers.joined(separator: ", "))")
         return identifiers
     }
 

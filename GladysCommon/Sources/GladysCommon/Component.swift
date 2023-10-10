@@ -795,7 +795,8 @@ public final class Component: Codable, Hashable {
         progress.totalUnitCount = 2
 
         do {
-            let data = try await provider.loadDataRepresentation(for: createWebArchive ? "public.url" : typeIdentifier)
+            let effectiveIdentifier = createWebArchive ? "public.url" : typeIdentifier
+            let data = try await provider.loadDataRepresentation(for: effectiveIdentifier)
             progress.completedUnitCount += 1
             flags.remove(.isTransferring)
             if flags.contains(.loadingAborted) {
@@ -816,11 +817,11 @@ public final class Component: Codable, Hashable {
                     throw GladysError.actionCancelled
                 }
 
-                log(">> Resolved url to read data from: [\(typeIdentifier)]")
+                log(">> Resolved url to read data from: [\(effectiveIdentifier)]")
                 try await ingest(from: assignedUrl)
 
             } else {
-                log(">> Received type: [\(typeIdentifier)]")
+                log(">> Received type: [\(effectiveIdentifier)]")
                 try await ingest(data: data, encodeAnyUIImage: encodeAnyUIImage, storeBytes: true)
             }
 
