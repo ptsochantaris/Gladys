@@ -87,12 +87,12 @@ final class ActionRequestViewController: UIViewController {
             } else {
                 list
             }
-        }
+        }.map { DataImporter(itemProvider: $0) }
 
         var allDifferentTypes = true
         var typeSet = Set<String>()
         for p in providerList {
-            let currentTypes = Set(p.registeredTypeIdentifiers)
+            let currentTypes = Set(p.identifiers)
             if typeSet.isDisjoint(with: currentTypes) {
                 typeSet.formUnion(currentTypes)
             } else {

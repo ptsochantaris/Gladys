@@ -189,8 +189,8 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
         let image = presentationInfo.image
         #if canImport(UIKit)
-        components.append(image?.accessibilityLabel)
-        components.append(image?.accessibilityValue)
+            components.append(image?.accessibilityLabel)
+            components.append(image?.accessibilityValue)
         #endif
 
         if PersistedOptions.displayLabelsInMainView, let l = item?.labels, !l.isEmpty {

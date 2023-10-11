@@ -483,11 +483,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 .compactMap { _ in pasteboard.string(forType: .string) }
                 .filter { _ in PersistedOptions.clipboardSnoopingAll || !pasteboard.typesAreSensitive }
                 .map { text in NSItemProvider(object: text as NSItemProviderWriting) }
-                .sink { provider in
+                .map { provider in DataImporter(itemProvider: provider) }
+                .sink { importer in
                     let label = PersistedOptions.clipboardSnoopingLabel
                     let overrides = label.isEmpty ? nil : ImportOverrides(title: nil, note: nil, labels: [label])
                     Task { @MainActor in
-                        _ = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: keyGladysControllerIfExists?.filter)
+                        _ = Model.addItems(itemProviders: [importer], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: keyGladysControllerIfExists?.filter)
                     }
                 }
         } else if !snoop, pasteboardObservation != nil {

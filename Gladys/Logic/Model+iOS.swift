@@ -77,14 +77,14 @@ extension Model {
     }
 
     @available(iOS 16, *)
-    static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
+    static func createItem(provider: DataImporter, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result = pasteItems(from: [provider], overrides: importOverrides)
         return try await GladysAppIntents.processCreationResult(result)
     }
 
     @discardableResult
-    static func pasteItems(from providers: [NSItemProvider], overrides: ImportOverrides?) -> PasteResult {
+    static func pasteItems(from providers: [DataImporter], overrides: ImportOverrides?) -> PasteResult {
         if providers.isEmpty {
             return .noData
         }

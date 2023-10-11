@@ -48,17 +48,13 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
            let mimeType = p["WebResourceMIMEType"] as? String,
            let data = p["WebResourceData"] as? Data,
            let uti = UTType(mimeType: mimeType) {
-            let provider = NSItemProvider()
-            provider.registerDataRepresentation(forTypeIdentifier: uti.identifier, visibility: .all) { callback -> Progress? in
-                callback(data, nil)
-                return nil
-            }
+            let importer = DataImporter(type: uti.identifier, data: data, suggestedName: nil)
             let titleString: String? = if let url = p["WebResourceURL"] as? String {
                 mimeType + " from " + url
             } else {
                 mimeType
             }
-            if case .success = Model.pasteItems(from: [provider], overrides: ImportOverrides(title: titleString, note: nil, labels: nil)) {
+            if case .success = Model.pasteItems(from: [importer], overrides: ImportOverrides(title: titleString, note: nil, labels: nil)) {
                 Task {
                     await genericAlert(title: nil, message: "Extracted as new item", buttonTitle: nil)
                 }

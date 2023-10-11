@@ -80,12 +80,8 @@ extension CallbackSupport {
 
     @discardableResult
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> PasteResult {
-        let p = NSItemProvider()
-        p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
-            completion(data, nil)
-            return nil
-        }
-        return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
+        let importer = DataImporter(type: UTType.data.identifier, data: data, suggestedName: nil)
+        return Model.addItems(itemProviders: [importer], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
     }
 
     @discardableResult
@@ -98,6 +94,7 @@ extension CallbackSupport {
     @discardableResult
     static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
         let p = NSItemProvider(object: object)
-        return Model.addItems(itemProviders: [p], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
+        let importer = DataImporter(itemProvider: p)
+        return Model.addItems(itemProviders: [importer], indexPath: IndexPath(item: 0, section: 0), overrides: overrides, filterContext: nil)
     }
 }

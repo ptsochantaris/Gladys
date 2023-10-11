@@ -791,12 +791,12 @@ public final class Component: Codable, Hashable {
         }
     }
 
-    func startIngest(provider: NSItemProvider, encodeAnyUIImage: Bool, createWebArchive: Bool, progress: Progress) async throws {
+    func startIngest(provider: DataImporter, encodeAnyUIImage: Bool, createWebArchive: Bool, progress: Progress) async throws {
         progress.totalUnitCount = 2
 
         do {
             let effectiveIdentifier = createWebArchive ? "public.url" : typeIdentifier
-            let data = try await provider.loadDataRepresentation(for: effectiveIdentifier)
+            let data = try await provider.data(for: effectiveIdentifier)
             progress.completedUnitCount += 1
             flags.remove(.isTransferring)
             if flags.contains(.loadingAborted) {

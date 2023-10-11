@@ -284,7 +284,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func externalDrop(dragItem: UIDragItem, to destinationIndexPath: IndexPath) -> PostDropAction {
         var result = PostDropAction.none
 
-        for newItem in ArchivedItem.importData(providers: [dragItem.itemProvider], overrides: nil) {
+        let importer = DataImporter(itemProvider: dragItem.itemProvider)
+        for newItem in ArchivedItem.importData(providers: [importer], overrides: nil) {
             switch filter.groupingMode {
             case .byLabel:
                 let destinationSectionIndex = IndexPath(item: 0, section: destinationIndexPath.section)
@@ -1068,7 +1069,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     @IBAction private func pasteSelected(_: UIBarButtonItem) {
         Model.donatePasteIntent()
-        if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: nil) {
+        if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil) {
             Task {
                 await genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
             }

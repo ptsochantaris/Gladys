@@ -10,7 +10,7 @@ import GladysUI
 
 extension Model {
     @available(iOS 16, *)
-    static func createItem(provider _: NSItemProvider, title _: String?, note _: String?, labels _: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
+    static func createItem(provider _: DataImporter, title _: String?, note _: String?, labels _: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         try await GladysAppIntents.processCreationResult(.noData)
     }
 
@@ -22,7 +22,7 @@ extension Model {
     #endif
 
     @discardableResult
-    static func pasteItems(from _: [NSItemProvider], overrides _: ImportOverrides?) -> PasteResult {
+    static func pasteItems(from _: [DataImporter], overrides _: ImportOverrides?) -> PasteResult {
         .noData
     }
 }

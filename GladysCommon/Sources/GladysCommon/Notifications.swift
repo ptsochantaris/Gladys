@@ -13,7 +13,7 @@ public struct ImportOverrides {
 }
 
 public struct PasteRequest {
-    public let providers: [NSItemProvider]
+    public let providers: [DataImporter]
     public let overrides: ImportOverrides?
 }
 

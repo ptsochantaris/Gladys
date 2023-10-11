@@ -65,13 +65,8 @@ extension CallbackSupport {
 
     @discardableResult
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> PasteResult {
-        let p = NSItemProvider()
-        p.suggestedName = overrides.title
-        p.registerDataRepresentation(forTypeIdentifier: UTType.data.identifier, visibility: .all) { completion -> Progress? in
-            completion(data, nil)
-            return nil
-        }
-        return Model.pasteItems(from: [p], overrides: overrides)
+        let importer = DataImporter(type: UTType.data.identifier, data: data, suggestedName: overrides.title)
+        return Model.pasteItems(from: [importer], overrides: overrides)
     }
 
     @discardableResult
@@ -85,11 +80,14 @@ extension CallbackSupport {
         defer {
             Model.donatePasteIntent()
         }
-        return Model.pasteItems(from: UIPasteboard.general.itemProviders, overrides: importOverrides)
+        let importers = UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }
+        return Model.pasteItems(from: importers, overrides: importOverrides)
     }
 
     @discardableResult
     private static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
-        Model.pasteItems(from: [NSItemProvider(object: object)], overrides: overrides)
+        let p = NSItemProvider(object: object)
+        let importer = DataImporter(itemProvider: p)
+        return Model.pasteItems(from: [importer], overrides: overrides)
     }
 }

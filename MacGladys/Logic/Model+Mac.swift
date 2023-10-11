@@ -31,7 +31,7 @@ extension Model {
     }
 
     @available(macOS 13, *)
-    static func createItem(provider: NSItemProvider, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
+    static func createItem(provider: DataImporter, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)
         return try await GladysAppIntents.processCreationResult(result)
@@ -85,10 +85,9 @@ extension Model {
 
         let importGroup = DispatchGroup()
 
-        let itemProviders = pasteboardItems.compactMap { pasteboardItem -> NSItemProvider? in
-            let extractor = NSItemProvider()
-            var count = 0
-            let utis = Set(pasteboardItem.types.map(\.rawValue))
+        let importers = pasteboardItems.compactMap { pasteboardItem -> [DataImporter] in
+            var importers = [DataImporter]()
+            let utis = Set<String>(pasteboardItem.types.map(\.rawValue))
 
             if let filePromises = pasteBoard.readObjects(forClasses: [NSFilePromiseReceiver.self], options: nil) as? [NSFilePromiseReceiver] {
                 for promise in filePromises {
@@ -98,7 +97,6 @@ extension Model {
                     if utis.contains(promiseType) { // No need to fetch the file, the data exists as a solid block in the pasteboard
                         continue
                     }
-                    count += 1
                     importGroup.enter()
 
                     // log("Waiting for promise: \(promiseType)")
@@ -107,10 +105,9 @@ extension Model {
                         if let error {
                             log("Warning, loading error in file drop: \(error.localizedDescription)")
                         } else {
-                            let dropData = try? Data(contentsOf: url)
-                            extractor.registerDataRepresentation(forTypeIdentifier: promiseType, visibility: .all) { callback -> Progress? in
-                                callback(dropData, nil)
-                                return nil
+                            if let dropData = try? Data(contentsOf: url) {
+                                let importer = DataImporter(type: promiseType, data: dropData, suggestedName: nil)
+                                importers.append(importer)
                             }
                         }
                         importGroup.leave()
@@ -119,28 +116,27 @@ extension Model {
             }
 
             for type in pasteboardItem.types {
-                count += 1
-                extractor.registerDataRepresentation(forTypeIdentifier: type.rawValue, visibility: .all) { callback -> Progress? in
-                    let data = pasteboardItem.data(forType: type)
-                    callback(data, nil)
-                    return nil
+                if let data = pasteboardItem.data(forType: type) {
+                    let importer = DataImporter(type: type.rawValue, data: data, suggestedName: nil)
+                    importers.append(importer)
                 }
             }
-            return count > 0 ? extractor : nil
+            return importers
         }
 
         importGroup.wait()
 
-        if itemProviders.isEmpty {
+        if importers.isEmpty {
             return .noData
         }
 
-        return addItems(itemProviders: itemProviders, indexPath: indexPath, overrides: overrides, filterContext: filterContext)
+        let flatList = importers.flatMap { $0 }
+        return addItems(itemProviders: flatList, indexPath: indexPath, overrides: overrides, filterContext: filterContext)
     }
 
     @discardableResult
     @MainActor
-    static func addItems(itemProviders: [NSItemProvider], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
+    static func addItems(itemProviders: [DataImporter], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
         var archivedItems = [ArchivedItem]()
         for provider in itemProviders {
             for newItem in ArchivedItem.importData(providers: [provider], overrides: overrides) {
@@ -167,14 +163,17 @@ extension Model {
 
     @MainActor
     static func importFiles(paths: [String], filterContext: Filter?) {
-        let providers = paths.compactMap { path -> NSItemProvider? in
+        let providers = paths.compactMap { path -> DataImporter? in
             let url = URL(fileURLWithPath: path)
             var isDir: ObjCBool = false
             FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
             if isDir.boolValue {
-                return NSItemProvider(item: url as NSURL, typeIdentifier: UTType.fileURL.identifier)
+                let p = NSItemProvider(item: url as NSURL, typeIdentifier: UTType.fileURL.identifier)
+                return DataImporter(itemProvider: p)
+            } else if let p = NSItemProvider(contentsOf: url) {
+                return DataImporter(itemProvider: p)
             } else {
-                return NSItemProvider(contentsOf: url)
+                return nil
             }
         }
         _ = addItems(itemProviders: providers, indexPath: IndexPath(item: 0, section: 0), overrides: nil, filterContext: filterContext)

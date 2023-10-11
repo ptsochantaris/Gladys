@@ -185,7 +185,8 @@ enum GladysAppIntents {
                 guard let p = UIPasteboard.general.itemProviders.first else {
                     throw Error.nothingInClipboard
                 }
-                Model.pasteItems(from: [p], overrides: nil)
+                let importer = DataImporter(itemProvider: p)
+                Model.pasteItems(from: [importer], overrides: nil)
             #else
                 let pb = NSPasteboard.general
                 guard let c = pb.pasteboardItems?.count, c > 0 else {
@@ -220,9 +221,8 @@ enum GladysAppIntents {
                 try await $file.requestValue()
             }
 
-            let p = NSItemProvider(item: data.data as NSData, typeIdentifier: (data.type ?? .data).identifier)
-            p.suggestedName = data.filename
-            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            let importer = DataImporter(type: (data.type ?? .data).identifier, data: data.data, suggestedName: data.filename)
+            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [])
         }
     }
 
@@ -250,7 +250,8 @@ enum GladysAppIntents {
             }
 
             let p = NSItemProvider(object: data as NSURL)
-            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            let importer = DataImporter(itemProvider: p)
+            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [])
         }
     }
 
@@ -278,7 +279,8 @@ enum GladysAppIntents {
             }
 
             let p = NSItemProvider(object: data as NSString)
-            return try await Model.createItem(provider: p, title: customName, note: note, labels: labels ?? [])
+            let importer = DataImporter(itemProvider: p)
+            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [])
         }
     }
 

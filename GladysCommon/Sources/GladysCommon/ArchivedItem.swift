@@ -194,11 +194,11 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         })
     }
 
-    public static func importData(providers: [NSItemProvider], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
+    public static func importData(providers: [DataImporter], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
         if PersistedOptions.separateItemPreference {
             let res = Lista<ArchivedItem>()
             for p in providers {
-                for t in sanitised(p.registeredTypeIdentifiers) {
+                for t in p.identifiers {
                     let item = ArchivedItem(providers: [p], limitToType: t, overrides: overrides)
                     res.append(item)
                 }
@@ -211,14 +211,14 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    private init(providers: [NSItemProvider], limitToType: String?, overrides: ImportOverrides?) {
+    private init(providers: [DataImporter], limitToType: String?, overrides: ImportOverrides?) {
         uuid = UUID()
         createdAt = Date()
         updatedAt = createdAt
         #if canImport(WatchKit)
             suggestedName = nil
         #else
-            suggestedName = providers.compactMap { $0.suggestedName }.first
+            suggestedName = providers.compactMap(\.suggestedName).first
         #endif
         needsReIngest = false // original ingest, not re-ingest, show "cancel"
         needsDeletion = false
@@ -565,24 +565,6 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    private static func sanitised(_ ids: [String]) -> [String] {
-        let blockedSuffixes = [".useractivity", ".internalMessageTransfer", ".internalEMMessageListItemTransfer", "itemprovider", ".rtfd", ".persisted"]
-        var identifiers = ids.filter { typeIdentifier in
-            if typeIdentifier.hasPrefix("dyn.") || typeIdentifier.contains(" ") {
-                return false
-            }
-            guard let type = UTType(typeIdentifier), type.conforms(to: .item) || type.conforms(to: .content), !blockedSuffixes.contains(where: { typeIdentifier.hasSuffix($0) }) else {
-                return false
-            }
-            return true
-        }
-        if identifiers.contains("com.apple.mail.email") {
-            identifiers.removeAll { $0 == "public.utf8-plain-text" || $0 == "com.apple.flat-rtfd" || $0 == "com.apple.uikit.attributedstring" }
-        }
-        log("Sanitised identifiers: \(identifiers.joined(separator: ", "))")
-        return identifiers
-    }
-
     public var mostRelevantTypeItem: Component? {
         components.max { $0.contentPriority < $1.contentPriority }
     }
@@ -802,9 +784,9 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         // }
     }
 
-    private func extractUrlData(from provider: NSItemProvider, for type: String) async -> Data? {
+    private func extractUrlData(from provider: DataImporter, for type: String) async -> Data? {
         var extractedData: Data?
-        let data = try? await provider.loadDataRepresentation(for: type)
+        let data = try? await provider.data(for: type)
         if let data, data.count < 16384 {
             var extractedText: String?
             if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
@@ -822,7 +804,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         return extractedData
     }
 
-    private func newItemIngest(providers: [NSItemProvider], limitToType: String?) async {
+    private func newItemIngest(providers: [DataImporter], limitToType: String?) async {
         await Maintini.startMaintaining()
         defer {
             Task {
@@ -833,7 +815,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         var componentsThatFailed = [Component]()
 
         for provider in providers {
-            var identifiers = ArchivedItem.sanitised(provider.registeredTypeIdentifiers)
+            var identifiers = provider.identifiers
             let shouldCreateEncodedImage = identifiers.contains("public.image") && !identifiers.contains { $0.hasPrefix("public.image.") }
             let shouldArchiveUrls = PersistedOptions.autoArchiveUrlComponents && !identifiers.contains("com.apple.webarchive")
             let alreadyHasUrl = identifiers.contains("public.url")
@@ -852,11 +834,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                    PersistedOptions.automaticallyDetectAndConvertWebLinks,
                    let extractedLinkData = await extractUrlData(from: provider, for: type) {
                     finalType = UTType.url.identifier
-                    finalProvider = NSItemProvider()
-                    finalProvider.registerDataRepresentation(forTypeIdentifier: finalType, visibility: .all) { provide -> Progress? in
-                        provide(extractedLinkData, nil)
-                        return nil
-                    }
+                    finalProvider = DataImporter(type: finalType, data: extractedLinkData, suggestedName: nil)
                 }
 
                 let i = Component(typeIdentifier: finalType, parentUuid: uuid, order: order)
