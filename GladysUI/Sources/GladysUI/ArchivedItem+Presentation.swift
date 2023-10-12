@@ -61,11 +61,7 @@ public extension ArchivedItem {
             PresentationInfo.defaultCardColor
         }
 
-        if Task.isCancelled {
-            return nil
-        }
-
-        return PresentationInfo(
+        let p = PresentationInfo(
             id: uuid,
             topText: topInfo,
             top: top,
@@ -75,6 +71,14 @@ public extension ArchivedItem {
             highlightColor: shouldDisplayLoading ? .none : highlightColor,
             hasFullImage: displayMode.prefersFullSizeImage
         )
+
+        presentationInfoCache[uuid] = p
+
+        if Task.isCancelled {
+            return nil
+        }
+
+        return p
     }
 
     private func prepareTopText() -> PresentationInfo.FieldContent {

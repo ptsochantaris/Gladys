@@ -92,7 +92,7 @@ final class ArchivedItemCell: CommonItemCell {
 
         func indirectScribbleInteraction(_: UIInteraction, requestElementsIn _: CGRect, completion: @escaping ([String]) -> Void) {
             if archivedDropItem?.isLocked == true {
-                return completion([])
+                completion([])
             } else {
                 completion(["NotesIdentifier"])
             }

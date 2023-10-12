@@ -35,9 +35,9 @@ extension Filter.Toggle.Function {
         let text = displayText
         let suggestedLabelSession = UIApplication.shared.openSessions.first {
             if let f = ($0.userInfo?[kGladysMainFilter] as? Filter) {
-                return f.enabledLabelsForTitles == [text]
+                f.enabledLabelsForTitles == [text]
             } else {
-                return false
+                false
             }
         }
 

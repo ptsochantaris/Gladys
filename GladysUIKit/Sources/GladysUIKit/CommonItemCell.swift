@@ -101,7 +101,7 @@ open class CommonItemCell: UICollectionViewCell {
         focusEffect = UIFocusHaloEffect(roundedRect: bounds.insetBy(dx: 2, dy: 2), cornerRadius: cellCornerRadius, curve: .continuous)
     }
 
-    open override var accessibilityValue: String? {
+    override open var accessibilityValue: String? {
         get {
             itemViewController.rootView.accessibilityText
         }

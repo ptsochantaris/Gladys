@@ -168,9 +168,9 @@ public extension CloudManager {
     internal static var uuidSequence: [String] {
         get {
             if let data = PersistedOptions.defaults.data(forKey: "uuidSequence") {
-                return SafeArchiving.unarchive(data) as? [String] ?? []
+                SafeArchiving.unarchive(data) as? [String] ?? []
             } else {
-                return []
+                []
             }
         }
         set {

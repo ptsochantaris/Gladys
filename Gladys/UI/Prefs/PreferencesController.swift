@@ -86,11 +86,11 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning _: UIDragSession) -> [UIDragItem] {
         if interaction.view == container {
-            return archiveDragItems
+            archiveDragItems
         } else if interaction.view == zipContainer {
-            return zipDragItems
+            zipDragItems
         } else {
-            return []
+            []
         }
     }
 

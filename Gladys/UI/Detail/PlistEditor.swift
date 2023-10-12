@@ -64,11 +64,11 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
 
     private func title(at index: Int) -> String? {
         if propertyList is [Any] {
-            return "Item \(index)"
+            "Item \(index)"
         } else if let p = propertyList as? [AnyHashable: Any] {
-            return p.keys.sorted { $0.hashValue < $1.hashValue }[index] as? String ?? "<unkown>"
+            p.keys.sorted { $0.hashValue < $1.hashValue }[index] as? String ?? "<unkown>"
         } else {
-            return nil
+            nil
         }
     }
 

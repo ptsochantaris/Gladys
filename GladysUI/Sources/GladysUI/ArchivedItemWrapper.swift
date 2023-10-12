@@ -60,32 +60,28 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             .objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self else { return }
-                assert(Thread.isMainThread)
-                updatePresentationInfo(for: newItem)
+                self?.updatePresentationInfo(for: newItem)
             }
     }
 
     private var updateTask: Task<Void, Never>?
     @MainActor private func updatePresentationInfo(for newItem: ArchivedItem) {
+        assert(Thread.isMainThread)
+
         if let task = updateTask {
             task.cancel()
             updateTask = nil
         }
-        
-        let newUuid = newItem.uuid
-        if let existing = presentationInfoCache[newUuid] {
+
+        if let existing = presentationInfoCache[newItem.uuid] {
             presentationInfo = existing
         } else {
             updateTask = Task {
-                defer {
-                    updateTask = nil
-                }
                 if let p = await newItem.createPresentationInfo(style: style) {
-                    presentationInfoCache[newUuid] = p
-                    guard !Task.isCancelled, item?.uuid == newUuid else { return }
+                    if Task.isCancelled, item?.uuid != p.id { return }
                     assert(Thread.isMainThread)
                     presentationInfo = p
+                    updateTask = nil
                 }
             }
         }
@@ -184,9 +180,9 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         components.append(dominantTypeDescription)
 
         #if canImport(UIKit)
-        if let v = presentationInfo.image?.accessibilityValue {
-            components.append(v)
-        }
+            if let v = presentationInfo.image?.accessibilityValue {
+                components.append(v)
+            }
         #endif
 
         if PersistedOptions.displayLabelsInMainView, let l = item?.labels, !l.isEmpty {

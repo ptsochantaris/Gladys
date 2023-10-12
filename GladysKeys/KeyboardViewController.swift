@@ -21,11 +21,9 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
 
     var changeCallback: (() -> Void)?
 
-    let labels: [String] = {
-        DropStore.visibleDrops
-            .reduce(Set<String>()) { $0.union($1.labels) }
-            .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
-    }()
+    let labels: [String] = DropStore.visibleDrops
+        .reduce(Set<String>()) { $0.union($1.labels) }
+        .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
 
     override func viewDidLoad() {
         super.viewDidLoad()

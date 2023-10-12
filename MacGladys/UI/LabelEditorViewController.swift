@@ -13,9 +13,7 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
         availableToggles.count
     }
 
-    private lazy var allToggles: [Filter.Toggle] = {
-        associatedFilter?.labelToggles.filter { $0.function != .unlabeledItems } ?? []
-    }()
+    private lazy var allToggles: [Filter.Toggle] = associatedFilter?.labelToggles.filter { $0.function != .unlabeledItems } ?? []
 
     private var availableToggles: [Filter.Toggle] {
         let filter = newLabelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
