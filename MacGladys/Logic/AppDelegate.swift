@@ -433,9 +433,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func applicationWillResignActive(_: Notification) {
-        Task { @MainActor in
-            DropStore.clearCaches()
-        }
+        clearCaches()
     }
 
     func applicationWillTerminate(_: Notification) {

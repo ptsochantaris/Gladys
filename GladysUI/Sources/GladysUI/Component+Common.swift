@@ -22,15 +22,15 @@ public extension Component {
 
     @MainActor
     var canPreview: Bool {
-        if let canPreviewCache {
-            return canPreviewCache
+        if let cachedEntry = canPreviewCache[uuid] {
+            return cachedEntry
         }
         #if canImport(AppKit)
             let res = fileExtension != nil && !(parent?.flags.contains(.needsUnlock) ?? true)
         #else
             let res = isWebArchive || QLPreviewController.canPreview(PreviewItem(typeItem: self))
         #endif
-        canPreviewCache = res
+        canPreviewCache[uuid] = res
         return res
     }
 
@@ -84,7 +84,7 @@ public extension Component {
             let data = Data(newUrl.absoluteString.utf8)
             setBytes(data)
         }
-        encodedURLCache = (true, newUrl)
+        encodedURLCache[uuid] = (true, newUrl)
         setTitle(from: newUrl as URL)
         markComponentUpdated()
     }

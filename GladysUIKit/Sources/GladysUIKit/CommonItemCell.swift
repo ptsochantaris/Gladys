@@ -53,7 +53,7 @@ open class CommonItemCell: UICollectionViewCell {
     public var targetedPreviewItem: UITargetedPreview {
         let params = UIDragPreviewParameters()
         params.visiblePath = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: cellCornerRadius, height: cellCornerRadius))
-        return UITargetedPreview(view: itemViewController.view, parameters: params)
+        return UITargetedPreview(view: self, parameters: params)
     }
 
     private var itemViewController = UIHostingController(rootView: ItemView())
@@ -67,7 +67,7 @@ open class CommonItemCell: UICollectionViewCell {
     override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            archivedDropItem?.queueWarmup(style: style)
+            archivedDropItem?.objectWillChange.send()
         }
     }
 
@@ -101,7 +101,7 @@ open class CommonItemCell: UICollectionViewCell {
         focusEffect = UIFocusHaloEffect(roundedRect: bounds.insetBy(dx: 2, dy: 2), cornerRadius: cellCornerRadius, curve: .continuous)
     }
 
-    override open var accessibilityLabel: String? {
+    open override var accessibilityValue: String? {
         get {
             itemViewController.rootView.accessibilityText
         }

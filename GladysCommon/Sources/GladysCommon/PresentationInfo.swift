@@ -2,8 +2,6 @@ import Foundation
 import SwiftUI
 
 public struct PresentationInfo: Identifiable, Hashable {
-    public static let cache = Cache<UUID, PresentationInfo>()
-
     public enum FieldContent {
         case none, text(String), link(URL), note(String), hint(String)
 

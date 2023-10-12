@@ -42,52 +42,53 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     @MainActor
     func clear() {
         item = nil
-        objectWillChange.send()
+        presentationInfo = PresentationInfo()
     }
 
     @MainActor
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else { return }
-        if newItem.uuid == item?.uuid, size.width == cellSize.width, style == self.style {
-            return
-        }
 
         self.style = style
         cellSize = size
         compact = cellSize.width < 170
         item = newItem
+        presentationInfo = PresentationInfo()
+        updatePresentationInfo(for: newItem)
+
         observer = newItem
             .objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
-                ensureItemIsWarmedUp()
+                assert(Thread.isMainThread)
+                updatePresentationInfo(for: newItem)
             }
-
-        ensureItemIsWarmedUp()
     }
 
-    @MainActor
-    private func ensureItemIsWarmedUp() {
-        guard let item else { return }
-
-        assert(Thread.isMainThread)
-
-        switch item.warmingUp {
-        case let .inProgress(existing):
-            existing.cancel()
-            item.warmingUp = .pending
-        case .done:
-            if presentationInfoCache[item.uuid] != nil {
-                objectWillChange.send()
-                return
-            }
-            item.warmingUp = .pending
-        case .pending:
-            break
+    private var updateTask: Task<Void, Never>?
+    @MainActor private func updatePresentationInfo(for newItem: ArchivedItem) {
+        if let task = updateTask {
+            task.cancel()
+            updateTask = nil
         }
-
-        item.queueWarmup(style: style)
+        
+        let newUuid = newItem.uuid
+        if let existing = presentationInfoCache[newUuid] {
+            presentationInfo = existing
+        } else {
+            updateTask = Task {
+                defer {
+                    updateTask = nil
+                }
+                if let p = await newItem.createPresentationInfo(style: style) {
+                    presentationInfoCache[newUuid] = p
+                    guard !Task.isCancelled, item?.uuid == newUuid else { return }
+                    assert(Thread.isMainThread)
+                    presentationInfo = p
+                }
+            }
+        }
     }
 
     @MainActor
@@ -104,12 +105,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     }
 
     @MainActor
-    var presentationInfo: PresentationInfo {
-        if let uuid = item?.uuid, let existing = presentationInfoCache[uuid] {
-            return existing
-        }
-        return PresentationInfo()
-    }
+    @Published var presentationInfo = PresentationInfo()
 
     @MainActor
     func delete() {
@@ -187,10 +183,10 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
         components.append(dominantTypeDescription)
 
-        let image = presentationInfo.image
         #if canImport(UIKit)
-            components.append(image?.accessibilityLabel)
-            components.append(image?.accessibilityValue)
+        if let v = presentationInfo.image?.accessibilityValue {
+            components.append(v)
+        }
         #endif
 
         if PersistedOptions.displayLabelsInMainView, let l = item?.labels, !l.isEmpty {

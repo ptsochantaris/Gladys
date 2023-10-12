@@ -22,19 +22,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     public let uuid: UUID
     public let createdAt: Date
 
-    public enum WarmUpState {
-        case pending, inProgress(Task<Void, Never>), done
-
-        public var associatedTask: Task<Void, Never>? {
-            switch self {
-            case .done, .pending: nil
-            case let .inProgress(task): task
-            }
-        }
-    }
-
-    @MainActor
-    public var warmingUp = WarmUpState.pending
+    public var presentationGenerator: Task<PresentationInfo?, Never>?
 
     public var components: ContiguousArray<Component> {
         didSet {

@@ -102,14 +102,6 @@ public enum DropStore {
         indexOfItem(with: uuid) != nil
     }
 
-    public static func clearCaches() {
-        for drop in dropStore {
-            for component in drop.components {
-                component.clearCachedFields()
-            }
-        }
-    }
-
     public static func reset() {
         dropStore.removeAll(keepingCapacity: false)
         uuidindex = [:]

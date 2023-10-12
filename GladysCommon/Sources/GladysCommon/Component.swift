@@ -116,10 +116,6 @@ public final class Component: Codable, Hashable {
 
     public var contributedLabels: [String]?
 
-    // Caches
-    public var encodedURLCache: (Bool, URL?)?
-    public var canPreviewCache: Bool?
-
     public init(cloning item: Component, newParentUUID: UUID) {
         uuid = UUID()
         parentUuid = newParentUUID
@@ -254,7 +250,7 @@ public final class Component: Codable, Hashable {
 
     //////////////////////////////////////////// Common
 
-    public func getFolderUrl(createIfNeeded: Bool) -> URL {
+    private func getFolderUrl(createIfNeeded: Bool) -> URL {
         if let url = folderUrlCache[uuid] {
             return url as URL
         }
@@ -275,16 +271,10 @@ public final class Component: Codable, Hashable {
     }
 
     public var imagePath: URL {
-        if let url = imagePathCache[uuid] {
-            return url as URL
-        }
-
-        let url = getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
-        imagePathCache[uuid] = url
-        return url
+        getFolderUrl(createIfNeeded: true).appendingPathComponent("thumbnail.png")
     }
 
-    public func getBytesPath(createIfNeeded: Bool) -> URL {
+    private func getBytesPath(createIfNeeded: Bool) -> URL {
         if let url = bytesPathCache[uuid] {
             return url as URL
         }
@@ -365,8 +355,8 @@ public final class Component: Codable, Hashable {
     }
 
     public var encodedUrl: URL? {
-        if let encodedURLCache {
-            return encodedURLCache.1
+        if let cachedEntry = encodedURLCache[uuid] {
+            return cachedEntry.1
         }
 
         var ret: URL?
@@ -386,7 +376,7 @@ public final class Component: Codable, Hashable {
             }
         }
 
-        encodedURLCache = (true, ret)
+        encodedURLCache[uuid] = (true, ret)
         return ret
     }
 
@@ -716,11 +706,6 @@ public final class Component: Codable, Hashable {
         flags.insert(.loadingAborted)
     }
 
-    public func clearCachedFields() {
-        encodedURLCache = nil
-        canPreviewCache = nil
-    }
-
     #if canImport(AppKit)
         public var componentIcon: NSImage? {
             get {
@@ -846,7 +831,7 @@ public final class Component: Codable, Hashable {
         defer {
             Component.gateKeeper.returnTicket()
         }
-        clearCachedFields()
+        clearCacheData(for: uuid)
 
         representedClass = .data
         classWasWrapped = false
@@ -872,7 +857,7 @@ public final class Component: Codable, Hashable {
         defer {
             Component.gateKeeper.returnTicket()
         }
-        clearCachedFields()
+        clearCacheData(for: uuid)
 
         guard data.isPlist, let obj = SafeArchiving.unarchive(data) else {
             log("      not a known class, storing data: \(data)")
@@ -1263,7 +1248,7 @@ public final class Component: Codable, Hashable {
                     await setDisplayIcon(#imageLiteral(resourceName: "zip"), 30, .center)
                     representedClass = .data
                     let tempURL = temporaryDirectoryUrl.appendingPathComponent(UUID().uuidString).appendingPathExtension("zip")
-                    let a = Archive(url: tempURL, accessMode: .create)!
+                    let a = try Archive(url: tempURL, accessMode: .create)
                     let dirName = item.lastPathComponent
                     let item = item.deletingLastPathComponent()
                     try appendDirectory(item, chain: [dirName], archive: a, fm: fm)

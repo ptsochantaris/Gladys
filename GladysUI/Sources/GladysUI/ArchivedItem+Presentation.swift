@@ -8,30 +8,18 @@ public extension ArchivedItem {
     private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
     private static let singleLock = Semalot(tickets: 1)
 
-    @MainActor
-    func queueWarmup(style: ArchivedItemWrapper.Style) {
-        log("Will (re)warm presentation for \(uuid)")
-
-        let previous = warmingUp.associatedTask
-
-        let task = Task<Void, Never>.detached { [weak self] in
-            await previous?.value
-
-            guard let self, let info = await createPresentationInfo(style: style) else { return }
-
-            presentationInfoCache[uuid] = info
-
-            Task { @MainActor [weak self] in
-                if let self, !Task.isCancelled {
-                    warmingUp = .done
-                    objectWillChange.send()
-                }
-            }
+    func createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
+        if let presentationGenerator {
+            return await presentationGenerator.value
+        } else {
+            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style) }
+            presentationGenerator = newTask
+            defer { presentationGenerator = nil }
+            return await newTask.value
         }
-        warmingUp = .inProgress(task)
     }
 
-    func createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
+    private func _createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
         if Task.isCancelled {
             return nil
         }
