@@ -83,7 +83,7 @@ extension ItemView {
             case let .hint(hintText):
                 contentText = hintText
                 showLabels = false
-                lineLimit = 6
+                lineLimit = 4
                 highlight = true
             case let .link(url):
                 contentText = url.absoluteString
@@ -98,12 +98,12 @@ extension ItemView {
             case let .note(text):
                 contentText = text
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = 6
+                lineLimit = 4
                 highlight = true
             case let .text(text):
                 contentText = text
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = atTop ? (wrapper.compact ? 2 : 6) : 2
+                lineLimit = atTop ? (wrapper.compact ? 2 : 4) : 2
                 highlight = false
             }
 
@@ -129,15 +129,13 @@ extension ItemView {
                 } else {
                     (atTop ? info.top.isBright : info.bottom.isBright) ? .black : .white
                 }
-                let hazeColor = fadeColor
+                let shadowColor = fadeColor
                 Text(contentText)
                     .fontWeight(highlight ? .semibold : .regular)
                     .foregroundColor(fgColor)
                     .multilineTextAlignment(.center)
                     .lineLimit(lineLimit)
-                    .shadow(color: hazeColor, radius: 5, x: 0, y: 0)
-                    .shadow(color: hazeColor, radius: 6, x: 0, y: 0)
-                    .shadow(color: hazeColor, radius: 7, x: 0, y: 0)
+                    .shadow(color: shadowColor, radius: 3, x: 0, y: 0)
             }
         }
 

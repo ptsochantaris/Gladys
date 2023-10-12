@@ -53,6 +53,7 @@ public struct ItemView: View {
                         .resizable()
                         .accessibilityIgnoresInvertColors()
                         .aspectRatio(contentMode: .fill)
+
                 case .circle:
                     img
                         .resizable()
@@ -73,12 +74,12 @@ public struct ItemView: View {
         var body: some View {
             let haze = fadeColor
             let gradient = Gradient(stops: [
-                Gradient.Stop(color: haze, location: 0.2),
-                Gradient.Stop(color: haze.opacity(0.3), location: 0.8),
+                Gradient.Stop(color: haze.opacity(0.7), location: 0.2),
+                Gradient.Stop(color: haze.opacity(0.3), location: 0.7),
                 Gradient.Stop(color: haze.opacity(0), location: 1.0)
             ])
             LinearGradient(gradient: gradient, startPoint: atTop ? .top : .bottom, endPoint: atTop ? .bottom : .top)
-                .padding(atTop ? .bottom : .top, -26)
+                .padding(atTop ? .bottom : .top, -23)
         }
     }
 

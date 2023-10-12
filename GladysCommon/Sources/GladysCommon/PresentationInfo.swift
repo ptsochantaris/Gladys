@@ -5,6 +5,13 @@ public struct PresentationInfo: Identifiable, Hashable {
     public enum FieldContent {
         case none, text(String), link(URL), note(String), hint(String)
 
+        public var willBeVisible: Bool {
+            switch self {
+            case .none: false
+            case .hint, .link, .note, .text: true
+            }
+        }
+
         public var rawText: String? {
             switch self {
             case .none: nil

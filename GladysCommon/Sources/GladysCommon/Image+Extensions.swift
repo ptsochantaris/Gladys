@@ -56,10 +56,7 @@ public extension IMAGE {
 
     #if canImport(CoreImage)
 
-        private static let sharedCiContext = CIContext()
-
-        // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
-        private final nonisolated func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
+        var createCiImage: CIImage? {
             #if canImport(AppKit)
                 let cgi = cgImage(forProposedRect: nil, context: nil, hints: nil)
             #else
@@ -67,21 +64,31 @@ public extension IMAGE {
             #endif
             guard let cgi else { return nil }
 
-            let inputImage = CIImage(cgImage: cgi)
+            return CIImage(cgImage: cgi, options: [.nearestSampling: true])
+        }
+    #endif
+}
 
-            guard !inputImage.extent.isEmpty,
-                  let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: inputImage, kCIInputExtentKey: CIVector(cgRect: rect)]),
+#if canImport(CoreImage)
+
+    public extension CIImage {
+        static let sharedCiContext = CIContext()
+
+        // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
+        private final func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
+            guard !extent.isEmpty,
+                  let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: self, kCIInputExtentKey: CIVector(cgRect: rect)]),
                   let outputImage = filter.outputImage
             else {
                 return nil
             }
 
             var bitmap = [UInt8](repeating: 0, count: 4)
-            IMAGE.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
+            CIImage.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
             return (bitmap[0], bitmap[1], bitmap[2], bitmap[3])
         }
 
-        final nonisolated func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
+        final func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
             var cols: (UInt8, UInt8, UInt8, UInt8)?
             let edgeInset: CGFloat = 50
             let H: CGFloat = 20
@@ -99,7 +106,7 @@ public extension IMAGE {
                 cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
             }
 
-            IMAGE.sharedCiContext.clearCaches()
+            // IMAGE.sharedCiContext.clearCaches()
 
             if let cols {
                 if cols.3 < 200 {
@@ -113,8 +120,78 @@ public extension IMAGE {
                 return nil
             }
         }
-    #endif
-}
+
+        private static var topGradientFilterImage: CIImage? = {
+            let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
+            let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
+
+            let gradient = CIFilter(name: "CILinearGradient")!
+            gradient.setValue(CIVector(x: 0, y: 512 - 70), forKey: "inputPoint0")
+            gradient.setValue(greenOpaque, forKey: "inputColor0")
+            gradient.setValue(CIVector(x: 0, y: 512 - 170), forKey: "inputPoint1")
+            gradient.setValue(greenClear, forKey: "inputColor1")
+            return gradient.outputImage
+        }()
+
+        private static var bottomGradientFilterImage: CIImage? = {
+            let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
+            let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
+
+            let gradient = CIFilter(name: "CILinearGradient")!
+            gradient.setValue(CIVector(x: 0, y: 70), forKey: "inputPoint0")
+            gradient.setValue(greenOpaque, forKey: "inputColor0")
+            gradient.setValue(CIVector(x: 0, y: 170), forKey: "inputPoint1")
+            gradient.setValue(greenClear, forKey: "inputColor1")
+            return gradient.outputImage
+        }()
+
+        private static var topMaskOnlyFilter: CIFilter {
+            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
+            maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
+            maskedVariableBlur.setValue(topGradientFilterImage, forKey: "inputMask")
+            return maskedVariableBlur
+        }
+
+        private static var bottomMaskOnlyFilter: CIFilter {
+            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
+            maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
+            maskedVariableBlur.setValue(bottomGradientFilterImage, forKey: "inputMask")
+            return maskedVariableBlur
+        }
+
+        private static var compositedMaskFilterImage: CIImage? = {
+            let gradientMask = CIFilter(name: "CIAdditionCompositing")!
+            gradientMask.setValue(topGradientFilterImage, forKey: kCIInputImageKey)
+            gradientMask.setValue(bottomGradientFilterImage, forKey: kCIInputBackgroundImageKey)
+            return gradientMask.outputImage
+        }()
+
+        private static var topBottomFilter: CIFilter {
+            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
+            maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
+            maskedVariableBlur.setValue(compositedMaskFilterImage, forKey: "inputMask")
+            return maskedVariableBlur
+        }
+
+        final func applyLensEffect(top: Bool, bottom: Bool) -> CIImage? {
+            let filter: CIFilter
+
+            if top, bottom {
+                filter = CIImage.topBottomFilter
+            } else if top {
+                filter = CIImage.topMaskOnlyFilter
+            } else if bottom {
+                filter = CIImage.bottomMaskOnlyFilter
+            } else {
+                return nil
+            }
+
+            filter.setValue(self, forKey: kCIInputImageKey)
+            return filter.outputImage
+        }
+    }
+
+#endif
 
 #if canImport(AppKit)
     public extension NSImage {
@@ -322,10 +399,10 @@ public extension IMAGE {
                             p1: CIColor(color: .systemBackground),
                             p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
                         ])
-                    defer {
-                        UIImage.sharedCiContext.clearCaches()
-                    }
-                    if let cgImage = UIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
+                    /* defer {
+                         UIImage.sharedCiContext.clearCaches()
+                     } */
+                    if let cgImage = CIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
                         let img = UIImage(cgImage: cgImage)
                         return img
                     } else {

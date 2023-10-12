@@ -5,7 +5,7 @@ import Semalot
 import SwiftUI
 
 public extension ArchivedItem {
-    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
+    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount + 1))
     private static let singleLock = Semalot(tickets: 1)
 
     func createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
@@ -38,27 +38,55 @@ public extension ArchivedItem {
 
         let topInfo = prepareTopText()
         let bottomInfo = prepareBottomText()
-        let prepared = await prepareImage(asThumbnail: style == .widget)
+        var result = await prepareImage(asThumbnail: style == .widget)
 
         if Task.isCancelled {
             return nil
         }
 
-        let fadeUsingImageColours = displayMode != .center
-        let top = if fadeUsingImageColours, let prepared {
-            prepared.calculateOuterColor(size: prepared.size, top: true) ?? PresentationInfo.defaultCardColor
-        } else {
-            PresentationInfo.defaultCardColor
-        }
+        var processedImage: CIImage?
+        var top = PresentationInfo.defaultCardColor
+        var bottom = PresentationInfo.defaultCardColor
 
-        if Task.isCancelled {
-            return nil
-        }
+        if displayMode != .center, style == .square, let prepared = result {
+            if topInfo.willBeVisible || bottomInfo.willBeVisible {
+                if processedImage == nil {
+                    processedImage = prepared.createCiImage
+                }
 
-        let bottom = if fadeUsingImageColours, let prepared {
-            prepared.calculateOuterColor(size: prepared.size, top: false) ?? PresentationInfo.defaultCardColor
-        } else {
-            PresentationInfo.defaultCardColor
+                if let previous = processedImage, let withBlur = previous.applyLensEffect(top: topInfo.willBeVisible, bottom: bottomInfo.willBeVisible) {
+                    if let new = CIImage.sharedCiContext.createCGImage(withBlur, from: previous.extent) {
+                        result = IMAGE(cgImage: new)
+                    }
+                    processedImage = withBlur
+                }
+
+                if Task.isCancelled {
+                    return nil
+                }
+            }
+
+            if topInfo.willBeVisible {
+                if processedImage == nil {
+                    processedImage = prepared.createCiImage
+                }
+                if let processedImage {
+                    top = processedImage.calculateOuterColor(size: prepared.size, top: true) ?? PresentationInfo.defaultCardColor
+                }
+
+                if Task.isCancelled {
+                    return nil
+                }
+            }
+
+            if bottomInfo.willBeVisible {
+                if processedImage == nil {
+                    processedImage = prepared.createCiImage
+                }
+                if let processedImage {
+                    bottom = processedImage.calculateOuterColor(size: prepared.size, top: false) ?? PresentationInfo.defaultCardColor
+                }
+            }
         }
 
         let p = PresentationInfo(
@@ -67,7 +95,7 @@ public extension ArchivedItem {
             top: top,
             bottomText: bottomInfo,
             bottom: bottom,
-            image: prepared,
+            image: result,
             highlightColor: shouldDisplayLoading ? .none : highlightColor,
             hasFullImage: displayMode.prefersFullSizeImage
         )
