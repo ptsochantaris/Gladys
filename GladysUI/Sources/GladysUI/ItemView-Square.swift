@@ -131,7 +131,6 @@ extension ItemView {
                 }
                 let shadowColor = fadeColor
                 Text(contentText)
-                    .fontWeight(highlight ? .semibold : .regular)
                     .foregroundColor(fgColor)
                     .multilineTextAlignment(.center)
                     .lineLimit(lineLimit)

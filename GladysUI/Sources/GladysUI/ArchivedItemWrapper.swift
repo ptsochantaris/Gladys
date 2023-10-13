@@ -69,6 +69,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         assert(Thread.isMainThread)
 
         if let task = updateTask {
+            log("Cancelling update task")
             task.cancel()
             updateTask = nil
         }
@@ -77,8 +78,8 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             presentationInfo = existing
         } else {
             updateTask = Task {
-                if let p = await newItem.createPresentationInfo(style: style) {
-                    if Task.isCancelled, item?.uuid != p.id { return }
+                if let p = await newItem.createPresentationInfo(style: style, expectedWidth: cellSize.width) {
+                    if item?.uuid != p.id { return }
                     assert(Thread.isMainThread)
                     presentationInfo = p
                     updateTask = nil

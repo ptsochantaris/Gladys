@@ -48,7 +48,7 @@ struct Provider: AppIntentTimelineProvider {
         var res = [PresentationInfo]()
         res.reserveCapacity(drops.count)
         for drop in drops {
-            if let info = await drop.createPresentationInfo(style: .widget) {
+            if let info = await drop.createPresentationInfo(style: .widget, expectedWidth: 0) {
                 res.append(info)
             }
         }

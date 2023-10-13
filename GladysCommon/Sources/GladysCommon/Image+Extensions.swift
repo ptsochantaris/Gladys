@@ -121,67 +121,64 @@ public extension IMAGE {
             }
         }
 
-        private static var topGradientFilterImage: CIImage? = {
+        private static func topGradientFilterImage(distance: CGFloat) -> CIImage? {
             let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
             let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
 
             let gradient = CIFilter(name: "CILinearGradient")!
-            gradient.setValue(CIVector(x: 0, y: 512 - 70), forKey: "inputPoint0")
+            gradient.setValue(CIVector(x: 0, y: 512 - distance + 40), forKey: "inputPoint0")
             gradient.setValue(greenOpaque, forKey: "inputColor0")
-            gradient.setValue(CIVector(x: 0, y: 512 - 170), forKey: "inputPoint1")
+            gradient.setValue(CIVector(x: 0, y: 512 - distance), forKey: "inputPoint1")
             gradient.setValue(greenClear, forKey: "inputColor1")
             return gradient.outputImage
-        }()
+        }
 
-        private static var bottomGradientFilterImage: CIImage? = {
+        private static func bottomGradientFilterImage(distance: CGFloat) -> CIImage? {
             let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
             let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
 
             let gradient = CIFilter(name: "CILinearGradient")!
-            gradient.setValue(CIVector(x: 0, y: 70), forKey: "inputPoint0")
+            gradient.setValue(CIVector(x: 0, y: distance - 40), forKey: "inputPoint0")
             gradient.setValue(greenOpaque, forKey: "inputColor0")
-            gradient.setValue(CIVector(x: 0, y: 170), forKey: "inputPoint1")
+            gradient.setValue(CIVector(x: 0, y: distance), forKey: "inputPoint1")
             gradient.setValue(greenClear, forKey: "inputColor1")
             return gradient.outputImage
-        }()
+        }
 
-        private static var topMaskOnlyFilter: CIFilter {
+        private static func topMaskOnlyFilter(distance: CGFloat) -> CIFilter {
             let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
             maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(topGradientFilterImage, forKey: "inputMask")
+            maskedVariableBlur.setValue(topGradientFilterImage(distance: distance), forKey: "inputMask")
             return maskedVariableBlur
         }
 
-        private static var bottomMaskOnlyFilter: CIFilter {
+        private static func bottomMaskOnlyFilter(distance: CGFloat) -> CIFilter {
             let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
             maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(bottomGradientFilterImage, forKey: "inputMask")
+            maskedVariableBlur.setValue(bottomGradientFilterImage(distance: distance), forKey: "inputMask")
             return maskedVariableBlur
         }
 
-        private static var compositedMaskFilterImage: CIImage? = {
+        private static func topBottomFilter(top: CGFloat, bottom: CGFloat) -> CIFilter {
             let gradientMask = CIFilter(name: "CIAdditionCompositing")!
-            gradientMask.setValue(topGradientFilterImage, forKey: kCIInputImageKey)
-            gradientMask.setValue(bottomGradientFilterImage, forKey: kCIInputBackgroundImageKey)
-            return gradientMask.outputImage
-        }()
+            gradientMask.setValue(topGradientFilterImage(distance: top), forKey: kCIInputImageKey)
+            gradientMask.setValue(bottomGradientFilterImage(distance: bottom), forKey: kCIInputBackgroundImageKey)
 
-        private static var topBottomFilter: CIFilter {
             let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
             maskedVariableBlur.setValue(6, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(compositedMaskFilterImage, forKey: "inputMask")
+            maskedVariableBlur.setValue(gradientMask.outputImage, forKey: "inputMask")
             return maskedVariableBlur
         }
 
-        final func applyLensEffect(top: Bool, bottom: Bool) -> CIImage? {
+        final func applyLensEffect(top: CGFloat?, bottom: CGFloat?) -> CIImage? {
             let filter: CIFilter
 
-            if top, bottom {
-                filter = CIImage.topBottomFilter
-            } else if top {
-                filter = CIImage.topMaskOnlyFilter
-            } else if bottom {
-                filter = CIImage.bottomMaskOnlyFilter
+            if let top, let bottom {
+                filter = CIImage.topBottomFilter(top: top, bottom: bottom)
+            } else if let top {
+                filter = CIImage.topMaskOnlyFilter(distance: top)
+            } else if let bottom {
+                filter = CIImage.bottomMaskOnlyFilter(distance: bottom)
             } else {
                 return nil
             }

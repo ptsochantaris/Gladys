@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 public extension String {
     var filenameSafe: String {
@@ -44,5 +45,13 @@ public extension String {
             return String(string[s ..< e].appending("…"))
         }
         return string
+    }
+
+    func height(for width: CGFloat, font: FONT, max: CGFloat) -> CGFloat {
+        let attributedText = NSAttributedString(string: self, attributes: [.font: font])
+        let frameSetter = CTFramesetterCreateWithAttributedString(attributedText)
+        let guide = CGSize(width: width, height: max)
+        let result = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(0, 0), nil, guide, nil)
+        return result.height
     }
 }

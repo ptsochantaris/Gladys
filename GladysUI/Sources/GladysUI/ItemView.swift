@@ -5,8 +5,10 @@ import SwiftUI
 public struct ItemView: View {
     #if os(visionOS)
         static let titleFont = Font.body
+        static let titleFontLegacy = FONT.preferredFont(forTextStyle: .body)
     #else
         static let titleFont = Font.caption
+        static let titleFontLegacy = FONT.preferredFont(forTextStyle: .caption1)
     #endif
 
     struct LoadingItem: View {
@@ -75,11 +77,11 @@ public struct ItemView: View {
             let haze = fadeColor
             let gradient = Gradient(stops: [
                 Gradient.Stop(color: haze.opacity(0.7), location: 0.2),
-                Gradient.Stop(color: haze.opacity(0.3), location: 0.7),
+                Gradient.Stop(color: haze.opacity(0.3), location: 0.6),
                 Gradient.Stop(color: haze.opacity(0), location: 1.0)
             ])
             LinearGradient(gradient: gradient, startPoint: atTop ? .top : .bottom, endPoint: atTop ? .bottom : .top)
-                .padding(atTop ? .bottom : .top, -23)
+                .padding(atTop ? .bottom : .top, -10)
         }
     }
 

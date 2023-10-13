@@ -110,16 +110,11 @@ final class TokenField: VIEWCLASS {
 
         let rect = bounds
 
-        // context.setFillColor(NSColor.red.cgColor)
-        // context.fill([rect])
-
         #if canImport(AppKit)
             let dirtyRect = rect.insetBy(dx: TokenField.padding, dy: 0)
         #else
             let dirtyRect = rect.insetBy(dx: TokenField.padding, dy: 0)
         #endif
-        // context.setFillColor(NSColor.green.cgColor)
-        // context.fill([dirtyRect])
 
         let path = CGPath(rect: dirtyRect, transform: nil)
         let totalFrame = CTFramesetterCreateFrame(frameSetter, TokenField.emptyRange, path, nil)

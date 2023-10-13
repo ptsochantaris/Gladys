@@ -8,18 +8,18 @@ public extension ArchivedItem {
     private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount + 1))
     private static let singleLock = Semalot(tickets: 1)
 
-    func createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
+    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedWidth: CGFloat) async -> PresentationInfo? {
         if let presentationGenerator {
             return await presentationGenerator.value
         } else {
-            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style) }
+            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style, expectedWidth: expectedWidth) }
             presentationGenerator = newTask
             defer { presentationGenerator = nil }
             return await newTask.value
         }
     }
 
-    private func _createPresentationInfo(style: ArchivedItemWrapper.Style) async -> PresentationInfo? {
+    private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedWidth: CGFloat) async -> PresentationInfo? {
         if Task.isCancelled {
             return nil
         }
@@ -49,12 +49,17 @@ public extension ArchivedItem {
         var bottom = PresentationInfo.defaultCardColor
 
         if displayMode != .center, style == .square, let prepared = result {
-            if topInfo.willBeVisible || bottomInfo.willBeVisible {
+            if expectedWidth > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
                 if processedImage == nil {
                     processedImage = prepared.createCiImage
                 }
 
-                if let previous = processedImage, let withBlur = previous.applyLensEffect(top: topInfo.willBeVisible, bottom: bottomInfo.willBeVisible) {
+                let topDistance = topInfo.heightEstimate(for: expectedWidth, font: ItemView.titleFontLegacy)
+                let bottomDistance = bottomInfo.heightEstimate(for: expectedWidth, font: ItemView.titleFontLegacy)
+
+                let top = topInfo.willBeVisible ? topDistance : nil
+                let bottom = bottomInfo.willBeVisible ? bottomDistance : nil
+                if let previous = processedImage, let withBlur = previous.applyLensEffect(top: top, bottom: bottom) {
                     if let new = CIImage.sharedCiContext.createCGImage(withBlur, from: previous.extent) {
                         result = IMAGE(cgImage: new)
                     }
