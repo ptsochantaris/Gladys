@@ -61,7 +61,11 @@ public extension ArchivedItem {
                 let bottom = bottomInfo.willBeVisible ? bottomDistance : nil
                 if let previous = processedImage, let withBlur = previous.applyLensEffect(top: top, bottom: bottom) {
                     if let new = CIImage.sharedCiContext.createCGImage(withBlur, from: previous.extent) {
+                        #if canImport(AppKit)
+                        result = IMAGE(cgImage: new, size: previous.extent.size)
+                        #else
                         result = IMAGE(cgImage: new)
+                        #endif
                     }
                     processedImage = withBlur
                 }

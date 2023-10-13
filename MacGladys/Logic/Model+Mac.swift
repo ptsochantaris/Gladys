@@ -55,7 +55,7 @@ extension Model {
             Task { @MainActor in
                 guard let parent = DropStore.item(uuid: potentialParentUUID),
                       parent.eligibleForExternalUpdateCheck,
-                      let component = ComponentLookup.shared.component(uuid: potentialParentUUID),
+                      let component = DropStore.component(uuid: potentialParentUUID),
                       component.scanForBlobChanges()
                 else { return }
 

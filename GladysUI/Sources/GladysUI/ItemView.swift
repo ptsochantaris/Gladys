@@ -4,11 +4,11 @@ import SwiftUI
 
 public struct ItemView: View {
     #if os(visionOS)
-        static let titleFont = Font.body
-        static let titleFontLegacy = FONT.preferredFont(forTextStyle: .body)
+        nonisolated static let titleFont = Font.body
+        nonisolated static let titleFontLegacy = FONT.preferredFont(forTextStyle: .body)
     #else
-        static let titleFont = Font.caption
-        static let titleFontLegacy = FONT.preferredFont(forTextStyle: .caption1)
+        nonisolated static let titleFont = Font.caption
+        nonisolated static let titleFontLegacy = FONT.preferredFont(forTextStyle: .caption1)
     #endif
 
     struct LoadingItem: View {
