@@ -157,7 +157,7 @@ final actor PullState {
                 log("Received delete for non-existent item record \(itemUUID), ignoring")
             }
         case .component:
-            if let component = ComponentLookup.shared.component(uuid: itemUUID) {
+            if let component = await DropStore.component(uuid: itemUUID) {
                 let componentParentZone = await component.parentZone
                 if componentParentZone != recordId.zoneID {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
@@ -417,7 +417,7 @@ final actor PullState {
             }
 
         case .component:
-            if let typeItem = ComponentLookup.shared.component(uuid: recordUUID) {
+            if let typeItem = await DropStore.component(uuid: recordUUID) {
                 if await (typeItem.parentZone) != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
                 } else {

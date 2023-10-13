@@ -79,8 +79,6 @@ public final class Component: Codable, Hashable {
         displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
         flags = []
-
-        ComponentLookup.shared.register(self)
     }
 
     public var typeIdentifier: String
@@ -136,8 +134,6 @@ public final class Component: Codable, Hashable {
         classWasWrapped = item.classWasWrapped
         representedClass = item.representedClass
         setBytes(item.bytes)
-
-        ComponentLookup.shared.register(self)
     }
 
     public init(typeIdentifier: String, parentUuid: UUID, data: Data, order: Int) {
@@ -159,8 +155,6 @@ public final class Component: Codable, Hashable {
         updatedAt = createdAt
         representedClass = .data
         setBytes(data)
-
-        ComponentLookup.shared.register(self)
     }
 
     public init(typeIdentifier: String, parentUuid: UUID, order: Int) {
@@ -181,8 +175,6 @@ public final class Component: Codable, Hashable {
         updatedAt = createdAt
         representedClass = .unknown(name: "")
         flags = [.isTransferring]
-
-        ComponentLookup.shared.register(self)
     }
 
     public init(from record: CKRecord, parentUuid: UUID) {
@@ -212,8 +204,6 @@ public final class Component: Codable, Hashable {
             try? FileManager.default.copyAndReplaceItem(at: assetURL, to: bytesPath)
         }
         cloudKitRecord = record
-
-        ComponentLookup.shared.register(self)
     }
 
     public init(from typeItem: Component, newParent: ArchivedItem) {
@@ -237,8 +227,6 @@ public final class Component: Codable, Hashable {
         classWasWrapped = typeItem.classWasWrapped
         accessoryTitle = typeItem.accessoryTitle
         setBytes(typeItem.bytes)
-
-        ComponentLookup.shared.register(self)
     }
 
     public var dataExists: Bool {

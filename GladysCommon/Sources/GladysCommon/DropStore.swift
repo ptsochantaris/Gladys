@@ -105,7 +105,6 @@ public enum DropStore {
     public static func reset() {
         dropStore.removeAll(keepingCapacity: false)
         uuidindex = [:]
-        ComponentLookup.shared.reset()
     }
 
     public static var doneIngesting: Bool {
@@ -130,6 +129,23 @@ public enum DropStore {
         } else {
             nil
         }
+    }
+
+    public static func component(uuid: String) -> Component? {
+        if let uuidData = UUID(uuidString: uuid) {
+            component(uuid: uuidData)
+        } else {
+            nil
+        }
+    }
+
+    public static func component(uuid: UUID) -> Component? {
+        for item in dropStore {
+            if let componentIndex = item.components.firstIndex(where: { $0.uuid == uuid }) {
+                return item.components[componentIndex]
+            }
+        }
+        return nil
     }
 
     public static func sizeInBytes() async -> Int64 {

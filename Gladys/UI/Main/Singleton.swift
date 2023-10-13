@@ -136,7 +136,7 @@ final class Singleton {
 
                 Task {
                     let child: Component? = if let childUuid = userInfo[kGladysDetailViewingActivityItemTypeUuid] as? String {
-                        ComponentLookup.shared.component(uuid: childUuid)
+                        DropStore.component(uuid: childUuid)
                     } else {
                         item.previewableTypeItem
                     }

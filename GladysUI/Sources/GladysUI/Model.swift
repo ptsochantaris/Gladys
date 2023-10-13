@@ -371,7 +371,6 @@ public enum Model {
             }.value
         }
 
-        ComponentLookup.shared.cleanup()
         trimTemporaryDirectory()
         ingestItemsIfNeeded()
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
