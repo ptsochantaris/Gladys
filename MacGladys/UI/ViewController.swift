@@ -69,6 +69,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         collection.setDraggingSourceOperationMask(optionPressed ? .every : .copy, forLocal: false)
     }
 
+    func reloadItems() {
+        presentationInfoCache.reset()
+        collection.reloadData()
+    }
+
     func modelFilterContextChanged(_: Filter, animate _: Bool) {
         itemCollectionNeedsDisplay()
         updateEmptyView()

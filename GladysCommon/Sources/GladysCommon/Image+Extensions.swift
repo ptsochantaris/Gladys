@@ -125,7 +125,7 @@ public extension IMAGE {
             let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
             let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
             let height = extent.height
-            let unitDistanceClear = (distance + 0.1) * height
+            let unitDistanceClear = distance * height
             let unitDistanceOpaque = (distance - 0.2) * height
 
             let gradient = CIFilter(name: "CILinearGradient")!
@@ -140,7 +140,7 @@ public extension IMAGE {
             let greenClear = CIColor(red: 0, green: 1, blue: 0, alpha: 0)
             let greenOpaque = CIColor(red: 0, green: 1, blue: 0, alpha: 1)
             let height = extent.height
-            let unitDistanceClear = (distance + 0.05) * height
+            let unitDistanceClear = distance * height
             let unitDistanceOpaque = (distance - 0.2) * height
 
             let gradient = CIFilter(name: "CILinearGradient")!

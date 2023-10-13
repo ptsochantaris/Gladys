@@ -57,6 +57,7 @@ final class WindowController: NSWindowController, NSWindowDelegate {
     }
 
     func windowDidEndLiveResize(_: Notification) {
+        gladysController.reloadItems()
         if window?.isVisible == true {
             WindowController.storeStates()
         }

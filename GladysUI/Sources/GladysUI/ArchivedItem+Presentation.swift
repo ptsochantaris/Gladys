@@ -42,7 +42,15 @@ public extension ArchivedItem {
         var originalSize: CGSize?
         if let img = await prepareImage(asThumbnail: style == .widget) {
             originalSize = img.size
-            processedImage = CIImage(image: img)
+            #if canImport(AppKit)
+                if let cgImage = img.cgImage(forProposedRect: nil, context: nil, hints: nil) {
+                    processedImage = CIImage(cgImage: cgImage, options: [.nearestSampling: true])
+                } else {
+                    processedImage = nil
+                }
+            #else
+                processedImage = CIImage(image: img, options: [.nearestSampling: true])
+            #endif
         }
 
         if Task.isCancelled {
