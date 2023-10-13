@@ -20,15 +20,14 @@ public struct PresentationInfo: Identifiable, Hashable {
             }
         }
 
-        public func heightEstimate(for width: CGFloat, font: FONT) -> CGFloat {
-            let labelWidth = width - 28 // 261 - 233
-            return switch self {
+        public func heightEstimate(for width: CGFloat) -> CGFloat {
+            switch self {
             case .none:
                 0
             case .link:
-                88
+                39
             case let .hint(text), let .note(text), let .text(text):
-                text.height(for: labelWidth, font: font, max: 110) + 90
+                min(92, text.height(for: width) + 30)
             }
         }
     }

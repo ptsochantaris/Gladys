@@ -8,18 +8,18 @@ public extension ArchivedItem {
     private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount + 1))
     private static let singleLock = Semalot(tickets: 1)
 
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedWidth: CGFloat) async -> PresentationInfo? {
+    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         if let presentationGenerator {
             return await presentationGenerator.value
         } else {
-            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style, expectedWidth: expectedWidth) }
+            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style, expectedSize: expectedSize) }
             presentationGenerator = newTask
             defer { presentationGenerator = nil }
             return await newTask.value
         }
     }
 
-    private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedWidth: CGFloat) async -> PresentationInfo? {
+    private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         if Task.isCancelled {
             return nil
         }
@@ -38,36 +38,29 @@ public extension ArchivedItem {
 
         let topInfo = prepareTopText()
         let bottomInfo = prepareBottomText()
-        var result = await prepareImage(asThumbnail: style == .widget)
+        var processedImage: CIImage?
+        var originalSize: CGSize?
+        if let img = await prepareImage(asThumbnail: style == .widget) {
+            originalSize = img.size
+            processedImage = CIImage(image: img)
+        }
 
         if Task.isCancelled {
             return nil
         }
 
-        var processedImage: CIImage?
         var top = PresentationInfo.defaultCardColor
         var bottom = PresentationInfo.defaultCardColor
 
-        if displayMode != .center, style == .square, let prepared = result {
-            if expectedWidth > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
-                if processedImage == nil {
-                    processedImage = prepared.createCiImage
-                }
+        if displayMode != .center, style == .square, let originalSize {
+            if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
+                let topDistancePercent = topInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
+                let bottomDistancePercent = bottomInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
 
-                let topDistance = topInfo.heightEstimate(for: expectedWidth, font: ItemView.titleFontLegacy)
-                let bottomDistance = bottomInfo.heightEstimate(for: expectedWidth, font: ItemView.titleFontLegacy)
-
-                let top = topInfo.willBeVisible ? topDistance : nil
-                let bottom = bottomInfo.willBeVisible ? bottomDistance : nil
-                if let previous = processedImage, let withBlur = previous.applyLensEffect(top: top, bottom: bottom) {
-                    if let new = CIImage.sharedCiContext.createCGImage(withBlur, from: previous.extent) {
-                        #if canImport(AppKit)
-                        result = IMAGE(cgImage: new, size: previous.extent.size)
-                        #else
-                        result = IMAGE(cgImage: new)
-                        #endif
-                    }
-                    processedImage = withBlur
+                let top = topInfo.willBeVisible ? topDistancePercent : nil
+                let bottom = bottomInfo.willBeVisible ? bottomDistancePercent : nil
+                if let withBlur = processedImage?.applyLensEffect(top: top, bottom: bottom) {
+                    processedImage = withBlur.cropped(to: CGRect(origin: .zero, size: originalSize))
                 }
 
                 if Task.isCancelled {
@@ -75,26 +68,27 @@ public extension ArchivedItem {
                 }
             }
 
-            if topInfo.willBeVisible {
-                if processedImage == nil {
-                    processedImage = prepared.createCiImage
-                }
-                if let processedImage {
-                    top = processedImage.calculateOuterColor(size: prepared.size, top: true) ?? PresentationInfo.defaultCardColor
-                }
+            if topInfo.willBeVisible, let processedImage {
+                top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? PresentationInfo.defaultCardColor
 
                 if Task.isCancelled {
                     return nil
                 }
             }
 
-            if bottomInfo.willBeVisible {
-                if processedImage == nil {
-                    processedImage = prepared.createCiImage
-                }
-                if let processedImage {
-                    bottom = processedImage.calculateOuterColor(size: prepared.size, top: false) ?? PresentationInfo.defaultCardColor
-                }
+            if bottomInfo.willBeVisible, let processedImage {
+                bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? PresentationInfo.defaultCardColor
+            }
+        }
+
+        var result: IMAGE?
+        if let processedImage, let originalSize {
+            if let new = CIImage.sharedCiContext.createCGImage(processedImage, from: processedImage.extent) {
+                #if canImport(AppKit)
+                    result = IMAGE(cgImage: new, size: originalSize)
+                #else
+                    result = IMAGE(cgImage: new)
+                #endif
             }
         }
 
@@ -149,28 +143,18 @@ public extension ArchivedItem {
             return thumbnail
         }
 
-        let result: IMAGE?
         if let bgItem = backgroundInfoObject {
             if let mapItem = bgItem as? MKMapItem {
                 let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)
-                #if canImport(AppKit)
-                    result = try? await Images.shared.mapSnapshot(with: snapshotOptions)
-                #else
-                    result = try? await Images.shared.mapSnapshot(with: snapshotOptions).byPreparingForDisplay()
-                #endif
+                return try? await Images.shared.mapSnapshot(with: snapshotOptions)
 
             } else if let colour = bgItem as? COLOR {
-                result = IMAGE.block(color: colour, size: CGSize(width: 1, height: 1))
-            } else {
-                result = nil
+                return IMAGE.block(color: colour, size: CGSize(width: 1, height: 1))
             }
-        } else {
-            #if canImport(AppKit)
-                result = displayIcon
-            #else
-                result = displayIcon.preparingForDisplay()
-            #endif
+
+            return nil
         }
-        return result
+
+        return displayIcon
     }
 }

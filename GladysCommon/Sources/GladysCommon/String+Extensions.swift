@@ -47,10 +47,15 @@ public extension String {
         return string
     }
 
-    func height(for width: CGFloat, font: FONT, max: CGFloat) -> CGFloat {
+    func height(for width: CGFloat) -> CGFloat {
+        #if os(visionOS)
+            let font = FONT.preferredFont(forTextStyle: FONT.TextStyle.body)
+        #else
+            let font = FONT.preferredFont(forTextStyle: FONT.TextStyle.caption1)
+        #endif
         let attributedText = NSAttributedString(string: self, attributes: [.font: font])
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedText)
-        let guide = CGSize(width: width, height: max)
+        let guide = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         let result = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(0, 0), nil, guide, nil)
         return result.height
     }

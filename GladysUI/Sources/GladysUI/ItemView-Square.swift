@@ -155,13 +155,8 @@ extension ItemView {
             let shareView = createShareView()
 
             if textView != nil || shareView != nil || labels != nil {
-                #if canImport(AppKit)
-                    let paddingSize: CGFloat = 10
-                    let spacing: CGFloat = 4
-                #else
-                    let paddingSize: CGFloat = wrapper.compact ? 9 : 14
-                    let spacing: CGFloat = wrapper.compact ? 4 : 5
-                #endif
+                let paddingSize = ArchivedItemWrapper.labelPadding(compact: wrapper.compact)
+                let spacing = wrapper.labelSpacing
 
                 VStack(alignment: .center, spacing: spacing) {
                     labels

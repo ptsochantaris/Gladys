@@ -474,11 +474,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         let style: ArchivedItemWrapper.Style = PersistedOptions.wideMode ? .wide : .square
-        let expectedWidth = cellSize.width
+        let compact = cellSize.width < 170
+        let expectedCellSize = CGSize(width: cellSize.width - ArchivedItemWrapper.labelPadding(compact: compact) * 2, height: cellSize.height)
+
         for ip in indexPaths {
             if let uuid = dataSource.itemIdentifier(for: ip)?.uuid, let item = DropStore.item(uuid: uuid) {
                 Task.detached {
-                    presentationInfoCache[uuid] = await item.createPresentationInfo(style: style, expectedWidth: expectedWidth)
+                    presentationInfoCache[uuid] = await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
                 }
             }
         }

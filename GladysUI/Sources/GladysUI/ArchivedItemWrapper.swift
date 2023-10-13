@@ -45,6 +45,22 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         presentationInfo = PresentationInfo()
     }
 
+    public static func labelPadding(compact: Bool) -> CGFloat {
+        #if canImport(AppKit)
+            10
+        #else
+            compact ? 9 : 14
+        #endif
+    }
+
+    var labelSpacing: CGFloat {
+        #if canImport(AppKit)
+            4
+        #else
+            compact ? 4 : 5
+        #endif
+    }
+
     @MainActor
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else { return }
@@ -78,7 +94,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             presentationInfo = existing
         } else {
             updateTask = Task {
-                if let p = await newItem.createPresentationInfo(style: style, expectedWidth: cellSize.width) {
+                if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: compact) * 2, height: cellSize.height)) {
                     if item?.uuid != p.id { return }
                     assert(Thread.isMainThread)
                     presentationInfo = p
