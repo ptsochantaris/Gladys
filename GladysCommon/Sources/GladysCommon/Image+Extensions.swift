@@ -72,7 +72,18 @@ public extension IMAGE {
 #if canImport(CoreImage)
 
     public extension CIImage {
-        static let sharedCiContext = CIContext()
+        private static let sharedCiContext = CIContext(options: [.useSoftwareRenderer: false, .cacheIntermediates: false])
+
+        var asImage: IMAGE? {
+            guard let new = CIImage.sharedCiContext.createCGImage(self, from: extent) else {
+                return nil
+            }
+            #if canImport(AppKit)
+                return IMAGE(cgImage: new, size: originalSize)
+            #else
+                return IMAGE(cgImage: new)
+            #endif
+        }
 
         // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
         private final func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
@@ -105,8 +116,6 @@ public extension IMAGE {
             } else {
                 cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
             }
-
-            // IMAGE.sharedCiContext.clearCaches()
 
             if let cols {
                 if cols.3 < 200 {
@@ -400,15 +409,7 @@ public extension IMAGE {
                             p1: CIColor(color: .systemBackground),
                             p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
                         ])
-                    /* defer {
-                         UIImage.sharedCiContext.clearCaches()
-                     } */
-                    if let cgImage = CIImage.sharedCiContext.createCGImage(blackAndWhiteImage, from: blackAndWhiteImage.extent) {
-                        let img = UIImage(cgImage: cgImage)
-                        return img
-                    } else {
-                        return self
-                    }
+                    return blackAndWhiteImage.asImage ?? self
                 }.value
             }
         #endif

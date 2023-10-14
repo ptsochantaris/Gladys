@@ -5,21 +5,38 @@ import Semalot
 import SwiftUI
 
 public extension ArchivedItem {
-    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount + 1))
+    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
     private static let singleLock = Semalot(tickets: 1)
 
+    @discardableResult
     func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        if let presentationGenerator {
+        if let existing = presentationInfoCache[uuid] {
+            return existing
+
+        } else if let presentationGenerator, !presentationGenerator.isCancelled {
+            log(">>> Deduped presentation task \(uuid.uuidString)")
             return await presentationGenerator.value
+
         } else {
             let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style, expectedSize: expectedSize) }
             presentationGenerator = newTask
-            defer { presentationGenerator = nil }
+            defer {
+                presentationGenerator = nil
+            }
             return await newTask.value
         }
     }
 
     private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
+        log(">>> New presentation task \(uuid.uuidString)")
+        defer {
+            if Task.isCancelled {
+                log(">>> Cancelled presentation task \(uuid.uuidString)")
+            } else {
+                log(">>> Finished presentation task \(uuid.uuidString)")
+            }
+        }
+
         if Task.isCancelled {
             return nil
         }
@@ -37,11 +54,34 @@ public extension ArchivedItem {
         assert(!Thread.isMainThread)
 
         let topInfo = prepareTopText()
+
+        if Task.isCancelled {
+            return nil
+        }
+
         let bottomInfo = prepareBottomText()
-        var processedImage: CIImage?
-        var originalSize: CGSize?
-        if let img = await prepareImage(asThumbnail: style == .widget) {
-            originalSize = img.size
+
+        if Task.isCancelled {
+            return nil
+        }
+
+        var top = PresentationInfo.defaultCardColor
+        var bottom = PresentationInfo.defaultCardColor
+        var result: IMAGE?
+
+        if style != .square || displayMode == .center {
+            result = await prepareImage(asThumbnail: style == .widget)
+            if Task.isCancelled {
+                return nil
+            }
+
+        } else if let img = await prepareImage(asThumbnail: false) {
+            if Task.isCancelled {
+                return nil
+            }
+
+            var processedImage: CIImage?
+            let originalSize = img.size
             #if canImport(AppKit)
                 if let cgImage = img.cgImage(forProposedRect: nil, context: nil, hints: nil) {
                     processedImage = CIImage(cgImage: cgImage, options: [.nearestSampling: true])
@@ -51,52 +91,44 @@ public extension ArchivedItem {
             #else
                 processedImage = CIImage(image: img, options: [.nearestSampling: true])
             #endif
-        }
 
-        if Task.isCancelled {
-            return nil
-        }
-
-        var top = PresentationInfo.defaultCardColor
-        var bottom = PresentationInfo.defaultCardColor
-
-        if displayMode != .center, style == .square, let originalSize {
-            if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
-                let topDistancePercent = topInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
-                let bottomDistancePercent = bottomInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
-
-                let top = topInfo.willBeVisible ? topDistancePercent : nil
-                let bottom = bottomInfo.willBeVisible ? bottomDistancePercent : nil
-                if let withBlur = processedImage?.applyLensEffect(top: top, bottom: bottom) {
-                    processedImage = withBlur.cropped(to: CGRect(origin: .zero, size: originalSize))
-                }
-
+            if var processedImage {
                 if Task.isCancelled {
                     return nil
                 }
-            }
 
-            if topInfo.willBeVisible, let processedImage {
-                top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? PresentationInfo.defaultCardColor
+                if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
+                    let topDistancePercent = topInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
+                    let bottomDistancePercent = bottomInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
 
-                if Task.isCancelled {
-                    return nil
+                    let top = topInfo.willBeVisible ? topDistancePercent : nil
+                    let bottom = bottomInfo.willBeVisible ? bottomDistancePercent : nil
+                    if let withBlur = processedImage.applyLensEffect(top: top, bottom: bottom)?.cropped(to: CGRect(origin: .zero, size: originalSize)) {
+                        processedImage = withBlur
+                    }
+
+                    if Task.isCancelled {
+                        return nil
+                    }
                 }
-            }
 
-            if bottomInfo.willBeVisible, let processedImage {
-                bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? PresentationInfo.defaultCardColor
-            }
-        }
+                if topInfo.willBeVisible {
+                    top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? PresentationInfo.defaultCardColor
 
-        var result: IMAGE?
-        if let processedImage, let originalSize {
-            if let new = CIImage.sharedCiContext.createCGImage(processedImage, from: processedImage.extent) {
-                #if canImport(AppKit)
-                    result = IMAGE(cgImage: new, size: originalSize)
-                #else
-                    result = IMAGE(cgImage: new)
-                #endif
+                    if Task.isCancelled {
+                        return nil
+                    }
+                }
+
+                if bottomInfo.willBeVisible {
+                    bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? PresentationInfo.defaultCardColor
+
+                    if Task.isCancelled {
+                        return nil
+                    }
+                }
+
+                result = processedImage.asImage
             }
         }
 

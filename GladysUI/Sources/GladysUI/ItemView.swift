@@ -41,7 +41,15 @@ public struct ItemView: View {
         @Environment(\.colorScheme) var colorScheme
 
         var body: some View {
-            if let img = wrapper.presentationInfo.image?.swiftUiImage {
+            if wrapper.locked {
+                Image(systemName: "lock")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 33, height: 33)
+                    .foregroundColor(.accentColor)
+
+            } else if let img = wrapper.presentationInfo.image?.swiftUiImage {
                 switch wrapper.displayMode {
                 case .fit:
                     img
@@ -136,7 +144,7 @@ public struct ItemView: View {
         if wrapper.hasItem {
             itemMode
         } else {
-            Color.clear
+            EmptyView()
         }
     }
 

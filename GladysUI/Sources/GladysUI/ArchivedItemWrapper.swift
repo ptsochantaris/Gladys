@@ -41,8 +41,12 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
     @MainActor
     func clear() {
-        item = nil
-        presentationInfo = PresentationInfo()
+        if let i = item {
+            i.presentationGenerator?.cancel()
+            item = nil
+            observer = nil
+            presentationInfo = PresentationInfo()
+        }
     }
 
     public static func labelPadding(compact: Bool) -> CGFloat {
@@ -63,42 +67,40 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
     @MainActor
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
-        guard let newItem else { return }
+        guard let newItem else {
+            clear()
+            return
+        }
+
+        if let item, item != newItem {
+            presentationInfo = PresentationInfo()
+            if let p = item.presentationGenerator {
+                p.cancel()
+            }
+        }
 
         self.style = style
         cellSize = size
         compact = cellSize.width < 170
         item = newItem
-        presentationInfo = PresentationInfo()
-        updatePresentationInfo(for: newItem)
+        updatePresentationInfo(for: newItem, alwaysStartFresh: false)
 
         observer = newItem
             .objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.updatePresentationInfo(for: newItem)
+                self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
             }
     }
 
-    private var updateTask: Task<Void, Never>?
-    @MainActor private func updatePresentationInfo(for newItem: ArchivedItem) {
-        assert(Thread.isMainThread)
-
-        if let task = updateTask {
-            log("Cancelling update task")
-            task.cancel()
-            updateTask = nil
+    @MainActor private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
+        if alwaysStartFresh, let p = newItem.presentationGenerator {
+            p.cancel()
         }
-
-        if let existing = presentationInfoCache[newItem.uuid] {
-            presentationInfo = existing
-        } else {
-            updateTask = Task {
-                if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: compact) * 2, height: cellSize.height)) {
-                    if item?.uuid != p.id { return }
-                    assert(Thread.isMainThread)
+        Task {
+            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: compact) * 2, height: cellSize.height)) {
+                if item?.uuid == p.id {
                     presentationInfo = p
-                    updateTask = nil
                 }
             }
         }

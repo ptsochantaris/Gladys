@@ -22,18 +22,9 @@ extension ItemView {
                 } else {
                     let size = wrapper.cellSize
 
-                    if wrapper.locked {
-                        Image(systemName: "lock")
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .frame(width: 33, height: 33)
-                            .foregroundColor(.accentColor)
-                    } else {
-                        ItemImage(wrapper: wrapper)
-                            .foregroundColor(.accentColor)
-                            .frame(width: size.width, height: size.height)
-                    }
+                    ItemImage(wrapper: wrapper)
+                        .foregroundColor(.accentColor)
+                        .frame(width: size.width, height: size.height)
 
                     SquareItemText(wrapper: wrapper)
                         .frame(width: size.width, height: size.height)

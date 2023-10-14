@@ -907,6 +907,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     @MainActor
     public func postModified() {
+        presentationGenerator?.cancel()
         presentationInfoCache[uuid] = nil
         objectWillChange.send()
     }

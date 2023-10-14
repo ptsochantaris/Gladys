@@ -478,9 +478,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let expectedCellSize = CGSize(width: cellSize.width - ArchivedItemWrapper.labelPadding(compact: compact) * 2, height: cellSize.height)
 
         for ip in indexPaths {
-            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid, let item = DropStore.item(uuid: uuid) {
-                Task.detached {
-                    presentationInfoCache[uuid] = await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
+            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
+               presentationInfoCache[uuid] == nil,
+               let item = DropStore.item(uuid: uuid) {
+                Task {
+                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
                 }
             }
         }
