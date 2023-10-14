@@ -474,7 +474,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         let style: ArchivedItemWrapper.Style = PersistedOptions.wideMode ? .wide : .square
-        let compact = cellSize.width < 170
+        let compact = cellSize.isCompact
         let expectedCellSize = CGSize(width: cellSize.width - ArchivedItemWrapper.labelPadding(compact: compact) * 2, height: cellSize.height)
 
         for ip in indexPaths {

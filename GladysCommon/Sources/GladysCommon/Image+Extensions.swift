@@ -10,6 +10,12 @@
 import Foundation
 import SwiftUI
 
+public extension CGSize {
+    var isCompact: Bool {
+        width < 170
+    }
+}
+
 public extension COLOR {
     func interpolate(with color: COLOR) -> COLOR {
         let (r1, g1, b1, a1) = components
@@ -79,7 +85,7 @@ public extension IMAGE {
                 return nil
             }
             #if canImport(AppKit)
-                return IMAGE(cgImage: new, size: originalSize)
+                return IMAGE(cgImage: new, size: CGSize(width: 512, height: 512))
             #else
                 return IMAGE(cgImage: new)
             #endif

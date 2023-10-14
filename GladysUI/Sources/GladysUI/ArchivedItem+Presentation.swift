@@ -98,11 +98,8 @@ public extension ArchivedItem {
                 }
 
                 if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
-                    let topDistancePercent = topInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
-                    let bottomDistancePercent = bottomInfo.heightEstimate(for: expectedSize.width) / expectedSize.height
-
-                    let top = topInfo.willBeVisible ? topDistancePercent : nil
-                    let bottom = bottomInfo.willBeVisible ? bottomDistancePercent : nil
+                    let top = topInfo.expectedHeightEstimate(for: expectedSize, atTop: true)
+                    let bottom = bottomInfo.expectedHeightEstimate(for: expectedSize, atTop: false)
                     if let withBlur = processedImage.applyLensEffect(top: top, bottom: bottom)?.cropped(to: CGRect(origin: .zero, size: originalSize)) {
                         processedImage = withBlur
                     }

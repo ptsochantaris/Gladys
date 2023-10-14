@@ -70,31 +70,27 @@ extension ItemView {
 
             let presentation = wrapper.presentationInfo
             let info = atTop ? presentation.top.content : presentation.bottom.content
+            lineLimit = info.lineLimit(isTop: atTop, size: wrapper.cellSize)
             switch info {
             case let .hint(hintText):
                 contentText = hintText
                 showLabels = false
-                lineLimit = 4
                 highlight = true
             case let .link(url):
                 contentText = url.absoluteString
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = 1
                 highlight = false
             case .none:
                 contentText = ""
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = 1
                 highlight = false
             case let .note(text):
                 contentText = text
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = 4
                 highlight = true
             case let .text(text):
                 contentText = text
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = atTop ? (wrapper.compact ? 2 : 4) : 2
                 highlight = false
             }
 
@@ -141,12 +137,13 @@ extension ItemView {
         }
 
         var body: some View {
-            let labels = showLabels ? wrapper.createLabelView(width: wrapper.cellSize.width - 8, alignment: .center) : nil
+            let cellSize = wrapper.cellSize
+            let labels = showLabels ? wrapper.createLabelView(width: cellSize.width - 8, alignment: .center) : nil
             let textView = createTextView()
             let shareView = createShareView()
 
             if textView != nil || shareView != nil || labels != nil {
-                let paddingSize = ArchivedItemWrapper.labelPadding(compact: wrapper.compact)
+                let paddingSize = ArchivedItemWrapper.labelPadding(compact: cellSize.isCompact)
                 let spacing = wrapper.labelSpacing
 
                 VStack(alignment: .center, spacing: spacing) {

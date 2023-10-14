@@ -20,14 +20,29 @@ public struct PresentationInfo: Identifiable, Hashable {
             }
         }
 
-        public func heightEstimate(for width: CGFloat) -> CGFloat {
-            switch self {
+        public func expectedHeightEstimate(for size: CGSize, atTop: Bool) -> CGFloat? {
+            guard willBeVisible else { return nil }
+
+            let height: CGFloat = switch self {
             case .none:
                 0
             case .link:
                 39
             case let .hint(text), let .note(text), let .text(text):
-                min(92, text.height(for: width) + 30)
+                min(92, text.height(for: size.width, lineLimit: lineLimit(isTop: atTop, size: size)) + 30)
+            }
+
+            return height / size.height
+        }
+
+        public func lineLimit(isTop: Bool, size: CGSize) -> Int {
+            switch self {
+            case .hint, .note:
+                4
+            case .link, .none:
+                1
+            case .text:
+                isTop ? (size.isCompact ? 2 : 4) : 2
             }
         }
     }

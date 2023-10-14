@@ -32,7 +32,6 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         }
     }
 
-    var compact = false
     var cellSize = CGSize.zero
     var style = Style.square
 
@@ -61,7 +60,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         #if canImport(AppKit)
             4
         #else
-            compact ? 4 : 5
+            cellSize.isCompact ? 4 : 5
         #endif
     }
 
@@ -81,7 +80,6 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
         self.style = style
         cellSize = size
-        compact = cellSize.width < 170
         item = newItem
         updatePresentationInfo(for: newItem, alwaysStartFresh: false)
 
@@ -98,7 +96,7 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
             p.cancel()
         }
         Task {
-            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: compact) * 2, height: cellSize.height)) {
+            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)) {
                 if item?.uuid == p.id {
                     presentationInfo = p
                 }

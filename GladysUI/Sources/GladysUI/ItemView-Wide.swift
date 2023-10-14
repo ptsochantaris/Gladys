@@ -106,7 +106,7 @@ extension ItemView {
             case let .text(text):
                 contentText = text
                 showLabels = !atTop && wrapper.style.allowsLabels
-                lineLimit = atTop ? (wrapper.compact ? 2 : 6) : 2
+                lineLimit = atTop ? (wrapper.cellSize.isCompact ? 2 : 6) : 2
                 highlight = false
             }
 
