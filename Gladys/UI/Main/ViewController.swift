@@ -1668,6 +1668,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) ?? true {
+            presentationInfoCache.reset()
+            collection.reloadData()
+        }
+    }
+
     var currentColumnCount = 1
     private var cellSize = CGSize.zero
 

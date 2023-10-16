@@ -22,6 +22,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     @IBOutlet private var translucentView: NSVisualEffectView!
 
     private var highlightRegistration: HighlightRequest.Registration?
+    private var modeChangeRegistration: NSObjectProtocol?
 
     override func viewWillAppear() {
         handleLayout()
@@ -132,6 +133,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         // Not using notifications macro because registration needs to be immediate
         highlightRegistration = HighlightRequest.registerListener(listener: self)
 
+        modeChangeRegistration = collection.observe(\.effectiveAppearance) { [weak self] _, _ in
+            self?.reloadItems()
+        }
+
         notifications(for: .ItemsAddedBySync) { [weak self] _ in
             self?.filter.update(signalUpdate: .animated)
         }
@@ -147,6 +152,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     deinit {
+        modeChangeRegistration = nil
         highlightRegistration?.cancel()
         log("Main VC deinitialised")
     }
