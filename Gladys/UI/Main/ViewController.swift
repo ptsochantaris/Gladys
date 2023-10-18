@@ -853,6 +853,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
+    override func paste(itemProviders: [NSItemProvider]) {
+        Model.pasteItems(from: itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil)
+    }
+
+    override func canPaste(_: [NSItemProvider]) -> Bool {
+        true
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -863,6 +871,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
             cell.isEditing = isEditing
         }
+
+        updatePasteButton()
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: sectionItem)
@@ -1668,9 +1678,28 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
 
+    private func updatePasteButton() {
+        if #available(iOS 16.0, *), var items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) {
+            let config = UIPasteControl.Configuration()
+            config.baseBackgroundColor = .g_colorPaper
+            config.baseForegroundColor = .g_colorTint
+            config.displayMode = .iconOnly
+
+            let control = UIPasteControl(configuration: config)
+            control.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            control.target = self
+
+            let customBarButtonItem = UIBarButtonItem(customView: control)
+            customBarButtonItem.tag = 382_611
+            items[indexOfPaste] = customBarButtonItem
+            navigationItem.leftBarButtonItems = items
+        }
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) ?? true {
+            updatePasteButton()
             presentationInfoCache.reset()
             collection.reloadData()
         }

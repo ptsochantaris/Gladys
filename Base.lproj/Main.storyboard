@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22129"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -76,7 +76,7 @@
                                     <action selector="showPreferences" destination="BYZ-38-t0r" id="34b-Jf-A2e"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Paste" id="jsK-Yx-Re8">
+                            <barButtonItem tag="382611" title="Paste" id="jsK-Yx-Re8">
                                 <imageReference key="image" image="arrow.down.doc" catalog="system"/>
                                 <connections>
                                     <action selector="pasteSelected:" destination="BYZ-38-t0r" id="Z8T-pE-mzS"/>
