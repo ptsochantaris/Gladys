@@ -1681,8 +1681,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func updatePasteButton() {
         if #available(iOS 16.0, *), var items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) {
             let config = UIPasteControl.Configuration()
+            #if os(visionOS)
+            config.baseBackgroundColor = .tintColor
+            #else
             config.baseBackgroundColor = .g_colorPaper
+            #endif
             config.baseForegroundColor = .g_colorTint
+            config.cornerStyle = .capsule
             config.displayMode = .iconOnly
 
             let control = UIPasteControl(configuration: config)

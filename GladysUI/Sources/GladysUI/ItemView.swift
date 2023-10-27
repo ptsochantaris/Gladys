@@ -154,11 +154,12 @@ public struct ItemView: View {
 
     @ViewBuilder
     private var itemMode: some View {
-        let shadowColor: Color = wrapper.shouldShowShadow ? (colorScheme == .dark ? .black : .gray) : .clear
         #if os(visionOS)
-            let cornerRadius = wrapper.compact ? cellCornerRadius * 0.5 : cellCornerRadius
+            let shadowColor: Color = wrapper.shouldShowShadow ? .black.opacity(0.3) : .clear
+            let cornerRadius = wrapper.cellSize.isCompact ? cellCornerRadius * 0.5 : cellCornerRadius
             let shadowRadius: CGFloat = 6
         #else
+            let shadowColor: Color = wrapper.shouldShowShadow ? (colorScheme == .dark ? .black : .gray) : .clear
             let cornerRadius = cellCornerRadius
             let shadowRadius: CGFloat = 2
         #endif
