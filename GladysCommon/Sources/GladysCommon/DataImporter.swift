@@ -1,6 +1,9 @@
 import Combine
 import Foundation
 import UniformTypeIdentifiers
+#if canImport(AppKit)
+import AppKit
+#endif
 
 public final class DataImporter {
     private var dataItemPublisher = CurrentValueSubject<[String: Data]?, Never>(nil)
@@ -35,6 +38,18 @@ public final class DataImporter {
             dataItemPublisher.send(dataLookup)
         }
     }
+
+    #if canImport(AppKit)
+    public init(pasteboardItem: NSPasteboardItem, suggestedName: String?) {
+        var dataLookup = [String: Data](minimumCapacity: pasteboardItem.types.count)
+        for type in pasteboardItem.types {
+            dataLookup[type.rawValue] = pasteboardItem.data(forType: type)
+        }
+        self.identifiers = Array(dataLookup.keys)
+        self.suggestedName = suggestedName
+        dataItemPublisher.send(dataLookup)
+    }
+    #endif
 
     public init(type: String, data: Data, suggestedName: String?) {
         identifiers = [type]

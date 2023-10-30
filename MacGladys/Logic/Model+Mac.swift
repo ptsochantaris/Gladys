@@ -115,12 +115,8 @@ extension Model {
                 }
             }
 
-            for type in pasteboardItem.types {
-                if let data = pasteboardItem.data(forType: type) {
-                    let importer = DataImporter(type: type.rawValue, data: data, suggestedName: nil)
-                    importers.append(importer)
-                }
-            }
+            let importer = DataImporter(pasteboardItem: pasteboardItem, suggestedName: nil)
+            importers.append(importer)
             return importers
         }
 
