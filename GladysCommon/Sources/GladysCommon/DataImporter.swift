@@ -26,11 +26,14 @@ public final class DataImporter {
         let group = DispatchGroup()
         for identifier in identifiers {
             group.enter()
-            itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, _ in
+            itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, error in
                 constructionQueue.async {
+                    if let error {
+                        log("Warning: Error during data read (identifier: '\(identifier)'): \(error.localizedDescription)")
+                    }
                     dataLookup[identifier] = data
+                    group.leave()
                 }
-                group.leave()
             }
         }
         group.notify(queue: constructionQueue) { [weak self] in
@@ -67,12 +70,12 @@ public final class DataImporter {
         }
         var cancellable: Cancellable?
         let data = await withCheckedContinuation { continuation in
-            cancellable = dataItemPublisher.sink { value in
+            cancellable = dataItemPublisher.compactMap { $0 }.sink { value in
                 continuation.resume(returning: value)
             }
         }
         return try withExtendedLifetime(cancellable) {
-            if let data = data?[identifier] {
+            if let data = data[identifier] {
                 data
             } else {
                 throw GladysError.noData
