@@ -94,20 +94,19 @@ public final class ImportExport {
 
         p.completedUnitCount += 1
 
-        if let archive = Archive(url: tempPath, accessMode: .create) {
-            for item in dropsCopy {
-                let dir = item.displayTitleOrUuid.filenameSafe
+        let archive = try Archive(url: tempPath, accessMode: .create)
+        for item in dropsCopy {
+            let dir = item.displayTitleOrUuid.filenameSafe
 
-                if item.components.count == 1, let typeItem = item.components.first {
-                    try await addZipItem(typeItem, directory: nil, name: dir, in: archive)
+            if item.components.count == 1, let typeItem = item.components.first {
+                try await addZipItem(typeItem, directory: nil, name: dir, in: archive)
 
-                } else {
-                    for typeItem in item.components {
-                        try await addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
-                    }
+            } else {
+                for typeItem in item.components {
+                    try await addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
                 }
-                p.completedUnitCount += 1
             }
+            p.completedUnitCount += 1
         }
 
         return tempPath

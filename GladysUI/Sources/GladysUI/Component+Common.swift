@@ -1,9 +1,6 @@
 import Contacts
 import Foundation
 import MapKit
-#if canImport(Intents)
-    import Intents
-#endif
 #if canImport(UIKit)
     import QuickLook
 #endif
@@ -12,12 +9,6 @@ import GladysCommon
 public extension Component {
     var sizeDescription: String? {
         diskSizeFormatter.string(fromByteCount: sizeInBytes)
-    }
-
-    func removeIntents() {
-        #if canImport(Intents)
-            INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-        #endif
     }
 
     @MainActor
@@ -43,7 +34,6 @@ public extension Component {
             try? fm.removeItem(at: folderUrl)
         }
         clearCacheData(for: uuid)
-        removeIntents()
     }
 
     var objectForShare: Any? {

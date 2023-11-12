@@ -17,7 +17,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var allowLabelsInExtensionSwitch: UISwitch!
     @IBOutlet private var wideModeSwitch: UISwitch!
     @IBOutlet private var inclusiveSearchTermsSwitch: UISwitch!
-    @IBOutlet private var siriSettingsButton: UIBarButtonItem!
     @IBOutlet private var autoConvertUrlsSwitch: UISwitch!
     @IBOutlet private var blockGladysUrls: UISwitch!
     @IBOutlet private var generateLabelsFromTitlesSwitch: UISwitch!
@@ -191,11 +190,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if #available(iOS 16.0, *) {
-            // we use an app intent for this
-            siriSettingsButton.isHidden = true
-        }
 
         explicitScrolling = true
         doneButtonLocation = .right

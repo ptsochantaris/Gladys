@@ -77,9 +77,6 @@ extension CallbackSupport {
 
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
-        defer {
-            Model.donatePasteIntent()
-        }
         let importers = UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }
         return Model.pasteItems(from: importers, overrides: importOverrides)
     }

@@ -145,8 +145,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if items.isPopulated {
             if dragModeMove {
                 Model.delete(items: items)
-            } else {
-                items.forEach { $0.donateCopyIntent() }
             }
         }
 
@@ -409,7 +407,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             #if !os(visionOS)
                 p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
 
-                if #available(iOS 16, *), let sheet = n.popoverPresentationController?.adaptiveSheetPresentationController {
+                if let sheet = n.popoverPresentationController?.adaptiveSheetPresentationController {
                     sheet.largestUndimmedDetentIdentifier = .none
                     sheet.prefersScrollingExpandsWhenScrolledToEdge = false
                     sheet.prefersEdgeAttachedInCompactHeight = true
@@ -453,19 +451,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 if hasChanges {
                     setEditing(false, animated: true)
                 }
-            }
-
-        case "toSiriShortcuts":
-            guard let n = segue.destination as? UINavigationController,
-                  let d = n.viewControllers.first as? SiriShortcutsViewController,
-                  let cell = sender as? ArchivedItemCell,
-                  let item = cell.archivedDropItem
-            else { return }
-
-            d.sourceItem = item
-            if let p = n.popoverPresentationController {
-                p.sourceView = cell
-                p.delegate = self
             }
 
         default: break
@@ -1085,7 +1070,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @IBOutlet private var pasteButton: UIBarButtonItem!
 
     @IBAction private func pasteSelected(_: UIBarButtonItem) {
-        Model.donatePasteIntent()
         if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil) {
             Task {
                 await genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
@@ -1576,21 +1560,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        children.append(makeAction(title: "Siri Shortcuts", callback: { [weak self] in
-            guard let self else { return }
-            if let cell = collection.cellForItem(at: indexPath) {
-                if let detail = currentDetailView {
-                    detail.segue("toSiriShortcuts", sender: nil)
-                } else {
-                    Task { [weak self] in
-                        guard let self else { return }
-                        await dismissAnyPopOver()
-                        segue("toSiriShortcuts", sender: cell)
-                    }
-                }
-            }
-        }, style: [], iconName: "mic"))
-
         if item.cloudKitRecord != nil {
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
@@ -1679,19 +1648,19 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     private func updatePasteButton() {
-        if #available(iOS 16.0, *), var items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) {
+        if var items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) {
             let config = UIPasteControl.Configuration()
             #if os(visionOS)
-            config.baseBackgroundColor = .tintColor
+                config.baseBackgroundColor = .tintColor
             #else
-            config.baseBackgroundColor = .g_colorPaper
+                config.baseBackgroundColor = .g_colorPaper
+                config.baseForegroundColor = .g_colorTint
             #endif
-            config.baseForegroundColor = .g_colorTint
             config.cornerStyle = .capsule
             config.displayMode = .iconOnly
 
             let control = UIPasteControl(configuration: config)
-            control.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            control.frame = CGRect(x: 0, y: 0, width: 50, height: 52)
             control.target = self
 
             let customBarButtonItem = UIBarButtonItem(customView: control)
@@ -1734,11 +1703,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = spacing
-        if #available(iOS 16.0, *) {
-            section.supplementaryContentInsetsReference = .none
-        } else {
-            section.supplementariesFollowContentInsets = false
-        }
+        section.supplementaryContentInsetsReference = .none
         section.contentInsetsReference = .none
 
         let sectionLeft = view.safeAreaInsets.left + spacing
@@ -2057,7 +2022,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         let t = (controller.presentedViewController as? UINavigationController)?.topViewController
-        if t is LabelSelector || t is LabelEditorController || t is SiriShortcutsViewController {
+        if t is LabelSelector || t is LabelEditorController {
             return .none
         } else {
             return .overCurrentContext

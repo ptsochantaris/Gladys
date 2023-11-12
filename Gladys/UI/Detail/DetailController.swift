@@ -634,14 +634,6 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
             } else {
                 d.title = "Add Label"
             }
-
-        } else if segue.identifier == "toSiriShortcuts",
-                  let n = segue.destination as? UINavigationController,
-                  let p = n.popoverPresentationController {
-            p.delegate = self
-            if let m = menuButton {
-                p.barButtonItem = m
-            }
         }
     }
 

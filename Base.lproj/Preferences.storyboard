@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QNh-jL-bwn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QNh-jL-bwn">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -1185,15 +1185,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Options" id="REe-Ta-y5r">
-                        <barButtonItem key="leftBarButtonItem" title="Siri Settings" image="mic" catalog="system" id="sT1-aB-pR0">
-                            <connections>
-                                <segue destination="r5u-AY-517" kind="popoverPresentation" identifier="toSiriOptions" popoverAnchorBarButtonItem="sT1-aB-pR0" id="Q2V-Mh-swF">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Options" id="REe-Ta-y5r"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="3400"/>
                     <connections>
@@ -1218,7 +1210,6 @@
                         <outlet property="requestInlineDrops" destination="KYU-D0-fuz" id="D86-02-69M"/>
                         <outlet property="separateItemsSwitch" destination="Re0-bQ-XI7" id="vUX-eK-BtU"/>
                         <outlet property="showCopyMoveSwitchSelectorSwitch" destination="jLY-Yd-XP1" id="r1X-J0-oFv"/>
-                        <outlet property="siriSettingsButton" destination="sT1-aB-pR0" id="Y5W-Rt-nLM"/>
                         <outlet property="transcribeSpeechInMedia" destination="oXH-HY-eOm" id="2YH-Lb-a69"/>
                         <outlet property="twoColumnsSwitch" destination="VpB-kf-y3J" id="mhi-5I-1rA"/>
                         <outlet property="wideModeSwitch" destination="ftx-hG-yxt" id="5Yo-3E-Bl1"/>
@@ -2186,101 +2177,6 @@
             </objects>
             <point key="canvasLocation" x="6783" y="-2686"/>
         </scene>
-        <!--Siri Settings-->
-        <scene sceneID="dfc-b7-DGh">
-            <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="5x4-nY-GLM" customClass="SiriSettingsViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="xyQ-dS-ghA" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="280"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sFM-Az-Bfn">
-                                <rect key="frame" x="0.0" y="44" width="240" height="236"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="beS-2E-gsh">
-                                        <rect key="frame" x="20" y="31" width="200" height="174.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="PASTE CLIPBOARD INTO GLADYS" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZlP-f6-gdY">
-                                                <rect key="frame" x="0.0" y="0.0" width="200" height="13.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                <color key="textColor" name="colorTint"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <view contentMode="scaleToFill" placeholderIntrinsicWidth="240" placeholderIntrinsicHeight="66" translatesAutoresizingMaskIntoConstraints="NO" id="7rR-YE-jhn">
-                                                <rect key="frame" x="0.0" y="27.5" width="200" height="66"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Pastes the current contents of your clipboard into Gladys." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nq6-Yh-cxk">
-                                                <rect key="frame" x="0.0" y="107.5" width="200" height="26.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                <color key="textColor" name="colorComponentLabel"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Configure individual shortcuts for items from their info views." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFB-CA-Wk5">
-                                                <rect key="frame" x="0.0" y="148" width="200" height="26.5"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
-                                                <color key="textColor" name="colorComponentLabel"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstItem="beS-2E-gsh" firstAttribute="top" relation="greaterThanOrEqual" secondItem="sFM-Az-Bfn" secondAttribute="top" constant="24" id="7On-4G-uL1"/>
-                                    <constraint firstAttribute="trailing" secondItem="beS-2E-gsh" secondAttribute="trailing" constant="20" id="Fgq-jO-mxs"/>
-                                    <constraint firstItem="beS-2E-gsh" firstAttribute="leading" secondItem="sFM-Az-Bfn" secondAttribute="leading" constant="20" id="QH7-q1-R67"/>
-                                    <constraint firstItem="beS-2E-gsh" firstAttribute="centerY" secondItem="sFM-Az-Bfn" secondAttribute="centerY" id="YMI-SB-wSO"/>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="beS-2E-gsh" secondAttribute="bottom" constant="24" id="hdq-BG-DwY"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="zfd-BB-kYh"/>
-                        <color key="backgroundColor" name="colorPaper"/>
-                        <constraints>
-                            <constraint firstItem="sFM-Az-Bfn" firstAttribute="leading" secondItem="zfd-BB-kYh" secondAttribute="leading" id="AK8-1V-GLq"/>
-                            <constraint firstItem="sFM-Az-Bfn" firstAttribute="top" secondItem="zfd-BB-kYh" secondAttribute="top" id="N5F-KZ-zIG"/>
-                            <constraint firstItem="sFM-Az-Bfn" firstAttribute="trailing" secondItem="zfd-BB-kYh" secondAttribute="trailing" id="gry-8W-8Ly"/>
-                            <constraint firstItem="zfd-BB-kYh" firstAttribute="bottom" secondItem="sFM-Az-Bfn" secondAttribute="bottom" id="hfw-RX-xKg"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Siri Settings" id="0Id-mA-Brv"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="240" height="280"/>
-                    <connections>
-                        <outlet property="pasteInGladysContainer" destination="7rR-YE-jhn" id="Lce-0r-Bd1"/>
-                        <outlet property="stackHolder" destination="sFM-Az-Bfn" id="qla-OC-wE1"/>
-                        <outletCollection property="footers" destination="Nq6-Yh-cxk" collectionClass="NSMutableArray" id="Jkz-K4-I9a"/>
-                        <outletCollection property="headers" destination="ZlP-f6-gdY" collectionClass="NSMutableArray" id="7I4-3A-OJZ"/>
-                        <outletCollection property="footers" destination="hFB-CA-Wk5" collectionClass="NSMutableArray" id="kyk-i8-cHK"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="R78-ad-APK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6783" y="-1536"/>
-        </scene>
-        <!--Gladys Nav Controller-->
-        <scene sceneID="2xn-Gj-2qb">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r5u-AY-517" customClass="GladysNavController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <size key="freeformSize" width="240" height="280"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qJZ-e3-duA">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" systemColor="secondaryLabelColor"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="5x4-nY-GLM" kind="relationship" relationship="rootViewController" id="5mB-Ga-zyp"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="HtI-xH-TeX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6783" y="-1902"/>
-        </scene>
     </scenes>
     <color key="tintColor" name="colorTint"/>
     <resources>
@@ -2289,7 +2185,6 @@
         <image name="gladysImage" width="1024" height="1024"/>
         <image name="icloud" catalog="system" width="128" height="90"/>
         <image name="info.circle" catalog="system" width="128" height="123"/>
-        <image name="mic" catalog="system" width="110" height="128"/>
         <image name="questionmark.circle" catalog="system" width="128" height="123"/>
         <image name="slider.horizontal.3" catalog="system" width="128" height="99"/>
         <namedColor name="colorComponentLabel">
@@ -2305,16 +2200,16 @@
             <color red="0.57647058823529407" green="0.094117647058823528" blue="0.070588235294117646" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="quaternarySystemFillColor">
-            <color red="0.4549019608" green="0.4549019608" blue="0.50196078430000002" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.45490196078431372" green="0.45490196078431372" blue="0.50196078431372548" alpha="0.080000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

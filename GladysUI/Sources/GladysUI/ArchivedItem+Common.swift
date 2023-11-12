@@ -1,19 +1,7 @@
 import Foundation
 import GladysCommon
-#if canImport(Intents)
-    import Intents
-#endif
 
 public extension ArchivedItem {
-    private func removeIntents() {
-        #if canImport(Intents)
-            INInteraction.delete(with: ["copy-\(uuid.uuidString)"])
-            for item in components {
-                item.removeIntents()
-            }
-        #endif
-    }
-
     @MainActor
     var canPreview: Bool {
         components.contains { $0.canPreview }
@@ -45,7 +33,6 @@ public extension ArchivedItem {
         } else {
             log("No cloud record for this item, skipping cloud delete")
         }
-        removeIntents()
         let p = folderUrl.path
         let uuids = components.map(\.uuid)
         itemAccessQueue.async(flags: .barrier) {

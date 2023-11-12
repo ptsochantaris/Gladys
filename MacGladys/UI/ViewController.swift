@@ -1154,11 +1154,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         enteredWindowAfterAutoShow = false
         autoShown = startHideTimerIfNeeded
 
-        if #available(macOS 13.0, *) {
-            window.collectionBehavior = [.moveToActiveSpace, .canJoinAllApplications]
-        } else {
-            window.collectionBehavior = [.moveToActiveSpace]
-        }
+        window.collectionBehavior = [.moveToActiveSpace, .canJoinAllApplications]
         window.alphaValue = 0
         window.orderFrontRegardless()
         window.makeKey()

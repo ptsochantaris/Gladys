@@ -112,7 +112,7 @@ enum GladysAppIntents {
             else {
                 throw Error.itemNotFound
             }
-            item.copyToPasteboard(donateShortcut: false)
+            item.copyToPasteboard()
             return .result()
         }
     }

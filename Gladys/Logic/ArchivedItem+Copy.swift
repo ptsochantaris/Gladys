@@ -33,11 +33,8 @@ import GladysCommon
             return i
         }
 
-        func copyToPasteboard(donateShortcut: Bool = true) {
+        func copyToPasteboard() {
             UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
-            if donateShortcut {
-                donateCopyIntent()
-            }
         }
     }
 #endif

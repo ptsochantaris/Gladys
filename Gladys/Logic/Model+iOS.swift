@@ -3,7 +3,6 @@ import Foundation
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import Intents
 import Maintini
 import UIKit
 import WatchConnectivity
@@ -40,7 +39,7 @@ extension Model {
         stateHandler = { state in
             switch state {
             case .migrated:
-                clearLegacyIntents()
+                break
 
             case let .saveComplete(dueToSyncFetch):
                 #if canImport(WidgetKit)
@@ -109,33 +108,5 @@ extension Model {
         }
 
         return .success(items)
-    }
-
-    static var pasteIntent: PasteClipboardIntent {
-        let intent = PasteClipboardIntent()
-        intent.suggestedInvocationPhrase = "Paste in Gladys"
-        return intent
-    }
-
-    private static func clearLegacyIntents() {
-        if #available(iOS 16, *) {
-            INInteraction.deleteAll() // using app intents now
-        }
-    }
-
-    static func donatePasteIntent() {
-        if #available(iOS 16, *) {
-            log("Will not donate SiriKit paste shortcut")
-        } else {
-            let interaction = INInteraction(intent: pasteIntent, response: nil)
-            interaction.identifier = "paste-in-gladys"
-            interaction.donate { error in
-                if let error {
-                    log("Error donating paste shortcut: \(error.localizedDescription)")
-                } else {
-                    log("Donated paste shortcut")
-                }
-            }
-        }
     }
 }

@@ -1,13 +1,9 @@
 import GladysCommon
-import Intents
 import UIKit
 
 extension Component {
-    func copyToPasteboard(donateShortcut: Bool = true) {
+    func copyToPasteboard() {
         UIPasteboard.general.setItemProviders([itemProvider], localOnly: false, expirationDate: nil)
-        if donateShortcut {
-            donateCopyIntent()
-        }
     }
 
     var itemProvider: NSItemProvider {
@@ -26,25 +22,5 @@ extension Component {
 
     var trimmedSuggestedName: String {
         oneTitle.truncateWithEllipses(limit: 128)
-    }
-
-    private func donateCopyIntent() {
-        if #available(iOS 16, *) {
-            log("Will not donate SiriKit copy component shortcut")
-        } else {
-            let intent = CopyComponentIntent()
-            let trimmed = trimmedName
-            intent.suggestedInvocationPhrase = "Copy '\(trimmed)' from Gladys"
-            intent.component = INObject(identifier: uuid.uuidString, display: trimmed)
-            let interaction = INInteraction(intent: intent, response: nil)
-            interaction.identifier = "copy-\(uuid.uuidString)"
-            interaction.donate { error in
-                if let error {
-                    log("Error donating component copy shortcut: \(error.localizedDescription)")
-                } else {
-                    log("Donated copy shortcut")
-                }
-            }
-        }
     }
 }
