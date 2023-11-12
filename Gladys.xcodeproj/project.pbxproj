@@ -27,6 +27,8 @@
 		161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */; };
 		1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */; };
 		16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
+		161994362B010CD6006DE2B2 /* BackgroundRefreshTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161994352B010CD6006DE2B2 /* BackgroundRefreshTasks.swift */; };
+		161994372B010CD6006DE2B2 /* BackgroundRefreshTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161994352B010CD6006DE2B2 /* BackgroundRefreshTasks.swift */; };
 		1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1619B60A1F76EC2F005CF414 /* HeaderCell.swift */; };
 		161D357821BA6A4200CADA41 /* NotesEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161D357721BA6A4200CADA41 /* NotesEditor.swift */; };
 		162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162289B3207CC72600DAC6A2 /* CallbackSupport.swift */; };
@@ -119,7 +121,6 @@
 		16B2AA4524DF4542004F3FC2 /* ArchivedItem+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1657B8C51FD4381700EC480D /* ArchivedItem+Messages.swift */; };
 		16B2AA4624DF4542004F3FC2 /* Component+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169E5E051FE0851A00CCE984 /* Component+Messages.swift */; };
 		16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */; };
-		16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */; };
 		16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF23283893FB00B3EEF3 /* Preferences.storyboard */; };
 		16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16BDAF26283895B600B3EEF3 /* Detail.storyboard */; };
 		16C12FC028AE494C00E9EB04 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 16C12FBF28AE494C00E9EB04 /* HotKey */; };
@@ -346,6 +347,7 @@
 		161718DC2094D7F7005ABD6C /* Model+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Mac.swift"; sourceTree = "<group>"; };
 		161718E22094DEB0005ABD6C /* CloudManager+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Mac.swift"; sourceTree = "<group>"; };
 		1618CEDA266D3BEE00CE5AD2 /* LabelSectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSectionTitle.swift; sourceTree = "<group>"; };
+		161994352B010CD6006DE2B2 /* BackgroundRefreshTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundRefreshTasks.swift; sourceTree = "<group>"; };
 		1619B60A1F76EC2F005CF414 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
 		161D357721BA6A4200CADA41 /* NotesEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditor.swift; sourceTree = "<group>"; };
 		162289B3207CC72600DAC6A2 /* CallbackSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallbackSupport.swift; sourceTree = "<group>"; };
@@ -450,7 +452,6 @@
 		16B2AA3C24DF42B5004F3FC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16B2AA4824DF458D004F3FC2 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		16B552771F12E3CC00641009 /* Fuzi.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Fuzi.framework.dSYM; path = Carthage/Build/iOS/Fuzi.framework.dSYM; sourceTree = "<group>"; };
-		16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CloudManager+Extensions.swift"; sourceTree = "<group>"; };
 		16BDAF24283893FB00B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
 		16BDAF27283895B600B3EEF3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Detail.storyboard; sourceTree = "<group>"; };
 		16C389E5221D42AD00AB790A /* ClockKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClockKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk/System/Library/Frameworks/ClockKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -643,7 +644,6 @@
 				164136931F09195000B34574 /* Info.plist */,
 				1605C5FB1F13A56E00F54B19 /* MainInterface.storyboard */,
 				1641368F1F09195000B34574 /* ActionRequestViewController.swift */,
-				16BCAE20245DE9EF000BDCC4 /* CloudManager+Extensions.swift */,
 				162383F520F96C650086E719 /* LabelEditorCell.swift */,
 				162383F320F969650086E719 /* LabelEditorController.swift */,
 			);
@@ -737,6 +737,7 @@
 				164CEC632AB2394300298594 /* Component+iOS.swift */,
 				16969BB91FB10A58007B2F77 /* Component+Copy.swift */,
 				1651117D2163DEE300C5C874 /* Component+Intents.swift */,
+				161994352B010CD6006DE2B2 /* BackgroundRefreshTasks.swift */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1313,10 +1314,10 @@
 				16A4E7DF1FBB844A00D60596 /* GladysWatch */,
 				1657B8AA1FD41C1B00EC480D /* GladysMessage */,
 				16B2AA3724DF42B5004F3FC2 /* GladysKeys */,
+				16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */,
 				161718C32094D333005ABD6C /* MacGladys */,
 				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 				164947CB20BEAA6200BD1BEB /* MacGladysShare */,
-				16CA740C2AB4C063000D6A99 /* GladysWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -1546,9 +1547,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				161994372B010CD6006DE2B2 /* BackgroundRefreshTasks.swift in Sources */,
 				162383F420F969650086E719 /* LabelEditorController.swift in Sources */,
 				164136901F09195000B34574 /* ActionRequestViewController.swift in Sources */,
-				16BCAE22245DE9EF000BDCC4 /* CloudManager+Extensions.swift in Sources */,
 				162383F620F96C650086E719 /* LabelEditorCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1593,6 +1594,7 @@
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
+				161994362B010CD6006DE2B2 /* BackgroundRefreshTasks.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1660C0262465C32000ABFDFD /* Singleton.swift in Sources */,

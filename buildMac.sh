@@ -3,7 +3,7 @@
 DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer
 
 # Clean
-xcodebuild clean archive -project Gladys.xcodeproj -scheme "MacGladys" -destination "generic/platform=OS X" -archivePath ~/Desktop/macgladys.xcarchive
+xcodebuild clean archive -project Gladys.xcodeproj -scheme "MacGladys" -destination "generic/platform=macOS" -archivePath ~/Desktop/macgladys.xcarchive
 
 if [ $? -eq 0 ]
 then
@@ -14,7 +14,7 @@ exit 1
 fi
 
 # Upload to App Store
-xcodebuild -exportArchive -archivePath ~/Desktop/macgladys.xcarchive -exportPath ~/Desktop/GladysExport -exportOptionsPlist exportMac.plist
+xcodebuild -exportArchive -archivePath ~/Desktop/macgladys.xcarchive -exportPath ~/Desktop/GladysExport -allowProvisioningUpdates -exportOptionsPlist exportMac.plist
 
 if [ $? -eq 0 ]
 then

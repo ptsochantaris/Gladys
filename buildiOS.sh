@@ -14,7 +14,7 @@ exit 1
 fi
 
 # Upload to App Store
-xcodebuild -exportArchive -archivePath ~/Desktop/gladys.xcarchive -exportPath ~/Desktop/GladysExport -exportOptionsPlist exportiOS.plist
+xcodebuild -exportArchive -archivePath ~/Desktop/gladys.xcarchive -exportPath ~/Desktop/GladysExport -allowProvisioningUpdates -exportOptionsPlist exportiOS.plist
 
 if [ $? -eq 0 ]
 then

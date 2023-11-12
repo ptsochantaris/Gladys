@@ -194,12 +194,9 @@ final class ActionRequestViewController: UIViewController {
             DropStore.append(drop: item)
         }
 
-        Task {
-            await CloudManager.signalExtensionUpdate()
-        }
-
         dismiss(animated: true) {
             self.reset(ingestOnNextAppearance: true)
+            BackgroundRefreshTasks.ensureFutureRefreshIsScheduled()
             self.extensionContext?.completeRequest(returningItems: nil) { _ in
                 log("Dismissed")
             }

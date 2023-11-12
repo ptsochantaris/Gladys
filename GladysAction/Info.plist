@@ -44,5 +44,9 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.ui-services</string>
 	</dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>build.bru.gladys.refresh</string>
+	</array>
 </dict>
 </plist>

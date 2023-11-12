@@ -96,7 +96,9 @@ final class Singleton {
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {
         guard let scene = scene as? UIWindowScene else { return }
 
-        scene.session.stateRestorationActivity = userActivity
+        if userActivity != nil {
+            scene.session.stateRestorationActivity = userActivity
+        }
 
         switch userActivity?.activityType {
         case kGladysMainListActivity:
