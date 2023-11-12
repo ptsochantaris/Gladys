@@ -1,8 +1,8 @@
+import BackgroundTasks
 import GladysCommon
 import GladysUI
 import Maintini
 import UIKit
-import BackgroundTasks
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {

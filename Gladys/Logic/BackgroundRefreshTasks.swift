@@ -1,5 +1,5 @@
-import Foundation
 import BackgroundTasks
+import Foundation
 import GladysCommon
 
 enum BackgroundRefreshTasks {
