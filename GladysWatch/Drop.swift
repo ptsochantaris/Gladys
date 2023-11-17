@@ -2,7 +2,7 @@ import UIKit
 import WatchConnectivity
 import WatchKit
 
-final class ImageCache {
+enum ImageCache {
     private static let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
 
     private static let accessKeys = Set([URLResourceKey.contentAccessDateKey])
