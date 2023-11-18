@@ -15,7 +15,6 @@ final class ActionRequestViewController: UIViewController {
 
     private var loadCount = 0
     private var ingestOnWillAppear = true
-    private var newItems = Lista<ArchivedItem>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,12 +102,12 @@ final class ActionRequestViewController: UIViewController {
 
         if allDifferentTypes { // posibly this is a composite item, leave it up to the user's settings
             for newItem in ArchivedItem.importData(providers: providerList, overrides: nil) {
-                newItems.append(newItem)
+                DropStore.append(drop: newItem)
             }
         } else { // list of items shares common types, let's assume they are multiple items per provider
             for provider in providerList {
                 for newItem in ArchivedItem.importData(providers: [provider], overrides: nil) {
-                    newItems.append(newItem)
+                    DropStore.append(drop: newItem)
                 }
             }
         }
@@ -124,7 +123,9 @@ final class ActionRequestViewController: UIViewController {
     }
 
     @IBAction private func cancelRequested(_: UIBarButtonItem) {
-        newItems.forEach { $0.cancelIngest() }
+        for item in DropStore.allDrops {
+            item.cancelIngest()
+        }
         reset(ingestOnNextAppearance: true)
         extensionContext?.cancelRequest(withError: GladysError.actionCancelled)
     }
@@ -173,7 +174,6 @@ final class ActionRequestViewController: UIViewController {
         showBusy(false)
 
         ingestOnWillAppear = ingestOnNextAppearance
-        newItems.removeAll()
         ActionRequestViewController.labelsToApply.removeAll()
         ActionRequestViewController.noteToApply = ""
         DropStore.reset()
@@ -184,19 +184,16 @@ final class ActionRequestViewController: UIViewController {
     }
 
     private func done() {
-        for item in newItems {
+        for item in DropStore.allDrops {
             item.labels = ActionRequestViewController.labelsToApply
             item.note = ActionRequestViewController.noteToApply
         }
 
-        LiteModel.insertNewItemsWithoutLoading(items: newItems)
-        for item in newItems {
-            DropStore.append(drop: item)
-        }
+        LiteModel.insertNewItemsWithoutLoading(items: DropStore.allDrops)
+        BackgroundRefreshTasks.ensureFutureRefreshIsScheduled()
 
         dismiss(animated: true) {
             self.reset(ingestOnNextAppearance: true)
-            BackgroundRefreshTasks.ensureFutureRefreshIsScheduled()
             self.extensionContext?.completeRequest(returningItems: nil) { _ in
                 log("Dismissed")
             }
