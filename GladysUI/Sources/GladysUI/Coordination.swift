@@ -20,7 +20,7 @@ import Foundation
 
             func presentedItemDidChange() {
                 Task {
-                    if await DropStore.doneIngesting {
+                    if !(await DropStore.ingestingItems) {
                         try! await Model.reloadDataIfNeeded()
                     }
                 }
@@ -37,7 +37,7 @@ import Foundation
         public static func beginMonitoringChanges() {
             notifications(for: UIApplication.willEnterForegroundNotification) { _ in
                 NSFileCoordinator.addFilePresenter(filePresenter)
-                if DropStore.doneIngesting {
+                if !DropStore.ingestingItems {
                     try! await Model.reloadDataIfNeeded()
                 }
             }

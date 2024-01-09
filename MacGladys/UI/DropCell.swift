@@ -161,7 +161,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
     }
 
     @IBAction private func cancelSelected(_: NSButton) {
-        if let archivedDropItem, archivedDropItem.shouldDisplayLoading {
+        if let archivedDropItem, archivedDropItem.status.shouldDisplayLoading {
             Model.delete(items: [archivedDropItem])
         }
     }

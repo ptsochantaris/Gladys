@@ -1,23 +1,54 @@
-import CloudKit
-import Foundation
-import Lista
 #if canImport(AppKit)
     import AppKit
-#endif
-#if canImport(UIKit)
+#elseif canImport(UIKit)
     import UIKit
 #endif
-import NaturalLanguage
-import UniformTypeIdentifiers
 #if !os(watchOS)
     import CoreSpotlight
     import Speech
     import Vision
 #endif
+import CloudKit
+import Foundation
+import Lista
 import Maintini
+import NaturalLanguage
 import SwiftUI
+import UniformTypeIdentifiers
 
 public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayImageProviding {
+    public enum Status: RawRepresentable, Codable {
+        case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
+
+        public init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .nominal
+            case 1: self = .isBeingConstructed
+            case 2: self = .deleted
+            case 3: self = .isBeingIngested(nil)
+            case 4: self = .needsIngest
+            default: return nil
+            }
+        }
+
+        public var rawValue: Int {
+            switch self {
+            case .nominal: 0
+            case .isBeingConstructed: 1
+            case .deleted: 2
+            case .isBeingIngested: 3
+            case .needsIngest: 4
+            }
+        }
+
+        public var shouldDisplayLoading: Bool {
+            switch self {
+            case .isBeingConstructed, .isBeingIngested, .needsIngest: true
+            case .deleted, .nominal: false
+            }
+        }
+    }
+
     public let suggestedName: String?
     public let uuid: UUID
     public let createdAt: Date
@@ -26,7 +57,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     public var components: ContiguousArray<Component> {
         didSet {
-            needsReIngest = true // also sets needsSaving
+            status = .needsIngest // also sets needsSaving
         }
     }
 
@@ -36,13 +67,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    public var needsReIngest: Bool {
-        didSet {
-            flags.insert(.needsSaving)
-        }
-    }
-
-    public var needsDeletion: Bool {
+    public var status: Status = .needsIngest {
         didSet {
             flags.insert(.needsSaving)
         }
@@ -84,10 +109,6 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    public var shouldDisplayLoading: Bool {
-        flags.contains(.isBeingCreatedBySync) || loadingProgress != nil
-    }
-
     // Transient
     public struct Flags: OptionSet {
         public let rawValue: Int
@@ -97,14 +118,12 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
         public static let needsSaving = Flags(rawValue: 1 << 0)
         public static let needsUnlock = Flags(rawValue: 1 << 1)
-        public static let isBeingCreatedBySync = Flags(rawValue: 1 << 2)
+        // 2 is deprecated, no longer in use
         public static let selected = Flags(rawValue: 1 << 3)
         public static let editing = Flags(rawValue: 1 << 4)
     }
 
     public var flags: Flags
-
-    public var loadingProgress: Progress?
 
     private enum CodingKeys: String, CodingKey {
         case suggestedName
@@ -112,11 +131,10 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         case createdAt
         case updatedAt
         case uuid
-        case needsReIngest
+        case status
         case note
         case titleOverride
         case labels
-        case needsDeletion
         case lockPassword
         case lockHint
         case highlightColor
@@ -129,11 +147,10 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         try v.encode(updatedAt, forKey: .updatedAt)
         try v.encode(uuid, forKey: .uuid)
         try v.encode(components, forKey: .components)
-        try v.encode(needsReIngest, forKey: .needsReIngest)
+        try v.encode(status, forKey: .status)
         try v.encode(note, forKey: .note)
         try v.encode(titleOverride, forKey: .titleOverride)
         try v.encode(labels, forKey: .labels)
-        try v.encode(needsDeletion, forKey: .needsDeletion)
         try v.encode(highlightColor, forKey: .highlightColor)
         try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
         try v.encodeIfPresent(lockHint, forKey: .lockHint)
@@ -147,11 +164,10 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
         uuid = try v.decode(UUID.self, forKey: .uuid)
         components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
-        needsReIngest = try v.decodeIfPresent(Bool.self, forKey: .needsReIngest) ?? false
+        status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
         note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
         titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
         labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
-        needsDeletion = try v.decodeIfPresent(Bool.self, forKey: .needsDeletion) ?? false
         highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
         lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
         let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
@@ -167,8 +183,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         updatedAt = createdAt
         lockPassword = nil
         lockHint = nil
-        needsReIngest = true
-        needsDeletion = false
+        status = .needsIngest
         flags = .needsSaving
 
         highlightColor = item.highlightColor
@@ -208,14 +223,12 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         #else
             suggestedName = providers.compactMap(\.suggestedName).first
         #endif
-        needsReIngest = false // original ingest, not re-ingest, show "cancel"
-        needsDeletion = false
+        status = .needsIngest
         titleOverride = overrides?.title ?? ""
         note = overrides?.note ?? ""
         labels = overrides?.labels ?? []
         components = ContiguousArray<Component>()
         flags = .needsSaving
-        loadingProgress = Progress()
 
         Task {
             await newItemIngest(providers: providers, limitToType: limitToType)
@@ -227,11 +240,11 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     public var goodToSave: Bool {
-        !needsDeletion && !isTransferring
+        status != .deleted && !isTransferring
     }
 
     public var eligibleForExternalUpdateCheck: Bool {
-        !(needsDeletion || needsReIngest || flags.contains(.isBeingCreatedBySync) || loadingProgress != nil || shareMode == .elsewhereReadOnly)
+        status == .nominal && shareMode != .elsewhereReadOnly
     }
 
     public init(from record: CKRecord) {
@@ -255,14 +268,13 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             highlightColor = .none
         }
 
-        needsReIngest = true
-        needsDeletion = false
+        status = .isBeingConstructed
         components = []
 
         if lp == nil {
-            flags = [.isBeingCreatedBySync, .needsSaving]
+            flags = [.needsSaving]
         } else {
-            flags = [.isBeingCreatedBySync, .needsSaving, .needsUnlock]
+            flags = [.needsSaving, .needsUnlock]
         }
 
         cloudKitRecord = record
@@ -364,7 +376,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     public var isVisible: Bool {
-        !needsDeletion && lockPassword == nil && !needsReIngest
+        status == .nominal && lockPassword == nil
     }
 
     @MainActor
@@ -588,7 +600,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     #if !os(watchOS)
-        private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool) async {
+        private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool, loadingProgress: Progress) async {
             let finalTitle = displayText.0
             var transcribedText: String?
             let img = imageOfImageComponentIfExists
@@ -663,7 +675,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
                 let vr = visualRequests
                 let st = speechTask
-                loadingProgress?.cancellationHandler = {
+                loadingProgress.cancellationHandler = {
                     vr.forEach { $0.cancel() }
                     st?.cancel()
                 }
@@ -704,8 +716,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     @MainActor
     private func componentIngestDone() async {
-        loadingProgress = nil
-        needsReIngest = false
+        status = .nominal
         Task {
             // timing corner case
             await Task.yield()
@@ -716,7 +727,9 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     public func cancelIngest() {
-        loadingProgress?.cancel()
+        if case let .isBeingIngested(progress) = status {
+            progress?.cancel()
+        }
         components.forEach { $0.cancelIngest() }
         log("Item \(uuid.uuidString) ingest cancelled by user")
     }
@@ -727,8 +740,11 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     @MainActor
     public func reIngest() async {
-        guard loadingProgress == nil else {
+        switch status {
+        case .deleted, .isBeingIngested:
             return
+        case .isBeingConstructed, .needsIngest, .nominal:
+            break
         }
 
         Maintini.startMaintaining()
@@ -745,7 +761,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             flags.insert(.needsUnlock)
         }
         let p = Progress(totalUnitCount: Int64(loadCount))
-        loadingProgress = p
+        status = .isBeingIngested(p)
 
         if loadCount > 1, components.contains(where: { $0.order != 0 }) { // some type items have an order set, enforce it
             components.sort { $0.order < $1.order }
@@ -800,6 +816,9 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             }
         }
 
+        let loadingProgress = Progress()
+        status = .isBeingIngested(loadingProgress)
+
         var componentsThatFailed = [Component]()
 
         for provider in providers {
@@ -827,8 +846,8 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
                 let i = Component(typeIdentifier: finalType, parentUuid: uuid, order: order)
                 let p = Progress()
-                loadingProgress?.totalUnitCount += 2
-                loadingProgress?.addChild(p, withPendingUnitCount: 2)
+                loadingProgress.totalUnitCount += 2
+                loadingProgress.addChild(p, withPendingUnitCount: 2)
                 do {
                     try await i.startIngest(provider: finalProvider, encodeAnyUIImage: encodeUIImage, createWebArchive: createWebArchive, progress: p)
                 } catch {
@@ -872,7 +891,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             let ocrImage = PersistedOptions.autoGenerateTextFromImage
             let transcribeAudio = PersistedOptions.transcribeSpeechFromMedia
             if autoText || autoImage || ocrImage || transcribeAudio {
-                await processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio)
+                await processML(autoText: autoText, autoImage: autoImage, ocrImage: ocrImage, transcribeAudio: transcribeAudio, loadingProgress: loadingProgress)
             }
         #endif
     }
@@ -943,7 +962,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     public var populatedCloudKitRecord: CKRecord? {
-        guard needsCloudPush, !needsDeletion, goodToSave else { return nil }
+        guard needsCloudPush, status != .deleted, goodToSave else { return nil }
 
         let record = cloudKitRecord ??
             CKRecord(recordType: CloudManager.RecordType.item.rawValue,

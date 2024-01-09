@@ -490,7 +490,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                 if let newURL = URL(string: textField.stringValue) {
                     typeItem.replaceURL(newURL)
                     item.markUpdated()
-                    item.needsReIngest = true
+                    item.status = .needsIngest
                     saveItem()
                 } else {
                     Task { @MainActor in

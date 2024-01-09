@@ -137,7 +137,7 @@ final class ActionRequestViewController: UIViewController {
             }
         }
 
-        guard DropStore.doneIngesting else {
+        if DropStore.ingestingItems {
             return
         }
 

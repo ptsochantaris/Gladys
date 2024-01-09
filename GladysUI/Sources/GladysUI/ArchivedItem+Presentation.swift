@@ -136,7 +136,7 @@ public extension ArchivedItem {
             bottomText: bottomInfo,
             bottom: bottom,
             image: result,
-            highlightColor: shouldDisplayLoading ? .none : highlightColor,
+            highlightColor: status.shouldDisplayLoading ? .none : highlightColor,
             hasFullImage: displayMode.prefersFullSizeImage
         )
 

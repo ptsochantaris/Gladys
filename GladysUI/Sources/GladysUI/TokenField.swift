@@ -95,11 +95,7 @@ final class TokenField: VIEWCLASS {
     #endif
     private static let padding: CGFloat = 5
 
-    #if canImport(AppKit)
-        private static let heightInset: CGFloat = 2.5
-    #else
-        private static let heightInset: CGFloat = 2.5
-    #endif
+    private static let heightInset: CGFloat = 2.5
 
     override func draw(_: CGRect) {
         #if canImport(AppKit)

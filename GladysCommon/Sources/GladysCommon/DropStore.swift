@@ -46,7 +46,7 @@ public enum DropStore {
 
     public static func removeDeletableDrops() {
         let count = dropStore.count
-        dropStore.removeAll { $0.needsDeletion }
+        dropStore.removeAll { $0.status == .deleted }
         if count != dropStore.count {
             uuidindex = nil
         }
@@ -107,12 +107,25 @@ public enum DropStore {
         uuidindex = [:]
     }
 
-    public static var doneIngesting: Bool {
-        !dropStore.contains { ($0.needsReIngest && !$0.needsDeletion) || $0.loadingProgress != nil }
+    public static var ingestingItems: Bool {
+        dropStore.contains { $0.status == .isBeingIngested(nil) }
+    }
+
+    public static var processingItems: Bool {
+        dropStore.contains { $0.status.shouldDisplayLoading }
+    }
+
+    public static func syncDone() -> Bool {
+        var haveNewlyContrustedItems = false
+        for drop in dropStore where drop.status == .isBeingConstructed {
+            drop.status = .needsIngest
+            haveNewlyContrustedItems = true
+        }
+        return haveNewlyContrustedItems
     }
 
     public static var readyToIngest: some Sequence<ArchivedItem> {
-        dropStore.filter { $0.needsReIngest && !$0.needsDeletion && $0.loadingProgress == nil }
+        dropStore.filter { $0.status == .needsIngest }
     }
 
     public static var visibleDrops: ContiguousArray<ArchivedItem> {

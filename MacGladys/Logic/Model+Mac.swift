@@ -59,7 +59,7 @@ extension Model {
                       component.scanForBlobChanges()
                 else { return }
 
-                parent.needsReIngest = true
+                parent.status = .needsIngest
                 parent.markUpdated()
                 log("Detected a modified component blob, uuid \(potentialComponentUUID), will re-ingest parent")
                 await parent.reIngest()
@@ -71,7 +71,7 @@ extension Model {
         let changedDrops = DropStore.allDrops.filter { $0.scanForBlobChanges() }
         for item in changedDrops {
             log("Located item whose data has been externally changed: \(item.uuid.uuidString)")
-            item.needsReIngest = true
+            item.status = .needsIngest
             item.markUpdated()
             Task {
                 await item.reIngest()

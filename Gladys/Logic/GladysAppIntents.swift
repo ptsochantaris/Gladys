@@ -298,8 +298,8 @@ enum GladysAppIntents {
             hi.entity = entity
             hi.action = .highlight
             for _ in 0 ..< 20 {
-                let done = await DropStore.doneIngesting
-                if done { break }
+                let ongoing = await DropStore.ingestingItems
+                if !ongoing { break }
                 try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
             }
             return .result(value: entity, opensIntent: hi)

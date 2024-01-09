@@ -324,7 +324,7 @@ public enum Model {
 
         let index = CSSearchableIndex.default()
 
-        let itemsToDelete = Set(DropStore.allDrops.filter(\.needsDeletion))
+        let itemsToDelete = Set(DropStore.allDrops.filter { $0.status == .deleted })
         let removedUuids = itemsToDelete.map(\.uuid)
         if removedUuids.isPopulated {
             Maintini.startMaintaining()
@@ -352,7 +352,6 @@ public enum Model {
         }
 
         let uuidsToEncode = Set(itemsToWrite.map { i -> UUID in
-            i.flags.remove(.isBeingCreatedBySync)
             i.flags.remove(.needsSaving)
             return i.uuid
         })
@@ -377,7 +376,6 @@ public enum Model {
     }
 
     public static func commitItem(item: ArchivedItem) {
-        item.flags.remove(.isBeingCreatedBySync)
         item.flags.remove(.needsSaving)
 
         if brokenMode {
@@ -390,7 +388,7 @@ public enum Model {
             defer {
                 storageGatekeeper.returnTicket()
             }
-            if item.needsDeletion || brokenMode {
+            if brokenMode || item.status == .deleted {
                 return
             }
             let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
@@ -463,7 +461,7 @@ public enum Model {
     }
 
     private static func clearPartialDeletions() {
-        for item in DropStore.allDrops where !item.needsDeletion { // partial deletes
+        for item in DropStore.allDrops where item.status != .deleted {
             let componentsToDelete = item.components.filter(\.needsDeletion)
             if componentsToDelete.isPopulated {
                 item.components.removeAll { $0.needsDeletion }

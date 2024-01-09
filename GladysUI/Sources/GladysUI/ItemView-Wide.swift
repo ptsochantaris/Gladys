@@ -14,7 +14,7 @@ extension ItemView {
                         .background(.ultraThinMaterial)
                 }
 
-                if wrapper.shouldDisplayLoading {
+                if wrapper.status?.shouldDisplayLoading == true {
                     LoadingItem(wrapper: wrapper)
                         .foregroundColor(.accentColor)
 

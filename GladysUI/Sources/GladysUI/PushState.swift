@@ -35,7 +35,7 @@ final actor PushState {
             idsToPush.insert(itemId)
             idsToPush.formUnion(item.components.map(\.uuid.uuidString))
 
-            var payload = item.components.compactMap(\.populatedCloudKitRecord)
+            var payload = item.components.map(\.populatedCloudKitRecord)
             payload.append(itemRecord)
             return payload.uniqued
 

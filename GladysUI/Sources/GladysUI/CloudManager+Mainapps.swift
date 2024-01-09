@@ -602,7 +602,7 @@ public extension CloudManager {
         #else
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #endif
-        let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.compactMap(\.populatedCloudKitRecord)
+        let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.map(\.populatedCloudKitRecord)
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
         let modifyResults = try await container.privateCloudDatabase.modifyRecords(saving: recordsToSave, deleting: [], savePolicy: .allKeys)
         try check(modifyResults)
@@ -698,6 +698,10 @@ public extension CloudManager {
         syncing = true
 
         do {
+            while await DropStore.ingestingItems == true {
+                log("Waiting for ingest to complete before syncing up")
+                try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
+            }
             try await sendUpdatesUp()
             try await PullState().fetchDatabaseChanges(scope: scope)
             lastSyncCompletion = Date()

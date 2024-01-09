@@ -110,14 +110,6 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     }
 
     @MainActor
-    var isFirstImport: Bool {
-        guard let item else {
-            return false
-        }
-        return item.shouldDisplayLoading && !(item.needsReIngest || item.flags.contains(.isBeingCreatedBySync))
-    }
-
-    @MainActor
     @Published var presentationInfo = PresentationInfo()
 
     @MainActor
@@ -131,17 +123,13 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     }
 
     @MainActor
-    var loadingProgress: Progress? {
-        item?.loadingProgress
+    var status: ArchivedItem.Status? {
+        item?.status
     }
 
     @MainActor
     var dominantTypeDescription: String? {
         item?.dominantTypeDescription
-    }
-
-    @MainActor var shouldDisplayLoading: Bool {
-        item?.shouldDisplayLoading ?? false
     }
 
     @MainActor
@@ -176,8 +164,8 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
 
     @MainActor
     public var accessibilityText: String {
-        if shouldDisplayLoading {
-            if isFirstImport {
+        if let status, status.shouldDisplayLoading {
+            if status == .isBeingIngested(nil) {
                 return "Importing item. Activate to cancel."
             } else {
                 return "Processing item."

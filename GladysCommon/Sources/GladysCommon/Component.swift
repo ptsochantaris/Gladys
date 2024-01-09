@@ -1191,13 +1191,13 @@ public final class Component: Codable, Hashable {
 
         componentIcon =
             switch contentMode {
-        case .fit:
-            icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
-        case .fill:
-            icon.limited(to: Component.iconPointSize, useScreenScale: true)
-        case .center, .circle:
-            icon
-        }
+            case .fit:
+                icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+            case .fill:
+                icon.limited(to: Component.iconPointSize, useScreenScale: true)
+            case .center, .circle:
+                icon
+            }
 
         displayIconPriority = priority
         displayIconContentMode = contentMode
@@ -1352,7 +1352,7 @@ public final class Component: Codable, Hashable {
     @MainActor
     public func markComponentUpdated() {
         updatedAt = Date()
-        parent?.needsReIngest = true
+        parent?.status = .needsIngest
     }
 
     @MainActor
@@ -1361,7 +1361,7 @@ public final class Component: Codable, Hashable {
     }
 
     @MainActor
-    public var populatedCloudKitRecord: CKRecord? {
+    public var populatedCloudKitRecord: CKRecord {
         let record = cloudKitRecord
             ?? CKRecord(recordType: "ArchivedDropItemType",
                         recordID: CKRecord.ID(recordName: uuid.uuidString, zoneID: parentZone))

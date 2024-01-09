@@ -136,7 +136,6 @@ public enum LiteModel {
 
                 let encoder = saveEncoder
                 for item in items {
-                    item.flags.remove(.isBeingCreatedBySync)
                     item.flags.remove(.needsSaving)
                     let u = item.uuid
                     let t = u.uuid

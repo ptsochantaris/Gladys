@@ -18,7 +18,7 @@ final class ArchivedItemCell: CommonItemCell {
     }
 
     private func cancelSelected() {
-        if let archivedDropItem, archivedDropItem.shouldDisplayLoading {
+        if let archivedDropItem, archivedDropItem.status.shouldDisplayLoading {
             Model.delete(items: [archivedDropItem])
         }
     }

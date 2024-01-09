@@ -64,7 +64,9 @@ final actor PullState {
         await CloudManager.setSyncProgressString("Updating…")
         log("Changes fetch complete, processing")
 
-        let needsSave = updatedSequence
+        let haveNewlyContrustedItems = await DropStore.syncDone()
+
+        let needsSave = updatedSequence || haveNewlyContrustedItems
             || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
             || (updatedZoneTokens.isPopulated && updatedSequence)
 
@@ -148,7 +150,7 @@ final actor PullState {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
                     log("Item deletion: \(itemUUID)")
-                    item.needsDeletion = true
+                    item.status = .deleted
                     item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
                     item.cloudKitShareRecord = nil // get rid of useless file
                     deletionCount += 1

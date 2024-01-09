@@ -144,7 +144,7 @@ public final class ImportExport {
             try fm.copyAndReplaceItem(at: remotePath, to: item.folderUrl)
         }
 
-        item.needsReIngest = true
+        item.status = .needsIngest
         item.markUpdated()
         item.removeFromCloudkit()
 

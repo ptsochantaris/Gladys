@@ -76,7 +76,7 @@ final class Singleton {
         }
 
         notifications(for: .IngestComplete) { object in
-            if DropStore.doneIngesting {
+            if !DropStore.ingestingItems {
                 await Model.save()
             } else if let item = object as? ArchivedItem {
                 Model.commitItem(item: item)

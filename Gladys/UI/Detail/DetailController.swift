@@ -120,9 +120,11 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     }
 
     @objc private func dataUpdate(_ notification: Notification) {
-        if item == nil || item?.needsDeletion == true {
+        guard let item, item.status != .deleted else {
             done()
-        } else if let uuid = item?.uuid, let removedUUIDs = (notification.object as? [AnyHashable: Any])?["removed"] as? Set<UUID>, removedUUIDs.contains(uuid) {
+            return
+        }
+        if let removedUUIDs = (notification.object as? [AnyHashable: Any])?["removed"] as? Set<UUID>, removedUUIDs.contains(item.uuid) {
             done()
         } else {
             updateUI()
@@ -145,15 +147,16 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
 
         // second pass, ensure item is fresh
         item = DropStore.item(uuid: item.uuid)
-        if item == nil || item?.needsDeletion == true {
+        guard let item, item.status != .deleted else {
             done()
-        } else {
-            isReadWrite = item.shareMode != .elsewhereReadOnly
-            updateMenuButton()
-            view.setNeedsLayout()
-            table.reloadData()
-            sizeWindow()
+            return
         }
+
+        isReadWrite = item.shareMode != .elsewhereReadOnly
+        updateMenuButton()
+        view.setNeedsLayout()
+        table.reloadData()
+        sizeWindow()
     }
 
     var isReadWrite = false {
@@ -295,7 +298,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     }
 
     func numberOfSections(in _: UITableView) -> Int {
-        if item == nil || item?.needsDeletion == true {
+        guard let item, item.status != .deleted else {
             return 0
         }
         return item.components.isEmpty ? 2 : 3
@@ -524,7 +527,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         if await CloudManager.syncing {
             return true
         }
-        return item.needsReIngest || item.isTransferring
+        return item.status == .needsIngest || item.isTransferring
     }
 
     private func proceedAfterSync() async -> Bool {
@@ -586,7 +589,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         } completion: { [weak self] _ in
             guard let self else { return }
             item.renumberTypeItems()
-            item.needsReIngest = true
+            item.status = .needsIngest
             makeIndexAndSaveItem()
         }
     }
@@ -668,7 +671,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     }
 
     func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
-        if let d = destinationIndexPath, let s = session.localDragSession, isReadWrite, !item.shouldDisplayLoading {
+        if let d = destinationIndexPath, let s = session.localDragSession, isReadWrite, !item.status.shouldDisplayLoading {
             if d.section == 1, d.row < item.labels.count, s.canLoadObjects(ofClass: String.self) {
                 if let simpleString = s.items.first?.localObject as? String, item.labels.contains(simpleString) {
                     return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)

@@ -504,7 +504,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let item = item(for: indexPath) else {
             return false
         }
-        return !item.shouldDisplayLoading
+        return !item.status.shouldDisplayLoading
     }
 
     func collectionView(_: UICollectionView, didDeselectItemAt _: IndexPath) {
@@ -749,7 +749,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 }
             }
 
-            if DropStore.doneIngesting {
+            if !DropStore.processingItems {
                 UIAccessibility.post(notification: .screenChanged, argument: nil)
             }
         }
@@ -1985,7 +1985,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             if let cell = collection.cellForItem(at: ip) as? ArchivedItemCell {
                 cell.flash()
-                if let item = cell.archivedDropItem, !item.shouldDisplayLoading {
+                if let item = cell.archivedDropItem, !item.status.shouldDisplayLoading {
                     switch request.extraAction {
                     case .none:
                         break
@@ -2100,7 +2100,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         if let item = item(for: indexPath) {
-            return !item.shouldDisplayLoading
+            return !item.status.shouldDisplayLoading
         }
         return false
     }

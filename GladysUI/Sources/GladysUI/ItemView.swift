@@ -13,7 +13,7 @@ public struct ItemView: View {
         @ObservedObject var wrapper: ArchivedItemWrapper
 
         var body: some View {
-            if wrapper.isFirstImport, let progress = wrapper.loadingProgress?.fractionCompleted {
+            if case let .isBeingIngested(loadingProgress) = wrapper.status, let progress = loadingProgress?.fractionCompleted {
                 VStack(spacing: 20) {
                     ProgressView(value: progress)
                         .progressViewStyle(LinearProgressViewStyle())
@@ -174,7 +174,7 @@ public struct ItemView: View {
         .shadow(color: shadowColor, radius: shadowRadius)
         .overlay {
             let highlight = wrapper.presentationInfo.highlightColor
-            if highlight != .none, !wrapper.shouldDisplayLoading {
+            if highlight != .none, let status = wrapper.status, !status.shouldDisplayLoading {
                 ZStack {
                     RoundedRectangle(cornerSize: CGSize(width: cellCornerRadius, height: cellCornerRadius), style: .continuous)
                         .stroke(Color(highlight.bgColor), lineWidth: 5)

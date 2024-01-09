@@ -284,7 +284,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
 
         notifications(for: .IngestComplete) { object in
-            if DropStore.doneIngesting {
+            if !DropStore.ingestingItems {
                 Task {
                     await Model.save()
                 }

@@ -17,11 +17,11 @@ public extension ArchivedItem {
 
     @MainActor
     func delete() {
-        if shouldDisplayLoading {
+        if status.shouldDisplayLoading {
             cancelIngest()
         }
 
-        needsDeletion = true
+        status = .deleted
         if isImportedShare, let cloudKitShareRecord {
             Task { @CloudActor in
                 CloudManager.markAsDeleted(recordName: cloudKitShareRecord.recordID.recordName, cloudKitRecord: cloudKitShareRecord)
