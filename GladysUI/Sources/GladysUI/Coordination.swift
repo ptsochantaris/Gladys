@@ -20,7 +20,7 @@ import Foundation
 
             func presentedItemDidChange() {
                 Task {
-                    if !(await DropStore.ingestingItems) {
+                    if await !(DropStore.ingestingItems) {
                         try! await Model.reloadDataIfNeeded()
                     }
                 }
