@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "8b6cf29eead8841a1fa7822481cb3af4ddaadba6",
-        "version" : "2.6.1"
+        "revision" : "f83c097597094a04124eb6e0d1e894d24129af87",
+        "version" : "2.7.0"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
         "branch" : "development",
-        "revision" : "e6464a023ffa9d9aaaad80be2159d2755107b651"
+        "revision" : "cbd9900dd1816849cb677fcbdb00b8b28781e1de"
       }
     }
   ],
