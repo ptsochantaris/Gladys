@@ -5,7 +5,8 @@ import PackageDescription
 let package = Package(
     name: "GladysUIKit",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
+        .visionOS(.v1)
     ],
     products: [
         .library(

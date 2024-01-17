@@ -6,7 +6,8 @@ let package = Package(
     name: "GladysUI",
     platforms: [
         .macOS(.v12),
-        .iOS(.v15)
+        .iOS(.v15),
+        .visionOS(.v1)
     ],
     products: [
         .library(
