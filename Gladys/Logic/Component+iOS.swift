@@ -133,21 +133,26 @@ final class GladysPreviewController: GladysViewController, QLPreviewControllerDa
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        #if os(iOS)
         guard let currentWindowSize = currentWindow?.bounds.size else { return }
         popoverPresentationController?.presentedViewController.preferredContentSize = CGSize(width: min(768, currentWindowSize.width), height: currentWindowSize.height)
+        #endif
     }
-
-    private lazy var qlNav: UINavigationController = {
-        let ql = QLPreviewController()
-        ql.dataSource = self
-        ql.delegate = self
-        return NavBarHiderNavigationController(rootViewController: ql)
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let ql = QLPreviewController()
+        ql.dataSource = self
+        ql.delegate = self
+        #if os(visionOS)
+        view.backgroundColor = .clear
+        ql.view.backgroundColor = .clear
+        addChildController(ql, to: view)
+        #else
+        let qlNav = NavBarHiderNavigationController(rootViewController: ql)
         addChildController(qlNav, to: view)
+        #endif
 
         userActivity = NSUserActivity(activityType: kGladysQuicklookActivity)
         userActivity?.needsSave = true
