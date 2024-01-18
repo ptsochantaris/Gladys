@@ -20,7 +20,6 @@ final actor PullState {
         case setZoneToken(zoneToken: CKServerChangeToken?, zoneId: CKRecordZone.ID)
     }
 
-    private var updatedSequence = false
     private var newDropCount = 0 { didSet { updateProgress() } }
     private var newTypeItemCount = 0 { didSet { updateProgress() } }
 
@@ -66,14 +65,10 @@ final actor PullState {
 
         let haveNewlyContrustedItems = await DropStore.syncDone()
 
-        let needsSave = updatedSequence || haveNewlyContrustedItems
-            || (typeUpdateCount + newDropCount + updateCount + deletionCount + newTypesAppended > 0)
-            || (updatedZoneTokens.isPopulated && updatedSequence)
+        let needsSave = haveNewlyContrustedItems || updatedZoneTokens.isPopulated
 
         if needsSave {
-            if updatedSequence || newDropCount > 0 {
-                await Model.sortDrops()
-            }
+            await Model.sortDrops()
             await Model.save(dueToSyncFetch: true)
 
         } else {
@@ -463,7 +458,6 @@ final actor PullState {
                     CloudManager.uuidSequence = newList
                     CloudManager.uuidSequenceRecord = record
                 }
-                updatedSequence = true
             } else if change == .tagOnly {
                 log("Received non-updated position list record, updated tag")
                 Task { @CloudActor in

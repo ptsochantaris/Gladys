@@ -96,27 +96,27 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
         let name = toggle.function.displayText
         switch state {
         case .none:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem) {
                     item.labels.append(name)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         case .some:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0), !item.labels.contains(name) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem), !item.labels.contains(name) {
                     item.labels.append(name)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         case .all:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0), let i = item.labels.firstIndex(of: name) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem), let i = item.labels.firstIndex(of: name) {
                     item.labels.remove(at: i)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         }

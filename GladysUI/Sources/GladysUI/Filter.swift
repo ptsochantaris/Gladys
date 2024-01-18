@@ -523,11 +523,11 @@ public final class Filter {
         var noLabelCount = 0
         var recentlyAddedCount = 0
         for item in dropSource {
-            item.labels.forEach {
-                if let c = counts[$0] {
-                    counts[$0] = c + 1
+            for label in item.labels {
+                if let c = counts[label] {
+                    counts[label] = c + 1
                 } else {
-                    counts[$0] = 1
+                    counts[label] = 1
                 }
             }
             if item.labels.isEmpty {
@@ -584,7 +584,7 @@ public final class Filter {
     public func renameLabel(_ oldName: String, to newName: String) {
         let wasEnabled = labelToggles.first { $0.function == .userLabel(oldName) }?.active ?? false
 
-        dropSource.forEach { i in
+        for i in dropSource {
             if let oldIndex = i.labels.firstIndex(of: oldName) {
                 if i.labels.contains(newName) {
                     i.labels.remove(at: oldIndex)

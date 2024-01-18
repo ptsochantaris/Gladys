@@ -334,8 +334,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         updateMenubarIconMode(showing: false, forceUpdateMenu: false)
         Model.trimTemporaryDirectory()
         if PersistedOptions.autoShowWhenDragging || PersistedOptions.autoShowFromEdge > 0 {
-            WindowController.visibleItemWindows.forEach {
-                $0.gladysController?.hideWindowBecauseOfMouse(window: $0)
+            for visibleItemWindow in WindowController.visibleItemWindows {
+                visibleItemWindow.gladysController?.hideWindowBecauseOfMouse(window: visibleItemWindow)
             }
         }
     }
@@ -374,8 +374,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         if windows.isEmpty {
             newWindowSelected(nil)
         } else {
-            windows.forEach {
-                $0.gladysController?.showWindow(window: $0)
+            for item in windows {
+                item.gladysController?.showWindow(window: item)
             }
         }
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)

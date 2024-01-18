@@ -342,11 +342,10 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
         height.constant = min(400, UIScreen.main.bounds.height * 0.5)
 
-        let config: UIImage.SymbolConfiguration
-        if traitCollection.horizontalSizeClass == .regular {
-            config = UIImage.SymbolConfiguration(pointSize: 23, weight: .light, scale: .default)
+        let config = if traitCollection.horizontalSizeClass == .regular {
+            UIImage.SymbolConfiguration(pointSize: 23, weight: .light, scale: .default)
         } else {
-            config = UIImage.SymbolConfiguration(pointSize: 19, weight: .light, scale: .default)
+            UIImage.SymbolConfiguration(pointSize: 19, weight: .light, scale: .default)
         }
 
         for b in [labelsButton, dismissButton, spaceButton, backspaceButton, enterButton, nextKeyboardButton] {

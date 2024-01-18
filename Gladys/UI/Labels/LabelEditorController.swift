@@ -91,27 +91,27 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         let state = toggle.toggleState(across: selectedItems)
         switch state {
         case .none:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem) {
                     item.labels.append(toggle.function.displayText)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         case .some:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0), !item.labels.contains(toggle.function.displayText) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem), !item.labels.contains(toggle.function.displayText) {
                     item.labels.append(toggle.function.displayText)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         case .all:
-            selectedItems.forEach {
-                if let item = DropStore.item(uuid: $0), let i = item.labels.firstIndex(of: toggle.function.displayText) {
+            for selectedItem in selectedItems {
+                if let item = DropStore.item(uuid: selectedItem), let i = item.labels.firstIndex(of: toggle.function.displayText) {
                     item.labels.remove(at: i)
                     item.postModified()
-                    editedUUIDs.insert($0)
+                    editedUUIDs.insert(selectedItem)
                 }
             }
         }
@@ -227,11 +227,11 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
     }
 
     func newNoteSaved(note: String) {
-        selectedItems.forEach {
-            if let item = DropStore.item(uuid: $0) {
+        for selectedItem in selectedItems {
+            if let item = DropStore.item(uuid: selectedItem) {
                 item.note = note
                 item.postModified()
-                editedUUIDs.insert($0)
+                editedUUIDs.insert(selectedItem)
             }
         }
     }

@@ -4,6 +4,7 @@ import SwiftUI
 
 #if canImport(AppKit)
     import AppKit
+
     public typealias IMAGE = NSImage
     public typealias COLOR = NSColor
     public typealias VIEWCLASS = NSView
@@ -12,6 +13,7 @@ import SwiftUI
     public let groupName = "X727JSJUGJ.build.bru.MacGladys"
 #elseif canImport(UIKit)
     import UIKit
+
     public typealias IMAGE = UIImage
     public typealias COLOR = UIColor
     #if !os(watchOS)

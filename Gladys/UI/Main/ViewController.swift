@@ -1768,7 +1768,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         let key = width + (wideMode ? 1 : 0) + (forceTwoColumn ? 1 : 0)
         if lastLayoutProcessed == key {
-            log("setupLayout not needed")
+            // log("setupLayout not needed")
             return
         }
 

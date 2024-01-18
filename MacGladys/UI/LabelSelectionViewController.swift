@@ -4,7 +4,7 @@ import GladysUI
 
 final class LabelSelectionViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate {
     private var presentingGladysVc: ViewController {
-        self.presentingViewController as! ViewController
+        presentingViewController as! ViewController
     }
 
     override func viewDidLoad() {

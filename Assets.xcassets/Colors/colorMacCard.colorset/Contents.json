@@ -34,18 +34,6 @@
       "color" : {
         "color-space" : "srgb",
         "components" : {
-          "alpha" : "0.040",
-          "blue" : "1.000",
-          "green" : "1.000",
-          "red" : "1.000"
-        }
-      },
-      "idiom" : "reality"
-    },
-    {
-      "color" : {
-        "color-space" : "srgb",
-        "components" : {
           "alpha" : "1.000",
           "blue" : "1.000",
           "green" : "1.000",
@@ -71,6 +59,18 @@
         }
       },
       "idiom" : "mac"
+    },
+    {
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "0.040",
+          "blue" : "1.000",
+          "green" : "1.000",
+          "red" : "1.000"
+        }
+      },
+      "idiom" : "vision"
     }
   ],
   "info" : {

@@ -151,8 +151,8 @@ extension Model {
         if archivedItems.isEmpty {
             return .noData
         }
-        allFilters.forEach {
-            $0.update(signalUpdate: .animated)
+        for filter in allFilters {
+            filter.update(signalUpdate: .animated)
         }
         return .success(archivedItems)
     }
