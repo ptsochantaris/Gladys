@@ -16,7 +16,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/phimage/CallbackURLKit", from: "3.0.0"),
+        .package(url: "https://github.com/ptsochantaris/CallbackURLKit-VisionOS-Fork", from: "3.0.0"),
         .package(path: "../GladysCommon")
     ],
     targets: [
