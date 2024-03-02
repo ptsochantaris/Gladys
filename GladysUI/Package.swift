@@ -22,8 +22,8 @@ let package = Package(
     targets: [
         .target(
             name: "GladysUI",
-            dependencies: ["GladysCommon", 
-                .product(name: "CallbackURLKit", package: "CallbackURLKit-VisionOS-Fork")]
+            dependencies: ["GladysCommon",
+                           .product(name: "CallbackURLKit", package: "CallbackURLKit-VisionOS-Fork")]
         )
     ]
 )
