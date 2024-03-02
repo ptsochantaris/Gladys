@@ -1184,7 +1184,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
 					161718C32094D333005ABD6C = {
@@ -1455,7 +1455,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftformat >/dev/null; then\n  swiftformat . --swiftversion 5.6\nfi\n";
+			shellScript = "if which swiftformat >/dev/null; then\n  swiftformat . --swiftversion 5.9\nfi\n";
 		};
 		16CFDC4B23E5CD9A00FA4F00 /* Lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2409,6 +2409,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2441,6 +2442,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";

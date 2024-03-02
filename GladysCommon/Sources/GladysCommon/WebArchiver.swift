@@ -201,7 +201,7 @@ public final actor WebArchiver {
             }
         }
 
-        let thumbnailUrl = try repair(path: getThumbnailPath(from: htmlDoc), using: url)
+        let thumbnailUrl = try repair(path: getThumbnailPath(from: htmlDoc, in: url), using: url)
         guard let thumbnailUrl, let iconUrl = URL(string: thumbnailUrl) else {
             return try await fetchFavIcon()
         }
@@ -215,7 +215,7 @@ public final actor WebArchiver {
         }
     }
 
-    private func getThumbnailPath(from htmlDoc: SwiftSoup.Document) throws -> String? {
+    private func getThumbnailPath(from htmlDoc: SwiftSoup.Document, in url: URL) throws -> String? {
         if let metaTags = try htmlDoc.head()?.select("meta[property=\"og:image\"]") {
             for node in metaTags {
                 let content = try node.attr("content")
@@ -232,6 +232,17 @@ public final actor WebArchiver {
                 if content.isPopulated {
                     log("Found thumbnail image: \(content)")
                     return content
+                }
+            }
+        }
+
+        if let host = url.host, host.contains("youtube.co") || host.contains("youtu.be") {
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            for arg in components?.queryItems ?? [] {
+                if arg.name == "v", let youTubeId = arg.value {
+                    let thumbnailURL = "https://i.ytimg.com/vi/\(youTubeId)/maxresdefault.jpg"
+                    log("Trying YouTube thumbnail image: \(thumbnailURL)")
+                    return thumbnailURL
                 }
             }
         }

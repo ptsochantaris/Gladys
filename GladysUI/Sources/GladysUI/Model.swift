@@ -7,6 +7,10 @@ import PopTimer
 import Semalot
 import UniformTypeIdentifiers
 
+extension UnsafeMutableBufferPointer: @unchecked Sendable {}
+extension UnsafeBufferPointer<uuid_t>: @unchecked Sendable {}
+extension ThrowingTaskGroup: @unchecked Sendable {}
+
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
@@ -24,7 +28,7 @@ public enum Model {
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
 
-    private static let storageGatekeeper = Semalot(tickets: 1)
+    private nonisolated static let storageGatekeeper = Semalot(tickets: 1)
 
     static func reset() {
         DropStore.reset()

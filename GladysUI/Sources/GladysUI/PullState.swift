@@ -359,7 +359,7 @@ final actor PullState {
                     }
                 }
 
-                return try await group.contains { $0 == true }
+                return try await group.contains(true)
             }
 
             try? await CloudManager.fetchMissingShareRecords()
