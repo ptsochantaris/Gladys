@@ -94,7 +94,10 @@ public final class ImportExport {
 
         p.completedUnitCount += 1
 
-        let archive = try Archive(url: tempPath, accessMode: .create)
+        guard let archive = try Archive(url: tempPath, accessMode: .create) else {
+            throw GladysError.creatingArchiveFailed
+        }
+
         for item in dropsCopy {
             let dir = item.displayTitleOrUuid.filenameSafe
 

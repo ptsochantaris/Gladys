@@ -17,6 +17,7 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
+		1610F9042B9399D7001B55F6 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1610F9032B9399D7001B55F6 /* GladysUIKit */; };
 		1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1616BE002454B3BD001C3BD4 /* CreditsViewController.swift */; };
 		161718C72094D333005ABD6C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C62094D333005ABD6C /* AppDelegate.swift */; };
 		161718C92094D333005ABD6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161718C82094D333005ABD6C /* ViewController.swift */; };
@@ -84,7 +85,6 @@
 		167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167ABECA1F77D3C30075E0E8 /* NoteCell.swift */; };
 		1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686E7EF233D0D9C0012BA63 /* TouchBar.swift */; };
 		1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1687145D209F322900FB9B85 /* GladysFilePromiseProvider.swift */; };
-		168810F72AB0E8C400988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810F62AB0E8C400988232 /* GladysUIKit */; };
 		168810FB2AB0E91300988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FA2AB0E91300988232 /* GladysUIKit */; };
 		168810FD2AB0E91B00988232 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FC2AB0E91B00988232 /* GladysUIKit */; };
 		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
@@ -546,7 +546,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
-				168810F72AB0E8C400988232 /* GladysUIKit in Frameworks */,
+				1610F9042B9399D7001B55F6 /* GladysUIKit in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1090,7 +1090,7 @@
 			);
 			name = Gladys;
 			packageProductDependencies = (
-				168810F62AB0E8C400988232 /* GladysUIKit */,
+				1610F9032B9399D7001B55F6 /* GladysUIKit */,
 			);
 			productName = Gladys;
 			productReference = 1678F9CD1EF475FE005697CB /* Gladys.app */;
@@ -2076,6 +2076,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Debug;
 		};
@@ -2221,6 +2222,7 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Release;
 		};
@@ -2571,7 +2573,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		168810F62AB0E8C400988232 /* GladysUIKit */ = {
+		1610F9032B9399D7001B55F6 /* GladysUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysUIKit;
 		};

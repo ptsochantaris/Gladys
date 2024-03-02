@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "GladysUI",
     platforms: [
-        .macOS(.v12),
-        .iOS(.v15),
+        .macOS(.v13),
+        .iOS(.v16),
         .visionOS(.v1)
     ],
     products: [
@@ -16,14 +16,14 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/ptsochantaris/CallbackURLKit-VisionOS-Fork", from: "3.0.0"),
+        .package(url: "https://github.com/ptsochantaris/CallbackURLKit-VisionOS-Fork", branch: "master"),
         .package(path: "../GladysCommon")
     ],
     targets: [
         .target(
             name: "GladysUI",
-            dependencies: ["GladysCommon",
-                           "CallbackURLKit"]
+            dependencies: ["GladysCommon", 
+                .product(name: "CallbackURLKit", package: "CallbackURLKit-VisionOS-Fork")]
         )
     ]
 )

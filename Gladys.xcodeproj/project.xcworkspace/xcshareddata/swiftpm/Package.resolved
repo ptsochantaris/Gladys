@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "callbackurlkit",
+      "identity" : "callbackurlkit-visionos-fork",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/phimage/CallbackURLKit",
+      "location" : "https://github.com/ptsochantaris/CallbackURLKit-VisionOS-Fork",
       "state" : {
-        "revision" : "5411bfc17cd0787ac80c46f312c7235783ff9421",
-        "version" : "3.0.0"
+        "branch" : "master",
+        "revision" : "60b306cbe733b8d5d870f6945ea699d579419286"
       }
     },
     {

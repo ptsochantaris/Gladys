@@ -21,6 +21,7 @@ public enum GladysError: LocalizedError {
     case syncFailure(CKError)
     case modelLoadingError(NSError)
     case modelCoordinationError(NSError)
+    case creatingArchiveFailed
 
     public var suggestSettings: Bool {
         switch self {
@@ -71,6 +72,8 @@ public enum GladysError: LocalizedError {
             "There was a network problem downloading this data"
         case .noData:
             "Data for this item could not be loaded"
+        case .creatingArchiveFailed:
+            "Creating the archive failed"
         }
     }
 }

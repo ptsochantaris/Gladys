@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "callbackurlkit",
+      "identity" : "callbackurlkit-visionos-fork",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/phimage/CallbackURLKit",
+      "location" : "https://github.com/ptsochantaris/CallbackURLKit-VisionOS-Fork",
       "state" : {
-        "revision" : "5411bfc17cd0787ac80c46f312c7235783ff9421",
-        "version" : "3.0.0"
+        "branch" : "master",
+        "revision" : "60b306cbe733b8d5d870f6945ea699d579419286"
       }
     },
     {
@@ -16,15 +16,6 @@
       "state" : {
         "revision" : "a7acaf40f8bd67a1f3a05a14de5b6a861ac3d1ac",
         "version" : "2.0.1"
-      }
-    },
-    {
-      "identity" : "fuzi",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/cezheng/Fuzi",
-      "state" : {
-        "revision" : "f08c8323da21e985f3772610753bcfc652c2103f",
-        "version" : "3.1.3"
       }
     },
     {
@@ -64,30 +55,12 @@
       }
     },
     {
-      "identity" : "swift-async-algorithms",
+      "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-async-algorithms",
+      "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "9cfed92b026c524674ed869a4ff2dcfdeedf8a2a",
-        "version" : "0.1.0"
-      }
-    },
-    {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections.git",
-      "state" : {
-        "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
-        "version" : "1.0.4"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
-      "state" : {
-        "revision" : "7bb5231dad28c6dceabf7a439867f39d2c105e4f",
-        "version" : "509.0.0-swift-DEVELOPMENT-SNAPSHOT-2023-09-05-a"
+        "revision" : "1d39e56d364cba79ce43b341f9661b534cccb18d",
+        "version" : "2.7.1"
       }
     },
     {
