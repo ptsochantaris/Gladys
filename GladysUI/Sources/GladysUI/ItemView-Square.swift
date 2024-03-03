@@ -11,8 +11,8 @@ extension ItemView {
                 Color(PresentationInfo.defaultCardColor)
 
                 if wrapper.locked || wrapper.displayMode == .center {
-                    Spacer()
-                        .background(.ultraThinMaterial)
+                    Rectangle()
+                        .foregroundStyle(.ultraThinMaterial)
                 }
 
                 if wrapper.status?.shouldDisplayLoading ?? true {
@@ -116,12 +116,11 @@ extension ItemView {
                 } else {
                     (atTop ? info.top.isBright : info.bottom.isBright) ? .black : .white
                 }
-                let shadowColor = fadeColor
                 Text(contentText)
                     .foregroundColor(fgColor)
                     .multilineTextAlignment(.center)
                     .lineLimit(lineLimit)
-                    .shadow(color: shadowColor, radius: 3, x: 0, y: 0)
+                    .shadow(color: fadeColor, radius: 3, x: 0, y: 0)
             }
         }
 
@@ -143,15 +142,12 @@ extension ItemView {
             let shareView = createShareView()
 
             if textView != nil || shareView != nil || labels != nil {
-                let paddingSize = ArchivedItemWrapper.labelPadding(compact: cellSize.isCompact)
-                let spacing = wrapper.labelSpacing
-
-                VStack(alignment: .center, spacing: spacing) {
+                VStack(alignment: .center, spacing: wrapper.labelSpacing) {
                     labels
                     textView
                     shareView
                 }
-                .padding(paddingSize)
+                .padding(ArchivedItemWrapper.labelPadding(compact: cellSize.isCompact))
                 .frame(maxWidth: .infinity)
                 .background {
                     if wrapper.style == .widget {

@@ -10,8 +10,8 @@ extension ItemView {
                 Color(PresentationInfo.defaultCardColor)
 
                 if wrapper.locked || wrapper.displayMode == .center {
-                    Spacer()
-                        .background(.ultraThinMaterial)
+                    Rectangle()
+                        .foregroundStyle(.ultraThinMaterial)
                 }
 
                 if wrapper.status?.shouldDisplayLoading == true {

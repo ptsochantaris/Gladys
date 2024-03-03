@@ -146,6 +146,7 @@
 		16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */; };
 		16CE3EA124DF6ADA009EC017 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16CE3EA224DF6B3B009EC017 /* Component+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB91FB10A58007B2F77 /* Component+Copy.swift */; };
+		16CF3E9D2B93F091004B2C39 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CF3E9C2B93F091004B2C39 /* AppIntents.framework */; };
 		16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */; };
 		16D2C7161EF5A829009B97F9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16D2C7141EF5A744009B97F9 /* Main.storyboard */; };
 		16D3CC0626343B0D00BCC5B4 /* NSPasteboard+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D3CC0526343B0D00BCC5B4 /* NSPasteboard+Extensions.swift */; };
@@ -471,6 +472,7 @@
 		16CAB03A1F9FD26D00A9F736 /* ICloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudController.swift; sourceTree = "<group>"; };
 		16CAB03C1F9FD49100A9F736 /* IOSSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSSettingsController.swift; sourceTree = "<group>"; };
 		16CE3EA024DF4E6B009EC017 /* Gladys Keys.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gladys Keys.entitlements"; sourceTree = "<group>"; };
+		16CF3E9C2B93F091004B2C39 /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS17.4.sdk/System/Library/Frameworks/AppIntents.framework; sourceTree = DEVELOPER_DIR; };
 		16D2C7121EF5A6E6009B97F9 /* ArchivedItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemCell.swift; sourceTree = "<group>"; };
 		16D2C7151EF5A744009B97F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		16D3CC0526343B0D00BCC5B4 /* NSPasteboard+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPasteboard+Extensions.swift"; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 			files = (
 				16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */,
 				1610F9042B9399D7001B55F6 /* GladysUIKit in Frameworks */,
+				16CF3E9D2B93F091004B2C39 /* AppIntents.framework in Frameworks */,
 				1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -927,6 +930,7 @@
 		16FAC6761EF988D6009BCB35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				16CF3E9C2B93F091004B2C39 /* AppIntents.framework */,
 				16114866209FA5A0008BB332 /* libcrypto.a */,
 				1675740E1F12C2D100385079 /* libcrypto.a */,
 				16114864209FA58D008BB332 /* libssl.a */,
