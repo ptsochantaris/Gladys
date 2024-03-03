@@ -321,41 +321,42 @@ enum GladysAppIntents {
     }
 
     struct GladysShortcuts: AppShortcutsProvider {
-        static var appShortcuts: [AppShortcut] {
+        // Not using builder because it makes visionOS 1.0.3 crash
+        static var appShortcuts = [
             AppShortcut(intent: CopyItem(),
                         phrases: ["Copy \(.applicationName) item to clipboard"],
                         shortTitle: "Copy to clipboard",
-                        systemImageName: "doc.on.doc")
+                        systemImageName: "doc.on.doc"),
 
             AppShortcut(intent: PasteIntoGladys(),
                         phrases: ["Paste clipboard into \(.applicationName)"],
                         shortTitle: "Paste from clipboard",
-                        systemImageName: "arrow.down.doc")
+                        systemImageName: "arrow.down.doc"),
 
             AppShortcut(intent: OpenGladys(),
                         phrases: ["Select \(.applicationName) item"],
                         shortTitle: "Select item",
-                        systemImageName: "square.grid.3x3.topleft.filled")
+                        systemImageName: "square.grid.3x3.topleft.filled"),
 
             AppShortcut(intent: CreateItemFromText(),
                         phrases: ["Create \(.applicationName) item from text"],
                         shortTitle: "Create from text",
-                        systemImageName: "doc.text")
+                        systemImageName: "doc.text"),
 
             AppShortcut(intent: CreateItemFromText(),
                         phrases: ["Create \(.applicationName) item from link"],
                         shortTitle: "Create from link",
-                        systemImageName: "link")
+                        systemImageName: "link"),
 
             AppShortcut(intent: CreateItemFromFile(),
                         phrases: ["Create \(.applicationName) item from file"],
                         shortTitle: "Create from file",
-                        systemImageName: "doc")
+                        systemImageName: "doc"),
 
             AppShortcut(intent: DeleteItem(),
                         phrases: ["Delete \(.applicationName) item"],
                         shortTitle: "Delete item",
                         systemImageName: "xmark.bin")
-        }
+        ]
     }
 }
