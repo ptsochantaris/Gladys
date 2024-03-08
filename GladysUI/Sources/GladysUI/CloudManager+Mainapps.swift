@@ -614,12 +614,7 @@ public extension CloudManager {
             throw GladysError.acceptRequiresSyncEnabled
         }
 
-        let recordId: String?
-        #if os(visionOS)
-            recordId = metadata.hierarchicalRootRecordID?.recordName
-        #else
-            recordId = metadata.rootRecordID.recordName
-        #endif
+        let recordId = metadata.hierarchicalRootRecordID?.recordName
         if let recordId, let existingItem = await DropStore.item(uuid: recordId) {
             HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
             return
