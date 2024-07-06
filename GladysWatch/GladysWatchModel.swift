@@ -1,11 +1,12 @@
 import GladysCommon
 import WatchConnectivity
 
-final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
-    @Published var reportedCount = 0
-    @Published var dropList = [Drop]()
+@MainActor
+@Observable
+final class GladysWatchModel: NSObject, WCSessionDelegate {
+    var reportedCount = 0
+    var dropList = [Drop]()
 
-    @MainActor
     static let shared = GladysWatchModel()
 
     enum State {

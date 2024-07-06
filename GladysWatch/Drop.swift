@@ -44,12 +44,14 @@ enum ImageCache {
     }
 }
 
-final class Drop: Identifiable, ObservableObject {
+@MainActor
+@Observable
+final class Drop: Identifiable {
     let id: String
     let title: String
     let imageDate: Date
 
-    enum ImageState {
+    enum ImageState: Sendable {
         case none, loading, empty, loaded(image: UIImage)
     }
 
@@ -57,8 +59,8 @@ final class Drop: Identifiable, ObservableObject {
         case noText, text, menu(over: UIState), action(label: String)
     }
 
-    @Published var imageState = ImageState.none
-    @Published var uiState = UIState.text
+    var imageState = ImageState.none
+    var uiState = UIState.text
 
     init?(json: [String: Any]) {
         guard let id = json["u"] as? String,

@@ -4,7 +4,8 @@ import GladysCommon
 import SwiftUI
 
 @MainActor
-public final class ArchivedItemWrapper: ObservableObject, Identifiable {
+@Observable
+public final class ArchivedItemWrapper: Identifiable {
     private let emptyId = UUID()
 
     nonisolated public var id: UUID {
@@ -67,7 +68,6 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         #endif
     }
 
-    @MainActor
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else {
             clear()
@@ -87,14 +87,13 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         updatePresentationInfo(for: newItem, alwaysStartFresh: false)
 
         observer = newItem
-            .objectWillChange
-            .receive(on: DispatchQueue.main)
+            .itemUpdates
             .sink { [weak self] _ in
                 self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
             }
     }
 
-    @MainActor private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
+    private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
         if alwaysStartFresh, let p = newItem.presentationGenerator {
             p.cancel()
         }
@@ -107,65 +106,52 @@ public final class ArchivedItemWrapper: ObservableObject, Identifiable {
         }
     }
 
-    @MainActor
     var shouldShowShadow: Bool {
         style.allowsShadows && presentationInfo.highlightColor == .none
     }
 
-    @MainActor
-    @Published var presentationInfo = PresentationInfo()
+    var presentationInfo = PresentationInfo()
 
-    @MainActor
     func delete() {
         item?.delete()
     }
 
-    @MainActor
     var labels: [String] {
         item?.labels ?? []
     }
 
-    @MainActor
     var status: ArchivedItem.Status? {
         item?.status
     }
 
-    @MainActor
     var dominantTypeDescription: String? {
         item?.dominantTypeDescription
     }
 
-    @MainActor
     var shareOwnerDescription: String? {
         item?.cloudKitShareRecord?.owner.userIdentity.description
     }
 
-    @MainActor
     var isShareWithOnlyOwner: Bool {
         item?.isShareWithOnlyOwner ?? false
     }
 
-    @MainActor
     var flags: ArchivedItem.Flags {
         item?.flags ?? []
     }
 
-    @MainActor
     var displayMode: ArchivedDropItemDisplayType {
         item?.displayMode ?? .fill
     }
 
-    @MainActor
     var shareMode: ArchivedItem.ShareMode {
         item?.shareMode ?? .none
     }
 
-    @MainActor
     var locked: Bool {
         item?.flags.contains(.needsUnlock) ?? false
     }
 
-    @MainActor
     public var accessibilityText: String {
         if let status, status.shouldDisplayLoading {
             if status == .isBeingIngested(nil) {

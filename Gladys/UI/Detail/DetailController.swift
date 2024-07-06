@@ -19,7 +19,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
 
     var item: ArchivedItem! {
         didSet {
-            itemObservation = item.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] _ in
+            itemObservation = item.itemUpdates.sink { [weak self] _ in
                 self?.updateUI()
             }
         }

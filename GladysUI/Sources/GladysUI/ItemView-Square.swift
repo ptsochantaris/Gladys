@@ -4,7 +4,7 @@ import SwiftUI
 
 extension ItemView {
     struct SquareContentView: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         public var body: some View {
             ZStack {
@@ -34,7 +34,7 @@ extension ItemView {
     }
 
     private struct SquareItemText: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         var body: some View {
             ZStack(alignment: .trailing) {
@@ -54,7 +54,7 @@ extension ItemView {
     }
 
     private struct SquareLabel: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
         @Environment(\.colorScheme) var colorScheme
 
         private let showLabels: Bool

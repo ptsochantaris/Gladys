@@ -10,7 +10,7 @@ public struct ItemView: View {
     #endif
 
     struct LoadingItem: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         var body: some View {
             if case let .isBeingIngested(loadingProgress) = wrapper.status, let progress = loadingProgress?.fractionCompleted {
@@ -37,8 +37,9 @@ public struct ItemView: View {
             wrapper.id
         }
 
-        @ObservedObject var wrapper: ArchivedItemWrapper
         @Environment(\.colorScheme) var colorScheme
+
+        let wrapper: ArchivedItemWrapper
 
         var body: some View {
             if wrapper.locked {
@@ -106,7 +107,7 @@ public struct ItemView: View {
     }
 
     struct SelectionTick: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         var body: some View {
             Group {
@@ -126,7 +127,7 @@ public struct ItemView: View {
         }
     }
 
-    @ObservedObject private var wrapper = ArchivedItemWrapper()
+    private let wrapper = ArchivedItemWrapper()
     @Environment(\.colorScheme) var colorScheme
 
     public init() {}

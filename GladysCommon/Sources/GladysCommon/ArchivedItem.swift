@@ -15,9 +15,11 @@ import Maintini
 import NaturalLanguage
 import SwiftUI
 import UniformTypeIdentifiers
+import Combine
 
 @MainActor
-public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayImageProviding {
+@Observable
+public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     public enum Status: RawRepresentable, Codable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
 
@@ -56,13 +58,13 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
 
     public var presentationGenerator: Task<PresentationInfo?, Never>?
 
-    public var components: ContiguousArray<Component> {
+    public var components: ContiguousArray<Component> = [] {
         didSet {
             status = .needsIngest // also sets needsSaving
         }
     }
 
-    public var updatedAt: Date {
+    public var updatedAt: Date = .distantPast {
         didSet {
             flags.insert(.needsSaving)
         }
@@ -74,19 +76,19 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    public var note: String {
+    public var note: String = "" {
         didSet {
             flags.insert(.needsSaving)
         }
     }
 
-    public var titleOverride: String {
+    public var titleOverride: String = "" {
         didSet {
             flags.insert(.needsSaving)
         }
     }
 
-    public var labels: [String] {
+    public var labels: [String] = [] {
         didSet {
             flags.insert(.needsSaving)
         }
@@ -164,16 +166,19 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
         let c = try v.decode(Date.self, forKey: .createdAt)
         createdAt = c
-        updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
         uuid = try v.decode(UUID.self, forKey: .uuid)
-        components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
-        note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
-        titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
-        labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
-        lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
-        let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
-        lockPassword = lp
+
         try onlyOnMainThread {
+            updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
+            components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
+            note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
+            titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
+            labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
+            lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
+
+            let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+            lockPassword = lp
+
             flags = lp == nil ? [] : .needsUnlock
             status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
             highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
@@ -925,11 +930,17 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     #endif
 
+    public let itemUpdates = PassthroughSubject<Void, Never>()
+
     @MainActor
     public func postModified() {
         presentationGenerator?.cancel()
         presentationInfoCache[uuid] = nil
-        objectWillChange.send()
+        signalItemUpdate()
+    }
+
+    public func signalItemUpdate() {
+        itemUpdates.send()
     }
 
     public func cloudKitUpdate(from record: CKRecord) {

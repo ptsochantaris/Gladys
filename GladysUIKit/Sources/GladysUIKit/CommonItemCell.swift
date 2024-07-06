@@ -40,8 +40,8 @@ open class CommonItemCell: UICollectionViewCell {
         setNeedsLayout()
 
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
-            guard let self else { return }
-            archivedDropItem?.objectWillChange.send()
+            guard let archivedDropItem = self?.archivedDropItem else { return }
+            archivedDropItem.signalItemUpdate()
         }
     }
 
@@ -130,7 +130,7 @@ open class CommonItemCell: UICollectionViewCell {
             } else {
                 archivedDropItem.flags.remove(.selected)
             }
-            archivedDropItem.objectWillChange.send()
+            archivedDropItem.signalItemUpdate()
         }
     }
 
@@ -143,7 +143,7 @@ open class CommonItemCell: UICollectionViewCell {
             } else {
                 archivedDropItem.flags.remove(.editing)
             }
-            archivedDropItem.objectWillChange.send()
+            archivedDropItem.signalItemUpdate()
         }
     }
 }

@@ -29,7 +29,7 @@ private struct Label: View {
 }
 
 private struct DropView: View {
-    @StateObject var drop: Drop
+    let drop: Drop
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -135,7 +135,7 @@ private struct DropView: View {
 
 @main
 struct GladysWatch: App {
-    @StateObject var model = GladysWatchModel.shared
+    let model = GladysWatchModel.shared
     @Environment(\.scenePhase) private var scenePhase
 
     init() {

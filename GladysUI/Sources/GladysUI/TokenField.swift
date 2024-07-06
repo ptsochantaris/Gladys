@@ -190,8 +190,8 @@ final class TokenField: VIEWCLASS {
 }
 
 struct TagCloudView: VRCLASS {
-    @ObservedObject var wrapper: ArchivedItemWrapper
-    @State var cellWidth: CGFloat
+    let wrapper: ArchivedItemWrapper
+    var cellWidth: CGFloat
     let alignment: NSTextAlignment
 
     #if canImport(AppKit)

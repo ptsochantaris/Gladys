@@ -3,7 +3,7 @@ import SwiftUI
 
 extension ItemView {
     public struct WideContentView: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         public var body: some View {
             ZStack {
@@ -46,7 +46,7 @@ extension ItemView {
     }
 
     private struct WideItemText: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
 
         var body: some View {
             HStack(spacing: 0) {
@@ -66,7 +66,7 @@ extension ItemView {
     }
 
     private struct WideLabel: View {
-        @ObservedObject var wrapper: ArchivedItemWrapper
+        let wrapper: ArchivedItemWrapper
         @Environment(\.colorScheme) var colorScheme
 
         private let showLabels: Bool
