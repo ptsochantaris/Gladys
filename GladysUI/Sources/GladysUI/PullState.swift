@@ -3,16 +3,6 @@ import GladysCommon
 import Lista
 import PopTimer
 
-extension CKDatabase.DatabaseChange.Deletion {
-    var isPurged: Bool {
-        #if os(visionOS)
-            reason == .purged
-        #else
-            purged
-        #endif
-    }
-}
-
 final actor PullState {
     private enum ZoneModification {
         case itemModified(modification: CKDatabase.RecordZoneChange.Modification)
@@ -140,14 +130,14 @@ final actor PullState {
         let itemUUID = recordId.recordName
         switch recordType {
         case .item:
-            if let item = await (MainActor.run { DropStore.item(uuid: itemUUID) }) {
-                if item.parentZone != recordId.zoneID {
+            if let item = await DropStore.item(uuid: itemUUID) {
+                if await item.parentZone != recordId.zoneID {
                     log("Ignoring delete for item \(itemUUID) from a different zone")
                 } else {
                     log("Item deletion: \(itemUUID)")
-                    item.status = .deleted
-                    item.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
-                    item.cloudKitShareRecord = nil // get rid of useless file
+                    await item.setStatus(.deleted)
+                    await item.setCloudKitRecord(nil) // no need to sync deletion up, it's already recorded in the cloud
+                    await item.setCloudKitShareRecord(nil) // get rid of useless file
                     deletionCount += 1
                 }
             } else {
@@ -160,8 +150,8 @@ final actor PullState {
                     log("Ignoring delete for component \(itemUUID) from a different zone")
                 } else {
                     log("Component deletion: \(itemUUID)")
-                    component.needsDeletion = true
-                    component.cloudKitRecord = nil // no need to sync deletion up, it's already recorded in the cloud
+                    await component.setNeedsDeletion(true)
+                    await component.setCloudKitRecord(nil) // no need to sync deletion up, it's already recorded in the cloud
                     deletionCount += 1
                 }
             } else {
@@ -169,11 +159,11 @@ final actor PullState {
             }
         case .share:
             if let associatedItem = await (MainActor.run { DropStore.item(shareId: itemUUID) }) {
-                if let zoneID = associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
+                if let zoneID = await associatedItem.cloudKitShareRecord?.recordID.zoneID, zoneID != recordId.zoneID {
                     log("Ignoring delete for share record for item \(associatedItem.uuid) from a different zone")
                 } else {
                     log("Share record deleted for item \(associatedItem.uuid)")
-                    associatedItem.cloudKitShareRecord = nil
+                    await associatedItem.setCloudKitShareRecord(nil)
                     deletionCount += 1
                 }
             } else {
@@ -300,7 +290,7 @@ final actor PullState {
             }
             for deletion in databaseChanges.deletions {
                 deletedZoneIds.insert(deletion.zoneID)
-                if deletion.isPurged {
+                if deletion.reason == .purged {
                     log("Detected zone purging in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
                 } else {
                     log("Detected zone deletion in \(deletion.zoneID.zoneName) database: \(database.databaseScope.logName)")
@@ -378,17 +368,17 @@ final actor PullState {
         switch recordType {
         case .item:
             if let item = await DropStore.item(uuid: recordUUID) {
-                if item.parentZone != zoneID {
+                if await item.parentZone != zoneID {
                     log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
                 } else {
-                    switch RecordChangeCheck(localRecord: item.cloudKitRecord, remoteRecord: record) {
+                    switch RecordChangeCheck(localRecord: await item.cloudKitRecord, remoteRecord: record) {
                     case .changed:
                         log("Will update existing local item for cloud record \(recordUUID)")
-                        item.cloudKitUpdate(from: record)
+                        await item.cloudKitUpdate(from: record)
                         updateCount += 1
                     case .tagOnly:
                         log("Update but no changes to item record (\(recordUUID)) apart from tag")
-                        item.cloudKitRecord = record
+                        await item.setCloudKitRecord(record)
                     case .none:
                         log("Update but no changes to item record (\(recordUUID))")
                     }
@@ -396,16 +386,16 @@ final actor PullState {
 
             } else {
                 log("Will create new local item for cloud record (\(recordUUID)) - pending count: \(pendingComponentRecords.count)")
-                let newItem = ArchivedItem(from: record)
+                let newItem = await ArchivedItem(from: record)
                 let newTypeItemRecords = pendingComponentRecords.removeValue(forKey: recordID)
                 if let newTypeItemRecords {
                     let uuid = newItem.uuid
-                    let newComponents = newTypeItemRecords.map { Component(from: $0, parentUuid: uuid) }
-                    newItem.components = ContiguousArray(newComponents)
+                    let newComponents = await newTypeItemRecords.asyncMap { await Component(from: $0, parentUuid: uuid) }
+                    await newItem.setComponents(ContiguousArray(newComponents))
                     log("  Hooked \(newTypeItemRecords.count) pending type items")
                 }
                 if let existingShareId = record.share?.recordID, let pendingShareRecord = pendingShareComponentRecords.removeValue(forKey: existingShareId) {
-                    newItem.cloudKitShareRecord = pendingShareRecord
+                    await newItem.setCloudKitShareRecord(pendingShareRecord)
                     log("  Hooked onto pending share \(existingShareId.recordName)")
                 }
                 await DropStore.append(drop: newItem)
@@ -414,29 +404,30 @@ final actor PullState {
             }
 
         case .component:
-            if let typeItem = await DropStore.component(uuid: recordUUID) {
-                if await (typeItem.parentZone) != zoneID {
+            if let component = await DropStore.component(uuid: recordUUID) {
+                if await (component.parentZone) != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
                 } else {
-                    switch RecordChangeCheck(localRecord: typeItem.cloudKitRecord, remoteRecord: record) {
+                    switch RecordChangeCheck(localRecord: await component.cloudKitRecord, remoteRecord: record) {
                     case .changed:
                         log("Will update existing component: (\(recordUUID))")
-                        typeItem.cloudKitUpdate(from: record)
+                        await component.cloudKitUpdate(from: record)
                         typeUpdateCount += 1
                     case .tagOnly:
                         log("Update but no changes to item type data record (\(recordUUID)) apart from tag")
-                        typeItem.cloudKitRecord = record
+                        await component.setCloudKitRecord(record)
                     case .none:
                         log("Update but no changes to item type data record (\(recordUUID))")
                     }
                 }
             } else if let parentId = record.parent?.recordID {
                 if let existingParent = await DropStore.item(uuid: parentId.recordName) {
-                    if existingParent.parentZone != zoneID {
+                    if await existingParent.parentZone != zoneID {
                         log("Ignoring new component for existing item UUID but wrong zone (component: \(recordUUID) item: \(parentId.recordName))")
                     } else {
                         log("Will create new component (\(recordUUID)) for parent (\(parentId.recordName))")
-                        existingParent.components.append(Component(from: record, parentUuid: existingParent.uuid))
+                        let newComponent = await Component(from: record, parentUuid: existingParent.uuid)
+                        await existingParent.appendComponent(newComponent)
                         newTypeItemCount += 1
                     }
                 } else {
@@ -470,11 +461,11 @@ final actor PullState {
         case .share:
             if let share = record as? CKShare {
                 if let associatedItem = await DropStore.item(shareId: recordUUID) {
-                    if associatedItem.parentZone != zoneID {
+                    if await associatedItem.parentZone != zoneID {
                         log("Ignoring share record updated for existing item in different zone (share: \(recordUUID) - item: \(associatedItem.uuid))")
                     } else {
                         log("Share record updated for item (share: \(recordUUID) - item: \(associatedItem.uuid))")
-                        associatedItem.cloudKitShareRecord = share
+                        await associatedItem.setCloudKitShareRecord(share)
                         updateCount += 1
                     }
                 } else {

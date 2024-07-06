@@ -14,12 +14,11 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        itemAccessQueue.async(flags: .barrier) {
-            self.allToggles = LiteModel.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
-            Task { @MainActor [weak self] in
-                self?.table.isHidden = false
-                self?.updateFilter(nil)
-            }
+        self.allToggles = LiteModel.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        Task { [weak self] in
+            guard let self else { return }
+            table.isHidden = false
+            updateFilter(nil)
         }
 
         notesText.text = ActionRequestViewController.noteToApply

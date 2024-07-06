@@ -162,16 +162,22 @@ public enum DropStore {
     }
 
     public static func sizeInBytes() async -> Int64 {
-        let snapshot = DropStore.allDrops
-        return await Task.detached {
-            snapshot.reduce(0) { $0 + $1.sizeInBytes }
+        await Task.detached {
+            var total: Int64 = 0
+            for drop in await allDrops {
+                total += await drop.sizeInBytes
+            }
+            return total
         }.value
     }
 
     public static func sizeForItems(uuids: [UUID]) async -> Int64 {
-        let snapshot = DropStore.allDrops
-        return await Task.detached {
-            snapshot.reduce(0) { $0 + (uuids.contains($1.uuid) ? $1.sizeInBytes : 0) }
+        await Task.detached {
+            var total: Int64 = 0
+            for drop in await allDrops where uuids.contains(drop.uuid) {
+                total += await drop.sizeInBytes
+            }
+            return total
         }.value
     }
 

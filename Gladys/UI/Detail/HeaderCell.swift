@@ -20,7 +20,9 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
         label.textContainerInset = .zero
         observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
             guard let self else { return }
-            caretMoved()
+            Task { @MainActor in
+                self.caretMoved()
+            }
         }
 
         focusEffect = UIFocusHaloEffect()
@@ -32,12 +34,13 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
     }
 
     private func caretMoved() {
-        if let r = label.selectedTextRange, let s = superview {
-            var caretRect = label.caretRect(for: r.start)
-            caretRect = label.convert(caretRect, to: s)
-            caretRect = caretRect.insetBy(dx: 0, dy: -22)
-            delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: false)
+        guard let r = label.selectedTextRange, let s = superview else {
+            return
         }
+        var caretRect = label.caretRect(for: r.start)
+        caretRect = label.convert(caretRect, to: s)
+        caretRect = caretRect.insetBy(dx: 0, dy: -22)
+        delegate?.cellNeedsResize(cell: self, caretRect: caretRect, heightChange: false)
     }
 
     private var previousText: String?

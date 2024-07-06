@@ -94,18 +94,19 @@ public final class ImportExport {
 
         p.completedUnitCount += 1
 
-        guard let archive = try Archive(url: tempPath, accessMode: .create) else {
+        guard let archive = try? Archive(url: tempPath, accessMode: .create, pathEncoding: nil) else {
             throw GladysError.creatingArchiveFailed
         }
 
         for item in dropsCopy {
-            let dir = item.displayTitleOrUuid.filenameSafe
+            let dir = await item.displayTitleOrUuid.filenameSafe
 
-            if item.components.count == 1, let typeItem = item.components.first {
+            let components = await item.components
+            if components.count == 1, let typeItem = components.first {
                 try await addZipItem(typeItem, directory: nil, name: dir, in: archive)
 
             } else {
-                for typeItem in item.components {
+                for typeItem in components {
                     try await addZipItem(typeItem, directory: dir, name: typeItem.typeDescription, in: archive)
                 }
             }

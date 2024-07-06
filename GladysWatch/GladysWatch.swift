@@ -61,6 +61,7 @@ private struct DropView: View {
                     Spacer()
                     Label(text: formatter.string(from: drop.imageDate), lineLimit: 1)
                 }
+
             case let .action(label):
                 Color(white: 0, opacity: 0.8)
                     .ignoresSafeArea()
@@ -160,8 +161,8 @@ struct GladysWatch: App {
                 .tabViewStyle(.carousel)
             }
         }
-        .onChange(of: scenePhase) { phase in
-            switch phase {
+        .onChange(of: scenePhase) {
+            switch scenePhase {
             case .active:
                 model.getFullUpdate(session: WCSession.default)
 

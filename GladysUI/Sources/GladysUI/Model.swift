@@ -7,9 +7,9 @@ import PopTimer
 import Semalot
 import UniformTypeIdentifiers
 
-extension UnsafeMutableBufferPointer: @unchecked Sendable {}
-extension UnsafeBufferPointer<uuid_t>: @unchecked Sendable {}
-extension ThrowingTaskGroup: @unchecked Sendable {}
+extension UnsafeMutableBufferPointer: @unchecked @retroactive Sendable {}
+extension UnsafeBufferPointer<uuid_t>: @unchecked @retroactive Sendable {}
+extension ThrowingTaskGroup: @unchecked @retroactive Sendable {}
 
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
@@ -124,7 +124,8 @@ public enum Model {
         d.withUnsafeBytes { pointer in
             let decoder = loadDecoder
             let uuidSequence = pointer.bindMemory(to: uuid_t.self)
-            DispatchQueue.concurrentPerform(iterations: itemCount) { count in
+            for count in 0 ..< itemCount {
+                // DispatchQueue.concurrentPerform(iterations: itemCount) { count in
                 let uuid = UUID(uuid: uuidSequence[count]).uuidString
                 let dataPath = url.appendingPathComponent(uuid)
                 if let data = try? Data(contentsOf: dataPath),
@@ -133,6 +134,7 @@ public enum Model {
                 } else {
                     store.initializeElement(at: count, to: nil)
                 }
+                // }
             }
         }
 
@@ -424,7 +426,8 @@ public enum Model {
 
                 let uuidArray = UnsafeMutableBufferPointer<uuid_t>.allocate(capacity: allCount)
                 let encoder = saveEncoder
-                DispatchQueue.concurrentPerform(iterations: allCount) { count in
+                for count in 0 ..< allCount {
+                    // DispatchQueue.concurrentPerform(iterations: allCount) { count in
                     let item = allItems[count]
                     let u = item.uuid
                     uuidArray.initializeElement(at: count, to: u.uuid)
@@ -432,6 +435,7 @@ public enum Model {
                         let finalPath = url.appendingPathComponent(u.uuidString)
                         try? encoder.encode(item).write(to: finalPath)
                     }
+                    // }
                 }
 
                 try Data(buffer: uuidArray).write(to: url.appendingPathComponent("uuids"), options: .atomic)
@@ -482,20 +486,10 @@ public enum Model {
         Maintini.startMaintaining()
         let ready = DropStore.readyToIngest
         Task.detached {
-            if #available(macOS 14, iOS 17, watchOS 10, *) {
-                await withDiscardingTaskGroup {
-                    for drop in ready {
-                        $0.addTask {
-                            await drop.reIngest()
-                        }
-                    }
-                }
-            } else {
-                await withTaskGroup(of: Void.self) {
-                    for drop in ready {
-                        $0.addTask {
-                            await drop.reIngest()
-                        }
+            await withDiscardingTaskGroup {
+                for drop in ready {
+                    $0.addTask {
+                        await drop.reIngest()
                     }
                 }
             }

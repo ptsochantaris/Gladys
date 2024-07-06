@@ -3,11 +3,14 @@ import Foundation
 import GladysCommon
 import SwiftUI
 
+@MainActor
 public final class ArchivedItemWrapper: ObservableObject, Identifiable {
     private let emptyId = UUID()
 
-    public var id: UUID {
-        item?.uuid ?? emptyId
+    nonisolated public var id: UUID {
+        MainActor.assumeIsolated {
+            item?.uuid ?? emptyId
+        }
     }
 
     public var hasItem: Bool {

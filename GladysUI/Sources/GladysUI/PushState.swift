@@ -22,20 +22,21 @@ final actor PushState {
 
         var _dropsToPush = 0
         var _dataItemsToPush = 0
-        var _payloadsToPush = drops.compactMap { item -> [CKRecord]? in
-            guard let itemRecord = item.populatedCloudKitRecord,
+        var _payloadsToPush = await drops.asyncCompactMap { item -> [CKRecord]? in
+            guard let itemRecord = await item.populatedCloudKitRecord,
                   itemRecord.recordID.zoneID == zoneId
             else {
                 return nil
             }
-            _dataItemsToPush += item.components.count
+            let components = await item.components
+            _dataItemsToPush += components.count
             _dropsToPush += 1
 
             let itemId = item.uuid.uuidString
             idsToPush.insert(itemId)
-            idsToPush.formUnion(item.components.map(\.uuid.uuidString))
+            idsToPush.formUnion(await components.asyncMap { await $0.uuid.uuidString })
 
-            var payload = item.components.map(\.populatedCloudKitRecord)
+            var payload = await components.asyncMap { await $0.populatedCloudKitRecord }
             payload.append(itemRecord)
             return payload.uniqued
 
@@ -67,7 +68,7 @@ final actor PushState {
         }.uniqued.bunch(maxSize: 100)
 
         if zoneId == privateZoneId {
-            currentUUIDSequence = drops.map(\.uuid.uuidString)
+            currentUUIDSequence = drops.map { $0.uuid.uuidString }
             if await PushState.sequenceNeedsUpload(currentUUIDSequence) {
                 var sequenceToSend: [String]?
 
@@ -194,10 +195,10 @@ final actor PushState {
                                     CloudManager.uuidSequenceRecord = record
                                 }
                             } else if let item = await DropStore.item(uuid: itemUUID) {
-                                item.cloudKitRecord = record
+                                await item.setCloudKitRecord(record)
                                 self.dropsToPush -= 1
                             } else if let typeItem = await DropStore.component(uuid: itemUUID) {
-                                typeItem.cloudKitRecord = record
+                                await typeItem.setCloudKitRecord(record)
                                 self.dataItemsToPush -= 1
                             }
                         }

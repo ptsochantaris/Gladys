@@ -16,6 +16,7 @@ import NaturalLanguage
 import SwiftUI
 import UniformTypeIdentifiers
 
+@MainActor
 public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayImageProviding {
     public enum Status: RawRepresentable, Codable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
@@ -49,9 +50,9 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         }
     }
 
-    public let suggestedName: String?
-    public let uuid: UUID
-    public let createdAt: Date
+    public nonisolated let suggestedName: String?
+    public nonisolated let uuid: UUID
+    public nonisolated let createdAt: Date
 
     public var presentationGenerator: Task<PresentationInfo?, Never>?
 
@@ -123,7 +124,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         public static let editing = Flags(rawValue: 1 << 4)
     }
 
-    public var flags: Flags
+    public var flags = Flags()
 
     private enum CodingKeys: String, CodingKey {
         case suggestedName
@@ -140,23 +141,25 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         case highlightColor
     }
 
-    public func encode(to encoder: Encoder) throws {
+    nonisolated public func encode(to encoder: Encoder) throws {
         var v = encoder.container(keyedBy: CodingKeys.self)
         try v.encodeIfPresent(suggestedName, forKey: .suggestedName)
         try v.encode(createdAt, forKey: .createdAt)
-        try v.encode(updatedAt, forKey: .updatedAt)
         try v.encode(uuid, forKey: .uuid)
-        try v.encode(components, forKey: .components)
-        try v.encode(status, forKey: .status)
-        try v.encode(note, forKey: .note)
-        try v.encode(titleOverride, forKey: .titleOverride)
-        try v.encode(labels, forKey: .labels)
-        try v.encode(highlightColor, forKey: .highlightColor)
-        try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
-        try v.encodeIfPresent(lockHint, forKey: .lockHint)
+        try onlyOnMainThread {
+            try v.encode(updatedAt, forKey: .updatedAt)
+            try v.encode(components, forKey: .components)
+            try v.encode(status, forKey: .status)
+            try v.encode(note, forKey: .note)
+            try v.encode(titleOverride, forKey: .titleOverride)
+            try v.encode(labels, forKey: .labels)
+            try v.encode(highlightColor, forKey: .highlightColor)
+            try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
+            try v.encodeIfPresent(lockHint, forKey: .lockHint)
+        }
     }
 
-    public init(from decoder: Decoder) throws {
+    nonisolated public init(from decoder: Decoder) throws {
         let v = try decoder.container(keyedBy: CodingKeys.self)
         suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
         let c = try v.decode(Date.self, forKey: .createdAt)
@@ -164,15 +167,17 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
         uuid = try v.decode(UUID.self, forKey: .uuid)
         components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
-        status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
         note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
         titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
         labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
-        highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
         lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
         let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
         lockPassword = lp
-        flags = lp == nil ? [] : .needsUnlock
+        try onlyOnMainThread {
+            flags = lp == nil ? [] : .needsUnlock
+            status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
+            highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+        }
     }
 
     public init(cloning item: ArchivedItem) {
@@ -280,11 +285,31 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         cloudKitRecord = record
     }
 
-    public static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
+    public func setCloudKitRecord(_ newRecord: CKRecord?) {
+        cloudKitRecord = newRecord
+    }
+
+    public func setComponents(_ newValue: ContiguousArray<Component>) {
+        components = newValue
+    }
+
+    public func appendComponent(_ component: Component) {
+        components.append(component)
+    }
+
+    public func setCloudKitShareRecord(_ newRecord: CKShare?) {
+        cloudKitShareRecord = newRecord
+    }
+
+    public func setStatus(_ newStatus: Status) {
+        status = newStatus
+    }
+
+    nonisolated public static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
         lhs.uuid == rhs.uuid
     }
 
-    public func hash(into hasher: inout Hasher) {
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
@@ -425,18 +450,14 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                 return cached
             }
             let path = cloudKitDataPath
-            return itemAccessQueue.sync {
-                let value = FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
-                needsCloudPushCache[uuid] = value
-                return value
-            }
+            let value = FileManager.default.getBoolAttribute(ArchivedItem.needsCloudPushKey, from: path) ?? true
+            needsCloudPushCache[uuid] = value
+            return value
         }
         set {
             needsCloudPushCache[uuid] = newValue
             let path = cloudKitDataPath
-            itemAccessQueue.async(flags: .barrier) {
-                FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
-            }
+            FileManager.default.setBoolAttribute(ArchivedItem.needsCloudPushKey, at: path, to: newValue)
         }
     }
 
@@ -494,35 +515,31 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
                 return cached.record
             }
             let recordLocation = cloudKitDataPath
-            return itemAccessQueue.sync {
-                if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
-                    let record = CKRecord(coder: coder)
-                    coder.finishDecoding()
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
-                    return record
+            if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                let record = CKRecord(coder: coder)
+                coder.finishDecoding()
+                cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
+                return record
 
-                } else {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
-                    return nil
-                }
+            } else {
+                cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
+                return nil
             }
         }
         set {
             let newEntry = CKRecordCacheEntry(record: newValue)
             cloudKitRecordCache[uuid] = newEntry
             let recordLocation = cloudKitDataPath
-            itemAccessQueue.async(flags: .barrier) {
-                if let newValue {
-                    let coder = NSKeyedArchiver(requiringSecureCoding: true)
-                    newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation)
-                    self.needsCloudPush = false
-                } else {
-                    let f = FileManager.default
-                    let path = recordLocation.path
-                    if f.fileExists(atPath: path) {
-                        try? f.removeItem(atPath: path)
-                    }
+            if let newValue {
+                let coder = NSKeyedArchiver(requiringSecureCoding: true)
+                newValue.encodeSystemFields(with: coder)
+                try? coder.encodedData.write(to: recordLocation)
+                self.needsCloudPush = false
+            } else {
+                let f = FileManager.default
+                let path = recordLocation.path
+                if f.fileExists(atPath: path) {
+                    try? f.removeItem(atPath: path)
                 }
             }
         }
@@ -533,33 +550,29 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             if let cached = cloudKitShareCache[uuid] {
                 return cached.share
             }
-            return itemAccessQueue.sync {
-                if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
-                    let share = CKShare(coder: coder)
-                    coder.finishDecoding()
-                    cloudKitShareCache[uuid] = CKShareCacheEntry(share: share)
-                    return share
+            if let data = try? Data(contentsOf: cloudKitShareDataPath), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                let share = CKShare(coder: coder)
+                coder.finishDecoding()
+                cloudKitShareCache[uuid] = CKShareCacheEntry(share: share)
+                return share
 
-                } else {
-                    cloudKitShareCache[uuid] = CKShareCacheEntry(share: nil)
-                    return nil
-                }
+            } else {
+                cloudKitShareCache[uuid] = CKShareCacheEntry(share: nil)
+                return nil
             }
         }
         set {
             cloudKitShareCache[uuid] = CKShareCacheEntry(share: newValue)
             let recordLocation = cloudKitShareDataPath
-            itemAccessQueue.async(flags: .barrier) {
-                if let newValue {
-                    let coder = NSKeyedArchiver(requiringSecureCoding: true)
-                    newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation)
-                } else {
-                    let f = FileManager.default
-                    let path = recordLocation.path
-                    if f.fileExists(atPath: path) {
-                        try? f.removeItem(atPath: path)
-                    }
+            if let newValue {
+                let coder = NSKeyedArchiver(requiringSecureCoding: true)
+                newValue.encodeSystemFields(with: coder)
+                try? coder.encodedData.write(to: recordLocation)
+            } else {
+                let f = FileManager.default
+                let path = recordLocation.path
+                if f.fileExists(atPath: path) {
+                    try? f.removeItem(atPath: path)
                 }
             }
         }
@@ -767,22 +780,11 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
             components.sort { $0.order < $1.order }
         }
 
-        if #available(macOS 14, iOS 17, watchOS 10, *) {
-            await withDiscardingTaskGroup {
-                for i in components {
-                    $0.addTask {
-                        try? await i.reIngest()
-                        p.completedUnitCount += 1
-                    }
-                }
-            }
-        } else {
-            await withTaskGroup(of: Void.self) {
-                for i in components {
-                    $0.addTask {
-                        try? await i.reIngest()
-                        p.completedUnitCount += 1
-                    }
+        await withDiscardingTaskGroup {
+            for i in components {
+                $0.addTask {
+                    try? await i.reIngest()
+                    p.completedUnitCount += 1
                 }
             }
         }
@@ -792,15 +794,14 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
         var extractedData: Data?
         let data = try? await provider.data(for: type)
         if let data, data.count < 16384 {
-            var extractedText: String?
-            if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
-                extractedText = text
+            let extractedText: String = if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
+                text
 
-            } else if let text = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) {
-                extractedText = text
+            } else {
+                String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
             }
 
-            if let extractedText, extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
+            if extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
                 let list = [extractedText, "", [AnyHashable: Any]()] as [Any]
                 extractedData = try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
             }
@@ -809,7 +810,7 @@ public final class ArchivedItem: Codable, ObservableObject, Hashable, DisplayIma
     }
 
     private func newItemIngest(providers: [DataImporter], limitToType: String?) async {
-        await Maintini.startMaintaining()
+        Maintini.startMaintaining()
         defer {
             Task {
                 await componentIngestDone()

@@ -50,8 +50,8 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
         var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: label) }
     }
 
-    static var title: LocalizedStringResource = "Filter"
-    static var description = IntentDescription("Filter using a label or text, leave blank for no fileting")
+    static let title: LocalizedStringResource = "Filter"
+    static let description = IntentDescription("Filter using a label or text, leave blank for no fileting")
 
     @Parameter(title: "Label", default: nil)
     var label: LabelOption?

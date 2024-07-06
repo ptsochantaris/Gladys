@@ -16,3 +16,15 @@ public let isRunningInTestFlightEnvironment: Bool = {
         return sandbox && !provision
     #endif
 }()
+
+public func onlyOnMainThread<T>(block: @MainActor () throws -> T) rethrows -> T {
+    if Thread.isMainThread {
+        try MainActor.assumeIsolated {
+            try block()
+        }
+    } else {
+        try DispatchQueue.main.sync {
+            try block()
+        }
+    }
+}

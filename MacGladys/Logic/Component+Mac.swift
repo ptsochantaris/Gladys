@@ -85,28 +85,25 @@ extension Component {
     }
 
     func scanForBlobChanges() -> Bool {
-        var detectedChange = false
-        componentAccessQueue.sync(flags: .barrier) {
-            let recordLocation = bytesPath
-            let fm = FileManager.default
-            guard fm.fileExists(atPath: recordLocation.path) else { return }
+        let recordLocation = bytesPath
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: recordLocation.path) else { return false }
 
-            if let fileModification = Model.unsafeModificationDate(for: recordLocation) {
-                if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
-                    if recordedModification < fileModification { // is the file modified after we stamped it?
-                        lastGladysBlobUpdate = fileModification
-                        detectedChange = true
-                    }
-                } else {
-                    lastGladysBlobUpdate = fileModification // have modification date but no stamp
+        if let fileModification = Model.unsafeModificationDate(for: recordLocation) {
+            if let recordedModification = lastGladysBlobUpdate { // we've already stamped this
+                if recordedModification < fileModification { // is the file modified after we stamped it?
+                    lastGladysBlobUpdate = fileModification
+                    return true
                 }
             } else {
-                let now = Date()
-                try? fm.setAttributes([FileAttributeKey.modificationDate: now], ofItemAtPath: recordLocation.path)
-                lastGladysBlobUpdate = now // no modification date, no stamp
+                lastGladysBlobUpdate = fileModification // have modification date but no stamp
             }
+        } else {
+            let now = Date()
+            try? fm.setAttributes([FileAttributeKey.modificationDate: now], ofItemAtPath: recordLocation.path)
+            lastGladysBlobUpdate = now // no modification date, no stamp
         }
-        return detectedChange
+        return false
     }
 
     var itemProviderForSharing: NSItemProvider {

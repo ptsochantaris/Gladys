@@ -17,7 +17,7 @@ public struct PasteRequest {
     public let overrides: ImportOverrides?
 }
 
-extension Notification: @unchecked Sendable {}
+extension Notification: @unchecked @retroactive Sendable {}
 
 public extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")

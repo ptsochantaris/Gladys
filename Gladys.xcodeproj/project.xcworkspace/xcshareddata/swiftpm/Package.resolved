@@ -1,4 +1,5 @@
 {
+  "originHash" : "5c6517cdbdc7cc17b501bf32aefddf9e28798582693b5ec36c536fac48c8fba2",
   "pins" : [
     {
       "identity" : "callbackurlkit-visionos-fork",
@@ -68,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup.git",
       "state" : {
-        "revision" : "1d39e56d364cba79ce43b341f9661b534cccb18d",
-        "version" : "2.7.1"
+        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148",
+        "version" : "2.7.2"
       }
     },
     {
@@ -77,10 +78,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
-        "branch" : "development",
-        "revision" : "55ef1939d8d3a5e9b42c09ce6b725b80509aae13"
+        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+        "version" : "0.9.19"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

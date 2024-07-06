@@ -32,7 +32,7 @@ enum GladysAppIntents {
         let id: UUID
         let title: String
 
-        static var defaultQuery = ArchivedItemQuery()
+        static let defaultQuery = ArchivedItemQuery()
 
         static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Item" }
 
@@ -74,7 +74,7 @@ enum GladysAppIntents {
 
         let id: String
 
-        static var defaultQuery = ArchivedItemLabelQuery()
+        static let defaultQuery = ArchivedItemLabelQuery()
 
         static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Label" }
 
@@ -144,7 +144,7 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Select item" }
 
-        static var openAppWhenRun = true
+        static let openAppWhenRun = true
 
         @MainActor
         func perform() async throws -> some IntentResult {
@@ -176,7 +176,7 @@ enum GladysAppIntents {
     struct PasteIntoGladys: AppIntent {
         static var title: LocalizedStringResource { "Paste from clipboard" }
 
-        static var openAppWhenRun = true
+        static let openAppWhenRun = true
 
         @MainActor
         func perform() async throws -> some IntentResult {
@@ -293,7 +293,7 @@ enum GladysAppIntents {
             guard let item = items.first else {
                 throw Error.noItemsCreated
             }
-            let entity = ArchivedItemEntity(id: item.uuid, title: item.displayTitleOrUuid)
+            let entity = await ArchivedItemEntity(id: item.uuid, title: item.displayTitleOrUuid)
             let hi = OpenGladys()
             hi.entity = entity
             hi.action = .highlight
@@ -318,45 +318,5 @@ enum GladysAppIntents {
             case .nothingInClipboard: "There was nothing in the clipboard"
             }
         }
-    }
-
-    struct GladysShortcuts: AppShortcutsProvider {
-        // Not using builder because it makes visionOS 1.0.3 crash
-        static var appShortcuts = [
-            AppShortcut(intent: CopyItem(),
-                        phrases: ["Copy \(.applicationName) item to clipboard"],
-                        shortTitle: "Copy to clipboard",
-                        systemImageName: "doc.on.doc"),
-
-            AppShortcut(intent: PasteIntoGladys(),
-                        phrases: ["Paste clipboard into \(.applicationName)"],
-                        shortTitle: "Paste from clipboard",
-                        systemImageName: "arrow.down.doc"),
-
-            AppShortcut(intent: OpenGladys(),
-                        phrases: ["Select \(.applicationName) item"],
-                        shortTitle: "Select item",
-                        systemImageName: "square.grid.3x3.topleft.filled"),
-
-            AppShortcut(intent: CreateItemFromText(),
-                        phrases: ["Create \(.applicationName) item from text"],
-                        shortTitle: "Create from text",
-                        systemImageName: "doc.text"),
-
-            AppShortcut(intent: CreateItemFromText(),
-                        phrases: ["Create \(.applicationName) item from link"],
-                        shortTitle: "Create from link",
-                        systemImageName: "link"),
-
-            AppShortcut(intent: CreateItemFromFile(),
-                        phrases: ["Create \(.applicationName) item from file"],
-                        shortTitle: "Create from file",
-                        systemImageName: "doc"),
-
-            AppShortcut(intent: DeleteItem(),
-                        phrases: ["Delete \(.applicationName) item"],
-                        shortTitle: "Delete item",
-                        systemImageName: "xmark.bin")
-        ]
     }
 }

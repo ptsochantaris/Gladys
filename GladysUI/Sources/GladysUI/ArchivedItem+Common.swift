@@ -27,23 +27,19 @@ public extension ArchivedItem {
                 CloudManager.markAsDeleted(recordName: cloudKitShareRecord.recordID.recordName, cloudKitRecord: cloudKitShareRecord)
             }
         } else if let cloudKitRecord {
-            Task { @CloudActor in
-                CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
+            Task {
+                await CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
             }
         } else {
             log("No cloud record for this item, skipping cloud delete")
         }
         let p = folderUrl.path
         let uuids = components.map(\.uuid)
-        itemAccessQueue.async(flags: .barrier) {
-            componentAccessQueue.async(flags: .barrier) {
-                try? FileManager.default.removeItem(atPath: p)
-                for item in uuids {
-                    clearCacheData(for: item)
-                }
-            }
-            clearCacheData(for: self.uuid) // this must be last since we use URLs above
+        try? FileManager.default.removeItem(atPath: p)
+        for item in uuids {
+            clearCacheData(for: item)
         }
+        clearCacheData(for: self.uuid) // this must be last since we use URLs above
     }
 
     func renumberTypeItems() {

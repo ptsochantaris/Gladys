@@ -61,7 +61,6 @@ public struct ItemView: View {
                         .resizable()
                         .accessibilityIgnoresInvertColors()
                         .aspectRatio(contentMode: .fill)
-
                 case .circle:
                     img
                         .resizable()

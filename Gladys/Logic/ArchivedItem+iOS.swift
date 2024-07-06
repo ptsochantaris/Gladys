@@ -8,6 +8,7 @@ import UIKit
 import UniformTypeIdentifiers
 
 extension Filter.Toggle.Function {
+    @MainActor
     var dragItem: UIDragItem? {
         let p = NSItemProvider(item: displayText as NSSecureCoding, typeIdentifier: UTType.plainText.identifier)
         p.registerObject(userActivity, visibility: .all)
@@ -159,10 +160,8 @@ extension ArchivedItem {
 
     var watchItem: [String: Any] {
         var imageDate = updatedAt
-        componentAccessQueue.sync {
-            if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
-                imageDate = max(imageDate, id)
-            }
+        if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
+            imageDate = max(imageDate, id)
         }
         return ["u": uuid.uuidString, "t": displayTitleOrUuid, "d": imageDate]
     }

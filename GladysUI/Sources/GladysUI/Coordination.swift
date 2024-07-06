@@ -2,7 +2,7 @@ import Foundation
 
 #if canImport(AppKit)
     public enum Coordination {
-        nonisolated static var coordinator: NSFileCoordinator {
+        static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: nil)
         }
     }
@@ -27,7 +27,7 @@ import Foundation
             }
         }
 
-        nonisolated static var coordinator: NSFileCoordinator {
+        static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: filePresenter)
         }
 

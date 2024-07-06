@@ -3,7 +3,10 @@ import GladysUI
 import GladysUIKit
 import UIKit
 
+@MainActor
 private var latestOffset = CGPoint.zero
+
+@MainActor
 private var selectedLabel: String?
 
 final class SimpleLabelToggleCell: UITableViewCell {
@@ -99,7 +102,7 @@ final class SimpleLabelPicker: UIViewController, UITableViewDelegate, UITableVie
     }
 }
 
-extension UIInputView: UIInputViewAudioFeedback {
+extension UIInputView: @retroactive UIInputViewAudioFeedback {
     public var enableInputClicksWhenVisible: Bool {
         true
     }
@@ -213,7 +216,9 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             guard let self else { return }
-            startRapidBackspace()
+            Task { @MainActor in
+                self.startRapidBackspace()
+            }
         }
     }
 
@@ -221,7 +226,9 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.03, repeats: true) { [weak self] _ in
             guard let self else { return }
-            textDocumentProxy.deleteBackward()
+            Task { @MainActor in
+                self.textDocumentProxy.deleteBackward()
+            }
         }
     }
 

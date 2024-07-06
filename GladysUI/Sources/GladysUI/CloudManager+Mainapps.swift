@@ -30,10 +30,10 @@ public extension CloudManager {
 
     static var syncProgressString: String?
 
-    private static let syncProgressDebouncer = PopTimer(timeInterval: 0.2) {
+    private static let syncProgressDebouncer = PopTimer(timeInterval: 0.1) {
         #if DEBUG
-            if let s = await syncProgressString {
-                log(">>> Sync label updated: \(s)")
+            if let syncProgressString {
+                log(">>> Sync label updated: \(syncProgressString)")
             } else {
                 log(">>> Sync label cleared")
             }
@@ -52,8 +52,8 @@ public extension CloudManager {
         }
 
         var sharedZonesToPush = Set<CKRecordZone.ID>()
-        for item in await DropStore.allDrops where item.needsCloudPush {
-            let zoneID = item.parentZone
+        for item in await DropStore.allDrops where await item.needsCloudPush {
+            let zoneID = await item.parentZone
             if zoneID != privateZoneId {
                 sharedZonesToPush.insert(zoneID)
             }
@@ -217,9 +217,9 @@ public extension CloudManager {
     internal static var deletionQueue: Set<String> {
         get {
             if let data = try? Data(contentsOf: deleteQueuePath) {
-                return SafeArchiving.unarchive(data) as? Set<String> ?? []
+                SafeArchiving.unarchive(data) as? Set<String> ?? []
             } else {
-                return []
+                []
             }
         }
         set {
@@ -321,7 +321,7 @@ public extension CloudManager {
             for recordID in modifyResult.deleteResults.keys {
                 let recordUUID = recordID.recordName
                 if let item = await DropStore.item(shareId: recordUUID) {
-                    item.cloudKitShareRecord = nil
+                    await item.setCloudKitShareRecord(nil)
                     log("Shut down sharing for item \(item.uuid) before deactivation")
                     await item.postModified()
                 }
@@ -340,7 +340,7 @@ public extension CloudManager {
             syncTransitioning = false
         }
 
-        let myOwnShareIds = await DropStore.itemsIAmSharing.compactMap { $0.cloudKitShareRecord?.recordID }
+        let myOwnShareIds = await DropStore.itemsIAmSharing.asyncCompactMap { await $0.cloudKitShareRecord?.recordID }
         if myOwnShareIds.isPopulated {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }
@@ -372,7 +372,7 @@ public extension CloudManager {
         lastiCloudAccount = nil
         PersistedOptions.lastPushToken = nil
         for item in await DropStore.allDrops {
-            item.removeFromCloudkit()
+            await item.removeFromCloudkit()
         }
         await Model.save()
         log("Cloud sync deactivation complete")
@@ -454,7 +454,7 @@ public extension CloudManager {
         var fetchGroups = [CKRecordZone.ID: Lista<CKRecord.ID>]()
 
         for item in await DropStore.allDrops {
-            if let shareId = item.cloudKitRecord?.share?.recordID, item.cloudKitShareRecord == nil {
+            if let shareId = await item.cloudKitRecord?.share?.recordID, await item.cloudKitShareRecord == nil {
                 let zoneId = shareId.zoneID
                 if let existingFetchGroup = fetchGroups[zoneId] {
                     existingFetchGroup.append(shareId)
@@ -500,19 +500,19 @@ public extension CloudManager {
     }
 
     private static func fetchCloudRecord(for item: ArchivedItem?) async throws {
-        guard let item, let recordIdNeedingRefresh = item.cloudKitRecord?.recordID else { return }
+        guard let item, let recordIdNeedingRefresh = await item.cloudKitRecord?.recordID else { return }
 
         let database = recordIdNeedingRefresh.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
         do {
             let record = try await database.record(for: recordIdNeedingRefresh)
             log("Replaced local cloud record with latest copy from server (\(item.uuid))")
-            item.cloudKitRecord = record
+            await item.setCloudKitRecord(record)
             await item.postModified()
 
         } catch {
             if error.itemDoesNotExistOnServer {
                 log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(item.uuid))")
-                item.removeFromCloudkit()
+                await item.removeFromCloudkit()
                 await item.postModified()
             }
         }
@@ -595,14 +595,14 @@ public extension CloudManager {
 
     static func share(item: ArchivedItem, rootRecord: CKRecord) async throws -> CKShare {
         let shareRecord = CKShare(rootRecord: rootRecord)
-        shareRecord[CKShare.SystemFieldKey.title] = item.trimmedSuggestedName as NSString
-        let scaledIcon = item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
+        shareRecord[CKShare.SystemFieldKey.title] = await item.trimmedSuggestedName as NSString
+        let scaledIcon = await item.displayIcon.limited(to: Component.iconPointSize, limitTo: 1, useScreenScale: false, singleScale: true)
         #if canImport(AppKit)
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.tiffRepresentation as NSData?
         #else
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #endif
-        let componentsThatNeedMigrating = item.components.filter { $0.cloudKitRecord?.parent == nil }.map(\.populatedCloudKitRecord)
+        let componentsThatNeedMigrating = await item.components.asyncFilter { await $0.cloudKitRecord?.parent == nil }.asyncMap { await $0.populatedCloudKitRecord }
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
         let modifyResults = try await container.privateCloudDatabase.modifyRecords(saving: recordsToSave, deleting: [], savePolicy: .allKeys)
         try check(modifyResults)
@@ -637,19 +637,21 @@ public extension CloudManager {
     }
 
     static func deleteShare(_ item: ArchivedItem) async throws {
-        guard let shareId = item.cloudKitRecord?.share?.recordID ?? item.cloudKitShareRecord?.recordID else {
+        let cloudKitShareId = await item.cloudKitRecord?.share?.recordID
+        let shareRecordId = await item.cloudKitShareRecord?.recordID
+        guard let shareId = cloudKitShareId ?? shareRecordId else {
             return
         }
 
         do {
             let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
             _ = try await database.deleteRecord(withID: shareId)
-            item.cloudKitShareRecord = nil
+            await item.setCloudKitShareRecord(nil)
             await item.postModified()
         } catch {
             if error.itemDoesNotExistOnServer {
                 do {
-                    item.cloudKitShareRecord = nil
+                    await item.setCloudKitShareRecord(nil)
                     try await fetchCloudRecord(for: item)
                 } catch {
                     throw error

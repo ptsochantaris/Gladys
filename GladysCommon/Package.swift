@@ -1,13 +1,13 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 
 import PackageDescription
 
 let package = Package(
     name: "GladysCommon",
     platforms: [
-        .macOS(.v12),
-        .iOS(.v15),
-        .watchOS(.v8),
+        .macOS(.v14),
+        .iOS(.v17),
+        .watchOS(.v10),
         .visionOS(.v1)
     ],
     products: [
@@ -19,7 +19,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/sindresorhus/ExceptionCatcher", from: "2.0.0"),
         .package(url: "https://github.com/scinfu/SwiftSoup.git", from: "2.0.0"),
-        .package(url: "https://github.com/weichsel/ZIPFoundation", branch: "development"),
+        .package(url: "https://github.com/weichsel/ZIPFoundation", from: "0.9.0"),
         .package(url: "https://github.com/ptsochantaris/semalot", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/lista", branch: "main"),
         .package(url: "https://github.com/ptsochantaris/pop-timer", branch: "main"),

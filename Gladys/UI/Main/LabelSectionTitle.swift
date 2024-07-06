@@ -31,7 +31,7 @@ final class ScrollFadeView: UICollectionReusableView {
         updateColor()
     }
 
-    override class var layerClass: AnyClass {
+    override static var layerClass: AnyClass {
         CAGradientLayer.self
     }
 
@@ -41,11 +41,11 @@ final class ScrollFadeView: UICollectionReusableView {
         notifications(for: .ModelDataUpdated) { [weak self] _ in
             self?.updateColor()
         }
-    }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateColor()
+        registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
+            guard let self else { return }
+            updateColor()
+        }
     }
 
     private func updateColor() {

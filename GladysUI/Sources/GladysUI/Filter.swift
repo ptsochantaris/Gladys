@@ -68,9 +68,12 @@ public final class Filter {
     }
 
     public func sizeOfVisibleItemsInBytes() async -> Int64 {
-        let snapshot = filteredDrops
-        return await Task.detached {
-            snapshot.reduce(0) { $0 + $1.sizeInBytes }
+        await Task.detached { [filteredDrops] in
+            var total: Int64 = 0
+            for drop in filteredDrops {
+                total += await drop.sizeInBytes
+            }
+            return total
         }.value
     }
 
@@ -196,7 +199,7 @@ public final class Filter {
     private func findIds(for queryString: String) -> Set<UUID> {
         var replacementResults = Set<UUID>()
 
-        let q = CSSearchQuery(queryString: queryString, attributes: nil)
+        let q = CSSearchQuery(queryString: queryString, queryContext: nil)
         q.foundItemsHandler = { items in
             for item in items {
                 if let uuid = UUID(uuidString: item.uniqueIdentifier) {

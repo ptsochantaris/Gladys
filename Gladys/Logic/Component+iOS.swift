@@ -178,40 +178,50 @@ final class GladysPreviewController: GladysViewController, QLPreviewControllerDa
         Component.PreviewItem(typeItem: typeItem)
     }
 
-    func previewController(_: QLPreviewController, editingModeFor _: QLPreviewItem) -> QLPreviewItemEditingMode {
+    nonisolated func previewController(_: QLPreviewController, editingModeFor _: QLPreviewItem) -> QLPreviewItemEditingMode {
         .disabled
     }
 }
 
+@MainActor
 final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     private let component: Component
     private let previewItem: Component.PreviewItem
 
-    @MainActor
     init(component: Component) {
         self.component = component
         previewItem = Component.PreviewItem(typeItem: component)
         super.init()
     }
 
-    func activityViewControllerPlaceholderItem(_: UIActivityViewController) -> Any {
-        (component.encodedUrl as Any?) ?? (previewItem.previewItemURL as Any?) ?? Data()
+    nonisolated func activityViewControllerPlaceholderItem(_: UIActivityViewController) -> Any {
+        MainActor.assumeIsolated {
+            (component.encodedUrl as Any?) ?? (previewItem.previewItemURL as Any?) ?? Data()
+        }
     }
 
-    func activityViewController(_: UIActivityViewController, itemForActivityType _: UIActivity.ActivityType?) -> Any? {
-        component.encodedUrl ?? previewItem.previewItemURL
+    nonisolated func activityViewController(_: UIActivityViewController, itemForActivityType _: UIActivity.ActivityType?) -> Any? {
+        MainActor.assumeIsolated {
+            component.encodedUrl ?? previewItem.previewItemURL
+        }
     }
 
-    func activityViewController(_: UIActivityViewController, subjectForActivityType _: UIActivity.ActivityType?) -> String {
-        previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
+    nonisolated func activityViewController(_: UIActivityViewController, subjectForActivityType _: UIActivity.ActivityType?) -> String {
+        MainActor.assumeIsolated {
+            previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
+        }
     }
 
-    func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
-        component.componentIcon
+    nonisolated func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
+        MainActor.assumeIsolated {
+            component.componentIcon
+        }
     }
 
-    func activityViewController(_: UIActivityViewController, dataTypeIdentifierForActivityType _: UIActivity.ActivityType?) -> String {
-        component.typeIdentifier
+    nonisolated func activityViewController(_: UIActivityViewController, dataTypeIdentifierForActivityType _: UIActivity.ActivityType?) -> String {
+        MainActor.assumeIsolated {
+            component.typeIdentifier
+        }
     }
 
     /*

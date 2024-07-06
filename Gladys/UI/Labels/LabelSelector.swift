@@ -43,11 +43,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             searchController.delegate = self
             searchController.searchResultsUpdater = self
             searchController.searchBar.tintColor = view.tintColor
-            #if swift(>=5.9)
-                if #available(iOS 17.0, *) {
-                    searchController.searchBar.isLookToDictateEnabled = true
-                }
-            #endif
+            searchController.searchBar.isLookToDictateEnabled = true
             searchController.hidesNavigationBarDuringPresentation = false
             navigationItem.hidesSearchBarWhenScrolling = false
             navigationItem.searchController = searchController

@@ -67,25 +67,15 @@
             }
         }
 
-        @MainActor // lie, but taking care of that in the method
         public func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            if Thread.isMainThread {
+            try onlyOnMainThread {
                 try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-            } else {
-                try DispatchQueue.main.sync {
-                    try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-                }
             }
         }
 
-        @MainActor // lie, but taking care of that in the method
         public func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
-            if Thread.isMainThread {
+            try onlyOnMainThread {
                 try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-            } else {
-                try DispatchQueue.main.sync {
-                    try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-                }
             }
         }
 

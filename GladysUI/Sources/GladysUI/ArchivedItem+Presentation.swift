@@ -27,7 +27,7 @@ public extension ArchivedItem {
         }
     }
 
-    private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
+    nonisolated private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         log(">>> New presentation task \(uuid.uuidString)")
         defer {
             if Task.isCancelled {
@@ -41,7 +41,7 @@ public extension ArchivedItem {
             return nil
         }
 
-        let lock = style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
+        let lock = await style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
         await lock.takeTicket()
         defer {
             lock.returnTicket()
@@ -53,13 +53,13 @@ public extension ArchivedItem {
 
         assert(!Thread.isMainThread)
 
-        let topInfo = prepareTopText()
+        let topInfo = await prepareTopText()
 
         if Task.isCancelled {
             return nil
         }
 
-        let bottomInfo = prepareBottomText()
+        let bottomInfo = await prepareBottomText()
 
         if Task.isCancelled {
             return nil
@@ -69,7 +69,8 @@ public extension ArchivedItem {
         var bottom = PresentationInfo.defaultCardColor
         var result: IMAGE?
 
-        if style != .square || displayMode == .center {
+        let dm = await displayMode
+        if dm == .center || style != .square {
             result = await prepareImage(asThumbnail: style == .widget)
             if Task.isCancelled {
                 return nil
@@ -129,6 +130,8 @@ public extension ArchivedItem {
             }
         }
 
+        let highlight = await status.shouldDisplayLoading ? .none : highlightColor
+
         let p = PresentationInfo(
             id: uuid,
             topText: topInfo,
@@ -136,8 +139,8 @@ public extension ArchivedItem {
             bottomText: bottomInfo,
             bottom: bottom,
             image: result,
-            highlightColor: status.shouldDisplayLoading ? .none : highlightColor,
-            hasFullImage: displayMode.prefersFullSizeImage
+            highlightColor: highlight,
+            hasFullImage: dm.prefersFullSizeImage
         )
 
         presentationInfoCache[uuid] = p
@@ -174,8 +177,6 @@ public extension ArchivedItem {
     }
 
     private func prepareImage(asThumbnail: Bool) async -> IMAGE? {
-        assert(!Thread.isMainThread)
-
         if asThumbnail {
             return thumbnail
         }

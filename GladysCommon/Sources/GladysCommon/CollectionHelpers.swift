@@ -1,17 +1,40 @@
 import Foundation
 import Lista
 
-public extension Sequence where Element: Hashable {
+public extension Collection where Element: Hashable {
     var uniqued: [Element] {
         var set = Set<Element>()
         set.reserveCapacity(underestimatedCount)
         return filter { set.insert($0).inserted }
     }
-}
 
-extension Array: Identifiable where Element: Identifiable {
-    public var id: String {
-        map { String(describing: $0) }.joined()
+    func asyncMap<T>(block: (Element) async -> T) async -> [T] {
+        var result = [T]()
+        result.reserveCapacity(count)
+        for element in self {
+            result.append(await block(element))
+        }
+        return result
+    }
+
+    func asyncCompactMap<T>(block: (Element) async -> T?) async -> [T] {
+        var result = [T]()
+        result.reserveCapacity(count)
+        for element in self {
+            if let converted = await block(element) {
+                result.append(converted)
+            }
+        }
+        return result
+    }
+
+    func asyncFilter(block: (Element) async -> Bool) async -> [Element] {
+        var result = [Element]()
+        result.reserveCapacity(count)
+        for element in self where await block(element) {
+            result.append(element)
+        }
+        return result
     }
 }
 

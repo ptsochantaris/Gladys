@@ -1,11 +1,11 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 
 import PackageDescription
 
 let package = Package(
     name: "GladysUIKit",
     platforms: [
-        .iOS(.v16),
+        .iOS(.v17),
         .visionOS(.v1)
     ],
     products: [

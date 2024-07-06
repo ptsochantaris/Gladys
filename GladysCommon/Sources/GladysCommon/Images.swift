@@ -1,7 +1,8 @@
 import CoreLocation
 import MapKit
 
-extension CLLocationCoordinate2D: Hashable {
+extension CLLocationCoordinate2D: @retroactive Equatable {}
+extension CLLocationCoordinate2D: @retroactive Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
@@ -12,7 +13,7 @@ extension CLLocationCoordinate2D: Hashable {
     }
 }
 
-extension CGSize: Hashable {
+extension CGSize: @retroactive Hashable {
     public static func == (lhs: CGSize, rhs: CGSize) -> Bool {
         lhs.width == rhs.width && lhs.height == rhs.height
     }
@@ -25,6 +26,7 @@ extension CGSize: Hashable {
 
 public let imageDimensions = CGSize(width: 512, height: 512)
 
+@MainActor
 public protocol DisplayImageProviding {
     var imageCacheKey: String { get }
     var displayIcon: IMAGE { get }

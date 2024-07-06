@@ -6,6 +6,8 @@ import MapKit
 import UIKit
 import WatchConnectivity
 
+extension MKMapItem: @retroactive @unchecked Sendable {}
+
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
         super.init()

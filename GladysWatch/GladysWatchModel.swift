@@ -5,6 +5,7 @@ final class GladysWatchModel: NSObject, ObservableObject, WCSessionDelegate {
     @Published var reportedCount = 0
     @Published var dropList = [Drop]()
 
+    @MainActor
     static let shared = GladysWatchModel()
 
     enum State {

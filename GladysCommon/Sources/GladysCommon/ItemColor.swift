@@ -1,4 +1,4 @@
-public enum ItemColor: String, CaseIterable, Codable {
+public enum ItemColor: String, CaseIterable, Codable, Sendable {
     case none, blue, red, purple, green, cyan, yellow, gray
 
     public var title: String {

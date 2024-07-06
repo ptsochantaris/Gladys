@@ -5,7 +5,10 @@ import Messages
 import PopTimer
 import UIKit
 
+@MainActor
 private var messagesCurrentOffset = CGPoint.zero
+
+@MainActor
 private var lastFilter: String?
 
 final class MessagesViewController: MSMessagesAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UISearchBarDelegate {
@@ -90,11 +93,7 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        #if swift(>=5.9)
-            if #available(iOS 17.0, *) {
-                searchBar.isLookToDictateEnabled = true
-            }
-        #endif
+        searchBar.isLookToDictateEnabled = true
         searchTimer = PopTimer(timeInterval: 0.3) { [weak self] in
             guard let self else { return }
             searchUpdated()

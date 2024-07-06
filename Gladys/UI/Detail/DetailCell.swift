@@ -1,6 +1,7 @@
 import GladysCommon
 import UIKit
 
+@MainActor
 protocol DetailCellDelegate: AnyObject {
     func inspectOptionSelected(in cell: DetailCell)
     func archiveOptionSelected(in cell: DetailCell)

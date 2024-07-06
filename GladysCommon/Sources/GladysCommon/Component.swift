@@ -11,6 +11,7 @@ import Semalot
 import UniformTypeIdentifiers
 import ZIPFoundation
 
+@MainActor
 public final class Component: Codable, Hashable {
     private enum CodingKeys: String, CodingKey {
         case typeIdentifier
@@ -31,30 +32,31 @@ public final class Component: Codable, Hashable {
         case order
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var v = encoder.container(keyedBy: CodingKeys.self)
-        try v.encode(typeIdentifier, forKey: .typeIdentifier)
-        try v.encode(representedClass, forKey: .representedClass)
-        try v.encode(classWasWrapped, forKey: .classWasWrapped)
-        try v.encode(uuid, forKey: .uuid)
-        try v.encode(parentUuid, forKey: .parentUuid)
-        try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
-        try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
-        try v.encode(displayTitleAlignment.rawValue, forKey: .displayTitleAlignment)
-        try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
-        try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
-        try v.encode(displayIconPriority, forKey: .displayIconPriority)
-        try v.encode(createdAt, forKey: .createdAt)
-        try v.encode(updatedAt, forKey: .updatedAt)
-        try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
-        try v.encode(needsDeletion, forKey: .needsDeletion)
-        try v.encode(order, forKey: .order)
+    nonisolated public func encode(to encoder: Encoder) throws {
+        try MainActor.assumeIsolated {
+            var v = encoder.container(keyedBy: CodingKeys.self)
+            try v.encode(typeIdentifier, forKey: .typeIdentifier)
+            try v.encode(representedClass, forKey: .representedClass)
+            try v.encode(classWasWrapped, forKey: .classWasWrapped)
+            try v.encode(uuid, forKey: .uuid)
+            try v.encode(parentUuid, forKey: .parentUuid)
+            try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
+            try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
+            try v.encode(displayTitleAlignment.rawValue, forKey: .displayTitleAlignment)
+            try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
+            try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
+            try v.encode(displayIconPriority, forKey: .displayIconPriority)
+            try v.encode(createdAt, forKey: .createdAt)
+            try v.encode(updatedAt, forKey: .updatedAt)
+            try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
+            try v.encode(needsDeletion, forKey: .needsDeletion)
+            try v.encode(order, forKey: .order)
+        }
     }
 
-    public init(from decoder: Decoder) throws {
+    nonisolated public init(from decoder: Decoder) throws {
         let v = try decoder.container(keyedBy: CodingKeys.self)
         typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
-        representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
         classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
 
         uuid = try v.decode(UUID.self, forKey: .uuid)
@@ -78,7 +80,9 @@ public final class Component: Codable, Hashable {
         let m = try v.decode(Int.self, forKey: .displayIconContentMode)
         displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
-        flags = []
+        try onlyOnMainThread {
+            representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
+        }
     }
 
     public var typeIdentifier: String
@@ -87,7 +91,7 @@ public final class Component: Codable, Hashable {
     public let parentUuid: UUID
     public let createdAt: Date
     public var updatedAt: Date
-    public var representedClass: RepresentedClass
+    public var representedClass = RepresentedClass.unknown(name: "")
     public var classWasWrapped: Bool
     public var needsDeletion: Bool
     public var order: Int
@@ -110,7 +114,7 @@ public final class Component: Codable, Hashable {
         public static let loadingAborted = Flags(rawValue: 1 << 1)
     }
 
-    public var flags: Flags
+    public var flags = Flags()
 
     public var contributedLabels: [String]?
 
@@ -230,10 +234,7 @@ public final class Component: Codable, Hashable {
     }
 
     public var dataExists: Bool {
-        componentAccessQueue.sync {
-            // required to avoid race condition
-            FileManager.default.fileExists(atPath: bytesPath.path)
-        }
+        FileManager.default.fileExists(atPath: bytesPath.path)
     }
 
     //////////////////////////////////////////// Common
@@ -288,16 +289,14 @@ public final class Component: Codable, Hashable {
 
     public func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
-        componentAccessQueue.async(flags: .barrier) {
-            if data == nil || self.flags.contains(.loadingAborted) {
-                let f = FileManager.default
-                if f.fileExists(atPath: byteLocation.path) {
-                    try? f.removeItem(at: byteLocation)
-                }
-            } else {
-                try? data?.write(to: byteLocation)
-                self.lastGladysBlobUpdate = Date()
+        if data == nil || self.flags.contains(.loadingAborted) {
+            let f = FileManager.default
+            if f.fileExists(atPath: byteLocation.path) {
+                try? f.removeItem(at: byteLocation)
             }
+        } else {
+            try? data?.write(to: byteLocation)
+            self.lastGladysBlobUpdate = Date()
         }
     }
 
@@ -327,15 +326,11 @@ public final class Component: Codable, Hashable {
     }
 
     public var bytes: Data? {
-        componentAccessQueue.sync {
-            Data.forceMemoryMapped(contentsOf: bytesPath)
-        }
+        Data.forceMemoryMapped(contentsOf: bytesPath)
     }
 
     public var hasBytes: Bool {
-        componentAccessQueue.sync {
-            FileManager.default.fileExists(atPath: bytesPath.path)
-        }
+        FileManager.default.fileExists(atPath: bytesPath.path)
     }
 
     public var isPlist: Bool {
@@ -624,23 +619,21 @@ public final class Component: Codable, Hashable {
     }
 
     public var sizeInBytes: Int64 {
-        componentAccessQueue.sync {
-            let fm = FileManager.default
+        let fm = FileManager.default
 
-            var isDir: ObjCBool = false
-            let url = getBytesPath(createIfNeeded: false)
-            let path = url.path
-            if fm.fileExists(atPath: path, isDirectory: &isDir) {
-                if isDir.boolValue {
-                    return fm.contentSizeOfDirectory(at: url)
-                } else {
-                    if let attrs = try? fm.attributesOfItem(atPath: path) {
-                        return attrs[FileAttributeKey.size] as? Int64 ?? 0
-                    }
+        var isDir: ObjCBool = false
+        let url = getBytesPath(createIfNeeded: false)
+        let path = url.path
+        if fm.fileExists(atPath: path, isDirectory: &isDir) {
+            if isDir.boolValue {
+                return fm.contentSizeOfDirectory(at: url)
+            } else {
+                if let attrs = try? fm.attributesOfItem(atPath: path) {
+                    return attrs[FileAttributeKey.size] as? Int64 ?? 0
                 }
             }
-            return 0
         }
+        return 0
     }
 
     private var cloudKitDataPath: URL {
@@ -659,32 +652,28 @@ public final class Component: Codable, Hashable {
                 return cached.record
             }
             let recordLocation = cloudKitDataPath
-            return componentAccessQueue.sync {
-                if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
-                    let record = CKRecord(coder: coder)
-                    coder.finishDecoding()
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
-                    return record
+            if let data = try? Data(contentsOf: recordLocation), let coder = try? NSKeyedUnarchiver(forReadingFrom: data) {
+                let record = CKRecord(coder: coder)
+                coder.finishDecoding()
+                cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: record)
+                return record
 
-                } else {
-                    cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
-                    return nil
-                }
+            } else {
+                cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: nil)
+                return nil
             }
         }
         set {
             cloudKitRecordCache[uuid] = CKRecordCacheEntry(record: newValue)
             let recordLocation = cloudKitDataPath
-            componentAccessQueue.async(flags: .barrier) {
-                if let newValue {
-                    let coder = NSKeyedArchiver(requiringSecureCoding: true)
-                    newValue.encodeSystemFields(with: coder)
-                    try? coder.encodedData.write(to: recordLocation)
-                } else {
-                    let f = FileManager.default
-                    if f.fileExists(atPath: recordLocation.path) {
-                        try? f.removeItem(at: recordLocation)
-                    }
+            if let newValue {
+                let coder = NSKeyedArchiver(requiringSecureCoding: true)
+                newValue.encodeSystemFields(with: coder)
+                try? coder.encodedData.write(to: recordLocation)
+            } else {
+                let f = FileManager.default
+                if f.fileExists(atPath: recordLocation.path) {
+                    try? f.removeItem(at: recordLocation)
                 }
             }
         }
@@ -746,15 +735,23 @@ public final class Component: Codable, Hashable {
         }
     #endif
 
-    public static func == (lhs: Component, rhs: Component) -> Bool {
+    nonisolated public static func == (lhs: Component, rhs: Component) -> Bool {
         lhs.uuid == rhs.uuid
     }
 
-    public func hash(into hasher: inout Hasher) {
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
     public static let iconPointSize = CGSize(width: 256, height: 256)
+
+    public func setCloudKitRecord(_ newRecord: CKRecord?) {
+        cloudKitRecord = newRecord
+    }
+
+    public func setNeedsDeletion(_ newValue: Bool) {
+        needsDeletion = newValue
+    }
 
     public var backgroundInfoObject: (Any?, Int) {
         switch representedClass {
@@ -1114,9 +1111,8 @@ public final class Component: Codable, Hashable {
             }
 
         } else if typeIdentifier == "public.utf8-plain-text" {
-            if let s = String(data: data, encoding: .utf8) {
-                setTitleInfo(s, 9)
-            }
+            let s = String(decoding: data, as: UTF8.self)
+            setTitleInfo(s, 9)
             await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeIdentifier == "public.utf16-plain-text" {
@@ -1141,9 +1137,8 @@ public final class Component: Codable, Hashable {
             try await handleUrl(url as URL, data, storeBytes)
 
         } else if typeConforms(to: .text) {
-            if let s = String(data: data, encoding: .utf8) {
-                setTitleInfo(s, 5)
-            }
+            let s = String(decoding: data, as: UTF8.self)
+            setTitleInfo(s, 5)
             await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
         } else if typeConforms(to: .image) {
@@ -1186,8 +1181,6 @@ public final class Component: Codable, Hashable {
         guard priority >= displayIconPriority else {
             return
         }
-
-        assert(!Thread.isMainThread)
 
         componentIcon =
             switch contentMode {

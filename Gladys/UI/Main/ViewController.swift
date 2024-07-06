@@ -5,6 +5,9 @@ import Lista
 import PopTimer
 import UIKit
 
+extension ItemIdentifier: @retroactive @unchecked Sendable {}
+extension SectionIdentifier: @retroactive @unchecked Sendable {}
+
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate, HighlightListener {
@@ -391,6 +394,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let p = segue.destination.popoverPresentationController {
                 p.delegate = self
             }
+
         case "showDetail":
             guard let item = sender as? ArchivedItem,
                   let indexPath = mostRecentIndexPathActioned,
@@ -476,15 +480,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
         var observation: NSKeyValueObservation?
         observation = cell.observe(\.center, options: .new) { strongCell, _ in
-            let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
-            popOver.sourceRect = cellRect
-            popOver.containerView?.setNeedsLayout()
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-                popOver.containerView?.layoutIfNeeded()
+            Task { @MainActor in
+                let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
+                popOver.sourceRect = cellRect
+                popOver.containerView?.setNeedsLayout()
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+                    popOver.containerView?.layoutIfNeeded()
+                }
+                observation = nil
             }
-            observation = nil
         }
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             if observation != nil { // keep it around
                 observation = nil
@@ -523,12 +529,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         ArchivedItem.updateUserActivity(activity, from: item, child: nil, titled: "Quick look")
 
         let options = UIWindowScene.ActivationRequestOptions()
-        #if os(visionOS)
-            options.placement = UIWindowSceneProminentPlacement.prominent()
-        #else
-            options.preferredPresentationStyle = .prominent
-        #endif
-
+        options.placement = UIWindowSceneProminentPlacement.prominent()
         return UIWindowScene.ActivationConfiguration(userActivity: activity, options: options, preview: cell.targetedPreviewItem)
     }
 
@@ -939,9 +940,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         searchController.searchBar.returnKeyType = .search
         searchController.searchBar.enablesReturnKeyAutomatically = false
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
-        if #available(iOS 17.0, *) {
-            searchController.searchBar.isLookToDictateEnabled = true
-        }
+        searchController.searchBar.isLookToDictateEnabled = true
         navigationItem.searchController = searchController
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
@@ -997,6 +996,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         filter.delegate = self
         filterChanged()
+
+        registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
+            guard let self else { return }
+            updatePasteButton()
+            presentationInfoCache.reset()
+            collection.reloadData()
+        }
     }
 
     deinit {
@@ -1670,15 +1676,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if previousTraitCollection?.hasDifferentColorAppearance(comparedTo: traitCollection) ?? true {
-            updatePasteButton()
-            presentationInfoCache.reset()
-            collection.reloadData()
-        }
-    }
-
     var currentColumnCount = 1
     private var cellSize = CGSize.zero
 
@@ -2181,9 +2178,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let uuid = csc.share?.parent?.recordID.recordName, let item = DropStore.item(uuid: uuid), let ip = item.imagePath else {
             return nil
         }
-        return componentAccessQueue.sync {
-            try? Data(contentsOf: ip)
-        }
+        return try? Data(contentsOf: ip)
     }
 
     private func shareOptionsPrivate(for item: ArchivedItem, at indexPath: IndexPath) {

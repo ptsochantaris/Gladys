@@ -38,6 +38,11 @@ open class CommonItemCell: UICollectionViewCell {
         itemViewController.view.isOpaque = false
         layer.shouldRasterize = true
         setNeedsLayout()
+
+        registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
+            guard let self else { return }
+            archivedDropItem?.objectWillChange.send()
+        }
     }
 
     override public init(frame: CGRect) {
@@ -61,13 +66,6 @@ open class CommonItemCell: UICollectionViewCell {
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
             invalidateView()
-        }
-    }
-
-    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            archivedDropItem?.objectWillChange.send()
         }
     }
 

@@ -5,6 +5,7 @@ import GladysUIKit
 import UIKit
 import UniformTypeIdentifiers
 
+@MainActor
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
 }

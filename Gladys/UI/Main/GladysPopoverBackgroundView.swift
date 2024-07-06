@@ -2,21 +2,21 @@
     import UIKit
 
     final class GladysPopoverBackgroundView: UIPopoverBackgroundView {
-        override class func contentViewInsets() -> UIEdgeInsets {
+        override static func contentViewInsets() -> UIEdgeInsets {
             .zero
         }
 
         private let arrowRectangle = Arrow(frame: CGRect(x: 0, y: 0, width: 44, height: 12))
 
-        override class func arrowBase() -> CGFloat {
+        override static func arrowBase() -> CGFloat {
             44
         }
 
-        override class func arrowHeight() -> CGFloat {
+        override static func arrowHeight() -> CGFloat {
             12
         }
 
-        override class var wantsDefaultContentAppearance: Bool {
+        override static var wantsDefaultContentAppearance: Bool {
             true
         }
 
@@ -81,6 +81,11 @@
             addSubview(arrowRectangle)
 
             updateColors()
+
+            registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
+                guard let self else { return }
+                updateColors()
+            }
         }
 
         private var darkMode: Bool {
@@ -89,11 +94,6 @@
 
         private func updateColors() {
             layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.75 : 0.25).cgColor
-        }
-
-        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            super.traitCollectionDidChange(previousTraitCollection)
-            updateColors()
         }
 
         @available(*, unavailable)

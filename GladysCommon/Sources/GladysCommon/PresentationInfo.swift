@@ -1,8 +1,8 @@
 import Foundation
 import SwiftUI
 
-public struct PresentationInfo: Identifiable, Hashable {
-    public enum FieldContent {
+public struct PresentationInfo: Identifiable, Hashable, Sendable {
+    public enum FieldContent: Sendable {
         case none, text(String), link(URL), note(String), hint(String)
 
         public var willBeVisible: Bool {
@@ -47,7 +47,7 @@ public struct PresentationInfo: Identifiable, Hashable {
         }
     }
 
-    public struct LabelInfo {
+    public struct LabelInfo: Sendable {
         public let content: FieldContent
         public let backgroundColor: Color
         public let isBright: Bool

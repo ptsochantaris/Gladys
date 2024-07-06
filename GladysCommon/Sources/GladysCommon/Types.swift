@@ -46,10 +46,7 @@ public let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
 public let kGladysMainViewSections = "kGladysMainViewSections"
 public let kGladysMainFilter = "mainFilter"
 
-public let itemAccessQueue = DispatchQueue(label: "build.bru.Gladys.itemAccessQueue", qos: .default, attributes: .concurrent)
-public let componentAccessQueue = DispatchQueue(label: "build.bru.Gladys.componentAccessQueue", qos: .default, attributes: .concurrent)
-
-public enum ArchivedDropItemDisplayType: Int {
+public enum ArchivedDropItemDisplayType: Int, Sendable {
     case fit, fill, center, circle
 
     public var prefersFullSizeImage: Bool {
@@ -65,7 +62,7 @@ public enum ArchivedDropItemDisplayType: Int {
 public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 public let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
 
-public enum PasteResult {
+public enum PasteResult: Sendable {
     case success([ArchivedItem]), noData
 }
 
