@@ -345,20 +345,19 @@ public extension CloudManager {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }
 
-        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-            taskGroup.addTask {
-                _ = try await container.sharedCloudDatabase.deleteSubscription(withID: sharedDatabaseSubscriptionId)
+        do {
+            try await withThrowingDiscardingTaskGroup {
+                $0.addTask {
+                    _ = try await container.sharedCloudDatabase.deleteSubscription(withID: sharedDatabaseSubscriptionId)
+                }
+                $0.addTask {
+                    _ = try await container.privateCloudDatabase.deleteSubscription(withID: privateDatabaseSubscriptionId)
+                }
             }
-            taskGroup.addTask {
-                _ = try await container.privateCloudDatabase.deleteSubscription(withID: privateDatabaseSubscriptionId)
-            }
-            do {
-                try await taskGroup.waitForAll()
-            } catch {
-                if force { return }
-                log("Cloud sync deactivation failed: \(error.localizedDescription)")
-                throw error
-            }
+        } catch {
+            if force { return }
+            log("Cloud sync deactivation failed: \(error.localizedDescription)")
+            throw error
         }
 
         deletionQueue.removeAll()
@@ -392,21 +391,20 @@ public extension CloudManager {
     private static func updateSubscriptions() async throws {
         log("Updating subscriptions to CK zones")
 
-        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-            taskGroup.addTask {
-                let subscribeToPrivateDatabase = await subscriptionToDatabaseZone(id: privateDatabaseSubscriptionId)
-                _ = try await container.privateCloudDatabase.modifySubscriptions(saving: [subscribeToPrivateDatabase], deleting: [])
+        do {
+            try await withThrowingDiscardingTaskGroup {
+                $0.addTask {
+                    let subscribeToPrivateDatabase = await subscriptionToDatabaseZone(id: privateDatabaseSubscriptionId)
+                    _ = try await container.privateCloudDatabase.modifySubscriptions(saving: [subscribeToPrivateDatabase], deleting: [])
+                }
+                $0.addTask {
+                    let subscribeToSharedDatabase = await subscriptionToDatabaseZone(id: sharedDatabaseSubscriptionId)
+                    _ = try await container.sharedCloudDatabase.modifySubscriptions(saving: [subscribeToSharedDatabase], deleting: [])
+                }
             }
-            taskGroup.addTask {
-                let subscribeToSharedDatabase = await subscriptionToDatabaseZone(id: sharedDatabaseSubscriptionId)
-                _ = try await container.sharedCloudDatabase.modifySubscriptions(saving: [subscribeToSharedDatabase], deleting: [])
-            }
-            do {
-                try await taskGroup.waitForAll()
-            } catch {
-                log("CK zone subscription failed: \(error.localizedDescription)")
-                throw error
-            }
+        } catch {
+            log("CK zone subscription failed: \(error.localizedDescription)")
+            throw error
         }
     }
 
@@ -468,7 +466,7 @@ public extension CloudManager {
             return
         }
 
-        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+        try await withThrowingDiscardingTaskGroup { taskGroup in
             for (zoneId, fetchGroup) in fetchGroups {
                 taskGroup.addTask { @MainActor in
                     let c = await container
@@ -495,7 +493,6 @@ public extension CloudManager {
                     }
                 }
             }
-            try await taskGroup.waitForAll()
         }
     }
 

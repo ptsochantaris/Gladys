@@ -200,7 +200,7 @@ final actor PullState {
             }
         }
 
-        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+        try await withThrowingDiscardingTaskGroup { taskGroup in
             for zoneID in zoneIDs {
                 taskGroup.addTask {
                     var zoneToken = await self.zoneToken(for: zoneID)
@@ -245,7 +245,6 @@ final actor PullState {
                     changeQueue.continuation.yield(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
                 }
             }
-            try await taskGroup.waitForAll()
         }
 
         changeQueue.continuation.finish()
