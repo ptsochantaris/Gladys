@@ -9,13 +9,13 @@
     import Vision
 #endif
 import CloudKit
+import Combine
 import Foundation
 import Lista
 import Maintini
 import NaturalLanguage
 import SwiftUI
 import UniformTypeIdentifiers
-import Combine
 
 @MainActor
 @Observable
@@ -76,13 +76,13 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    public var note: String = "" {
+    public var note = "" {
         didSet {
             flags.insert(.needsSaving)
         }
     }
 
-    public var titleOverride: String = "" {
+    public var titleOverride = "" {
         didSet {
             flags.insert(.needsSaving)
         }
@@ -143,7 +143,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         case highlightColor
     }
 
-    nonisolated public func encode(to encoder: Encoder) throws {
+    public nonisolated func encode(to encoder: Encoder) throws {
         var v = encoder.container(keyedBy: CodingKeys.self)
         try v.encodeIfPresent(suggestedName, forKey: .suggestedName)
         try v.encode(createdAt, forKey: .createdAt)
@@ -161,7 +161,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    nonisolated public init(from decoder: Decoder) throws {
+    public nonisolated init(from decoder: Decoder) throws {
         let v = try decoder.container(keyedBy: CodingKeys.self)
         suggestedName = try v.decodeIfPresent(String.self, forKey: .suggestedName)
         let c = try v.decode(Date.self, forKey: .createdAt)
@@ -310,11 +310,11 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         status = newStatus
     }
 
-    nonisolated public static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
+    public nonisolated static func == (lhs: ArchivedItem, rhs: ArchivedItem) -> Bool {
         lhs.uuid == rhs.uuid
     }
 
-    nonisolated public func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
@@ -539,7 +539,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                 let coder = NSKeyedArchiver(requiringSecureCoding: true)
                 newValue.encodeSystemFields(with: coder)
                 try? coder.encodedData.write(to: recordLocation)
-                self.needsCloudPush = false
+                needsCloudPush = false
             } else {
                 let f = FileManager.default
                 let path = recordLocation.path

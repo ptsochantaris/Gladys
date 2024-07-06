@@ -34,24 +34,20 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let i = NSItemProvider()
         i.suggestedName = "Gladys Archive.gladysArchive"
         i.registerFileRepresentation(forTypeIdentifier: GladysFileUTI, fileOptions: [], visibility: .all) { completion -> Progress? in
+            let p = Progress(totalUnitCount: 100)
             Task { @MainActor in
                 self.showExportActivity(true)
-            }
-            return ImportExport().createArchive(using: filter) { result in
-                switch result {
-                case let .success(url):
+                do {
+                    let url = try await ImportExport.createArchive(using: filter, progress: p)
                     completion(url, false, nil)
                     try? FileManager.default.removeItem(at: url)
-                case let .failure(error):
+                } catch {
                     completion(nil, false, error)
-                    Task {
-                        await genericAlert(title: "Error", message: error.localizedDescription)
-                    }
+                    await genericAlert(title: "Error", message: error.localizedDescription)
                 }
-                Task { @MainActor in
-                    self.showExportActivity(false)
-                }
+                self.showExportActivity(false)
             }
+            return p
         }
         return [UIDragItem(itemProvider: i)]
     }
@@ -62,24 +58,20 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         let i = NSItemProvider()
         i.suggestedName = "Gladys.zip"
         i.registerFileRepresentation(forTypeIdentifier: UTType.zip.identifier, fileOptions: [], visibility: .all) { completion -> Progress? in
+            let p = Progress(totalUnitCount: 100)
             Task { @MainActor in
                 self.showZipActivity(true)
-            }
-            return ImportExport().createZip(using: filter) { result in
-                switch result {
-                case let .success(url):
+                do {
+                    let url = try await ImportExport.createZip(using: filter, progress: p)
                     completion(url, false, nil)
                     try? FileManager.default.removeItem(at: url)
-                case let .failure(error):
+                } catch {
                     completion(nil, false, error)
-                    Task { @MainActor in
-                        await genericAlert(title: "Error", message: error.localizedDescription)
-                    }
+                    await genericAlert(title: "Error", message: error.localizedDescription)
                 }
-                Task { @MainActor in
-                    self.showZipActivity(false)
-                }
+                self.showZipActivity(false)
             }
+            return p
         }
         return [UIDragItem(itemProvider: i)]
     }
@@ -108,8 +100,12 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                     return
                 }
                 if let url {
-                    DispatchQueue.main.sync { // sync is intentional, to keep the data around
-                        self.importArchive(from: url)
+                    let securityScoped = url.startAccessingSecurityScopedResource()
+                    Task {
+                        await self.importArchive(from: url)
+                        if securityScoped {
+                            url.stopAccessingSecurityScopedResource()
+                        }
                     }
                 } else {
                     Task { @MainActor in
@@ -302,14 +298,15 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     private func exportSelected() {
         guard let filter = view.associatedFilter else { return }
-        Task { @MainActor in
-            self.showExportActivity(true)
-        }
-        _ = ImportExport().createArchive(using: filter) { result in
-            self.completeOperation(result: result)
-            Task { @MainActor in
-                self.showExportActivity(false)
+        showExportActivity(true)
+        Task {
+            do {
+                let url = try await ImportExport.createArchive(using: filter, progress: Progress())
+                completeOperation(url: url)
+            } catch {
+                await genericAlert(title: "Error", message: error.localizedDescription)
             }
+            showExportActivity(false)
         }
     }
 
@@ -319,55 +316,54 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         present(p, animated: true)
     }
 
-    private func importArchive(from url: URL) {
+    private func importArchive(from url: URL) async {
         do {
-            try ImportExport().importArchive(from: url, removingOriginal: true)
+            try await ImportExport.importArchive(from: url, removingOriginal: true)
         } catch {
-            Task { @MainActor in
-                await genericAlert(title: "Error", message: error.localizedDescription)
-            }
+            await genericAlert(title: "Error", message: error.localizedDescription)
         }
         updateUI()
     }
 
-    private func completeOperation(result: Result<URL, Error>) {
-        switch result {
-        case let .success(url):
-            Task { @MainActor in
-                self.exportingFileURL = url
-                let p = UIDocumentPickerViewController(forExporting: [url])
-                p.delegate = self
-                self.present(p, animated: true)
-            }
-        case let .failure(error):
-            Task {
-                await genericAlert(title: "Error", message: error.localizedDescription)
-            }
-        }
+    @MainActor
+    private func completeOperation(url: URL) {
+        exportingFileURL = url
+        let p = UIDocumentPickerViewController(forExporting: [url])
+        p.delegate = self
+        present(p, animated: true)
     }
 
     @objc private func zipSelected() {
         guard let filter = view.associatedFilter else { return }
-
-        Task { @MainActor in
-            self.showZipActivity(true)
-        }
-        _ = ImportExport().createZip(using: filter) { result in
-            self.completeOperation(result: result)
-            Task { @MainActor in
-                self.showZipActivity(false)
+        showZipActivity(true)
+        Task {
+            do {
+                let url = try await ImportExport.createZip(using: filter, progress: Progress())
+                completeOperation(url: url)
+            } catch {
+                await genericAlert(title: "Error", message: error.localizedDescription)
             }
+            self.showZipActivity(false)
         }
     }
 
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if exportingFileURL != nil {
             manualExportDone()
+
         } else {
             infoLabel.text = nil
             spinner.startAnimating()
             exportOnlyVisibleSwitch.isEnabled = false
-            importArchive(from: urls.first!)
+
+            let url = urls.first!
+            let securityScoped = url.startAccessingSecurityScopedResource()
+            Task {
+                await importArchive(from: url)
+                if securityScoped {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
         }
         controller.dismiss(animated: true)
     }

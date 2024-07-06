@@ -158,7 +158,7 @@ extension ArchivedItem {
         mostRelevantTypeItem?.canOpen == true
     }
 
-    var watchItem: [String: Any] {
+    var watchItem: [String: Sendable] {
         var imageDate = updatedAt
         if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
             imageDate = max(imageDate, id)

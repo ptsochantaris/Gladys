@@ -39,7 +39,7 @@ public extension ArchivedItem {
         for item in uuids {
             clearCacheData(for: item)
         }
-        clearCacheData(for: self.uuid) // this must be last since we use URLs above
+        clearCacheData(for: uuid) // this must be last since we use URLs above
     }
 
     func renumberTypeItems() {

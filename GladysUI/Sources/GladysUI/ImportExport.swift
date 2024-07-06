@@ -2,10 +2,7 @@ import Foundation
 import GladysCommon
 import ZIPFoundation
 
-@MainActor
-public final class ImportExport {
-    public init() {}
-
+public enum ImportExport {
     private class FileManagerFilter: NSObject, FileManagerDelegate {
         func fileManager(_: FileManager, shouldCopyItemAt srcURL: URL, to _: URL) -> Bool {
             guard let lastComponent = srcURL.pathComponents.last else { return false }
@@ -15,25 +12,20 @@ public final class ImportExport {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @discardableResult
-    public func createArchive(using filter: Filter, completion: @escaping (Result<URL, Error>) -> Void) -> Progress {
-        let eligibleItems: ContiguousArray = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
+    @MainActor
+    public static func createArchive(using filter: Filter, progress: Progress) async throws -> URL {
+        let eligibleItems = filter.eligibleDropsForExport.filter { !$0.isImportedShare }
         let count = 2 + eligibleItems.count
+
         let p = Progress(totalUnitCount: Int64(count))
+        progress.addChild(p, withPendingUnitCount: 100)
 
-        Task.detached {
-            do {
-                let url = try self.createArchiveThread(progress: p, eligibleItems: eligibleItems)
-                completion(.success(url))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-
-        return p
+        return try await Task.detached {
+            try createArchiveThread(progress: p, eligibleItems: eligibleItems)
+        }.value
     }
 
-    private nonisolated func createArchiveThread(progress p: Progress, eligibleItems: ContiguousArray<ArchivedItem>) throws -> URL {
+    private nonisolated static func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedItem]) throws -> URL {
         let fm = FileManager()
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -65,25 +57,20 @@ public final class ImportExport {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @discardableResult
-    public func createZip(using filter: Filter, completion: @escaping (Result<URL, Error>) -> Void) -> Progress {
+    @MainActor
+    public static func createZip(using filter: Filter, progress: Progress) async throws -> URL {
         let dropsCopy = filter.eligibleDropsForExport
         let itemCount = Int64(1 + dropsCopy.count)
+
         let p = Progress(totalUnitCount: itemCount)
+        progress.addChild(p, withPendingUnitCount: 100)
 
-        Task.detached {
-            do {
-                let url = try await self.createZipThread(dropsCopy: dropsCopy, progress: p)
-                completion(.success(url))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-
-        return p
+        return try await Task.detached {
+            try await createZipThread(dropsCopy: dropsCopy, progress: p)
+        }.value
     }
 
-    private nonisolated func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
+    private nonisolated static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default
@@ -116,46 +103,55 @@ public final class ImportExport {
         return tempPath
     }
 
-    private func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) async throws {
+    private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) async throws {
         var bytes: Data?
-        if typeItem.isWebURL, let url = typeItem.encodedUrl {
+        if await typeItem.isWebURL, let url = await typeItem.encodedUrl {
             bytes = url.urlFileContent
 
-        } else if typeItem.classWasWrapped {
-            bytes = typeItem.dataForDropping ?? typeItem.bytes
+        } else if await typeItem.classWasWrapped {
+            bytes = await typeItem.dataForDropping
         }
-        if let B = bytes ?? typeItem.bytes {
-            let timmedName = typeItem.prepareFilename(name: name, directory: directory)
-            let provider: Provider = { (pos: Int64, size: Int) throws -> Data in
-                B[pos ..< pos + Int64(size)]
-            }
-            try archive.addEntry(with: timmedName, type: .file, uncompressedSize: Int64(B.count), provider: provider)
+
+        let B: Data? = if let bytes {
+            bytes
+        } else {
+            await typeItem.bytes
         }
+
+        guard let B else { return }
+
+        let timmedName = await typeItem.prepareFilename(name: name, directory: directory)
+        let provider: Provider = { (pos: Int64, size: Int) throws -> Data in
+            B[pos ..< pos + Int64(size)]
+        }
+        try archive.addEntry(with: timmedName, type: .file, uncompressedSize: Int64(B.count), provider: provider)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private func bringInItem(_ item: ArchivedItem, from url: URL, using fm: FileManager, moveItem: Bool) throws -> Bool {
+    private static func bringInItem(_ item: ArchivedItem, from url: URL, moveItem: Bool) async throws -> Bool {
         let remotePath = url.appendingPathComponent(item.uuid.uuidString)
+        let fm = FileManager.default
         if !fm.fileExists(atPath: remotePath.path) {
             log("Warning: Item \(item.uuid) declared but not found on imported archive, skipped")
             return false
         }
 
+        let folderUrl = await item.folderUrl
         if moveItem {
-            try fm.moveAndReplaceItem(at: remotePath, to: item.folderUrl)
+            try fm.moveAndReplaceItem(at: remotePath, to: folderUrl)
         } else {
-            try fm.copyAndReplaceItem(at: remotePath, to: item.folderUrl)
+            try fm.copyAndReplaceItem(at: remotePath, to: folderUrl)
         }
 
-        item.status = .needsIngest
-        item.markUpdated()
-        item.removeFromCloudkit()
+        await item.setStatus(.needsIngest)
+        await item.markUpdated()
+        await item.removeFromCloudkit()
 
         return true
     }
 
-    public func importArchive(from url: URL, removingOriginal: Bool) throws {
+    public static func importArchive(from url: URL, removingOriginal: Bool) async throws {
         let fm = FileManager.default
         defer {
             if removingOriginal {
@@ -173,16 +169,20 @@ public final class ImportExport {
         let itemsInPackage = try loadDecoder.decode([ArchivedItem].self, from: data)
 
         for item in itemsInPackage.reversed() {
-            if let i = DropStore.indexOfItem(with: item.uuid) {
-                if DropStore.allDrops[i].updatedAt >= item.updatedAt || DropStore.allDrops[i].shareMode != .none {
+            if let i = await DropStore.indexOfItem(with: item.uuid) {
+                let item = await DropStore.allDrops[i]
+                if await item.updatedAt >= item.updatedAt {
                     continue
                 }
-                if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    DropStore.replace(drop: item, at: i)
+                if await item.shareMode != .none {
+                    continue
+                }
+                if try await bringInItem(item, from: url, moveItem: removingOriginal) {
+                    await DropStore.replace(drop: item, at: i)
                 }
             } else {
-                if try bringInItem(item, from: url, using: fm, moveItem: removingOriginal) {
-                    DropStore.insert(drop: item, at: 0)
+                if try await bringInItem(item, from: url, moveItem: removingOriginal) {
+                    await DropStore.insert(drop: item, at: 0)
                 }
             }
         }

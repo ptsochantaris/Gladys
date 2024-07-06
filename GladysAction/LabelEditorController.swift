@@ -14,7 +14,7 @@ final class LabelEditorController: UIViewController, UITableViewDelegate, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.allToggles = LiteModel.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        allToggles = LiteModel.getLabelsWithoutLoading().sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
         Task { [weak self] in
             guard let self else { return }
             table.isHidden = false

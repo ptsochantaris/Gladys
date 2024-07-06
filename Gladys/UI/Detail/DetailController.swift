@@ -2,7 +2,7 @@ import Combine
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import UIKit
+@preconcurrency import UIKit
 import UniformTypeIdentifiers
 
 @MainActor

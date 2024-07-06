@@ -34,7 +34,7 @@ final actor PushState {
 
             let itemId = item.uuid.uuidString
             idsToPush.insert(itemId)
-            idsToPush.formUnion(await components.asyncMap { await $0.uuid.uuidString })
+            await idsToPush.formUnion(components.asyncMap { await $0.uuid.uuidString })
 
             var payload = await components.asyncMap { await $0.populatedCloudKitRecord }
             payload.append(itemRecord)
@@ -68,7 +68,7 @@ final actor PushState {
         }.uniqued.bunch(maxSize: 100)
 
         if zoneId == privateZoneId {
-            currentUUIDSequence = drops.map { $0.uuid.uuidString }
+            currentUUIDSequence = drops.map(\.uuid.uuidString)
             if await PushState.sequenceNeedsUpload(currentUUIDSequence) {
                 var sequenceToSend: [String]?
 

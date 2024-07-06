@@ -12,7 +12,7 @@ public extension Collection where Element: Hashable {
         var result = [T]()
         result.reserveCapacity(count)
         for element in self {
-            result.append(await block(element))
+            await result.append(block(element))
         }
         return result
     }

@@ -8,8 +8,8 @@ import SwiftUI
 public final class ArchivedItemWrapper: Identifiable {
     private let emptyId = UUID()
 
-    nonisolated public var id: UUID {
-        MainActor.assumeIsolated {
+    public nonisolated var id: UUID {
+        onlyOnMainThread {
             item?.uuid ?? emptyId
         }
     }
@@ -42,7 +42,6 @@ public final class ArchivedItemWrapper: Identifiable {
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    @MainActor
     func clear() {
         if let i = item {
             i.presentationGenerator?.cancel()

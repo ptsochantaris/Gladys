@@ -1,85 +1,65 @@
 import GladysCommon
-import SystemConfiguration
-
-let reachability = Reachability()
+import Network
 
 final actor Reachability {
-    private let reachability: SCNetworkReachability
+    static let shared = Reachability()
+
+    private let wifiMonitor = NWPathMonitor(requiredInterfaceType: .wifi)
+    private let ethernetMonitor = NWPathMonitor(requiredInterfaceType: .wiredEthernet)
+    private let cellularMonitor = NWPathMonitor(requiredInterfaceType: .cellular)
+    private var lastStatus = "None"
 
     init() {
-        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-
-        reachability = withUnsafePointer(to: &zeroAddress) {
-            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, $0)!
+        wifiMonitor.pathUpdateHandler = { [weak self] _ in
+            guard let self else { return }
+            Task {
+                await self.update()
             }
         }
 
-        let changeCallback: SCNetworkReachabilityCallBack = { _, flags, _ in
-            let newStatus = Reachability.status(from: flags)
-            log("Rechability changed: \(newStatus.name)")
-            Task { @MainActor in
-                sendNotification(name: .ReachabilityChanged, object: newStatus)
+        ethernetMonitor.pathUpdateHandler = { [weak self] _ in
+            guard let self else { return }
+            Task {
+                await self.update()
             }
         }
+        cellularMonitor.pathUpdateHandler = { [weak self] _ in
+            guard let self else { return }
+            Task {
+                await self.update()
+            }
+        }
+        wifiMonitor.start(queue: .main)
+        ethernetMonitor.start(queue: .main)
+        cellularMonitor.start(queue: .main)
+        log("Reachabillity monitor active")
+    }
 
-        var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-        if SCNetworkReachabilitySetCallback(reachability, changeCallback, &context), SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue) {
-            log("Reachability monitoring active")
-        } else {
-            log("Reachability monitoring start failed")
+    private func update() {
+        let newName = statusName
+        if lastStatus == newName {
+            return
+        }
+        lastStatus = newName
+        log("Reachability update: \(newName)")
+        Task { @MainActor in
+            sendNotification(name: .ReachabilityChanged, object: nil)
         }
     }
 
-    var isReachableViaWiFi: Bool {
-        status == .reachableViaWiFi
-    }
-
-    var notReachableViaWiFi: Bool {
-        status != .reachableViaWiFi
+    var isReachableViaLowCost: Bool {
+        wifiMonitor.currentPath.status == .satisfied || ethernetMonitor.currentPath.status == .satisfied
     }
 
     var statusName: String {
-        status.name
-    }
-
-    private enum NetworkStatus: Int {
-        case notReachable, reachableViaWiFi, reachableViaWWAN
-        var name: String {
-            switch self {
-            case .notReachable: "Down"
-            case .reachableViaWiFi: "WiFi"
-            case .reachableViaWWAN: "Cellular"
-            }
-        }
-    }
-
-    deinit {
-        SCNetworkReachabilityUnscheduleFromRunLoop(reachability, CFRunLoopGetMain(), CFRunLoopMode.commonModes.rawValue)
-    }
-
-    private static func status(from flags: SCNetworkReachabilityFlags) -> NetworkStatus {
-        var returnValue = NetworkStatus.notReachable
-        if flags.contains(.reachable) {
-            if !flags.contains(.connectionRequired) { returnValue = .reachableViaWiFi }
-
-            if flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic) {
-                if !flags.contains(.interventionRequired) { returnValue = .reachableViaWiFi }
-            }
-
-            if flags.contains(.isWWAN) { returnValue = .reachableViaWWAN }
-        }
-        return returnValue
-    }
-
-    private var status: NetworkStatus {
-        var flags = SCNetworkReachabilityFlags()
-        if SCNetworkReachabilityGetFlags(reachability, &flags) {
-            return Reachability.status(from: flags)
+        if wifiMonitor.currentPath.status == .satisfied {
+            "WiFi"
+        } else if ethernetMonitor.currentPath.status == .satisfied {
+            "Ethernet"
+        } else if cellularMonitor.currentPath.status == .satisfied {
+            "Cellular"
         } else {
-            return .notReachable
+            "None"
         }
     }
 }

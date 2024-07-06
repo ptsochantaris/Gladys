@@ -27,7 +27,7 @@ public extension ArchivedItem {
         }
     }
 
-    nonisolated private func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
+    private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         log(">>> New presentation task \(uuid.uuidString)")
         defer {
             if Task.isCancelled {

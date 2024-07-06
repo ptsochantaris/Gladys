@@ -1,6 +1,6 @@
 import GladysCommon
 import GladysUI
-import UIKit
+@preconcurrency import UIKit
 
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()

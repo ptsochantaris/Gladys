@@ -43,7 +43,7 @@ final class ArchivedItemCell: CommonItemCell {
         nonisolated func indirectScribbleInteraction(_: UIInteraction, willBeginWritingInElement _: String) {}
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, didFinishWritingInElement _: String) {
-            MainActor.assumeIsolated {
+            onlyOnMainThread {
                 if let item = archivedDropItem, let text = notesTextView?.text?.trimmingCharacters(in: .whitespacesAndNewlines), text.isPopulated, item.note != text {
                     item.note = text
                     item.markUpdated()
@@ -64,7 +64,7 @@ final class ArchivedItemCell: CommonItemCell {
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, focusElementIfNeeded _: String, referencePoint _: CGPoint, completion: @escaping ((UIResponder & UITextInput)?) -> Void) {
-            MainActor.assumeIsolated {
+            onlyOnMainThread {
                 if let n = notesTextView {
                     completion(n)
                     return
@@ -95,7 +95,7 @@ final class ArchivedItemCell: CommonItemCell {
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, requestElementsIn _: CGRect, completion: @escaping ([String]) -> Void) {
-            MainActor.assumeIsolated {
+            onlyOnMainThread {
                 if archivedDropItem?.isLocked == true {
                     completion([])
                 } else {
@@ -105,13 +105,13 @@ final class ArchivedItemCell: CommonItemCell {
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, frameForElement _: String) -> CGRect {
-            MainActor.assumeIsolated {
+            onlyOnMainThread {
                 bounds
             }
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, isElementFocused _: String) -> Bool {
-            MainActor.assumeIsolated {
+            onlyOnMainThread {
                 notesTextView != nil
             }
         }

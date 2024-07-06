@@ -3,7 +3,7 @@ import GladysUI
 import GladysUIKit
 import Lista
 import PopTimer
-import UIKit
+@preconcurrency import UIKit
 
 extension ItemIdentifier: @retroactive @unchecked Sendable {}
 extension SectionIdentifier: @retroactive @unchecked Sendable {}
@@ -716,7 +716,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         notifications(for: .ReachabilityChanged) { _ in
-            guard await CloudManager.syncContextSetting == .wifiOnly, await reachability.isReachableViaWiFi else {
+            guard await CloudManager.syncContextSetting == .wifiOnly, await Reachability.shared.isReachableViaLowCost else {
                 return
             }
             do {

@@ -32,8 +32,8 @@ public final class Component: Codable, Hashable {
         case order
     }
 
-    nonisolated public func encode(to encoder: Encoder) throws {
-        try MainActor.assumeIsolated {
+    public nonisolated func encode(to encoder: Encoder) throws {
+        try onlyOnMainThread {
             var v = encoder.container(keyedBy: CodingKeys.self)
             try v.encode(typeIdentifier, forKey: .typeIdentifier)
             try v.encode(representedClass, forKey: .representedClass)
@@ -54,7 +54,7 @@ public final class Component: Codable, Hashable {
         }
     }
 
-    nonisolated public init(from decoder: Decoder) throws {
+    public nonisolated init(from decoder: Decoder) throws {
         let v = try decoder.container(keyedBy: CodingKeys.self)
         typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
         classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
@@ -289,14 +289,14 @@ public final class Component: Codable, Hashable {
 
     public func setBytes(_ data: Data?) {
         let byteLocation = bytesPath
-        if data == nil || self.flags.contains(.loadingAborted) {
+        if data == nil || flags.contains(.loadingAborted) {
             let f = FileManager.default
             if f.fileExists(atPath: byteLocation.path) {
                 try? f.removeItem(at: byteLocation)
             }
         } else {
             try? data?.write(to: byteLocation)
-            self.lastGladysBlobUpdate = Date()
+            lastGladysBlobUpdate = Date()
         }
     }
 
@@ -735,11 +735,11 @@ public final class Component: Codable, Hashable {
         }
     #endif
 
-    nonisolated public static func == (lhs: Component, rhs: Component) -> Bool {
+    public nonisolated static func == (lhs: Component, rhs: Component) -> Bool {
         lhs.uuid == rhs.uuid
     }
 
-    nonisolated public func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 

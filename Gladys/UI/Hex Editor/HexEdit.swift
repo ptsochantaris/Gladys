@@ -1,4 +1,4 @@
-import UIKit
+@preconcurrency import UIKit
 
 final class HexEdit: GladysViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIPopoverPresentationControllerDelegate {
     var bytes: Data!

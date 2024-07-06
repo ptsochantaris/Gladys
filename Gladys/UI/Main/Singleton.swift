@@ -42,7 +42,7 @@ final class Singleton {
         CallbackSupport.setupCallbackSupport()
 
         Task {
-            let name = await reachability.statusName
+            let name = await Reachability.shared.statusName
             log("Initial reachability status: \(name)")
         }
 
@@ -295,19 +295,16 @@ final class Singleton {
             if url.isFileURL, url.pathExtension.lowercased() == "gladysarchive", let presenter = scene.windows.first?.alertPresenter {
                 let a = UIAlertController(title: "Import Archive?", message: "Import items from \"\(url.deletingPathExtension().lastPathComponent)\"?", preferredStyle: .alert)
                 a.addAction(UIAlertAction(title: "Import", style: .destructive) { _ in
-                    var securityScoped = false
-                    if options.openInPlace {
-                        securityScoped = url.startAccessingSecurityScopedResource()
-                    }
-                    do {
-                        try ImportExport().importArchive(from: url, removingOriginal: !options.openInPlace)
-                    } catch {
-                        Task {
+                    let securityScoped = options.openInPlace ? url.startAccessingSecurityScopedResource() : false
+                    Task {
+                        do {
+                            try await ImportExport.importArchive(from: url, removingOriginal: !options.openInPlace)
+                        } catch {
                             await genericAlert(title: "Could not import data", message: error.localizedDescription)
                         }
-                    }
-                    if securityScoped {
-                        url.stopAccessingSecurityScopedResource()
+                        if securityScoped {
+                            url.stopAccessingSecurityScopedResource()
+                        }
                     }
                 })
                 a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

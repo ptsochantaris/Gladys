@@ -371,7 +371,7 @@ final actor PullState {
                 if await item.parentZone != zoneID {
                     log("Ignoring update notification for existing item UUID but wrong zone (\(recordUUID))")
                 } else {
-                    switch RecordChangeCheck(localRecord: await item.cloudKitRecord, remoteRecord: record) {
+                    switch await RecordChangeCheck(localRecord: item.cloudKitRecord, remoteRecord: record) {
                     case .changed:
                         log("Will update existing local item for cloud record \(recordUUID)")
                         await item.cloudKitUpdate(from: record)
@@ -408,7 +408,7 @@ final actor PullState {
                 if await (component.parentZone) != zoneID {
                     log("Ignoring update notification for existing component UUID but wrong zone (\(recordUUID))")
                 } else {
-                    switch RecordChangeCheck(localRecord: await component.cloudKitRecord, remoteRecord: record) {
+                    switch await RecordChangeCheck(localRecord: component.cloudKitRecord, remoteRecord: record) {
                     case .changed:
                         log("Will update existing component: (\(recordUUID))")
                         await component.cloudKitUpdate(from: record)

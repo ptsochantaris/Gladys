@@ -51,7 +51,7 @@ extension CloudManager {
             if force {
                 return true
             }
-            if syncContextSetting == .wifiOnly, await reachability.notReachableViaWiFi {
+            if syncContextSetting == .wifiOnly, await !Reachability.shared.isReachableViaLowCost {
                 log("Skipping auto sync because no WiFi is present and user has selected WiFi sync only")
                 return false
             }
@@ -73,8 +73,7 @@ extension CloudManager {
         case .always:
             log("Sync after a local save")
         case .wifiOnly:
-            let go = await reachability.isReachableViaWiFi
-            if go {
+            if await Reachability.shared.isReachableViaLowCost {
                 log("Will sync after save, since WiFi is available")
             } else {
                 log("Won't sync after save, because no WiFi")

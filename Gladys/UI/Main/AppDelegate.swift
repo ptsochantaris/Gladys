@@ -59,12 +59,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    func application(_: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async -> UIBackgroundFetchResult {
         Maintini.startMaintaining()
-        Task { @CloudActor in
-            let result = await CloudManager.received(notificationInfo: userInfo)
-            await Maintini.endMaintaining()
-            completionHandler(result)
+        defer {
+            Maintini.endMaintaining()
         }
+        return await CloudManager.received(notificationInfo: userInfo)
     }
 }
