@@ -9,6 +9,7 @@ import HotKey
 import Maintini
 import UserNotifications
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private static var hotKey: HotKey?
 
@@ -517,7 +518,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
         Task { @MainActor in // give UI a chance to update
             do {
-                try ImportExport().importArchive(from: url, removingOriginal: false)
+                try await ImportExport.importArchive(from: url, removingOriginal: false)
                 endProgress()
             } catch {
                 endProgress()
@@ -542,10 +543,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.allowedContentTypes = [.gladysArchive]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
-            let p = ImportExport().createArchive(using: controller.filter) { result in
-                self.createOperationDone(selectedUrl: selectedUrl, result: result)
+            Task {
+                let p = Progress(totalUnitCount: 100)
+                startProgress(for: p)
+                defer { endProgress() }
+                do {
+                    let url = try await ImportExport.createArchive(using: controller.filter, progress: p)
+                    await createOperationDone(selectedUrl: selectedUrl, createdUrl: url)
+                } catch {
+                    await genericAlert(title: "Operation Failed", message: error.localizedDescription)
+                }
             }
-            startProgress(for: p)
         }
     }
 
@@ -575,11 +583,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.allowedContentTypes = [.zip]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
-            assert(Thread.isMainThread)
-            let p = ImportExport().createZip(using: controller.filter) { result in
-                self.createOperationDone(selectedUrl: selectedUrl, result: result)
+            Task { @MainActor in
+                let p = Progress(totalUnitCount: 100)
+                startProgress(for: p)
+                defer { endProgress() }
+                do {
+                    let url = try await ImportExport.createZip(using: controller.filter, progress: p)
+                    await createOperationDone(selectedUrl: selectedUrl, createdUrl: url)
+                } catch {
+                    await genericAlert(title: "Operation Failed", message: error.localizedDescription)
+                }
             }
-            startProgress(for: p)
         }
     }
 
@@ -617,28 +631,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    private func createOperationDone(selectedUrl: URL, result: Result<URL, Error>) {
-        Task { @MainActor in
-            endProgress()
-        }
-
-        switch result {
-        case let .success(createdUrl):
-            do {
-                let fm = FileManager.default
-                try fm.moveAndReplaceItem(at: createdUrl, to: selectedUrl)
-                try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
-                NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
-            } catch {
-                Task {
-                    await genericAlert(title: "Operation Failed", message: error.localizedDescription)
-                }
-            }
-
-        case let .failure(error):
-            Task {
-                await genericAlert(title: "Operation Failed", message: error.localizedDescription)
-            }
+    private func createOperationDone(selectedUrl: URL, createdUrl: URL) async {
+        do {
+            let fm = FileManager.default
+            try fm.moveAndReplaceItem(at: createdUrl, to: selectedUrl)
+            try fm.setAttributes([FileAttributeKey.extensionHidden: true], ofItemAtPath: selectedUrl.path)
+            NSWorkspace.shared.activateFileViewerSelecting([selectedUrl])
+        } catch {
+            await genericAlert(title: "Operation Failed", message: error.localizedDescription)
         }
     }
 

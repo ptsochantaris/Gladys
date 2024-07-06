@@ -1,8 +1,8 @@
-import AppKit
+@preconcurrency import AppKit
 import GladysCommon
 import GladysUI
 import PopTimer
-import QuickLookUI
+@preconcurrency import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
     NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener {
@@ -134,7 +134,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         highlightRegistration = HighlightRequest.registerListener(listener: self)
 
         modeChangeRegistration = collection.observe(\.effectiveAppearance) { [weak self] _, _ in
-            self?.reloadItems()
+            guard let self else { return }
+            Task { @MainActor in
+                self.reloadItems()
+            }
         }
 
         notifications(for: .ItemsAddedBySync) { [weak self] _ in
@@ -996,41 +999,51 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         previewPanel = nil
     }
 
-    func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
-        collection.selectionIndexPaths.count
+    nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
+        MainActor.assumeIsolated {
+            collection.selectionIndexPaths.count
+        }
     }
 
-    func previewPanel(_: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
-        let index = collection.selectionIndexPaths.sorted()[index].item
-        return filter.filteredDrops[index].previewableTypeItem?.quickLookItem
+    nonisolated func previewPanel(_: QLPreviewPanel!, previewItemAt index: Int) -> QLPreviewItem! {
+        MainActor.assumeIsolated {
+            let index = collection.selectionIndexPaths.sorted()[index].item
+            return filter.filteredDrops[index].previewableTypeItem?.quickLookItem
+        }
     }
 
-    func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+    nonisolated func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
         if event.type == .keyDown {
-            collection.keyDown(with: event)
+            MainActor.assumeIsolated {
+                collection.keyDown(with: event)
+            }
             return true
         }
         return false
     }
 
-    func previewPanel(_: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
+    nonisolated func previewPanel(_: QLPreviewPanel!, sourceFrameOnScreenFor item: QLPreviewItem!) -> NSRect {
         guard let qlItem = item as? Component.PreviewItem else { return .zero }
-        if let drop = DropStore.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
-            let frameRealativeToCollection = collection.frameForItem(at: index)
-            let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
-            let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
-            return frameRelativeToScreen
+        return MainActor.assumeIsolated {
+            if let drop = DropStore.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
+                let frameRealativeToCollection = collection.frameForItem(at: index)
+                let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
+                let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
+                return frameRelativeToScreen
+            }
+            return .zero
         }
-        return .zero
     }
 
-    func previewPanel(_: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect _: UnsafeMutablePointer<NSRect>!) -> Any! {
-        let visibleCells = collection.visibleItems()
-        if let qlItem = item as? Component.PreviewItem,
-           let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == qlItem.parentUuid }) {
-            return (visibleCells[cellIndex] as? DropCell)?.previewImage
+    nonisolated func previewPanel(_: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect _: UnsafeMutablePointer<NSRect>!) -> Any! {
+        MainActor.assumeIsolated {
+            let visibleCells = collection.visibleItems()
+            if let qlItem = item as? Component.PreviewItem,
+               let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == qlItem.parentUuid }) {
+                return (visibleCells[cellIndex] as? DropCell)?.previewImage
+            }
+            return nil
         }
-        return nil
     }
 
     /////////////////////////////// Mouse monitoring
@@ -1164,7 +1177,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             let time = TimeInterval(PersistedOptions.autoHideAfter)
             if time > 0 {
                 hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false) { [weak self] _ in
-                    self?.hideWindowBecauseOfMouse(window: window)
+                    guard let self else { return }
+                    Task { @MainActor in
+                        self.hideWindowBecauseOfMouse(window: window)
+                    }
                 }
             }
         }

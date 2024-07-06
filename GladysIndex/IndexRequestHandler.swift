@@ -1,7 +1,10 @@
 import CoreSpotlight
 import GladysCommon
 
-final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider {
+extension CSSearchableIndex: @retroactive @unchecked Sendable {}
+extension CSIndexExtensionRequestHandler: @retroactive @unchecked Sendable {}
+
+final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider, @unchecked Sendable {
     private lazy var indexDelegate = Indexer(itemProvider: self)
 
     @MainActor

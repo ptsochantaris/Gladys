@@ -30,7 +30,7 @@ import SwiftUI
     public let cellCornerRadius: CGFloat = 18
 #endif
 
-extension IMAGE: @unchecked Sendable {}
+extension IMAGE: @unchecked @retroactive Sendable {}
 
 public let GladysFileUTI = "build.bru.gladys.archive"
 

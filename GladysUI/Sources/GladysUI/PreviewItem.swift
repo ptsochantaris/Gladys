@@ -7,7 +7,7 @@ import Foundation
 import GladysCommon
 
 public extension Component {
-    final class PreviewItem: NSObject, QLPreviewItem {
+    final class PreviewItem: NSObject, QLPreviewItem, Sendable {
         public let previewItemURL: URL?
         public let previewItemTitle: String?
         public let parentUuid: UUID

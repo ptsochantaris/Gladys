@@ -17,6 +17,7 @@ final class ComponentCollectionView: NSCollectionView {
     }
 }
 
+@MainActor
 protocol FocusableTextFieldDelegate: AnyObject {
     func fieldReceivedFocus(_ field: FocusableTextField)
 }
@@ -124,7 +125,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     private var itemObservation: Cancellable?
     override var representedObject: Any? {
         didSet {
-            itemObservation = item.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] _ in
+            itemObservation = item.itemUpdates.sink { [weak self] _ in
                 self?.updateInfo()
             }
         }

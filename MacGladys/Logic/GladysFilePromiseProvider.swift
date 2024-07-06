@@ -3,6 +3,7 @@ import GladysCommon
 import GladysUI
 
 final class GladysFilePromiseProvider: NSFilePromiseProvider {
+    @MainActor
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
         let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
         let tempPath = temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
@@ -24,6 +25,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
     private var tempPath: URL?
     private var tags: [String]?
 
+    @MainActor
     override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
         var types = super.writableTypes(for: pasteboard)
         let newItems = (extraItems ?? []).map { NSPasteboard.PasteboardType($0.typeIdentifier) }
@@ -34,6 +36,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         return types
     }
 
+    @MainActor
     override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
         let t = type.rawValue
         if t == "public.file-url" {
@@ -85,20 +88,21 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
         title
     }
 
-    @MainActor
-    func filePromiseProvider(_: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
-        do {
-            let fm = FileManager.default
-            if !fm.fileExists(atPath: tempPath.path) {
-                try typeItem?.writeBytes(to: tempPath, tags: tags)
+    nonisolated func filePromiseProvider(_: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
+        MainActor.assumeIsolated {
+            do {
+                let fm = FileManager.default
+                if !fm.fileExists(atPath: tempPath.path) {
+                    try typeItem?.writeBytes(to: tempPath, tags: tags)
+                }
+                if fm.fileExists(atPath: url.path) {
+                    try fm.removeItem(at: url)
+                }
+                try fm.moveItem(at: tempPath, to: url)
+                completionHandler(nil)
+            } catch {
+                completionHandler(error)
             }
-            if fm.fileExists(atPath: url.path) {
-                try fm.removeItem(at: url)
-            }
-            try fm.moveItem(at: tempPath, to: url)
-            completionHandler(nil)
-        } catch {
-            completionHandler(error)
         }
     }
 }

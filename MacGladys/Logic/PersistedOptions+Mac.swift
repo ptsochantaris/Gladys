@@ -139,7 +139,10 @@ extension PersistedOptions {
         }
     }
 
+    @MainActor
     private static var _autoShowWhenDragging: Bool?
+
+    @MainActor
     static var autoShowWhenDragging: Bool {
         get {
             if let _autoShowWhenDragging {
@@ -154,7 +157,10 @@ extension PersistedOptions {
         }
     }
 
+    @MainActor
     private static var _autoShowFromEdge: Int?
+
+    @MainActor
     static var autoShowFromEdge: Int {
         get {
             if let _autoShowFromEdge {

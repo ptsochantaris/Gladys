@@ -1,6 +1,8 @@
 import GladysCommon
 import WatchConnectivity
 
+extension WCSession: @retroactive @unchecked Sendable {}
+
 @MainActor
 @Observable
 final class GladysWatchModel: NSObject, WCSessionDelegate {
@@ -45,8 +47,10 @@ final class GladysWatchModel: NSObject, WCSessionDelegate {
         }
     }
 
-    func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
-        receivedInfo(userInfo)
+    nonisolated func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
+        Task {
+            await receivedInfo(userInfo)
+        }
     }
 
     func getFullUpdate(session: WCSession) {
@@ -58,9 +62,11 @@ final class GladysWatchModel: NSObject, WCSessionDelegate {
         }
     }
 
-    func session(_ session: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {
-        getFullUpdate(session: session)
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {
+        Task {
+            await getFullUpdate(session: session)
+        }
     }
 
-    func session(_: WCSession, didReceiveApplicationContext _: [String: Any]) {}
+    nonisolated func session(_: WCSession, didReceiveApplicationContext _: [String: Any]) {}
 }
