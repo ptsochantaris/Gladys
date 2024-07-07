@@ -130,17 +130,19 @@ public extension ArchivedItem {
             }
         }
 
-        let highlight = await status.shouldDisplayLoading ? .none : highlightColor
-
-        let p = PresentationInfo(
+        let p = await PresentationInfo(
             id: uuid,
             topText: topInfo,
             top: top,
             bottomText: bottomInfo,
             bottom: bottom,
             image: result,
-            highlightColor: highlight,
-            hasFullImage: dm.prefersFullSizeImage
+            highlightColor: status.shouldDisplayLoading ? .none : highlightColor,
+            hasFullImage: dm.prefersFullSizeImage,
+            status: status,
+            locked: isLocked,
+            labels: labels,
+            dominantTypeDescription: dominantTypeDescription
         )
 
         presentationInfoCache[uuid] = p

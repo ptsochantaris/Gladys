@@ -10,7 +10,7 @@ extension SectionIdentifier: @retroactive @unchecked Sendable {}
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
-    UIPopoverPresentationControllerDelegate, UICloudSharingControllerDelegate, FilterDelegate, HighlightListener {
+    UIPopoverPresentationControllerDelegate, FilterDelegate, HighlightListener {
     @IBOutlet private var collection: UICollectionView!
     @IBOutlet private var totalSizeLabel: UIBarButtonItem!
     @IBOutlet private var deleteButton: UIBarButtonItem!
@@ -1569,27 +1569,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if item.cloudKitRecord != nil {
             if item.shareMode == .none {
                 children.append(makeAction(title: "Collaborate", callback: { [weak self] in
-                    guard let self else { return }
-                    Task { [weak self] in
-                        guard let self else { return }
-                        await dismissAnyPopOver()
-                        addInvites(to: item, at: indexPath)
+                    Task {
+                        await self?.addInvites(to: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.badge.plus"))
 
             } else {
                 children.append(makeAction(title: "Collaboration…", callback: { [weak self] in
-                    guard let self else { return }
-                    Task { [weak self] in
-                        guard let self else { return }
-                        await dismissAnyPopOver()
-                        if item.isPrivateShareWithOnlyOwner {
-                            shareOptionsPrivate(for: item, at: indexPath)
-                        } else if item.isShareWithOnlyOwner {
-                            shareOptionsPublic(for: item, at: indexPath)
-                        } else {
-                            editInvites(in: item, at: indexPath)
-                        }
+                    Task {
+                        await self?.editInvites(in: item, at: indexPath)
                     }
                 }, style: [], iconName: "person.crop.circle.fill.badge.checkmark"))
             }
@@ -1695,7 +1683,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupsSize = NSCollectionLayoutSize(widthDimension: .absolute(width - spacing - spacing), heightDimension: itemHeight)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, subitem: item, count: columns)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupsSize, repeatingSubitem: item, count: columns)
         group.interItemSpacing = .fixed(spacing)
 
         let section = NSCollectionLayoutSection(group: group)
@@ -2152,106 +2140,39 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         activity.addUserInfoEntries(from: userInfo)
     }
 
-    private weak var itemToBeShared: ArchivedItem?
+    private func addInvites(to item: ArchivedItem, at indexPath: IndexPath) async {
+        await dismissAnyPopOver()
 
-    func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
-        guard let item = itemToBeShared else { return }
-        item.cloudKitShareRecord = csc.share
-        item.postModified()
-    }
-
-    func cloudSharingControllerDidStopSharing(_: UICloudSharingController) {
-        guard let i = itemToBeShared else { return }
-        let wasImported = i.isImportedShare
-        i.cloudKitShareRecord = nil
-        if wasImported {
-            Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
-                Model.delete(items: [i])
-            }
-        } else {
-            i.postModified()
-        }
-    }
-
-    func itemThumbnailData(for csc: UICloudSharingController) -> Data? {
-        guard let uuid = csc.share?.parent?.recordID.recordName, let item = DropStore.item(uuid: uuid), let ip = item.imagePath else {
-            return nil
-        }
-        return try? Data(contentsOf: ip)
-    }
-
-    private func shareOptionsPrivate(for item: ArchivedItem, at indexPath: IndexPath) {
-        let a = UIAlertController(title: "No Participants", message: "This item is shared privately, but has no participants yet. You can edit options to make it public, invite more people, or stop sharing it.", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Options", style: .default) { [weak self] _ in
-            guard let self else { return }
-            editInvites(in: item, at: indexPath)
-        })
-        a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
-            Task {
-                do {
-                    try await CloudManager.deleteShare(item)
-                } catch {
-                    await genericAlert(title: "Error", message: error.localizedDescription)
-                }
-            }
-        })
-        a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(a, animated: true)
-        if let p = a.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
-            p.sourceView = cell
-            p.sourceRect = cell.bounds
-        }
-    }
-
-    private func shareOptionsPublic(for item: ArchivedItem, at indexPath: IndexPath) {
-        let a = UIAlertController(title: "No Participants", message: "This item is shared publicly, but has no participants yet. You can edit options to make it private and invite people, or stop sharing it.", preferredStyle: .actionSheet)
-        a.addAction(UIAlertAction(title: "Make Private", style: .default) { [weak self] _ in
-            guard let self else { return }
-            editInvites(in: item, at: indexPath)
-        })
-        a.addAction(UIAlertAction(title: "Stop Sharing", style: .destructive) { _ in
-            Task {
-                do {
-                    try await CloudManager.deleteShare(item)
-                } catch {
-                    await genericAlert(title: "Error", message: error.localizedDescription)
-                }
-            }
-        })
-        a.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(a, animated: true)
-        if let p = a.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
-            p.sourceView = cell
-            p.sourceRect = cell.bounds
-        }
-    }
-
-    private func addInvites(to item: ArchivedItem, at indexPath: IndexPath) {
         guard let rootRecord = item.cloudKitRecord else { return }
-        let cloudSharingController = UICloudSharingController { _, completion in
-            Task { @MainActor in
-                do {
-                    let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
-                    await completion(share, CloudManager.container, nil)
-                } catch {
-                    await completion(nil, CloudManager.container, error)
-                }
-            }
+
+        let provider = NSItemProvider()
+        await provider.registerCKShare(container: CloudManager.container, allowedSharingOptions: .standard) {
+            let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
+            await item.setCloudKitShareRecord(share)
+            await item.postModified()
+            return share
         }
-        presentCloudController(cloudSharingController, for: item, at: indexPath)
+
+        let config = UIActivityItemsConfiguration(itemProviders: [provider])
+        let activity = UIActivityViewController(activityItemsConfiguration: config)
+        activity.view.tintColor = view.tintColor
+        present(activity, animated: true)
+
+        if let p = activity.popoverPresentationController, let cell = collection.cellForItem(at: indexPath) {
+            p.sourceView = cell
+            p.sourceRect = cell.bounds
+        }
     }
 
-    private func editInvites(in item: ArchivedItem, at indexPath: IndexPath) {
+    private var editingItemId: UUID?
+
+    private func editInvites(in item: ArchivedItem, at indexPath: IndexPath) async {
+        await dismissAnyPopOver()
+
         guard let shareRecord = item.cloudKitShareRecord else { return }
-        Task {
-            let cloudSharingController = await UICloudSharingController(share: shareRecord, container: CloudManager.container)
-            presentCloudController(cloudSharingController, for: item, at: indexPath)
-        }
-    }
+        let cloudSharingController = await UICloudSharingController(share: shareRecord, container: CloudManager.container)
 
-    private func presentCloudController(_ cloudSharingController: UICloudSharingController, for item: ArchivedItem, at indexPath: IndexPath) {
-        itemToBeShared = item
+        editingItemId = item.uuid
         cloudSharingController.delegate = self
         cloudSharingController.view.tintColor = view.tintColor
         present(cloudSharingController, animated: true)
@@ -2259,6 +2180,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             p.sourceView = cell
             p.sourceRect = cell.bounds
         }
+    }
+}
+
+extension ViewController: UICloudSharingControllerDelegate {
+    func itemThumbnailData(for _: UICloudSharingController) -> Data? {
+        guard let editingItemId, let item = DropStore.item(uuid: editingItemId), let ip = item.imagePath else {
+            return nil
+        }
+        return try? Data(contentsOf: ip)
     }
 
     func cloudSharingController(_: UICloudSharingController, failedToSaveShareWithError error: Error) {
@@ -2268,6 +2198,41 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     func itemTitle(for _: UICloudSharingController) -> String? {
-        itemToBeShared?.trimmedSuggestedName
+        guard let editingItemId, let item = DropStore.item(uuid: editingItemId) else {
+            return nil
+        }
+        return item.trimmedSuggestedName
+    }
+
+    func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+        guard let editingItemId, let item = DropStore.item(uuid: editingItemId) else {
+            return
+        }
+        item.cloudKitShareRecord = csc.share
+        item.postModified()
+    }
+
+    func cloudSharingControllerDidStopSharing(_: UICloudSharingController) {
+        guard let editingItemId, let item = DropStore.item(uuid: editingItemId) else {
+            return
+        }
+
+        Task {
+            let wasImported = item.isImportedShare
+
+            do {
+                try await CloudManager.deleteShare(item)
+            } catch {
+                await genericAlert(title: "Error", message: error.localizedDescription)
+                return
+            }
+
+            if wasImported {
+                try? await Task.sleep(for: .seconds(1))
+                Model.delete(items: [item])
+            } else {
+                item.postModified()
+            }
+        }
     }
 }

@@ -1,5 +1,8 @@
 import Foundation
 import SwiftUI
+#if os(iOS) || os(visionOS)
+    import UIKit
+#endif
 
 public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public enum FieldContent: Sendable {
@@ -85,6 +88,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let hasTransparentBackground: Bool
     public let hasFullImage: Bool
     public let isPlaceholder: Bool
+    public let accessibilityText: String
 
     public static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
@@ -103,6 +107,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         hasTransparentBackground = top.hasTransparentBackground || bottom.hasTransparentBackground
         hasFullImage = false
         isPlaceholder = true
+        accessibilityText = ""
     }
 
     public static func placeholders(count: Int) -> [PresentationInfo] {
@@ -120,7 +125,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
     #endif
 
-    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool) {
+    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) {
         self.id = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
@@ -129,5 +134,43 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         hasTransparentBackground = self.top.hasTransparentBackground || self.bottom.hasTransparentBackground
         self.hasFullImage = hasFullImage
         isPlaceholder = false
+
+        if status.shouldDisplayLoading {
+            if status == .isBeingIngested(nil) {
+                accessibilityText = "Importing item. Activate to cancel."
+            } else {
+                accessibilityText = "Processing item."
+            }
+
+        } else if locked {
+            accessibilityText = "Item Locked"
+
+        } else {
+            var components = [String]()
+
+            if let topText = topText.rawText, topText.isPopulated {
+                components.append(topText)
+            }
+
+            if let dominantTypeDescription {
+                components.append(dominantTypeDescription)
+            }
+
+            #if os(iOS) || os(visionOS)
+                if let v = image?.accessibilityValue {
+                    components.append(v)
+                }
+            #endif
+
+            if PersistedOptions.displayLabelsInMainView, let l = labels, !l.isEmpty {
+                components.append(l.joined(separator: ", "))
+            }
+
+            if let l = bottomText.rawText, l.isPopulated {
+                components.append(l)
+            }
+
+            accessibilityText = components.joined(separator: "\n")
+        }
     }
 }

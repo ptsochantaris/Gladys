@@ -9,7 +9,7 @@ public final class ArchivedItemWrapper: Identifiable {
     private let emptyId = UUID()
 
     public nonisolated var id: UUID {
-        onlyOnMainThread {
+        MainActor.assumeIsolated {
             item?.uuid ?? emptyId
         }
     }
@@ -152,40 +152,6 @@ public final class ArchivedItemWrapper: Identifiable {
     }
 
     public var accessibilityText: String {
-        if let status, status.shouldDisplayLoading {
-            if status == .isBeingIngested(nil) {
-                return "Importing item. Activate to cancel."
-            } else {
-                return "Processing item."
-            }
-        }
-
-        if locked {
-            return "Item Locked"
-        }
-
-        var components = [String?]()
-
-        if let topText = presentationInfo.top.content.rawText, topText.isPopulated {
-            components.append(topText)
-        }
-
-        components.append(dominantTypeDescription)
-
-        #if canImport(UIKit)
-            if let v = presentationInfo.image?.accessibilityValue {
-                components.append(v)
-            }
-        #endif
-
-        if PersistedOptions.displayLabelsInMainView, let l = item?.labels, !l.isEmpty {
-            components.append(l.joined(separator: ", "))
-        }
-
-        if let l = presentationInfo.bottom.content.rawText, l.isPopulated {
-            components.append(l)
-        }
-
-        return components.compactMap { $0 }.joined(separator: "\n")
+        presentationInfo.accessibilityText
     }
 }
