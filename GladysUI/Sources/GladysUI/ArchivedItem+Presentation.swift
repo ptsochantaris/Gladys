@@ -180,7 +180,7 @@ public extension ArchivedItem {
 
     private func prepareImage(asThumbnail: Bool) async -> IMAGE? {
         if asThumbnail {
-            return thumbnail
+            return await thumbnail
         }
 
         if let bgItem = backgroundInfoObject {
@@ -195,6 +195,6 @@ public extension ArchivedItem {
             return nil
         }
 
-        return displayIcon
+        return await displayIcon
     }
 }

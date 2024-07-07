@@ -214,7 +214,7 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
 
     nonisolated func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
         MainActor.assumeIsolated {
-            component.componentIcon
+            component.getComponentIconSync()
         }
     }
 

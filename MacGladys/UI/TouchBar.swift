@@ -71,8 +71,8 @@ final class GladysThumbnailItemView: NSScrubberItemView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func decorate(with item: ArchivedItem) {
-        imageView.image = item.displayIcon
+    func decorate(with item: ArchivedItem) async {
+        imageView.image = await item.displayIcon
     }
 }
 
@@ -106,7 +106,9 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
     func scrubber(_ scrubber: NSScrubber, viewForItemAt index: Int) -> NSScrubberItemView {
         if let itemView = scrubber.makeItem(withIdentifier: GladysThumbnailItemView.identifier, owner: nil) as? GladysThumbnailItemView, let filter = NSApp.keyWindow?.gladysController?.filter {
             let drop = filter.filteredDrops[index]
-            itemView.decorate(with: drop)
+            Task {
+                await itemView.decorate(with: drop)
+            }
             return itemView
         }
         return NSScrubberItemView()

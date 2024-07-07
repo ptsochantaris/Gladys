@@ -336,13 +336,17 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     public var displayIcon: IMAGE {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.componentIcon ?? #imageLiteral(resourceName: "iconStickyNote")
+        get async {
+            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+            return await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
+        }
     }
 
     public var thumbnail: IMAGE {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.thumbnail ?? #imageLiteral(resourceName: "iconStickyNote")
+        get async {
+            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+            return await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
+        }
     }
 
     public var dominantTypeDescription: String? {

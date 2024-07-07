@@ -94,10 +94,10 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
                     data = await Self.handleMapItemPreview(mapItem: mapItem, size: size, fallbackIcon: item.displayIcon)
 
                 } else {
-                    data = Self.proceedWithImage(item.displayIcon, size: size, mode: .center)
+                    data = await Self.proceedWithImage(item.displayIcon, size: size, mode: .center)
                 }
             } else {
-                data = Self.proceedWithImage(item.displayIcon, size: size, mode: mode)
+                data = await Self.proceedWithImage(item.displayIcon, size: size, mode: mode)
             }
             return ["image": data]
         }

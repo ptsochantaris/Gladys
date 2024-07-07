@@ -683,13 +683,21 @@ public final class Component: Codable, Hashable {
         flags.insert(.loadingAborted)
     }
 
-    #if canImport(AppKit)
-        public var componentIcon: NSImage? {
-            get {
-                guard let d = try? Data(contentsOf: imagePath), let i = NSImage(data: d) else {
+    #if !canImport(AppKit)
+        public func getComponentIconSync() -> IMAGE? {
+            UIImage.fromFile(imagePath, template: displayIconTemplate)
+        }
+    #endif
+
+    public func getComponentIcon() async -> IMAGE? {
+        let path = imagePath
+        let template = displayIconTemplate
+        return await Task.detached {
+            #if canImport(AppKit)
+                guard let d = try? Data(contentsOf: path), let i = NSImage(data: d) else {
                     return nil
                 }
-                if displayIconTemplate {
+                if template {
                     i.isTemplate = true
                     let w = i.size.width
                     let h = i.size.height
@@ -697,43 +705,47 @@ public final class Component: Codable, Hashable {
                     i.size = NSSize(width: w * scale, height: h * scale)
                 }
                 return i
-            }
-            set {
-                let ipath = imagePath
-                if let n = newValue, let data = n.tiffRepresentation {
+            #else
+                UIImage.fromFile(path, template: template)
+            #endif
+        }.value
+    }
+
+    public func setComponentIcon(_ icon: IMAGE?) async {
+        let ipath = imagePath
+        await Task.detached {
+            #if canImport(AppKit)
+                if let icon, let data = icon.tiffRepresentation {
                     try? data.write(to: ipath)
                 } else if FileManager.default.fileExists(atPath: ipath.path) {
                     try? FileManager.default.removeItem(at: ipath)
                 }
-            }
-        }
-
-        public var thumbnail: NSImage? {
-            componentIcon
-        }
-    #else
-        public var componentIcon: UIImage? {
-            get {
-                UIImage.fromFile(imagePath, template: displayIconTemplate)
-            }
-            set {
-                let ipath = imagePath
-                if let n = newValue, let data = n.pngData() {
+            #else
+                if let icon, let data = icon.pngData() {
                     try? data.write(to: ipath)
                 } else {
                     try? FileManager.default.removeItem(at: ipath)
                 }
-            }
-        }
+            #endif
+        }.value
+    }
 
-        public var thumbnail: UIImage? {
+    public func getThumbnail() async -> IMAGE? {
+        #if canImport(AppKit)
+            await getComponentIcon()
+        #else
+            let path = imagePath
             if displayIconTemplate {
-                UIImage.fromFile(imagePath, template: true)
+                return await Task.detached {
+                    UIImage.fromFile(path, template: true)
+                }.value
             } else {
-                UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
+                return await Task.detached {
+                    UIImage.fromFile(path, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
+                }.value
             }
-        }
-    #endif
+        #endif
+    }
 
     public nonisolated static func == (lhs: Component, rhs: Component) -> Bool {
         lhs.uuid == rhs.uuid
@@ -743,7 +755,7 @@ public final class Component: Codable, Hashable {
         hasher.combine(uuid)
     }
 
-    public static let iconPointSize = CGSize(width: 256, height: 256)
+    public nonisolated static let iconPointSize = CGSize(width: 256, height: 256)
 
     public func setCloudKitRecord(_ newRecord: CKRecord?) {
         cloudKitRecord = newRecord
@@ -1182,7 +1194,7 @@ public final class Component: Codable, Hashable {
             return
         }
 
-        componentIcon =
+        let img = await Task.detached {
             switch contentMode {
             case .fit:
                 icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
@@ -1191,6 +1203,9 @@ public final class Component: Codable, Hashable {
             case .center, .circle:
                 icon
             }
+        }.value
+
+        await setComponentIcon(img)
 
         displayIconPriority = priority
         displayIconContentMode = contentMode

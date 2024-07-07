@@ -29,7 +29,7 @@ public let imageDimensions = CGSize(width: 512, height: 512)
 @MainActor
 public protocol DisplayImageProviding {
     var imageCacheKey: String { get }
-    var displayIcon: IMAGE { get }
+    var displayIcon: IMAGE { get async }
 }
 
 public final class Images {

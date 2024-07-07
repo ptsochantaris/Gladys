@@ -398,25 +398,23 @@ public extension IMAGE {
                 return img?.withTintColor(coloured, renderingMode: .alwaysOriginal)
             }
 
-            final func desaturated(darkMode: Bool) async -> UIImage {
-                await Task.detached {
-                    guard let ciImage = CIImage(image: self) else {
-                        return self
-                    }
-                    let p1 = darkMode ? "inputColor0" : "inputColor1"
-                    let p2 = darkMode ? "inputColor1" : "inputColor0"
-                    #if os(visionOS)
-                        let a: CGFloat = 0.5
-                    #else
-                        let a: CGFloat = darkMode ? 0.05 : 0.2
-                    #endif
-                    let blackAndWhiteImage = ciImage
-                        .applyingFilter("CIFalseColor", parameters: [
-                            p1: CIColor(color: .systemBackground),
-                            p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
-                        ])
-                    return blackAndWhiteImage.asImage ?? self
-                }.value
+            final func desaturated(darkMode: Bool) -> UIImage {
+                guard let ciImage = CIImage(image: self) else {
+                    return self
+                }
+                let p1 = darkMode ? "inputColor0" : "inputColor1"
+                let p2 = darkMode ? "inputColor1" : "inputColor0"
+                #if os(visionOS)
+                    let a: CGFloat = 0.5
+                #else
+                    let a: CGFloat = darkMode ? 0.05 : 0.2
+                #endif
+                let blackAndWhiteImage = ciImage
+                    .applyingFilter("CIFalseColor", parameters: [
+                        p1: CIColor(color: .systemBackground),
+                        p2: CIColor(color: .secondaryLabel.withAlphaComponent(a))
+                    ])
+                return blackAndWhiteImage.asImage ?? self
             }
         #endif
     }

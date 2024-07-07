@@ -39,7 +39,9 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 
     override func viewWillLayout() {
         super.viewWillLayout()
-        decorate()
+        Task {
+            await decorate()
+        }
     }
 
     private var shortcutMenu: NSMenu? {
@@ -111,7 +113,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         delegate?.componentCell(self, wants: .edit)
     }
 
-    private func decorate() {
+    private func decorate() async {
         guard let typeEntry = representedObject as? Component else { return }
 
         sizeLabel.stringValue = typeEntry.sizeDescription ?? ""
@@ -147,10 +149,8 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
             previewLabel.alignment = .center
         }
 
-        if showPreview, let icon = typeEntry.componentIcon {
-            Task {
-                centreBlock.layer?.contents = await icon.desaturated()
-            }
+        if showPreview, let icon = await typeEntry.getComponentIcon() {
+            centreBlock.layer?.contents = await icon.desaturated()
         } else {
             centreBlock.layer?.contents = nil
         }
