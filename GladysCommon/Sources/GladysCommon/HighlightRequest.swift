@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol HighlightListener: AnyObject {
+public protocol HighlightListener: AnyObject, Sendable {
     func highlightItem(request: HighlightRequest) async
 }
 

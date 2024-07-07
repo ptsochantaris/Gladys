@@ -1,5 +1,7 @@
 import AppKit
 
+extension NSEvent: @retroactive @unchecked Sendable {}
+
 extension NSTextField {
     @objc final func gladysUndo() {
         currentEditor()?.undoManager?.undo()

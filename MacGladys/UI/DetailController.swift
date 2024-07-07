@@ -119,7 +119,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     deinit {
-        DetailController.showingUUIDs.remove(item.uuid)
+        onlyOnMainThread {
+            _ = DetailController.showingUUIDs.remove(item.uuid)
+        }
     }
 
     private var itemObservation: Cancellable?
@@ -333,10 +335,11 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     }
 
     func newLabelController(_: NewLabelController, selectedLabel label: String) {
-        if !item.labels.contains(label) {
-            item.labels.append(label)
-            saveItem()
+        if item.labels.contains(label) {
+            return
         }
+        item.labels.append(label)
+        saveItem()
     }
 
     override func updateUserActivityState(_ userActivity: NSUserActivity) {
@@ -653,7 +656,9 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     nonisolated func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
         if event.type == .keyDown {
-            components.keyDown(with: event)
+            onlyOnMainThread {
+                components.keyDown(with: event)
+            }
             return true
         }
         return false

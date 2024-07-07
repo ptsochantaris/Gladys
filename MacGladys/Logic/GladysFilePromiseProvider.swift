@@ -89,20 +89,23 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
     }
 
     nonisolated func filePromiseProvider(_: NSFilePromiseProvider, writePromiseTo url: URL, completionHandler: @escaping (Error?) -> Void) {
-        MainActor.assumeIsolated {
-            do {
-                let fm = FileManager.default
-                if !fm.fileExists(atPath: tempPath.path) {
-                    try typeItem?.writeBytes(to: tempPath, tags: tags)
+        do {
+            let fm = FileManager.default
+            let temp = tempPath
+            if !fm.fileExists(atPath: temp.path) {
+                let item = typeItem
+                let itemTags = tags
+                try MainActor.assumeIsolated {
+                    try item?.writeBytes(to: temp, tags: itemTags)
                 }
-                if fm.fileExists(atPath: url.path) {
-                    try fm.removeItem(at: url)
-                }
-                try fm.moveItem(at: tempPath, to: url)
-                completionHandler(nil)
-            } catch {
-                completionHandler(error)
             }
+            if fm.fileExists(atPath: url.path) {
+                try fm.removeItem(at: url)
+            }
+            try fm.moveItem(at: tempPath, to: url)
+            completionHandler(nil)
+        } catch {
+            completionHandler(error)
         }
     }
 }

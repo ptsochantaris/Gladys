@@ -8,14 +8,17 @@ final class ProgressViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Processing..."
+        title = "Processing…"
     }
 
     func startMonitoring(progress: Progress?, titleOverride: String?) {
         if let monitoredProgress = progress {
             observer = monitoredProgress.observe(\Progress.completedUnitCount, options: .new) { [weak self] p, _ in
                 guard let self else { return }
-                update(from: p)
+                Task { [weak self] in
+                    guard let self else { return }
+                    await update(from: p)
+                }
             }
             update(from: monitoredProgress)
         } else {

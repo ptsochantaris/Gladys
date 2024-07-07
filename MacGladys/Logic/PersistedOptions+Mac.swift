@@ -66,13 +66,20 @@ extension PersistedOptions {
         }
     }
 
+    private static var loginItem: SMAppService {
+        SMAppService.loginItem(identifier: LauncherCommon.helperAppId)
+    }
+
     static var launchAtLogin: Bool {
         get {
-            defaults.bool(forKey: "launchAtLogin")
+            switch loginItem.status {
+            case .notFound, .notRegistered: false
+            case .enabled, .requiresApproval: true
+            @unknown default: false
+            }
         }
         set {
-            defaults.set(newValue, forKey: "launchAtLogin")
-            SMLoginItemSetEnabled(LauncherCommon.helperAppId as CFString, newValue)
+            try? newValue ? loginItem.register() : loginItem.unregister()
         }
     }
 

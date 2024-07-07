@@ -532,19 +532,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             }
         }
 
-        /*
-         var index = 0
-         var indexSet = Set<IndexPath>()
-         for i in filter.filteredDrops {
-             if selectedUUIDS.contains(i.uuid) {
-                 indexSet.insert(IndexPath(item: index, section: 0))
-             }
-             index += 1
-         }
-         if !indexSet.isEmpty {
-             collection.selectItems(at: indexSet, scrollPosition: [.centeredHorizontally, .centeredVertically])
-         }
-         */
         touchBarScrubber?.reloadData()
 
         Task {
@@ -1036,14 +1023,21 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     nonisolated func previewPanel(_: QLPreviewPanel!, transitionImageFor item: QLPreviewItem!, contentRect _: UnsafeMutablePointer<NSRect>!) -> Any! {
-        MainActor.assumeIsolated {
-            let visibleCells = collection.visibleItems()
-            if let qlItem = item as? Component.PreviewItem,
-               let cellIndex = visibleCells.firstIndex(where: { ($0.representedObject as? ArchivedItem)?.uuid == qlItem.parentUuid }) {
-                return (visibleCells[cellIndex] as? DropCell)?.previewImage
-            }
+        guard let qlItem = item as? Component.PreviewItem else {
             return nil
         }
+
+        let visibleCells = MainActor.assumeIsolated { collection.visibleItems() }
+
+        guard let cellIndex = visibleCells.firstIndex(where: { cell in
+            let o = MainActor.assumeIsolated { cell.representedObject as? ArchivedItem }
+            return o?.uuid == qlItem.parentUuid
+        }) else {
+            return nil
+        }
+
+        let cell = visibleCells[cellIndex] as? DropCell
+        return MainActor.assumeIsolated { cell?.previewImage }
     }
 
     /////////////////////////////// Mouse monitoring

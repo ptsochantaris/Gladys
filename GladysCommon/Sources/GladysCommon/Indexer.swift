@@ -68,15 +68,11 @@
         }
 
         public func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            try onlyOnMainThread {
-                try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-            }
+            try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
         public func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
-            try onlyOnMainThread {
-                try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
-            }
+            try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
         public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
@@ -89,20 +85,24 @@
             }
         }
 
-        @MainActor
         private func data(itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            if let item = itemProvider.getItem(uuid: itemIdentifier), let data = item.bytes(for: typeIdentifier) {
-                return data
+            onlyOnMainThread {
+                if let item = itemProvider.getItem(uuid: itemIdentifier),
+                   let data = item.bytes(for: typeIdentifier) {
+                    return data
+                }
+                return Data()
             }
-            return Data()
         }
 
-        @MainActor
         private func fileURL(itemIdentifier: String, typeIdentifier: String) throws -> URL {
-            if let item = itemProvider.getItem(uuid: itemIdentifier), let url = item.url(for: typeIdentifier) {
-                return url as URL
+            onlyOnMainThread {
+                if let item = itemProvider.getItem(uuid: itemIdentifier),
+                   let url = item.url(for: typeIdentifier) {
+                    return url as URL
+                }
+                return URL(string: "file://")!
             }
-            return URL(string: "file://")!
         }
     }
 #endif

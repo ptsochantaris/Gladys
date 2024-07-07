@@ -2,6 +2,7 @@ import AppKit
 import GladysUI
 
 protocol NewLabelControllerDelegate: AnyObject {
+    @MainActor
     func newLabelController(_ newLabelController: NewLabelController, selectedLabel label: String)
 }
 
