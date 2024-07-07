@@ -12,7 +12,7 @@ public struct HighlightRequest: Sendable {
     public let uuid: String
     public let extraAction: Action
 
-    public struct Registration: Hashable {
+    public struct Registration: Hashable, Sendable {
         public static func == (lhs: Self, rhs: Self) -> Bool {
             lhs.id == rhs.id
         }

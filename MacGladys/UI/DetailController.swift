@@ -641,15 +641,17 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         previewPanel = nil
     }
 
-    func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
+    nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
         1
     }
 
-    func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
-        selectedItem?.quickLookItem
+    nonisolated func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
+        onlyOnMainThread {
+            selectedItem?.quickLookItem
+        }
     }
 
-    func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+    nonisolated func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
         if event.type == .keyDown {
             components.keyDown(with: event)
             return true
@@ -726,18 +728,22 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         view.window?.close()
     }
 
-    func sharingService(_: NSSharingService, didSave share: CKShare) {
-        item.cloudKitShareRecord = share
-        item.postModified()
+    nonisolated func sharingService(_: NSSharingService, didSave share: CKShare) {
+        onlyOnMainThread {
+            item.cloudKitShareRecord = share
+            item.postModified()
+        }
     }
 
-    func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
-        let wasImported = item.isImportedShare
-        item.cloudKitShareRecord = nil
-        if wasImported {
-            Model.delete(items: [item])
-        } else {
-            item.postModified()
+    nonisolated func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
+        onlyOnMainThread {
+            let wasImported = item.isImportedShare
+            item.cloudKitShareRecord = nil
+            if wasImported {
+                Model.delete(items: [item])
+            } else {
+                item.postModified()
+            }
         }
     }
 

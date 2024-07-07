@@ -41,12 +41,12 @@ final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {
         NSApplication.shared.registerServicesMenuSendTypes(Array(sendTypes), returnTypes: [])
     }
 
-    func readSelection(from _: NSPasteboard) -> Bool {
+    nonisolated func readSelection(from _: NSPasteboard) -> Bool {
         false
     }
 
-    func writeSelection(to pboard: NSPasteboard, types _: [NSPasteboard.PasteboardType]) -> Bool {
-        let objectsToWrite = actionableSelectedItems.compactMap { $0.pasteboardItem(forDrag: false) }
+    nonisolated func writeSelection(to pboard: NSPasteboard, types _: [NSPasteboard.PasteboardType]) -> Bool {
+        let objectsToWrite = onlyOnMainThread { actionableSelectedItems.compactMap { $0.pasteboardItem(forDrag: false) } }
         if objectsToWrite.isEmpty {
             return false
         } else {
