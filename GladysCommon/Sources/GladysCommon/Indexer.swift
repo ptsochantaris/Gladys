@@ -33,7 +33,7 @@
                 var searchableItems = [CSSearchableItem]()
                 itemProvider.iterateThroughAllItems { item in
                     searchableItems.append(item.searchableItem)
-                    if searchableItems.count > 99 {
+                    if searchableItems.count > 199 {
                         reIndex(items: searchableItems, in: searchableIndex)
                         searchableItems.removeAll()
                     }
@@ -53,7 +53,7 @@
                 itemProvider.iterateThroughAllItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
-                        if searchableItems.count > 99 {
+                        if searchableItems.count > 199 {
                             reIndex(items: searchableItems, in: searchableIndex)
                             searchableItems.removeAll()
                         }
@@ -76,11 +76,12 @@
         }
 
         public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
-            index.indexSearchableItems(items) { error in
-                if let error {
-                    log("Error indexing items: \(error.localizedDescription)")
-                } else {
+            Task.detached {
+                do {
+                    try await index.indexSearchableItems(items)
                     log("\(items.count) item(s) indexed")
+                } catch {
+                    log("Error indexing items: \(error.localizedDescription)")
                 }
             }
         }

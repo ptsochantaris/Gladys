@@ -991,42 +991,44 @@ public final class Component: Codable, Hashable {
         return nil
     }
 
-    private func generatePdfPreview() -> IMAGE? {
-        guard let document = CGPDFDocument(bytesPath as CFURL), let firstPage = document.page(at: 1) else { return nil }
+    private func generatePdfPreview() async -> IMAGE? {
+        let path = bytesPath
+        return await Task.detached {
+            guard let document = CGPDFDocument(path as CFURL), let firstPage = document.page(at: 1) else { return nil }
 
-        let side: CGFloat = 1024
+            let side: CGFloat = 1024
 
-        var pageRect = firstPage.getBoxRect(.cropBox)
-        let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
-        pageRect.origin = .zero
-        pageRect.size.width *= pdfScale
-        pageRect.size.height *= pdfScale
+            var pageRect = firstPage.getBoxRect(.cropBox)
+            let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
+            pageRect.origin = .zero
+            pageRect.size.width *= pdfScale
+            pageRect.size.height *= pdfScale
 
-        let c = CGContext(data: nil,
-                          width: Int(pageRect.size.width),
-                          height: Int(pageRect.size.height),
-                          bitsPerComponent: 8,
-                          bytesPerRow: Int(pageRect.size.width) * 4,
-                          space: CGColorSpaceCreateDeviceRGB(),
-                          bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)
+            guard let context = CGContext(data: nil,
+                                          width: Int(pageRect.size.width),
+                                          height: Int(pageRect.size.height),
+                                          bitsPerComponent: 8,
+                                          bytesPerRow: Int(pageRect.size.width) * 4,
+                                          space: CGColorSpaceCreateDeviceRGB(),
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)
+            else { return nil }
 
-        guard let context = c else { return nil }
+            context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
+            context.fill(pageRect)
 
-        context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
-        context.fill(pageRect)
+            context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
+            context.drawPDFPage(firstPage)
 
-        context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
-        context.drawPDFPage(firstPage)
-
-        if let cgImage = context.makeImage() {
-            #if canImport(AppKit)
-                return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-            #else
-                return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
-            #endif
-        } else {
-            return nil
-        }
+            if let cgImage = context.makeImage() {
+                #if canImport(AppKit)
+                    return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+                #else
+                    return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
+                #endif
+            } else {
+                return nil
+            }
+        }.value
     }
 
     public var previewTempPath: URL {
@@ -1066,14 +1068,10 @@ public final class Component: Codable, Hashable {
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
                 imgGenerator.appliesPreferredTrackTransform = true
 
-                #if os(visionOS)
-                    let cgImage = try await imgGenerator.image(at: CMTimeMake(value: 0, timescale: 1)).image
-                    return UIImage(cgImage: cgImage)
-                #elseif canImport(AppKit)
-                    let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+                let cgImage = try await imgGenerator.image(at: CMTimeMake(value: 0, timescale: 1)).image
+                #if canImport(AppKit)
                     return NSImage(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-                #elseif canImport(UIKit)
-                    let cgImage = try imgGenerator.copyCGImage(at: CMTimeMake(value: 0, timescale: 1), actualTime: nil)
+                #else
                     return UIImage(cgImage: cgImage)
                 #endif
 
@@ -1166,7 +1164,7 @@ public final class Component: Codable, Hashable {
         } else if typeConforms(to: .audio) {
             await setDisplayIcon(#imageLiteral(resourceName: "audio"), 30, .center)
 
-        } else if typeConforms(to: .pdf), let pdfPreview = generatePdfPreview() {
+        } else if typeConforms(to: .pdf), let pdfPreview = await generatePdfPreview() {
             if let title = getPdfTitle(), title.isPopulated {
                 setTitleInfo(title, 11)
             }

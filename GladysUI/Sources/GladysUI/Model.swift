@@ -267,8 +267,7 @@ public enum Model {
     private final class IndexProxy: IndexerItemProvider {
         func iterateThroughAllItems(perItem: (GladysCommon.ArchivedItem) -> Bool) {
             for drop in DropStore.allDrops {
-                let carryOn = perItem(drop)
-                if !carryOn {
+                if !perItem(drop) {
                     return
                 }
             }

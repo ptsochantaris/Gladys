@@ -356,9 +356,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         } else {
             let component = item.components[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "DetailCell", for: indexPath) as! DetailCell
-            Task {
-                await cell.configure(with: component, showTypeDetails: showTypeDetails, isReadWrite: isReadWrite, delegate: self)
-            }
+            cell.configure(with: component, showTypeDetails: showTypeDetails, isReadWrite: isReadWrite, delegate: self)
             return cell
         }
     }
