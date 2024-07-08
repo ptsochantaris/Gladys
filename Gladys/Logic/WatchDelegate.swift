@@ -59,7 +59,8 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
         Task { [weak self] in
             let reply = await self?.handle(message: watchMessage)
-            replyHandler(reply?.asData ?? Data())
+            let data = reply?.asData ?? Data()
+            replyHandler(data)
         }
     }
 

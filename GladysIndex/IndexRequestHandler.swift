@@ -29,4 +29,8 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
     override func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
         try indexDelegate.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
     }
+
+    override func searchableIndexDidThrottle(_ searchableIndex: CSSearchableIndex) {}
+
+    override func searchableIndexDidFinishThrottle(_ searchableIndex: CSSearchableIndex) {}
 }

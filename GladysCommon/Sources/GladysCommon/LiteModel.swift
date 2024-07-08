@@ -108,7 +108,6 @@ public enum LiteModel {
                     }
                 }
             } catch {
-                log("Loading Error: \(error)")
                 loadingError = error as NSError
             }
         }

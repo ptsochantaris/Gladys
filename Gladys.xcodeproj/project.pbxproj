@@ -76,7 +76,9 @@
 		165F3B492AB61B4F00C13B18 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
 		165F3B4A2AB61B6500C13B18 /* GladysAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */; };
 		1660C0262465C32000ABFDFD /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1660C0252465C32000ABFDFD /* Singleton.swift */; };
+		166932F72C3C7C0C0088B68A /* IndexRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16287AE91EFB03FD007188AE /* IndexRequestHandler.swift */; };
 		166EEC9A23645391000BE78A /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 166EEC9923645391000BE78A /* Media.xcassets */; };
+		167812F02C3C750600E88CF1 /* MacGladysIndex.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 167812E82C3C750600E88CF1 /* MacGladysIndex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D01EF475FE005697CB /* AppDelegate.swift */; };
 		1678F9D31EF475FF005697CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678F9D21EF475FF005697CB /* ViewController.swift */; };
 		1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -163,6 +165,7 @@
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
+		16EDF33A2C3C76ED00A54A2D /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16EDF3392C3C76ED00A54A2D /* GladysCommon */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
 		16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */; };
@@ -201,6 +204,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1657B8AA1FD41C1B00EC480D;
 			remoteInfo = GladysMessage;
+		};
+		167812EE2C3C750600E88CF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1678F9C51EF475FE005697CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 167812E72C3C750600E88CF1;
+			remoteInfo = MacGladysIndex;
 		};
 		168ADF1E2AB8A4EA009D20CE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -281,6 +291,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				167812F02C3C750600E88CF1 /* MacGladysIndex.appex in Embed Foundation Extensions */,
 				168ADF1D2AB8A4EA009D20CE /* GladysWidgetsExtension.appex in Embed Foundation Extensions */,
 				164947D920BEAA6200BD1BEB /* MacGladysShare.appex in Embed Foundation Extensions */,
 			);
@@ -402,6 +413,9 @@
 		166EEC9923645391000BE78A /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		1675740E1F12C2D100385079 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = GladysFramework/openssl/libcrypto.a; sourceTree = "<group>"; };
 		1675740F1F12C2D100385079 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = GladysFramework/openssl/libssl.a; sourceTree = "<group>"; };
+		167812E82C3C750600E88CF1 /* MacGladysIndex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacGladysIndex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		167812EC2C3C750600E88CF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		167812ED2C3C750600E88CF1 /* MacGladysIndex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacGladysIndex.entitlements; sourceTree = "<group>"; };
 		1678F9CD1EF475FE005697CB /* Gladys.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gladys.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1678F9D01EF475FE005697CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1678F9D21EF475FF005697CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -547,6 +561,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		167812E52C3C750600E88CF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				16EDF33A2C3C76ED00A54A2D /* GladysCommon in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1678F9CA1EF475FE005697CB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -682,6 +704,15 @@
 			path = GladysMessage;
 			sourceTree = "<group>";
 		};
+		167812E92C3C750600E88CF1 /* MacGladysIndex */ = {
+			isa = PBXGroup;
+			children = (
+				167812EC2C3C750600E88CF1 /* Info.plist */,
+				167812ED2C3C750600E88CF1 /* MacGladysIndex.entitlements */,
+			);
+			path = MacGladysIndex;
+			sourceTree = "<group>";
+		};
 		1678F9C41EF475FE005697CB = {
 			isa = PBXGroup;
 			children = (
@@ -699,6 +730,7 @@
 				164947CD20BEAA6200BD1BEB /* MacGladysShare */,
 				16B2AA3924DF42B5004F3FC2 /* GladysKeys */,
 				16CA74122AB4C063000D6A99 /* GladysWidgets */,
+				167812E92C3C750600E88CF1 /* MacGladysIndex */,
 				1678F9CE1EF475FE005697CB /* Products */,
 				16FAC6761EF988D6009BCB35 /* Frameworks */,
 			);
@@ -717,6 +749,7 @@
 				164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */,
 				16B2AA3824DF42B5004F3FC2 /* Keyhive.appex */,
 				16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */,
+				167812E82C3C750600E88CF1 /* MacGladysIndex.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -984,6 +1017,7 @@
 				168DFB1620B88559002C603D /* PBXTargetDependency */,
 				164947D820BEAA6200BD1BEB /* PBXTargetDependency */,
 				168ADF1F2AB8A4EA009D20CE /* PBXTargetDependency */,
+				167812EF2C3C750600E88CF1 /* PBXTargetDependency */,
 			);
 			name = MacGladys;
 			packageProductDependencies = (
@@ -1073,6 +1107,26 @@
 			productName = GladysMessage;
 			productReference = 1657B8AB1FD41C1B00EC480D /* GladysMessage.appex */;
 			productType = "com.apple.product-type.app-extension.messages";
+		};
+		167812E72C3C750600E88CF1 /* MacGladysIndex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 167812F32C3C750600E88CF1 /* Build configuration list for PBXNativeTarget "MacGladysIndex" */;
+			buildPhases = (
+				167812E42C3C750600E88CF1 /* Sources */,
+				167812E52C3C750600E88CF1 /* Frameworks */,
+				167812E62C3C750600E88CF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MacGladysIndex;
+			packageProductDependencies = (
+				16EDF3392C3C76ED00A54A2D /* GladysCommon */,
+			);
+			productName = MacGladysIndex;
+			productReference = 167812E82C3C750600E88CF1 /* MacGladysIndex.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		1678F9CC1EF475FE005697CB /* Gladys */ = {
 			isa = PBXNativeTarget;
@@ -1192,7 +1246,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				ORGANIZATIONNAME = "Paul Tsochantaris";
 				TargetAttributes = {
@@ -1254,6 +1308,9 @@
 								enabled = 1;
 							};
 						};
+					};
+					167812E72C3C750600E88CF1 = {
+						CreatedOnToolsVersion = 16.0;
 					};
 					1678F9CC1EF475FE005697CB = {
 						CreatedOnToolsVersion = 9.0;
@@ -1327,6 +1384,7 @@
 				161718C32094D333005ABD6C /* MacGladys */,
 				168DFAFD20B85F3D002C603D /* MacGladysHelper */,
 				164947CB20BEAA6200BD1BEB /* MacGladysShare */,
+				167812E72C3C750600E88CF1 /* MacGladysIndex */,
 			);
 		};
 /* End PBXProject section */
@@ -1375,6 +1433,13 @@
 			files = (
 				16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */,
 				1657B8B31FD41C1C00EC480D /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		167812E62C3C750600E88CF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1582,6 +1647,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		167812E42C3C750600E88CF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				166932F72C3C7C0C0088B68A /* IndexRequestHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1678F9C91EF475FE005697CB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1713,6 +1786,11 @@
 			platformFilter = ios;
 			target = 1657B8AA1FD41C1B00EC480D /* GladysMessage */;
 			targetProxy = 1657B8B71FD41C1C00EC480D /* PBXContainerItemProxy */;
+		};
+		167812EF2C3C750600E88CF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 167812E72C3C750600E88CF1 /* MacGladysIndex */;
+			targetProxy = 167812EE2C3C750600E88CF1 /* PBXContainerItemProxy */;
 		};
 		168ADF1F2AB8A4EA009D20CE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1962,6 +2040,66 @@
 			};
 			name = Release;
 		};
+		167812F12C3C750600E88CF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladysIndex/MacGladysIndex.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MacGladysIndex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MacGladysIndex;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysIndex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		167812F22C3C750600E88CF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_ENTITLEMENTS = MacGladysIndex/MacGladysIndex.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = X727JSJUGJ;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MacGladysIndex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MacGladysIndex;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.MacGladysIndex;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
 		168DFB0B20B85F3D002C603D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2070,7 +2208,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.8.0;
@@ -2215,7 +2353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -2511,6 +2649,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		167812F32C3C750600E88CF1 /* Build configuration list for PBXNativeTarget "MacGladysIndex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				167812F12C3C750600E88CF1 /* Debug */,
+				167812F22C3C750600E88CF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		1678F9C81EF475FE005697CB /* Build configuration list for PBXProject "Gladys" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2617,6 +2764,10 @@
 			productName = GladysCommon;
 		};
 		16C2994B2987E56B002286B1 /* GladysCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GladysCommon;
+		};
+		16EDF3392C3C76ED00A54A2D /* GladysCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GladysCommon;
 		};
