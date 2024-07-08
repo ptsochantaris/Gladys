@@ -32,22 +32,29 @@
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
-                var tasks = [Task<Void, Never>]()
                 itemProvider.iterateThroughAllItems { item in
                     searchableItems.append(item.searchableItem)
-                    if searchableItems.count > 199 {
-                        let task = reIndex(items: searchableItems, in: searchableIndex)
-                        tasks.append(task)
+                    if searchableItems.count > 99 {
+                        log("Submitting block for indexing")
+                        searchableIndex.indexSearchableItems(searchableItems) { error in
+                            if let error {
+                                log("Error while indexing: \(error.localizedDescription)")
+                            } else {
+                                log("Block indexed")
+                            }
+                        }
                         searchableItems.removeAll()
                     }
                     return true
                 }
                 if searchableItems.isPopulated {
-                    let task = reIndex(items: searchableItems, in: searchableIndex)
-                    tasks.append(task)
-                }
-                for task in tasks {
-                    _ = await task.value
+                    do {
+                        try await searchableIndex.indexSearchableItems(searchableItems)
+                        log("Last block indexed")
+                    } catch {
+                        log("Error while indexing: \(error.localizedDescription)")
+                    }
+                    searchableItems.removeAll()
                 }
                 log("Indexing done")
                 acknowledgementHandler()
@@ -58,24 +65,31 @@
             Task { @MainActor in
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
-                var tasks = [Task<Void, Never>]()
                 itemProvider.iterateThroughAllItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
-                        if searchableItems.count > 199 {
-                            let task = reIndex(items: searchableItems, in: searchableIndex)
-                            tasks.append(task)
+                        if searchableItems.count > 99 {
+                            log("Submitting block for indexing")
+                            searchableIndex.indexSearchableItems(searchableItems) { error in
+                                if let error {
+                                    log("Error while indexing: \(error.localizedDescription)")
+                                } else {
+                                    log("Last block indexed")
+                                }
+                            }
                             searchableItems.removeAll()
                         }
                     }
                     return true
                 }
                 if searchableItems.isPopulated {
-                    let task = reIndex(items: searchableItems, in: searchableIndex)
-                    tasks.append(task)
-                }
-                for task in tasks {
-                    _ = await task.value
+                    do {
+                        try await searchableIndex.indexSearchableItems(searchableItems)
+                        log("Block indexed")
+                    } catch {
+                        log("Error while indexing: \(error.localizedDescription)")
+                    }
+                    searchableItems.removeAll()
                 }
                 log("Indexing done")
                 acknowledgementHandler()
@@ -90,14 +104,12 @@
             try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
-        public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) -> Task<Void, Never> {
-            Task {
-                do {
-                    try await index.indexSearchableItems(items)
-                    log("\(items.count) item(s) indexed")
-                } catch {
-                    log("Error indexing items: \(error.localizedDescription)")
-                }
+        public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) async {
+            do {
+                try await index.indexSearchableItems(items)
+                log("\(items.count) item(s) indexed")
+            } catch {
+                log("Error indexing items: \(error.localizedDescription)")
             }
         }
 

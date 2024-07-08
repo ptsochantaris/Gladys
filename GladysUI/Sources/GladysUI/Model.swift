@@ -353,7 +353,7 @@ public enum Model {
             Maintini.startMaintaining()
             Task {
                 let searchableItems = itemsToWrite.map(\.searchableItem)
-                indexDelegate.reIndex(items: searchableItems, in: index)
+                await indexDelegate.reIndex(items: searchableItems, in: index)
                 Maintini.endMaintaining()
             }
         }
@@ -399,7 +399,7 @@ public enum Model {
                 return
             }
             let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
-            indexDelegate.reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
+            await indexDelegate.reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
             await Task.detached(priority: .background) {
                 do {
                     _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [item.uuid])
