@@ -15,22 +15,38 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
     }
 
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+        log("Reindexing all spotlight items…")
+        defer {
+            log("Reindexing all spotlight items done")
+        }
         indexDelegate.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
     }
 
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+        log("Reindexing some spotlight items…")
+        defer {
+            log("Reindexing some spotlight items done")
+        }
         indexDelegate.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
     }
 
     override func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
-        try indexDelegate.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+        log("Serving data for a spotlight item…")
+        defer {
+            log("Serving data for a spotlight item done")
+        }
+        return try indexDelegate.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
     }
 
     override func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
-        try indexDelegate.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+        log("Providing URL for a spotlight item…")
+        defer {
+            log("Providing URL for a spotlight item done")
+        }
+        return try indexDelegate.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
     }
 
-    override func searchableIndexDidThrottle(_ searchableIndex: CSSearchableIndex) {}
+    override func searchableIndexDidThrottle(_: CSSearchableIndex) {}
 
-    override func searchableIndexDidFinishThrottle(_ searchableIndex: CSSearchableIndex) {}
+    override func searchableIndexDidFinishThrottle(_: CSSearchableIndex) {}
 }
