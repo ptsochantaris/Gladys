@@ -64,12 +64,12 @@ final class ArchivedItemCell: CommonItemCell {
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, focusElementIfNeeded _: String, referencePoint _: CGPoint, completion: @escaping ((UIResponder & UITextInput)?) -> Void) {
-            MainActor.assumeIsolated {
-                if let n = notesTextView {
-                    completion(n)
-                    return
-                }
+            if let n = MainActor.assumeIsolated({ notesTextView }) {
+                completion(n)
+                return
+            }
 
+            MainActor.assumeIsolated {
                 let f = UITextView()
                 f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
                 f.backgroundColor = UIColor.g_colorTint
@@ -86,22 +86,17 @@ final class ArchivedItemCell: CommonItemCell {
                 f.alpha = 0
                 cover(with: f)
                 notesTextView = f
-                UIView.animate(withDuration: 0.15, animations: {
+                UIView.animate(withDuration: 0.15) {
                     f.alpha = 1
-                }, completion: { _ in
+                } completion: { _ in
                     completion(f)
-                })
+                }
             }
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, requestElementsIn _: CGRect, completion: @escaping ([String]) -> Void) {
-            MainActor.assumeIsolated {
-                if archivedDropItem?.isLocked == true {
-                    completion([])
-                } else {
-                    completion(["NotesIdentifier"])
-                }
-            }
+            let locked = MainActor.assumeIsolated { archivedDropItem?.isLocked == true }
+            completion(locked ? [] : ["NotesIdentifier"])
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, frameForElement _: String) -> CGRect {

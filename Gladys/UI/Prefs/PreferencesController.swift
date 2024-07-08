@@ -93,7 +93,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             exportOnlyVisibleSwitch.isEnabled = false
             var cancelled = false
             let progress = p.loadFileRepresentation(forTypeIdentifier: GladysFileUTI) { url, error in
-                if cancelled {
+                if onlyOnMainThread({ cancelled }) {
                     Task { @MainActor in
                         self.updateUI()
                     }
@@ -108,18 +108,18 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                         }
                     }
                 } else {
-                    Task { @MainActor in
+                    Task {
                         if let error {
                             await genericAlert(title: "Could not import data", message: "The data transfer failed: \(error.localizedDescription)")
                         } else {
                             await genericAlert(title: "Could not import data", message: "The data transfer failed")
                         }
-                        self.updateUI()
+                        await self.updateUI()
                     }
                 }
             }
             progress.cancellationHandler = {
-                cancelled = true
+                onlyOnMainThread({ cancelled = true })
                 Task { @MainActor in
                     self.updateUI()
                 }

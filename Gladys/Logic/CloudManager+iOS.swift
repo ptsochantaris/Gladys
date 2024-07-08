@@ -12,10 +12,20 @@ extension CloudManager {
     @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
     static var syncContextSetting: SyncPermissionContext
 
+    @MainActor
     static func received(notificationInfo: [AnyHashable: Any]) async -> UIBackgroundFetchResult {
-        await Model.updateBadge()
+        Model.updateBadge()
 
-        guard syncSwitchedOn, let notification = CKNotification(fromRemoteNotificationDictionary: notificationInfo) as? CKDatabaseNotification else {
+        if let notification = CKDatabaseNotification(fromRemoteNotificationDictionary: notificationInfo) {
+            return await _received(notification: notification)
+        } else {
+            return .noData
+        }
+    }
+
+    static private func _received(notification: CKDatabaseNotification) async -> UIBackgroundFetchResult {
+
+        guard syncSwitchedOn else {
             return .noData
         }
 

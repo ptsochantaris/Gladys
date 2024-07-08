@@ -15,6 +15,7 @@ public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
 
+@MainActor
 public var brokenMode = false
 
 private var dataFileLastModified = Date.distantPast
@@ -46,7 +47,7 @@ public enum Model {
     }
 
     private nonisolated static func _reloadDataIfNeeded() throws {
-        if brokenMode {
+        if onlyOnMainThread({ brokenMode }) {
             log("Ignoring load, model is broken, app needs restart.")
             return
         }
@@ -93,7 +94,7 @@ public enum Model {
             }
         }
 
-        if brokenMode {
+        if onlyOnMainThread({ brokenMode }) {
             log("Model in broken state, further loading or error processing aborted")
             return
         }
@@ -181,14 +182,14 @@ public enum Model {
     }
 
     private nonisolated static func handleLoadingError(_ error: NSError) throws {
-        brokenMode = true
+        onlyOnMainThread({ brokenMode = true })
         log("Error while loading: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelLoadingError(finalError)
     }
 
     private nonisolated static func handleCoordinationError(_ error: NSError) throws {
-        brokenMode = true
+        onlyOnMainThread({ brokenMode = true })
         log("Error in file coordinator: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelCoordinationError(finalError)
@@ -267,7 +268,8 @@ public enum Model {
     private final class IndexProxy: IndexerItemProvider {
         func iterateThroughAllItems(perItem: (GladysCommon.ArchivedItem) -> Bool) {
             for drop in DropStore.allDrops {
-                if !perItem(drop) {
+                let carryOn = perItem(drop)
+                if !carryOn {
                     return
                 }
             }

@@ -17,7 +17,7 @@ public let isRunningInTestFlightEnvironment: Bool = {
     #endif
 }()
 
-public func onlyOnMainThread<T>(block: @MainActor () throws -> T) rethrows -> T {
+public func onlyOnMainThread<T>(_ block: @MainActor () throws -> T) rethrows -> T {
     if Thread.isMainThread {
         try MainActor.assumeIsolated {
             try block()

@@ -32,8 +32,13 @@
     },
     {
       "color" : {
-        "platform" : "XR",
-        "reference" : "systemBackgroundColor"
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.182",
+          "green" : "0.182",
+          "red" : "0.182"
+        }
       },
       "idiom" : "vision"
     }
