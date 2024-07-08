@@ -184,15 +184,14 @@ public extension ArchivedItem {
         }
 
         if let bgItem = backgroundInfoObject {
-            if let mapItem = bgItem as? MKMapItem {
+            switch bgItem.content {
+            case let .map(mapItem):
                 let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)
                 return try? await Images.shared.mapSnapshot(with: snapshotOptions)
 
-            } else if let colour = bgItem as? COLOR {
+            case let .color(colour):
                 return IMAGE.block(color: colour, size: CGSize(width: 1, height: 1))
             }
-
-            return nil
         }
 
         return await displayIcon

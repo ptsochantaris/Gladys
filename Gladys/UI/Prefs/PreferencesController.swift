@@ -119,7 +119,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
                 }
             }
             progress.cancellationHandler = {
-                onlyOnMainThread({ cancelled = true })
+                onlyOnMainThread { cancelled = true }
                 Task { @MainActor in
                     self.updateUI()
                 }

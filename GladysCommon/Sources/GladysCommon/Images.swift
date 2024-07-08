@@ -1,7 +1,10 @@
 import CoreLocation
 import MapKit
 
+extension MKMapItem: @retroactive @unchecked Sendable {}
+
 extension CLLocationCoordinate2D: @retroactive Equatable {}
+
 extension CLLocationCoordinate2D: @retroactive Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude

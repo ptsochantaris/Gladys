@@ -49,8 +49,8 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
     }
 
     public func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
+        let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
         Task { @MainActor in
-            let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
             completion(items, nil)
         }
     }

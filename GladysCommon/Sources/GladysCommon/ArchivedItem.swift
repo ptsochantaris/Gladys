@@ -999,16 +999,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         return record
     }
 
-    public var backgroundInfoObject: Any? {
-        var currentItem: Any?
-        var currentPriority = -1
-        for item in components {
-            let (newItem, newPriority) = item.backgroundInfoObject
-            if let newItem, newPriority > currentPriority {
-                currentItem = newItem
-                currentPriority = newPriority
-            }
-        }
-        return currentItem
+    public var backgroundInfoObject: Component.BackgroundInfoObject? {
+        components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
     }
 }

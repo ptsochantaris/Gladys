@@ -23,8 +23,7 @@ extension CloudManager {
         }
     }
 
-    static private func _received(notification: CKDatabaseNotification) async -> UIBackgroundFetchResult {
-
+    private static func _received(notification: CKDatabaseNotification) async -> UIBackgroundFetchResult {
         guard syncSwitchedOn else {
             return .noData
         }

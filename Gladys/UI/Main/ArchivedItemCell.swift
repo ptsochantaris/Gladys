@@ -69,7 +69,7 @@ final class ArchivedItemCell: CommonItemCell {
                 return
             }
 
-            MainActor.assumeIsolated {
+            let f = MainActor.assumeIsolated {
                 let f = UITextView()
                 f.contentInset = UIEdgeInsets(top: 10, left: 6, bottom: 10, right: 6)
                 f.backgroundColor = UIColor.g_colorTint
@@ -88,10 +88,11 @@ final class ArchivedItemCell: CommonItemCell {
                 notesTextView = f
                 UIView.animate(withDuration: 0.15) {
                     f.alpha = 1
-                } completion: { _ in
-                    completion(f)
                 }
+                return f
             }
+
+            completion(f)
         }
 
         nonisolated func indirectScribbleInteraction(_: UIInteraction, requestElementsIn _: CGRect, completion: @escaping ([String]) -> Void) {

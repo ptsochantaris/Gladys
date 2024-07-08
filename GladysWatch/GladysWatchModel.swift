@@ -1,8 +1,6 @@
 import GladysCommon
 import WatchConnectivity
 
-extension WCSession: @retroactive @unchecked Sendable {}
-
 @MainActor
 @Observable
 final class GladysWatchModel: NSObject, WCSessionDelegate {
@@ -17,47 +15,35 @@ final class GladysWatchModel: NSObject, WCSessionDelegate {
 
     var state = State.loading
 
-    private func extractDropList(from context: [String: Any]) -> ([[String: Any]], Int) {
-        if
-            let reportedCount = context["total"] as? Int,
-            let compressedData = context["dropList"] as? Data,
-            let uncompressedData = compressedData.data(operation: .decompress),
-            let itemInfo = SafeArchiving.unarchive(uncompressedData) as? [[String: Any]] {
-            var count = 1
-            let list = itemInfo.map { dict -> [String: Any] in
-                var d = dict
-                d["it"] = "\(count) of \(reportedCount)"
-                count += 1
-                return d
+    private nonisolated func receivedInfo(message: WatchMessage?) {
+        switch message {
+        case let .contextReply(dropList, reportedCount):
+            let drops = dropList.map { Drop(dropInfo: $0) }
+            Task { @MainActor in
+                self.reportedCount = reportedCount
+                self.dropList = drops
+                ComplicationDataSource.reloadComplications()
+                ImageCache.trimUnaccessedEntries()
+                state = drops.isEmpty ? .empty : .list
             }
-            return (list, reportedCount)
-        } else {
-            return ([], 0)
+
+        default:
+            return
         }
     }
 
-    private func receivedInfo(_ info: [String: Any]) {
-        let (dropList, reportedCount) = extractDropList(from: info)
-        Task { @MainActor in
-            self.reportedCount = reportedCount
-            self.dropList = dropList.compactMap { Drop(json: $0) }
-            ComplicationDataSource.reloadComplications()
-            ImageCache.trimUnaccessedEntries()
-            state = dropList.isEmpty ? .empty : .list
+    nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data) {
+        guard let watchMessage = WatchMessage.parse(from: messageData) else {
+            return
         }
-    }
-
-    nonisolated func session(_: WCSession, didReceiveUserInfo userInfo: [String: Any] = [:]) {
-        Task {
-            await receivedInfo(userInfo)
-        }
+        receivedInfo(message: watchMessage)
     }
 
     func getFullUpdate(session: WCSession) {
         if session.activationState == .activated {
-            session.sendMessage(["update": "full"]) { [weak self] info in
-                guard let self else { return }
-                receivedInfo(info)
+            Task.detached { [weak self] in
+                let reply = await session.sendWatchMessage(.updateRequest(full: true))
+                self?.receivedInfo(message: reply)
             }
         }
     }

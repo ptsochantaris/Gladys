@@ -62,16 +62,10 @@ final class Drop: Identifiable {
     var imageState = ImageState.none
     var uiState = UIState.text
 
-    init?(json: [String: Any]) {
-        guard let id = json["u"] as? String,
-              let title = json["t"] as? String,
-              let imageDate = json["d"] as? Date
-        else {
-            return nil
-        }
-        self.id = id
-        self.title = title
-        self.imageDate = imageDate
+    nonisolated init(dropInfo: WatchMessage.DropInfo) {
+        id = dropInfo.id
+        title = dropInfo.title
+        imageDate = dropInfo.imageDate
     }
 
     func fetchImage() {
@@ -89,74 +83,59 @@ final class Drop: Identifiable {
 
         let screen = WKInterfaceDevice.current()
         let size = CGSize(width: screen.screenBounds.width, height: screen.screenBounds.height)
-        WCSession.default.sendMessage(["image": id, "width": size.width, "height": size.height]) { reply in
-            guard let r = reply["image"] as? Data, let i = UIImage(data: r) else {
+        let request = WatchMessage.imageRequest(WatchMessage.ImageInfo(id: id, width: size.width, height: size.height))
+
+        Task.detached {
+            switch await WCSession.default.sendWatchMessage(request) {
+            case let .imageData(data):
+                if let i = UIImage(data: data) {
+                    ImageCache.setImageData(data, for: cacheKey)
+                    Task { @MainActor in
+                        self.imageState = .loaded(image: i)
+                    }
+                } else {
+                    Task { @MainActor in
+                        self.imageState = .empty
+                    }
+                }
+
+            default:
                 Task { @MainActor in
                     self.imageState = .empty
                 }
-                return
-            }
-            ImageCache.setImageData(r, for: cacheKey)
-            Task { @MainActor in
-                self.imageState = .loaded(image: i)
-            }
-
-        } errorHandler: { _ in
-            Task { @MainActor in
-                self.imageState = .empty
             }
         }
     }
 
     func viewOnDeviceSelected() {
         uiState = .action(label: "Opening item on the phone app")
-        WCSession.default.sendMessage(["view": id]) { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
-        } errorHandler: { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
+        Task {
+            _ = await WCSession.default.sendWatchMessage(.view(id))
+            self.uiState = .text
         }
     }
 
     func copySelected() {
         uiState = .action(label: "Copying")
-        WCSession.default.sendMessage(["copy": id]) { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
-        } errorHandler: { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
+        Task {
+            _ = await WCSession.default.sendWatchMessage(.copy(id))
+            self.uiState = .text
         }
     }
 
     func moveToTopSelected() {
         uiState = .action(label: "Moving to the top of the list")
-        WCSession.default.sendMessage(["moveToTop": id]) { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
-        } errorHandler: { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
+        Task {
+            _ = await WCSession.default.sendWatchMessage(.moveToTop(id))
+            self.uiState = .text
         }
     }
 
     func deleteSelected() {
         uiState = .action(label: "Deleting")
-        WCSession.default.sendMessage(["delete": id]) { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
-        } errorHandler: { _ in
-            Task { @MainActor in
-                self.uiState = .text
-            }
+        Task {
+            _ = await WCSession.default.sendWatchMessage(.delete(id))
+            self.uiState = .text
         }
     }
 }

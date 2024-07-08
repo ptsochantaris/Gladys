@@ -182,14 +182,14 @@ public enum Model {
     }
 
     private nonisolated static func handleLoadingError(_ error: NSError) throws {
-        onlyOnMainThread({ brokenMode = true })
+        onlyOnMainThread { brokenMode = true }
         log("Error while loading: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelLoadingError(finalError)
     }
 
     private nonisolated static func handleCoordinationError(_ error: NSError) throws {
-        onlyOnMainThread({ brokenMode = true })
+        onlyOnMainThread { brokenMode = true }
         log("Error in file coordinator: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelCoordinationError(finalError)

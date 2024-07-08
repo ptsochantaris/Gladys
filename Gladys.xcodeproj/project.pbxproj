@@ -158,6 +158,8 @@
 		16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DF9FBB20C20F3F00CFD3D1 /* ProgressViewController.swift */; };
 		16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */ = {isa = PBXBuildFile; fileRef = 16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */; };
 		16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */; };
+		16E89F642C3C50DD003DF4B1 /* WatchMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E89F632C3C50DD003DF4B1 /* WatchMessage.swift */; };
+		16E89F652C3C50DD003DF4B1 /* WatchMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E89F632C3C50DD003DF4B1 /* WatchMessage.swift */; };
 		16E9E1FC1F9B4294005DAE72 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */; };
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
@@ -487,6 +489,7 @@
 		16DF9FBD20C220B200CFD3D1 /* gladysIconLarge.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = gladysIconLarge.icns; sourceTree = "<group>"; };
 		16E781BB1FE97AD90071ED9C /* LabelEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorController.swift; sourceTree = "<group>"; };
 		16E781BD1FE97ED40071ED9C /* LabelEditorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelEditorCell.swift; sourceTree = "<group>"; };
+		16E89F632C3C50DD003DF4B1 /* WatchMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMessage.swift; sourceTree = "<group>"; };
 		16E9E1FB1F9B4294005DAE72 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		16EC3D082145286F0015714A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16EC717E1F9FC6C7007750AA /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -816,6 +819,7 @@
 				162BDD7D220F4D4700A3C17B /* ComplicationDataSource.swift */,
 				16524C692950900D00384B20 /* Drop.swift */,
 				16A4E7F31FBB844A00D60596 /* GladysWatch.swift */,
+				16E89F632C3C50DD003DF4B1 /* WatchMessage.swift */,
 				16524C6729508FCF00384B20 /* GladysWatchModel.swift */,
 				16A4E7E51FBB844A00D60596 /* Assets.xcassets */,
 			);
@@ -1604,6 +1608,7 @@
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
 				1607079F1F8A38B5003B856A /* AsciiCell.swift in Sources */,
 				1660C0262465C32000ABFDFD /* Singleton.swift in Sources */,
+				16E89F652C3C50DD003DF4B1 /* WatchMessage.swift in Sources */,
 				1633F0361F9371EB00421B8C /* AddLabelController.swift in Sources */,
 				164CEC642AB2394300298594 /* Component+iOS.swift in Sources */,
 				1678F9D31EF475FF005697CB /* ViewController.swift in Sources */,
@@ -1652,6 +1657,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16524C6A2950900D00384B20 /* Drop.swift in Sources */,
+				16E89F642C3C50DD003DF4B1 /* WatchMessage.swift in Sources */,
 				16A4E7F41FBB844A00D60596 /* GladysWatch.swift in Sources */,
 				16524C6829508FD000384B20 /* GladysWatchModel.swift in Sources */,
 				162BDD7E220F4D4700A3C17B /* ComplicationDataSource.swift in Sources */,
@@ -1817,7 +1823,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
@@ -1846,7 +1851,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys;
 				PRODUCT_NAME = Gladys;
@@ -1873,7 +1877,6 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1902,7 +1905,6 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1919,7 +1921,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysMessage/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1944,7 +1945,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysMessage/GladysMessage.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysMessage/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1979,7 +1979,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2007,7 +2006,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.MacGladys.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2073,8 +2071,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				MTL_FAST_MATH = YES;
@@ -2088,7 +2086,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
 				_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES;
 			};
@@ -2104,7 +2102,6 @@
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2127,7 +2124,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2152,7 +2148,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2221,9 +2216,9 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2238,7 +2233,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
-				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 				XROS_DEPLOYMENT_TARGET = 1.0;
 				_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES;
 			};
@@ -2254,7 +2249,6 @@
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2277,7 +2271,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysIndex/GladysIndex.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysIndex/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2302,7 +2295,6 @@
 				CODE_SIGN_ENTITLEMENTS = GladysAction/GladysAction.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysAction/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2337,7 +2329,6 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Debug;
 		};
@@ -2358,7 +2349,6 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -2368,7 +2358,6 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysKeys/Gladys Keys.entitlements";
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysKeys/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2394,7 +2383,6 @@
 				CODE_SIGN_ENTITLEMENTS = "GladysKeys/Gladys Keys.entitlements";
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = GladysKeys/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2426,13 +2414,11 @@
 				INFOPLIST_FILE = GladysWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
@@ -2459,13 +2445,11 @@
 				INFOPLIST_FILE = GladysWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MERGED_BINARY_TYPE = automatic;
 				PRODUCT_BUNDLE_IDENTIFIER = build.bru.Gladys.GladysWidgets;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;

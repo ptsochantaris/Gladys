@@ -765,11 +765,31 @@ public final class Component: Codable, Hashable {
         needsDeletion = newValue
     }
 
-    public var backgroundInfoObject: (Any?, Int) {
+    public struct BackgroundInfoObject: Sendable {
+        public enum Content: Sendable {
+            case map(MKMapItem), color(COLOR)
+        }
+
+        public let content: Content
+        public let priority: Int
+    }
+
+    public var backgroundInfoObject: BackgroundInfoObject? {
         switch representedClass {
-        case .mapItem: (decode() as? MKMapItem, 30)
-        case .color: (decode() as? COLOR, 30)
-        default: (nil, 0)
+        case .mapItem:
+            if let map = decode() as? MKMapItem {
+                BackgroundInfoObject(content: .map(map), priority: 30)
+            } else {
+                nil
+            }
+        case .color:
+            if let color = decode() as? COLOR {
+                BackgroundInfoObject(content: .color(color), priority: 30)
+            } else {
+                nil
+            }
+        default:
+            nil
         }
     }
 

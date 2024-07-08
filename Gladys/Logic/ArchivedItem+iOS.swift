@@ -158,12 +158,12 @@ extension ArchivedItem {
         mostRelevantTypeItem?.canOpen == true
     }
 
-    var watchItem: [String: Sendable] {
+    var watchItem: WatchMessage.DropInfo {
         var imageDate = updatedAt
         if let imagePath, FileManager.default.fileExists(atPath: imagePath.path), let id = (try? imagePath.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate {
             imageDate = max(imageDate, id)
         }
-        return ["u": uuid.uuidString, "t": displayTitleOrUuid, "d": imageDate]
+        return WatchMessage.DropInfo(id: uuid.uuidString, title: displayTitleOrUuid, imageDate: imageDate)
     }
 
     @MainActor

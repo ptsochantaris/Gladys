@@ -139,13 +139,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
+    @MainActor
     final class ServicesProvider: NSObject {
-        @MainActor
         @objc private func handleServices(_ pboard: NSPasteboard, userData _: String, error _: AutoreleasingUnsafeMutablePointer<NSString>) {
             _ = Model.addItems(from: pboard, at: IndexPath(item: 0, section: 0), overrides: nil, filterContext: nil)
         }
 
-        @MainActor
         @objc func handleURLEvent(event: NSAppleEventDescriptor, replyEvent _: NSAppleEventDescriptor) {
             if PersistedOptions.blockGladysUrlRequests { return }
             if let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue, let url = URL(string: urlString) {
@@ -182,7 +181,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         updateMenubarIconMode(showing: true, forceUpdateMenu: false)
     }
 
-    @MainActor
     override init() {
         super.init()
 
@@ -234,7 +232,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         TipJar.warmup()
     }
 
-    @MainActor
     func applicationWillFinishLaunching(_: Notification) {
         let s = NSAppleEventManager.shared()
         s.setEventHandler(servicesProvider,
@@ -330,7 +327,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @MainActor
     func applicationDidResignActive(_: Notification) {
         updateMenubarIconMode(showing: false, forceUpdateMenu: false)
         Model.trimTemporaryDirectory()
@@ -353,7 +349,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @MainActor
     func application(_: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
         Task {
             await CloudManager.received(notificationInfo: userInfo)
@@ -419,14 +414,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         return false
     }
 
-    @MainActor
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Task { @CloudActor in
             CloudManager.apnsUpdate(deviceToken)
         }
     }
 
-    @MainActor
     func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
         Task { @CloudActor in
             CloudManager.apnsUpdate(nil)
@@ -609,7 +602,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @MainActor
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(aboutSelected(_:))
             || menuItem.action == #selector(newWindowSelected(_:))
@@ -657,7 +649,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     @IBOutlet var sortAscendingMenu: NSMenu!
     @IBOutlet var sortDescendingMenu: NSMenu!
 
-    @MainActor
     @objc private func sortOptionSelected(_ sender: NSMenu) {
         guard let controller = keyGladysControllerIfExists else { return }
         let selectedItems = ContiguousArray(controller.selectedItems)
@@ -682,7 +673,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         }
     }
 
-    @MainActor
     private func proceedWithSort(sender: NSMenu, items: ContiguousArray<ArchivedItem>) {
         if let sortOption = SortOption.options.first(where: { $0.ascendingTitle == sender.title }) {
             let sortMethod = sortOption.handlerForSort(itemsToSort: items, ascending: true)
