@@ -26,22 +26,30 @@
         public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
             Task { @MainActor in
                 do {
+                    log("Clearing items before full reindex")
                     try await searchableIndex.deleteAllSearchableItems()
                 } catch {
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
+                var tasks = [Task<Void, Never>]()
                 itemProvider.iterateThroughAllItems { item in
                     searchableItems.append(item.searchableItem)
                     if searchableItems.count > 199 {
-                        reIndex(items: searchableItems, in: searchableIndex)
+                        let task = reIndex(items: searchableItems, in: searchableIndex)
+                        tasks.append(task)
                         searchableItems.removeAll()
                     }
                     return true
                 }
                 if searchableItems.isPopulated {
-                    reIndex(items: searchableItems, in: searchableIndex)
+                    let task = reIndex(items: searchableItems, in: searchableIndex)
+                    tasks.append(task)
                 }
+                for task in tasks {
+                    _ = await task.value
+                }
+                log("Indexing done")
                 acknowledgementHandler()
             }
         }
@@ -50,19 +58,26 @@
             Task { @MainActor in
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
+                var tasks = [Task<Void, Never>]()
                 itemProvider.iterateThroughAllItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
                         if searchableItems.count > 199 {
-                            reIndex(items: searchableItems, in: searchableIndex)
+                            let task = reIndex(items: searchableItems, in: searchableIndex)
+                            tasks.append(task)
                             searchableItems.removeAll()
                         }
                     }
                     return true
                 }
                 if searchableItems.isPopulated {
-                    reIndex(items: searchableItems, in: searchableIndex)
+                    let task = reIndex(items: searchableItems, in: searchableIndex)
+                    tasks.append(task)
                 }
+                for task in tasks {
+                    _ = await task.value
+                }
+                log("Indexing done")
                 acknowledgementHandler()
             }
         }
@@ -75,8 +90,8 @@
             try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
-        public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) {
-            Task.detached {
+        public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) -> Task<Void, Never> {
+            Task {
                 do {
                     try await index.indexSearchableItems(items)
                     log("\(items.count) item(s) indexed")
