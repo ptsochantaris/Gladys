@@ -1,4 +1,4 @@
-@preconcurrency import UIKit
+import UIKit
 
 final class SwitchHolder: UIView {
     required init?(coder aDecoder: NSCoder) {

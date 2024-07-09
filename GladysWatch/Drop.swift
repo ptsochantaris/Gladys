@@ -86,7 +86,7 @@ final class Drop: Identifiable {
         let request = WatchMessage.imageRequest(WatchMessage.ImageInfo(id: id, width: size.width, height: size.height))
 
         Task.detached {
-            switch await WCSession.default.sendWatchMessage(request) {
+            switch try? await WCSession.default.sendWatchMessage(request) {
             case let .imageData(data):
                 if let i = UIImage(data: data) {
                     ImageCache.setImageData(data, for: cacheKey)
@@ -110,7 +110,7 @@ final class Drop: Identifiable {
     func viewOnDeviceSelected() {
         uiState = .action(label: "Opening item on the phone app")
         Task {
-            _ = await WCSession.default.sendWatchMessage(.view(id))
+            _ = try? await WCSession.default.sendWatchMessage(.view(id))
             self.uiState = .text
         }
     }
@@ -118,7 +118,7 @@ final class Drop: Identifiable {
     func copySelected() {
         uiState = .action(label: "Copying")
         Task {
-            _ = await WCSession.default.sendWatchMessage(.copy(id))
+            _ = try? await WCSession.default.sendWatchMessage(.copy(id))
             self.uiState = .text
         }
     }
@@ -126,7 +126,7 @@ final class Drop: Identifiable {
     func moveToTopSelected() {
         uiState = .action(label: "Moving to the top of the list")
         Task {
-            _ = await WCSession.default.sendWatchMessage(.moveToTop(id))
+            _ = try? await WCSession.default.sendWatchMessage(.moveToTop(id))
             self.uiState = .text
         }
     }
@@ -134,7 +134,7 @@ final class Drop: Identifiable {
     func deleteSelected() {
         uiState = .action(label: "Deleting")
         Task {
-            _ = await WCSession.default.sendWatchMessage(.delete(id))
+            _ = try? await WCSession.default.sendWatchMessage(.delete(id))
             self.uiState = .text
         }
     }

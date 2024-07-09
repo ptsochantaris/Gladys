@@ -35,15 +35,17 @@ enum WatchMessage: Sendable, Codable {
 }
 
 extension WCSession {
-    func sendWatchMessage(_ message: WatchMessage) async -> WatchMessage? {
+    func sendWatchMessage(_ message: WatchMessage) async throws -> WatchMessage? {
         guard let data = message.asData else {
             return nil
         }
 
-        return await withCheckedContinuation { (continuation: CheckedContinuation<WatchMessage?, Never>) in
+        return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<WatchMessage?, Error>) in
             sendMessageData(data) {
                 let watchMessage = WatchMessage.parse(from: $0)
                 continuation.resume(returning: watchMessage)
+            } errorHandler: { error in
+                continuation.resume(throwing: error)
             }
         }
     }

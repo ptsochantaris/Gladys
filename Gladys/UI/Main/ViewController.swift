@@ -3,7 +3,7 @@ import GladysUI
 import GladysUIKit
 import Lista
 import PopTimer
-@preconcurrency import UIKit
+import UIKit
 
 extension ItemIdentifier: @retroactive @unchecked Sendable {}
 extension SectionIdentifier: @retroactive @unchecked Sendable {}
@@ -2221,7 +2221,7 @@ extension ViewController: UICloudSharingControllerDelegate {
             let wasImported = item.isImportedShare
 
             do {
-                try await CloudManager.deleteShare(item)
+                try await CloudManager.deleteShare(item.uuid)
             } catch {
                 await genericAlert(title: "Error", message: error.localizedDescription)
                 return

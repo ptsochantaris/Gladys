@@ -6,7 +6,6 @@ import MapKit
 import UIKit
 import WatchConnectivity
 
-@MainActor
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
         super.init()
@@ -15,13 +14,13 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         session.activate()
     }
 
-    nonisolated func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
+    func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
 
-    nonisolated func sessionReachabilityDidChange(_: WCSession) {}
+    func sessionReachabilityDidChange(_: WCSession) {}
 
-    nonisolated func sessionDidBecomeInactive(_: WCSession) {}
+    func sessionDidBecomeInactive(_: WCSession) {}
 
-    nonisolated func sessionDidDeactivate(_: WCSession) {}
+    func sessionDidDeactivate(_: WCSession) {}
 
     private enum TextOrNumber {
         case text(String), number(CGFloat)
@@ -53,18 +52,28 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
+    private nonisolated(unsafe) static var replyData: Data?
+
+    func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
         guard let watchMessage = WatchMessage.parse(from: messageData) else {
             return
         }
-        Task { [weak self] in
-            let reply = await self?.handle(message: watchMessage)
-            let data = reply?.asData ?? Data()
-            replyHandler(data)
+        Task.detached {
+            let reply = await Self.handle(message: watchMessage)
+            Self.replyData = reply.asData ?? Data()
         }
+
+        while Self.replyData == nil {
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+        if let replyData = Self.replyData {
+            replyHandler(replyData)
+        }
+        Self.replyData = nil
     }
 
-    private func handle(message: WatchMessage) async -> WatchMessage {
+    @MainActor
+    private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
             guard let item = DropStore.item(uuid: imageInfo.id) else {
@@ -85,7 +94,8 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
                     data = Self.proceedWithImage(icon, size: nil, mode: .center)
 
                 case let .map(mapItem):
-                    data = await Self.handleMapItemPreview(mapItem: mapItem, size: size, fallbackIcon: item.displayIcon)
+                    let icon = await item.displayIcon
+                    data = await Self.handleMapItemPreview(mapItem: mapItem, size: size, fallbackIcon: icon)
                 }
             } else {
                 data = await Self.proceedWithImage(item.displayIcon, size: size, mode: mode)
@@ -128,7 +138,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private nonisolated static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
+    private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
         do {
             let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
             let img = try await Images.shared.mapSnapshot(with: options)
@@ -138,7 +148,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private nonisolated static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) -> Data {
+    private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) -> Data {
         if let size {
             if mode == .center || mode == .circle {
                 let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
@@ -152,18 +162,20 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private func buildContext() -> WatchMessage {
+    @MainActor
+    private static func buildContext() -> WatchMessage {
         let drops = DropStore.allDrops
         let items = drops.prefix(100).map(\.watchItem)
         return .contextReply(items, drops.count)
     }
 
+    @MainActor
     func updateContext() {
         let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
-        let context = buildContext()
+        let context = Self.buildContext()
         Task.detached {
-            _ = await session.sendWatchMessage(context)
+            _ = try? await session.sendWatchMessage(context)
         }
         log("Updated watch context")
     }

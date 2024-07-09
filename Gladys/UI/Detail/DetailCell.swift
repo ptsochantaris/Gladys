@@ -1,5 +1,5 @@
 import GladysCommon
-@preconcurrency import UIKit
+import UIKit
 
 @MainActor
 protocol DetailCellDelegate: AnyObject {

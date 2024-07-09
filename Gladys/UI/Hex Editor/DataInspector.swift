@@ -1,6 +1,6 @@
 import GladysUI
 import GladysUIKit
-@preconcurrency import UIKit
+import UIKit
 
 final class DataInspector: GladysViewController {
     static func setBool(_ name: String, _ value: Bool) {

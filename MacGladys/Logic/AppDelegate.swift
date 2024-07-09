@@ -249,11 +249,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         Maintini.setup()
 
         NSApplication.shared.registerForRemoteNotifications(matching: [])
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
-            if let error {
-                log("Notification permissions error: \(error.localizedDescription)")
-            } else {
+
+        Task { @MainActor in
+            do {
+                let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional])
                 log("Notification permissions request result: \(granted)")
+            } catch {
+                log("Notification permissions error: \(error.localizedDescription)")
             }
         }
 

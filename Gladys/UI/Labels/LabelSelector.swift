@@ -1,7 +1,7 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-@preconcurrency import UIKit
+import UIKit
 
 final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate, WindowSizing {
     @IBOutlet private var table: UITableView!

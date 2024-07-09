@@ -46,11 +46,7 @@ extension Model {
                     WidgetCenter.shared.reloadAllTimelines()
                 #endif
 
-                if let watchDelegate {
-                    Task {
-                        await watchDelegate.updateContext()
-                    }
-                }
+                watchDelegate?.updateContext()
 
                 Task {
                     do {

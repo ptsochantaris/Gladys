@@ -781,7 +781,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         sender.isEnabled = false
         Task { @MainActor in
             do {
-                try await CloudManager.deleteShare(item)
+                try await CloudManager.deleteShare(item.uuid)
             } catch {
                 await genericAlert(title: "Error", message: error.localizedDescription)
             }

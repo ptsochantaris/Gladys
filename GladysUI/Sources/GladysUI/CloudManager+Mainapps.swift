@@ -633,7 +633,10 @@ public extension CloudManager {
         }
     }
 
-    static func deleteShare(_ item: ArchivedItem) async throws {
+    static func deleteShare(_ itemUuid: UUID) async throws {
+        guard let item = await DropStore.item(uuid: itemUuid) else {
+            return
+        }
         let cloudKitShareId = await item.cloudKitRecord?.share?.recordID
         let shareRecordId = await item.cloudKitShareRecord?.recordID
         guard let shareId = cloudKitShareId ?? shareRecordId else {
