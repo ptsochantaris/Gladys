@@ -1896,7 +1896,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladys/Boot/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1924,7 +1923,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = MacGladys/Boot/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2056,7 +2054,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MacGladysIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MacGladysIndex;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2088,7 +2085,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MacGladysIndex/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MacGladysIndex;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2212,6 +2208,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -2243,7 +2240,6 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2357,6 +2353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2024 Paul Tsochantaris. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LLVM_LTO = YES;
@@ -2390,7 +2387,6 @@
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				DEVELOPMENT_TEAM = X727JSJUGJ;
 				INFOPLIST_FILE = Gladys/Info.plist;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2555,7 +2551,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GladysWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2586,7 +2581,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GladysWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Gladget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2017-2023 Paul Tsochantaris. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
