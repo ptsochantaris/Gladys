@@ -16,7 +16,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var displayLabelsInMainViewSwitch: UISwitch!
     @IBOutlet private var allowLabelsInExtensionSwitch: UISwitch!
     @IBOutlet private var wideModeSwitch: UISwitch!
-    @IBOutlet private var inclusiveSearchTermsSwitch: UISwitch!
     @IBOutlet private var autoConvertUrlsSwitch: UISwitch!
     @IBOutlet private var blockGladysUrls: UISwitch!
     @IBOutlet private var generateLabelsFromTitlesSwitch: UISwitch!
@@ -31,14 +30,12 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     @IBOutlet private var autoArchiveSwitch: UISwitch!
     @IBOutlet private var exclusiveLabelsSwitch: UISwitch!
 
+    @IBOutlet private var searchSelector: UISegmentedControl!
+    @IBOutlet private var searchDescription: UILabel!
+
     @IBAction private func wideModeSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.wideMode = sender.isOn
         sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
-    }
-
-    @IBAction private func inclusiveSearchTermsSwitchSelected(_ sender: UISwitch) {
-        PersistedOptions.inclusiveSearchTerms = sender.isOn
-        view.associatedFilter?.update(signalUpdate: .instant)
     }
 
     @IBAction private func allowLabelsInExtensionSwitchSelected(_ sender: UISwitch) {
@@ -64,7 +61,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.exclusiveMultipleLabels = sender.isOn
-        view.associatedFilter?.update(signalUpdate: .instant)
+        view.associatedFilter?.update(signalUpdate: .animated)
     }
 
     @IBAction private func autoArchiveSwitchSelected(_ sender: UISwitch) {
@@ -86,6 +83,24 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         if let value = DefaultTapAction(rawValue: sender.selectedSegmentIndex) {
             PersistedOptions.actionOnTap = value
         }
+    }
+
+    @IBAction func searchselectorValueChanged(_: UISegmentedControl) {
+        switch searchSelector.selectedSegmentIndex {
+        case 0:
+            PersistedOptions.useExplicitSearch = false
+            PersistedOptions.inclusiveSearchTerms = false
+        case 1:
+            PersistedOptions.useExplicitSearch = true
+            PersistedOptions.inclusiveSearchTerms = true
+        case 2:
+            PersistedOptions.useExplicitSearch = true
+            PersistedOptions.inclusiveSearchTerms = false
+        default:
+            break
+        }
+        updateSearchSelectorDescription()
+        view.associatedFilter?.update(signalUpdate: .animated)
     }
 
     @IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {
@@ -209,7 +224,6 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         displayLabelsInMainViewSwitch.isOn = PersistedOptions.displayLabelsInMainView
         showCopyMoveSwitchSelectorSwitch.isOn = PersistedOptions.showCopyMoveSwitchSelector
         allowLabelsInExtensionSwitch.isOn = PersistedOptions.setLabelsWhenActioning
-        inclusiveSearchTermsSwitch.isOn = PersistedOptions.inclusiveSearchTerms
         autoArchiveSwitch.isOn = PersistedOptions.autoArchiveUrlComponents
         exclusiveLabelsSwitch.isOn = PersistedOptions.exclusiveMultipleLabels
         wideModeSwitch.isOn = PersistedOptions.wideMode
@@ -220,6 +234,28 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
         fullScreenHolder.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 
         actionSelector.selectedSegmentIndex = PersistedOptions.actionOnTap.rawValue
+
+        if PersistedOptions.useExplicitSearch {
+            searchSelector.selectedSegmentIndex = 0
+        } else if PersistedOptions.inclusiveSearchTerms {
+            searchSelector.selectedSegmentIndex = 1
+        } else {
+            searchSelector.selectedSegmentIndex = 2
+        }
+        updateSearchSelectorDescription()
+    }
+
+    func updateSearchSelectorDescription() {
+        switch searchSelector.selectedSegmentIndex {
+        case 0:
+            searchDescription.text = "Use iOS semantic search, recommended for iOS 18 and above"
+        case 1:
+            searchDescription.text = "Show results that contain any of the provided words"
+        case 2:
+            searchDescription.text = "Only show results that contain all of the provided words"
+        default:
+            break
+        }
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

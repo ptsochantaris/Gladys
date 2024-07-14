@@ -19,7 +19,8 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBOutlet private var displayLabelsSwitch: NSButton!
     @IBOutlet private var separateItemsSwitch: NSButton!
     @IBOutlet private var autoLabelSwitch: NSButton!
-    @IBOutlet private var inclusiveSearchTermsSwitch: NSButton!
+
+    @IBOutlet private var searchLogicSelector: NSPopUpButton!
     @IBOutlet private var autoConvertUrlsSwitch: NSButton!
     @IBOutlet private var convertLabelsToTagsSwitch: NSButton!
     @IBOutlet private var autoShowWhenDraggingSwitch: NSButton!
@@ -106,7 +107,6 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         displayLabelsSwitch.integerValue = PersistedOptions.displayLabelsInMainView ? 1 : 0
         separateItemsSwitch.integerValue = PersistedOptions.separateItemPreference ? 1 : 0
         autoLabelSwitch.integerValue = PersistedOptions.dontAutoLabelNewItems ? 1 : 0
-        inclusiveSearchTermsSwitch.integerValue = PersistedOptions.inclusiveSearchTerms ? 1 : 0
         autoConvertUrlsSwitch.integerValue = PersistedOptions.automaticallyDetectAndConvertWebLinks ? 1 : 0
         convertLabelsToTagsSwitch.integerValue = PersistedOptions.readAndStoreFinderTagsAsLabels ? 1 : 0
         launchAtLoginSwitch.integerValue = PersistedOptions.launchAtLogin ? 1 : 0
@@ -127,6 +127,16 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         clipboardLabelling.stringValue = PersistedOptions.clipboardSnoopingLabel
         badgeItemWithVisibleItemCount.integerValue = PersistedOptions.badgeIconWithItemCount ? 1 : 0
         updateFadeLabel()
+
+        if PersistedOptions.useExplicitSearch {
+            if PersistedOptions.inclusiveSearchTerms {
+                searchLogicSelector.selectItem(at: 1)
+            } else {
+                searchLogicSelector.selectItem(at: 2)
+            }
+        } else {
+            searchLogicSelector.selectItem(at: 0)
+        }
 
         notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
             await self?.updateSyncSwitches()
@@ -430,10 +440,22 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         PersistedOptions.dontAutoLabelNewItems = sender.integerValue == 1
     }
 
-    @IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSButton) {
-        PersistedOptions.inclusiveSearchTerms = sender.integerValue == 1
+    @IBAction private func inclusiveSearchTermsSwitchChanged(_ sender: NSPopUpButton) {
+        switch sender.indexOfSelectedItem {
+        case 0:
+            PersistedOptions.useExplicitSearch = false
+            PersistedOptions.inclusiveSearchTerms = false
+        case 1:
+            PersistedOptions.useExplicitSearch = true
+            PersistedOptions.inclusiveSearchTerms = true
+        case 2:
+            PersistedOptions.useExplicitSearch = true
+            PersistedOptions.inclusiveSearchTerms = false
+        default:
+            break
+        }
         for filter in allFilters {
-            filter.update(signalUpdate: .instant)
+            filter.update(signalUpdate: .animated)
         }
     }
 

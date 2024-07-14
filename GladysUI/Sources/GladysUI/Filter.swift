@@ -164,8 +164,8 @@ public final class Filter {
 
     private static let regex = try! NSRegularExpression(pattern: "(\\b\\S+?\\b|\\B\\\".+?\\\"\\B)")
 
-    private static func terms(for text: String?) -> [String]? {
-        guard let text = text?.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"") else { return nil }
+    private static func terms(for text: String) -> [String] {
+        let text = text.replacingOccurrences(of: "”", with: "\"").replacingOccurrences(of: "“", with: "\"")
 
         return regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap { match -> String? in
             guard let r = Range(match.range, in: text) else { return nil }
@@ -197,31 +197,52 @@ public final class Filter {
         return count
     }
 
-    private func findIds(for queryString: String) -> Set<UUID> {
-        var replacementResults = Set<UUID>()
+    private func findIds(using query: CSSearchQuery) -> Set<UUID> {
+        var results = Set<UUID>()
 
-        let q = CSSearchQuery(queryString: queryString, queryContext: nil)
-        q.foundItemsHandler = { items in
+        query.foundItemsHandler = { items in
             for item in items {
                 if let uuid = UUID(uuidString: item.uniqueIdentifier) {
-                    replacementResults.insert(uuid)
+                    results.insert(uuid)
                 }
             }
         }
         let lock = NSLock()
         lock.lock()
-        q.completionHandler = { error in
+        query.completionHandler = { error in
             if let error {
                 log("Search error: \(error.localizedDescription)")
             }
             lock.unlock()
         }
-        q.start()
+        query.start()
         if !lock.lock(before: Date(timeIntervalSinceNow: 10)) {
-            q.cancel()
+            query.cancel()
         }
         lock.unlock()
-        return replacementResults
+
+        return results
+    }
+
+    private func findIdsSemantically(for enteredText: String) -> Set<UUID> {
+        let q = CSUserQuery(userQueryString: enteredText, userQueryContext: nil)
+        return findIds(using: q)
+    }
+
+    private func findIds(for enteredText: String) -> Set<UUID> {
+        let terms = Filter.terms(for: enteredText)
+        let queryString = if terms.count > 1 {
+            if PersistedOptions.inclusiveSearchTerms {
+                "(" + terms.joined(separator: ") || (") + ")"
+            } else {
+                "(" + terms.joined(separator: ") && (") + ")"
+            }
+        } else {
+            terms.first ?? ""
+        }
+
+        let q = CSSearchQuery(queryString: queryString, queryContext: nil)
+        return findIds(using: q)
     }
 
     private func checkForChange(between a: ContiguousArray<ArchivedItem>, and b: ContiguousArray<ArchivedItem>) -> Bool {
@@ -277,20 +298,17 @@ public final class Filter {
         let previousFilteredDrops = filteredDrops
         // text pass
 
-        if let terms = Filter.terms(for: modelFilter), terms.isPopulated {
-            let queryString: String = if terms.count > 1 {
-                if PersistedOptions.inclusiveSearchTerms {
-                    "(" + terms.joined(separator: ") || (") + ")"
-                } else {
-                    "(" + terms.joined(separator: ") && (") + ")"
-                }
-            } else {
-                terms.first ?? ""
-            }
-
+        let enteredText = modelFilter?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if enteredText.isPopulated {
             isFilteringText = true
-            let ids = findIds(for: queryString)
+            let ids: Set<UUID> = if PersistedOptions.useExplicitSearch {
+                findIds(for: enteredText)
+
+            } else {
+                findIdsSemantically(for: enteredText)
+            }
             filteredDrops = postLabelDrops.filter { ids.contains($0.uuid) }
+
         } else {
             isFilteringText = false
             filteredDrops = postLabelDrops
@@ -298,9 +316,11 @@ public final class Filter {
 
         if forceAnnounce || checkForChange(between: previousFilteredDrops, and: filteredDrops) {
             Model.updateBadge()
-            if signalUpdate != .none {
+            switch signalUpdate {
+            case .none:
+                break
+            case .animated, .instant:
                 delegate?.modelFilterContextChanged(self, animate: signalUpdate == .animated)
-
                 #if canImport(UIKit)
                     if isFilteringText, UIAccessibility.isVoiceOverRunning {
                         let resultString: String

@@ -92,9 +92,6 @@ public enum PersistedOptions {
     @OptionalUserDefault(key: "lastPushToken", emptyValue: Data())
     public static var lastPushToken: Data?
 
-    @UserDefault(key: "inclusiveSearchTerms", defaultValue: false)
-    public static var inclusiveSearchTerms: Bool
-
     @OptionalUserDefault(key: "LastRanVersion", emptyValue: nil)
     public static var lastRanVersion: String?
 
@@ -115,4 +112,10 @@ public enum PersistedOptions {
 
     @UserDefault(key: "requestInlineDrops", defaultValue: false)
     public static var requestInlineDrops: Bool
+
+    @UserDefault(key: "useExplicitSearch", defaultValue: false)
+    public static var useExplicitSearch: Bool
+
+    @UserDefault(key: "inclusiveSearchTerms", defaultValue: false)
+    public static var inclusiveSearchTerms: Bool
 }
