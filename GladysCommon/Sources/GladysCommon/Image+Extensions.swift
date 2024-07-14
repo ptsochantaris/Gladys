@@ -78,7 +78,7 @@ public extension IMAGE {
 #if canImport(CoreImage)
 
     public extension CIImage {
-        private static let sharedCiContext = CIContext(options: [.useSoftwareRenderer: false, .cacheIntermediates: false])
+        private static let sharedCiContext = CIContext(options: [.cacheIntermediates: false])
 
         var asImage: IMAGE? {
             guard let new = CIImage.sharedCiContext.createCGImage(self, from: extent) else {

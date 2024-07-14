@@ -172,7 +172,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt _: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let center = cell.center
         let x = center.x
         let y = center.y
@@ -181,6 +181,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             UIAccessibilityLocationDescriptor(name: "Drop after item", point: CGPoint(x: x + w, y: y), in: collectionView),
             UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
         ]
+
+        if let cell = cell as? ArchivedItemCell, let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
+            configureCell(cell, identifier: uuid)
+        }
+    }
+
+    func collectionView(_: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt _: IndexPath) {
+        (cell as? ArchivedItemCell)?.didEndDisplaying()
     }
 
     private func path(at point: CGPoint) -> IndexPath {
@@ -401,16 +409,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                   let n = segue.destination as? UINavigationController,
                   let d = n.topViewController as? DetailController,
                   let p = n.popoverPresentationController,
-                  let cell = collection.cellForItem(at: indexPath),
+                  let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell,
                   let myNavView = navigationController?.view
             else { return }
 
             d.sourceIndexPath = indexPath
             d.item = item
+            cell.skipFade = true
 
             #if !os(visionOS)
-                p.popoverBackgroundViewClass = GladysPopoverBackgroundView.self
-
                 if let sheet = n.popoverPresentationController?.adaptiveSheetPresentationController {
                     sheet.largestUndimmedDetentIdentifier = .none
                     sheet.prefersScrollingExpandsWhenScrolledToEdge = false
@@ -470,8 +477,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
                presentationInfoCache[uuid] == nil,
                let item = DropStore.item(uuid: uuid) {
+                log("Prefetching presentation info for \(uuid)")
                 Task {
-                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
+                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize, alwaysStartFresh: false)
                 }
             }
         }
@@ -847,18 +855,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         true
     }
 
+    private func configureCell(_ cell: ArchivedItemCell, identifier: UUID) {
+        cell.wideCell = PersistedOptions.wideMode
+        cell.lowMemoryMode = lowMemoryMode
+        cell.owningViewController = self
+        cell.archivedDropItem = DropStore.item(uuid: identifier)
+        cell.isEditing = isEditing
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier> { [unowned self] cell, _, identifier in
-            cell.wideCell = PersistedOptions.wideMode
-            cell.lowMemoryMode = lowMemoryMode
-            cell.owningViewController = self
-            cell.archivedDropItem = DropStore.item(uuid: identifier.uuid)
-            cell.isEditing = isEditing
+            configureCell(cell, identifier: identifier.uuid)
         }
-
-        updatePasteButton()
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: sectionItem)
@@ -997,9 +1007,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         filter.delegate = self
         filterChanged()
 
+        updatePasteButton()
+
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
             guard let self else { return }
-            updatePasteButton()
             presentationInfoCache.reset()
             collection.reloadData()
         }
@@ -1641,27 +1652,29 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return nil
     }
 
+    private lazy var pasteControl = {
+        let config = UIPasteControl.Configuration()
+        #if os(visionOS)
+            config.baseBackgroundColor = .tintColor
+        #endif
+        config.cornerRadius = 19
+        config.cornerStyle = .fixed
+        config.displayMode = .iconOnly
+
+        let control = UIPasteControl(configuration: config)
+        control.target = self
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        control.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        return control
+    }()
+
     private func updatePasteButton() {
-        if var items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) {
-            let config = UIPasteControl.Configuration()
-            #if os(visionOS)
-                config.baseBackgroundColor = .tintColor
-            #else
-                config.baseBackgroundColor = .g_colorPaper
-                config.baseForegroundColor = .g_colorTint
-            #endif
-            config.cornerStyle = .capsule
-            config.displayMode = .iconOnly
-
-            let control = UIPasteControl(configuration: config)
-            control.frame = CGRect(x: 0, y: 0, width: 50, height: 52)
-            control.target = self
-
-            let customBarButtonItem = UIBarButtonItem(customView: control)
-            customBarButtonItem.tag = 382_611
-            items[indexOfPaste] = customBarButtonItem
-            navigationItem.leftBarButtonItems = items
+        guard let items = navigationItem.leftBarButtonItems, let indexOfPaste = items.firstIndex(where: { $0.tag == 382_611 }) else {
+            return
         }
+
+        items[indexOfPaste].customView = pasteControl
     }
 
     var currentColumnCount = 1

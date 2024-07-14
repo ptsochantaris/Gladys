@@ -59,7 +59,7 @@ final class Drop: Identifiable {
         case noText, text, menu(over: UIState), action(label: String)
     }
 
-    var imageState = ImageState.none
+    private(set) var imageState = ImageState.none
     var uiState = UIState.text
 
     nonisolated init(dropInfo: WatchMessage.DropInfo) {

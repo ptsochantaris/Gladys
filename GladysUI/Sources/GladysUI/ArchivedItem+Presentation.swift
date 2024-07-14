@@ -9,41 +9,40 @@ public extension ArchivedItem {
     private static let singleLock = Semalot(tickets: 1)
 
     @discardableResult
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        if let existing = presentationInfoCache[uuid] {
-            return existing
-
-        } else if let presentationGenerator, !presentationGenerator.isCancelled {
-            log(">>> Deduped presentation task \(uuid.uuidString)")
-            return await presentationGenerator.value
-
+    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize, alwaysStartFresh: Bool) async -> PresentationInfo? {
+        if alwaysStartFresh {
+            cancelPresentationGeneration()
         } else {
-            let newTask = Task.detached { [weak self] in await self?._createPresentationInfo(style: style, expectedSize: expectedSize) }
-            presentationGenerator = newTask
-            defer {
-                presentationGenerator = nil
+            if let existing = presentationInfoCache[uuid] {
+                log(">>> Using cached presentation info for \(uuid.uuidString)")
+                return existing
             }
-            return await newTask.value
+
+            if let info = await activePresentationGenerationResult {
+                log(">>> Deduped presentation task \(uuid.uuidString)")
+                return info
+            }
         }
+
+        let newTask = Task.detached(priority: .high) { [weak self] in
+            await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
+        }
+        return await usingPresentationGenerator(newTask)
     }
 
     private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        log(">>> New presentation task \(uuid.uuidString)")
+        assert(!Thread.isMainThread)
+
+        let lock = await style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
+
+        await lock.takeTicket()
+
         defer {
             if Task.isCancelled {
                 log(">>> Cancelled presentation task \(uuid.uuidString)")
             } else {
                 log(">>> Finished presentation task \(uuid.uuidString)")
             }
-        }
-
-        if Task.isCancelled {
-            return nil
-        }
-
-        let lock = await style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
-        await lock.takeTicket()
-        defer {
             lock.returnTicket()
         }
 
@@ -51,7 +50,7 @@ public extension ArchivedItem {
             return nil
         }
 
-        assert(!Thread.isMainThread)
+        log(">>> New presentation task \(uuid.uuidString)")
 
         let topInfo = await prepareTopText()
 
@@ -85,12 +84,12 @@ public extension ArchivedItem {
             let originalSize = img.size
             #if canImport(AppKit)
                 if let cgImage = img.cgImage(forProposedRect: nil, context: nil, hints: nil) {
-                    processedImage = CIImage(cgImage: cgImage, options: [.nearestSampling: true])
+                    processedImage = CIImage(cgImage: cgImage)
                 } else {
                     processedImage = nil
                 }
             #else
-                processedImage = CIImage(image: img, options: [.nearestSampling: true])
+                processedImage = CIImage(image: img)
             #endif
 
             if var processedImage {
@@ -128,6 +127,10 @@ public extension ArchivedItem {
 
                 result = processedImage.asImage
             }
+        }
+
+        if Task.isCancelled {
+            return nil
         }
 
         let p = await PresentationInfo(

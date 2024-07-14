@@ -385,22 +385,6 @@ public final class Filter {
             case recentlyAddedItems
             case unlabeledItems
 
-            public static func == (lhs: Function, rhs: Function) -> Bool {
-                switch lhs {
-                case let .userLabel(leftText):
-                    switch rhs {
-                    case let .userLabel(rightText):
-                        leftText.localizedCaseInsensitiveCompare(rightText) == .orderedSame
-                    case .recentlyAddedItems, .unlabeledItems:
-                        false
-                    }
-                case .recentlyAddedItems:
-                    if case .recentlyAddedItems = rhs { true } else { false }
-                case .unlabeledItems:
-                    if case .unlabeledItems = rhs { true } else { false }
-                }
-            }
-
             public var displayText: String {
                 switch self {
                 case let .userLabel(name): name

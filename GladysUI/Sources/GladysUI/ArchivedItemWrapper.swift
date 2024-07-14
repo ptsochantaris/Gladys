@@ -44,7 +44,7 @@ public final class ArchivedItemWrapper: Identifiable {
 
     func clear() {
         if let i = item {
-            i.presentationGenerator?.cancel()
+            i.cancelPresentationGeneration()
             item = nil
             observer = nil
             presentationInfo = PresentationInfo()
@@ -73,31 +73,24 @@ public final class ArchivedItemWrapper: Identifiable {
             return
         }
 
-        if let item, item != newItem {
-            presentationInfo = PresentationInfo()
-            if let p = item.presentationGenerator {
-                p.cancel()
-            }
-        }
-
         self.style = style
         cellSize = size
-        item = newItem
-        updatePresentationInfo(for: newItem, alwaysStartFresh: false)
 
-        observer = newItem
-            .itemUpdates
-            .sink { [weak self] _ in
-                self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
-            }
+        if item != newItem {
+            presentationInfo = PresentationInfo()
+            item = newItem
+            updatePresentationInfo(for: newItem, alwaysStartFresh: false)
+            observer = newItem
+                .itemUpdates
+                .sink { [weak self] _ in
+                    self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
+                }
+        }
     }
 
     private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
-        if alwaysStartFresh, let p = newItem.presentationGenerator {
-            p.cancel()
-        }
         Task {
-            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)) {
+            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height), alwaysStartFresh: alwaysStartFresh) {
                 if item?.uuid == p.id {
                     presentationInfo = p
                 }

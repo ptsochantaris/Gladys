@@ -387,7 +387,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
                     children.append(UIAction(title: "Remove", image: UIImage(systemName: "xmark"), attributes: .destructive) { [weak self] _ in
                         Task { [weak self] in
                             guard let self else { return }
-                            await removeLabel(text)
+                            await self.removeLabel(text)
                         }
                     })
                 }
@@ -824,7 +824,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
             UIContextualAction(style: .destructive, title: "Remove") { [weak self] _, _, completion in
                 Task { [weak self] in
                     guard let self else { return }
-                    await removeLabel(text)
+                    await self.removeLabel(text)
                     completion(true)
                 }
             }

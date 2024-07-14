@@ -56,8 +56,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     public nonisolated let uuid: UUID
     public nonisolated let createdAt: Date
 
-    public var presentationGenerator: Task<PresentationInfo?, Never>?
-
     public var components: ContiguousArray<Component> = [] {
         didSet {
             status = .needsIngest // also sets needsSaving
@@ -1001,5 +999,30 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
 
     public var backgroundInfoObject: Component.BackgroundInfoObject? {
         components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
+    }
+
+    private var presentationGenerator: Task<PresentationInfo?, Never>?
+
+    public var activePresentationGenerationResult: PresentationInfo? {
+        get async {
+            if let presentationGenerator, !presentationGenerator.isCancelled {
+                await presentationGenerator.value
+            } else {
+                nil
+            }
+        }
+    }
+
+    public func cancelPresentationGeneration() {
+        presentationGenerator?.cancel()
+        presentationGenerator = nil
+    }
+
+    public func usingPresentationGenerator(_ newTask: Task<PresentationInfo?, Never>) async -> PresentationInfo? {
+        presentationGenerator = newTask
+        defer {
+            presentationGenerator = nil
+        }
+        return await newTask.value
     }
 }

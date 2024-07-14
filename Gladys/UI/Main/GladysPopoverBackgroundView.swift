@@ -42,14 +42,6 @@
             }
         }
 
-        private let containerRectangle: UIView = {
-            let v = UIView()
-            v.backgroundColor = UIColor.g_colorPaper
-            v.clipsToBounds = true
-            v.layer.cornerRadius = 13
-            return v
-        }()
-
         private class Arrow: UIView {
             override init(frame: CGRect) {
                 super.init(frame: frame)
@@ -77,23 +69,12 @@
 
         override init(frame: CGRect) {
             super.init(frame: frame)
-            addSubview(containerRectangle)
+
             addSubview(arrowRectangle)
-
-            updateColors()
-
-            registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
-                guard let self else { return }
-                updateColors()
-            }
         }
 
         private var darkMode: Bool {
             traitCollection.userInterfaceStyle == .dark
-        }
-
-        private func updateColors() {
-            layer.shadowColor = UIColor(white: 0, alpha: darkMode ? 0.75 : 0.25).cgColor
         }
 
         @available(*, unavailable)
@@ -101,8 +82,13 @@
             fatalError("init(coder:) has not been implemented")
         }
 
+        private var needGradient = true
+
         override func layoutSubviews() {
             super.layoutSubviews()
+
+            layer.shadowColor = UIColor.black.withAlphaComponent(darkMode ? 0.8 : 0.3).cgColor
+            layer.shadowPath = UIBezierPath(rect: arrowRectangle.bounds.insetBy(dx: 100, dy: 100)).cgPath
 
             let arrowHeight = GladysPopoverBackgroundView.arrowHeight()
             var backgroundFrame = frame
@@ -134,8 +120,6 @@
                 return
             }
 
-            containerRectangle.frame = backgroundFrame
-
             if arrowRectangle.center.y < 44 {
                 arrowRectangle.tintColor = darkMode ? UIColor(white: 0.175, alpha: 1) : UIColor.white
             } else {
@@ -143,6 +127,27 @@
             }
             arrowRectangle.center = arrowCenter
             arrowRectangle.transform = CGAffineTransform(rotationAngle: arrowTransformInRadians)
+
+            if needGradient {
+                needGradient = false
+
+                let gradientLayer = CAGradientLayer()
+                gradientLayer.type = .radial
+                gradientLayer.colors = [UIColor.black.withAlphaComponent(0.3).cgColor, UIColor.clear.cgColor]
+                gradientLayer.locations = [0, 1]
+                gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
+                gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+                gradientLayer.frame = bounds.insetBy(dx: -1024, dy: -1024)
+                gradientLayer.opacity = 0.0
+                layer.insertSublayer(gradientLayer, at: 0)
+
+                Task {
+                    try? await Task.sleep(for: .seconds(0.1))
+                    UIView.animate {
+                        gradientLayer.opacity = 1.0
+                    }
+                }
+            }
         }
     }
 #endif

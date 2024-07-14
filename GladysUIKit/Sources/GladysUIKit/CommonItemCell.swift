@@ -69,6 +69,10 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
+    public func didEndDisplaying() {
+        itemViewController.rootView.didEndDisplaying()
+    }
+
     private var lastLayout = CGSize.zero
     public var style = ArchivedItemWrapper.Style.square
 

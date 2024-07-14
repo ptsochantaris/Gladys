@@ -23,6 +23,27 @@ final class ArchivedItemCell: CommonItemCell {
         }
     }
 
+    var skipFade = false
+
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+
+        if tintColor == .g_colorTint {
+            UIView.animate {
+                self.alpha = 1
+                self.transform = .identity
+            }
+        } else {
+            if skipFade {
+                skipFade = false
+            } else {
+                UIView.animate {
+                    self.alpha = 0.6
+                }
+            }
+        }
+    }
+
     #if canImport(PencilKit)
         override func setup() {
             super.setup()

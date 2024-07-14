@@ -136,6 +136,10 @@ public struct ItemView: View {
         wrapper.configure(with: item, size: size, style: style)
     }
 
+    public func didEndDisplaying() {
+        wrapper.clear()
+    }
+
     public func clear() {
         wrapper.clear()
     }
@@ -143,8 +147,6 @@ public struct ItemView: View {
     public var body: some View {
         if wrapper.hasItem {
             itemMode
-        } else {
-            EmptyView()
         }
     }
 
