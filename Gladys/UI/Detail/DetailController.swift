@@ -912,7 +912,6 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         present(a, animated: true)
     }
 
-    @MainActor
     private func proceedToFetchLinkThumbnail(cell: DetailCell, url: URL) async {
         cell.animateArchive(true)
         defer {
@@ -940,7 +939,6 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         }
     }
 
-    @MainActor
     private func proceedToArchiveWebComponent(cell: DetailCell, url: URL) async {
         cell.animateArchive(true)
         defer {

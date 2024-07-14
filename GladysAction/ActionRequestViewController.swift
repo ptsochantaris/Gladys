@@ -153,7 +153,7 @@ final class ActionRequestViewController: UIViewController {
                     self.performSegue(withIdentifier: "showLabelsAndNotes", sender: nil)
                 }
             } else {
-                Task { @MainActor in
+                Task {
                     try? await Task.sleep(nanoseconds: 200 * NSEC_PER_MSEC)
                     self.signalDone()
                 }

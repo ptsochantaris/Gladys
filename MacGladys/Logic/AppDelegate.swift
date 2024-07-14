@@ -72,7 +72,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             if NSApp.activationPolicy() != .accessory {
                 log("Changing activation policy to accessory mode")
                 NSApp.setActivationPolicy(.accessory)
-                Task { @MainActor in
+                Task {
                     NSApp.activate(ignoringOtherApps: true)
                     NSMenu.setMenuBarVisible(true)
                 }
@@ -110,7 +110,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 NSStatusBar.system.removeStatusItem(s)
                 statusItem = nil
             }
-            Task { @MainActor in
+            Task {
                 NSApp.activate(ignoringOtherApps: true)
                 NSMenu.setMenuBarVisible(true)
             }
@@ -133,7 +133,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
                 proceedWithImport(from: url)
             }
         } else {
-            Task { @MainActor in
+            Task {
                 Model.importFiles(paths: filenames, filterContext: keyGladysControllerIfExists?.filter)
             }
         }
@@ -250,7 +250,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         NSApplication.shared.registerForRemoteNotifications(matching: [])
 
-        Task { @MainActor in
+        Task {
             do {
                 let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional])
                 log("Notification permissions request result: \(granted)")
@@ -297,7 +297,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func interfaceModeChanged(sender _: NSNotification) {
-        Task { @MainActor in
+        Task {
             sendNotification(name: .ItemCollectionNeedsDisplay, object: true)
         }
     }
@@ -340,7 +340,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     @objc private func systemDidWake() {
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             AppDelegate.updateHotkey()
             do {
@@ -511,7 +511,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
     private func proceedWithImport(from url: URL) {
         startProgress(for: nil, titleOverride: "Importing items from archive, this can take a moment…")
-        Task { @MainActor in // give UI a chance to update
+        Task {
+            await Task.yield() // give UI a chance to update
             do {
                 try await ImportExport.importArchive(from: url, removingOriginal: false)
                 endProgress()
@@ -578,7 +579,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         s.allowedContentTypes = [.zip]
         let response = s.runModal()
         if response == .OK, let selectedUrl = s.url {
-            Task { @MainActor in
+            Task {
                 let p = Progress(totalUnitCount: 100)
                 startProgress(for: p)
                 defer { endProgress() }

@@ -245,7 +245,6 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
 }
 
 extension Component {
-    @MainActor
     var sharingActivitySource: ArchivedDropItemActivitySource {
         ArchivedDropItemActivitySource(component: self)
     }
@@ -256,7 +255,6 @@ extension Component {
         return i
     }
 
-    @MainActor
     func quickLook() -> GladysPreviewController? {
         canPreview ? GladysPreviewController(item: self) : nil
     }
@@ -275,7 +273,6 @@ extension Component {
     }
 
     @discardableResult
-    @MainActor
     func tryOpen(in viewController: UINavigationController?) async -> Bool {
         let item = objectForShare
         if let item = item as? MKMapItem {

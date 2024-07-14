@@ -57,7 +57,6 @@ extension ArchivedItem {
         return Filter.Toggle.Function.userLabel(text).dragItem
     }
 
-    @MainActor
     private func getPassword(title: String, action: String, requestHint: Bool, message: String, completion: @escaping (String?, String?) -> Void) {
         let a = UIAlertController(title: title, message: message, preferredStyle: .alert)
         a.addTextField { textField in
@@ -90,7 +89,6 @@ extension ArchivedItem {
         currentWindow?.alertPresenter?.present(a, animated: true)
     }
 
-    @MainActor
     func lock() async -> (Data?, String?) {
         let message = if LocalAuth.canUseLocalAuth {
             "Please provide a backup password in case TouchID or FaceID fails. You can also provide an optional label to display while the item is locked."
@@ -116,7 +114,7 @@ extension ArchivedItem {
         }
 
         ArchivedItem.unlockingItemsBlock.insert(uuid)
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
             ArchivedItem.unlockingItemsBlock.remove(uuid)
         }
@@ -133,7 +131,6 @@ extension ArchivedItem {
         return nil
     }
 
-    @MainActor
     private func unlockWithPassword(label: String, action: String) async -> Bool {
         await withCheckedContinuation { continuation in
             getPassword(title: label, action: action, requestHint: false, message: "Please enter the password you provided when locking this item.") { [weak self] password, _ in
@@ -166,7 +163,6 @@ extension ArchivedItem {
         return WatchMessage.DropInfo(id: uuid.uuidString, title: displayTitleOrUuid, imageDate: imageDate)
     }
 
-    @MainActor
     @discardableResult func tryPreview(in viewController: UIViewController, from cell: ArchivedItemCell?, preferChild childUuid: String? = nil, forceFullscreen: Bool = false) -> Bool {
         var itemToPreview: Component?
         if let childUuid {
@@ -210,7 +206,6 @@ extension ArchivedItem {
     }
 
     @discardableResult
-    @MainActor
     func tryOpen(in viewController: UINavigationController?) async -> Bool {
         let item = mostRelevantTypeItem?.objectForShare
         if let item = item as? MKMapItem {

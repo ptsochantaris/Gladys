@@ -1,6 +1,7 @@
 import AppKit
 import GladysCommon
 
+@MainActor
 final class ShareViewController: NSViewController {
     override var nibName: NSNib.Name? {
         NSNib.Name("ShareViewController")
@@ -43,7 +44,6 @@ final class ShareViewController: NSViewController {
         }
     }
 
-    @MainActor
     private func runImport() async throws {
         guard let extensionContext else { return }
 

@@ -1325,7 +1325,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 l.widthAnchor.constraint(equalTo: e.widthAnchor)
             ])
 
-            Task { @MainActor in
+            Task {
                 try? await Task.sleep(nanoseconds: 6000 * NSEC_PER_MSEC)
                 UIView.animate(withDuration: 1, delay: 0, options: .curveEaseInOut, animations: {
                     l.alpha = 0
@@ -1635,7 +1635,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         if UIAccessibility.isVoiceOverRunning,
            let indexPath = configuration.identifier as? IndexPath,
            let cell = collectionView.cellForItem(at: indexPath) {
-            Task { @MainActor in
+            Task {
                 try? await Task.sleep(nanoseconds: 1000 * NSEC_PER_MSEC)
                 UIAccessibility.post(notification: .layoutChanged, argument: cell)
             }
@@ -1979,7 +1979,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         collection.scrollToItem(at: ip, at: .centeredVertically, animated: false)
 
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             if let cell = collection.cellForItem(at: ip) as? ArchivedItemCell {
                 cell.flash()
@@ -2131,7 +2131,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         guard let focusedCell = focusedItem as? ArchivedItemCell, let item = focusedCell.archivedDropItem else {
             return
         }
-        Task { @MainActor in
+        Task {
             let result = await confirm(title: "Delete Selected Item", message: "Are you sure?", action: "Delete", cancel: "Cancel")
             if result {
                 Model.delete(items: [item])

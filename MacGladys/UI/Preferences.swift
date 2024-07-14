@@ -580,7 +580,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         syncSwitch.isEnabled = false
         syncNowButton.isEnabled = false
         eraseAlliCloudDataButton.isEnabled = false
-        Task { @MainActor in
+        Task {
             do {
                 try await CloudManager.eraseZoneIfNeeded()
                 await genericAlert(title: "Done", message: "All Gladys data has been removed from iCloud")

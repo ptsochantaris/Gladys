@@ -325,7 +325,6 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         updateUI()
     }
 
-    @MainActor
     private func completeOperation(url: URL) {
         exportingFileURL = url
         let p = UIDocumentPickerViewController(forExporting: [url])
@@ -375,7 +374,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
 
     private func manualExportDone() {
         if let e = exportingFileURL {
-            Task { @MainActor in
+            Task {
                 try? FileManager.default.removeItem(at: e)
             }
             exportingFileURL = nil

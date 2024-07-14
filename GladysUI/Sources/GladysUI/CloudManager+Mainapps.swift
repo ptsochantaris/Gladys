@@ -116,9 +116,7 @@ public extension CloudManager {
         didSet {
             if syncTransitioning != oldValue {
                 showNetwork = syncing || syncTransitioning
-                Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged)
-                }
+                sendNotification(name: .CloudManagerStatusChanged)
             }
         }
     }
@@ -128,9 +126,7 @@ public extension CloudManager {
             if syncTransitioning != oldValue {
                 setSyncProgressString(syncing ? "Pausing" : nil)
                 showNetwork = false
-                Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged)
-                }
+                sendNotification(name: .CloudManagerStatusChanged)
             }
         }
     }
@@ -140,9 +136,7 @@ public extension CloudManager {
             if syncing != oldValue {
                 setSyncProgressString(syncing ? "Syncing" : nil)
                 showNetwork = syncing || syncTransitioning
-                Task { @MainActor in
-                    sendNotification(name: .CloudManagerStatusChanged)
-                }
+                sendNotification(name: .CloudManagerStatusChanged)
             }
         }
     }
@@ -613,7 +607,7 @@ public extension CloudManager {
 
         let recordId = metadata.hierarchicalRootRecordID?.recordName
         if let recordId, let existingItem = await DropStore.item(uuid: recordId) {
-            HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
+            await HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
             return
         }
 

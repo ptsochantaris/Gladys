@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 
 extension CallbackSupport {
     private static func handle(result: PasteResult, success: @escaping SuccessCallback, failure: @escaping FailureCallback) {
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             switch result {
             case .success:
@@ -71,9 +71,7 @@ extension CallbackSupport {
 
     @discardableResult
     static func handlePasteRequest(title: String?, note: String?, labels: String?) -> PasteResult {
-        Task { @MainActor in
-            sendNotification(name: .DismissPopoversRequest)
-        }
+        sendNotification(name: .DismissPopoversRequest)
 
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)

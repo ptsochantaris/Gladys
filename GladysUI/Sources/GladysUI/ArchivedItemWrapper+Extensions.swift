@@ -3,7 +3,6 @@ import GladysCommon
 import SwiftUI
 
 extension ArchivedItemWrapper {
-    @MainActor
     @ViewBuilder
     func createLabelView(width: CGFloat, alignment: NSTextAlignment) -> (some View)? {
         if PersistedOptions.displayLabelsInMainView, labels.isPopulated {
@@ -15,7 +14,6 @@ extension ArchivedItemWrapper {
         }
     }
 
-    @MainActor
     func createShareInfo() -> (imageName: String, labelText: String)? {
         switch shareMode {
         case .elsewhereReadOnly, .elsewhereReadWrite:

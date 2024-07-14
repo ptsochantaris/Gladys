@@ -131,7 +131,6 @@ extension Model {
     }
 
     @discardableResult
-    @MainActor
     static func addItems(itemProviders: [DataImporter], indexPath: IndexPath, overrides: ImportOverrides?, filterContext: Filter?) -> PasteResult {
         var archivedItems = [ArchivedItem]()
         for provider in itemProviders {
@@ -157,7 +156,6 @@ extension Model {
         return .success(archivedItems)
     }
 
-    @MainActor
     static func importFiles(paths: [String], filterContext: Filter?) {
         let providers = paths.compactMap { path -> DataImporter? in
             let url = URL(fileURLWithPath: path)

@@ -18,6 +18,7 @@ extension UIScene {
     }
 }
 
+@MainActor
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -37,7 +38,6 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         updateWindowCount()
     }
 
-    @MainActor
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
         if shortcutItem.type.hasSuffix(".Search") {
             Singleton.shared.boot(with: NSUserActivity(activityType: kGladysStartSearchShortcutActivity), in: windowScene)

@@ -1,6 +1,5 @@
 import Foundation
 
-@MainActor
 public enum SortOption {
     case dateAdded, dateModified, title, note, size, label
     public var ascendingTitle: String {
@@ -25,6 +24,7 @@ public enum SortOption {
         }
     }
 
+    @MainActor
     private func sortElements(itemsToSort: ContiguousArray<ArchivedItem>) -> (ContiguousArray<ArchivedItem>, [Int]) {
         var itemIndexes = [Int]()
         let toCheck = itemsToSort.isEmpty ? DropStore.allDrops : itemsToSort
@@ -39,6 +39,7 @@ public enum SortOption {
         return (ContiguousArray(actualItemsToSort), itemIndexes.sorted())
     }
 
+    @MainActor
     public func handlerForSort(itemsToSort: ContiguousArray<ArchivedItem>, ascending: Bool) -> () -> Void {
         var (actualItemsToSort, itemIndexes) = sortElements(itemsToSort: itemsToSort)
         let sortType = self

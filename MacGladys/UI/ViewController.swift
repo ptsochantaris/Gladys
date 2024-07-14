@@ -319,7 +319,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
         let f = cell.view.frame
         let centerFrame = NSRect(origin: CGPoint(x: f.midX - 1, y: f.midY - 1), size: CGSize(width: 2, height: 2))
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             p.show(relativeTo: centerFrame, of: self.collection, preferredEdge: .minY)
         }
@@ -342,13 +342,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     @IBAction func findSelected(_: NSMenuItem?) {
         if showSearch {
             resetSearch(andLabels: false)
-            Task { @MainActor in
-                self.view.window?.makeFirstResponder(self.collection)
+            Task {
+                view.window?.makeFirstResponder(self.collection)
             }
         } else {
             showSearch = true
-            Task { @MainActor in
-                self.view.window?.makeFirstResponder(self.searchBar)
+            Task {
+                view.window?.makeFirstResponder(self.searchBar)
             }
         }
     }
@@ -410,13 +410,13 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     private func updateScrollviewInsets() {
-        Task { @MainActor in
+        Task {
             guard let scrollView = self.collection.enclosingScrollView else { return }
             let offset = scrollView.contentView.bounds.origin.y
             let topHeight = self.topBackground.frame.size.height
             scrollView.contentInsets = NSEdgeInsets(top: topHeight, left: 0, bottom: 0, right: 0)
             if offset <= 0 {
-                Task { @MainActor in
+                Task {
                     try? await Task.sleep(nanoseconds: 10 * NSEC_PER_MSEC)
                     scrollView.documentView?.scroll(CGPoint(x: 0, y: -topHeight))
                 }
@@ -963,7 +963,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         emptyLabel.alphaValue = 0
         emptyLabel.stringValue = text
         emptyLabel.animator().alphaValue = 1
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 6000 * NSEC_PER_MSEC)
             emptyLabel.animator().alphaValue = 0
         }

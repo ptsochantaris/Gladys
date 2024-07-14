@@ -465,7 +465,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         let p = NSSharingServicePicker(items: [itemToShare.itemProviderForSharing])
         let f = cell.view.frame
         let centerFrame = NSRect(origin: CGPoint(x: f.midX - 1, y: f.midY - 1), size: CGSize(width: 2, height: 2))
-        Task { @MainActor in
+        Task {
             try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
             p.show(relativeTo: centerFrame, of: self.components, preferredEdge: .minY)
         }
@@ -497,7 +497,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
                     item.status = .needsIngest
                     saveItem()
                 } else {
-                    Task { @MainActor in
+                    Task {
                         await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: self.view.window!)
                         self.editCurrent(sender)
                     }
@@ -516,7 +516,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         guard let i = components.selectionIndexes.first else { return }
         let component = item.components[i]
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
-        Task { @MainActor in
+        Task {
             cell.animateArchiving = true
             do {
                 let (data, typeIdentifier) = try await WebArchiver.shared.archiveFromUrl(url.absoluteString)
@@ -539,7 +539,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         guard let url = component.encodedUrl as URL?, let cell = components.item(at: IndexPath(item: i, section: 0)) as? ComponentCell else { return }
         cell.animateArchiving = true
 
-        Task { @MainActor in
+        Task {
             let res = try? await WebArchiver.shared.fetchWebPreview(for: url.absoluteString)
             if let image = res?.image, let bits = image.representations.first as? NSBitmapImageRep, let jpegData = bits.representation(using: .jpeg, properties: [.compressionFactor: 1]) {
                 let newTypeItem = Component(typeIdentifier: UTType.jpeg.identifier, parentUuid: item.uuid, data: jpegData, order: item.components.count)
@@ -625,7 +625,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     //////////////////////////////////////////////////// Quicklook
 
-    @MainActor
     override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
         if let currentItem = selectedItem {
             return currentItem.canPreview
@@ -779,7 +778,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
     private func deleteShare(_ sender: NSButton) {
         sender.isEnabled = false
-        Task { @MainActor in
+        Task {
             do {
                 try await CloudManager.deleteShare(item.uuid)
             } catch {

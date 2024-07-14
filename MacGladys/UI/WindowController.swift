@@ -20,6 +20,7 @@ extension NSWindow {
     }
 }
 
+@MainActor
 final class WindowController: NSWindowController, NSWindowDelegate {
     private static var strongRefs = [WindowController]()
 

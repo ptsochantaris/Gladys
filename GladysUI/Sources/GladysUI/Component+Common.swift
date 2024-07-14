@@ -11,7 +11,6 @@ public extension Component {
         diskSizeFormatter.string(fromByteCount: sizeInBytes)
     }
 
-    @MainActor
     var canPreview: Bool {
         if let cachedEntry = canPreviewCache[uuid] {
             return cachedEntry
@@ -25,7 +24,6 @@ public extension Component {
         return res
     }
 
-    @MainActor
     func deleteFromStorage() async {
         await CloudManager.markAsDeleted(recordName: uuid.uuidString, cloudKitRecord: cloudKitRecord)
         let fm = FileManager.default
@@ -52,7 +50,6 @@ public extension Component {
         return decode()
     }
 
-    @MainActor
     func replaceURL(_ newUrl: URL) {
         guard isURL else { return }
 

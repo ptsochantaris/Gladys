@@ -1370,23 +1370,19 @@ public final class Component: Codable, Hashable {
         }
     }
 
-    @MainActor
     public var parent: ArchivedItem? {
         DropStore.item(uuid: parentUuid)
     }
 
-    @MainActor
     public func markComponentUpdated() {
         updatedAt = Date()
         parent?.status = .needsIngest
     }
 
-    @MainActor
     public var parentZone: CKRecordZone.ID {
         parent?.parentZone ?? privateZoneId
     }
 
-    @MainActor
     public var populatedCloudKitRecord: CKRecord {
         let record = cloudKitRecord
             ?? CKRecord(recordType: "ArchivedDropItemType",
@@ -1423,7 +1419,6 @@ public final class Component: Codable, Hashable {
         cloudKitRecord = record
     }
 
-    @MainActor
     public var dataForDropping: Data? {
         if classWasWrapped, typeIdentifier.hasPrefix("public.") {
             let decoded = decode()
@@ -1445,7 +1440,6 @@ public final class Component: Codable, Hashable {
         return nil
     }
 
-    @MainActor
     private var urlDropTitle: String {
         parent?.trimmedSuggestedName ?? oneTitle
     }

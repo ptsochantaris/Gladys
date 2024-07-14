@@ -2,8 +2,8 @@ import AppKit
 import GladysCommon
 import GladysUI
 
+@MainActor
 final class GladysFilePromiseProvider: NSFilePromiseProvider {
-    @MainActor
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
         let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
         let tempPath = temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
@@ -25,7 +25,6 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
     private var tempPath: URL?
     private var tags: [String]?
 
-    @MainActor
     override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
         var types = super.writableTypes(for: pasteboard)
         let newItems = (extraItems ?? []).map { NSPasteboard.PasteboardType($0.typeIdentifier) }
@@ -36,7 +35,6 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         return types
     }
 
-    @MainActor
     override func writingOptions(forType type: NSPasteboard.PasteboardType, pasteboard: NSPasteboard) -> NSPasteboard.WritingOptions {
         let t = type.rawValue
         if t == "public.file-url" {
@@ -48,7 +46,6 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         return super.writingOptions(forType: type, pasteboard: pasteboard)
     }
 
-    @MainActor
     override func pasteboardPropertyList(forType type: NSPasteboard.PasteboardType) -> Any? {
         let T = type.rawValue
         switch T {
@@ -111,7 +108,6 @@ final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate 
 }
 
 private extension Component {
-    @MainActor
     func writeBytes(to destinationUrl: URL, tags: [String]?) throws {
         Model.trimTemporaryDirectory()
 

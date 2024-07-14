@@ -411,7 +411,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         status == .nominal && lockPassword == nil
     }
 
-    @MainActor
     public func markUpdated() {
         updatedAt = Date()
         needsCloudPush = true
@@ -734,7 +733,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     #endif
 
-    @MainActor
     private func componentIngestDone() async {
         status = .nominal
         Task {
@@ -758,7 +756,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         components.contains { $0.flags.contains(.loadingAborted) }
     }
 
-    @MainActor
     public func reIngest() async {
         switch status {
         case .deleted, .isBeingIngested:
@@ -934,7 +931,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
 
     public let itemUpdates = PassthroughSubject<Void, Never>()
 
-    @MainActor
     public func postModified() {
         presentationGenerator?.cancel()
         presentationInfoCache[uuid] = nil
@@ -966,9 +962,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
 
         cloudKitRecord = record
-        Task { @MainActor in
-            postModified()
-        }
+        postModified()
     }
 
     public var parentZone: CKRecordZone.ID {

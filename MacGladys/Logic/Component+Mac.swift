@@ -68,7 +68,6 @@ extension Component {
         }
     }
 
-    @MainActor
     func pasteboardItem(forDrag: Bool) -> NSPasteboardWriting {
         if forDrag {
             return GladysFilePromiseProvider.provider(for: self, with: oneTitle, extraItems: [self], tags: parent?.labels)
@@ -79,7 +78,6 @@ extension Component {
         }
     }
 
-    @MainActor
     var quickLookItem: PreviewItem {
         PreviewItem(typeItem: self)
     }

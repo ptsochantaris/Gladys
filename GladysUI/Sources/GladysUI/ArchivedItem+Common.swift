@@ -2,7 +2,6 @@ import Foundation
 import GladysCommon
 
 public extension ArchivedItem {
-    @MainActor
     var canPreview: Bool {
         components.contains { $0.canPreview }
     }
@@ -15,7 +14,6 @@ public extension ArchivedItem {
         }
     }
 
-    @MainActor
     func delete() {
         if status.shouldDisplayLoading {
             cancelIngest()
