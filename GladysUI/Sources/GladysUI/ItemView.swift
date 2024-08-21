@@ -150,6 +150,15 @@ public struct ItemView: View {
         }
     }
 
+    public var shade: Bool {
+        get {
+            wrapper.shade
+        }
+        set {
+            wrapper.shade = newValue
+        }
+    }
+
     public var accessibilityText: String {
         wrapper.accessibilityText
     }
@@ -172,8 +181,19 @@ public struct ItemView: View {
                 SquareContentView(wrapper: wrapper)
             }
         }
+        .overlay {
+            if wrapper.shade {
+                Rectangle()
+                    .foregroundStyle(.white)
+                    .blendMode(.saturation)
+
+                Rectangle()
+                    .foregroundStyle(Color(.g_colorPaper))
+                    .opacity(0.4)
+            }
+        }
         .cornerRadius(cornerRadius)
-        .shadow(color: shadowColor, radius: shadowRadius)
+        .shadow(color: shadowColor, radius: wrapper.shade ? 0 : shadowRadius)
         .overlay {
             let highlight = wrapper.presentationInfo.highlightColor
             if highlight != .none, let status = wrapper.status, !status.shouldDisplayLoading {

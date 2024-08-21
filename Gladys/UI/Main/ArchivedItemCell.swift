@@ -1,3 +1,4 @@
+import CoreImage
 import GladysCommon
 import GladysUI
 import GladysUIKit
@@ -29,17 +30,12 @@ final class ArchivedItemCell: CommonItemCell {
         super.tintColorDidChange()
 
         if tintColor == .g_colorTint {
-            UIView.animate {
-                self.alpha = 1
-                self.transform = .identity
-            }
+            shade = false
         } else {
             if skipFade {
                 skipFade = false
             } else {
-                UIView.animate {
-                    self.alpha = 0.6
-                }
+                shade = true
             }
         }
     }

@@ -38,6 +38,7 @@ public final class ArchivedItemWrapper: Identifiable {
 
     var cellSize = CGSize.zero
     var style = Style.square
+    var shade = false
 
     private weak var item: ArchivedItem?
     private var observer: Cancellable?

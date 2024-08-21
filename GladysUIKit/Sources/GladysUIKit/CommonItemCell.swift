@@ -76,6 +76,17 @@ open class CommonItemCell: UICollectionViewCell {
     private var lastLayout = CGSize.zero
     public var style = ArchivedItemWrapper.Style.square
 
+    public var shade: Bool {
+        get {
+            itemViewController.rootView.shade
+        }
+        set {
+            withAnimation {
+                itemViewController.rootView.shade = newValue
+            }
+        }
+    }
+
     override open func layoutSubviews() {
         let currentSize = bounds.size
         if lastLayout != currentSize {

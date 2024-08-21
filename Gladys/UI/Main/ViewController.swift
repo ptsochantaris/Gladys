@@ -1654,22 +1654,36 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private lazy var pasteControl = {
         let config = UIPasteControl.Configuration()
-        config.cornerStyle = .fixed
         config.displayMode = .iconOnly
-#if os(visionOS)
-        let controlSize: CGFloat = 44
-#else
-        let controlSize: CGFloat = 36
-#endif
-        config.cornerRadius = controlSize * 0.5
+        config.baseBackgroundColor = .tintColor
+
+        #if os(visionOS)
+            let controlSize: CGFloat = 44
+        #else
+            let controlSize: CGFloat = 36
+        #endif
+
+        if #available(iOS 18.0, visionOS 2.0, *) {
+            config.cornerStyle = .fixed
+            config.cornerRadius = controlSize * 0.5
+        } else {
+            config.cornerStyle = .capsule
+        }
 
         let control = UIPasteControl(configuration: config)
+
+        if #available(iOS 18.0, visionOS 2.0, *) {
+            NSLayoutConstraint.activate([
+                control.widthAnchor.constraint(equalToConstant: controlSize),
+                control.heightAnchor.constraint(equalToConstant: controlSize)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                control.heightAnchor.constraint(equalToConstant: controlSize)
+            ])
+        }
         control.target = self
         control.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            control.widthAnchor.constraint(equalToConstant: controlSize),
-            control.heightAnchor.constraint(equalToConstant: controlSize)
-        ])
         return control
     }()
 
