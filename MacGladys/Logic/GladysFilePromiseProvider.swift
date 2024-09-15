@@ -2,24 +2,31 @@ import AppKit
 import GladysCommon
 import GladysUI
 
-@MainActor
 final class GladysFilePromiseProvider: NSFilePromiseProvider {
+    @MainActor
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
         let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
         let tempPath = temporaryDirectoryUrl.appendingPathComponent(component.uuid.uuidString).appendingPathComponent(title)
 
         let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath, tags: tags)
 
-        let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate)
-        p.component = component
-        p.tempPath = tempPath
-        p.strongReference = delegate
-        p.tags = tags
-        p.extraItems = extraItems.filter { $0.typeIdentifier != "public.file-url" }
+        let extra = extraItems.filter { $0.typeIdentifier != "public.file-url" }
+        let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate, extraItems: extra, strongReference: delegate, component: component, tempPath: tempPath, tags: tags)
         return p
     }
 
-    private var extraItems: ContiguousArray<Component>?
+    init(fileType: String, delegate: NSFilePromiseProviderDelegate, extraItems: [Component], strongReference: GladysFileProviderDelegate?, component: Component?, tempPath: URL?, tags: [String]?) {
+        self.extraItems = extraItems
+        self.strongReference = strongReference
+        self.component = component
+        self.tempPath = tempPath
+        self.tags = tags
+        super.init()
+        self.fileType = fileType
+        self.delegate = delegate
+    }
+
+    private var extraItems: [Component]
     private var strongReference: GladysFileProviderDelegate?
     private var component: Component?
     private var tempPath: URL?
@@ -27,9 +34,13 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
 
     override func writableTypes(for pasteboard: NSPasteboard) -> [NSPasteboard.PasteboardType] {
         var types = super.writableTypes(for: pasteboard)
-        let newItems = (extraItems ?? []).map { NSPasteboard.PasteboardType($0.typeIdentifier) }
+        let newItems = extraItems.map { extraItem in
+            let identifier = MainActor.assumeIsolated { extraItem.typeIdentifier }
+            return NSPasteboard.PasteboardType(identifier)
+        }
         types.insert(contentsOf: newItems, at: 0)
-        if tempPath != nil {
+        let hasTempPath = tempPath != nil
+        if hasTempPath {
             types.append(NSPasteboard.PasteboardType(rawValue: "public.file-url"))
         }
         return types
@@ -40,7 +51,11 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         if t == "public.file-url" {
             return []
         }
-        for e in extraItems ?? [] where t == e.typeIdentifier {
+        let extraItemsContainsType = extraItems.contains { extraItem in
+            MainActor.assumeIsolated { extraItem.typeIdentifier == t }
+        } == true
+
+        if extraItemsContainsType {
             return []
         }
         return super.writingOptions(forType: type, pasteboard: pasteboard)
@@ -52,16 +67,21 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         case "com.apple.NSFilePromiseItemMetaData", "com.apple.pasteboard.NSFilePromiseID", "com.apple.pasteboard.promised-file-content-type", "com.apple.pasteboard.promised-file-name", "public.data":
             return super.pasteboardPropertyList(forType: type)
         default:
-            let item = extraItems?.first { $0.typeIdentifier == T }
-            if item == nil, T == "public.file-url", let component, let tempPath {
+            let extraItemOfType = extraItems.first { extraItem in MainActor.assumeIsolated { extraItem.typeIdentifier } == T }
+            if extraItemOfType == nil, T == "public.file-url", let component, let tempPath {
                 do {
-                    try component.writeBytes(to: tempPath, tags: tags)
+                    let tagCopy = tags
+                    try MainActor.assumeIsolated {
+                        try component.writeBytes(to: tempPath, tags: tagCopy)
+                    }
                 } catch {
                     log("Could not create drop data: \(error.localizedDescription)")
                 }
                 return tempPath.dataRepresentation
+            } else if let extraItemOfType {
+                return MainActor.assumeIsolated { extraItemOfType.bytes }
             } else {
-                return item?.bytes
+                return nil
             }
         }
     }

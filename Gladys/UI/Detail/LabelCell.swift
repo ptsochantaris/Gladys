@@ -5,10 +5,13 @@ final class LabelCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        let b = UIView()
-        b.backgroundColor = UIColor.g_colorTint.withAlphaComponent(0.1)
-        selectedBackgroundView = b
-        focusEffect = UIFocusHaloEffect()
+
+        MainActor.assumeIsolated {
+            let b = UIView()
+            b.backgroundColor = UIColor.g_colorTint.withAlphaComponent(0.1)
+            selectedBackgroundView = b
+            focusEffect = UIFocusHaloEffect()
+        }
     }
 
     var label: String? {

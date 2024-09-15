@@ -17,16 +17,18 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        label.textContainerInset = .zero
-        observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
-            guard let self else { return }
-            Task { @MainActor in
-                self.caretMoved()
+        MainActor.assumeIsolated {
+            label.textContainerInset = .zero
+            observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.caretMoved()
+                }
             }
-        }
 
-        focusEffect = UIFocusHaloEffect()
-        label.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+            focusEffect = UIFocusHaloEffect()
+            label.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+        }
     }
 
     func startEdit() {

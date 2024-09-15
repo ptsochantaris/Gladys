@@ -88,8 +88,11 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        collection.dataSource = dataSource
-        collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
+
+        MainActor.assumeIsolated {
+            collection.dataSource = dataSource
+            collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
+        }
     }
 
     override func viewDidLoad() {
@@ -972,18 +975,24 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     //////////////////////////////////////////////////// Quicklook
 
     override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
-        collection.selectionIndexPaths.isPopulated
+        MainActor.assumeIsolated {
+            collection.selectionIndexPaths.isPopulated
+        }
     }
 
     private var previewPanel: QLPreviewPanel?
     override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
-        previewPanel = panel
-        panel.delegate = self
-        panel.dataSource = self
+        MainActor.assumeIsolated {
+            previewPanel = panel
+            panel.delegate = self
+            panel.dataSource = self
+        }
     }
 
     override func endPreviewPanelControl(_: QLPreviewPanel!) {
-        previewPanel = nil
+        MainActor.assumeIsolated {
+            previewPanel = nil
+        }
     }
 
     nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {

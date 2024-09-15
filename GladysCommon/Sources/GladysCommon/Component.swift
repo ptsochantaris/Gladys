@@ -1141,7 +1141,7 @@ public final class Component: Codable, Hashable {
             }
 
         } else if typeIdentifier == "public.utf8-plain-text" {
-            let s = String(decoding: data, as: UTF8.self)
+            let s = String.fromUTF8Data(data)
             setTitleInfo(s, 9)
             await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 
@@ -1167,7 +1167,7 @@ public final class Component: Codable, Hashable {
             try await handleUrl(url as URL, data, storeBytes)
 
         } else if typeConforms(to: .text) {
-            let s = String(decoding: data, as: UTF8.self)
+            let s = String.fromUTF8Data(data)
             setTitleInfo(s, 5)
             await setDisplayIcon(#imageLiteral(resourceName: "iconText"), 5, .center)
 

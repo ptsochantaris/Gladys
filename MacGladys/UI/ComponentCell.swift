@@ -158,8 +158,11 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        centreBlock.layer?.contentsGravity = .resizeAspectFill
-        centreBlock.layer?.cornerRadius = 4
+
+        MainActor.assumeIsolated {
+            centreBlock.layer?.contentsGravity = .resizeAspectFill
+            centreBlock.layer?.cornerRadius = 4
+        }
     }
 
     override var isSelected: Bool {

@@ -6,6 +6,9 @@ final class LabelEditorCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        focusEffect = UIFocusHaloEffect()
+
+        MainActor.assumeIsolated {
+            focusEffect = UIFocusHaloEffect()
+        }
     }
 }

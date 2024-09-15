@@ -607,20 +607,23 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        navigationItem.largeTitleDisplayMode = .never
-        navigationItem.largeTitleDisplayMode = .automatic
-        pasteButton.accessibilityLabel = "Paste from clipboard"
-        settingsButton.accessibilityLabel = "Settings"
-        shareButton.accessibilityLabel = "Share"
 
-        dragModePanel.translatesAutoresizingMaskIntoConstraints = false
-        dragModePanel.layer.shadowColor = UIColor.label.cgColor
-        dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 1)
-        dragModePanel.layer.shadowOpacity = 0.3
-        dragModePanel.layer.shadowRadius = 2
-        dragModePanel.layer.cornerRadius = 20
-        dragModePanel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        dragModePanel.alpha = 0
+        MainActor.assumeIsolated {
+            navigationItem.largeTitleDisplayMode = .never
+            navigationItem.largeTitleDisplayMode = .automatic
+            pasteButton.accessibilityLabel = "Paste from clipboard"
+            settingsButton.accessibilityLabel = "Settings"
+            shareButton.accessibilityLabel = "Share"
+
+            dragModePanel.translatesAutoresizingMaskIntoConstraints = false
+            dragModePanel.layer.shadowColor = UIColor.label.cgColor
+            dragModePanel.layer.shadowOffset = CGSize(width: 0, height: 1)
+            dragModePanel.layer.shadowOpacity = 0.3
+            dragModePanel.layer.shadowRadius = 2
+            dragModePanel.layer.cornerRadius = 20
+            dragModePanel.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+            dragModePanel.alpha = 0
+        }
     }
 
     private func updateDataSource(animated: Bool) {

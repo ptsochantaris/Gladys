@@ -27,8 +27,11 @@ final class FocusableTextField: NSTextField {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        wantsLayer = true
-        layer?.cornerRadius = 2.5
+
+        MainActor.assumeIsolated {
+            wantsLayer = true
+            layer?.cornerRadius = 2.5
+        }
     }
 
     override func becomeFirstResponder() -> Bool {
@@ -626,21 +629,24 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     //////////////////////////////////////////////////// Quicklook
 
     override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
-        if let currentItem = selectedItem {
-            return currentItem.canPreview
+        MainActor.assumeIsolated {
+            selectedItem?.canPreview ?? false
         }
-        return false
     }
 
     private var previewPanel: QLPreviewPanel?
     override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
-        previewPanel = panel
-        panel.delegate = self
-        panel.dataSource = self
+        MainActor.assumeIsolated {
+            previewPanel = panel
+            panel.delegate = self
+            panel.dataSource = self
+        }
     }
 
     override func endPreviewPanelControl(_: QLPreviewPanel!) {
-        previewPanel = nil
+        MainActor.assumeIsolated {
+            previewPanel = nil
+        }
     }
 
     nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {

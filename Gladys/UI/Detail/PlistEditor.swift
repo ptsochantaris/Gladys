@@ -170,7 +170,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
     private var shouldEnableCopyButton: Bool {
         if let p = propertyList as? [AnyHashable: Any],
            let mimeType = p["WebResourceMIMEType"] as? String,
-           p["WebResourceData"] as? Data != nil {
+           p["WebResourceData"] is Data {
             return UTType(mimeType: mimeType) != nil
         }
         return false

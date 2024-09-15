@@ -43,12 +43,14 @@ final class DetailCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        inspectButton.accessibilityLabel = "Inspect data"
-        archiveButton.accessibilityLabel = "Archive target of link"
-        viewButton.accessibilityLabel = "Visual item preview"
-        editButton.accessibilityLabel = "Edit item"
+        MainActor.assumeIsolated {
+            inspectButton.accessibilityLabel = "Inspect data"
+            archiveButton.accessibilityLabel = "Archive target of link"
+            viewButton.accessibilityLabel = "Visual item preview"
+            editButton.accessibilityLabel = "Edit item"
 
-        focusEffect = UIFocusHaloEffect()
+            focusEffect = UIFocusHaloEffect()
+        }
     }
 
     override func dragStateDidChange(_ dragState: UITableViewCell.DragState) {

@@ -52,39 +52,33 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private nonisolated(unsafe) static var replyData: Data?
-
     func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
         guard let watchMessage = WatchMessage.parse(from: messageData) else {
+            replyHandler(Data())
             return
         }
-        Task.detached {
-            let reply = await Self.handle(message: watchMessage)
-            Self.replyData = reply.asData ?? Data()
-        }
 
-        while Self.replyData == nil {
-            Thread.sleep(forTimeInterval: 0.1)
+        nonisolated(unsafe) let handler = replyHandler
+        _ = MainActor.assumeIsolated {
+            Task {
+                let replyData = await Self.handle(message: watchMessage).asData ?? Data()
+                handler(replyData)
+            }
         }
-        if let replyData = Self.replyData {
-            replyHandler(replyData)
-        }
-        Self.replyData = nil
     }
 
-    @MainActor
     private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
-            guard let item = DropStore.item(uuid: imageInfo.id) else {
+            guard let item = await DropStore.item(uuid: imageInfo.id) else {
                 return .failure
             }
 
             let size = CGSize(width: imageInfo.width, height: imageInfo.height)
 
-            let mode = item.displayMode
+            let mode = await item.displayMode
             let data: Data
-            if mode == .center, let backgroundInfoObject = item.backgroundInfoObject {
+            if mode == .center, let backgroundInfoObject = await item.backgroundInfoObject {
                 switch backgroundInfoObject.content {
                 case let .color(color):
                     let icon = UIGraphicsImageRenderer(size: size).image { context in
@@ -103,35 +97,35 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
             return .imageData(data)
 
         case let .view(uuid):
-            HighlightRequest.send(uuid: uuid, extraAction: .open)
+            await HighlightRequest.send(uuid: uuid, extraAction: .open)
             return .ok
 
         case let .copy(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                item.copyToPasteboard()
+            if let item = await DropStore.item(uuid: uuid) {
+                await item.copyToPasteboard()
                 return .ok
             } else {
                 return .failure
             }
 
         case let .moveToTop(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                Model.sendToTop(items: [item])
+            if let item = await DropStore.item(uuid: uuid) {
+                await Model.sendToTop(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case let .delete(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                Model.delete(items: [item])
+            if let item = await DropStore.item(uuid: uuid) {
+                await Model.delete(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case .updateRequest:
-            return buildContext()
+            return await buildContext()
 
         case .contextReply, .failure, .imageData, .ok:
             return .failure

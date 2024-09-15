@@ -802,7 +802,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                 text
 
             } else {
-                String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
+                String.fromUTF8Data(data).trimmingCharacters(in: .whitespacesAndNewlines)
             }
 
             if extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {

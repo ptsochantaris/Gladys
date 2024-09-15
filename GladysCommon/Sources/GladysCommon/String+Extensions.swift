@@ -2,6 +2,10 @@ import Foundation
 import SwiftUI
 
 public extension String {
+    static func fromUTF8Data(_ data: Data) -> String {
+        String(data: data, encoding: .utf8) ?? ""
+    }
+
     var filenameSafe: String {
         if let components = URLComponents(string: self) {
             if let host = components.host {

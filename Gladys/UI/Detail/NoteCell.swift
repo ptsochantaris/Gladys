@@ -13,18 +13,21 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        textView.textContainerInset = .zero
 
-        focusEffect = UIFocusHaloEffect()
-        textView?.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+        MainActor.assumeIsolated {
+            textView.textContainerInset = .zero
 
-        let c = UIColor.g_colorTint
-        textView.textColor = c
-        placeholder.textColor = c
-        observer = textView.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
-            guard let self else { return }
-            Task { @MainActor in
-                self.caretMoved()
+            focusEffect = UIFocusHaloEffect()
+            textView?.focusGroupIdentifier = "build.bru.gladys.detail.focus"
+
+            let c = UIColor.g_colorTint
+            textView.textColor = c
+            placeholder.textColor = c
+            observer = textView.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
+                guard let self else { return }
+                Task { @MainActor in
+                    self.caretMoved()
+                }
             }
         }
     }

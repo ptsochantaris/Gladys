@@ -29,11 +29,14 @@ final class ByteCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        layer.borderWidth = 0.25
-        layer.borderColor = UIColor.separator.cgColor
-        isAccessibilityElement = true
-        accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
-        updateSelected()
+
+        MainActor.assumeIsolated {
+            layer.borderWidth = 0.25
+            layer.borderColor = UIColor.separator.cgColor
+            isAccessibilityElement = true
+            accessibilityHint = "Double-tap and hold then swipe left or right to select a range."
+            updateSelected()
+        }
     }
 
     override func layoutSubviews() {
