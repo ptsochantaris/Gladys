@@ -9,6 +9,7 @@ public extension SKProduct {
     }
 }
 
+@MainActor
 public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     private let completion: ([SKProduct]?, Error?) -> Void
 
@@ -48,14 +49,14 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
         SKPaymentQueue.default().remove(self)
     }
 
-    public func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
+    public nonisolated func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
         let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
         Task { @MainActor in
             completion(items, nil)
         }
     }
 
-    public func request(_: SKRequest, didFailWithError error: Error) {
+    public nonisolated func request(_: SKRequest, didFailWithError error: Error) {
         log("Error fetching IAP items: \(error.localizedDescription)")
         Task { @MainActor in
             completion(nil, error)
@@ -77,46 +78,50 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
         }
     }
 
-    public func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        Task {
-            for t in transactions {
-                let prefix: String
-                #if canImport(AppKit)
-                    prefix = "MAC_GLADYS_TIP_TIER"
-                #else
-                    prefix = "GLADYS_TIP_TIER_"
-                #endif
-                if t.payment.productIdentifier.hasPrefix(prefix) {
-                    switch t.transactionState {
-                    case .failed:
-                        SKPaymentQueue.default().finishTransaction(t)
-                        let completion = purchaseCompletion
-                        purchaseCompletion = nil
-                        completion?(t.error)
-
-                    case .purchased, .restored:
-                        SKPaymentQueue.default().finishTransaction(t)
-                        let completion = purchaseCompletion
-                        purchaseCompletion = nil
-                        completion?(nil)
-
-                    case .deferred, .purchasing:
-                        break
-
-                    @unknown default:
-                        break
+    public nonisolated func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for t in transactions {
+            let prefix: String
+            #if canImport(AppKit)
+                prefix = "MAC_GLADYS_TIP_TIER"
+            #else
+                prefix = "GLADYS_TIP_TIER_"
+            #endif
+            if t.payment.productIdentifier.hasPrefix(prefix) {
+                switch t.transactionState {
+                case .failed:
+                    SKPaymentQueue.default().finishTransaction(t)
+                    Task { @MainActor in
+                        if let completion = purchaseCompletion {
+                            purchaseCompletion = nil
+                            completion(t.error)
+                        }
                     }
-                } else {
-                    switch t.transactionState {
-                    case .failed, .purchased, .restored:
-                        SKPaymentQueue.default().finishTransaction(t)
 
-                    case .deferred, .purchasing:
-                        break
-
-                    @unknown default:
-                        break
+                case .purchased, .restored:
+                    SKPaymentQueue.default().finishTransaction(t)
+                    Task { @MainActor in
+                        if let completion = purchaseCompletion {
+                            purchaseCompletion = nil
+                            completion(nil)
+                        }
                     }
+
+                case .deferred, .purchasing:
+                    break
+
+                @unknown default:
+                    break
+                }
+            } else {
+                switch t.transactionState {
+                case .failed, .purchased, .restored:
+                    SKPaymentQueue.default().finishTransaction(t)
+
+                case .deferred, .purchasing:
+                    break
+
+                @unknown default:
+                    break
                 }
             }
         }

@@ -24,7 +24,7 @@ public extension ArchivedItem {
             }
         }
 
-        let newTask = Task.detached(priority: .high) { [weak self] in
+        let newTask = Task.detached(priority: .userInitiated) { [weak self] in
             await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
         }
         return await usingPresentationGenerator(newTask)
@@ -64,7 +64,7 @@ public extension ArchivedItem {
             return nil
         }
 
-        let defaultColor = await PresentationInfo.defaultCardColor
+        let defaultColor = PresentationInfo.defaultCardColor
         var top = defaultColor
         var bottom = defaultColor
         var result: IMAGE?

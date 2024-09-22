@@ -4,7 +4,6 @@ import SwiftUI
     import UIKit
 #endif
 
-@MainActor
 public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public enum FieldContent: Sendable {
         case none, text(String), link(URL), note(String), hint(String)
@@ -51,7 +50,6 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         }
     }
 
-    @MainActor
     public struct LabelInfo: Sendable {
         public let content: FieldContent
         public let backgroundColor: Color
@@ -127,7 +125,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
     #endif
 
-    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) {
+    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) async {
         self.id = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
@@ -159,12 +157,14 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
             }
 
             #if os(iOS) || os(visionOS)
-                if let v = image?.accessibilityValue {
-                    components.append(v)
+                await MainActor.run {
+                    if let v = image?.accessibilityValue {
+                        components.append(v)
+                    }
                 }
             #endif
 
-            if PersistedOptions.displayLabelsInMainView, let l = labels, !l.isEmpty {
+            if await PersistedOptions.displayLabelsInMainView, let l = labels, !l.isEmpty {
                 components.append(l.joined(separator: ", "))
             }
 

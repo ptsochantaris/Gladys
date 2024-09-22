@@ -33,7 +33,7 @@ public struct ItemView: View {
     }
 
     struct ItemImage: View, Identifiable {
-        var id: UUID {
+        nonisolated var id: UUID {
             wrapper.id
         }
 

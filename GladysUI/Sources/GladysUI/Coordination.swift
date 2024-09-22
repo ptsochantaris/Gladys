@@ -27,11 +27,11 @@ import Foundation
             }
         }
 
-        static var coordinator: NSFileCoordinator {
+        nonisolated static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: filePresenter)
         }
 
-        private static let filePresenter = ModelFilePresenter()
+        private nonisolated(unsafe) static let filePresenter = ModelFilePresenter()
 
         @MainActor
         public static func beginMonitoringChanges() {

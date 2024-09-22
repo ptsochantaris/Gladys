@@ -334,7 +334,12 @@ public extension CloudManager {
             syncTransitioning = false
         }
 
-        let myOwnShareIds = await DropStore.itemsIAmSharing.asyncCompactMap { await $0.cloudKitShareRecord?.recordID }
+        var myOwnShareIds = [CKRecord.ID]()
+        for record in await DropStore.itemsIAmSharing {
+            if let id = await record.cloudKitShareRecord?.recordID {
+                myOwnShareIds.append(id)
+            }
+        }
         if myOwnShareIds.isPopulated {
             try await shutdownShares(ids: myOwnShareIds, force: force)
         }
@@ -464,20 +469,23 @@ public extension CloudManager {
 
         try await withThrowingDiscardingTaskGroup { taskGroup in
             for (zoneId, fetchGroup) in fetchGroups {
-                taskGroup.addTask { @MainActor in
+                let groupArray = Array(fetchGroup)
+                taskGroup.addTask {
                     let c = await container
                     let database = zoneId == privateZoneId ? c.privateCloudDatabase : c.sharedCloudDatabase
-                    let fetchResults = try await database.records(for: Array(fetchGroup))
+                    let fetchResults = try await database.records(for: groupArray)
                     for (id, result) in fetchResults {
                         switch result {
                         case let .success(record):
-                            if let share = record as? CKShare, let existingItem = DropStore.item(shareId: share.recordID.recordName) {
-                                existingItem.cloudKitShareRecord = share
+                            if let share = record as? CKShare, let existingItem = await DropStore.item(shareId: share.recordID.recordName) {
+                                await MainActor.run {
+                                    existingItem.cloudKitShareRecord = share
+                                }
                             }
                         case let .failure(error):
                             if error.itemDoesNotExistOnServer {
                                 // this share record does not exist. Our local data is wrong
-                                if let itemWithShare = DropStore.item(shareId: id.recordName) {
+                                if let itemWithShare = await DropStore.item(shareId: id.recordName) {
                                     log("Warning: Our local data thinks we have a share in the cloud (\(id.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
                                     try? await fetchCloudRecord(for: itemWithShare)
                                 }
@@ -595,7 +603,7 @@ public extension CloudManager {
         #else
             shareRecord[CKShare.SystemFieldKey.thumbnailImageData] = scaledIcon.pngData() as NSData?
         #endif
-        let componentsThatNeedMigrating = await item.components.asyncFilter { await $0.cloudKitRecord?.parent == nil }.asyncMap { await $0.populatedCloudKitRecord }
+        let componentsThatNeedMigrating = await MainActor.run { item.components.filter { $0.cloudKitRecord?.parent == nil }.map(\.populatedCloudKitRecord) }
         let recordsToSave = [rootRecord, shareRecord] + componentsThatNeedMigrating
         let modifyResults = try await container.privateCloudDatabase.modifyRecords(saving: recordsToSave, deleting: [], savePolicy: .allKeys)
         try check(modifyResults)

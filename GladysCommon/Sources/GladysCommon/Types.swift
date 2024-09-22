@@ -60,6 +60,7 @@ public enum ArchivedDropItemDisplayType: Int, Sendable {
 }
 
 public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+
 public let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
 
 public enum PasteResult: Sendable {

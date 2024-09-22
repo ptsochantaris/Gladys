@@ -389,7 +389,11 @@ final actor PullState {
                 let newTypeItemRecords = pendingComponentRecords.removeValue(forKey: recordID)
                 if let newTypeItemRecords {
                     let uuid = newItem.uuid
-                    let newComponents = await newTypeItemRecords.asyncMap { await Component(from: $0, parentUuid: uuid) }
+                    var newComponents = [Component]()
+                    for record in newTypeItemRecords {
+                        let newComponent = await Component(from: record, parentUuid: uuid)
+                        newComponents.append(newComponent)
+                    }
                     await newItem.setComponents(ContiguousArray(newComponents))
                     log("  Hooked \(newTypeItemRecords.count) pending type items")
                 }

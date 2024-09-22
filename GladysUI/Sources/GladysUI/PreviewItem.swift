@@ -58,7 +58,7 @@ public extension Component {
             }
         }
 
-        public static var previewUrls = [URL: Int]()
+        public nonisolated(unsafe) static var previewUrls = [URL: Int]()
         private static func cleanupUrl(previewItemURL: URL) {
             let currentCount = previewUrls[previewItemURL] ?? 0
             if currentCount == 1 {

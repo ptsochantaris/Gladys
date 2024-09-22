@@ -18,7 +18,7 @@ public extension UTType {
 @MainActor
 public var brokenMode = false
 
-private var dataFileLastModified = Date.distantPast
+private nonisolated(unsafe) var dataFileLastModified = Date.distantPast
 
 @MainActor
 public enum Model {
@@ -360,7 +360,7 @@ public enum Model {
             return i.uuid
         })
 
-        sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids] as [String: Any])
+        sendNotification(name: .ModelDataUpdated, object: ["updated": uuidsToEncode, "removed": removedUuids] as [String: Sendable])
 
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")
@@ -483,7 +483,7 @@ public enum Model {
     private static func ingestItemsIfNeeded() {
         Maintini.startMaintaining()
         let ready = DropStore.readyToIngest
-        Task.detached {
+        Task {
             await withDiscardingTaskGroup {
                 for drop in ready {
                     $0.addTask {
@@ -491,7 +491,7 @@ public enum Model {
                     }
                 }
             }
-            await Maintini.endMaintaining()
+            Maintini.endMaintaining()
         }
     }
 
