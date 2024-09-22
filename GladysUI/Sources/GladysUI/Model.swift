@@ -16,11 +16,6 @@ public extension UTType {
 }
 
 @MainActor
-public var brokenMode = false
-
-private nonisolated(unsafe) var dataFileLastModified = Date.distantPast
-
-@MainActor
 public enum Model {
     public enum State {
         case startupComplete, willSave, saveComplete(dueToSyncFetch: Bool), migrated
@@ -28,6 +23,9 @@ public enum Model {
 
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
+    public static var brokenMode = false
+
+    private static var dataFileLastModified = Date.distantPast
 
     private nonisolated static let storageGatekeeper = Semalot(tickets: 1)
 
@@ -44,6 +42,18 @@ public enum Model {
             }
             try _reloadDataIfNeeded()
         }.value
+    }
+
+    private nonisolated static func shouldLoad(from url: URL) -> Bool {
+        onlyOnMainThread {
+            guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {
+                return false
+            }
+
+            dataFileLastModified = dataModified
+            log("Need to reload data, new file date: \(dataModified)")
+            return true
+        }
     }
 
     private nonisolated static func _reloadDataIfNeeded() throws {
@@ -67,20 +77,11 @@ public enum Model {
             }
 
             do {
-                var shouldLoad = true
-                if let dataModified = modificationDate(for: url) {
-                    if dataModified == dataFileLastModified {
-                        shouldLoad = false
-                    } else {
-                        dataFileLastModified = dataModified
-                    }
-                }
-                guard shouldLoad else {
+                guard shouldLoad(from: url) else {
                     log("No need to reload data")
                     return
                 }
 
-                log("Needed to reload data, new file date: \(dataFileLastModified)")
                 let result = try dataLoad(from: url)
 
                 Task { @MainActor in

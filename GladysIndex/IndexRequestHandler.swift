@@ -15,7 +15,7 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
         log("Reindexing all spotlight items…")
         nonisolated(unsafe) let handler = acknowledgementHandler
-        onlyOnMainThread {
+        Task { @MainActor in
             let indexer = Indexer(itemProvider: self)
             indexer.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: handler)
         }
@@ -24,7 +24,7 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
         log("Reindexing some spotlight items…")
         nonisolated(unsafe) let handler = acknowledgementHandler
-        onlyOnMainThread {
+        Task { @MainActor in
             let indexer = Indexer(itemProvider: self)
             indexer.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: handler)
         }

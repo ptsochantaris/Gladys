@@ -253,7 +253,7 @@ final class Singleton {
 
     private func replaceRootVc(in scene: UIWindowScene, with vc: UIViewController?) {
         guard let vc else { return }
-        if !brokenMode {
+        if !Model.brokenMode {
             scene.windows.first?.rootViewController = vc
         }
     }

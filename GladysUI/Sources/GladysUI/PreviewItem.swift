@@ -7,6 +7,7 @@ import Foundation
 import GladysCommon
 
 public extension Component {
+    @MainActor
     final class PreviewItem: NSObject, QLPreviewItem, Sendable {
         public let previewItemURL: URL?
         public let previewItemTitle: String?
@@ -15,7 +16,6 @@ public extension Component {
         private let needsCleanup: Bool
         private let uuid: UUID
 
-        @MainActor
         public init(typeItem: Component) {
             parentUuid = typeItem.parentUuid
             uuid = typeItem.uuid
@@ -58,18 +58,21 @@ public extension Component {
             }
         }
 
-        public nonisolated(unsafe) static var previewUrls = [URL: Int]()
-        private static func cleanupUrl(previewItemURL: URL) {
-            let currentCount = previewUrls[previewItemURL] ?? 0
-            if currentCount == 1 {
-                previewUrls[previewItemURL] = nil
-                let fm = FileManager.default
-                if fm.fileExists(atPath: previewItemURL.path) {
-                    try? fm.removeItem(at: previewItemURL)
-                    log("Removed temporary preview at \(previewItemURL.path)")
+        public static var previewUrls = [URL: Int]()
+
+        private nonisolated static func cleanupUrl(previewItemURL: URL) {
+            onlyOnMainThread {
+                let currentCount = previewUrls[previewItemURL] ?? 0
+                if currentCount == 1 {
+                    previewUrls[previewItemURL] = nil
+                    let fm = FileManager.default
+                    if fm.fileExists(atPath: previewItemURL.path) {
+                        try? fm.removeItem(at: previewItemURL)
+                        log("Removed temporary preview at \(previewItemURL.path)")
+                    }
+                } else {
+                    previewUrls[previewItemURL] = currentCount - 1
                 }
-            } else {
-                previewUrls[previewItemURL] = currentCount - 1
             }
         }
     }
