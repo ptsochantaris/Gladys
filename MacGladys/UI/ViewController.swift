@@ -1039,8 +1039,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let visibleCells = MainActor.assumeIsolated { collection.visibleItems() }
 
         guard let cellIndex = visibleCells.firstIndex(where: { cell in
-            let o = MainActor.assumeIsolated { cell.representedObject as? ArchivedItem }
-            return o?.uuid == qlItem.parentUuid
+            MainActor.assumeIsolated {
+                let o = cell.representedObject as? ArchivedItem
+                return o?.uuid == qlItem.parentUuid
+            }
         }) else {
             return nil
         }
