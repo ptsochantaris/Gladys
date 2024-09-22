@@ -36,15 +36,15 @@ public extension Notification.Name {
     static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
 }
 
-public func sendNotification(name: Notification.Name, object: Any? = nil) {
+public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
     Task { @MainActor in
         await Task.yield()
         NotificationCenter.default.post(name: name, object: object)
     }
 }
 
-public func notifications(for name: Notification.Name, block: @escaping (Any?) async -> Void) {
-    Task {
+public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
+    Task { @MainActor in
         for await notification in NotificationCenter.default.notifications(named: name) {
             let obj = notification.object
             await block(obj)
@@ -55,7 +55,7 @@ public func notifications(for name: Notification.Name, block: @escaping (Any?) a
 #if canImport(UIKit) && !canImport(WatchKit)
     import UIKit
 
-    public struct UIRequest {
+    public struct UIRequest: Sendable {
         public let vc: UIViewController
         public let sourceView: UIView?
         public let sourceRect: CGRect?

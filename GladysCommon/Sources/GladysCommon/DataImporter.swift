@@ -5,82 +5,75 @@ import UniformTypeIdentifiers
     import AppKit
 #endif
 
-public final class DataImporter {
-    private var dataItemPublisher = CurrentValueSubject<[String: Data]?, Never>(nil)
+extension NSItemProvider: @retroactive @unchecked Sendable {}
 
-    public var identifiers: [String]
+public final class DataImporter: Sendable {
+    public let identifiers: [String]
+    public let suggestedName: String?
 
-    public var suggestedName: String?
+    private let dataLookupTask: Task<[String: Data], Never>
 
     public init(itemProvider: NSItemProvider) {
-        identifiers = Self.sanitised(itemProvider.registeredTypeIdentifiers)
+        let identifierList = Self.sanitised(itemProvider.registeredTypeIdentifiers)
+        identifiers = identifierList
+
         #if os(watchOS)
             suggestedName = nil
         #else
             suggestedName = itemProvider.suggestedName
         #endif
 
-        var dataLookup = [String: Data](minimumCapacity: identifiers.count)
-        let constructionQueue = DispatchQueue(label: "build.bru.data-importer")
-
-        let group = DispatchGroup()
-        for identifier in identifiers {
-            group.enter()
-            itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, error in
-                constructionQueue.async {
-                    if let error {
-                        log("Warning: Error during data read (identifier: '\(identifier)'): \(error.localizedDescription)")
+        dataLookupTask = Task.detached {
+            await withTaskGroup(of: (String, Data)?.self) { group in
+                for identifier in identifierList {
+                    group.addTask {
+                        await withCheckedContinuation { continuation in
+                            itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, error in
+                                if let data {
+                                    continuation.resume(returning: (identifier, data))
+                                } else if let error {
+                                    log("Warning: Error during data read (identifier: '\(identifier)'): \(error.localizedDescription)")
+                                    continuation.resume(returning: nil)
+                                } else {
+                                    continuation.resume(returning: nil)
+                                }
+                            }
+                        }
                     }
-                    dataLookup[identifier] = data
-                    group.leave()
                 }
+                var builder = [String: Data](minimumCapacity: identifierList.count)
+                for await pair in group {
+                    if let pair {
+                        builder[pair.0] = pair.1
+                    }
+                }
+                return builder
             }
         }
-        group.notify(queue: constructionQueue) { [weak self] in
-            guard let self else { return }
-            dataItemPublisher.send(dataLookup)
+    }
+
+    public var dataLookup: [String: Data] {
+        get async {
+            await dataLookupTask.value
         }
     }
 
     #if canImport(AppKit)
         public init(pasteboardItem: NSPasteboardItem, suggestedName: String?) {
-            var dataLookup = [String: Data](minimumCapacity: pasteboardItem.types.count)
+            var lookup = [String: Data](minimumCapacity: pasteboardItem.types.count)
             for type in pasteboardItem.types {
-                dataLookup[type.rawValue] = pasteboardItem.data(forType: type)
+                lookup[type.rawValue] = pasteboardItem.data(forType: type)
             }
-            identifiers = Array(dataLookup.keys)
+            identifiers = Array(lookup.keys)
             self.suggestedName = suggestedName
-            dataItemPublisher.send(dataLookup)
+            dataLookupTask = Task { lookup }
         }
     #endif
 
     public init(type: String, data: Data, suggestedName: String?) {
         identifiers = [type]
+        dataLookupTask = Task { [type: data] }
         self.suggestedName = suggestedName
-        dataItemPublisher.send([type: data])
-    }
-
-    public func data(for identifier: String) async throws -> Data {
-        if let value = dataItemPublisher.value {
-            if let data = value[identifier] {
-                return data
-            } else {
-                throw GladysError.noData
-            }
-        }
-        var cancellable: Cancellable?
-        let data = await withCheckedContinuation { continuation in
-            cancellable = dataItemPublisher.compactMap { $0 }.sink { value in
-                continuation.resume(returning: value)
-            }
-        }
-        return try withExtendedLifetime(cancellable) {
-            if let data = data[identifier] {
-                data
-            } else {
-                throw GladysError.noData
-            }
-        }
     }
 
     private static func sanitised(_ ids: [String]) -> [String] {

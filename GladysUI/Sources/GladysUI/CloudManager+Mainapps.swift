@@ -363,7 +363,9 @@ public extension CloudManager {
         await Model.removeImportedShares()
         syncSwitchedOn = false
         lastiCloudAccount = nil
-        PersistedOptions.lastPushToken = nil
+        await MainActor.run {
+            PersistedOptions.lastPushToken = nil
+        }
         for item in await DropStore.allDrops {
             await item.removeFromCloudkit()
         }
@@ -705,7 +707,8 @@ public extension CloudManager {
         }
     }
 
-    static func apnsUpdate(_ newToken: Data?) {
+    @MainActor
+    static func apnsUpdate(_ newToken: Data?) async {
         guard let newToken else {
             log("Warning: APNS registration failed")
             return
@@ -724,21 +727,19 @@ public extension CloudManager {
             log("Push migration needed - existing push token reset")
         }
 
-        guard syncSwitchedOn else {
+        guard await syncSwitchedOn else {
             PersistedOptions.lastPushToken = newToken
             return
         }
 
         log("Will subscribe for CK notifications")
 
-        Task {
-            do {
-                try await updateSubscriptions()
-                log("Subscriptions updated successfully, storing new APNS token")
-                PersistedOptions.lastPushToken = newToken
-            } catch {
-                log("Subscription update failed: \(error.localizedDescription)")
-            }
+        do {
+            try await updateSubscriptions()
+            log("Subscriptions updated successfully, storing new APNS token")
+            PersistedOptions.lastPushToken = newToken
+        } catch {
+            log("Subscription update failed: \(error.localizedDescription)")
         }
     }
 }

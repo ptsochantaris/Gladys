@@ -1,8 +1,8 @@
 #if canImport(AppKit)
     import AppKit
-    import CoreImage
+    @preconcurrency import CoreImage
 #elseif os(iOS) || os(visionOS)
-    import CoreImage
+    @preconcurrency import CoreImage
     import UIKit
 #elseif os(watchOS)
     import WatchKit
@@ -298,12 +298,23 @@ public extension IMAGE {
 #else
 
     #if canImport(WatchKit)
-        private let screenScale = WKInterfaceDevice.current().screenScale
+        private var screenScale: CGFloat {
+            onlyOnMainThread {
+                WKInterfaceDevice.current().screenScale
+            }
+        }
+
     #elseif os(visionOS)
         private let screenScale: CGFloat = 2
+
     #else
-        private let screenScale = UIScreen.main.scale
+        private var screenScale: CGFloat {
+            onlyOnMainThread {
+                UIScreen.main.scale
+            }
+        }
     #endif
+
     public let pixelSize: CGFloat = 1 / screenScale
 
     public extension UIImage {

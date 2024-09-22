@@ -77,6 +77,18 @@ public enum LiteModel {
         return items
     }
 
+    public static func iterateThroughAllSavedItemsWithoutLoading(perItemCallback: @escaping @MainActor (ArchivedItem) async -> Void) async {
+        // TODO: Throttle!
+        await withTaskGroup(of: Void.self) { group in
+            iterateThroughSavedItemsWithoutLoading { item in
+                group.addTask {
+                    _ = await perItemCallback(item)
+                }
+                return true
+            }
+        }
+    }
+
     public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
         var coordinationError: NSError?
         var loadingError: NSError?

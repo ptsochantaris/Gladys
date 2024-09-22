@@ -39,7 +39,7 @@ public final actor WebArchiver {
 
         let resources = try resourcePaths(from: url, pageText: pageText)
 
-        let resourceInfo = await withTaskGroup(of: (String, [String: Any])?.self) { group -> [String: Any] in
+        let resourceInfo = await withTaskGroup(of: (String, [String: Sendable])?.self) { group -> [String: Sendable] in
             for resourceUrlString in resources {
                 group.addTask {
                     guard let resourceUrl = URL(string: resourceUrlString),
@@ -50,7 +50,7 @@ public final actor WebArchiver {
                         return nil
                     }
 
-                    var resource: [String: Any] = [
+                    var resource: [String: Sendable] = [
                         "WebResourceURL": resourceUrlString
                     ]
                     if let mimeType = response.mimeType {
@@ -64,7 +64,7 @@ public final actor WebArchiver {
                 }
             }
             let pairs = group.compactMap { $0 }
-            var info = [String: Any]()
+            var info = [String: Sendable]()
             for await pair in pairs {
                 info[pair.0] = pair.1
             }

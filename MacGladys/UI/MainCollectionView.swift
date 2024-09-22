@@ -1,4 +1,4 @@
-import AppKit
+@preconcurrency import AppKit
 import GladysCommon
 
 final class MainCollectionView: NSCollectionView, NSServicesMenuRequestor {

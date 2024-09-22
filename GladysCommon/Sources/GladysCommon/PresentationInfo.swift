@@ -4,6 +4,7 @@ import SwiftUI
     import UIKit
 #endif
 
+@MainActor
 public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public enum FieldContent: Sendable {
         case none, text(String), link(URL), note(String), hint(String)
@@ -50,6 +51,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         }
     }
 
+    @MainActor
     public struct LabelInfo: Sendable {
         public let content: FieldContent
         public let backgroundColor: Color
@@ -90,11 +92,11 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let isPlaceholder: Bool
     public let accessibilityText: String
 
-    public static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
+    public nonisolated static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
     }
 
-    public func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 

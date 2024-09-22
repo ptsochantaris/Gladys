@@ -417,14 +417,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func application(_: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Task { @CloudActor in
-            CloudManager.apnsUpdate(deviceToken)
+        Task {
+            await CloudManager.apnsUpdate(deviceToken)
         }
     }
 
     func application(_: NSApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
-        Task { @CloudActor in
-            CloudManager.apnsUpdate(nil)
+        Task {
+            await CloudManager.apnsUpdate(nil)
         }
     }
 

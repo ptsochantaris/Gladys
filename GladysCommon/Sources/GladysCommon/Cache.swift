@@ -1,7 +1,7 @@
 import Foundation
 
-public final class Cache<Key: Hashable, Value> {
-    private let store: NSCache<WrappedKey, Entry>
+public final class Cache<Key: Hashable, Value>: Sendable {
+    private nonisolated(unsafe) let store: NSCache<WrappedKey, Entry>
 
     public init() {
         store = NSCache<WrappedKey, Entry>()

@@ -1,11 +1,12 @@
 import Foundation
 
-public enum DefaultTapAction: Int {
+public enum DefaultTapAction: Int, Sendable {
     case infoPanel = 0, preview, open, copy, none
 }
 
+@MainActor
 public enum PersistedOptions {
-    public static let defaults = UserDefaults(suiteName: groupName)!
+    public nonisolated(unsafe) static let defaults = UserDefaults(suiteName: groupName)!
 
     private static var wideModeCache: Bool?
     public static var wideMode: Bool {

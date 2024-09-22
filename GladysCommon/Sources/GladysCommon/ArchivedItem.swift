@@ -5,8 +5,8 @@
 #endif
 #if !os(watchOS)
     import CoreSpotlight
-    import Speech
-    import Vision
+    @preconcurrency import Speech
+    @preconcurrency import Vision
 #endif
 import CloudKit
 import Combine
@@ -17,10 +17,14 @@ import NaturalLanguage
 import SwiftUI
 import UniformTypeIdentifiers
 
+#if !os(watchOS)
+    extension SFSpeechRecognitionResult: @retroactive @unchecked Sendable {}
+#endif
+
 @MainActor
 @Observable
 public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
-    public enum Status: RawRepresentable, Codable {
+    public enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
 
         public init?(rawValue: Int) {
@@ -111,7 +115,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     // Transient
-    public struct Flags: OptionSet {
+    public struct Flags: OptionSet, Sendable {
         public let rawValue: Int
         public init(rawValue: Int) {
             self.rawValue = rawValue
@@ -146,16 +150,18 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         try v.encodeIfPresent(suggestedName, forKey: .suggestedName)
         try v.encode(createdAt, forKey: .createdAt)
         try v.encode(uuid, forKey: .uuid)
+
+        nonisolated(unsafe) var Nv = v
         try onlyOnMainThread {
-            try v.encode(updatedAt, forKey: .updatedAt)
-            try v.encode(components, forKey: .components)
-            try v.encode(status, forKey: .status)
-            try v.encode(note, forKey: .note)
-            try v.encode(titleOverride, forKey: .titleOverride)
-            try v.encode(labels, forKey: .labels)
-            try v.encode(highlightColor, forKey: .highlightColor)
-            try v.encodeIfPresent(lockPassword, forKey: .lockPassword)
-            try v.encodeIfPresent(lockHint, forKey: .lockHint)
+            try Nv.encode(updatedAt, forKey: .updatedAt)
+            try Nv.encode(components, forKey: .components)
+            try Nv.encode(status, forKey: .status)
+            try Nv.encode(note, forKey: .note)
+            try Nv.encode(titleOverride, forKey: .titleOverride)
+            try Nv.encode(labels, forKey: .labels)
+            try Nv.encode(highlightColor, forKey: .highlightColor)
+            try Nv.encodeIfPresent(lockPassword, forKey: .lockPassword)
+            try Nv.encodeIfPresent(lockHint, forKey: .lockHint)
         }
     }
 
@@ -166,20 +172,21 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         createdAt = c
         uuid = try v.decode(UUID.self, forKey: .uuid)
 
+        nonisolated(unsafe) let Nv = v
         try onlyOnMainThread {
-            updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
-            components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
-            note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
-            titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
-            labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
-            lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
+            updatedAt = try Nv.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
+            components = try Nv.decode(ContiguousArray<Component>.self, forKey: .components)
+            note = try Nv.decodeIfPresent(String.self, forKey: .note) ?? ""
+            titleOverride = try Nv.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
+            labels = try Nv.decodeIfPresent([String].self, forKey: .labels) ?? []
+            lockHint = try Nv.decodeIfPresent(String.self, forKey: .lockHint)
 
-            let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+            let lp = try Nv.decodeIfPresent(Data.self, forKey: .lockPassword)
             lockPassword = lp
 
             flags = lp == nil ? [] : .needsUnlock
-            status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
-            highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+            status = try Nv.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
+            highlightColor = try Nv.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
         }
     }
 
@@ -467,7 +474,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    public enum ShareMode {
+    public enum ShareMode: Sendable {
         case none, elsewhereReadOnly, elsewhereReadWrite, sharing
     }
 
@@ -658,11 +665,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                 }
 
                 if visualRequests.isPopulated {
-                    let vr = visualRequests
-                    let handler = VNImageRequestHandler(cgImage: img)
-                    await Task.detached {
-                        try? handler.perform(vr)
-                    }.value
+                    try? VNImageRequestHandler(cgImage: img).perform(visualRequests)
                 }
 
                 if transcribeAudio, let (mediaUrl, ext) = mediaInfo, let recognizer = SFSpeechRecognizer(), recognizer.isAvailable, recognizer.supportsOnDeviceRecognition {
@@ -795,22 +798,23 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     private func extractUrlData(from provider: DataImporter, for type: String) async -> Data? {
-        var extractedData: Data?
-        let data = try? await provider.data(for: type)
-        if let data, data.count < 16384 {
-            let extractedText: String = if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
-                text
-
-            } else {
-                String.fromUTF8Data(data).trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-
-            if extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") {
-                let list = [extractedText, "", [AnyHashable: Any]()] as [Any]
-                extractedData = try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
-            }
+        guard let data = await provider.dataLookup[type], data.count < 16384 else {
+            return nil
         }
-        return extractedData
+
+        let extractedText: String = if data.isPlist, let text = SafeArchiving.unarchive(data) as? String {
+            text
+
+        } else {
+            String.fromUTF8Data(data).trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        guard extractedText.hasPrefix("http://") || extractedText.hasPrefix("https://") else {
+            return nil
+        }
+
+        let list = [extractedText, "", [AnyHashable: Any]()] as [Any]
+        return try? PropertyListSerialization.data(fromPropertyList: list, format: .binary, options: 0)
     }
 
     private func newItemIngest(providers: [DataImporter], limitToType: String?) async {

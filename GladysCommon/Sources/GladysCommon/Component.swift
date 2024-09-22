@@ -33,6 +33,7 @@ public final class Component: Codable, Hashable {
     }
 
     public nonisolated func encode(to encoder: Encoder) throws {
+        nonisolated(unsafe) let encoder = encoder
         try onlyOnMainThread {
             var v = encoder.container(keyedBy: CodingKeys.self)
             try v.encode(typeIdentifier, forKey: .typeIdentifier)
@@ -80,8 +81,9 @@ public final class Component: Codable, Hashable {
         let m = try v.decode(Int.self, forKey: .displayIconContentMode)
         displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
+        nonisolated(unsafe) let Nv = v
         try onlyOnMainThread {
-            representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
+            representedClass = try Nv.decode(RepresentedClass.self, forKey: .representedClass)
         }
     }
 
@@ -104,7 +106,7 @@ public final class Component: Codable, Hashable {
     public var displayTitlePriority: Int
     public var displayTitleAlignment: NSTextAlignment
 
-    public struct Flags: OptionSet {
+    public struct Flags: OptionSet, Sendable {
         public let rawValue: Int
         public init(rawValue: Int) {
             self.rawValue = rawValue
@@ -798,7 +800,9 @@ public final class Component: Codable, Hashable {
 
         do {
             let effectiveIdentifier = createWebArchive ? "public.url" : typeIdentifier
-            let data = try await provider.data(for: effectiveIdentifier)
+            guard let data = await provider.dataLookup[effectiveIdentifier] else {
+                throw GladysError.noData
+            }
             progress.completedUnitCount += 1
             flags.remove(.isTransferring)
             if flags.contains(.loadingAborted) {

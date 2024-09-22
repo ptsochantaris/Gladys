@@ -1,10 +1,10 @@
 import CoreSpotlight
 import GladysCommon
 
-final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider {
+final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider, @unchecked Sendable {
     @MainActor
-    func iterateThroughAllItems(perItem: (ArchivedItem) -> Bool) {
-        LiteModel.iterateThroughSavedItemsWithoutLoading(perItemCallback: perItem)
+    func iterateThroughAllItems(perItem: @escaping @MainActor (ArchivedItem) async -> Void) async {
+        await LiteModel.iterateThroughAllSavedItemsWithoutLoading(perItemCallback: perItem)
     }
 
     @MainActor
@@ -14,26 +14,36 @@ final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProv
 
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
         log("Reindexing all spotlight items…")
-        let indexer = Indexer(itemProvider: self)
-        indexer.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: acknowledgementHandler)
+        nonisolated(unsafe) let handler = acknowledgementHandler
+        onlyOnMainThread {
+            let indexer = Indexer(itemProvider: self)
+            indexer.searchableIndex(searchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler: handler)
+        }
     }
 
     override func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
         log("Reindexing some spotlight items…")
-        let indexer = Indexer(itemProvider: self)
-        indexer.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: acknowledgementHandler)
+        nonisolated(unsafe) let handler = acknowledgementHandler
+        onlyOnMainThread {
+            let indexer = Indexer(itemProvider: self)
+            indexer.searchableIndex(searchableIndex, reindexSearchableItemsWithIdentifiers: identifiers, acknowledgementHandler: handler)
+        }
     }
 
     override func data(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
         log("Serving data for a spotlight item…")
-        let indexer = Indexer(itemProvider: self)
-        return try indexer.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+        return try onlyOnMainThread {
+            let indexer = Indexer(itemProvider: self)
+            return try indexer.data(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
+        }
     }
 
     override func fileURL(for searchableIndex: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace: Bool) throws -> URL {
         log("Providing URL for a spotlight item…")
-        let indexer = Indexer(itemProvider: self)
-        return try indexer.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+        return try onlyOnMainThread {
+            let indexer = Indexer(itemProvider: self)
+            return try indexer.fileURL(for: searchableIndex, itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier, inPlace: inPlace)
+        }
     }
 
     override func searchableIndexDidThrottle(_: CSSearchableIndex) {}

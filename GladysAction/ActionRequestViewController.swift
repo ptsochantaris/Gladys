@@ -26,8 +26,6 @@ final class ActionRequestViewController: UIViewController {
         notifications(for: .DoneSelected) { [weak self] _ in
             self?.done()
         }
-
-        ingest()
     }
 
     override func viewWillAppear(_ animated: Bool) {

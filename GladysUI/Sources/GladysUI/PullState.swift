@@ -475,7 +475,9 @@ final actor PullState {
 
         case .extensionUpdate:
             log("Received an extension update record")
-            PersistedOptions.extensionRequestedSync = false
+            await MainActor.run {
+                PersistedOptions.extensionRequestedSync = false
+            }
         }
     }
 }

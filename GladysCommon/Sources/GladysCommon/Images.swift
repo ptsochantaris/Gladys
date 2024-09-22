@@ -35,10 +35,8 @@ public protocol DisplayImageProviding {
     var displayIcon: IMAGE { get async }
 }
 
-public final class Images {
-    public static let shared = Images()
-
-    public struct SnapshotOptions: Hashable {
+public enum Images {
+    public struct SnapshotOptions: Hashable, Sendable {
         public var coordinate: CLLocationCoordinate2D?
         public let range: CLLocationDistance
         public let outputSize: CGSize
@@ -51,7 +49,7 @@ public final class Images {
     }
 
     #if !os(watchOS)
-        public func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
+        public static func mapSnapshot(with options: SnapshotOptions) async throws -> IMAGE {
             guard let coordinate = options.coordinate else {
                 throw GladysError.noData
             }

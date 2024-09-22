@@ -64,8 +64,9 @@ public extension ArchivedItem {
             return nil
         }
 
-        var top = PresentationInfo.defaultCardColor
-        var bottom = PresentationInfo.defaultCardColor
+        let defaultColor = await PresentationInfo.defaultCardColor
+        var top = defaultColor
+        var bottom = defaultColor
         var result: IMAGE?
 
         let dm = await displayMode
@@ -110,7 +111,7 @@ public extension ArchivedItem {
                 }
 
                 if topInfo.willBeVisible {
-                    top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? PresentationInfo.defaultCardColor
+                    top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
 
                     if Task.isCancelled {
                         return nil
@@ -118,7 +119,7 @@ public extension ArchivedItem {
                 }
 
                 if bottomInfo.willBeVisible {
-                    bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? PresentationInfo.defaultCardColor
+                    bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
 
                     if Task.isCancelled {
                         return nil
@@ -190,7 +191,7 @@ public extension ArchivedItem {
             switch bgItem.content {
             case let .map(mapItem):
                 let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)
-                return try? await Images.shared.mapSnapshot(with: snapshotOptions)
+                return try? await Images.mapSnapshot(with: snapshotOptions)
 
             case let .color(colour):
                 return IMAGE.block(color: colour, size: CGSize(width: 1, height: 1))

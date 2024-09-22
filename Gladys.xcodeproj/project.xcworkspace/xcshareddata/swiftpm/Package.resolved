@@ -1,5 +1,5 @@
 {
-  "originHash" : "5c6517cdbdc7cc17b501bf32aefddf9e28798582693b5ec36c536fac48c8fba2",
+  "originHash" : "b2771ab6d4616cdac7d4c39a403b65470d54332b8c880931873686a0376a2386",
   "pins" : [
     {
       "identity" : "callbackurlkit-visionos-fork",
@@ -67,10 +67,10 @@
     {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scinfu/SwiftSoup.git",
+      "location" : "https://github.com/scinfu/SwiftSoup",
       "state" : {
-        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148",
-        "version" : "2.7.2"
+        "revision" : "3c2c7e1e72b8abd96eafbae80323c5c1e5317437",
+        "version" : "2.7.5"
       }
     },
     {

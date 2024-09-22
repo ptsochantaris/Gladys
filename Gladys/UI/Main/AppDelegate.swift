@@ -48,14 +48,14 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Task { @CloudActor in
-            CloudManager.apnsUpdate(deviceToken)
+        Task {
+            await CloudManager.apnsUpdate(deviceToken)
         }
     }
 
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError _: Error) {
-        Task { @CloudActor in
-            CloudManager.apnsUpdate(nil)
+        Task {
+            await CloudManager.apnsUpdate(nil)
         }
     }
 

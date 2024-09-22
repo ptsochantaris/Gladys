@@ -7,7 +7,8 @@ import WidgetKit
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> CurrentState {
         let itemCount = maxCount(in: context) - 1
-        return CurrentState(date: Date(), displaySize: context.displaySize, items: PresentationInfo.placeholders(count: itemCount))
+        let placeholders = onlyOnMainThread { PresentationInfo.placeholders(count: itemCount) }
+        return CurrentState(date: Date(), displaySize: context.displaySize, items: placeholders)
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> CurrentState {

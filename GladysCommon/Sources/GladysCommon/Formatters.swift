@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 public let diskSizeFormatter = ByteCountFormatter()
 
 public let agoFormatter: DateComponentsFormatter = {
