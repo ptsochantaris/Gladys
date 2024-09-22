@@ -119,7 +119,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public static let defaultShadow = Color.black
     #if os(visionOS)
         public static let defaultCardColor = UIColor.systemFill
-        private static var defaultCardIsBright = false
+        private static let defaultCardIsBright = false
     #else
         public static let defaultCardColor = COLOR.g_colorMacCard
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
