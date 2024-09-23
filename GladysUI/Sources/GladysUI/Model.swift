@@ -267,9 +267,10 @@ public enum Model {
 
     @MainActor
     private final class IndexProxy: IndexerItemProvider {
-        func iterateThroughAllItems(perItem: @escaping @MainActor (GladysCommon.ArchivedItem) async -> Void) async {
+        func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async {
             for drop in DropStore.allDrops {
-                await perItem(drop)
+                let go = await perItem(drop)
+                if !go { break }
             }
         }
 

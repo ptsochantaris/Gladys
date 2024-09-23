@@ -9,8 +9,8 @@ import GladysCommon
 public extension Component {
     @MainActor
     final class PreviewItem: NSObject, QLPreviewItem, Sendable {
-        nonisolated public let previewItemURL: URL? // protocol
-        nonisolated public let previewItemTitle: String? // protocol
+        public nonisolated let previewItemURL: URL? // protocol
+        public nonisolated let previewItemTitle: String? // protocol
 
         public let parentUuid: UUID
 

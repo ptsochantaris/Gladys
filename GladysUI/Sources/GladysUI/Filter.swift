@@ -197,7 +197,7 @@ public final class Filter {
         return count
     }
 
-    nonisolated private func findIds(using query: CSSearchQuery) -> Set<UUID> {
+    private nonisolated func findIds(using query: CSSearchQuery) -> Set<UUID> {
         var results = Set<UUID>()
 
         query.foundItemsHandler = { items in

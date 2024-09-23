@@ -77,55 +77,51 @@ public enum LiteModel {
         return items
     }
 
-    public static func iterateThroughAllSavedItemsWithoutLoading(perItemCallback: @escaping @MainActor (ArchivedItem) async -> Void) async {
-        // TODO: Throttle!
-        await withTaskGroup(of: Void.self) { group in
-            iterateThroughSavedItemsWithoutLoading { item in
-                group.addTask {
-                    _ = await perItemCallback(item)
-                }
-                return true
+    public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            iterateThroughSavedItemsWithoutLoading(perItemCallback: perItemCallback) {
+                continuation.resume()
             }
         }
     }
 
-    public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: (ArchivedItem) -> Bool) {
-        var coordinationError: NSError?
-        var loadingError: NSError?
+    public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool, completion: (@Sendable () -> Void)? = nil) {
+        let url = itemsDirectoryUrl
 
-        coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
+        coordinator.coordinate(with: [.readingIntent(with: url, options: .withoutChanges)], queue: OperationQueue.main) { coordinationError in
+            Task {
+                defer {
+                    completion?()
+                }
 
-            if !FileManager.default.fileExists(atPath: url.path) {
-                return
-            }
+                if let coordinationError {
+                    log("Lite model loading error: \(coordinationError)")
+                    return
+                }
 
-            do {
-                let decoder = loadDecoder
-                let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
-                d.withUnsafeBytes { pointer in
-                    let uuids = pointer.bindMemory(to: uuid_t.self)
+                guard FileManager.default.fileExists(atPath: url.path) else {
+                    log("Lite model loading: No data directory, skipping")
+                    return
+                }
+
+                do {
+                    let decoder = loadDecoder
+                    let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
+                    let uuids = d.withUnsafeBytes { $0.bindMemory(to: uuid_t.self) }
                     for u in uuids {
-                        let go = autoreleasepool {
-                            let u = UUID(uuid: u)
-                            let dataPath = url.appendingPathComponent(u.uuidString)
-                            if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                                return perItemCallback(item)
-                            } else {
-                                return true
+                        let u = UUID(uuid: u)
+                        let dataPath = url.appendingPathComponent(u.uuidString)
+                        if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {
+                            let go = await perItemCallback(item)
+                            if !go {
+                                return
                             }
                         }
-                        if !go {
-                            return
-                        }
                     }
+                } catch {
+                    log("Error in searching through saved items for a component: \(error)")
                 }
-            } catch {
-                loadingError = error as NSError
             }
-        }
-
-        if let e = loadingError ?? coordinationError {
-            log("Error in searching through saved items for a component: \(e)")
         }
     }
 

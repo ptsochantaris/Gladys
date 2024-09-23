@@ -7,7 +7,7 @@
 
     public protocol IndexerItemProvider: AnyObject {
         @MainActor
-        func iterateThroughAllItems(perItem: @escaping @MainActor (ArchivedItem) async -> Void) async
+        func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async
 
         @MainActor
         func getItem(uuid: String) -> ArchivedItem?
@@ -37,12 +37,13 @@
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughAllItems { item in
+                await itemProvider.iterateThroughItems { item in
                     searchableItems.append(item.searchableItem)
                     if searchableItems.count > 99 {
                         await Self.indexBlock(of: searchableItems, in: searchableIndex)
                         searchableItems.removeAll()
                     }
+                    return true
                 }
                 if searchableItems.isPopulated {
                     await Self.indexBlock(of: searchableItems, in: searchableIndex)
@@ -58,7 +59,7 @@
             Task { @MainActor in
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughAllItems { item in
+                await itemProvider.iterateThroughItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
                         if searchableItems.count > 99 {
@@ -66,6 +67,7 @@
                             searchableItems.removeAll()
                         }
                     }
+                    return true
                 }
                 if searchableItems.isPopulated {
                     await Self.indexBlock(of: searchableItems, in: searchableIndex)
