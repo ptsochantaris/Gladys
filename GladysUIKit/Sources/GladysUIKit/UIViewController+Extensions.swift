@@ -65,10 +65,8 @@ public extension UIViewController {
 
     func dismiss(animated: Bool) async {
         await withCheckedContinuation { continuation in
-            Task { @MainActor in
-                dismiss(animated: animated) {
-                    continuation.resume()
-                }
+            dismiss(animated: animated) {
+                continuation.resume()
             }
         }
     }

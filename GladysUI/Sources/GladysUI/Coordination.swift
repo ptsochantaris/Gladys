@@ -19,10 +19,8 @@ import Foundation
             let presentedItemOperationQueue = OperationQueue()
 
             func presentedItemDidChange() {
-                Task { @MainActor in
-                    if !DropStore.ingestingItems {
-                        try! await Model.reloadDataIfNeeded()
-                    }
+                Task {
+                    try! await Model.reloadIfPossible()
                 }
             }
         }
@@ -36,9 +34,7 @@ import Foundation
         public static func beginMonitoringChanges() {
             notifications(for: UIApplication.willEnterForegroundNotification) { _ in
                 NSFileCoordinator.addFilePresenter(filePresenter)
-                if !DropStore.ingestingItems {
-                    try! await Model.reloadDataIfNeeded()
-                }
+                try! await Model.reloadIfPossible()
             }
 
             notifications(for: UIApplication.didEnterBackgroundNotification) { _ in

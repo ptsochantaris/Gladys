@@ -22,8 +22,8 @@ public extension CloudManager {
 
     static var showNetwork = false {
         didSet {
-            Task { @MainActor in
-                Model.updateBadge()
+            Task {
+                await Model.updateBadge()
             }
         }
     }
@@ -363,8 +363,8 @@ public extension CloudManager {
         lastSyncCompletion = .distantPast
         uuidSequence = []
         uuidSequenceRecord = nil
-        PullState.wipeDatabaseTokens()
-        PullState.wipeZoneTokens()
+        await PullState.wipeDatabaseTokens()
+        await PullState.wipeZoneTokens()
         await Model.removeImportedShares()
         syncSwitchedOn = false
         lastiCloudAccount = nil

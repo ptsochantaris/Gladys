@@ -44,7 +44,7 @@ public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
 }
 
 public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
-    Task { @MainActor in
+    Task {
         for await notification in NotificationCenter.default.notifications(named: name) {
             let obj = notification.object
             await block(obj)

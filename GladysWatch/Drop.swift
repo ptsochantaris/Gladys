@@ -85,26 +85,25 @@ final class Drop: Identifiable {
         let size = CGSize(width: screen.screenBounds.width, height: screen.screenBounds.height)
         let request = WatchMessage.imageRequest(WatchMessage.ImageInfo(id: id, width: size.width, height: size.height))
 
-        Task.detached {
+        Task.detached { [weak self] in
+            guard let self else { return }
             switch try? await WCSession.default.sendWatchMessage(request) {
             case let .imageData(data):
                 if let i = UIImage(data: data) {
                     ImageCache.setImageData(data, for: cacheKey)
-                    Task { @MainActor in
-                        self.imageState = .loaded(image: i)
-                    }
+                    await setImageState(.loaded(image: i))
                 } else {
-                    Task { @MainActor in
-                        self.imageState = .empty
-                    }
+                    await setImageState(.empty)
                 }
 
             default:
-                Task { @MainActor in
-                    self.imageState = .empty
-                }
+                await setImageState(.empty)
             }
         }
+    }
+
+    func setImageState(_ newState: ImageState) {
+        imageState = newState
     }
 
     func viewOnDeviceSelected() {

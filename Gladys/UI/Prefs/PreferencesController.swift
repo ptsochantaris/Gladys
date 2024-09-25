@@ -94,8 +94,8 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             var cancelled = false
             let progress = p.loadFileRepresentation(forTypeIdentifier: GladysFileUTI) { url, error in
                 if onlyOnMainThread({ cancelled }) {
-                    Task { @MainActor in
-                        self.updateUI()
+                    Task {
+                        await self.updateUI()
                     }
                     return
                 }

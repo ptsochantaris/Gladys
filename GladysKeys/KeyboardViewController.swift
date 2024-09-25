@@ -216,8 +216,8 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         textDocumentProxy.deleteBackward()
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             guard let self else { return }
-            Task { @MainActor in
-                self.startRapidBackspace()
+            Task {
+                await startRapidBackspace()
             }
         }
     }

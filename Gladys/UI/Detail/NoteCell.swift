@@ -25,8 +25,8 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
             placeholder.textColor = c
             observer = textView.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
                 guard let self else { return }
-                Task { @MainActor in
-                    self.caretMoved()
+                Task {
+                    await self.caretMoved()
                 }
             }
         }

@@ -11,7 +11,7 @@ public extension SKProduct {
 
 @MainActor
 public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
-    private let completion: ([SKProduct]?, Error?) -> Void
+    private let completion: @Sendable @MainActor ([SKProduct]?, Error?) -> Void
 
     #if canImport(AppKit)
         private static let identifiers: Set<String> = [
@@ -35,7 +35,7 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
         SKProductsRequest(productIdentifiers: TipJar.identifiers).start()
     }
 
-    public init(completion: @escaping ([SKProduct]?, Error?) -> Void) {
+    public init(completion: @escaping @Sendable @MainActor ([SKProduct]?, Error?) -> Void) {
         self.completion = completion
         super.init()
         SKPaymentQueue.default().add(self)
@@ -51,15 +51,15 @@ public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransac
 
     public nonisolated func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
         let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
-        Task { @MainActor in
-            completion(items, nil)
+        Task {
+            await completion(items, nil)
         }
     }
 
     public nonisolated func request(_: SKRequest, didFailWithError error: Error) {
         log("Error fetching IAP items: \(error.localizedDescription)")
-        Task { @MainActor in
-            completion(nil, error)
+        Task {
+            await completion(nil, error)
         }
     }
 

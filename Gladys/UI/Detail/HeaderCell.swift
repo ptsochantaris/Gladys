@@ -21,8 +21,8 @@ final class HeaderCell: UITableViewCell, UITextViewDelegate {
             label.textContainerInset = .zero
             observer = label.observe(\.selectedTextRange, options: .new) { [weak self] _, _ in
                 guard let self else { return }
-                Task { @MainActor in
-                    self.caretMoved()
+                Task {
+                    await self.caretMoved()
                 }
             }
 

@@ -2,7 +2,8 @@ import CloudKit
 import GladysCommon
 import Lista
 
-final actor PushState {
+@SyncActor
+final class PushState {
     var latestError: Error?
 
     private var dataItemsToPush: Int
@@ -22,7 +23,7 @@ final actor PushState {
 
         var _dropsToPush = 0
         var _dataItemsToPush = 0
-        var _payloadsToPush = await drops.asyncCompactMap { item -> [CKRecord]? in
+        var _payloadsToPush = await drops.asyncCompactMap { @SyncActor item -> [CKRecord]? in
             guard let itemRecord = await item.populatedCloudKitRecord,
                   itemRecord.recordID.zoneID == zoneId
             else {
@@ -31,12 +32,12 @@ final actor PushState {
             let components = await item.components
             _dataItemsToPush += components.count
             _dropsToPush += 1
-
+            
             let itemId = item.uuid.uuidString
             idsToPush.insert(itemId)
-            await idsToPush.formUnion(components.asyncMap { await $0.uuid.uuidString })
-
-            var payload = await components.asyncMap { await $0.populatedCloudKitRecord }
+            await idsToPush.formUnion(components.asyncMap { @SyncActor in await $0.uuid.uuidString })
+            
+            var payload = await components.asyncMap { @SyncActor in await $0.populatedCloudKitRecord }
             payload.append(itemRecord)
             return payload.uniqued
 
@@ -123,8 +124,8 @@ final actor PushState {
         if dataItemsToPush > 0 { components.append(dataItemsToPush == 1 ? "1 Component" : "\(dataItemsToPush) Components") }
         let deletionCount = recordsToDelete.count
         if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
-        Task {
-            await CloudManager.setSyncProgressString("Sending" + (components.count == 0 ? "" : (" " + components.joined(separator: ", "))))
+        Task { @CloudActor in
+            CloudManager.setSyncProgressString("Sending" + (components.count == 0 ? "" : (" " + components.joined(separator: ", "))))
         }
     }
 
@@ -149,7 +150,7 @@ final actor PushState {
                 }
             }
             operation.modifyRecordsResultBlock = { result in
-                Task {
+                Task { @SyncActor in
                     switch result {
                     case .success:
                         log("Item cloud deletions completed")
@@ -174,17 +175,19 @@ final actor PushState {
             let updatedRecords = Lista<CKRecord>()
 
             operation.perRecordSaveBlock = { id, result in
-                switch result {
-                case let .success(record):
-                    updatedRecords.append(record)
-                    log("Confirmed cloud save of item \(record.recordType) id (\(id.recordName))")
-                case let .failure(error):
-                    log("Error in cloud save of item (\(id.recordName)): \(error.localizedDescription)")
+                Task { @SyncActor in
+                    switch result {
+                    case let .success(record):
+                        updatedRecords.append(record)
+                        log("Confirmed cloud save of item \(record.recordType) id (\(id.recordName))")
+                    case let .failure(error):
+                        log("Error in cloud save of item (\(id.recordName)): \(error.localizedDescription)")
+                    }
                 }
             }
 
             operation.modifyRecordsResultBlock = { result in
-                Task {
+                Task { @SyncActor in
                     switch result {
                     case .success:
                         for record in updatedRecords {

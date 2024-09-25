@@ -168,8 +168,10 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
         let context = Self.buildContext()
+        Maintini.startMaintaining()
         Task.detached {
             _ = try? await session.sendWatchMessage(context)
+            await Maintini.endMaintaining()
         }
         log("Updated watch context")
     }

@@ -42,7 +42,7 @@ public func genericAlert(title: String?, message: String? = nil, buttonTitle: St
         presenter.present(a, animated: true)
 
         if buttonTitle == nil {
-            Task { @MainActor in
+            Task {
                 try? await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
                 await a.dismiss(animated: true)
             }

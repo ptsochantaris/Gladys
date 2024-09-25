@@ -3,7 +3,14 @@ import GladysCommon
 import Lista
 import PopTimer
 
-final actor PullState {
+@globalActor
+public enum SyncActor {
+    public final actor ActorType {}
+    public static let shared = ActorType()
+}
+
+@SyncActor
+final class PullState {
     private enum ZoneModification {
         case itemModified(modification: CKDatabase.RecordZoneChange.Modification)
         case itemDeleted(deletion: CKDatabase.RecordZoneChange.Deletion)

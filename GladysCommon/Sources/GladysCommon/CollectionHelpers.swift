@@ -8,7 +8,7 @@ public extension Collection where Element: Hashable {
         return filter { set.insert($0).inserted }
     }
 
-    func asyncMap<T>(block: (Element) async -> T) async -> [T] {
+    func asyncMap<T>(block: @Sendable (Element) async -> T) async -> [T] {
         var result = [T]()
         result.reserveCapacity(count)
         for element in self {
@@ -17,7 +17,7 @@ public extension Collection where Element: Hashable {
         return result
     }
 
-    func asyncCompactMap<T>(block: (Element) async -> T?) async -> [T] {
+    func asyncCompactMap<T>(block: @Sendable (Element) async -> T?) async -> [T] {
         var result = [T]()
         result.reserveCapacity(count)
         for element in self {
@@ -28,7 +28,7 @@ public extension Collection where Element: Hashable {
         return result
     }
 
-    func asyncFilter(block: (Element) async -> Bool) async -> [Element] {
+    func asyncFilter(block: @Sendable (Element) async -> Bool) async -> [Element] {
         var result = [Element]()
         result.reserveCapacity(count)
         for element in self where await block(element) {

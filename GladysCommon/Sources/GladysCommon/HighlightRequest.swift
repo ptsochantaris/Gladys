@@ -1,11 +1,9 @@
 import Foundation
 
-@MainActor
 public protocol HighlightListener: AnyObject, Sendable {
     func highlightItem(request: HighlightRequest) async
 }
 
-@MainActor
 public struct HighlightRequest: Sendable {
     public enum Action: Sendable {
         case none, detail, open, preview(String?), userDefault
@@ -33,14 +31,17 @@ public struct HighlightRequest: Sendable {
         }
     }
 
+    @MainActor
     private static var registrations = Set<Registration>()
 
+    @MainActor
     public static func registerListener(listener: some HighlightListener) -> Registration {
         let registration = Registration(listener: listener)
         registrations.insert(registration)
         return registration
     }
 
+    @MainActor
     public static func send(uuid: String, extraAction: Action) {
         let request = HighlightRequest(uuid: uuid, extraAction: extraAction)
         Task {

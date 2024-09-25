@@ -42,9 +42,7 @@ final actor Reachability {
         }
         lastStatus = newName
         log("Reachability update: \(newName)")
-        Task { @MainActor in
-            sendNotification(name: .ReachabilityChanged, object: nil)
-        }
+        sendNotification(name: .ReachabilityChanged, object: nil)
     }
 
     var isReachableViaLowCost: Bool {

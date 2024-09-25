@@ -116,8 +116,8 @@ extension Component {
         } else {
             provider.registerDataRepresentation(forTypeIdentifier: typeIdentifier, visibility: .all) { completion -> Progress? in
                 let p = Progress(totalUnitCount: 1)
-                Task { @MainActor in
-                    let response = self.dataForDropping ?? self.bytes
+                Task {
+                    let response = await MainActor.run { self.dataForDropping ?? self.bytes }
                     p.completedUnitCount = 1
                     completion(response, nil)
                 }

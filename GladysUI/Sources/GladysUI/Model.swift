@@ -44,6 +44,13 @@ public enum Model {
         }.value
     }
 
+    public static func reloadIfPossible() async throws {
+        if DropStore.ingestingItems {
+            return
+        }
+        try await reloadDataIfNeeded()
+    }
+
     private nonisolated static func shouldLoad(from url: URL) -> Bool {
         onlyOnMainThread {
             guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {

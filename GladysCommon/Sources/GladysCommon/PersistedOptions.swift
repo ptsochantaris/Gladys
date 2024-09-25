@@ -4,9 +4,11 @@ public enum DefaultTapAction: Int, Sendable {
     case infoPanel = 0, preview, open, copy, none
 }
 
+extension UserDefaults: @retroactive @unchecked Sendable {}
+
 @MainActor
 public enum PersistedOptions {
-    public nonisolated(unsafe) static let defaults = UserDefaults(suiteName: groupName)!
+    public nonisolated static let defaults = UserDefaults(suiteName: groupName)!
 
     private static var wideModeCache: Bool?
     public static var wideMode: Bool {

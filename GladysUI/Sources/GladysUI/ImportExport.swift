@@ -25,7 +25,7 @@ public enum ImportExport {
         }.value
     }
 
-    private nonisolated static func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedItem]) throws -> URL {
+    private static func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedItem]) throws -> URL {
         let fm = FileManager()
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -70,7 +70,7 @@ public enum ImportExport {
         }.value
     }
 
-    private nonisolated static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
+    private static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default

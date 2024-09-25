@@ -138,8 +138,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         modeChangeRegistration = collection.observe(\.effectiveAppearance) { [weak self] _, _ in
             guard let self else { return }
-            Task { @MainActor in
-                self.reloadItems()
+            Task {
+                await reloadItems()
             }
         }
 
@@ -1183,8 +1183,8 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             if time > 0 {
                 hideTimer = Timer.scheduledTimer(withTimeInterval: time, repeats: false) { [weak self] _ in
                     guard let self else { return }
-                    Task { @MainActor in
-                        self.hideWindowBecauseOfMouse(window: window)
+                    Task {
+                        await self.hideWindowBecauseOfMouse(window: window)
                     }
                 }
             }
