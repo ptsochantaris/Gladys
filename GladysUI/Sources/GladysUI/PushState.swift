@@ -32,11 +32,11 @@ final class PushState {
             let components = await item.components
             _dataItemsToPush += components.count
             _dropsToPush += 1
-            
+
             let itemId = item.uuid.uuidString
             idsToPush.insert(itemId)
             await idsToPush.formUnion(components.asyncMap { @SyncActor in await $0.uuid.uuidString })
-            
+
             var payload = await components.asyncMap { @SyncActor in await $0.populatedCloudKitRecord }
             payload.append(itemRecord)
             return payload.uniqued

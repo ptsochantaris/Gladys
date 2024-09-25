@@ -82,6 +82,8 @@ public extension CloudManager {
             await operations.append(contentsOf: sharedPushState.operations)
         }
 
+        // TODO: convert to using CloudKit async methods instead of operations, use throwingDiscardingTaskGroup
+
         if operations.isEmpty {
             log("No changes to push up")
             return
