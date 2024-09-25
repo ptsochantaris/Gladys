@@ -139,7 +139,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         modeChangeRegistration = collection.observe(\.effectiveAppearance) { [weak self] _, _ in
             guard let self else { return }
             Task {
-                await reloadItems()
+                await self.reloadItems()
             }
         }
 
