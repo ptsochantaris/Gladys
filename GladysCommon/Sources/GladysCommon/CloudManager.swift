@@ -2,7 +2,6 @@ import CloudKit
 import Lista
 
 extension CKRecord: @unchecked Sendable {}
-extension CKDatabaseOperation: @unchecked Sendable {}
 extension CKShare.Metadata: @unchecked Sendable {}
 extension CKRecordZone: @unchecked Sendable {}
 

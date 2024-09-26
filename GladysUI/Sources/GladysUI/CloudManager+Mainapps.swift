@@ -14,12 +14,6 @@ public extension CloudManager {
     internal static let privateDatabaseSubscriptionId = "private-changes"
     internal static let sharedDatabaseSubscriptionId = "shared-changes"
 
-    internal nonisolated static func submit(_ operation: CKDatabaseOperation, on database: CKDatabase, type: String) {
-        log("CK \(database.databaseScope.logName) database, operation \(operation.operationID): \(type)")
-        operation.qualityOfService = .userInitiated
-        database.add(operation)
-    }
-
     static var showNetwork = false {
         didSet {
             Task {
@@ -69,47 +63,16 @@ public extension CloudManager {
             }
         }
 
-        let privatePushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
-
-        let sharedPushStates = Lista<PushState>()
-        for sharedZoneId in sharedZonesToPush {
-            let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
-            sharedPushStates.append(pushState)
-        }
-
-        var operations = await privatePushState.operations
-        for sharedPushState in sharedPushStates {
-            await operations.append(contentsOf: sharedPushState.operations)
-        }
-
-        // TODO: convert to using CloudKit async methods instead of operations, use throwingDiscardingTaskGroup
-
-        if operations.isEmpty {
-            log("No changes to push up")
-            return
-        }
-
-        await withCheckedContinuation { continuation in
-            let done = BlockOperation {
-                continuation.resume()
+        try await withThrowingDiscardingTaskGroup { group in
+            group.addTask {
+                let pushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
+                try await pushState.perform()
             }
-
-            for operation in operations {
-                done.addDependency(operation)
-                submit(operation, on: operation.database!, type: "sync upload")
-            }
-
-            let queue = OperationQueue.current ?? OperationQueue.main
-            queue.addOperation(done)
-        }
-
-        if let error = await privatePushState.latestError {
-            throw error
-        }
-
-        for pushState in sharedPushStates {
-            if let error = await pushState.latestError {
-                throw error
+            for sharedZoneId in sharedZonesToPush {
+                group.addTask {
+                    let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
+                    try await pushState.perform()
+                }
             }
         }
     }
