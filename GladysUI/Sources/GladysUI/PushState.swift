@@ -6,9 +6,10 @@ import Lista
 final class PushState {
     private var componentsToPush: Int
     private var dropsToPush: Int
+    private var recordsToDelete: Int
 
     private let database: CKDatabase
-    private let recordIdsToDelete: [CKRecord.ID]
+    private let recordIdsToDelete: [[CKRecord.ID]]
     private let recordsToUpload: [[CKRecord]]
     private let currentUUIDSequence: [String]
 
@@ -21,6 +22,7 @@ final class PushState {
 
         var _dropsToPush = 0
         var _dataItemsToPush = 0
+        var _recordsToDelete = 0
 
         var _recordsToUpload = await drops.asyncCompactMap { @SyncActor item -> [CKRecord]? in
             guard let itemRecord = await item.populatedCloudKitRecord,
@@ -39,7 +41,7 @@ final class PushState {
             var payload = await components.asyncMap { @MainActor in $0.populatedCloudKitRecord }
             payload.append(itemRecord)
             return payload.uniqued
-        }.flatBunch(minSize: 100).uniqued
+        }.flatBunch(minSize: 100)
 
         let newDeletionQueue = await CloudManager.deletionQueue
         if idsToPush.isPopulated, newDeletionQueue.isPopulated {
@@ -55,16 +57,18 @@ final class PushState {
             let components = $0.components(separatedBy: ":")
             if components.count > 2 {
                 if zoneId.zoneName == components[0], zoneId.ownerName == components[1] {
+                    _recordsToDelete += 1
                     return CKRecord.ID(recordName: components[2], zoneID: zoneId)
                 } else {
                     return nil
                 }
             } else if zoneId == privateZoneId {
+                _recordsToDelete += 1
                 return CKRecord.ID(recordName: components[0], zoneID: zoneId)
             } else {
                 return nil
             }
-        }.uniqued
+        }.uniqued.bunch(maxSize: 100)
 
         if zoneId == privateZoneId {
             currentUUIDSequence = drops.map(\.uuid.uuidString)
@@ -102,6 +106,7 @@ final class PushState {
         componentsToPush = _dataItemsToPush
         dropsToPush = _dropsToPush
         recordsToUpload = _recordsToUpload
+        recordsToDelete = _recordsToDelete
     }
 
     private static func sequenceNeedsUpload(_ currentSequence: [String]) async -> Bool {
@@ -120,17 +125,21 @@ final class PushState {
         let components = Lista<String>()
         if dropsToPush > 0 { components.append(dropsToPush == 1 ? "1 Drop" : "\(dropsToPush) Drops") }
         if componentsToPush > 0 { components.append(componentsToPush == 1 ? "1 Component" : "\(componentsToPush) Components") }
-        let deletionCount = recordIdsToDelete.count
-        if deletionCount > 0 { components.append(deletionCount == 1 ? "1 Deletion" : "\(deletionCount) Deletions") }
+        if recordsToDelete > 0 { components.append(recordsToDelete == 1 ? "1 Deletion" : "\(recordsToDelete) Deletions") }
         Task { @CloudActor in
-            CloudManager.setSyncProgressString("Sending" + (components.count == 0 ? "" : (" " + components.joined(separator: ", "))))
+            CloudManager.setSyncProgressString("Sending" + (components.isEmpty ? "…" : (" " + components.joined(separator: ", "))))
         }
     }
 
     func perform() async throws {
+        let diff = recordsToUpload.count - recordIdsToDelete.count
+        let paddedRecordsToUpload = recordsToUpload + [[CKRecord]](repeating: [], count: max(0, -diff))
+        let paddedDeletionRecordIds = recordIdsToDelete + [[CKRecord.ID]](repeating: [], count: max(0, diff))
+        let updatePairs = zip(paddedRecordsToUpload, paddedDeletionRecordIds)
+
         do {
-            for recordList in recordsToUpload {
-                let outcome = try await database.modifyRecords(saving: recordList, deleting: [], savePolicy: .allKeys, atomically: false)
+            for (updateRecordList, deletionIdList) in updatePairs {
+                let outcome = try await database.modifyRecords(saving: updateRecordList, deleting: deletionIdList, savePolicy: .allKeys, atomically: false)
 
                 for updateResult in outcome.saveResults {
                     let uuid = updateResult.key.recordName
@@ -157,29 +166,28 @@ final class PushState {
                         log("Error in cloud save of item (\(uuid)): \(error.localizedDescription)")
                     }
                 }
-                updateSyncMessage()
-            }
 
-            if recordIdsToDelete.isPopulated {
-                let outcome = try await database.modifyRecords(saving: [], deleting: recordIdsToDelete, savePolicy: .allKeys, atomically: false)
-
-                var deletedRecordIds = [String]()
-                for deletionResult in outcome.deleteResults {
-                    let uuid = deletionResult.key.recordName
-                    switch deletionResult.value {
+                let deletedRecordIds = outcome.deleteResults.compactMap {
+                    recordsToDelete -= 1
+                    let uuid = $0.key.recordName
+                    switch $0.value {
                     case .success:
-                        deletedRecordIds.append(uuid)
-                        log("Confirmed cloud deletion of item (\(uuid))")
+                        return uuid
                     case let .failure(error):
                         if error.itemDoesNotExistOnServer {
                             log("Didn't need to cloud delete item (\(uuid))")
                         } else {
                             log("Error in cloud deletion of item (\(uuid)): \(error.localizedDescription)")
                         }
+                        return nil
                     }
                 }
-                log("Item cloud deletions completed")
-                await CloudManager.commitDeletion(for: deletedRecordIds)
+
+                if deletedRecordIds.isPopulated {
+                    log("Item cloud deletions removed \(deletedRecordIds.count) items")
+                    await CloudManager.commitDeletion(for: deletedRecordIds)
+                }
+                
                 updateSyncMessage()
             }
 
