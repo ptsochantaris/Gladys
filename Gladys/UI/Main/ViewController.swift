@@ -525,7 +525,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         updateUI()
     }
 
-    @available(iOS 15.0, *)
     func collectionView(_: UICollectionView, sceneActivationConfigurationForItemAt indexPath: IndexPath, point _: CGPoint) -> UIWindowScene.ActivationConfiguration? {
         guard let cell = collection.cellForItem(at: indexPath) as? ArchivedItemCell,
               let item = cell.archivedDropItem else {

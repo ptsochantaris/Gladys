@@ -9,7 +9,6 @@ import GladysUI
 // Stubs for methods that are in the widget but will actually run in the main app target
 
 extension Model {
-    @available(iOS 16, *)
     static func createItem(provider _: DataImporter, title _: String?, note _: String?, labels _: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         try await GladysAppIntents.processCreationResult(.noData)
     }

@@ -141,7 +141,7 @@
 		16CA74112AB4C063000D6A99 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA74102AB4C063000D6A99 /* SwiftUI.framework */; };
 		16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */; };
 		16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74152AB4C063000D6A99 /* GladysWidgets.swift */; };
-		16CA74182AB4C063000D6A99 /* ConfigurationAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */; };
+		16CA74182AB4C063000D6A99 /* ConfigIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74172AB4C063000D6A99 /* ConfigIntent.swift */; };
 		16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
 		16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA7AA0236F880C00F96699 /* SceneDelegate.swift */; };
@@ -482,7 +482,7 @@
 		16CA74102AB4C063000D6A99 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgetsBundle.swift; sourceTree = "<group>"; };
 		16CA74152AB4C063000D6A99 /* GladysWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgets.swift; sourceTree = "<group>"; };
-		16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationAppIntent.swift; sourceTree = "<group>"; };
+		16CA74172AB4C063000D6A99 /* ConfigIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigIntent.swift; sourceTree = "<group>"; };
 		16CA741B2AB4C063000D6A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16CA74222AB4C0DF000D6A99 /* GladysWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		16CA7AA0236F880C00F96699 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -926,7 +926,7 @@
 				16CA74222AB4C0DF000D6A99 /* GladysWidgetsExtension.entitlements */,
 				1626AA4D2AB6163900B99569 /* MacGladysWidgetsExtension.entitlements */,
 				16CA741B2AB4C063000D6A99 /* Info.plist */,
-				16CA74172AB4C063000D6A99 /* ConfigurationAppIntent.swift */,
+				16CA74172AB4C063000D6A99 /* ConfigIntent.swift */,
 				16CA74152AB4C063000D6A99 /* GladysWidgets.swift */,
 				16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */,
 				165CD5BC2AB6FDF000640DE4 /* Provider.swift */,
@@ -1759,7 +1759,7 @@
 				16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */,
 				16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */,
 				16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */,
-				16CA74182AB4C063000D6A99 /* ConfigurationAppIntent.swift in Sources */,
+				16CA74182AB4C063000D6A99 /* ConfigIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2561,11 +2561,11 @@
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -2591,11 +2591,11 @@
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = build.bru.MacGladys.GladysWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};

@@ -11,11 +11,11 @@ struct Provider: AppIntentTimelineProvider {
         return CurrentState(date: Date(), displaySize: context.displaySize, items: placeholders)
     }
 
-    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> CurrentState {
+    func snapshot(for configuration: ConfigIntent, in context: Context) async -> CurrentState {
         await CurrentState(date: Date(), displaySize: context.displaySize, items: loadPresentationInfo(in: context, configuration: configuration))
     }
 
-    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<CurrentState> {
+    func timeline(for configuration: ConfigIntent, in context: Context) async -> Timeline<CurrentState> {
         let entry = await CurrentState(date: Date(), displaySize: context.displaySize, items: loadPresentationInfo(in: context, configuration: configuration))
         return Timeline(entries: [entry], policy: .never)
     }
@@ -31,28 +31,27 @@ struct Provider: AppIntentTimelineProvider {
         }
     }
 
-    private func loadPresentationInfo(in context: Context, configuration: ConfigurationAppIntent) async -> [PresentationInfo] {
+    private func loadPresentationInfo(in context: Context, configuration: ConfigIntent) async -> [PresentationInfo] {
         let itemCount = maxCount(in: context) - 1
 
-        let drops = await Task { @MainActor in
+        return await Task { @MainActor in
             let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
-            if let search = configuration.search, search.isPopulated {
+
+            let search = configuration.search ?? ""
+            if search.isPopulated {
                 filter.text = search
             }
-            if let labelFilter = configuration.label?.id, labelFilter.isPopulated {
-                filter.enableLabelsByName([labelFilter])
+
+            let labelFilterId = configuration.label?.id ?? ""
+            if labelFilterId.isPopulated {
+                filter.enableLabelsByName([labelFilterId])
             }
             filter.update(signalUpdate: .none)
-            return filter.filteredDrops.prefix(itemCount)
-        }.value
 
-        var res = [PresentationInfo]()
-        res.reserveCapacity(drops.count)
-        for drop in drops {
-            if let info = await drop.createPresentationInfo(style: .widget, expectedSize: .zero, alwaysStartFresh: true) {
-                res.append(info)
+            let drops = filter.filteredDrops.prefix(itemCount)
+            return await drops.asyncCompactMap {
+                await $0.createPresentationInfo(style: .widget, expectedSize: .zero, alwaysStartFresh: true)
             }
-        }
-        return res
+        }.value
     }
 }

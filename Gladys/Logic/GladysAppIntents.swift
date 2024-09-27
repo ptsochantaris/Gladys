@@ -7,7 +7,6 @@ import AppIntents
 import GladysCommon
 import GladysUI
 
-@available(iOS 16, macOS 13, *)
 enum GladysAppIntents {
     struct ArchivedItemEntity: AppEntity, Identifiable {
         struct ArchivedItemQuery: EntityStringQuery {

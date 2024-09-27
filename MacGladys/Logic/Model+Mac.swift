@@ -30,7 +30,6 @@ extension Model {
         }
     }
 
-    @available(macOS 13, *)
     static func createItem(provider: DataImporter, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: nil)

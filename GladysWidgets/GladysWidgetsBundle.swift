@@ -18,11 +18,9 @@ struct GladysWidgetsBundle: WidgetBundle {
 }
 
 struct GladysWidgets: Widget {
-    let kind = "GladysWidgets"
-
     var body: some WidgetConfiguration {
-        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
-            GladysWidgetsEntryView(entry: entry)
+        AppIntentConfiguration(kind: "GladysWidgets", intent: ConfigIntent.self, provider: Provider()) {
+            GladysWidgetsEntryView(entry: $0)
                 .containerBackground(Color(.g_colorPaper), for: .widget)
         }
         .configurationDisplayName("Gladgets")
