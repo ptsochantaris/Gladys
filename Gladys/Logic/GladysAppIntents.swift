@@ -7,24 +7,42 @@ import AppIntents
 import GladysCommon
 import GladysUI
 
+@MainActor
+protocol WidgetModel {
+    associatedtype CreateReturnType: IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent
+
+    static func createItem(provider _: DataImporter, title _: String?, note _: String?, labels _: [GladysAppIntents.ArchivedItemLabel]) async throws -> CreateReturnType
+
+    #if canImport(AppKit)
+        @discardableResult
+        static func addItems(from _: NSPasteboard, at _: IndexPath, overrides _: ImportOverrides?, filterContext _: Filter?) -> PasteResult
+    #else
+        @discardableResult
+        static func pasteItems(from _: [DataImporter], overrides _: ImportOverrides?) -> PasteResult
+    #endif
+}
+
 enum GladysAppIntents {
     struct ArchivedItemEntity: AppEntity, Identifiable {
         struct ArchivedItemQuery: EntityStringQuery {
-            @MainActor
             func entities(matching string: String) async throws -> [ArchivedItemEntity] {
-                let filter = Filter()
-                filter.text = string
-                return filter.filteredDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                await MainActor.run {
+                    let filter = Filter()
+                    filter.text = string
+                    return filter.filteredDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                }
             }
 
-            @MainActor
             func entities(for identifiers: [ID]) async throws -> [ArchivedItemEntity] {
-                identifiers.compactMap { DropStore.item(uuid: $0) }.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                await MainActor.run {
+                    identifiers.compactMap { DropStore.item(uuid: $0) }.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                }
             }
 
-            @MainActor
             func suggestedEntities() async throws -> [ArchivedItemEntity] {
-                DropStore.allDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                await MainActor.run {
+                    DropStore.allDrops.map { ArchivedItemEntity(id: $0.uuid, title: $0.displayTitleOrUuid) }
+                }
             }
         }
 
@@ -45,28 +63,30 @@ enum GladysAppIntents {
                 return all.filter { $0.id.localizedCaseInsensitiveContains(string) }
             }
 
-            @MainActor
             func entities(for identifiers: [ID]) async throws -> [ArchivedItemLabel] {
-                let filter = Filter()
-                filter.rebuildLabels()
-                let names = Set(filter.labelToggles.map(\.function.displayText))
-                return identifiers.compactMap { entityId in
-                    if names.contains(entityId) {
-                        return ArchivedItemLabel(id: entityId)
+                await MainActor.run {
+                    let filter = Filter()
+                    filter.rebuildLabels()
+                    let names = Set(filter.labelToggles.map(\.function.displayText))
+                    return identifiers.compactMap { entityId in
+                        if names.contains(entityId) {
+                            return ArchivedItemLabel(id: entityId)
+                        }
+                        return nil
                     }
-                    return nil
                 }
             }
 
-            @MainActor
             func suggestedEntities() async throws -> [ArchivedItemLabel] {
-                let filter = Filter()
-                filter.rebuildLabels()
-                return filter.labelToggles.compactMap {
-                    if case .userLabel = $0.function {
-                        return ArchivedItemLabel(id: $0.function.displayText)
+                await MainActor.run {
+                    let filter = Filter()
+                    filter.rebuildLabels()
+                    return filter.labelToggles.compactMap {
+                        if case .userLabel = $0.function {
+                            return ArchivedItemLabel(id: $0.function.displayText)
+                        }
+                        return nil
                     }
-                    return nil
                 }
             }
         }
@@ -86,14 +106,13 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Delete item" }
 
-        @MainActor
         func perform() async throws -> some IntentResult {
             guard let entity,
-                  let item = DropStore.item(uuid: entity.id)
+                  let item = await DropStore.item(uuid: entity.id)
             else {
                 throw Error.itemNotFound
             }
-            Model.delete(items: [item])
+            await Model.delete(items: [item])
             return .result()
         }
     }
@@ -104,14 +123,13 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Copy item to clipboard" }
 
-        @MainActor
         func perform() async throws -> some IntentResult {
             guard let entity,
-                  let item = DropStore.item(uuid: entity.id)
+                  let item = await DropStore.item(uuid: entity.id)
             else {
                 throw Error.itemNotFound
             }
-            item.copyToPasteboard()
+            await item.copyToPasteboard()
             return .result()
         }
     }
@@ -145,29 +163,22 @@ enum GladysAppIntents {
 
         static let openAppWhenRun = true
 
-        @MainActor
         func perform() async throws -> some IntentResult {
             guard let entity else {
                 throw Error.itemNotFound
             }
-            let itemUUID = entity.id.uuidString
 
-            switch action {
-            case .highlight:
-                HighlightRequest.send(uuid: itemUUID, extraAction: .none)
+            let extraAction: HighlightRequest.Action =
+                switch action {
+                case .highlight: .none
+                case .tryQuicklook: .preview(nil)
+                case .tryOpen: .open
+                case .details: .detail
+                case .userDefault: .userDefault
+                }
 
-            case .tryQuicklook:
-                HighlightRequest.send(uuid: itemUUID, extraAction: .preview(nil))
+            HighlightRequest.send(uuid: entity.id.uuidString, extraAction: extraAction)
 
-            case .tryOpen:
-                HighlightRequest.send(uuid: itemUUID, extraAction: .open)
-
-            case .details:
-                HighlightRequest.send(uuid: itemUUID, extraAction: .detail)
-
-            case .userDefault:
-                HighlightRequest.send(uuid: itemUUID, extraAction: .userDefault)
-            }
             return .result()
         }
     }
@@ -177,7 +188,6 @@ enum GladysAppIntents {
 
         static let openAppWhenRun = true
 
-        @MainActor
         func perform() async throws -> some IntentResult {
             let topIndex = IndexPath(item: 0, section: 0)
             #if canImport(UIKit)
@@ -185,13 +195,13 @@ enum GladysAppIntents {
                     throw Error.nothingInClipboard
                 }
                 let importer = DataImporter(itemProvider: p)
-                Model.pasteItems(from: [importer], overrides: nil)
+                await Model.pasteItems(from: [importer], overrides: nil)
             #else
                 let pb = NSPasteboard.general
                 guard let c = pb.pasteboardItems?.count, c > 0 else {
                     throw Error.nothingInClipboard
                 }
-                _ = Model.addItems(from: pb, at: topIndex, overrides: .none, filterContext: nil)
+                _ = await Model.addItems(from: pb, at: topIndex, overrides: .none, filterContext: nil)
             #endif
             return .result()
         }
@@ -212,7 +222,6 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Create item from file" }
 
-        @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
             let data: IntentFile = if let file {
                 file
@@ -240,7 +249,6 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Create item from link" }
 
-        @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
             let data: URL = if let url {
                 url
@@ -269,7 +277,6 @@ enum GladysAppIntents {
 
         static var title: LocalizedStringResource { "Create item from text" }
 
-        @MainActor
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
             let data: String = if let text {
                 text

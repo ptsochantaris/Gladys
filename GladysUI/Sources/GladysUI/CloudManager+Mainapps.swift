@@ -582,24 +582,22 @@ public extension CloudManager {
 
         let recordId = metadata.hierarchicalRootRecordID?.recordName
         if let recordId, let existingItem = await DropStore.item(uuid: recordId) {
-            await HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
+            HighlightRequest.send(uuid: existingItem.uuid.uuidString, extraAction: .none)
             return
         }
 
         sendNotification(name: .AcceptStarting)
         try? await sync() // make sure all our previous deletions related to shares are caught up in the change tokens, just in case
-        showNetwork = true
 
-        do {
-            try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
-            try? await sync() // get the new shared objects
+        showNetwork = true
+        defer {
             sendNotification(name: .AcceptEnding)
             showNetwork = false
-        } catch {
-            sendNotification(name: .AcceptEnding)
-            showNetwork = false
-            throw error
         }
+
+        try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
+
+        try? await sync() // get the new shared objects
     }
 
     static func deleteShare(_ itemUuid: UUID) async throws {

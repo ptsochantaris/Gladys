@@ -93,6 +93,12 @@
 		168810FF2AB0EBBB00988232 /* GladysAppKit in Frameworks */ = {isa = PBXBuildFile; productRef = 168810FE2AB0EBBB00988232 /* GladysAppKit */; };
 		1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82A1FAE60B80014FA1B /* OptionsController.swift */; };
 		1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */; };
+		168945FE2CA734F6005EB3EB /* CurrentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168945FD2CA734F6005EB3EB /* CurrentState.swift */; };
+		168946002CA7354B005EB3EB /* GladysWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168945FF2CA7354B005EB3EB /* GladysWidgetsBundle.swift */; };
+		168946022CA735D0005EB3EB /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168946012CA735D0005EB3EB /* ItemCell.swift */; };
+		168946042CA73742005EB3EB /* GladysWidgetsEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168946032CA73742005EB3EB /* GladysWidgetsEntryView.swift */; };
+		168946062CA73BF8005EB3EB /* LabelQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168946052CA73BF8005EB3EB /* LabelQuery.swift */; };
+		168946082CA73C3F005EB3EB /* LabelOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168946072CA73C3F005EB3EB /* LabelOption.swift */; };
 		168ADF1D2AB8A4EA009D20CE /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		168D2CAB209DADF3005041CF /* DetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAA209DADF3005041CF /* DetailController.swift */; };
 		168D2CAD209DCC53005041CF /* NewLabelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168D2CAC209DCC53005041CF /* NewLabelController.swift */; };
@@ -139,8 +145,7 @@
 		16C8166C20CB4F87001C12DF /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16C8166A20CB4EF1001C12DF /* Application.swift */; };
 		16CA740F2AB4C063000D6A99 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA740E2AB4C063000D6A99 /* WidgetKit.framework */; };
 		16CA74112AB4C063000D6A99 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16CA74102AB4C063000D6A99 /* SwiftUI.framework */; };
-		16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */; };
-		16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74152AB4C063000D6A99 /* GladysWidgets.swift */; };
+		16CA74142AB4C063000D6A99 /* GladysWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74132AB4C063000D6A99 /* GladysWidgets.swift */; };
 		16CA74182AB4C063000D6A99 /* ConfigIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16CA74172AB4C063000D6A99 /* ConfigIntent.swift */; };
 		16CA741E2AB4C063000D6A99 /* GladysWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
@@ -168,7 +173,7 @@
 		16EDF33A2C3C76ED00A54A2D /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16EDF3392C3C76ED00A54A2D /* GladysCommon */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
-		16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */; };
+		16F3A8D92AB72305005BD3D2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8D82AB72305005BD3D2 /* Extensions.swift */; };
 		16F3A8DC2AB7271B005BD3D2 /* ArchivedItem+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */; };
 		16F3A8E02AB72809005BD3D2 /* ArchivedItem+Copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */; };
 		16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F72B35266D8232000E2C67 /* RoundedBackground.swift */; };
@@ -431,6 +436,12 @@
 		168810F52AB0E7C200988232 /* GladysAppKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysAppKit; sourceTree = "<group>"; };
 		1688B82A1FAE60B80014FA1B /* OptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsController.swift; sourceTree = "<group>"; };
 		1688B82C1FAE60E70014FA1B /* SwitchHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchHolder.swift; sourceTree = "<group>"; };
+		168945FD2CA734F6005EB3EB /* CurrentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentState.swift; sourceTree = "<group>"; };
+		168945FF2CA7354B005EB3EB /* GladysWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgetsBundle.swift; sourceTree = "<group>"; };
+		168946012CA735D0005EB3EB /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
+		168946032CA73742005EB3EB /* GladysWidgetsEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgetsEntryView.swift; sourceTree = "<group>"; };
+		168946052CA73BF8005EB3EB /* LabelQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelQuery.swift; sourceTree = "<group>"; };
+		168946072CA73C3F005EB3EB /* LabelOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelOption.swift; sourceTree = "<group>"; };
 		1689646029903B66009D7D01 /* GladysUI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GladysUI; sourceTree = "<group>"; };
 		168A0CE61FBCD11300B63951 /* GladysWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWatch.entitlements; sourceTree = "<group>"; };
 		168D2CAA209DADF3005041CF /* DetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailController.swift; sourceTree = "<group>"; };
@@ -480,8 +491,7 @@
 		16CA740D2AB4C063000D6A99 /* GladysWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GladysWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		16CA740E2AB4C063000D6A99 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		16CA74102AB4C063000D6A99 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgetsBundle.swift; sourceTree = "<group>"; };
-		16CA74152AB4C063000D6A99 /* GladysWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgets.swift; sourceTree = "<group>"; };
+		16CA74132AB4C063000D6A99 /* GladysWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysWidgets.swift; sourceTree = "<group>"; };
 		16CA74172AB4C063000D6A99 /* ConfigIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigIntent.swift; sourceTree = "<group>"; };
 		16CA741B2AB4C063000D6A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16CA74222AB4C0DF000D6A99 /* GladysWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GladysWidgetsExtension.entitlements; sourceTree = "<group>"; };
@@ -510,7 +520,7 @@
 		16F063FB20B895CD00ABF32A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		16F21C171F12D1B40033FE8B /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = Carthage/Build/iOS/Fuzi.framework; sourceTree = "<group>"; };
 		16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysPopoverBackgroundView.swift; sourceTree = "<group>"; };
-		16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Widgets.swift"; sourceTree = "<group>"; };
+		16F3A8D82AB72305005BD3D2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		16F3A8DB2AB7271A005BD3D2 /* ArchivedItem+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ArchivedItem+Mac.swift"; sourceTree = "<group>"; };
 		16F72B35266D8232000E2C67 /* RoundedBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -927,10 +937,15 @@
 				1626AA4D2AB6163900B99569 /* MacGladysWidgetsExtension.entitlements */,
 				16CA741B2AB4C063000D6A99 /* Info.plist */,
 				16CA74172AB4C063000D6A99 /* ConfigIntent.swift */,
-				16CA74152AB4C063000D6A99 /* GladysWidgets.swift */,
-				16CA74132AB4C063000D6A99 /* GladysWidgetsBundle.swift */,
+				168945FD2CA734F6005EB3EB /* CurrentState.swift */,
+				16F3A8D82AB72305005BD3D2 /* Extensions.swift */,
+				16CA74132AB4C063000D6A99 /* GladysWidgets.swift */,
+				168945FF2CA7354B005EB3EB /* GladysWidgetsBundle.swift */,
+				168946032CA73742005EB3EB /* GladysWidgetsEntryView.swift */,
+				168946012CA735D0005EB3EB /* ItemCell.swift */,
+				168946072CA73C3F005EB3EB /* LabelOption.swift */,
+				168946052CA73BF8005EB3EB /* LabelQuery.swift */,
 				165CD5BC2AB6FDF000640DE4 /* Provider.swift */,
-				16F3A8D82AB72305005BD3D2 /* Model+Widgets.swift */,
 			);
 			path = GladysWidgets;
 			sourceTree = "<group>";
@@ -1754,12 +1769,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				165CD5C22AB71AB300640DE4 /* Component+Copy.swift in Sources */,
+				168945FE2CA734F6005EB3EB /* CurrentState.swift in Sources */,
 				16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */,
+				168946062CA73BF8005EB3EB /* LabelQuery.swift in Sources */,
+				168946002CA7354B005EB3EB /* GladysWidgetsBundle.swift in Sources */,
+				168946082CA73C3F005EB3EB /* LabelOption.swift in Sources */,
+				168946022CA735D0005EB3EB /* ItemCell.swift in Sources */,
 				165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */,
-				16CA74142AB4C063000D6A99 /* GladysWidgetsBundle.swift in Sources */,
-				16F3A8D92AB72305005BD3D2 /* Model+Widgets.swift in Sources */,
-				16CA74162AB4C063000D6A99 /* GladysWidgets.swift in Sources */,
+				16CA74142AB4C063000D6A99 /* GladysWidgets.swift in Sources */,
+				16F3A8D92AB72305005BD3D2 /* Extensions.swift in Sources */,
 				16CA74182AB4C063000D6A99 /* ConfigIntent.swift in Sources */,
+				168946042CA73742005EB3EB /* GladysWidgetsEntryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

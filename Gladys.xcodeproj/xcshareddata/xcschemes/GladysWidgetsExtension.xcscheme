@@ -56,18 +56,6 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "1"
-         BundleIdentifier = "com.apple.widgetkit.simulator"
-         RemotePath = "/System/Library/CoreServices/WidgetKit Simulator.app/Contents/MacOS/WidgetKit Simulator">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "16CA740C2AB4C063000D6A99"
-            BuildableName = "GladysWidgetsExtension.appex"
-            BlueprintName = "GladysWidgetsExtension"
-            ReferencedContainer = "container:Gladys.xcodeproj">
-         </BuildableReference>
-      </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"

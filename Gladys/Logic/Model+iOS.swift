@@ -6,9 +6,7 @@ import GladysUIKit
 import Maintini
 import UIKit
 import WatchConnectivity
-#if canImport(WidgetKit)
-    import WidgetKit
-#endif
+import WidgetKit
 
 extension UISceneSession {
     var associatedFilter: Filter {
@@ -32,7 +30,7 @@ extension UIView {
     }
 }
 
-extension Model {
+extension Model: WidgetModel {
     private static var watchDelegate: WatchDelegate?
 
     static func registerStateHandler() {
@@ -42,9 +40,7 @@ extension Model {
                 break
 
             case let .saveComplete(dueToSyncFetch):
-                #if canImport(WidgetKit)
-                    WidgetCenter.shared.reloadAllTimelines()
-                #endif
+                WidgetCenter.shared.reloadAllTimelines()
 
                 watchDelegate?.updateContext()
 

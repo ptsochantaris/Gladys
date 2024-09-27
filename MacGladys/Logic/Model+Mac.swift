@@ -5,7 +5,7 @@ import GladysUI
 import UniformTypeIdentifiers
 import WidgetKit
 
-extension Model {
+extension Model: WidgetModel {
     static func registerStateHandler() {
         stateHandler = { state in
             switch state {

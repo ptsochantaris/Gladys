@@ -1,12 +1,11 @@
 import Foundation
 import GladysCommon
 import GladysUI
-import Lista
 import WidgetKit
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> CurrentState {
-        let itemCount = maxCount(in: context) - 1
+        let itemCount = context.family.maxCount - 1
         let placeholders = onlyOnMainThread { PresentationInfo.placeholders(count: itemCount) }
         return CurrentState(date: Date(), displaySize: context.displaySize, items: placeholders)
     }
@@ -20,19 +19,8 @@ struct Provider: AppIntentTimelineProvider {
         return Timeline(entries: [entry], policy: .never)
     }
 
-    private func maxCount(in context: Context) -> Int {
-        switch context.family {
-        case .accessoryCircular, .accessoryInline, .accessoryRectangular: 1
-        case .systemSmall: 4
-        case .systemMedium: 8
-        case .systemLarge: 16
-        case .systemExtraLarge: 32
-        @unknown default: 1
-        }
-    }
-
     private func loadPresentationInfo(in context: Context, configuration: ConfigIntent) async -> [PresentationInfo] {
-        let itemCount = maxCount(in: context) - 1
+        let itemCount = context.family.maxCount - 1
 
         return await Task { @MainActor in
             let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))

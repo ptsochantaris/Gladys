@@ -41,10 +41,9 @@ public struct HighlightRequest: Sendable {
         return registration
     }
 
-    @MainActor
     public static func send(uuid: String, extraAction: Action) {
         let request = HighlightRequest(uuid: uuid, extraAction: extraAction)
-        Task {
+        Task { @MainActor in
             for registration in registrations {
                 await registration.listener?.highlightItem(request: request)
             }

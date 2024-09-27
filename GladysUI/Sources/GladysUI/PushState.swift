@@ -187,7 +187,7 @@ final class PushState {
                     log("Item cloud deletions removed \(deletedRecordIds.count) items")
                     await CloudManager.commitDeletion(for: deletedRecordIds)
                 }
-                
+
                 updateSyncMessage()
             }
 
