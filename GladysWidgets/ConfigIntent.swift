@@ -4,10 +4,10 @@ import GladysUI
 import WidgetKit
 
 struct ConfigIntent: WidgetConfigurationIntent {
-    @Parameter(title: "Label")
+    @Parameter(title: "Label", default: nil)
     var label: LabelOption?
 
-    @Parameter(title: "Search Term")
+    @Parameter(title: "Search Term", default: nil)
     var search: String?
 
     static let title: LocalizedStringResource = "Filter"

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1374,7 +1374,6 @@
 				};
 			};
 			buildConfigurationList = 1678F9C81EF475FE005697CB /* Build configuration list for PBXProject "Gladys" */;
-			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1385,6 +1384,7 @@
 			packageReferences = (
 				16B89F142523D885007FD864 /* XCRemoteSwiftPackageReference "HotKey" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 1678F9CE1EF475FE005697CB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
