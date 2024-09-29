@@ -97,7 +97,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
             return .imageData(data)
 
         case let .view(uuid):
-            await HighlightRequest.send(uuid: uuid, extraAction: .open)
+            HighlightRequest.send(uuid: uuid, extraAction: .open)
             return .ok
 
         case let .copy(uuid):

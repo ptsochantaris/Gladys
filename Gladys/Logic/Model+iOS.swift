@@ -30,7 +30,7 @@ extension UIView {
     }
 }
 
-extension Model: WidgetModel {
+extension Model {
     private static var watchDelegate: WatchDelegate?
 
     static func registerStateHandler() {

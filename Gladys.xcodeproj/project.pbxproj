@@ -49,6 +49,37 @@
 		164136961F09195000B34574 /* GladysAction.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1641368D1F09195000B34574 /* GladysAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1643C0402323EDA0005D7BF3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1643C03F2323EDA0005D7BF3 /* StoreKit.framework */; };
 		16458D8F21A1D857004AEEB2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1678F9D71EF475FF005697CB /* Assets.xcassets */; };
+		1647208E2CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1647208D2CA9F43900FE9C1C /* ArchivedItemEntity.swift */; };
+		1647208F2CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1647208D2CA9F43900FE9C1C /* ArchivedItemEntity.swift */; };
+		164720902CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1647208D2CA9F43900FE9C1C /* ArchivedItemEntity.swift */; };
+		164720922CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720912CA9F44300FE9C1C /* ArchivedItemLabel.swift */; };
+		164720932CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720912CA9F44300FE9C1C /* ArchivedItemLabel.swift */; };
+		164720942CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720912CA9F44300FE9C1C /* ArchivedItemLabel.swift */; };
+		164720962CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720952CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift */; };
+		164720972CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720952CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift */; };
+		164720982CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720952CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift */; };
+		1647209A2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720992CA9F4F600FE9C1C /* ArchivedItemQuery.swift */; };
+		1647209B2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720992CA9F4F600FE9C1C /* ArchivedItemQuery.swift */; };
+		1647209C2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720992CA9F4F600FE9C1C /* ArchivedItemQuery.swift */; };
+		1647209F2CA9F54B00FE9C1C /* DeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1647209D2CA9F54B00FE9C1C /* DeleteItem.swift */; };
+		164720A02CA9F54B00FE9C1C /* DeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1647209D2CA9F54B00FE9C1C /* DeleteItem.swift */; };
+		164720A22CA9F57A00FE9C1C /* CopyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A12CA9F57A00FE9C1C /* CopyItem.swift */; };
+		164720A32CA9F57A00FE9C1C /* CopyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A12CA9F57A00FE9C1C /* CopyItem.swift */; };
+		164720A62CA9F58F00FE9C1C /* OpenGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A52CA9F58F00FE9C1C /* OpenGladys.swift */; };
+		164720A72CA9F58F00FE9C1C /* OpenGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A52CA9F58F00FE9C1C /* OpenGladys.swift */; };
+		164720A82CA9F58F00FE9C1C /* OpenGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A52CA9F58F00FE9C1C /* OpenGladys.swift */; };
+		164720AA2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A92CA9F5B800FE9C1C /* PasteIntoGladys.swift */; };
+		164720AB2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A92CA9F5B800FE9C1C /* PasteIntoGladys.swift */; };
+		164720AC2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720A92CA9F5B800FE9C1C /* PasteIntoGladys.swift */; };
+		164720AF2CA9F5D900FE9C1C /* CreateItemFromFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720AD2CA9F5D900FE9C1C /* CreateItemFromFile.swift */; };
+		164720B02CA9F5D900FE9C1C /* CreateItemFromFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720AD2CA9F5D900FE9C1C /* CreateItemFromFile.swift */; };
+		164720B32CA9F61D00FE9C1C /* CreateItemFromUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B12CA9F61D00FE9C1C /* CreateItemFromUrl.swift */; };
+		164720B42CA9F61D00FE9C1C /* CreateItemFromUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B12CA9F61D00FE9C1C /* CreateItemFromUrl.swift */; };
+		164720B62CA9F63300FE9C1C /* CreateItemFromText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B52CA9F63300FE9C1C /* CreateItemFromText.swift */; };
+		164720B72CA9F63300FE9C1C /* CreateItemFromText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B52CA9F63300FE9C1C /* CreateItemFromText.swift */; };
+		164720BA2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
+		164720BB2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
+		164720BC2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
 		164947CF20BEAA6200BD1BEB /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 164947CE20BEAA6200BD1BEB /* icon.icns */; };
 		164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947D020BEAA6200BD1BEB /* ShareViewController.swift */; };
 		164947D420BEAA6200BD1BEB /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 164947D220BEAA6200BD1BEB /* ShareViewController.xib */; };
@@ -387,6 +418,18 @@
 		1641368F1F09195000B34574 /* ActionRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionRequestViewController.swift; sourceTree = "<group>"; };
 		164136931F09195000B34574 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1643C03F2323EDA0005D7BF3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		1647208D2CA9F43900FE9C1C /* ArchivedItemEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemEntity.swift; sourceTree = "<group>"; };
+		164720912CA9F44300FE9C1C /* ArchivedItemLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemLabel.swift; sourceTree = "<group>"; };
+		164720952CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemLabelQuery.swift; sourceTree = "<group>"; };
+		164720992CA9F4F600FE9C1C /* ArchivedItemQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedItemQuery.swift; sourceTree = "<group>"; };
+		1647209D2CA9F54B00FE9C1C /* DeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteItem.swift; sourceTree = "<group>"; };
+		164720A12CA9F57A00FE9C1C /* CopyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyItem.swift; sourceTree = "<group>"; };
+		164720A52CA9F58F00FE9C1C /* OpenGladys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenGladys.swift; sourceTree = "<group>"; };
+		164720A92CA9F5B800FE9C1C /* PasteIntoGladys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteIntoGladys.swift; sourceTree = "<group>"; };
+		164720AD2CA9F5D900FE9C1C /* CreateItemFromFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemFromFile.swift; sourceTree = "<group>"; };
+		164720B12CA9F61D00FE9C1C /* CreateItemFromUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemFromUrl.swift; sourceTree = "<group>"; };
+		164720B52CA9F63300FE9C1C /* CreateItemFromText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemFromText.swift; sourceTree = "<group>"; };
+		164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysAppIntentsError.swift; sourceTree = "<group>"; };
 		164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacGladysShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		164947CE20BEAA6200BD1BEB /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		164947D020BEAA6200BD1BEB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -688,6 +731,26 @@
 			path = GladysAction;
 			sourceTree = "<group>";
 		};
+		1647208C2CA9F41300FE9C1C /* App Intents */ = {
+			isa = PBXGroup;
+			children = (
+				164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */,
+				164720B52CA9F63300FE9C1C /* CreateItemFromText.swift */,
+				164720B12CA9F61D00FE9C1C /* CreateItemFromUrl.swift */,
+				164720AD2CA9F5D900FE9C1C /* CreateItemFromFile.swift */,
+				164720A92CA9F5B800FE9C1C /* PasteIntoGladys.swift */,
+				164720A52CA9F58F00FE9C1C /* OpenGladys.swift */,
+				164720A12CA9F57A00FE9C1C /* CopyItem.swift */,
+				1647209D2CA9F54B00FE9C1C /* DeleteItem.swift */,
+				164720992CA9F4F600FE9C1C /* ArchivedItemQuery.swift */,
+				164720952CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift */,
+				164720912CA9F44300FE9C1C /* ArchivedItemLabel.swift */,
+				1647208D2CA9F43900FE9C1C /* ArchivedItemEntity.swift */,
+				165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */,
+			);
+			path = "App Intents";
+			sourceTree = "<group>";
+		};
 		164947CD20BEAA6200BD1BEB /* MacGladysShare */ = {
 			isa = PBXGroup;
 			children = (
@@ -767,6 +830,7 @@
 		1678F9CF1EF475FE005697CB /* Gladys */ = {
 			isa = PBXGroup;
 			children = (
+				1647208C2CA9F41300FE9C1C /* App Intents */,
 				1689646D29905B25009D7D01 /* Logic */,
 				16E27BCC1EFC5F9D00FD0818 /* Support */,
 				16D2C7111EF5A6D3009B97F9 /* UI */,
@@ -777,7 +841,6 @@
 		1689646D29905B25009D7D01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				165F3B482AB61B4F00C13B18 /* GladysAppIntents.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
 				164CEC712AB23AE700298594 /* WatchDelegate.swift */,
 				16A925092A35CB6300A6B52E /* Model+iOS.swift */,
@@ -1591,18 +1654,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				164720982CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */,
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
+				164720AF2CA9F5D900FE9C1C /* CreateItemFromFile.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
+				164720902CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */,
 				1686E7F0233D0D9C0012BA63 /* TouchBar.swift in Sources */,
+				164720AC2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */,
 				16A6729F29D4ED5900110F63 /* FileMonitor.swift in Sources */,
+				164720BA2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */,
+				164720942CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */,
+				1647209B2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */,
 				16A51AAD20F6C7640033C1FD /* LabelEditorViewController.swift in Sources */,
 				16D7F3A324CC6E040091F468 /* AboutViewController.swift in Sources */,
 				165F3B4A2AB61B6500C13B18 /* GladysAppIntents.swift in Sources */,
 				16DF9FBC20C20F3F00CFD3D1 /* ProgressViewController.swift in Sources */,
 				161718C92094D333005ABD6C /* ViewController.swift in Sources */,
+				164720A22CA9F57A00FE9C1C /* CopyItem.swift in Sources */,
 				16EC3D092145286F0015714A /* main.swift in Sources */,
+				164720B72CA9F63300FE9C1C /* CreateItemFromText.swift in Sources */,
+				164720A02CA9F54B00FE9C1C /* DeleteItem.swift in Sources */,
+				164720B32CA9F61D00FE9C1C /* CreateItemFromUrl.swift in Sources */,
 				16D3CC0626343B0D00BCC5B4 /* NSPasteboard+Extensions.swift in Sources */,
 				1687145E209F322900FB9B85 /* GladysFilePromiseProvider.swift in Sources */,
 				167A9538209D01D5002D99B6 /* LabelSelectionViewController.swift in Sources */,
@@ -1611,6 +1685,7 @@
 				168DFB0F20B85F84002C603D /* LauncherCommon.swift in Sources */,
 				161718D72094D6B8005ABD6C /* Component+Mac.swift in Sources */,
 				16C8166C20CB4F87001C12DF /* Application.swift in Sources */,
+				164720A62CA9F58F00FE9C1C /* OpenGladys.swift in Sources */,
 				161718E32094DEB0005ABD6C /* CloudManager+Mac.swift in Sources */,
 				16F3A8DC2AB7271B005BD3D2 /* ArchivedItem+Mac.swift in Sources */,
 				168FE0632095D16800E740E9 /* Preferences.swift in Sources */,
@@ -1676,21 +1751,27 @@
 			files = (
 				1633F0381F93757000421B8C /* LabelListCell.swift in Sources */,
 				16E781BE1FE97ED40071ED9C /* LabelEditorCell.swift in Sources */,
+				164720B02CA9F5D900FE9C1C /* CreateItemFromFile.swift in Sources */,
 				16CAB03B1F9FD26D00A9F736 /* ICloudController.swift in Sources */,
 				16DD7F65208E637B005F37C9 /* TextEditController.swift in Sources */,
 				1616BE012454B3BD001C3BD4 /* CreditsViewController.swift in Sources */,
 				164CEC702AB23ACD00298594 /* Model+iOS.swift in Sources */,
 				165F3B492AB61B4F00C13B18 /* GladysAppIntents.swift in Sources */,
+				1647209F2CA9F54B00FE9C1C /* DeleteItem.swift in Sources */,
+				164720922CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */,
 				16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */,
 				16C4BA9F1F9233B00012C9E0 /* LabelCell.swift in Sources */,
 				16969BB71FB109D9007B2F77 /* ArchivedItem+Copy.swift in Sources */,
 				16CAB03D1F9FD49100A9F736 /* IOSSettingsController.swift in Sources */,
+				164720BB2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */,
 				16F72B36266D8232000E2C67 /* RoundedBackground.swift in Sources */,
+				164720B62CA9F63300FE9C1C /* CreateItemFromText.swift in Sources */,
 				160707A21F8A3915003B856A /* DataInspector.swift in Sources */,
 				16062E0C1EFE705800AB5353 /* DetailCell.swift in Sources */,
 				1607079C1F8A386E003B856A /* PanDirectionGestureRecognizer.swift in Sources */,
 				16161D9A2C395EB700A1C213 /* GladysShortcuts.swift in Sources */,
 				16AA7D24295891A6001C6506 /* UIUtilities.swift in Sources */,
+				164720962CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */,
 				16CA7AA1236F880C00F96699 /* SceneDelegate.swift in Sources */,
 				161994362B010CD6006DE2B2 /* BackgroundRefreshTasks.swift in Sources */,
 				16AED98821B4373D0049E433 /* NotesEditorViewController.swift in Sources */,
@@ -1704,17 +1785,22 @@
 				162289C8207D0D6900DAC6A2 /* HelpController.swift in Sources */,
 				167ABECB1F77D3C40075E0E8 /* NoteCell.swift in Sources */,
 				165173031F99483E006CAF0A /* GladysViewController.swift in Sources */,
+				164720A72CA9F58F00FE9C1C /* OpenGladys.swift in Sources */,
 				16C4BAA81F9296D90012C9E0 /* LabelSelector.swift in Sources */,
 				16D2C7131EF5A6E6009B97F9 /* ArchivedItemCell.swift in Sources */,
+				1647209A2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */,
+				164720A32CA9F57A00FE9C1C /* CopyItem.swift in Sources */,
 				1678F9D11EF475FE005697CB /* AppDelegate.swift in Sources */,
 				160707991F8A35D0003B856A /* HexEdit.swift in Sources */,
 				16C4BAAB1F929ADD0012C9E0 /* LabelToggleCell.swift in Sources */,
+				1647208E2CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */,
 				1618CEDB266D3BEE00CE5AD2 /* LabelSectionTitle.swift in Sources */,
 				1688B82B1FAE60B80014FA1B /* OptionsController.swift in Sources */,
 				16062E091EFE647800AB5353 /* DetailController.swift in Sources */,
 				1619B60B1F76EC2F005CF414 /* HeaderCell.swift in Sources */,
 				164CEC6A2AB23A5E00298594 /* CloudManager+iOS.swift in Sources */,
 				165A8F0921AA92D300405701 /* PlistEditor.swift in Sources */,
+				164720AA2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */,
 				1688B82D1FAE60E70014FA1B /* SwitchHolder.swift in Sources */,
 				1651117E2163DEE300C5C874 /* Component+Intents.swift in Sources */,
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
@@ -1726,6 +1812,7 @@
 				160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */,
 				164CEC722AB23AE700298594 /* WatchDelegate.swift in Sources */,
 				16797EA52AA294E80053AD5F /* VisionSettingsController.swift in Sources */,
+				164720B42CA9F61D00FE9C1C /* CreateItemFromUrl.swift in Sources */,
 				16D829131F86D3DD00CF06FF /* AboutController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1773,13 +1860,20 @@
 				16194B6C2AB86FFE0002031E /* GladysAppIntents.swift in Sources */,
 				168946062CA73BF8005EB3EB /* LabelQuery.swift in Sources */,
 				168946002CA7354B005EB3EB /* GladysWidgetsBundle.swift in Sources */,
+				164720A82CA9F58F00FE9C1C /* OpenGladys.swift in Sources */,
 				168946082CA73C3F005EB3EB /* LabelOption.swift in Sources */,
 				168946022CA735D0005EB3EB /* ItemCell.swift in Sources */,
+				1647208F2CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */,
+				164720BC2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */,
 				165CD5BD2AB6FDF000640DE4 /* Provider.swift in Sources */,
+				164720AB2CA9F5B800FE9C1C /* PasteIntoGladys.swift in Sources */,
+				164720972CA9F4E400FE9C1C /* ArchivedItemLabelQuery.swift in Sources */,
 				16CA74142AB4C063000D6A99 /* GladysWidgets.swift in Sources */,
 				16F3A8D92AB72305005BD3D2 /* Extensions.swift in Sources */,
 				16CA74182AB4C063000D6A99 /* ConfigIntent.swift in Sources */,
+				1647209C2CA9F4F600FE9C1C /* ArchivedItemQuery.swift in Sources */,
 				168946042CA73742005EB3EB /* GladysWidgetsEntryView.swift in Sources */,
+				164720932CA9F44300FE9C1C /* ArchivedItemLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

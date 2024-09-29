@@ -46,7 +46,7 @@ extension WidgetFamily {
     }
 }
 
-extension Model: WidgetModel {
+extension Model {
     static func createItem(provider _: DataImporter, title _: String?, note _: String?, labels _: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         try await GladysAppIntents.processCreationResult(.noData)
     }
