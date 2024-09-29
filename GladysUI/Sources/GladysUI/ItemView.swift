@@ -137,11 +137,9 @@ public struct ItemView: View {
     }
 
     public func didEndDisplaying() {
-        wrapper.clear()
-    }
-
-    public func clear() {
-        wrapper.clear()
+        Task {
+            await wrapper.clear()
+        }
     }
 
     public var body: some View {

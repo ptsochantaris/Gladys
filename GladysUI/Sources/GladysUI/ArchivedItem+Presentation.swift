@@ -9,19 +9,15 @@ public extension ArchivedItem {
     private static let singleLock = Semalot(tickets: 1)
 
     @discardableResult
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize, alwaysStartFresh: Bool) async -> PresentationInfo? {
-        if alwaysStartFresh {
-            cancelPresentationGeneration()
-        } else {
-            if let existing = presentationInfoCache[uuid] {
-                log(">>> Using cached presentation info for \(uuid.uuidString)")
-                return existing
-            }
+    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
+        if let existing = presentationInfoCache[uuid] {
+            log(">>> Using cached presentation info for \(uuid.uuidString)")
+            return existing
+        }
 
-            if let info = await activePresentationGenerationResult {
-                log(">>> Deduped presentation task \(uuid.uuidString)")
-                return info
-            }
+        if let info = await activePresentationGenerationResult {
+            log(">>> Deduped presentation task \(uuid.uuidString)")
+            return info
         }
 
         let newTask = Task.detached(priority: .userInitiated) { [weak self] in

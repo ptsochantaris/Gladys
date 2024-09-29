@@ -1011,9 +1011,11 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    public func cancelPresentationGeneration() {
+    public func cancelPresentationGeneration() async {
         presentationGenerator?.cancel()
+        _ = await presentationGenerator?.value
         presentationGenerator = nil
+        presentationInfoCache[uuid] = nil
     }
 
     public func usingPresentationGenerator(_ newTask: Task<PresentationInfo?, Never>) async -> PresentationInfo? {

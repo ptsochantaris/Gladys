@@ -93,7 +93,7 @@ open class CommonItemCell: UICollectionViewCell {
             lastLayout = currentSize
 
             if lowMemoryMode {
-                itemViewController.rootView.clear()
+                itemViewController.rootView.didEndDisplaying()
             } else {
                 itemViewController.rootView.setItem(archivedDropItem, for: bounds.size, style: style)
             }
@@ -139,7 +139,7 @@ open class CommonItemCell: UICollectionViewCell {
     override public var isSelected: Bool {
         get { archivedDropItem?.flags.contains(.selected) ?? false }
         set {
-            guard let archivedDropItem else { return }
+            guard let archivedDropItem, newValue != isSelected else { return }
             if newValue {
                 archivedDropItem.flags.insert(.selected)
             } else {
@@ -152,7 +152,7 @@ open class CommonItemCell: UICollectionViewCell {
     public var isEditing: Bool {
         get { archivedDropItem?.flags.contains(.editing) ?? false }
         set {
-            guard let archivedDropItem else { return }
+            guard let archivedDropItem, newValue != isEditing else { return }
             if newValue {
                 archivedDropItem.flags.insert(.editing)
             } else {

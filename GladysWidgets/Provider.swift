@@ -26,7 +26,8 @@ struct Provider: AppIntentTimelineProvider {
 
             let drops = filter.filteredDrops.prefix(itemCount)
             return await drops.asyncCompactMap {
-                await $0.createPresentationInfo(style: .widget, expectedSize: .zero, alwaysStartFresh: true)
+                await $0.cancelPresentationGeneration()
+                return await $0.createPresentationInfo(style: .widget, expectedSize: .zero)
             }
         }.value
 

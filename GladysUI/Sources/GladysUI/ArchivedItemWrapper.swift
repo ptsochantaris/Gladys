@@ -43,9 +43,9 @@ public final class ArchivedItemWrapper: Identifiable {
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    func clear() {
+    func clear() async {
         if let i = item {
-            i.cancelPresentationGeneration()
+            await i.cancelPresentationGeneration()
             item = nil
             observer = nil
             presentationInfo = PresentationInfo()
@@ -70,7 +70,9 @@ public final class ArchivedItemWrapper: Identifiable {
 
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else {
-            clear()
+            Task {
+                await clear()
+            }
             return
         }
 
@@ -91,7 +93,10 @@ public final class ArchivedItemWrapper: Identifiable {
 
     private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
         Task {
-            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height), alwaysStartFresh: alwaysStartFresh) {
+            if alwaysStartFresh {
+                await newItem.cancelPresentationGeneration()
+            }
+            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)) {
                 if item?.uuid == p.id {
                     presentationInfo = p
                 }
@@ -103,7 +108,11 @@ public final class ArchivedItemWrapper: Identifiable {
         style.allowsShadows && presentationInfo.highlightColor == .none
     }
 
-    var presentationInfo = PresentationInfo()
+    var presentationInfo = PresentationInfo() {
+        didSet {
+            print("Presentation info updated")
+        }
+    }
 
     func delete() {
         item?.delete()

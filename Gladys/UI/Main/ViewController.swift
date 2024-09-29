@@ -479,7 +479,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                let item = DropStore.item(uuid: uuid) {
                 log("Prefetching presentation info for \(uuid)")
                 Task {
-                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize, alwaysStartFresh: false)
+                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
                 }
             }
         }
