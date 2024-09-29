@@ -24,11 +24,6 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>GladysIntents.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
-		</dict>
 		<key>GladysKeys.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -43,11 +38,6 @@
 		<dict>
 			<key>orderHint</key>
 			<integer>13</integer>
-		</dict>
-		<key>GladysToday.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>5</integer>
 		</dict>
 		<key>GladysWatch.xcscheme_^#shared#^_</key>
 		<dict>
@@ -180,6 +170,11 @@
 			<true/>
 		</dict>
 		<key>167573FE1F12C22500385079</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>167812E72C3C750600E88CF1</key>
 		<dict>
 			<key>primary</key>
 			<true/>

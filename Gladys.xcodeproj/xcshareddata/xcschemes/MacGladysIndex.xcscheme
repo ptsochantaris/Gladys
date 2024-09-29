@@ -5,7 +5,8 @@
    version = "2.0">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -15,9 +16,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "16D984922160C5A000D9D51C"
-               BuildableName = "GladysIntents.appex"
-               BlueprintName = "GladysIntents"
+               BlueprintIdentifier = "167812E72C3C750600E88CF1"
+               BuildableName = "MacGladysIndex.appex"
+               BlueprintName = "MacGladysIndex"
                ReferencedContainer = "container:Gladys.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,9 +30,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
+               BlueprintIdentifier = "161718C32094D333005ABD6C"
                BuildableName = "Gladys.app"
-               BlueprintName = "Gladys"
+               BlueprintName = "MacGladys"
                ReferencedContainer = "container:Gladys.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -41,13 +42,11 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      intentQueryString = "Paste into Gladys"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
@@ -58,21 +57,19 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.notificationcenterui">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "16D984922160C5A000D9D51C"
-            BuildableName = "GladysIntents.appex"
-            BlueprintName = "GladysIntents"
+            BlueprintIdentifier = "161718C32094D333005ABD6C"
+            BuildableName = "Gladys.app"
+            BlueprintName = "MacGladys"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
-      intentQueryString = "Paste into Gladys"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -83,9 +80,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1678F9CC1EF475FE005697CB"
+            BlueprintIdentifier = "161718C32094D333005ABD6C"
             BuildableName = "Gladys.app"
-            BlueprintName = "Gladys"
+            BlueprintName = "MacGladys"
             ReferencedContainer = "container:Gladys.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

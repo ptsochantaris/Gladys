@@ -70,8 +70,8 @@ public enum LiteModel {
 
     public static func allItems() -> Lista<ArchivedItem> {
         let items = Lista<ArchivedItem>()
-        iterateThroughSavedItemsWithoutLoading { item in
-            items.append(item)
+        iterateThroughSavedItemsWithoutLoading {
+            items.append($0)
             return true
         }
         return items
@@ -88,39 +88,41 @@ public enum LiteModel {
     public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool, completion: (@Sendable () -> Void)? = nil) {
         let url = itemsDirectoryUrl
 
-        coordinator.coordinate(with: [.readingIntent(with: url, options: .withoutChanges)], queue: OperationQueue.main) { coordinationError in
-            Task {
-                defer {
-                    completion?()
-                }
+        coordinator.coordinate(with: [.readingIntent(with: url, options: .withoutChanges)], queue: OperationQueue()) { coordinationError in
+            defer {
+                completion?()
+            }
 
-                if let coordinationError {
-                    log("Lite model loading error: \(coordinationError)")
-                    return
-                }
+            if let coordinationError {
+                log("Lite model loading error: \(coordinationError)")
+                return
+            }
 
-                guard FileManager.default.fileExists(atPath: url.path) else {
-                    log("Lite model loading: No data directory, skipping")
-                    return
-                }
+            guard FileManager.default.fileExists(atPath: url.path) else {
+                log("Lite model loading: No data directory, skipping")
+                return
+            }
 
-                do {
-                    let decoder = loadDecoder
-                    let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
-                    let uuids = d.withUnsafeBytes { $0.bindMemory(to: uuid_t.self) }
-                    for u in uuids {
+            do {
+                let decoder = loadDecoder
+                let d = try Data(contentsOf: url.appendingPathComponent("uuids"))
+                let uuids = d.withUnsafeBytes { $0.bindMemory(to: uuid_t.self) }
+                let semaphore = DispatchSemaphore(value: 0)
+                for u in uuids {
+                    nonisolated(unsafe) var go = true
+                    Task { // doubles as an autoreleasepool
                         let u = UUID(uuid: u)
                         let dataPath = url.appendingPathComponent(u.uuidString)
                         if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                            let go = await perItemCallback(item)
-                            if !go {
-                                return
-                            }
+                            go = await perItemCallback(item)
                         }
+                        semaphore.signal()
                     }
-                } catch {
-                    log("Error in searching through saved items for a component: \(error)")
+                    semaphore.wait()
+                    if !go { break }
                 }
+            } catch {
+                log("Error in searching through saved items for a component: \(error)")
             }
         }
     }

@@ -11,27 +11,15 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: ConfigIntent, in context: Context) async -> CurrentState {
-        await CurrentState(date: Date(), displaySize: context.displaySize, items: loadPresentationInfo(in: context, configuration: configuration))
-    }
-
-    func timeline(for configuration: ConfigIntent, in context: Context) async -> Timeline<CurrentState> {
-        let entry = await CurrentState(date: Date(), displaySize: context.displaySize, items: loadPresentationInfo(in: context, configuration: configuration))
-        return Timeline(entries: [entry], policy: .never)
-    }
-
-    private func loadPresentationInfo(in context: Context, configuration: ConfigIntent) async -> [PresentationInfo] {
         let itemCount = context.family.maxCount - 1
 
-        return await Task { @MainActor in
+        let info = await Task { @MainActor in
             let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
 
-            let search = configuration.search ?? ""
-            if search.isPopulated {
+            if let search = configuration.search, search.isPopulated {
                 filter.text = search
             }
-
-            let labelFilterId = configuration.label?.id ?? ""
-            if labelFilterId.isPopulated {
+            if let labelFilterId = configuration.label?.id, labelFilterId.isPopulated {
                 filter.enableLabelsByName([labelFilterId])
             }
             filter.update(signalUpdate: .none)
@@ -41,5 +29,12 @@ struct Provider: AppIntentTimelineProvider {
                 await $0.createPresentationInfo(style: .widget, expectedSize: .zero, alwaysStartFresh: true)
             }
         }.value
+
+        return CurrentState(date: Date(), displaySize: context.displaySize, items: info)
+    }
+
+    func timeline(for configuration: ConfigIntent, in context: Context) async -> Timeline<CurrentState> {
+        let entry = await snapshot(for: configuration, in: context)
+        return Timeline(entries: [entry], policy: .never)
     }
 }

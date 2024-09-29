@@ -9,15 +9,11 @@ struct GladysWidgetsEntryView: View {
     @Environment(\.widgetFamily) private var widgetFamily: WidgetFamily
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
-    private func itemIntent(for id: UUID?) -> any AppIntent {
-        if let id {
-            let x = GladysAppIntents.OpenGladys()
-            x.entity = GladysAppIntents.ArchivedItemEntity(id: id, title: "")
-            x.action = .userDefault
-            return x
-        } else {
-            return GladysAppIntents.PasteIntoGladys()
-        }
+    private func itemIntent(for id: UUID) -> GladysAppIntents.OpenGladys {
+        let x = GladysAppIntents.OpenGladys()
+        x.entity = GladysAppIntents.ArchivedItemEntity(id: id, title: "")
+        x.action = .userDefault
+        return x
     }
 
     private struct RowData: Identifiable {
@@ -52,7 +48,7 @@ struct GladysWidgetsEntryView: View {
                         .buttonStyle(.plain)
                     }
                     if row.items.count < columns {
-                        Button(intent: itemIntent(for: nil)) {
+                        Button(intent: GladysAppIntents.PasteIntoGladys()) {
                             Image(systemName: "arrow.down.doc")
                                 .font(.largeTitle).fontWeight(.light)
                                 .foregroundColor(Color(.g_colorTint))
