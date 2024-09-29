@@ -27,7 +27,7 @@ extension GladysAppIntents {
             }
 
             let importer = DataImporter(type: (data.type ?? .data).identifier, data: data.data, suggestedName: data.filename)
-            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [])
+            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [], currentFilter: nil)
         }
     }
 }

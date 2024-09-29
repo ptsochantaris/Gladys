@@ -3,13 +3,6 @@ import GladysCommon
 import GladysUI
 
 @MainActor
-var allFilters: [Filter] {
-    NSApp.orderedWindows.compactMap {
-        ($0.contentViewController as? ViewController)?.filter
-    }
-}
-
-@MainActor
 var keyGladysControllerIfExists: ViewController? {
     NSApp.keyWindow?.contentViewController as? ViewController
 }

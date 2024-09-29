@@ -20,7 +20,7 @@ extension GladysAppIntents {
                     throw GladysAppIntentsError.nothingInClipboard
                 }
                 let importer = DataImporter(itemProvider: p)
-                await Model.pasteItems(from: [importer], overrides: nil)
+                await Model.pasteItems(from: [importer], overrides: nil, currentFilter: nil)
             #else
                 let pb = NSPasteboard.general
                 guard let c = pb.pasteboardItems?.count, c > 0 else {

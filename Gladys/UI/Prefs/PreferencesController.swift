@@ -7,6 +7,8 @@ import UniformTypeIdentifiers
 final class PreferencesController: GladysViewController, UIDragInteractionDelegate, UIDropInteractionDelegate, UIDocumentPickerDelegate {
     @IBOutlet private var exportOnlyVisibleSwitch: UISwitch!
 
+    var associatedFilter: Filter?
+
     private func showExportActivity(_ show: Bool) {
         if show {
             spinner.startAnimating()
@@ -29,7 +31,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     }
 
     private var archiveDragItems: [UIDragItem] {
-        guard let filter = view.associatedFilter else { return [] }
+        guard let filter = associatedFilter else { return [] }
 
         let i = NSItemProvider()
         i.suggestedName = "Gladys Archive.gladysArchive"
@@ -53,7 +55,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     }
 
     private var zipDragItems: [UIDragItem] {
-        guard let filter = view.associatedFilter else { return [] }
+        guard let filter = associatedFilter else { return [] }
 
         let i = NSItemProvider()
         i.suggestedName = "Gladys.zip"
@@ -186,6 +188,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        associatedFilter = view.associatedFilter
         doneButtonLocation = .right
 
         container.layer.cornerRadius = 10
@@ -240,7 +243,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
         spinner.stopAnimating()
         exportOnlyVisibleSwitch.isEnabled = true
 
-        guard let filter = view.associatedFilter else { return }
+        guard let filter = associatedFilter else { return }
 
         let count = filter.eligibleDropsForExport.count
         infoLabel.text = "…"
@@ -297,7 +300,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     }
 
     private func exportSelected() {
-        guard let filter = view.associatedFilter else { return }
+        guard let filter = associatedFilter else { return }
         showExportActivity(true)
         Task {
             do {
@@ -333,7 +336,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
     }
 
     @objc private func zipSelected() {
-        guard let filter = view.associatedFilter else { return }
+        guard let filter = associatedFilter else { return }
         showZipActivity(true)
         Task {
             do {

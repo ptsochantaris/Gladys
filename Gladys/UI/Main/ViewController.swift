@@ -717,10 +717,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             await self?._modelDataUpdate(object)
         }
 
-        notifications(for: .ItemsAddedBySync) { [weak self] _ in
-            self?.filter.update(signalUpdate: .animated)
-        }
-
         notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
             await self?.cloudStatusChanged()
         }
@@ -850,7 +846,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     override func paste(itemProviders: [NSItemProvider]) {
-        Model.pasteItems(from: itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil)
+        Model.pasteItems(from: itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil, currentFilter: filter)
     }
 
     override func canPaste(_: [NSItemProvider]) -> Bool {
@@ -1089,7 +1085,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     @IBOutlet private var pasteButton: UIBarButtonItem!
 
     @IBAction private func pasteSelected(_: UIBarButtonItem) {
-        if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil) {
+        if case .noData = Model.pasteItems(from: UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }, overrides: nil, currentFilter: filter) {
             Task {
                 await genericAlert(title: "Nothing to Paste", message: "There is currently nothing in the clipboard.")
             }

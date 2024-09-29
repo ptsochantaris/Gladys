@@ -54,7 +54,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
             } else {
                 mimeType
             }
-            if case .success = Model.pasteItems(from: [importer], overrides: ImportOverrides(title: titleString, note: nil, labels: nil)) {
+            if case .success = Model.pasteItems(from: [importer], overrides: ImportOverrides(title: titleString, note: nil, labels: nil), currentFilter: currentWindow?.associatedFilter) {
                 Task {
                     await genericAlert(title: nil, message: "Extracted as new item", buttonTitle: nil)
                 }

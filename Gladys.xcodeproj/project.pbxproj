@@ -80,6 +80,10 @@
 		164720BA2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
 		164720BB2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
 		164720BC2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */; };
+		164720CE2CAA01F100FE9C1C /* Model+AppIntents+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720CD2CAA01E700FE9C1C /* Model+AppIntents+Mac.swift */; };
+		164720CF2CAA022200FE9C1C /* Model+AppIntents+Mac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720CD2CAA01E700FE9C1C /* Model+AppIntents+Mac.swift */; };
+		164720D12CAA044B00FE9C1C /* Model+AppIntents+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720D02CAA044300FE9C1C /* Model+AppIntents+iOS.swift */; };
+		164720D22CAA04F800FE9C1C /* Model+AppIntents+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164720D02CAA044300FE9C1C /* Model+AppIntents+iOS.swift */; };
 		164947CF20BEAA6200BD1BEB /* icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 164947CE20BEAA6200BD1BEB /* icon.icns */; };
 		164947D120BEAA6200BD1BEB /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164947D020BEAA6200BD1BEB /* ShareViewController.swift */; };
 		164947D420BEAA6200BD1BEB /* ShareViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 164947D220BEAA6200BD1BEB /* ShareViewController.xib */; };
@@ -430,6 +434,8 @@
 		164720B12CA9F61D00FE9C1C /* CreateItemFromUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemFromUrl.swift; sourceTree = "<group>"; };
 		164720B52CA9F63300FE9C1C /* CreateItemFromText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateItemFromText.swift; sourceTree = "<group>"; };
 		164720B92CA9F66C00FE9C1C /* GladysAppIntentsError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GladysAppIntentsError.swift; sourceTree = "<group>"; };
+		164720CD2CAA01E700FE9C1C /* Model+AppIntents+Mac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+AppIntents+Mac.swift"; sourceTree = "<group>"; };
+		164720D02CAA044300FE9C1C /* Model+AppIntents+iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+AppIntents+iOS.swift"; sourceTree = "<group>"; };
 		164947CC20BEAA6200BD1BEB /* MacGladysShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacGladysShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		164947CE20BEAA6200BD1BEB /* icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = icon.icns; sourceTree = "<group>"; };
 		164947D020BEAA6200BD1BEB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -841,6 +847,7 @@
 		1689646D29905B25009D7D01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				164720D02CAA044300FE9C1C /* Model+AppIntents+iOS.swift */,
 				16969BB61FB109D9007B2F77 /* ArchivedItem+Copy.swift */,
 				164CEC712AB23AE700298594 /* WatchDelegate.swift */,
 				16A925092A35CB6300A6B52E /* Model+iOS.swift */,
@@ -893,6 +900,7 @@
 		16906A9C23C8C9CA00D6C177 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				164720CD2CAA01E700FE9C1C /* Model+AppIntents+Mac.swift */,
 				161718C62094D333005ABD6C /* AppDelegate.swift */,
 				16C8166A20CB4EF1001C12DF /* Application.swift */,
 				164C3B9220BE144000E9A8B5 /* CallbackSupport.swift */,
@@ -1658,6 +1666,7 @@
 				168D2CAB209DADF3005041CF /* DetailController.swift in Sources */,
 				16D3CC0A26343B6400BCC5B4 /* WindowController.swift in Sources */,
 				164C3B9320BE144000E9A8B5 /* CallbackSupport.swift in Sources */,
+				164720CE2CAA01F100FE9C1C /* Model+AppIntents+Mac.swift in Sources */,
 				164720AF2CA9F5D900FE9C1C /* CreateItemFromFile.swift in Sources */,
 				168D2CB1209E0988005041CF /* ComponentCell.swift in Sources */,
 				164720902CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */,
@@ -1806,6 +1815,7 @@
 				16969BBA1FB10A58007B2F77 /* Component+Copy.swift in Sources */,
 				164CEC662AB239A700298594 /* ArchivedItem+iOS.swift in Sources */,
 				16AFEF9E1F2A9C0B008C2E20 /* PreferencesController.swift in Sources */,
+				164720D12CAA044B00FE9C1C /* Model+AppIntents+iOS.swift in Sources */,
 				16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */,
 				162289B4207CC72600DAC6A2 /* CallbackSupport.swift in Sources */,
 				162383F220F9694A0086E719 /* LabelEditorController.swift in Sources */,
@@ -1862,6 +1872,8 @@
 				168946002CA7354B005EB3EB /* GladysWidgetsBundle.swift in Sources */,
 				164720A82CA9F58F00FE9C1C /* OpenGladys.swift in Sources */,
 				168946082CA73C3F005EB3EB /* LabelOption.swift in Sources */,
+				164720D22CAA04F800FE9C1C /* Model+AppIntents+iOS.swift in Sources */,
+				164720CF2CAA022200FE9C1C /* Model+AppIntents+Mac.swift in Sources */,
 				168946022CA735D0005EB3EB /* ItemCell.swift in Sources */,
 				1647208F2CA9F43900FE9C1C /* ArchivedItemEntity.swift in Sources */,
 				164720BC2CA9F66C00FE9C1C /* GladysAppIntentsError.swift in Sources */,

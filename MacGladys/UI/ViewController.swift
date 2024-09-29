@@ -143,10 +143,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             }
         }
 
-        notifications(for: .ItemsAddedBySync) { [weak self] _ in
-            self?.filter.update(signalUpdate: .animated)
-        }
-
         Task {
             await updateTitle()
         }

@@ -28,7 +28,7 @@ extension GladysAppIntents {
 
             let p = NSItemProvider(object: data as NSString)
             let importer = DataImporter(itemProvider: p)
-            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [])
+            return try await Model.createItem(provider: importer, title: customName, note: note, labels: labels ?? [], currentFilter: nil)
         }
     }
 }

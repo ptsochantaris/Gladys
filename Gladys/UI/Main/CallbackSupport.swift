@@ -66,7 +66,7 @@ extension CallbackSupport {
     @discardableResult
     static func handleEncodedRequest(_ data: Data, overrides: ImportOverrides) -> PasteResult {
         let importer = DataImporter(type: UTType.data.identifier, data: data, suggestedName: overrides.title)
-        return Model.pasteItems(from: [importer], overrides: overrides)
+        return Model.pasteItems(from: [importer], overrides: overrides, currentFilter: nil)
     }
 
     @discardableResult
@@ -76,13 +76,13 @@ extension CallbackSupport {
         let labelsList = labels?.split(separator: ",").map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
         let importOverrides = ImportOverrides(title: title, note: note, labels: labelsList)
         let importers = UIPasteboard.general.itemProviders.map { DataImporter(itemProvider: $0) }
-        return Model.pasteItems(from: importers, overrides: importOverrides)
+        return Model.pasteItems(from: importers, overrides: importOverrides, currentFilter: nil)
     }
 
     @discardableResult
     private static func handleCreateRequest(object: NSItemProviderWriting, overrides: ImportOverrides) -> PasteResult {
         let p = NSItemProvider(object: object)
         let importer = DataImporter(itemProvider: p)
-        return Model.pasteItems(from: [importer], overrides: overrides)
+        return Model.pasteItems(from: [importer], overrides: overrides, currentFilter: nil)
     }
 }

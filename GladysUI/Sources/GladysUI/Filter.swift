@@ -66,6 +66,10 @@ public final class Filter {
         self.manualDropSource = manualDropSource
         filteredDrops = manualDropSource ?? DropStore.allDrops
         rebuildLabels()
+
+        notifications(for: .FiltersShouldUpdate) { [weak self] _ in
+            self?.update(signalUpdate: .animated)
+        }
     }
 
     public func sizeOfVisibleItemsInBytes() async -> Int64 {

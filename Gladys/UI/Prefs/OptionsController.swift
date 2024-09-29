@@ -61,7 +61,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
 
     @IBAction private func exclusiveMultipleLabelsSwitchSelected(_ sender: UISwitch) {
         PersistedOptions.exclusiveMultipleLabels = sender.isOn
-        view.associatedFilter?.update(signalUpdate: .animated)
+        sendNotification(name: .FiltersShouldUpdate)
     }
 
     @IBAction private func autoArchiveSwitchSelected(_ sender: UISwitch) {
@@ -100,7 +100,7 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
             break
         }
         updateSearchSelectorDescription()
-        view.associatedFilter?.update(signalUpdate: .animated)
+        sendNotification(name: .FiltersShouldUpdate)
     }
 
     @IBAction private func twoColumnsSwitchSelected(_ sender: UISwitch) {

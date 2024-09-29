@@ -15,12 +15,9 @@ public extension UIWindow {
 }
 
 @MainActor
-public var currentWindow: UIWindow? {
-    UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
-}
-
-@MainActor
 public func genericAlert(title: String?, message: String? = nil, buttonTitle: String? = "OK", offerSettingsShortcut: Bool = false, alertController: ((UIAlertController) -> Void)? = nil) async {
+    let currentWindow = UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
+
     guard let presenter = currentWindow?.alertPresenter else {
         return
     }

@@ -8,26 +8,9 @@ import UIKit
 import WatchConnectivity
 import WidgetKit
 
-extension UISceneSession {
-    var associatedFilter: Filter {
-        if let existing = userInfo?[kGladysMainFilter] as? Filter {
-            return existing
-        }
-        let newFilter = Filter()
-        if userInfo == nil {
-            userInfo = [kGladysMainFilter: newFilter]
-        } else {
-            userInfo![kGladysMainFilter] = newFilter
-        }
-        return newFilter
-    }
-}
-
-extension UIView {
-    var associatedFilter: Filter? {
-        let w = (self as? UIWindow) ?? window
-        return w?.windowScene?.session.associatedFilter
-    }
+@MainActor
+var currentWindow: UIWindow? {
+    UIApplication.shared.connectedScenes.filter { $0.activationState != .background }.compactMap { ($0 as? UIWindowScene)?.windows.first }.lazy.first
 }
 
 extension Model {
@@ -67,37 +50,9 @@ extension Model {
         }
     }
 
-    static func createItem(provider: DataImporter, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel]) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
+    static func createItem(provider: DataImporter, title: String?, note: String?, labels: [GladysAppIntents.ArchivedItemLabel], currentFilter: Filter?) async throws -> some IntentResult & ReturnsValue<GladysAppIntents.ArchivedItemEntity> & OpensIntent {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
-        let result = pasteItems(from: [provider], overrides: importOverrides)
+        let result = pasteItems(from: [provider], overrides: importOverrides, currentFilter: currentFilter)
         return try await GladysAppIntents.processCreationResult(result)
-    }
-
-    @discardableResult
-    static func pasteItems(from providers: [DataImporter], overrides: ImportOverrides?) -> PasteResult {
-        if providers.isEmpty {
-            return .noData
-        }
-
-        let currentFilter = currentWindow?.associatedFilter
-
-        var items = [ArchivedItem]()
-        var addedStuff = false
-        for provider in providers { // separate item for each provider in the pasteboard
-            for item in ArchivedItem.importData(providers: [provider], overrides: overrides) {
-                if let currentFilter, currentFilter.isFilteringLabels, !PersistedOptions.dontAutoLabelNewItems {
-                    item.labels = currentFilter.enabledLabelsForItems
-                }
-                DropStore.insert(drop: item, at: 0)
-                items.append(item)
-                addedStuff = true
-            }
-        }
-
-        if addedStuff {
-            currentFilter?.update(signalUpdate: .animated)
-        }
-
-        return .success(items)
     }
 }

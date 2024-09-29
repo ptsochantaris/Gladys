@@ -22,7 +22,6 @@ extension Notification: @unchecked @retroactive Sendable {}
 public extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
     static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
-    static let ItemsAddedBySync = Notification.Name("ItemsAddedBySync")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
     static let LabelsUpdated = Notification.Name("LabelsUpdated")
     static let LabelSelectionChanged = Notification.Name("LabelSelectionChanged")
@@ -34,6 +33,7 @@ public extension Notification.Name {
     static let ForegroundDisplayedItem = Notification.Name("ForegroundDisplayedItem")
     static let AlwaysOnTopChanged = Notification.Name("AlwaysOnTopChanged")
     static let ClipboardSnoopingChanged = Notification.Name("ClipboardSnoopingChanged")
+    static let FiltersShouldUpdate = Notification.Name("FiltersShouldUpdate")
 }
 
 public func sendNotification(name: Notification.Name, object: Sendable? = nil) {

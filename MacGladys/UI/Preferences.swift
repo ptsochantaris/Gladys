@@ -454,9 +454,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         default:
             break
         }
-        for filter in allFilters {
-            filter.update(signalUpdate: .animated)
-        }
+        sendNotification(name: .FiltersShouldUpdate)
     }
 
     @IBAction private func automaticallyConvertUrlsSwitchChanged(_ sender: NSButton) {
