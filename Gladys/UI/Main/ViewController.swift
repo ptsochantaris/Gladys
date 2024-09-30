@@ -1105,6 +1105,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         super.didReceiveMemoryWarning()
     }
 
+    func sceneBackgrounded() {
+        lowMemoryMode = true
+        if let collection {
+            collection.reloadData()
+        }
+    }
+
     func sceneForegrounded() {
         lowMemoryMode = false
         if let collection {

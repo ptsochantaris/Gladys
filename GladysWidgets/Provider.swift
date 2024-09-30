@@ -14,7 +14,8 @@ struct Provider: AppIntentTimelineProvider {
         let itemCount = context.family.maxCount - 1
 
         let info = await Task { @MainActor in
-            let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
+            let allItems = await LiteModel.allItems()
+            let filter = Filter(manualDropSource: allItems)
 
             if let search = configuration.search, search.isPopulated {
                 filter.text = search

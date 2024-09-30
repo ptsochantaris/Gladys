@@ -68,13 +68,13 @@ public enum LiteModel {
         return items
     }
 
-    public static func allItems() -> Lista<ArchivedItem> {
+    public static func allItems() async -> ContiguousArray<ArchivedItem> {
         let items = Lista<ArchivedItem>()
-        iterateThroughSavedItemsWithoutLoading {
+        await iterateThroughSavedItemsWithoutLoading {
             items.append($0)
             return true
         }
-        return items
+        return ContiguousArray(items)
     }
 
     public static func iterateThroughSavedItemsWithoutLoading(perItemCallback: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async {

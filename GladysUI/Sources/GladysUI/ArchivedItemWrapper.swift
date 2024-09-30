@@ -43,10 +43,13 @@ public final class ArchivedItemWrapper: Identifiable {
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    func clear() async {
+    func clear() {
         if let i = item {
-            await i.cancelPresentationGeneration()
+            Task {
+                await i.cancelPresentationGeneration()
+            }
             item = nil
+            observer?.cancel()
             observer = nil
             presentationInfo = PresentationInfo()
         }
@@ -70,9 +73,7 @@ public final class ArchivedItemWrapper: Identifiable {
 
     func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else {
-            Task {
-                await clear()
-            }
+            clear()
             return
         }
 
@@ -108,11 +109,7 @@ public final class ArchivedItemWrapper: Identifiable {
         style.allowsShadows && presentationInfo.highlightColor == .none
     }
 
-    var presentationInfo = PresentationInfo() {
-        didSet {
-            print("Presentation info updated")
-        }
-    }
+    var presentationInfo = PresentationInfo()
 
     func delete() {
         item?.delete()

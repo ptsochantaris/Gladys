@@ -106,9 +106,12 @@ final class MessagesViewController: MSMessagesAppViewController, UICollectionVie
 
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
-        DropStore.boot(with: ContiguousArray(LiteModel.allItems()))
-        emptyLabel.isHidden = DropStore.visibleDrops.isPopulated
-        searchBar.text = lastFilter
+        Task {
+            let allItems = await LiteModel.allItems()
+            DropStore.boot(with: allItems)
+            emptyLabel.isHidden = DropStore.visibleDrops.isPopulated
+            searchBar.text = lastFilter
+        }
     }
 
     override func willResignActive(with conversation: MSConversation) {

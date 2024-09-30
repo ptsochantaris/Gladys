@@ -13,8 +13,8 @@ struct LabelQuery: EntityStringQuery {
 
     func entities(for identifiers: [String]) async throws -> [LabelOption] {
         await Task { @MainActor in
-            let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
-            filter.rebuildLabels()
+            let allItems = await LiteModel.allItems()
+            let filter = Filter(manualDropSource: allItems)
             let names = Set(filter.labelToggles.map(\.function.displayText))
             return identifiers.compactMap { entityId in
                 if entityId == "" {
@@ -30,8 +30,8 @@ struct LabelQuery: EntityStringQuery {
 
     func suggestedEntities() async throws -> [LabelOption] {
         await Task { @MainActor in
-            let filter = Filter(manualDropSource: ContiguousArray(LiteModel.allItems()))
-            filter.rebuildLabels()
+            let allItems = await LiteModel.allItems()
+            let filter = Filter(manualDropSource: allItems)
             return [LabelOption.clear] + filter.labelToggles.compactMap {
                 if case .userLabel = $0.function {
                     let labelText = $0.function.displayText

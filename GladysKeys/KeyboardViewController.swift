@@ -246,17 +246,19 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     }
 
     private func externalDataUpdated() {
-        let items = ContiguousArray(LiteModel.allItems())
-        DropStore.boot(with: items)
-        updateFilteredItems()
-        if filteredDrops.isEmpty {
-            emptyStack.isHidden = false
-            settingsButton.isHidden = true
-        } else {
-            emptyStack.isHidden = true
+        Task {
+            let items = await LiteModel.allItems()
+            DropStore.boot(with: items)
+            updateFilteredItems()
+            if filteredDrops.isEmpty {
+                emptyStack.isHidden = false
+                settingsButton.isHidden = true
+            } else {
+                emptyStack.isHidden = true
+            }
+            updateItemSize(for: view.bounds.size)
+            itemsView.reloadData()
         }
-        updateItemSize(for: view.bounds.size)
-        itemsView.reloadData()
     }
 
     deinit {
