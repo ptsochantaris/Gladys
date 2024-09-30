@@ -6,7 +6,10 @@ import GladysUIKit
 import Maintini
 import UIKit
 import WatchConnectivity
-import WidgetKit
+
+#if canImport(WidgetKit)
+    import WidgetKit
+#endif
 
 @MainActor
 var currentWindow: UIWindow? {
@@ -23,7 +26,9 @@ extension Model {
                 break
 
             case let .saveComplete(dueToSyncFetch):
-                WidgetCenter.shared.reloadAllTimelines()
+                #if canImport(WidgetKit)
+                    WidgetCenter.shared.reloadAllTimelines()
+                #endif
 
                 watchDelegate?.updateContext()
 
