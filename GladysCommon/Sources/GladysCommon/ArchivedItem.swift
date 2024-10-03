@@ -19,6 +19,7 @@ import UniformTypeIdentifiers
 
 #if !os(watchOS)
     extension SFSpeechRecognitionResult: @retroactive @unchecked Sendable {}
+    extension VNImageBasedRequest: @retroactive @unchecked Sendable {}
 #endif
 
 @MainActor
@@ -633,40 +634,48 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
             let mediaInfo = urlOfMediaComponentIfExists
 
             var tags1 = [String]()
-            var tags2 = [String]()
 
             if autoImage || ocrImage, displayMode == .fill, let img {
-                var visualRequests = [VNImageBasedRequest]()
-                var speechTask: SFSpeechRecognitionTask?
-
-                if autoImage {
-                    let r = VNClassifyImageRequest { request, _ in
-                        if let observations = request.results as? [VNClassificationObservation] {
-                            let relevant = observations.filter {
-                                $0.hasMinimumPrecision(0.7, forRecall: 0)
-                            }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                            tags1.append(contentsOf: relevant)
-                        }
-                    }
-                    visualRequests.append(r)
-                }
-
-                if ocrImage {
-                    let r = VNRecognizeTextRequest { request, _ in
-                        if let observations = request.results as? [VNRecognizedTextObservation] {
-                            let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
-                            if detectedText.isPopulated {
-                                transcribedText = detectedText
+                let vr = await Task.detached {
+                    var visualRequests = [VNImageBasedRequest]()
+                    if autoImage {
+                        let r = VNClassifyImageRequest { request, _ in
+                            if let observations = request.results as? [VNClassificationObservation] {
+                                let relevant = observations.filter {
+                                    $0.hasMinimumPrecision(0.7, forRecall: 0)
+                                }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
+                                tags1.append(contentsOf: relevant)
                             }
                         }
+                        visualRequests.append(r)
                     }
-                    r.recognitionLevel = .accurate
-                    visualRequests.append(r)
-                }
 
-                if visualRequests.isPopulated {
-                    try? VNImageRequestHandler(cgImage: img).perform(visualRequests)
-                }
+                    if ocrImage {
+                        let r = VNRecognizeTextRequest { request, _ in
+                            if let observations = request.results as? [VNRecognizedTextObservation] {
+                                let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+                                if detectedText.isPopulated {
+                                    transcribedText = detectedText
+                                }
+                            }
+                        }
+                        r.recognitionLevel = .accurate
+                        visualRequests.append(r)
+                    }
+
+                    if visualRequests.isPopulated {
+                        let handler = VNImageRequestHandler(cgImage: img)
+                        do {
+                            try handler.perform(visualRequests)
+                        } catch {
+                            log("Warning - VNImageRequestHandler failed: \(error.localizedDescription)")
+                        }
+                    }
+
+                    return visualRequests
+                }.value
+
+                var speechTask: SFSpeechRecognitionTask?
 
                 if transcribeAudio, let (mediaUrl, ext) = mediaInfo, let recognizer = SFSpeechRecognizer(), recognizer.isAvailable, recognizer.supportsOnDeviceRecognition {
                     log("Will treat media file as \(ext) file for audio transcribing")
@@ -695,13 +704,14 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                     try? FileManager.default.removeItem(at: link)
                 }
 
-                let vr = visualRequests
                 let st = speechTask
                 loadingProgress.cancellationHandler = {
                     vr.forEach { $0.cancel() }
                     st?.cancel()
                 }
             }
+
+            var tags2 = [String]()
 
             if autoText, let finalTitle = transcribedText ?? finalTitle {
                 let tagTask = Task.detached { () -> [String] in
