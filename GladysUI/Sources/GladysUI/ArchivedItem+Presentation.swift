@@ -64,9 +64,12 @@ public extension ArchivedItem {
         var top = defaultColor
         var bottom = defaultColor
         var result: IMAGE?
+        let (dm, status) = await (displayMode, status)
 
-        let dm = await displayMode
-        if dm == .center || style != .square {
+        if status.shouldDisplayLoading {
+            // nothing to do for now
+
+        } else if dm == .center || style != .square {
             result = await prepareImage(asThumbnail: style == .widget)
             if Task.isCancelled {
                 return nil
