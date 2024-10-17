@@ -13,7 +13,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         Maintini.setup()
         Singleton.shared.setup()
         application.registerForRemoteNotifications()
+
         Task {
+            assert(Thread.isMainThread)
             if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
                 _ = await CloudManager.received(notificationInfo: pushUserInfo)
             } else {
@@ -26,21 +28,23 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         BGTaskScheduler.shared.register(forTaskWithIdentifier: BackgroundRefreshTasks.bgRefreshTaskIdentifier, using: nil) { task in
-            Task {
+            task.expirationHandler = {
+                log("Warning: Background refresh task was expired by the system")
+            }
+            log("Running scheduled background task")
+            Task { @MainActor in
+                let result: Bool
                 do {
-                    task.expirationHandler = {
-                        log("Warning: Background refresh task was expired by the system")
-                    }
-                    log("Running scheduled background task")
                     try await CloudManager.syncAfterSaveIfNeeded()
                     for session in application.openSessions {
                         application.requestSceneSessionRefresh(session)
                     }
-                    task.setTaskCompleted(success: true)
+                    result = true
                 } catch {
                     log("Failure while syncing based on background refresh request: \(error.localizedDescription)")
-                    task.setTaskCompleted(success: false)
+                    result = false
                 }
+                task.setTaskCompleted(success: result)
             }
         }
 
