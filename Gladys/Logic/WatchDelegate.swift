@@ -6,21 +6,23 @@ import MapKit
 import UIKit
 import WatchConnectivity
 
+@MainActor
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
         super.init()
+
         let session = WCSession.default
         session.delegate = self
         session.activate()
     }
 
-    func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
+    nonisolated func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error _: Error?) {}
 
-    func sessionReachabilityDidChange(_: WCSession) {}
+    nonisolated func sessionReachabilityDidChange(_: WCSession) {}
 
-    func sessionDidBecomeInactive(_: WCSession) {}
+    nonisolated func sessionDidBecomeInactive(_: WCSession) {}
 
-    func sessionDidDeactivate(_: WCSession) {}
+    nonisolated func sessionDidDeactivate(_: WCSession) {}
 
     private enum TextOrNumber {
         case text(String), number(CGFloat)
@@ -52,33 +54,31 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
+    nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
         guard let watchMessage = WatchMessage.parse(from: messageData) else {
             replyHandler(Data())
             return
         }
 
         nonisolated(unsafe) let handler = replyHandler
-        _ = MainActor.assumeIsolated {
-            Task {
-                let replyData = await Self.handle(message: watchMessage).asData ?? Data()
-                handler(replyData)
-            }
+        Task { @MainActor in
+            let replyData = await Self.handle(message: watchMessage).asData ?? Data()
+            handler(replyData)
         }
     }
 
     private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
-            guard let item = await DropStore.item(uuid: imageInfo.id) else {
+            guard let item = DropStore.item(uuid: imageInfo.id) else {
                 return .failure
             }
 
             let size = CGSize(width: imageInfo.width, height: imageInfo.height)
 
-            let mode = await item.displayMode
+            let mode = item.displayMode
             let data: Data
-            if mode == .center, let backgroundInfoObject = await item.backgroundInfoObject {
+            if mode == .center, let backgroundInfoObject = item.backgroundInfoObject {
                 switch backgroundInfoObject.content {
                 case let .color(color):
                     let icon = UIGraphicsImageRenderer(size: size).image { context in
@@ -101,31 +101,31 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
             return .ok
 
         case let .copy(uuid):
-            if let item = await DropStore.item(uuid: uuid) {
-                await item.copyToPasteboard()
+            if let item = DropStore.item(uuid: uuid) {
+                item.copyToPasteboard()
                 return .ok
             } else {
                 return .failure
             }
 
         case let .moveToTop(uuid):
-            if let item = await DropStore.item(uuid: uuid) {
-                await Model.sendToTop(items: [item])
+            if let item = DropStore.item(uuid: uuid) {
+                Model.sendToTop(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case let .delete(uuid):
-            if let item = await DropStore.item(uuid: uuid) {
-                await Model.delete(items: [item])
+            if let item = DropStore.item(uuid: uuid) {
+                Model.delete(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case .updateRequest:
-            return await buildContext()
+            return buildContext()
 
         case .contextReply, .failure, .imageData, .ok:
             return .failure
@@ -156,14 +156,12 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    @MainActor
     private static func buildContext() -> WatchMessage {
         let drops = DropStore.allDrops
         let items = drops.prefix(100).map(\.watchItem)
         return .contextReply(items, drops.count)
     }
 
-    @MainActor
     func updateContext() {
         let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
