@@ -6,7 +6,6 @@ import MapKit
 import UIKit
 import WatchConnectivity
 
-@MainActor
 final class WatchDelegate: NSObject, WCSessionDelegate {
     override init() {
         super.init()
@@ -67,6 +66,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
+    @MainActor
     private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
@@ -156,20 +156,22 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
+    @MainActor
     private static func buildContext() -> WatchMessage {
         let drops = DropStore.allDrops
         let items = drops.prefix(100).map(\.watchItem)
         return .contextReply(items, drops.count)
     }
 
+    @MainActor
     func updateContext() {
         let session = WCSession.default
         guard session.isReachable, session.activationState == .activated, session.isPaired, session.isWatchAppInstalled else { return }
         let context = Self.buildContext()
         Maintini.startMaintaining()
-        Task.detached {
+        Task {
             _ = try? await session.sendWatchMessage(context)
-            await Maintini.endMaintaining()
+            Maintini.endMaintaining()
         }
         log("Updated watch context")
     }
