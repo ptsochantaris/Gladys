@@ -157,11 +157,9 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
             }
 
             #if os(iOS) || os(visionOS)
-                await MainActor.run {
-                    if let v = image?.accessibilityValue {
-                        components.append(v)
-                    }
-                }
+            if let value = await MainActor.run(body: { image?.accessibilityValue }) {
+                components.append(value)
+            }
             #endif
 
             if await PersistedOptions.displayLabelsInMainView, let l = labels, !l.isEmpty {

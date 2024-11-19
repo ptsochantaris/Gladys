@@ -217,7 +217,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
         backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { [weak self] _ in
             guard let self else { return }
             Task {
-                await startRapidBackspace()
+                await self.startRapidBackspace()
             }
         }
     }

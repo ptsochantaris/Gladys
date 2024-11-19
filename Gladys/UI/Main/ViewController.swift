@@ -1668,25 +1668,14 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             let controlSize: CGFloat = 36
         #endif
 
-        if #available(iOS 18.0, visionOS 2.0, *) {
-            config.cornerStyle = .fixed
-            config.cornerRadius = controlSize * 0.5
-        } else {
-            config.cornerStyle = .capsule
-        }
+        config.cornerStyle = .fixed
+        config.cornerRadius = controlSize * 0.5
 
         let control = UIPasteControl(configuration: config)
-
-        if #available(iOS 18.0, visionOS 2.0, *) {
-            NSLayoutConstraint.activate([
-                control.widthAnchor.constraint(equalToConstant: controlSize),
-                control.heightAnchor.constraint(equalToConstant: controlSize)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                control.heightAnchor.constraint(equalToConstant: controlSize)
-            ])
-        }
+        NSLayoutConstraint.activate([
+            control.widthAnchor.constraint(equalToConstant: controlSize),
+            control.heightAnchor.constraint(equalToConstant: controlSize)
+        ])
         control.target = self
         control.translatesAutoresizingMaskIntoConstraints = false
         return control
