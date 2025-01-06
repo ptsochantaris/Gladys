@@ -54,31 +54,31 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
     }
 
     nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
-        guard let watchMessage = WatchMessage.parse(from: messageData) else {
-            replyHandler(Data())
-            return
-        }
-
         nonisolated(unsafe) let handler = replyHandler
-        Task { @MainActor in
-            let replyData = await Self.handle(message: watchMessage).asData ?? Data()
-            handler(replyData)
+        _ = onlyOnMainThread { // Swift 6.0 <-> WatchKit acrobatics
+            Task {
+                guard let watchMessage = WatchMessage.parse(from: messageData) else {
+                    handler(Data())
+                    return
+                }
+                let replyData = await Self.handle(message: watchMessage).asData ?? Data()
+                handler(replyData)
+            }
         }
     }
 
-    @MainActor
     private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
-            guard let item = DropStore.item(uuid: imageInfo.id) else {
+            guard let item = await DropStore.item(uuid: imageInfo.id) else {
                 return .failure
             }
 
             let size = CGSize(width: imageInfo.width, height: imageInfo.height)
 
-            let mode = item.displayMode
+            let mode = await item.displayMode
             let data: Data
-            if mode == .center, let backgroundInfoObject = item.backgroundInfoObject {
+            if mode == .center, let backgroundInfoObject = await item.backgroundInfoObject {
                 switch backgroundInfoObject.content {
                 case let .color(color):
                     let icon = UIGraphicsImageRenderer(size: size).image { context in
@@ -101,31 +101,31 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
             return .ok
 
         case let .copy(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                item.copyToPasteboard()
+            if let item = await DropStore.item(uuid: uuid) {
+                await item.copyToPasteboard()
                 return .ok
             } else {
                 return .failure
             }
 
         case let .moveToTop(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                Model.sendToTop(items: [item])
+            if let item = await DropStore.item(uuid: uuid) {
+                await Model.sendToTop(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case let .delete(uuid):
-            if let item = DropStore.item(uuid: uuid) {
-                Model.delete(items: [item])
+            if let item = await DropStore.item(uuid: uuid) {
+                await Model.delete(items: [item])
                 return .ok
             } else {
                 return .failure
             }
 
         case .updateRequest:
-            return buildContext()
+            return await buildContext()
 
         case .contextReply, .failure, .imageData, .ok:
             return .failure

@@ -68,7 +68,7 @@ public extension ArchivedItem {
 
         activity.isEligibleForHandoff = true
         activity.isEligibleForPublicIndexing = false
-        activity.targetContentIdentifier = [uuidString, childUuidString].compactMap { $0 }.joined(separator: "/")
+        activity.targetContentIdentifier = [uuidString, childUuidString].compactMap(\.self).joined(separator: "/")
 
         #if !os(macOS)
             activity.isEligibleForPrediction = true

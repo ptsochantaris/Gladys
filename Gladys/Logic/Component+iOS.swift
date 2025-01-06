@@ -195,31 +195,31 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
     }
 
     nonisolated func activityViewControllerPlaceholderItem(_: UIActivityViewController) -> Any {
-        MainActor.assumeIsolated {
+        onlyOnMainThread {
             component.encodedUrl ?? previewItem.previewItemURL
         } ?? Data()
     }
 
     nonisolated func activityViewController(_: UIActivityViewController, itemForActivityType _: UIActivity.ActivityType?) -> Any? {
-        MainActor.assumeIsolated {
+        onlyOnMainThread {
             component.encodedUrl ?? previewItem.previewItemURL
         }
     }
 
     nonisolated func activityViewController(_: UIActivityViewController, subjectForActivityType _: UIActivity.ActivityType?) -> String {
-        MainActor.assumeIsolated {
+        onlyOnMainThread {
             previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
         }
     }
 
     nonisolated func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
-        MainActor.assumeIsolated {
+        onlyOnMainThread {
             component.getComponentIconSync()
         }
     }
 
     nonisolated func activityViewController(_: UIActivityViewController, dataTypeIdentifierForActivityType _: UIActivity.ActivityType?) -> String {
-        MainActor.assumeIsolated {
+        onlyOnMainThread {
             component.typeIdentifier
         }
     }

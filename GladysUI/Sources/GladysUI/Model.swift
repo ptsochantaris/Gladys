@@ -147,7 +147,7 @@ public enum Model {
             }
         }
 
-        return ContiguousArray(store.compactMap { $0 })
+        return ContiguousArray(store.compactMap(\.self))
     }
 
     private static func loadInitialData() throws {

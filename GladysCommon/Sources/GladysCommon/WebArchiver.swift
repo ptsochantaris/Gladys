@@ -63,7 +63,7 @@ public final actor WebArchiver {
                     return (resourceUrlString, resource)
                 }
             }
-            let pairs = group.compactMap { $0 }
+            let pairs = group.compactMap(\.self)
             var info = [String: Sendable]()
             for await pair in pairs {
                 info[pair.0] = pair.1

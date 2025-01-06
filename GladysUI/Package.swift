@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -6,8 +6,8 @@ let package = Package(
     name: "GladysUI",
     platforms: [
         .macOS(.v14),
-        .iOS(.v17),
-        .visionOS(.v1)
+        .iOS(.v18),
+        .visionOS(.v2)
     ],
     products: [
         .library(

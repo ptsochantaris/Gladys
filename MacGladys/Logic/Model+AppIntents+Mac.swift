@@ -78,7 +78,7 @@
                 return .noData
             }
 
-            let flatList = importers.flatMap { $0 }
+            let flatList = importers.flatMap(\.self)
             return addItems(itemProviders: flatList, indexPath: indexPath, overrides: overrides, filterContext: filterContext)
         }
     }

@@ -16,17 +16,6 @@ extension CLLocationCoordinate2D: @retroactive Hashable {
     }
 }
 
-extension CGSize: @retroactive Hashable {
-    public static func == (lhs: CGSize, rhs: CGSize) -> Bool {
-        lhs.width == rhs.width && lhs.height == rhs.height
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(width)
-        hasher.combine(height)
-    }
-}
-
 public let imageDimensions = CGSize(width: 512, height: 512)
 
 @MainActor
