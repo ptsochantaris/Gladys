@@ -219,12 +219,15 @@ public extension IMAGE {
             return image
         }
 
-        func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
+        final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
             let mySizePixelWidth = size.width
             let mySizePixelHeight = size.height
-
             let outputImagePixelWidth = targetSize.width
             let outputImagePixelHeight = targetSize.height
+
+            if mySizePixelWidth <= 0 || mySizePixelHeight <= 0 || outputImagePixelWidth <= 0 || outputImagePixelHeight <= 0 {
+                return NSImage()
+            }
 
             let widthRatio = outputImagePixelWidth / mySizePixelWidth
             let heightRatio = outputImagePixelHeight / mySizePixelHeight
@@ -337,6 +340,10 @@ public extension IMAGE {
             let s = useScreenScale ? screenScale : targetScale
             let outputImagePixelWidth = targetSize.width * s
             let outputImagePixelHeight = targetSize.height * s
+
+            if mySizePixelWidth <= 0 || mySizePixelHeight <= 0 || outputImagePixelWidth <= 0 || outputImagePixelHeight <= 0 {
+                return UIImage()
+            }
 
             let widthRatio = outputImagePixelWidth / mySizePixelWidth
             let heightRatio = outputImagePixelHeight / mySizePixelHeight

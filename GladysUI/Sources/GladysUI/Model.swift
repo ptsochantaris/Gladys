@@ -491,10 +491,9 @@ public enum Model {
 
     private static func ingestItemsIfNeeded() {
         Maintini.startMaintaining()
-        let ready = DropStore.readyToIngest
         Task {
             await withDiscardingTaskGroup {
-                for drop in ready {
+                for drop in DropStore.readyToIngest {
                     $0.addTask {
                         await drop.reIngest()
                     }

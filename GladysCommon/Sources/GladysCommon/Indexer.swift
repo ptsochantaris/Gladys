@@ -14,7 +14,7 @@
     }
 
     @MainActor
-    public final class Indexer: NSObject, CSSearchableIndexDelegate, Sendable {
+    public final class Indexer: NSObject, CSSearchableIndexDelegate {
         private weak var itemProvider: IndexerItemProvider!
 
         public init(itemProvider: IndexerItemProvider) {
