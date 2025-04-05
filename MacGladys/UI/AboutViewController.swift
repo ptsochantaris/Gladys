@@ -29,7 +29,7 @@ final class AboutViewController: NSViewController {
     @IBOutlet private var creditsContainer: NSScrollView!
 
     private var tipJar: TipJar?
-    private var tipItems: [SKProduct]?
+    private var tipItems: [Product]?
 
     override func viewDidLoad() {
         super.viewDidLoad()

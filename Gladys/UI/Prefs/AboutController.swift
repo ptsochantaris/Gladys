@@ -37,9 +37,6 @@ final class AboutController: GladysViewController {
     @IBOutlet private var l4: UILabel!
     @IBOutlet private var l5: UILabel!
 
-    private var tipJar: TipJar?
-    private var tipItems: [SKProduct]?
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,15 +47,17 @@ final class AboutController: GladysViewController {
         } else {
             testFlightStack.isHidden = true
 
-            tipJar = TipJar { [weak self] items, _ in
-                guard let self, let items, items.count > 4 else { return }
+            Task { @MainActor in
+                await TipJar.shared.setupIfNeeded()
 
-                tipItems = items
-                l1.text = items[0].regularPrice
-                l2.text = items[1].regularPrice
-                l3.text = items[2].regularPrice
-                l4.text = items[3].regularPrice
-                l5.text = items[4].regularPrice
+                let fetchedProducts = TipJar.shared.tips.compactMap(\.fetchedProduct)
+                guard fetchedProducts.isPopulated else { return }
+
+                l1.text = fetchedProducts[0].displayPrice
+                l2.text = fetchedProducts[1].displayPrice
+                l3.text = fetchedProducts[2].displayPrice
+                l4.text = fetchedProducts[3].displayPrice
+                l5.text = fetchedProducts[4].displayPrice
 
                 b1.accessibilityValue = l1.text
                 b2.accessibilityValue = l2.text
@@ -112,23 +111,28 @@ final class AboutController: GladysViewController {
     }
 
     private func purchase(index: Int) {
-        guard let tipJar, let items = tipItems else { return }
+        let tipJar = TipJar.shared
+        let items = tipJar.tips
+        guard index < items.count else {
+            return
+        }
 
         let t = [t1!, t2!, t3!, t4!, t5!]
         let prev = t[index].text
         t[index].text = "✅"
         view.isUserInteractionEnabled = false
         Task {
-            do {
-                try await tipJar.requestItem(items[index])
-                t[index].text = prev
-                view.isUserInteractionEnabled = true
+            await tipJar.purchase(items[index])
+            await tipJar.waitForBusy()
+            t[index].text = prev
+            view.isUserInteractionEnabled = true
 
-                await genericAlert(title: "Thank you for supporting Gladys!",
-                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.")
-            } catch {
+            if case let .error(error) = tipJar.state {
                 await genericAlert(title: "There was an error completing this operation",
                                    message: error.localizedDescription)
+            } else {
+                await genericAlert(title: "Thank you for supporting Gladys!",
+                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.")
             }
         }
     }

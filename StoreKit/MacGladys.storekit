@@ -1,0 +1,155 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "01928C3B",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "1525080755",
+      "localizations" : [
+        {
+          "description" : "😊 Thank you for your support!",
+          "displayName" : "Blush Tip",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "MAC_GLADYS_TIP_TIER_002",
+      "referenceName" : "Blush Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "1525081511",
+      "localizations" : [
+        {
+          "description" : "😮 Thank you for your support!",
+          "displayName" : "Gasp Tip",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "MAC_GLADYS_TIP_TIER_004",
+      "referenceName" : "Gasp Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "1525081010",
+      "localizations" : [
+        {
+          "description" : "🤗 Thank you for your support!",
+          "displayName" : "Hug Tip",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "MAC_GLADYS_TIP_TIER_003",
+      "referenceName" : "Hug Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "1525081571",
+      "localizations" : [
+        {
+          "description" : "😱 Thank you for your support!",
+          "displayName" : "Scream Tip",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "MAC_GLADYS_TIP_TIER_005",
+      "referenceName" : "Scream Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "1525080745",
+      "localizations" : [
+        {
+          "description" : "🙂 Thank you for your support!",
+          "displayName" : "Smile Tip",
+          "locale" : "en_GB"
+        }
+      ],
+      "productID" : "MAC_GLADYS_TIP_TIER_001",
+      "referenceName" : "Smile Tip",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1382386877",
+    "_developerTeamID" : "X727JSJUGJ",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 765550181.73139405,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

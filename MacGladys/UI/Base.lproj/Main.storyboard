@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23086.1" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23086.1"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -2916,8 +2917,8 @@ Finder tags</string>
                                     </subviews>
                                     <nil key="backgroundColor"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="lbV-Wv-Ctt">
-                                    <rect key="frame" x="0.0" y="351" width="220" height="16"/>
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="lbV-Wv-Ctt">
+                                    <rect key="frame" x="0.0" y="125" width="220" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="xtg-ph-Fbt">
@@ -3030,8 +3031,8 @@ Finder tags</string>
                                     </subviews>
                                     <nil key="backgroundColor"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Fr2-Ac-Fd2">
-                                    <rect key="frame" x="0.0" y="147" width="220" height="16"/>
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Fr2-Ac-Fd2">
+                                    <rect key="frame" x="0.0" y="329" width="220" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="eWb-Hs-L7G">
@@ -3188,7 +3189,7 @@ Finder tags</string>
                                                         <tableViewGridLines key="gridStyleMask" vertical="YES"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn editable="NO" width="231" minWidth="40" maxWidth="1000" id="a5H-8F-wPv">
+                                                            <tableColumn editable="NO" width="230.5" minWidth="40" maxWidth="1000" id="a5H-8F-wPv">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -3348,11 +3349,11 @@ Only</string>
             <objects>
                 <viewController id="gNv-h2-b4E" customClass="NewLabelController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="Gsn-Jo-TRL">
-                        <rect key="frame" x="0.0" y="0.0" width="188" height="265"/>
+                        <rect key="frame" x="0.0" y="0.0" width="217" height="265"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qlZ-aM-jH6">
-                                <rect key="frame" x="17" y="227" width="154" height="21"/>
+                                <rect key="frame" x="17" y="227" width="183" height="21"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="New Label" drawsBackground="YES" id="vZG-ok-ZJa">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -3363,19 +3364,19 @@ Only</string>
                                 </connections>
                             </textField>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="CCQ-ZH-Svz">
-                                <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
+                                <rect key="frame" x="0.0" y="0.0" width="217" height="210"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="4PC-K5-z9n">
-                                    <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="217" height="210"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="16" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="3kn-eL-Prc" id="oI8-zK-gGx">
-                                            <rect key="frame" x="0.0" y="0.0" width="188" height="210"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="217" height="210"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <color key="gridColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <tableColumns>
-                                                <tableColumn identifier="LabelColumn" editable="NO" width="156" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
+                                                <tableColumn identifier="LabelColumn" editable="NO" width="185" minWidth="40" maxWidth="1000" id="3kn-eL-Prc">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -3388,11 +3389,11 @@ Only</string>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                     <prototypeCellViews>
                                                         <tableCellView identifier="LabelCell" id="1yt-oK-y0c">
-                                                            <rect key="frame" x="11" y="1" width="165" height="16"/>
+                                                            <rect key="frame" x="11" y="1" width="194" height="16"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="ap7-Xp-ise">
-                                                                    <rect key="frame" x="-2" y="0.0" width="169" height="16"/>
+                                                                    <rect key="frame" x="-2" y="0.0" width="198" height="16"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="R7b-3H-mkY">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>

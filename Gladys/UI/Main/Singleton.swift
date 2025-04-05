@@ -90,7 +90,9 @@ final class Singleton {
             try? FileManager.default.removeItem(at: mirrorPath)
         }
 
-        TipJar.warmup()
+        Task {
+            await TipJar.shared.setupIfNeeded()
+        }
     }
 
     func handleActivity(_ userActivity: NSUserActivity?, in scene: UIScene, forceMainWindow: Bool) {

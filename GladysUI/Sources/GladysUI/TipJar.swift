@@ -2,128 +2,158 @@ import Foundation
 import GladysCommon
 import StoreKit
 
-public extension SKProduct {
-    var regularPrice: String? {
-        priceFormatter.locale = priceLocale
-        return priceFormatter.string(from: price)
+@MainActor
+public final class Tip {
+    public enum State {
+        case notPurchased, otherWasPurchased, purchased
+    }
+
+    public let image: String
+    public let productId: String
+
+    public var fetchedProduct: Product?
+    public var state: State
+
+    public init(productId: String, image: String) {
+        self.productId = productId
+        self.image = image
+        state = .notPurchased
+    }
+}
+
+public enum TipJarError: LocalizedError {
+    case noFetchedProduct(String)
+
+    public var errorDescription: String? {
+        switch self {
+        case let .noFetchedProduct(error):
+            error
+        }
     }
 }
 
 @MainActor
-public final class TipJar: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
-    private let completion: @Sendable @MainActor ([SKProduct]?, Error?) -> Void
+public final class TipJar {
+    public enum State {
+        case uninitialised, busy, ready, success, error(Error)
+
+        var isBusy: Bool {
+            switch self {
+            case .error, .ready, .success, .uninitialised: false
+            case .busy: true
+            }
+        }
+
+        var needsInit: Bool {
+            switch self {
+            case .error, .uninitialised: true
+            case .busy, .ready, .success: false
+            }
+        }
+    }
+
+    public static let shared = TipJar()
 
     #if canImport(AppKit)
-        private static let identifiers: Set<String> = [
-            "MAC_GLADYS_TIP_TIER_001",
-            "MAC_GLADYS_TIP_TIER_002",
-            "MAC_GLADYS_TIP_TIER_003",
-            "MAC_GLADYS_TIP_TIER_004",
-            "MAC_GLADYS_TIP_TIER_005"
-        ]
+        private static let identifierPrefix = "MAC_GLADYS_TIP_TIER"
     #else
-        private static let identifiers: Set<String> = [
-            "GLADYS_TIP_TIER_001",
-            "GLADYS_TIP_TIER_002",
-            "GLADYS_TIP_TIER_003",
-            "GLADYS_TIP_TIER_004",
-            "GLADYS_TIP_TIER_005"
-        ]
+        private static let identifierPrefix = "GLADYS_TIP_TIER"
     #endif
 
-    public static func warmup() {
-        SKProductsRequest(productIdentifiers: TipJar.identifiers).start()
-    }
+    public let tips = [
+        Tip(productId: "\(identifierPrefix)_001", image: "🙂"),
+        Tip(productId: "\(identifierPrefix)_002", image: "😊"),
+        Tip(productId: "\(identifierPrefix)_003", image: "🤗"),
+        Tip(productId: "\(identifierPrefix)_004", image: "😮"),
+        Tip(productId: "\(identifierPrefix)_005", image: "😱")
+    ]
 
-    public init(completion: @escaping @Sendable @MainActor ([SKProduct]?, Error?) -> Void) {
-        self.completion = completion
-        super.init()
-        SKPaymentQueue.default().add(self)
+    public var state = State.uninitialised
 
-        let r = SKProductsRequest(productIdentifiers: TipJar.identifiers)
-        r.delegate = self
-        r.start()
-    }
-
-    deinit {
-        SKPaymentQueue.default().remove(self)
-    }
-
-    public nonisolated func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
-        let items = response.products.sorted { $0.productIdentifier.localizedCaseInsensitiveCompare($1.productIdentifier) == .orderedAscending }
-        Task {
-            await completion(items, nil)
+    public func waitForBusy() async {
+        while state.isBusy {
+            try? await Task.sleep(for: .seconds(1))
         }
     }
 
-    public nonisolated func request(_: SKRequest, didFailWithError error: Error) {
-        log("Error fetching IAP items: \(error.localizedDescription)")
+    public func setupIfNeeded() async {
+        await waitForBusy()
+
+        guard state.needsInit else {
+            return
+        }
+
+        log("Initialising tip jar in case it's needed ;)")
+
+        do {
+            var products = try await Product.products(for: tips.map(\.productId))
+            if products.count < tips.count {
+                log("Error fetching tip jar: Missing products")
+                state = .error(TipJarError.noFetchedProduct("Could not fetch products from App Store"))
+                return
+            }
+            products.sort { $0.id < $1.id }
+            for pair in zip(tips, products) {
+                pair.0.fetchedProduct = pair.1
+            }
+            log("Fetched tip list")
+            state = .ready
+        } catch {
+            log("Error fetching tip jar: \(error.localizedDescription)")
+            state = .error(error)
+        }
         Task {
-            await completion(nil, error)
+            for await transactionResult in Transaction.updates {
+                await completeTransaction(transactionResult)
+            }
+        }
+        Task {
+            for await transactionResult in Transaction.unfinished {
+                await completeTransaction(transactionResult)
+            }
         }
     }
 
-    private var purchaseCompletion: ((Error?) -> Void)?
-    public func requestItem(_ item: SKProduct) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            purchaseCompletion = { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
+    private func completeTransaction(_ transaction: VerificationResult<StoreKit.Transaction>) async {
+        switch transaction {
+        case let .unverified(transaction, error):
+            state = .error(error)
+            await transaction.finish()
+
+        case let .verified(transaction):
+            await MainActor.run {
+                for tip in tips {
+                    tip.state = transaction.productID == tip.productId ? .purchased : .otherWasPurchased
                 }
             }
-            let payment = SKPayment(product: item)
-            SKPaymentQueue.default().add(payment)
+            state = .success
+            await transaction.finish()
         }
     }
 
-    public nonisolated func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        for t in transactions {
-            let prefix: String
-            #if canImport(AppKit)
-                prefix = "MAC_GLADYS_TIP_TIER"
-            #else
-                prefix = "GLADYS_TIP_TIER_"
-            #endif
-            if t.payment.productIdentifier.hasPrefix(prefix) {
-                switch t.transactionState {
-                case .failed:
-                    SKPaymentQueue.default().finishTransaction(t)
-                    Task { @MainActor in
-                        if let completion = purchaseCompletion {
-                            purchaseCompletion = nil
-                            completion(t.error)
-                        }
-                    }
-
-                case .purchased, .restored:
-                    SKPaymentQueue.default().finishTransaction(t)
-                    Task { @MainActor in
-                        if let completion = purchaseCompletion {
-                            purchaseCompletion = nil
-                            completion(nil)
-                        }
-                    }
-
-                case .deferred, .purchasing:
-                    break
-
-                @unknown default:
-                    break
-                }
-            } else {
-                switch t.transactionState {
-                case .failed, .purchased, .restored:
-                    SKPaymentQueue.default().finishTransaction(t)
-
-                case .deferred, .purchasing:
-                    break
-
-                @unknown default:
-                    break
-                }
+    public func purchase(_ tip: Tip) async {
+        state = .busy
+        do {
+            guard let product = tip.fetchedProduct else {
+                state = .error(TipJarError.noFetchedProduct("Did not find an associated App Store product for this tip"))
+                return
             }
+
+            switch try await product.purchase() {
+            case let .success(result):
+                await completeTransaction(result)
+
+            case .userCancelled:
+                state = .ready
+
+            case .pending:
+                fallthrough
+
+            @unknown default:
+                break
+            }
+        } catch {
+            state = .error(error)
         }
     }
 }
