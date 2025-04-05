@@ -28,9 +28,6 @@ final class AboutViewController: NSViewController {
     @IBOutlet private var credits: NSTextView!
     @IBOutlet private var creditsContainer: NSScrollView!
 
-    private var tipJar: TipJar?
-    private var tipItems: [Product]?
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,15 +48,18 @@ final class AboutViewController: NSViewController {
         }
 
         supportStack.isHidden = true
-        tipJar = TipJar { [weak self] items, _ in
-            guard let self, let items, items.count > 4 else { return }
 
-            tipItems = items
-            l1.stringValue = " " + (items[0].regularPrice ?? "") + " "
-            l2.stringValue = " " + (items[1].regularPrice ?? "") + " "
-            l3.stringValue = " " + (items[2].regularPrice ?? "") + " "
-            l4.stringValue = " " + (items[3].regularPrice ?? "") + " "
-            l5.stringValue = " " + (items[4].regularPrice ?? "") + " "
+        Task {
+            await TipJar.shared.setupIfNeeded()
+
+            let fetchedProducts = TipJar.shared.tips.compactMap(\.fetchedProduct)
+            guard fetchedProducts.count >= 5 else { return }
+
+            l1.stringValue = " " + fetchedProducts[0].displayPrice + " "
+            l2.stringValue = " " + fetchedProducts[1].displayPrice + " "
+            l3.stringValue = " " + fetchedProducts[2].displayPrice + " "
+            l4.stringValue = " " + fetchedProducts[3].displayPrice + " "
+            l5.stringValue = " " + fetchedProducts[4].displayPrice + " "
 
             supportStack.animator().isHidden = false
         }
@@ -72,31 +72,40 @@ final class AboutViewController: NSViewController {
     }
 
     private func purchase(sender: NSView, index: Int) {
-        guard let tipJar, let items = tipItems else { return }
+        let tipJar = TipJar.shared
+        let items = tipJar.tips
+        guard index < items.count else {
+            return
+        }
 
         let f = [f1!, f2!, f3!, f4!, f5!]
         let prev = f[index].stringValue
         f[index].stringValue = "✅"
         sender.gestureRecognizers.forEach { $0.isEnabled = false }
         Task {
-            do {
-                try await tipJar.requestItem(items[index])
-                f[index].stringValue = prev
-                sender.gestureRecognizers.forEach { $0.isEnabled = true }
+            await tipJar.purchase(items[index])
+            await tipJar.waitForBusy()
+            f[index].stringValue = prev
+            sender.gestureRecognizers.forEach { $0.isEnabled = true }
 
-                await genericAlert(title: "Thank you for supporting Gladys!",
-                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
-                                   windowOverride: view.window)
-            } catch {
+            if case let .error(error) = tipJar.state {
                 await genericAlert(title: "There was an error completing this operation",
                                    message: error.localizedDescription,
+                                   windowOverride: view.window)
+            } else {
+                await genericAlert(title: "Thank you for supporting Gladys!",
+                                   message: "Thank you so much for your support, it means a lot, and it ensures that Gladys will keep receiving improvements and features in the future.",
                                    windowOverride: view.window)
             }
         }
     }
 
     @objc private func clicked(_ recognizer: NSClickGestureRecognizer) {
-        guard let items = tipItems, items.count > 4 else { return }
+        let tipJar = TipJar.shared
+        let items = tipJar.tips
+        if items.count < 4 {
+            return
+        }
 
         if recognizer.view == tip1 {
             purchase(sender: tip1, index: 0)

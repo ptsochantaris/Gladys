@@ -229,7 +229,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
 
         CallbackSupport.setupCallbackSupport()
 
-        TipJar.warmup()
+        Task {
+            await TipJar.shared.setupIfNeeded()
+        }
     }
 
     func applicationWillFinishLaunching(_: Notification) {

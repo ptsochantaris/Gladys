@@ -47,11 +47,11 @@ final class AboutController: GladysViewController {
         } else {
             testFlightStack.isHidden = true
 
-            Task { @MainActor in
+            Task {
                 await TipJar.shared.setupIfNeeded()
 
                 let fetchedProducts = TipJar.shared.tips.compactMap(\.fetchedProduct)
-                guard fetchedProducts.isPopulated else { return }
+                guard fetchedProducts.count >= 5 else { return }
 
                 l1.text = fetchedProducts[0].displayPrice
                 l2.text = fetchedProducts[1].displayPrice
