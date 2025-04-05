@@ -139,7 +139,19 @@ public final class TipJar {
                 return
             }
 
-            switch try await product.purchase() {
+            #if os(visionOS)
+            guard let currentScene = UIApplication.shared.connectedScenes.filter({ $0.activationState != .background }).compactMap({ ($0 as? UIWindowScene) }).lazy.first else {
+                state = .error(TipJarError.noFetchedProduct("Did not find a window scene for presenting the purchase"))
+                return
+            }
+
+            let result = try await product.purchase(confirmIn: currentScene)
+            #else
+
+            let result = try await product.purchase()
+            #endif
+
+            switch result {
             case let .success(result):
                 await completeTransaction(result)
 

@@ -65,7 +65,7 @@ public enum GladysError: LocalizedError {
         case .mainAppFailedToOpen:
             "Main app could not be opened."
         case .cloudAccessTemporarilyUnavailable:
-            "iCloud access is temporarily unavailable, you may need to re-sign in to your iCloud account."
+            "iCloud access is temporarily unavailable. Please try this operation again in a few minutes. If this problem persists you may need to re-sign into your iCloud account."
         case .blankResponse:
             "The server returned an invalid response but not error"
         case .networkIssue:
