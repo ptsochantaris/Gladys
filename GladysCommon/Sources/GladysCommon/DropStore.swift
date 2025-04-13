@@ -67,9 +67,10 @@ public enum DropStore {
 
     public static func indexOfItem(with uuid: String) -> Int? {
         if let uuidData = UUID(uuidString: uuid) {
-            return indexOfItem(with: uuidData)
+            indexOfItem(with: uuidData)
+        } else {
+            nil
         }
-        return nil
     }
 
     public static func indexOfItem(with uuid: UUID) -> Int? {
@@ -86,16 +87,18 @@ public enum DropStore {
 
     public static func item(uuid: UUID) -> ArchivedItem? {
         if let i = indexOfItem(with: uuid) {
-            return dropStore[i]
+            dropStore[i]
+        } else {
+            nil
         }
-        return nil
     }
 
     public static func item(with uuid: String) -> Int? {
         if let uuidData = UUID(uuidString: uuid) {
-            return indexOfItem(with: uuidData)
+            indexOfItem(with: uuidData)
+        } else {
+            nil
         }
-        return nil
     }
 
     public static func contains(uuid: UUID) -> Bool {
