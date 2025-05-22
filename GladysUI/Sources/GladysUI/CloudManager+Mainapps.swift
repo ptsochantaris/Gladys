@@ -533,12 +533,10 @@ public extension CloudManager {
 
         case .assetNotAvailable, .badContainer, .badDatabase, .incompatibleVersion, .managedAccountRestricted, .missingEntitlement,
              .notAuthenticated, .userDeletedZone, .zoneNotFound:
-
             try? await deactivate(force: true)
             throw GladysError.syncFailure(ckError)
 
         case .assetFileModified, .changeTokenExpired, .requestRateLimited, .serverResponseLost, .serviceUnavailable, .zoneBusy:
-
             // retry
             let timeToRetry = ckError.userInfo[CKErrorRetryAfterKey] as? TimeInterval ?? 6.0
             syncRateLimited = true
@@ -549,7 +547,6 @@ public extension CloudManager {
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .networkFailure,
              .networkUnavailable, .operationCancelled, .partialFailure, .participantMayNeedVerification, .permissionFailure, .quotaExceeded,
              .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem:
-
             // regular failure
             throw ckError
 

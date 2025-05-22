@@ -14,7 +14,6 @@ public enum LiteModel {
         var coordinationError: NSError?
 
         coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
-
             let fm = FileManager.default
             if !fm.fileExists(atPath: url.path) {
                 return

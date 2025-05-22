@@ -74,7 +74,6 @@ public enum Model {
 
         // withoutChanges because we only signal the provider after we have saved
         Coordination.coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
-
             if !FileManager.default.fileExists(atPath: url.path) {
                 Task {
                     await DropStore.reset()
@@ -156,7 +155,6 @@ public enum Model {
 
         // withoutChanges because we only signal the provider after we have saved
         Coordination.coordinator.coordinate(readingItemAt: itemsDirectoryUrl, options: .withoutChanges, error: &coordinationError) { url in
-
             if !FileManager.default.fileExists(atPath: url.path) {
                 DropStore.reset()
                 log("Starting fresh store")

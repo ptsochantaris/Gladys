@@ -419,10 +419,10 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
 
         switch menuItem.action {
         case #selector(archivePage(_:)), #selector(archiveThumbnail(_:)):
-            return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.components[$0.item].isArchivable }.count == count
+            return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.count(where: { item.components[$0.item].isArchivable }) == count
 
         case #selector(editCurrent(_:)):
-            return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.filter { item.components[$0.item].isURL }.count == count
+            return item.shareMode != .elsewhereReadOnly && components.selectionIndexPaths.count(where: { item.components[$0.item].isURL }) == count
 
         case #selector(delete(_:)):
             return item.shareMode != .elsewhereReadOnly

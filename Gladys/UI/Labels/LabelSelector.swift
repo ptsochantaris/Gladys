@@ -120,7 +120,6 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
     func tableView(_: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
         let toggle = filteredToggles[indexPath.row]
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-
             var children = [
                 UIAction(title: "Rename", image: UIImage(systemName: "pencil")) { _ in
                     self.rename(toggle: toggle)

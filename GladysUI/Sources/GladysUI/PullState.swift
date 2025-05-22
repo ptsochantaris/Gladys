@@ -342,7 +342,7 @@ final class PullState {
         await CloudManager.setSyncProgressString("Checking…")
 
         do {
-            let skipCommits = try await withThrowingTaskGroup(of: Bool.self, returning: Bool.self) { group in
+            let skipCommits = try await withThrowingTaskGroup { group in
                 if scope == nil || scope == .private {
                     group.addTask {
                         try await self.fetchDBChanges(database: CloudManager.container.privateCloudDatabase)

@@ -24,10 +24,10 @@ public final class DataImporter: Sendable {
         #endif
 
         dataLookupTask = Task.detached {
-            await withTaskGroup(of: (String, Data)?.self) { group in
+            await withTaskGroup { group in
                 for identifier in identifierList {
                     group.addTask {
-                        await withCheckedContinuation { continuation in
+                        await withCheckedContinuation { (continuation: CheckedContinuation<(String, Data)?, Never>) in
                             itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, error in
                                 if let data {
                                     continuation.resume(returning: (identifier, data))

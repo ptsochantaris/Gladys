@@ -39,9 +39,9 @@ public final actor WebArchiver {
 
         let resources = try resourcePaths(from: url, pageText: pageText)
 
-        let resourceInfo = await withTaskGroup(of: (String, [String: Sendable])?.self) { group -> [String: Sendable] in
+        let resourceInfo = await withTaskGroup { group -> [String: Sendable] in
             for resourceUrlString in resources {
-                group.addTask {
+                group.addTask { () -> (String, [String: Sendable])? in
                     guard let resourceUrl = URL(string: resourceUrlString),
                           let (data, response) = try? await URLSession.shared.data(from: resourceUrl),
                           let response = response as? HTTPURLResponse,
