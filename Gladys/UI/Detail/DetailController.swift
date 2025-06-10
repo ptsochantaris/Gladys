@@ -271,7 +271,7 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
         #if os(visionOS)
             let preferredWidth: CGFloat = 480
         #else
-            let preferredWidth: CGFloat = 320
+            let preferredWidth: CGFloat = 360
         #endif
         let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
         preferredContentSize = preferredSize

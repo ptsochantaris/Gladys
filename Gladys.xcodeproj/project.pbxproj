@@ -17,6 +17,8 @@
 		160707A01F8A38B5003B856A /* ByteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1607079E1F8A38B5003B856A /* ByteCell.swift */; };
 		160707A21F8A3915003B856A /* DataInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A11F8A3915003B856A /* DataInspector.swift */; };
 		160707A41F8A3BAF003B856A /* GridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160707A31F8A3BAF003B856A /* GridLayout.swift */; };
+		160874412DF886BA00C61738 /* GladysIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 160874402DF886BA00C61738 /* GladysIcon.icon */; };
+		160874422DF886BA00C61738 /* GladysIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 160874402DF886BA00C61738 /* GladysIcon.icon */; };
 		1609C08E2DA15E63004B5DCD /* MacGladys.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 1609C08D2DA15E63004B5DCD /* MacGladys.storekit */; };
 		1610F9042B9399D7001B55F6 /* GladysUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1610F9032B9399D7001B55F6 /* GladysUIKit */; };
 		16161D9A2C395EB700A1C213 /* GladysShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16161D992C395EB600A1C213 /* GladysShortcuts.swift */; };
@@ -389,6 +391,7 @@
 		160707A31F8A3BAF003B856A /* GridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayout.swift; sourceTree = "<group>"; };
 		160807B1297AA80900B92C0F /* FileProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FileProvider.framework; path = System/Library/Frameworks/FileProvider.framework; sourceTree = SDKROOT; };
 		16080FFF242D726800E19FCE /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "openssl-xcframeworks/frameworks/openssl.xcframework"; sourceTree = "<group>"; };
+		160874402DF886BA00C61738 /* GladysIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = GladysIcon.icon; sourceTree = "<group>"; };
 		1609C08D2DA15E63004B5DCD /* MacGladys.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = MacGladys.storekit; path = StoreKit/MacGladys.storekit; sourceTree = SOURCE_ROOT; };
 		16114862209FA440008BB332 /* libboringssl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libboringssl.tbd; path = usr/lib/libboringssl.tbd; sourceTree = SDKROOT; };
 		16114864209FA58D008BB332 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2o_1/lib/libssl.a; sourceTree = "<group>"; };
@@ -1041,6 +1044,7 @@
 		16E27BCC1EFC5F9D00FD0818 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				160874402DF886BA00C61738 /* GladysIcon.icon */,
 				162BDD90220F85AA00A3C17B /* gallery.ckcomplication */,
 				16AA81561EFB2785000BC7E5 /* Gladys.entitlements */,
 				1678F9DC1EF475FF005697CB /* Info.plist */,
@@ -1489,6 +1493,7 @@
 				168D2CAF209E0770005041CF /* ComponentCell.xib in Resources */,
 				161718D82094D6FF005ABD6C /* Assets.xcassets in Resources */,
 				1609C08E2DA15E63004B5DCD /* MacGladys.storekit in Resources */,
+				160874422DF886BA00C61738 /* GladysIcon.icon in Resources */,
 				161718CE2094D334005ABD6C /* Main.storyboard in Resources */,
 				166EEC9A23645391000BE78A /* Media.xcassets in Resources */,
 				16DF9FBE20C220B200CFD3D1 /* gladysIconLarge.icns in Resources */,
@@ -1546,6 +1551,7 @@
 				16EFD3B82DA15C3300A83C2D /* Gladys.storekit in Resources */,
 				16BDAF28283895B600B3EEF3 /* Detail.storyboard in Resources */,
 				1678F9D81EF475FF005697CB /* Assets.xcassets in Resources */,
+				160874412DF886BA00C61738 /* GladysIcon.icon in Resources */,
 				162BDD91220F85AA00A3C17B /* gallery.ckcomplication in Resources */,
 				16BDAF25283893FB00B3EEF3 /* Preferences.storyboard in Resources */,
 				16C4BAA61F9295A00012C9E0 /* gladysIcon64.png in Resources */,
@@ -2389,7 +2395,7 @@
 		1694264F1F12D58700F3A0A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
+				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
@@ -2543,7 +2549,7 @@
 		169426551F12D59B00F3A0A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
+				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;

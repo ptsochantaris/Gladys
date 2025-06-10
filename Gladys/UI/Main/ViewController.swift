@@ -924,21 +924,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        #if os(visionOS)
-            navigationController?.navigationBar.titleTextAttributes = [
-                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-            ]
-            navigationController?.navigationBar.largeTitleTextAttributes = [
-                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-            ]
-        #else
-            navigationController?.navigationBar.titleTextAttributes = [
-                .foregroundColor: UIColor.g_colorLightGray
-            ]
-            navigationController?.navigationBar.largeTitleTextAttributes = [
-                .foregroundColor: UIColor.g_colorLightGray
-            ]
-        #endif
+        if #unavailable(iOS 26) {
+            if let navigationBar = navigationController?.navigationBar {
+#if os(visionOS)
+                navigationBar.titleTextAttributes = [
+                    .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                ]
+                navigationBar.largeTitleTextAttributes = [
+                    .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                ]
+#else
+                navigationBar.titleTextAttributes = [
+                    .foregroundColor: UIColor.g_colorLightGray
+                ]
+                navigationBar.largeTitleTextAttributes = [
+                    .foregroundColor: UIColor.g_colorLightGray
+                ]
+#endif
+            }
+        }
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.obscuresBackgroundDuringPresentation = false
