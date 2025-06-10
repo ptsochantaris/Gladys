@@ -11,6 +11,8 @@ import SwiftUI
     public typealias VRCLASS = NSViewRepresentable
     public typealias FONT = NSFont
     public let groupName = "X727JSJUGJ.build.bru.MacGladys"
+
+    extension NSImage: @retroactive @unchecked Sendable {}
 #elseif canImport(UIKit)
     import UIKit
 
@@ -29,8 +31,6 @@ import SwiftUI
 #else
     public let cellCornerRadius: CGFloat = 18
 #endif
-
-extension IMAGE: @unchecked @retroactive Sendable {}
 
 public let GladysFileUTI = "build.bru.gladys.archive"
 

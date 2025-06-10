@@ -2,7 +2,6 @@ import GladysCommon
 import GladysUI
 import UIKit
 
-@MainActor
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()
 }
@@ -17,7 +16,7 @@ final class GladysView: UIView {
     }
 }
 
-class GladysViewController: UIViewController, GladysViewDelegate {
+class GladysViewController: UIViewController, @MainActor GladysViewDelegate {
     enum ActionLocation {
         case none, left, right
     }

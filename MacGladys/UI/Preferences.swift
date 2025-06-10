@@ -368,7 +368,8 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
             syncNowButton.isEnabled = false
             deleteAllButton.isEnabled = false
             eraseAlliCloudDataButton.isHidden = true
-            syncStatus.stringValue = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            syncStatus.stringValue = swiftString
             syncStatusHolder.isHidden = false
             syncSpinner.startAnimation(nil)
         } else {
@@ -562,14 +563,16 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         }
     }
 
-    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
+    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping @MainActor @Sendable (Bool) -> Void) {
         let a = NSAlert()
         a.messageText = title
         a.informativeText = message
         a.addButton(withTitle: action)
         a.addButton(withTitle: cancel)
         a.beginSheetModal(for: view.window!) { response in
-            completion(response == .alertFirstButtonReturn)
+            Task { @MainActor in
+                completion(response == .alertFirstButtonReturn)
+            }
         }
     }
 

@@ -74,7 +74,8 @@ final class ICloudController: GladysViewController {
         let syncing = await CloudManager.syncing
         if transitioning || syncing {
             icloudSwitch.isEnabled = false
-            icloudLabel.text = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            icloudLabel.text = swiftString
             icloudSpinner.startAnimating()
         } else {
             icloudSwitch.isEnabled = true

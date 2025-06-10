@@ -1,7 +1,6 @@
 import AppKit
 import GladysUI
 
-@MainActor
 protocol NewLabelControllerDelegate: AnyObject {
     func newLabelController(_ newLabelController: NewLabelController, selectedLabel label: String)
 }

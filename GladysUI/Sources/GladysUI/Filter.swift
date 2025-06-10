@@ -21,7 +21,6 @@ public struct ItemIdentifier: Hashable {
     }
 }
 
-@MainActor
 public protocol FilterDelegate: AnyObject {
     func modelFilterContextChanged(_ modelFilterContext: Filter, animate: Bool)
 }

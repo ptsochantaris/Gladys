@@ -7,10 +7,6 @@ import PopTimer
 import Semalot
 import UniformTypeIdentifiers
 
-extension UnsafeMutableBufferPointer: @unchecked @retroactive Sendable {}
-extension UnsafeBufferPointer<uuid_t>: @unchecked @retroactive Sendable {}
-extension ThrowingTaskGroup: @unchecked @retroactive Sendable {}
-
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }

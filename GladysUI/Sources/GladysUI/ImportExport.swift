@@ -57,9 +57,8 @@ public enum ImportExport {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @MainActor
     public static func createZip(using filter: Filter, progress: Progress) async throws -> URL {
-        let dropsCopy = filter.eligibleDropsForExport
+        let dropsCopy = await filter.eligibleDropsForExport
         let itemCount = Int64(1 + dropsCopy.count)
 
         let p = Progress(totalUnitCount: itemCount)

@@ -5,14 +5,13 @@ import GladysUIKit
 import UIKit
 import UniformTypeIdentifiers
 
-@MainActor
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
 }
 
-final class DetailController: GladysViewController, ResizingCellDelegate, DetailCellDelegate,
+final class DetailController: GladysViewController, @MainActor ResizingCellDelegate, @MainActor DetailCellDelegate,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
+    UIPopoverPresentationControllerDelegate, @MainActor AddLabelControllerDelegate {
     var sourceIndexPath: IndexPath?
 
     private var itemObservation: Cancellable?

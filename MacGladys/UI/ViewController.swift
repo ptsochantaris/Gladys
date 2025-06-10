@@ -5,7 +5,7 @@ import PopTimer
 @preconcurrency import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener {
+    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, @MainActor FilterDelegate, HighlightListener {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!
@@ -1195,9 +1195,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         NSAnimationContext.runAnimationGroup { _ in
             window.animator().alphaValue = 0
-        }
-        completionHandler: {
-            window.orderOut(nil)
+        } completionHandler: {
+            Task { @MainActor in
+                window.orderOut(nil)
+            }
         }
     }
 }

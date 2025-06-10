@@ -10,7 +10,7 @@ extension SectionIdentifier: @retroactive @unchecked Sendable {}
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
-    UIPopoverPresentationControllerDelegate, FilterDelegate, HighlightListener {
+    UIPopoverPresentationControllerDelegate, @MainActor FilterDelegate, HighlightListener {
     @IBOutlet private var collection: UICollectionView!
     @IBOutlet private var totalSizeLabel: UIBarButtonItem!
     @IBOutlet private var deleteButton: UIBarButtonItem!
@@ -1063,7 +1063,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         if syncing || transitioning {
-            collection.accessibilityLabel = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            collection.accessibilityLabel = swiftString
         } else {
             collection.accessibilityLabel = "Items"
         }

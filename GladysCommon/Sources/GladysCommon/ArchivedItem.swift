@@ -24,7 +24,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 @Observable
-public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
+public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProviding {
     public enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
 
@@ -629,25 +629,30 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     #if !os(watchOS)
         private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool, loadingProgress: Progress) async {
             let finalTitle = displayText.0
-            var transcribedText: String?
             let img = imageOfImageComponentIfExists
             let mediaInfo = urlOfMediaComponentIfExists
 
+            var visualRequests = [VNImageBasedRequest]()
             var tags1 = [String]()
+            var transcribedText: String?
 
             if autoImage || ocrImage, displayMode == .fill, let img {
-                let vr = await Task.detached {
-                    var visualRequests = [VNImageBasedRequest]()
+                (visualRequests, tags1, transcribedText) = await Task.detached { @Sendable in
+
+                    var _visualRequests = [VNImageBasedRequest]()
+                    var _tags1 = [String]()
+                    var _transcribedText: String?
+
                     if autoImage {
                         let r = VNClassifyImageRequest { request, _ in
                             if let observations = request.results as? [VNClassificationObservation] {
                                 let relevant = observations.filter {
                                     $0.hasMinimumPrecision(0.7, forRecall: 0)
                                 }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                                tags1.append(contentsOf: relevant)
+                                _tags1.append(contentsOf: relevant)
                             }
                         }
-                        visualRequests.append(r)
+                        _visualRequests.append(r)
                     }
 
                     if ocrImage {
@@ -655,24 +660,24 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                             if let observations = request.results as? [VNRecognizedTextObservation] {
                                 let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
                                 if detectedText.isPopulated {
-                                    transcribedText = detectedText
+                                    _transcribedText = detectedText
                                 }
                             }
                         }
                         r.recognitionLevel = .accurate
-                        visualRequests.append(r)
+                        _visualRequests.append(r)
                     }
 
-                    if visualRequests.isPopulated {
+                    if _visualRequests.isPopulated {
                         let handler = VNImageRequestHandler(cgImage: img)
                         do {
-                            try handler.perform(visualRequests)
+                            try handler.perform(_visualRequests)
                         } catch {
                             log("Warning - VNImageRequestHandler failed: \(error.localizedDescription)")
                         }
                     }
 
-                    return visualRequests
+                    return (_visualRequests, _tags1, _transcribedText)
                 }.value
 
                 var speechTask: SFSpeechRecognitionTask?
@@ -705,8 +710,8 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                 }
 
                 let st = speechTask
-                loadingProgress.cancellationHandler = {
-                    vr.forEach { $0.cancel() }
+                loadingProgress.cancellationHandler = { [visualRequests] in
+                    visualRequests.forEach { $0.cancel() }
                     st?.cancel()
                 }
             }

@@ -3,7 +3,7 @@ import GladysUI
 import GladysUIKit
 import UIKit
 
-final class VisionSettingsController: GladysViewController, WindowSizing {
+final class VisionSettingsController: GladysViewController, @MainActor WindowSizing {
     private let viewControllers = {
         let prefs = UIStoryboard(name: "Preferences", bundle: nil)
         return ["importExportNav", "syncNav", "optionsNav", "helpNav", "aboutNav"].map {

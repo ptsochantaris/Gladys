@@ -1,6 +1,5 @@
 import UIKit
 
-@MainActor
 protocol NotesEditorViewControllerDelegate: AnyObject {
     func newNoteSaved(note: String)
 }

@@ -1,7 +1,6 @@
 import AppKit
 import GladysCommon
 
-@MainActor
 protocol ComponentCellDelegate: AnyObject {
     func componentCell(_ componentCell: ComponentCell, wants action: ComponentCell.Action)
 }

@@ -17,7 +17,6 @@ final class ComponentCollectionView: NSCollectionView {
     }
 }
 
-@MainActor
 protocol FocusableTextFieldDelegate: AnyObject {
     func fieldReceivedFocus(_ field: FocusableTextField)
 }
@@ -48,7 +47,7 @@ final class FocusableTextField: NSTextField {
     }
 }
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate, NSMenuItemValidation {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, @MainActor NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, @MainActor ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, @MainActor FocusableTextFieldDelegate, NSMenuItemValidation {
     static var showingUUIDs = Set<UUID>()
 
     var associatedFilter: Filter?
@@ -494,15 +493,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.window.initialFirstResponder = textField
         a.beginSheetModal(for: view.window!) { [weak self] response in
             if let self, response.rawValue == 1000 {
-                if let newURL = URL(string: textField.stringValue) {
-                    typeItem.replaceURL(newURL)
-                    item.markUpdated()
-                    item.status = .needsIngest
-                    saveItem()
-                } else {
-                    Task {
+                Task { @MainActor in
+                    if let newURL = URL(string: textField.stringValue) {
+                        typeItem.replaceURL(newURL)
+                        item.markUpdated()
+                        item.status = .needsIngest
+                        saveItem()
+                    } else {
                         await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: self.view.window!)
-                        self.editCurrent(sender)
+                        self.editCurrent(nil)
                     }
                 }
             }
@@ -774,10 +773,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.addButton(withTitle: "Options")
         a.beginSheetModal(for: view.window!) { [weak self] response in
             guard let self else { return }
-            if response.rawValue == 1002 {
-                editInvites(sender)
-            } else if response.rawValue == 1001 {
-                deleteShare(sender)
+            Task { @MainActor in
+                if response.rawValue == 1002 {
+                    editInvites(sender)
+                } else if response.rawValue == 1001 {
+                    deleteShare(sender)
+                }
             }
         }
     }
