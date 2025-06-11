@@ -638,7 +638,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
             if autoImage || ocrImage, displayMode == .fill, let img {
                 (visualRequests, tags1, transcribedText) = await Task.detached { @Sendable in
-
                     var _visualRequests = [VNImageBasedRequest]()
                     var _tags1 = [String]()
                     var _transcribedText: String?
@@ -951,12 +950,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
     public let itemUpdates = PassthroughSubject<Void, Never>()
 
     public func postModified() {
-        presentationGenerator?.cancel()
-        presentationInfoCache[uuid] = nil
-        signalItemUpdate()
-    }
-
-    public func signalItemUpdate() {
         itemUpdates.send()
     }
 
@@ -1012,32 +1005,5 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
     public var backgroundInfoObject: Component.BackgroundInfoObject? {
         components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
-    }
-
-    private var presentationGenerator: Task<PresentationInfo?, Never>?
-
-    public var activePresentationGenerationResult: PresentationInfo? {
-        get async {
-            if let presentationGenerator, !presentationGenerator.isCancelled {
-                await presentationGenerator.value
-            } else {
-                nil
-            }
-        }
-    }
-
-    public func cancelPresentationGeneration() async {
-        presentationGenerator?.cancel()
-        _ = await presentationGenerator?.value
-        presentationGenerator = nil
-        presentationInfoCache[uuid] = nil
-    }
-
-    public func usingPresentationGenerator(_ newTask: Task<PresentationInfo?, Never>) async -> PresentationInfo? {
-        presentationGenerator = newTask
-        defer {
-            presentationGenerator = nil
-        }
-        return await newTask.value
     }
 }

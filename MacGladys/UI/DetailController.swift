@@ -473,7 +473,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc private func editCurrent(_ sender: Any?) {
+    @objc private func editCurrent(_: Any?) {
         guard let typeItem = selectedItem else { return }
         guard let urlString = typeItem.encodedUrl?.absoluteString else { return }
 

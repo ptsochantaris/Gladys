@@ -209,6 +209,9 @@
 		16EC3D092145286F0015714A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC3D082145286F0015714A /* main.swift */; };
 		16EC717F1F9FC6C7007750AA /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EC717E1F9FC6C7007750AA /* Reachability.swift */; };
 		16EDF33A2C3C76ED00A54A2D /* GladysCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 16EDF3392C3C76ED00A54A2D /* GladysCommon */; };
+		16EF92E72DFA340D0046DC50 /* GladysIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 160874402DF886BA00C61738 /* GladysIcon.icon */; };
+		16EF92E82DFA34A40046DC50 /* GladysIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 160874402DF886BA00C61738 /* GladysIcon.icon */; };
+		16EF92E92DFA34DB0046DC50 /* GladysIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 160874402DF886BA00C61738 /* GladysIcon.icon */; };
 		16EFD3B82DA15C3300A83C2D /* Gladys.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 16EFD3B72DA15C3300A83C2D /* Gladys.storekit */; };
 		16F063FC20B895CD00ABF32A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F063FB20B895CD00ABF32A /* main.swift */; };
 		16F3A7F423D1BC4800263ECB /* GladysPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16F3A7F323D1BC4800263ECB /* GladysPopoverBackgroundView.swift */; };
@@ -1570,6 +1573,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16A4E7E61FBB844A00D60596 /* Assets.xcassets in Resources */,
+				16EF92E72DFA340D0046DC50 /* GladysIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1579,6 +1583,7 @@
 			files = (
 				16FAFDCA24DF78AF00268BA1 /* Assets.xcassets in Resources */,
 				16B2AA4924DF458D004F3FC2 /* MainInterface.storyboard in Resources */,
+				16EF92E82DFA34A40046DC50 /* GladysIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1587,6 +1592,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16CA74232AB4C23C000D6A99 /* Assets.xcassets in Resources */,
+				16EF92E92DFA34DB0046DC50 /* GladysIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2025,7 +2031,6 @@
 		161718D12094D334005ABD6C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = MacGladys/Boot/MacGladys.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -2054,7 +2059,6 @@
 		161718D22094D334005ABD6C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = MacGladys/Boot/MacGladys.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -2315,6 +2319,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
@@ -2395,7 +2400,6 @@
 		1694264F1F12D58700F3A0A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
@@ -2472,6 +2476,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
@@ -2549,7 +2554,6 @@
 		169426551F12D59B00F3A0A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = GladysIcon;
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
@@ -2625,7 +2629,6 @@
 		16A4E7FD1FBB844A00D60596 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
@@ -2644,7 +2647,6 @@
 		16A4E7FE1FBB844A00D60596 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				INFOPLIST_FILE = GladysWatch/Info.plist;

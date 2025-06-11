@@ -1,12 +1,105 @@
+import Combine
 import Foundation
 import GladysCommon
 import MapKit
 import Semalot
 import SwiftUI
 
+@MainActor private class PresentationGenerator {
+    private struct Operation: Hashable {
+        let uuid: UUID
+        let block: @Sendable () async -> PresentationInfo?
+
+        let publisher = PassthroughSubject<PresentationInfo?, Never>()
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(uuid)
+        }
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.uuid == rhs.uuid
+        }
+
+        func go() async {
+            let item = await block()
+            publisher.send(item)
+        }
+
+        @MainActor
+        var result: PresentationInfo? {
+            get async {
+                for await value in publisher.values {
+                    return value
+                }
+                return nil
+            }
+        }
+    }
+
+    private var queuedItems = [Operation]() {
+        didSet {
+            log(">>> queuedItems count: \(queuedItems.count)")
+        }
+    }
+
+    private let arrival = CurrentValueSubject<Void, Never>(())
+    private var activeOperations = [Operation]()
+
+    func waitIfNeeded(for uuid: UUID) async -> PresentationInfo? {
+        let item = queuedItems.first(where: { $0.uuid == uuid }) ?? activeOperations.first(where: { $0.uuid == uuid })
+        return await item?.result
+    }
+
+    private let semalot = Semalot(tickets: max(1, UInt(ProcessInfo().processorCount - 1)))
+
+    init() {
+        let iterator = arrival.values
+        Task {
+            for await _ in iterator {
+                while let nextItem = queuedItems.popLast() {
+                    activeOperations.insert(nextItem, at: 0)
+                    await semalot.takeTicket()
+                    let uuid = nextItem.uuid
+                    Task.detached(priority: .userInitiated) { [weak self] in
+                        await nextItem.go()
+                        Task { @MainActor [weak self] in
+                            guard let self else { return }
+                            activeOperations.removeAll { $0.uuid == uuid }
+                            semalot.returnTicket()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func queue(uuid: UUID, block: @Sendable @escaping () async -> PresentationInfo?) {
+        queuedItems.insert(Operation(uuid: uuid, block: block), at: 0)
+        arrival.send()
+    }
+
+    func cancel(uuid: UUID) {
+        queuedItems.removeAll { $0.uuid == uuid }
+    }
+}
+
+@MainActor
+private let presentationGenerator = PresentationGenerator()
+
 public extension ArchivedItem {
-    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
-    private static let singleLock = Semalot(tickets: 1)
+    func prefetchPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) {
+        if presentationInfoCache[uuid] != nil {
+            return
+        }
+
+        presentationGenerator.queue(uuid: uuid) { [weak self] in
+            await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
+        }
+    }
+
+    func ignorePresentationPrefetch() {
+        presentationGenerator.cancel(uuid: uuid)
+    }
 
     @discardableResult
     func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
@@ -15,50 +108,36 @@ public extension ArchivedItem {
             return existing
         }
 
-        if let info = await activePresentationGenerationResult {
-            log(">>> Deduped presentation task \(uuid.uuidString)")
-            return info
-        }
-
-        let newTask = Task.detached(priority: .userInitiated) { [weak self] in
+        presentationGenerator.queue(uuid: uuid) { [weak self] in
             await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
         }
-        return await usingPresentationGenerator(newTask)
+
+        return await presentationGenerator.waitIfNeeded(for: uuid)
+    }
+
+    func cancelPresentationGeneration() {
+        presentationGenerator.cancel(uuid: uuid)
+    }
+
+    func prepareForPresentationUpdate() async {
+        cancelPresentationGeneration()
+        _ = await presentationGenerator.waitIfNeeded(for: uuid)
+        presentationInfoCache[uuid] = nil
     }
 
     private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         assert(!Thread.isMainThread)
 
-        let lock = await style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
+        // TODO: locking, make sure only 1 instance runs in widget style
 
-        await lock.takeTicket()
-
+        log(">>> Presentation Info start \(uuid)")
         defer {
-            if Task.isCancelled {
-                log(">>> Cancelled presentation task \(uuid.uuidString)")
-            } else {
-                log(">>> Finished presentation task \(uuid.uuidString)")
-            }
-            lock.returnTicket()
+            log(">>> Presentation Info end \(uuid)")
         }
-
-        if Task.isCancelled {
-            return nil
-        }
-
-        log(">>> New presentation task \(uuid.uuidString)")
 
         let topInfo = await prepareTopText()
 
-        if Task.isCancelled {
-            return nil
-        }
-
         let bottomInfo = await prepareBottomText()
-
-        if Task.isCancelled {
-            return nil
-        }
 
         let defaultColor = PresentationInfo.defaultCardColor
         var top = defaultColor
@@ -71,15 +150,8 @@ public extension ArchivedItem {
 
         } else if dm == .center || style != .square {
             result = await prepareImage(asThumbnail: style == .widget)
-            if Task.isCancelled {
-                return nil
-            }
 
         } else if let img = await prepareImage(asThumbnail: false) {
-            if Task.isCancelled {
-                return nil
-            }
-
             var processedImage: CIImage?
             let originalSize = img.size
             #if canImport(AppKit)
@@ -93,44 +165,24 @@ public extension ArchivedItem {
             #endif
 
             if var processedImage {
-                if Task.isCancelled {
-                    return nil
-                }
-
                 if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
                     let top = topInfo.expectedHeightEstimate(for: expectedSize, atTop: true)
                     let bottom = bottomInfo.expectedHeightEstimate(for: expectedSize, atTop: false)
                     if let withBlur = processedImage.applyLensEffect(top: top, bottom: bottom)?.cropped(to: CGRect(origin: .zero, size: originalSize)) {
                         processedImage = withBlur
                     }
-
-                    if Task.isCancelled {
-                        return nil
-                    }
                 }
 
                 if topInfo.willBeVisible {
                     top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
-
-                    if Task.isCancelled {
-                        return nil
-                    }
                 }
 
                 if bottomInfo.willBeVisible {
                     bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
-
-                    if Task.isCancelled {
-                        return nil
-                    }
                 }
 
                 result = processedImage.asImage
             }
-        }
-
-        if Task.isCancelled {
-            return nil
         }
 
         let p = await PresentationInfo(
@@ -149,10 +201,6 @@ public extension ArchivedItem {
         )
 
         presentationInfoCache[uuid] = p
-
-        if Task.isCancelled {
-            return nil
-        }
 
         return p
     }

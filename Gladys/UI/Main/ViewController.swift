@@ -475,12 +475,17 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         for ip in indexPaths {
             if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
-               presentationInfoCache[uuid] == nil,
                let item = DropStore.item(uuid: uuid) {
-                log("Prefetching presentation info for \(uuid)")
-                Task {
-                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
-                }
+                item.prefetchPresentationInfo(style: style, expectedSize: expectedCellSize)
+            }
+        }
+    }
+
+    func collectionView(_: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        for ip in indexPaths {
+            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
+               let item = DropStore.item(uuid: uuid) {
+                item.ignorePresentationPrefetch()
             }
         }
     }
@@ -926,21 +931,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         if #unavailable(iOS 26) {
             if let navigationBar = navigationController?.navigationBar {
-#if os(visionOS)
-                navigationBar.titleTextAttributes = [
-                    .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-                ]
-                navigationBar.largeTitleTextAttributes = [
-                    .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-                ]
-#else
-                navigationBar.titleTextAttributes = [
-                    .foregroundColor: UIColor.g_colorLightGray
-                ]
-                navigationBar.largeTitleTextAttributes = [
-                    .foregroundColor: UIColor.g_colorLightGray
-                ]
-#endif
+                #if os(visionOS)
+                    navigationBar.titleTextAttributes = [
+                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                    ]
+                    navigationBar.largeTitleTextAttributes = [
+                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                    ]
+                #else
+                    navigationBar.titleTextAttributes = [
+                        .foregroundColor: UIColor.g_colorLightGray
+                    ]
+                    navigationBar.largeTitleTextAttributes = [
+                        .foregroundColor: UIColor.g_colorLightGray
+                    ]
+                #endif
             }
         }
 

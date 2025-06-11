@@ -550,8 +550,8 @@ public extension CloudManager {
             try await attemptSync(scope: nil, force: force)
 
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .networkFailure,
-             .networkUnavailable, .operationCancelled, .partialFailure, .participantMayNeedVerification, .permissionFailure, .quotaExceeded,
-             .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem, .participantAlreadyInvited:
+             .networkUnavailable, .operationCancelled, .partialFailure, .participantAlreadyInvited, .participantMayNeedVerification, .permissionFailure,
+             .quotaExceeded, .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem:
             // regular failure
             throw ckError
 
