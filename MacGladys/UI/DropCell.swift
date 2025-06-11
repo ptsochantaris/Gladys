@@ -49,7 +49,8 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
         view.window!.gladysController!
     }
 
-    private let itemViewController = NSHostingController(rootView: ItemView())
+    private let myWrapper = ArchivedItemWrapper()
+    private lazy var itemViewController = NSHostingController(rootView: ItemView(wrapper: myWrapper))
 
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -77,7 +78,7 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             if itemViewController.parent == nil {
                 hostGladysController.addChildController(itemViewController, to: view)
             }
-            itemViewController.rootView.setItem(archivedDropItem, for: size, style: .square)
+            myWrapper.configure(with: archivedDropItem, size: size, style: .square)
             lastLayout = size
         }
         view.layer?.rasterizationScale = view.window?.screen?.backingScaleFactor ?? 1

@@ -14,6 +14,8 @@ public final class ArchivedItemWrapper: Identifiable {
         }
     }
 
+    public init() {}
+
     public var hasItem: Bool {
         item != nil
     }
@@ -38,12 +40,12 @@ public final class ArchivedItemWrapper: Identifiable {
 
     var cellSize = CGSize.zero
     var style = Style.square
-    var shade = false
+    public var shade = false
 
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    func clear() {
+    public func clear() {
         if let i = item {
             i.cancelPresentationGeneration()
             item = nil
@@ -69,7 +71,7 @@ public final class ArchivedItemWrapper: Identifiable {
         #endif
     }
 
-    func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
+    public func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
         guard let newItem else {
             clear()
             return
@@ -107,7 +109,7 @@ public final class ArchivedItemWrapper: Identifiable {
         style.allowsShadows && presentationInfo.highlightColor == .none
     }
 
-    var presentationInfo = PresentationInfo()
+    private(set) var presentationInfo = PresentationInfo()
 
     func delete() {
         item?.delete()

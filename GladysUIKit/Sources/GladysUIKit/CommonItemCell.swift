@@ -61,7 +61,8 @@ open class CommonItemCell: UICollectionViewCell {
         return UITargetedPreview(view: self, parameters: params)
     }
 
-    private var itemViewController = UIHostingController(rootView: ItemView())
+    private let myWrapper = ArchivedItemWrapper()
+    private lazy var itemViewController = UIHostingController(rootView: ItemView(wrapper: myWrapper))
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
@@ -70,7 +71,7 @@ open class CommonItemCell: UICollectionViewCell {
     }
 
     public func didEndDisplaying() {
-        itemViewController.rootView.didEndDisplaying()
+        myWrapper.clear()
     }
 
     private var lastLayout = CGSize.zero
@@ -78,11 +79,11 @@ open class CommonItemCell: UICollectionViewCell {
 
     public var shade: Bool {
         get {
-            itemViewController.rootView.shade
+            myWrapper.shade
         }
         set {
             withAnimation {
-                itemViewController.rootView.shade = newValue
+                myWrapper.shade = newValue
             }
         }
     }
@@ -93,9 +94,9 @@ open class CommonItemCell: UICollectionViewCell {
             lastLayout = currentSize
 
             if lowMemoryMode {
-                itemViewController.rootView.didEndDisplaying()
+                myWrapper.clear()
             } else {
-                itemViewController.rootView.setItem(archivedDropItem, for: bounds.size, style: style)
+                myWrapper.configure(with: archivedDropItem, size: bounds.size, style: style)
             }
 
             if itemViewController.parent == nil, let owningViewController {
@@ -116,7 +117,7 @@ open class CommonItemCell: UICollectionViewCell {
 
     override open var accessibilityValue: String? {
         get {
-            itemViewController.rootView.accessibilityText
+            myWrapper.accessibilityText
         }
         set {}
     }

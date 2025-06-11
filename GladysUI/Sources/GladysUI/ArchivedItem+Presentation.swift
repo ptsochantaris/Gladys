@@ -36,29 +36,38 @@ import SwiftUI
         }
     }
 
+    private let arrival = CurrentValueSubject<Void, Never>(())
+
     private var queuedItems = [Operation]() {
         didSet {
             log(">>> queuedItems count: \(queuedItems.count)")
         }
     }
 
-    private let arrival = CurrentValueSubject<Void, Never>(())
-    private var activeOperations = [Operation]()
+    private var activeOperations = [Operation]() {
+        didSet {
+            log(">>> activeOperations count: \(activeOperations.count)")
+        }
+    }
 
     func waitIfNeeded(for uuid: UUID) async -> PresentationInfo? {
         let item = queuedItems.first(where: { $0.uuid == uuid }) ?? activeOperations.first(where: { $0.uuid == uuid })
         return await item?.result
     }
 
-    private let semalot = Semalot(tickets: max(1, UInt(ProcessInfo().processorCount - 1)))
+    private let semalot = Semalot(tickets: max(1, UInt(ProcessInfo().processorCount - 2)))
 
     init() {
         let iterator = arrival.values
         Task {
             for await _ in iterator {
-                while let nextItem = queuedItems.popLast() {
-                    activeOperations.insert(nextItem, at: 0)
+                while queuedItems.isPopulated {
                     await semalot.takeTicket()
+                    guard let nextItem = queuedItems.popLast() else {
+                        semalot.returnTicket()
+                        continue
+                    }
+                    activeOperations.insert(nextItem, at: 0)
                     let uuid = nextItem.uuid
                     Task.detached(priority: .userInitiated) { [weak self] in
                         await nextItem.go()
@@ -129,11 +138,6 @@ public extension ArchivedItem {
         assert(!Thread.isMainThread)
 
         // TODO: locking, make sure only 1 instance runs in widget style
-
-        log(">>> Presentation Info start \(uuid)")
-        defer {
-            log(">>> Presentation Info end \(uuid)")
-        }
 
         let topInfo = await prepareTopText()
 
