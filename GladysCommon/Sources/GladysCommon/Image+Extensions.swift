@@ -91,6 +91,8 @@ public extension IMAGE {
             #endif
         }
 
+        private static let srgb = CGColorSpace(name: CGColorSpace.sRGB)
+
         // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
         private final func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
             guard !extent.isEmpty,
@@ -100,9 +102,9 @@ public extension IMAGE {
                 return nil
             }
 
-            var bitmap = [UInt8](repeating: 0, count: 4)
-            CIImage.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
-            return (bitmap[0], bitmap[1], bitmap[2], bitmap[3])
+            var bitmap: (UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0)
+            CIImage.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: CIImage.srgb)
+            return bitmap
         }
 
         final func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
@@ -127,10 +129,17 @@ public extension IMAGE {
                 if cols.3 < 200 {
                     return nil
                 }
-                return COLOR(red: CGFloat(cols.0) / 255,
-                             green: CGFloat(cols.1) / 255,
-                             blue: CGFloat(cols.2) / 255,
-                             alpha: CGFloat(cols.3) / 255)
+                #if canImport(AppKit)
+                    return COLOR(srgbRed: CGFloat(cols.0) / 255,
+                                 green: CGFloat(cols.1) / 255,
+                                 blue: CGFloat(cols.2) / 255,
+                                 alpha: CGFloat(cols.3) / 255)
+                #else
+                    return COLOR(red: CGFloat(cols.0) / 255,
+                                 green: CGFloat(cols.1) / 255,
+                                 blue: CGFloat(cols.2) / 255,
+                                 alpha: CGFloat(cols.3) / 255)
+                #endif
             } else {
                 return nil
             }
