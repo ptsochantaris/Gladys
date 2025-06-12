@@ -78,7 +78,11 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
             if itemViewController.parent == nil {
                 hostGladysController.addChildController(itemViewController, to: view)
             }
-            myWrapper.configure(with: archivedDropItem, size: size, style: .square)
+            if let archivedDropItem {
+                myWrapper.configure(with: archivedDropItem, size: size, style: .square)
+            } else {
+                myWrapper.clear()
+            }
             lastLayout = size
         }
         view.layer?.rasterizationScale = view.window?.screen?.backingScaleFactor ?? 1

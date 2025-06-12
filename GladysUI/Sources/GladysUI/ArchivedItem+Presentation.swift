@@ -164,8 +164,6 @@ public extension ArchivedItem {
     private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         assert(!Thread.isMainThread)
 
-        // TODO: locking, make sure only 1 instance runs in widget style
-
         let topInfo = await prepareTopText()
 
         let bottomInfo = await prepareBottomText()
