@@ -127,8 +127,10 @@ public final class ArchivedItemWrapper: Identifiable {
         item?.dominantTypeDescription
     }
 
+    private static let customPersonFormatStyle = PersonNameComponents.FormatStyle(style: .short)
+
     var shareOwnerDescription: String? {
-        item?.cloudKitShareRecord?.owner.userIdentity.description
+        item?.cloudKitShareRecord?.owner.userIdentity.nameComponents?.formatted(ArchivedItemWrapper.customPersonFormatStyle)
     }
 
     var isShareWithOnlyOwner: Bool {
