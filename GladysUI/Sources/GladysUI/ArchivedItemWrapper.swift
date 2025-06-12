@@ -79,6 +79,7 @@ public final class ArchivedItemWrapper: Identifiable {
 
         observer = newItem
             .itemUpdates
+            .debounce(for: .seconds(0.1), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
             }
@@ -93,6 +94,10 @@ public final class ArchivedItemWrapper: Identifiable {
             if let p = await newItem.createPresentationInfo(style: style, expectedSize: size) {
                 if item?.uuid == p.itemId {
                     presentationInfo = p
+                    labels = newItem.labels
+                    status = newItem.status
+                    flags = newItem.flags
+                    locked = flags.contains(.needsUnlock)
                 }
             }
         }
@@ -108,13 +113,11 @@ public final class ArchivedItemWrapper: Identifiable {
         item?.delete()
     }
 
-    var labels: [String] {
-        item?.labels ?? []
-    }
-
-    var status: ArchivedItem.Status? {
-        item?.status
-    }
+    // copied on presentation update
+    var labels = [String]()
+    var status: ArchivedItem.Status?
+    var flags = ArchivedItem.Flags()
+    var locked = false
 
     var dominantTypeDescription: String? {
         item?.dominantTypeDescription
@@ -130,20 +133,12 @@ public final class ArchivedItemWrapper: Identifiable {
         item?.isShareWithOnlyOwner ?? false
     }
 
-    var flags: ArchivedItem.Flags {
-        item?.flags ?? []
-    }
-
     var displayMode: ArchivedDropItemDisplayType {
         item?.displayMode ?? .fill
     }
 
     var shareMode: ArchivedItem.ShareMode {
         item?.shareMode ?? .none
-    }
-
-    var locked: Bool {
-        item?.flags.contains(.needsUnlock) ?? false
     }
 
     public var accessibilityText: String {

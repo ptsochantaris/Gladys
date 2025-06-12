@@ -129,7 +129,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     private var itemObservation: Cancellable?
     override var representedObject: Any? {
         didSet {
-            itemObservation = item.itemUpdates.sink { [weak self] _ in
+            itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
                 self?.updateInfo()
             }
         }
@@ -740,7 +740,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
     nonisolated func sharingService(_: NSSharingService, didSave share: CKShare) {
         onlyOnMainThread {
             item.cloudKitShareRecord = share
-            item.postModified()
         }
     }
 
@@ -750,8 +749,6 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
             item.cloudKitShareRecord = nil
             if wasImported {
                 Model.delete(items: [item])
-            } else {
-                item.postModified()
             }
         }
     }

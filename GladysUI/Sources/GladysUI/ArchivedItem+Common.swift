@@ -7,11 +7,11 @@ public extension ArchivedItem {
     }
 
     func removeFromCloudkit() {
-        cloudKitRecord = nil
-        cloudKitShareRecord = nil
         for typeItem in components {
             typeItem.cloudKitRecord = nil
         }
+        cloudKitRecord = nil
+        cloudKitShareRecord = nil
     }
 
     func delete() {

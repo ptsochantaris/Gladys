@@ -24,7 +24,6 @@ import UniformTypeIdentifiers
 #endif
 
 @MainActor
-@Observable
 public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProviding {
     public enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
@@ -135,7 +134,11 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         public static let editing = Flags(rawValue: 1 << 4)
     }
 
-    public var flags = Flags()
+    public var flags = Flags() {
+        didSet {
+            itemUpdates.send()
+        }
+    }
 
     private enum CodingKeys: String, CodingKey {
         case suggestedName
@@ -347,6 +350,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
         mostRelevantTypeItem = components.max { $0.contentPriority < $1.contentPriority }
         backgroundInfoObject = components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
+        itemUpdates.send()
     }
 
     public var sizeInBytes: Int64 {
@@ -568,6 +572,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
                     try? f.removeItem(atPath: path)
                 }
             }
+            itemUpdates.send()
         }
     }
 
@@ -601,6 +606,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
                     try? f.removeItem(atPath: path)
                 }
             }
+            itemUpdates.send()
         }
     }
 
@@ -762,7 +768,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         Task {
             // timing corner case
             await Task.yield()
-            postModified()
+            itemUpdates.send()
             sendNotification(name: .IngestComplete, object: self)
             Maintini.endMaintaining()
         }
@@ -956,10 +962,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
     public let itemUpdates = PassthroughSubject<Void, Never>()
 
-    public func postModified() {
-        itemUpdates.send()
-    }
-
     public func cloudKitUpdate(from record: CKRecord) {
         updatedAt = record["updatedAt"] as? Date ?? .distantPast
         titleOverride = record["titleOverride"] as? String ?? ""
@@ -981,7 +983,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
 
         cloudKitRecord = record
-        postModified()
     }
 
     public var parentZone: CKRecordZone.ID {

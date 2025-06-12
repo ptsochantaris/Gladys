@@ -615,7 +615,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let instaLock = lockableSelectedItems.filter { $0.isLocked && !$0.flags.contains(.needsUnlock) }
         for item in instaLock {
             item.flags.insert(.needsUnlock)
-            item.postModified()
         }
 
         let items = lockableSelectedItems
@@ -679,7 +678,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             if success {
                 for item in items {
                     item.flags.remove(.needsUnlock)
-                    item.postModified()
                 }
             } else {
                 unlockWithPassword(items: items, label: label, plural: plural)
@@ -704,7 +702,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             let hashed = sha1(text)
             for item in items where item.lockPassword == hashed {
                 item.flags.remove(.needsUnlock)
-                item.postModified()
                 successCount += 1
             }
             if successCount == 0 {

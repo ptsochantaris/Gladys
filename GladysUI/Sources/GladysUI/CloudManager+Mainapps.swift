@@ -285,7 +285,6 @@ public extension CloudManager {
                 if let item = await DropStore.item(shareId: recordUUID) {
                     await item.setCloudKitShareRecord(nil)
                     log("Shut down sharing for item \(item.uuid) before deactivation")
-                    await item.postModified()
                 }
             }
         } catch {
@@ -478,13 +477,11 @@ public extension CloudManager {
             let record = try await database.record(for: recordIdNeedingRefresh)
             log("Replaced local cloud record with latest copy from server (\(item.uuid))")
             await item.setCloudKitRecord(record)
-            await item.postModified()
 
         } catch {
             if error.itemDoesNotExistOnServer {
                 log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(item.uuid))")
                 await item.removeFromCloudkit()
-                await item.postModified()
             }
         }
     }
@@ -616,7 +613,6 @@ public extension CloudManager {
             let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
             _ = try await database.deleteRecord(withID: shareId)
             await item.setCloudKitShareRecord(nil)
-            await item.postModified()
         } catch {
             if error.itemDoesNotExistOnServer {
                 do {

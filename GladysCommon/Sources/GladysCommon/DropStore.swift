@@ -199,7 +199,7 @@ public enum DropStore {
     public static func reloadCells(for uuids: Set<UUID>) {
         for uuid in uuids {
             if let item = item(uuid: uuid) {
-                item.postModified()
+                item.itemUpdates.send()
             }
         }
     }

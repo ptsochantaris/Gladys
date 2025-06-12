@@ -18,7 +18,7 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
 
     var item: ArchivedItem! {
         didSet {
-            itemObservation = item.itemUpdates.sink { [weak self] _ in
+            itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
                 self?.updateUI()
             }
         }
@@ -138,7 +138,7 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
         }
     }
 
-    @objc private func updateUI() {
+    private func updateUI() {
         view.endEditing(true)
         if item == nil {
             done()

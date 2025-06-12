@@ -280,7 +280,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             insert(item: existingItem, at: destinationIndexPath)
             if !PersistedOptions.dontAutoLabelNewItems, filter.isFilteringLabels, existingItem.labels != filter.enabledLabelsForItems {
                 existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
-                existingItem.postModified()
                 existingItem.markUpdated()
             }
             return .save
@@ -562,7 +561,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Task {
                 if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                     item.flags.remove(.needsUnlock)
-                    item.postModified()
                 }
             }
             return
@@ -1476,7 +1474,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     Task {
                         if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                             item.flags.remove(.needsUnlock)
-                            item.postModified()
                         }
                     }
                 }
@@ -1500,7 +1497,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             item.lockHint = nil
         }
         item.markUpdated()
-        item.postModified()
         Task {
             await Model.save()
         }
@@ -2184,7 +2180,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         await provider.registerCKShare(container: CloudManager.container, allowedSharingOptions: .standard) {
             let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
             await item.setCloudKitShareRecord(share)
-            await item.postModified()
             return share
         }
 
@@ -2244,7 +2239,6 @@ extension ViewController: UICloudSharingControllerDelegate {
             return
         }
         item.cloudKitShareRecord = csc.share
-        item.postModified()
     }
 
     func cloudSharingControllerDidStopSharing(_: UICloudSharingController) {
@@ -2266,7 +2260,7 @@ extension ViewController: UICloudSharingControllerDelegate {
                 try? await Task.sleep(for: .seconds(1))
                 Model.delete(items: [item])
             } else {
-                item.postModified()
+                item.itemUpdates.send()
             }
         }
     }

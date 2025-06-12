@@ -247,7 +247,6 @@ public enum Model {
     public static func lockUnlockedItems() {
         for item in DropStore.allDrops where item.isTemporarilyUnlocked {
             item.flags.insert(.needsUnlock)
-            item.postModified()
         }
     }
 
