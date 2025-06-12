@@ -382,6 +382,8 @@ public enum Model {
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
     }
 
+    private static var commitPool = ContiguousArray<ArchivedItem>()
+
     public static func commitItem(item: ArchivedItem) {
         item.flags.remove(.needsSaving)
 
@@ -390,20 +392,36 @@ public enum Model {
             return
         }
 
+        commitPool.append(item)
+
         Task {
             await storageGatekeeper.takeTicket()
+
             defer {
                 storageGatekeeper.returnTicket()
             }
-            if brokenMode || item.status == .deleted {
+
+            let pool = commitPool
+            commitPool.removeAll()
+
+            let dirtyItems = pool.filter {
+                $0.status != .deleted
+            }
+
+            if dirtyItems.isEmpty {
                 return
             }
-            let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
-            await indexDelegate.reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
+
+            let dirtyUUIDs = Set(dirtyItems.map(\.uuid))
+            let searchableItems = dirtyItems.map(\.searchableItem)
+            let allItemsToKeepInStorage: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
+
+            await indexDelegate.reIndex(items: searchableItems, in: CSSearchableIndex.default())
+
             await Task.detached(priority: .background) {
                 do {
-                    _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [item.uuid])
-                    log("Ingest completed for items (\(item.uuid)) and committed to disk")
+                    _ = try coordinatedSave(allItems: allItemsToKeepInStorage, dirtyUuids: dirtyUUIDs)
+                    log("Ingest completed for items \(dirtyUUIDs) and committed to disk")
                 } catch {
                     log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
                 }

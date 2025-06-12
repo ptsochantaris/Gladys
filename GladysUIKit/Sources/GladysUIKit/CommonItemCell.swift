@@ -34,8 +34,11 @@ open class CommonItemCell: UICollectionViewCell {
     open func setup() {
         contentView.backgroundColor = .clear
         contentView.clipsToBounds = false
-        itemViewController.view.backgroundColor = .clear
-        itemViewController.view.isOpaque = false
+
+        let v = itemViewController.view!
+        v.backgroundColor = .clear
+        v.isOpaque = false
+
         layer.shouldRasterize = true
         setNeedsLayout()
 
@@ -95,7 +98,7 @@ open class CommonItemCell: UICollectionViewCell {
 
             if lowMemoryMode {
                 myWrapper.clear()
-            } else {
+            } else if let archivedDropItem {
                 myWrapper.configure(with: archivedDropItem, size: bounds.size, style: style)
             }
 

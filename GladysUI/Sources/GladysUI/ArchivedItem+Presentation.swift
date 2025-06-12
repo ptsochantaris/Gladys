@@ -55,7 +55,34 @@ import SwiftUI
         return await item?.result
     }
 
-    private let semalot = Semalot(tickets: max(1, UInt(ProcessInfo().processorCount - 2)))
+    private static func countOptimalCores() -> UInt {
+        var coreCount: Int32 = 0
+        var len = MemoryLayout.size(ofValue: coreCount)
+        var result = sysctlbyname("hw.perflevel0.physicalcpu", &coreCount, &len, nil, 0)
+        if result == 0 {
+            return UInt(coreCount)
+        }
+
+        // fall back to plain CPU count
+        result = sysctlbyname("hw.physicalcpu", &coreCount, &len, nil, 0)
+        if result == 0 {
+            return UInt(coreCount)
+        }
+
+        // Can't access the count, play it safe
+        return 1
+    }
+
+    private let semalot = {
+        let bundlePathExtension = Bundle.main.bundleURL.pathExtension
+        let isAppex = bundlePathExtension == "appex"
+        let count: UInt = isAppex
+            ? 1
+            : PresentationGenerator.countOptimalCores()
+
+        log("Semalot count for presentation operations: \(count)")
+        return Semalot(tickets: count)
+    }()
 
     init() {
         let iterator = arrival.values

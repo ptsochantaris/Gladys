@@ -80,7 +80,8 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         }
     }
 
-    public let id: UUID
+    public let id = UUID()
+    public let itemId: UUID
     public let top: LabelInfo
     public let bottom: LabelInfo
     public let image: IMAGE?
@@ -99,7 +100,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     }
 
     public init() {
-        id = UUID()
+        itemId = UUID()
         top = LabelInfo()
         bottom = LabelInfo()
         image = nil
@@ -126,7 +127,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     #endif
 
     public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) async {
-        self.id = id
+        itemId = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
         self.image = image

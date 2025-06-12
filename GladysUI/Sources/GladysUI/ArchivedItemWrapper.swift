@@ -71,25 +71,23 @@ public final class ArchivedItemWrapper: Identifiable {
         #endif
     }
 
-    public func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
-        guard let newItem else {
-            clear()
-            return
-        }
-
+    public func configure(with newItem: ArchivedItem, size: CGSize, style: Style) {
         self.style = style
         cellSize = size
 
-        if item != newItem {
-            presentationInfo = PresentationInfo()
-            item = newItem
-            updatePresentationInfo(for: newItem, alwaysStartFresh: false)
-            observer = newItem
-                .itemUpdates
-                .sink { [weak self] _ in
-                    self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
-                }
+        if item == newItem {
+            return
         }
+
+        presentationInfo = PresentationInfo()
+        item = newItem
+        updatePresentationInfo(for: newItem, alwaysStartFresh: false)
+
+        observer = newItem
+            .itemUpdates
+            .sink { [weak self] _ in
+                self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
+            }
     }
 
     private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
@@ -97,8 +95,9 @@ public final class ArchivedItemWrapper: Identifiable {
             if alwaysStartFresh {
                 await newItem.prepareForPresentationUpdate()
             }
-            if let p = await newItem.createPresentationInfo(style: style, expectedSize: CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)) {
-                if item?.uuid == p.id {
+            let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
+            if let p = await newItem.createPresentationInfo(style: style, expectedSize: size) {
+                if item?.uuid == p.itemId {
                     presentationInfo = p
                 }
             }
