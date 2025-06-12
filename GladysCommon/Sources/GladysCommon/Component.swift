@@ -687,30 +687,29 @@ public final class Component: Codable, Hashable {
 
     #if !canImport(AppKit)
         public func getComponentIconSync() -> IMAGE? {
-            UIImage.fromFile(imagePath, template: displayIconTemplate)
+            UIImage.fromFileSync(imagePath, template: displayIconTemplate)
         }
     #endif
 
-    public func getComponentIcon() async -> IMAGE? {
-        let path = imagePath
-        let template = displayIconTemplate
-        return await Task.detached {
-            #if canImport(AppKit)
-                guard let d = try? Data(contentsOf: path), let i = NSImage(data: d) else {
-                    return nil
-                }
-                if template {
-                    i.isTemplate = true
-                    let w = i.size.width
-                    let h = i.size.height
-                    let scale = min(32.0 / h, 32.0 / w)
-                    i.size = NSSize(width: w * scale, height: h * scale)
-                }
-                return i
-            #else
-                UIImage.fromFile(path, template: template)
-            #endif
-        }.value
+    public nonisolated func getComponentIcon() async -> IMAGE? {
+        assert(!Thread.isMainThread)
+
+        let (path, template) = await (imagePath, displayIconTemplate)
+        #if canImport(AppKit)
+            guard let d = try? Data(contentsOf: path), let i = NSImage(data: d) else {
+                return nil
+            }
+            if template {
+                i.isTemplate = true
+                let w = i.size.width
+                let h = i.size.height
+                let scale = min(32.0 / h, 32.0 / w)
+                i.size = NSSize(width: w * scale, height: h * scale)
+            }
+            return i
+        #else
+            return await UIImage.fromFile(path, template: template)
+        #endif
     }
 
     public func setComponentIcon(_ icon: IMAGE?) async {
@@ -733,18 +732,14 @@ public final class Component: Codable, Hashable {
     }
 
     public func getThumbnail() async -> IMAGE? {
+        assert(!Thread.isMainThread)
         #if canImport(AppKit)
-            await getComponentIcon()
+            return await getComponentIcon()
         #else
-            let path = imagePath
             if displayIconTemplate {
-                return await Task.detached {
-                    UIImage.fromFile(path, template: true)
-                }.value
+                return await UIImage.fromFile(imagePath, template: true)
             } else {
-                return await Task.detached {
-                    UIImage.fromFile(path, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
-                }.value
+                return await UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
             }
         #endif
     }
@@ -1219,9 +1214,9 @@ public final class Component: Codable, Hashable {
         let img = await Task.detached {
             switch contentMode {
             case .fit:
-                icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+                await icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
             case .fill:
-                icon.limited(to: Component.iconPointSize, useScreenScale: true)
+                await icon.limited(to: Component.iconPointSize, useScreenScale: true)
             case .center, .circle:
                 icon
             }

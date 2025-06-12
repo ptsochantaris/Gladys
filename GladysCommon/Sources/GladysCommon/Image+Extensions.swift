@@ -1,8 +1,8 @@
 #if canImport(AppKit)
     import AppKit
-    @preconcurrency import CoreImage
+    import CoreImage
 #elseif os(iOS) || os(visionOS)
-    @preconcurrency import CoreImage
+    import CoreImage
     import UIKit
 #elseif os(watchOS)
     import WatchKit
@@ -228,7 +228,7 @@ public extension IMAGE {
             return image
         }
 
-        final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) -> NSImage {
+        final nonisolated func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) async -> NSImage {
             let mySizePixelWidth = size.width
             let mySizePixelHeight = size.height
             let outputImagePixelWidth = targetSize.width
@@ -310,27 +310,27 @@ public extension IMAGE {
 #else
 
     #if canImport(WatchKit)
+        @MainActor
         private var screenScale: CGFloat {
-            onlyOnMainThread {
-                WKInterfaceDevice.current().screenScale
-            }
+            WKInterfaceDevice.current().screenScale
         }
 
     #elseif os(visionOS)
         private let screenScale: CGFloat = 2
 
     #else
+        @MainActor
         private var screenScale: CGFloat {
-            onlyOnMainThread {
-                UIScreen.main.scale
-            }
+            UIScreen.main.scale
         }
     #endif
 
+    @MainActor
     public let pixelSize: CGFloat = 1 / screenScale
 
     public extension UIImage {
-        static func fromFile(_ url: URL, template: Bool) -> UIImage? {
+        @MainActor
+        static func fromFileSync(_ url: URL, template: Bool) -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {
                 if template {
                     return image.withRenderingMode(.alwaysTemplate)
@@ -341,12 +341,27 @@ public extension IMAGE {
             return nil
         }
 
-        final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) -> UIImage {
+        nonisolated static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
+            if let data = try? Data(contentsOf: url), let image = await UIImage(data: data, scale: template ? screenScale : 1) {
+                if template {
+                    return image.withRenderingMode(.alwaysTemplate)
+                } else {
+                    return image
+                }
+            }
+            return nil
+        }
+
+        final nonisolated func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) async -> UIImage {
             let targetScale = singleScale ? 1 : scale
             let mySizePixelWidth = size.width * targetScale
             let mySizePixelHeight = size.height * targetScale
 
-            let s = useScreenScale ? screenScale : targetScale
+            let s = if useScreenScale {
+                await screenScale
+            } else {
+                targetScale
+            }
             let outputImagePixelWidth = targetSize.width * s
             let outputImagePixelHeight = targetSize.height * s
 

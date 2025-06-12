@@ -24,8 +24,12 @@ extension ArchivedItem {
         return (tile, nil)
     }
 
+    public var mostAttachableItem: Component? {
+        components.max { $0.attachPriority < $1.attachPriority }
+    }
+
     var attachableTypeItem: Component? {
-        if let i = components.max(by: { $0.attachPriority < $1.attachPriority }), i.attachPriority > 0 {
+        if let i = mostAttachableItem, i.attachPriority > 0 {
             i
         } else {
             nil

@@ -5,8 +5,8 @@
 #endif
 #if !os(watchOS)
     import CoreSpotlight
-    @preconcurrency import Speech
-    @preconcurrency import Vision
+    import Speech
+    import Vision
 #endif
 import CloudKit
 import Combine
@@ -18,6 +18,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 #if !os(watchOS)
+    extension SFSpeechRecognitionTask: @retroactive @unchecked Sendable {}
     extension SFSpeechRecognitionResult: @retroactive @unchecked Sendable {}
     extension VNImageBasedRequest: @retroactive @unchecked Sendable {}
 #endif
@@ -57,6 +58,10 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
     }
 
+    public var highestPriorityIconItem: Component?
+    public var mostRelevantTypeItem: Component?
+    public var backgroundInfoObject: Component.BackgroundInfoObject?
+
     public nonisolated let suggestedName: String?
     public nonisolated let uuid: UUID
     public nonisolated let createdAt: Date
@@ -64,6 +69,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
     public var components: ContiguousArray<Component> = [] {
         didSet {
             status = .needsIngest // also sets needsSaving
+            componentsDidUpdate()
         }
     }
 
@@ -188,6 +194,8 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             flags = lp == nil ? [] : .needsUnlock
             status = try Nv.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
             highlightColor = try Nv.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+
+            componentsDidUpdate()
         }
     }
 
@@ -211,6 +219,8 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         components = ContiguousArray(item.components.map {
             Component(cloning: $0, newParentUUID: myUUID)
         })
+
+        componentsDidUpdate()
     }
 
     public static func importData(providers: [DataImporter], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
@@ -244,6 +254,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         note = overrides?.note ?? ""
         labels = overrides?.labels ?? []
         components = ContiguousArray<Component>()
+        componentsDidUpdate()
         flags = .needsSaving
 
         Task {
@@ -332,37 +343,38 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         displayTitleOrUuid.truncateWithEllipses(limit: 128)
     }
 
+    private func componentsDidUpdate() {
+        highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        mostRelevantTypeItem = components.max { $0.contentPriority < $1.contentPriority }
+        backgroundInfoObject = components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
+    }
+
     public var sizeInBytes: Int64 {
         components.reduce(0) { $0 + $1.sizeInBytes }
     }
 
     public var imagePath: URL? {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.imagePath
+        highestPriorityIconItem?.imagePath
     }
 
-    public var displayIcon: IMAGE {
+    public nonisolated var displayIcon: IMAGE {
         get async {
-            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-            return await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
+            await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
     }
 
-    public var thumbnail: IMAGE {
+    public nonisolated var thumbnail: IMAGE {
         get async {
-            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-            return await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
+            await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
     }
 
     public var dominantTypeDescription: String? {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.typeDescription
+        highestPriorityIconItem?.typeDescription
     }
 
     public var displayMode: ArchivedDropItemDisplayType {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.displayIconContentMode ?? .center
+        highestPriorityIconItem?.displayIconContentMode ?? .center
     }
 
     public var displayText: (String?, NSTextAlignment) {
@@ -398,7 +410,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
     public var nonOverridenText: (String?, NSTextAlignment) {
         if let a = components.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
-        let highestPriorityItem = components.max { $0.displayTitlePriority < $1.displayTitlePriority }
+        let highestPriorityItem = highestPriorityIconItem
         if let title = highestPriorityItem?.displayTitle {
             let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
             return (title, alignment)
@@ -592,10 +604,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
     }
 
-    public var mostRelevantTypeItem: Component? {
-        components.max { $0.contentPriority < $1.contentPriority }
-    }
-
     public var mostRelevantTypeItemImage: Component? {
         let item = mostRelevantTypeItem
         if let i = item, i.typeConforms(to: .url), PersistedOptions.includeUrlImagesInMlLogic {
@@ -708,10 +716,9 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
                     try? FileManager.default.removeItem(at: link)
                 }
 
-                let st = speechTask
-                loadingProgress.cancellationHandler = { [visualRequests] in
+                loadingProgress.cancellationHandler = { [visualRequests, speechTask] in
                     visualRequests.forEach { $0.cancel() }
-                    st?.cancel()
+                    speechTask?.cancel()
                 }
             }
 
@@ -1001,9 +1008,5 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         record["lockHint"] = lockHint
         record["highlightColor"] = highlightColor.rawValue
         return record
-    }
-
-    public var backgroundInfoObject: Component.BackgroundInfoObject? {
-        components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
     }
 }

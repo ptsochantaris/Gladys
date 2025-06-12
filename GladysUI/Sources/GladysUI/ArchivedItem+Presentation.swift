@@ -258,12 +258,14 @@ public extension ArchivedItem {
         }
     }
 
-    private func prepareImage(asThumbnail: Bool) async -> IMAGE? {
+    private nonisolated func prepareImage(asThumbnail: Bool) async -> IMAGE? {
+        assert(!Thread.isMainThread)
+
         if asThumbnail {
             return await thumbnail
         }
 
-        if let bgItem = backgroundInfoObject {
+        if let bgItem = await backgroundInfoObject {
             switch bgItem.content {
             case let .map(mapItem):
                 let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)

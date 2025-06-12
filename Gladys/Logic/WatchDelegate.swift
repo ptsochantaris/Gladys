@@ -85,7 +85,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
                         context.cgContext.setFillColor(color.cgColor)
                         context.fill(CGRect(origin: .zero, size: size))
                     }
-                    data = Self.proceedWithImage(icon, size: nil, mode: .center)
+                    data = await Self.proceedWithImage(icon, size: nil, mode: .center)
 
                 case let .map(mapItem):
                     let icon = await item.displayIcon
@@ -136,19 +136,19 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         do {
             let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
             let img = try await Images.mapSnapshot(with: options)
-            return proceedWithImage(img, size: size, mode: .fill)
+            return await proceedWithImage(img, size: size, mode: .fill)
         } catch {
-            return proceedWithImage(fallbackIcon, size: size, mode: .center)
+            return await proceedWithImage(fallbackIcon, size: size, mode: .center)
         }
     }
 
-    private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) -> Data {
+    private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) async -> Data {
         if let size {
             if mode == .center || mode == .circle {
-                let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
+                let scaledImage = await icon.limited(to: size, limitTo: 0.2, singleScale: true)
                 return scaledImage.pngData()!
             } else {
-                let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
+                let scaledImage = await icon.limited(to: size, limitTo: 1.0, singleScale: true)
                 return scaledImage.jpegData(compressionQuality: 0.6)!
             }
         } else {
