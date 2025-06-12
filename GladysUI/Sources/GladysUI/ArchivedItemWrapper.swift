@@ -6,13 +6,7 @@ import SwiftUI
 @MainActor
 @Observable
 public final class ArchivedItemWrapper: Identifiable {
-    private let emptyId = UUID()
-
-    public nonisolated var id: UUID {
-        MainActor.assumeIsolated {
-            item?.uuid ?? emptyId
-        }
-    }
+    public let id = UUID()
 
     public init() {}
 

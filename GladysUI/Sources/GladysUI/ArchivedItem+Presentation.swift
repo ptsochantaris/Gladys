@@ -44,11 +44,7 @@ import SwiftUI
         }
     }
 
-    private var activeOperations = [Operation]() {
-        didSet {
-            log(">>> activeOperations count: \(activeOperations.count)")
-        }
-    }
+    private var activeOperations = [Operation]()
 
     func waitIfNeeded(for uuid: UUID) async -> PresentationInfo? {
         let item = queuedItems.first(where: { $0.uuid == uuid }) ?? activeOperations.first(where: { $0.uuid == uuid })
@@ -140,7 +136,6 @@ public extension ArchivedItem {
     @discardableResult
     func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
         if let existing = presentationInfoCache[uuid] {
-            log(">>> Using cached presentation info for \(uuid.uuidString)")
             return existing
         }
 
@@ -203,11 +198,11 @@ public extension ArchivedItem {
                 }
 
                 if topInfo.willBeVisible {
-                    top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
+                    top = await processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
                 }
 
                 if bottomInfo.willBeVisible {
-                    bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
+                    bottom = await processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
                 }
 
                 result = processedImage.asImage

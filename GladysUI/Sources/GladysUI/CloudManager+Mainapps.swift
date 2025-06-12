@@ -27,7 +27,7 @@ public extension CloudManager {
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.1) {
         #if DEBUG
             if let syncProgressString = await syncProgressString {
-                log(">>> Sync label updated: \(syncProgressString)")
+                log(">>> Sync label: \(syncProgressString)")
             } else {
                 log(">>> Sync label cleared")
             }

@@ -1,8 +1,10 @@
 #if canImport(AppKit)
     import AppKit
     import CoreImage
+    import CoreImage.CIFilterBuiltins
 #elseif os(iOS) || os(visionOS)
     import CoreImage
+    import CoreImage.CIFilterBuiltins
     import UIKit
 #elseif os(watchOS)
     import WatchKit
@@ -77,11 +79,31 @@ public extension IMAGE {
 
 #if canImport(CoreImage)
 
-    public extension CIImage {
-        private static let sharedCiContext = CIContext(options: [.cacheIntermediates: false])
+    private final actor CIBuffer {
+        private var ciQueue = [CIContext]()
 
+        init() {}
+
+        func getContext() async -> CIContext {
+            if let next = ciQueue.popLast() {
+                return next
+            }
+            let cgContext = createCgContext(width: 1, height: 1)
+            return CIContext(cgContext: cgContext, options: [.cacheIntermediates: false, .useSoftwareRenderer: true])
+        }
+
+        func returnContext(_ context: CIContext) {
+            ciQueue.append(context)
+        }
+    }
+
+    private let ciBuffer = CIBuffer()
+
+    private let sharedCiContext = CIContext(options: [.cacheIntermediates: false])
+
+    public extension CIImage {
         var asImage: IMAGE? {
-            guard let new = CIImage.sharedCiContext.createCGImage(self, from: extent) else {
+            guard let new = sharedCiContext.createCGImage(self, from: extent) else {
                 return nil
             }
             #if canImport(AppKit)
@@ -91,23 +113,33 @@ public extension IMAGE {
             #endif
         }
 
-        private static let srgb = CGColorSpace(name: CGColorSpace.sRGB)
-
         // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
-        private final func calculateAverageColor(rect: CGRect) -> (UInt8, UInt8, UInt8, UInt8)? {
-            guard !extent.isEmpty,
-                  let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: self, kCIInputExtentKey: CIVector(cgRect: rect)]),
-                  let outputImage = filter.outputImage
-            else {
+        private final nonisolated func calculateAverageColor(rect: CGRect) async -> (UInt8, UInt8, UInt8, UInt8)? {
+            if extent.isEmpty {
                 return nil
             }
 
+            let filter = CIFilter.areaAverage()
+            filter.inputImage = self
+            filter.extent = rect
+
+            guard let outputImage = filter.outputImage else {
+                return nil
+            }
+
+            let ciContext = await ciBuffer.getContext()
+            defer {
+                Task {
+                    await ciBuffer.returnContext(ciContext)
+                }
+            }
+
             var bitmap: (UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0)
-            CIImage.sharedCiContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: CIImage.srgb)
+            ciContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: srgb)
             return bitmap
         }
 
-        final func calculateOuterColor(size: CGSize, top: Bool?) -> COLOR? {
+        final nonisolated func calculateOuterColor(size: CGSize, top: Bool?) async -> COLOR? {
             var cols: (UInt8, UInt8, UInt8, UInt8)?
             let edgeInset: CGFloat = 50
             let H: CGFloat = 20
@@ -117,12 +149,12 @@ public extension IMAGE {
                 let W = size.width - edgeInset * 2
                 let sampleSize = CGSize(width: W, height: H)
                 if top {
-                    cols = calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset), size: sampleSize))
+                    cols = await calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset), size: sampleSize))
                 } else {
-                    cols = calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: edgeInset - H), size: sampleSize))
+                    cols = await calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: edgeInset - H), size: sampleSize))
                 }
             } else {
-                cols = calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+                cols = await calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
             }
 
             if let cols {
@@ -152,11 +184,11 @@ public extension IMAGE {
             let unitDistanceClear = distance * height
             let unitDistanceOpaque = (distance - 0.2) * height
 
-            let gradient = CIFilter(name: "CILinearGradient")!
-            gradient.setValue(CIVector(x: 0, y: height - unitDistanceClear), forKey: "inputPoint0")
-            gradient.setValue(greenClear, forKey: "inputColor0")
-            gradient.setValue(CIVector(x: 0, y: height - unitDistanceOpaque), forKey: "inputPoint1")
-            gradient.setValue(greenOpaque, forKey: "inputColor1")
+            let gradient = CIFilter.linearGradient()
+            gradient.point0 = CGPoint(x: 0, y: height - unitDistanceClear)
+            gradient.color0 = greenClear
+            gradient.point1 = CGPoint(x: 0, y: height - unitDistanceOpaque)
+            gradient.color1 = greenOpaque
             return gradient.outputImage
         }
 
@@ -167,40 +199,36 @@ public extension IMAGE {
             let unitDistanceClear = distance * height
             let unitDistanceOpaque = (distance - 0.2) * height
 
-            let gradient = CIFilter(name: "CILinearGradient")!
-            gradient.setValue(CIVector(x: 0, y: unitDistanceOpaque), forKey: "inputPoint0")
-            gradient.setValue(greenOpaque, forKey: "inputColor0")
-            gradient.setValue(CIVector(x: 0, y: unitDistanceClear), forKey: "inputPoint1")
-            gradient.setValue(greenClear, forKey: "inputColor1")
+            let gradient = CIFilter.linearGradient()
+            gradient.point0 = CGPoint(x: 0, y: unitDistanceOpaque)
+            gradient.color0 = greenOpaque
+            gradient.point1 = CGPoint(x: 0, y: unitDistanceClear)
+            gradient.color1 = greenClear
             return gradient.outputImage
         }
 
+        private func createMaskedVariableBlur(mask: CIImage?) -> CIFilter & CIMaskedVariableBlur {
+            let maskedVariableBlur = CIFilter.maskedVariableBlur()
+            maskedVariableBlur.inputImage = self
+            maskedVariableBlur.radius = 8
+            maskedVariableBlur.mask = mask
+            return maskedVariableBlur
+        }
+
         private func topMaskOnlyFilter(distance: CGFloat) -> CIImage? {
-            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
-            maskedVariableBlur.setValue(self, forKey: kCIInputImageKey)
-            maskedVariableBlur.setValue(8, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(topGradientFilterImage(distance: distance), forKey: "inputMask")
-            return maskedVariableBlur.outputImage
+            createMaskedVariableBlur(mask: topGradientFilterImage(distance: distance)).outputImage
         }
 
         private func bottomMaskOnlyFilter(distance: CGFloat) -> CIImage? {
-            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
-            maskedVariableBlur.setValue(self, forKey: kCIInputImageKey)
-            maskedVariableBlur.setValue(8, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(bottomGradientFilterImage(distance: distance), forKey: "inputMask")
-            return maskedVariableBlur.outputImage
+            createMaskedVariableBlur(mask: bottomGradientFilterImage(distance: distance)).outputImage
         }
 
         private func topBottomFilter(top: CGFloat, bottom: CGFloat) -> CIImage? {
-            let gradientMask = CIFilter(name: "CIAdditionCompositing")!
-            gradientMask.setValue(topGradientFilterImage(distance: top), forKey: kCIInputImageKey)
-            gradientMask.setValue(bottomGradientFilterImage(distance: bottom), forKey: kCIInputBackgroundImageKey)
+            let gradientMask = CIFilter.additionCompositing()
+            gradientMask.inputImage = topGradientFilterImage(distance: top)
+            gradientMask.backgroundImage = bottomGradientFilterImage(distance: bottom)
 
-            let maskedVariableBlur = CIFilter(name: "CIMaskedVariableBlur")!
-            maskedVariableBlur.setValue(self, forKey: kCIInputImageKey)
-            maskedVariableBlur.setValue(8, forKey: kCIInputRadiusKey)
-            maskedVariableBlur.setValue(gradientMask.outputImage, forKey: "inputMask")
-            return maskedVariableBlur.outputImage
+            return createMaskedVariableBlur(mask: gradientMask.outputImage).outputImage
         }
 
         final func applyLensEffect(top: CGFloat?, bottom: CGFloat?) -> CIImage? {
@@ -217,6 +245,18 @@ public extension IMAGE {
     }
 
 #endif
+
+private let bitmapInfo = CGBitmapInfo(alpha: .premultipliedFirst, component: .integer, byteOrder: .orderDefault)
+private let srgb = CGColorSpace(name: CGColorSpace.sRGB)
+private func createCgContext(width: Int, height _: Int) -> CGContext {
+    CGContext(data: nil,
+              width: width,
+              height: width,
+              bitsPerComponent: 8,
+              bytesPerRow: width * 4,
+              space: srgb,
+              bitmapInfo: bitmapInfo)!
+}
 
 #if canImport(AppKit)
     public extension NSImage {
@@ -253,13 +293,7 @@ public extension IMAGE {
             let offsetX = (Int(outputImagePixelWidth) - drawnImageWidthPixels) / 2
             let offsetY = (Int(outputImagePixelHeight) - drawnImageHeightPixels) / 2
 
-            let c = CGContext(data: nil,
-                              width: Int(outputImagePixelWidth),
-                              height: Int(outputImagePixelHeight),
-                              bitsPerComponent: 8,
-                              bytesPerRow: Int(outputImagePixelWidth) * 4,
-                              space: CGColorSpaceCreateDeviceRGB(),
-                              bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+            let c = createCgContext(width: Int(outputImagePixelWidth), height: Int(outputImagePixelHeight))
             c.interpolationQuality = .high
 
             let imageRef = cgImage(forProposedRect: nil, context: nil, hints: nil)!
@@ -353,6 +387,10 @@ public extension IMAGE {
         }
 
         final nonisolated func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) async -> UIImage {
+            guard let cgImage else {
+                return UIImage()
+            }
+
             let targetScale = singleScale ? 1 : scale
             let mySizePixelWidth = size.width * targetScale
             let mySizePixelHeight = size.height * targetScale
@@ -404,25 +442,22 @@ public extension IMAGE {
             default: break
             }
 
-            let imageRef = cgImage!
-            let c = CGContext(data: nil,
-                              width: Int(outputImagePixelWidth),
-                              height: Int(outputImagePixelHeight),
-                              bitsPerComponent: 8,
-                              bytesPerRow: Int(outputImagePixelWidth) * 4,
-                              space: CGColorSpaceCreateDeviceRGB(),
-                              bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)!
+            let c = createCgContext(width: Int(outputImagePixelWidth), height: Int(outputImagePixelHeight))
             c.interpolationQuality = .high
             c.concatenate(transform)
 
             switch orientation {
             case .left, .leftMirrored, .right, .rightMirrored:
-                c.draw(imageRef, in: CGRect(x: offsetY, y: offsetX, width: drawnImageHeightPixels, height: drawnImageWidthPixels))
+                c.draw(cgImage, in: CGRect(x: offsetY, y: offsetX, width: drawnImageHeightPixels, height: drawnImageWidthPixels))
             default:
-                c.draw(imageRef, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
+                c.draw(cgImage, in: CGRect(x: offsetX, y: offsetY, width: drawnImageWidthPixels, height: drawnImageHeightPixels))
             }
 
-            return UIImage(cgImage: c.makeImage()!, scale: s, orientation: .up)
+            guard let createdCgImage = c.makeImage() else {
+                return UIImage()
+            }
+
+            return UIImage(cgImage: createdCgImage, scale: s, orientation: .up)
         }
 
         #if canImport(CoreImage)
