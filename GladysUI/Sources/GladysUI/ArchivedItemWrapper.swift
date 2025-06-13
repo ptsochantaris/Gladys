@@ -134,12 +134,16 @@ public final class ArchivedItemWrapper: Identifiable {
             observer = nil
             item = nil
 
-            presentationInfo = PresentationInfo()
-            labels = []
-            flags = ArchivedItem.Flags()
-            locked = false
-            status = .nominal
+            clearPresentation()
         }
+    }
+
+    private func clearPresentation() {
+        presentationInfo = PresentationInfo()
+        labels = []
+        flags = ArchivedItem.Flags()
+        locked = false
+        status = .nominal
     }
 
     public init() {
@@ -156,14 +160,16 @@ public final class ArchivedItemWrapper: Identifiable {
     }
 
     private func updatePresentationInfo(ignoreCache: Bool, queuedItem: ArchivedItem) async {
-        guard item?.uuid == queuedItem.uuid else {
+        let capturedUUID = queuedItem.uuid
+
+        guard item?.uuid == capturedUUID else {
             return
         }
 
         var generateNewInfo = true
-        if let cached = presentationInfoCache[queuedItem.uuid] {
+        if let cached = presentationInfoCache[capturedUUID] {
             if ignoreCache {
-                presentationInfoCache[queuedItem.uuid] = nil
+                presentationInfoCache[capturedUUID] = nil
             } else {
                 presentationInfo = cached
                 generateNewInfo = false
@@ -171,10 +177,12 @@ public final class ArchivedItemWrapper: Identifiable {
         }
 
         if generateNewInfo {
+            clearPresentation()
+
             let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
             let p = await queuedItem.createPresentationInfo(style: style, expectedSize: size)
 
-            guard item?.uuid == queuedItem.uuid else {
+            guard item?.uuid == capturedUUID else {
                 return
             }
 
