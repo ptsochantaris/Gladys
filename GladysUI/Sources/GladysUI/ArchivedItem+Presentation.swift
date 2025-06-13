@@ -110,7 +110,7 @@ import SwiftUI
         arrival.send()
     }
 
-    func cancel(uuid: UUID) {
+    func deQueue(uuid: UUID) {
         queuedItems.removeAll { $0.uuid == uuid }
     }
 }
@@ -129,8 +129,8 @@ public extension ArchivedItem {
         }
     }
 
-    func ignorePresentationPrefetch() {
-        presentationGenerator.cancel(uuid: uuid)
+    func deQueuePresentationPrefetch() {
+        presentationGenerator.deQueue(uuid: uuid)
     }
 
     @discardableResult
@@ -146,17 +146,17 @@ public extension ArchivedItem {
         return await presentationGenerator.waitIfNeeded(for: uuid)
     }
 
-    func cancelPresentationGeneration() {
-        presentationGenerator.cancel(uuid: uuid)
+    func deQueuePresentationGeneration() {
+        presentationGenerator.deQueue(uuid: uuid)
     }
 
     func prepareForPresentationUpdate() async {
-        cancelPresentationGeneration()
+        deQueuePresentationGeneration()
         _ = await presentationGenerator.waitIfNeeded(for: uuid)
         presentationInfoCache[uuid] = nil
     }
 
-    private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
+    private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo {
         assert(!Thread.isMainThread)
 
         let topInfo = await prepareTopText()

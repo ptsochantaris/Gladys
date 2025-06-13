@@ -484,7 +484,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         for ip in indexPaths {
             if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
                let item = DropStore.item(uuid: uuid) {
-                item.ignorePresentationPrefetch()
+                item.deQueuePresentationPrefetch()
             }
         }
     }

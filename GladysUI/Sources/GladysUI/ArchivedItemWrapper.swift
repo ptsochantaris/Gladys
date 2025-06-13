@@ -4,11 +4,38 @@ import GladysCommon
 import SwiftUI
 
 @MainActor
+public final class Grouper<T: Sendable> {
+    private let (stream, continuation) = AsyncStream.makeStream(of: T.self)
+    private var count = 0
+
+    public init() {}
+
+    public func queue(_ element: T) {
+        count += 1
+        continuation.yield(element)
+    }
+
+    public func nextBatch() async -> [T]? {
+        var res = [T]()
+        for await element in stream {
+            res.append(element)
+            count -= 1
+            if count == 0 {
+                return res
+            }
+        }
+        return nil
+    }
+
+    public func shutdown() {
+        continuation.finish()
+    }
+}
+
+@MainActor
 @Observable
 public final class ArchivedItemWrapper: Identifiable {
     public let id = UUID()
-
-    public init() {}
 
     public var hasItem: Bool {
         item != nil
@@ -39,16 +66,6 @@ public final class ArchivedItemWrapper: Identifiable {
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    public func clear() {
-        if let i = item {
-            i.cancelPresentationGeneration()
-            item = nil
-            observer?.cancel()
-            observer = nil
-            presentationInfo = PresentationInfo()
-        }
-    }
-
     public static func labelPadding(compact: Bool) -> CGFloat {
         #if canImport(AppKit)
             10
@@ -65,42 +82,102 @@ public final class ArchivedItemWrapper: Identifiable {
         #endif
     }
 
-    public func configure(with newItem: ArchivedItem, size: CGSize, style: Style) {
-        self.style = style
-        cellSize = size
+    private enum UpdateRequest: Equatable {
+        case update(ArchivedItem, Bool), clear, add(ArchivedItem, CGSize, Style)
 
-        if item == newItem {
-            return
+        var isReset: Bool {
+            switch self {
+            case .add, .update: false
+            case .clear: true
+            }
         }
 
-        presentationInfo = PresentationInfo()
-        item = newItem
-        updatePresentationInfo(for: newItem, alwaysStartFresh: false)
-
-        observer = newItem
-            .itemUpdates
-            .debounce(for: .seconds(0.1), scheduler: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updatePresentationInfo(for: newItem, alwaysStartFresh: true)
+        var relatedItem: ArchivedItem? {
+            switch self {
+            case .update(let archivedItem, _), .add(let archivedItem, _, _):
+                archivedItem
+            case .clear:
+                nil
             }
+        }
     }
 
-    private func updatePresentationInfo(for newItem: ArchivedItem, alwaysStartFresh: Bool) {
-        Task {
-            if alwaysStartFresh {
-                await newItem.prepareForPresentationUpdate()
+    private let updateQueue = Grouper<UpdateRequest>()
+
+    public func configure(with newItem: ArchivedItem, size: CGSize, style: Style) {
+        updateQueue.queue(.add(newItem, size, style))
+    }
+
+    public func clear() {
+        updateQueue.queue(.clear)
+    }
+
+    private func processUpdateRequest(updateRequest: UpdateRequest) async {
+        switch updateRequest {
+        case let .update(queuedItem, ignoreCache):
+            await updatePresentationInfo(ignoreCache: ignoreCache, queuedItem: queuedItem)
+
+        case let .add(newItem, size, style):
+            self.style = style
+            cellSize = size
+            item = newItem
+            updateQueue.queue(.update(newItem, false))
+
+            observer = newItem
+                .itemUpdates
+                .sink { [weak self] _ in
+                    self?.updateQueue.queue(.update(newItem, true))
+                }
+
+        case .clear:
+            observer?.cancel()
+            observer = nil
+
+            if let i = item {
+                i.deQueuePresentationGeneration()
+                item = nil
             }
-            let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
-            if let p = await newItem.createPresentationInfo(style: style, expectedSize: size) {
-                if item?.uuid == p.itemId {
-                    presentationInfo = p
-                    labels = newItem.labels
-                    status = newItem.status
-                    flags = newItem.flags
-                    locked = flags.contains(.needsUnlock)
+
+            presentationInfo = PresentationInfo()
+            labels = []
+            flags = ArchivedItem.Flags()
+            locked = false
+            status = .nominal
+        }
+    }
+
+    public init() {
+        Task {
+            while var updateRequests = await updateQueue.nextBatch() {
+                if let clearIndex = updateRequests.lastIndex(where: { $0.isReset }), clearIndex > 0 {
+                    updateRequests[0 ..< clearIndex] = []
+                }
+                for request in updateRequests {
+                    await processUpdateRequest(updateRequest: request)
                 }
             }
         }
+    }
+
+    private func updatePresentationInfo(ignoreCache: Bool, queuedItem: ArchivedItem) async {
+        guard item?.uuid == queuedItem.uuid else {
+            return
+        }
+
+        if ignoreCache {
+            await queuedItem.prepareForPresentationUpdate()
+        }
+
+        let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
+        guard let p = await queuedItem.createPresentationInfo(style: style, expectedSize: size), item?.uuid == queuedItem.uuid else {
+            return
+        }
+
+        presentationInfo = p
+        labels = queuedItem.labels
+        flags = queuedItem.flags
+        locked = flags.contains(.needsUnlock)
+        status = queuedItem.status
     }
 
     var shouldShowShadow: Bool {

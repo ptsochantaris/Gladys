@@ -49,6 +49,13 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             }
         }
 
+        public var shouldTryToExtendBackgroundTime: Bool {
+            switch self {
+            case .isBeingConstructed, .isBeingIngested: true
+            case .deleted, .needsIngest, .nominal: false
+            }
+        }
+
         public var shouldDisplayLoading: Bool {
             switch self {
             case .isBeingConstructed, .isBeingIngested, .needsIngest: true
@@ -67,8 +74,8 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
     public var components: ContiguousArray<Component> = [] {
         didSet {
-            status = .needsIngest // also sets needsSaving
             componentsDidUpdate()
+            status = .needsIngest // also sets needsSaving
         }
     }
 
@@ -78,8 +85,22 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
     }
 
+    private var extendBackground = false {
+        didSet {
+            if extendBackground == oldValue {
+                return
+            }
+            if extendBackground {
+                Maintini.startMaintaining()
+            } else {
+                Maintini.endMaintaining()
+            }
+        }
+    }
+
     public var status: Status = .needsIngest {
         didSet {
+            extendBackground = status.shouldTryToExtendBackgroundTime
             flags.insert(.needsSaving)
         }
     }
@@ -199,6 +220,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             highlightColor = try Nv.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
 
             componentsDidUpdate()
+            itemUpdates.send()
         }
     }
 
@@ -224,6 +246,14 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         })
 
         componentsDidUpdate()
+    }
+
+    deinit {
+        if extendBackground {
+            Task {
+                await Maintini.endMaintaining()
+            }
+        }
     }
 
     public static func importData(providers: [DataImporter], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
@@ -350,7 +380,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
         mostRelevantTypeItem = components.max { $0.contentPriority < $1.contentPriority }
         backgroundInfoObject = components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
-        itemUpdates.send()
     }
 
     public var sizeInBytes: Int64 {
@@ -765,12 +794,12 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
     private func componentIngestDone() async {
         status = .nominal
+        componentsDidUpdate()
         Task {
             // timing corner case
             await Task.yield()
-            itemUpdates.send()
             sendNotification(name: .IngestComplete, object: self)
-            Maintini.endMaintaining()
+            itemUpdates.send()
         }
     }
 
@@ -794,7 +823,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             break
         }
 
-        Maintini.startMaintaining()
         defer {
             Task {
                 await componentIngestDone()
@@ -845,7 +873,6 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
     }
 
     private func newItemIngest(providers: [DataImporter], limitToType: String?) async {
-        Maintini.startMaintaining()
         defer {
             Task {
                 await componentIngestDone()

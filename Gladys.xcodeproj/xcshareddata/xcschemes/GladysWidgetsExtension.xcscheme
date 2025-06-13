@@ -56,6 +56,17 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.springboard">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "16CA740C2AB4C063000D6A99"
+            BuildableName = "GladysWidgetsExtension.appex"
+            BlueprintName = "GladysWidgetsExtension"
+            ReferencedContainer = "container:Gladys.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
