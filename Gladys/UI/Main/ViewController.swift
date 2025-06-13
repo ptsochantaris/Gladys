@@ -480,15 +480,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func collectionView(_: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
-        for ip in indexPaths {
-            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
-               let item = DropStore.item(uuid: uuid) {
-                item.deQueuePresentationPrefetch()
-            }
-        }
-    }
-
     private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
         var observation: NSKeyValueObservation?
         observation = cell.observe(\.center, options: .new) { strongCell, _ in

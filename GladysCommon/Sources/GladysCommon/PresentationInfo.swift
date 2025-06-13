@@ -90,6 +90,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let hasFullImage: Bool
     public let isPlaceholder: Bool
     public let accessibilityText: String
+    public let size: CGSize
 
     public nonisolated static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
@@ -109,6 +110,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         hasFullImage = false
         isPlaceholder = true
         accessibilityText = ""
+        size = .zero
     }
 
     public static func placeholders(count: Int) -> [PresentationInfo] {
@@ -126,12 +128,13 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
     #endif
 
-    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) async {
+    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?, size: CGSize) async {
         itemId = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
         self.image = image
         self.highlightColor = highlightColor
+        self.size = size
         hasTransparentBackground = self.top.hasTransparentBackground || self.bottom.hasTransparentBackground
         self.hasFullImage = hasFullImage
         isPlaceholder = false

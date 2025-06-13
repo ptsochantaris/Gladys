@@ -5,162 +5,34 @@ import MapKit
 import Semalot
 import SwiftUI
 
-@MainActor private class PresentationGenerator {
-    private struct Operation: Hashable {
-        let uuid: UUID
-        let block: @Sendable () async -> PresentationInfo?
-
-        let publisher = PassthroughSubject<PresentationInfo?, Never>()
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(uuid)
-        }
-
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.uuid == rhs.uuid
-        }
-
-        func go() async {
-            let item = await block()
-            publisher.send(item)
-        }
-
-        @MainActor
-        var result: PresentationInfo? {
-            get async {
-                for await value in publisher.values {
-                    return value
-                }
-                return nil
-            }
-        }
-    }
-
-    private let arrival = CurrentValueSubject<Void, Never>(())
-
-    private var queuedItems = [Operation]() {
-        didSet {
-            log(">>> queuedItems count: \(queuedItems.count)")
-        }
-    }
-
-    private var activeOperations = [Operation]()
-
-    func waitIfNeeded(for uuid: UUID) async -> PresentationInfo? {
-        let item = queuedItems.first(where: { $0.uuid == uuid }) ?? activeOperations.first(where: { $0.uuid == uuid })
-        return await item?.result
-    }
-
-    private static func countOptimalCores() -> UInt {
-        var coreCount: Int32 = 0
-        var len = MemoryLayout.size(ofValue: coreCount)
-        var result = sysctlbyname("hw.perflevel0.physicalcpu", &coreCount, &len, nil, 0)
-        if result == 0 {
-            return UInt(coreCount)
-        }
-
-        // fall back to plain CPU count
-        result = sysctlbyname("hw.physicalcpu", &coreCount, &len, nil, 0)
-        if result == 0 {
-            return UInt(coreCount)
-        }
-
-        // Can't access the count, play it safe
-        return 1
-    }
-
-    private let semalot = {
-        let bundlePathExtension = Bundle.main.bundleURL.pathExtension
-        let isAppex = bundlePathExtension == "appex"
-        let count: UInt = isAppex
-            ? 1
-            : PresentationGenerator.countOptimalCores()
-
-        log("Semalot count for presentation operations: \(count)")
-        return Semalot(tickets: count)
-    }()
-
-    init() {
-        let iterator = arrival.values
-        Task {
-            for await _ in iterator {
-                while queuedItems.isPopulated {
-                    await semalot.takeTicket()
-                    guard let nextItem = queuedItems.popLast() else {
-                        semalot.returnTicket()
-                        continue
-                    }
-                    activeOperations.insert(nextItem, at: 0)
-                    let uuid = nextItem.uuid
-                    Task.detached(priority: .userInitiated) { [weak self] in
-                        await nextItem.go()
-                        Task { @MainActor [weak self] in
-                            guard let self else { return }
-                            activeOperations.removeAll { $0.uuid == uuid }
-                            semalot.returnTicket()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    func queue(uuid: UUID, block: @Sendable @escaping () async -> PresentationInfo?) {
-        queuedItems.insert(Operation(uuid: uuid, block: block), at: 0)
-        arrival.send()
-    }
-
-    func deQueue(uuid: UUID) {
-        queuedItems.removeAll { $0.uuid == uuid }
-    }
-}
-
-@MainActor
-private let presentationGenerator = PresentationGenerator()
-
 public extension ArchivedItem {
     func prefetchPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) {
-        if presentationInfoCache[uuid] != nil {
+        if presentationPrefetchTask != nil {
             return
         }
-
-        presentationGenerator.queue(uuid: uuid) { [weak self] in
-            await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
+        presentationPrefetchTask = Task.detached { [weak self] in
+            guard let self else {
+                return PresentationInfo()
+            }
+            let info = await createPresentationInfo(style: style, expectedSize: expectedSize, isPrefetch: true)
+            Task { @MainActor in
+                presentationPrefetchTask = nil
+            }
+            return info
         }
     }
 
-    func deQueuePresentationPrefetch() {
-        presentationGenerator.deQueue(uuid: uuid)
-    }
-
-    @discardableResult
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        if let existing = presentationInfoCache[uuid] {
-            return existing
-        }
-
-        presentationGenerator.queue(uuid: uuid) { [weak self] in
-            await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
-        }
-
-        return await presentationGenerator.waitIfNeeded(for: uuid)
-    }
-
-    func deQueuePresentationGeneration() {
-        presentationGenerator.deQueue(uuid: uuid)
-    }
-
-    func prepareForPresentationUpdate() async {
-        deQueuePresentationGeneration()
-        _ = await presentationGenerator.waitIfNeeded(for: uuid)
-        presentationInfoCache[uuid] = nil
-    }
-
-    private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo {
+    nonisolated func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
         assert(!Thread.isMainThread)
 
-        let topInfo = await prepareTopText()
+        if !isPrefetch, let p = await presentationPrefetchTask {
+            let info = await p.value
+            if info.size == expectedSize {
+                return info
+            }
+        }
 
+        let topInfo = await prepareTopText()
         let bottomInfo = await prepareBottomText()
 
         let defaultColor = PresentationInfo.defaultCardColor
@@ -221,7 +93,8 @@ public extension ArchivedItem {
             status: status,
             locked: isLocked,
             labels: labels,
-            dominantTypeDescription: dominantTypeDescription
+            dominantTypeDescription: dominantTypeDescription,
+            size: expectedSize
         )
 
         presentationInfoCache[uuid] = p

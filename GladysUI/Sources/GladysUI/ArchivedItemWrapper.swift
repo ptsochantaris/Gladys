@@ -94,7 +94,7 @@ public final class ArchivedItemWrapper: Identifiable {
 
         var relatedItem: ArchivedItem? {
             switch self {
-            case .update(let archivedItem, _), .add(let archivedItem, _, _):
+            case let .add(archivedItem, _, _), let .update(archivedItem, _):
                 archivedItem
             case .clear:
                 nil
@@ -132,11 +132,7 @@ public final class ArchivedItemWrapper: Identifiable {
         case .clear:
             observer?.cancel()
             observer = nil
-
-            if let i = item {
-                i.deQueuePresentationGeneration()
-                item = nil
-            }
+            item = nil
 
             presentationInfo = PresentationInfo()
             labels = []
@@ -164,16 +160,27 @@ public final class ArchivedItemWrapper: Identifiable {
             return
         }
 
-        if ignoreCache {
-            await queuedItem.prepareForPresentationUpdate()
+        var generateNewInfo = true
+        if let cached = presentationInfoCache[queuedItem.uuid] {
+            if ignoreCache {
+                presentationInfoCache[queuedItem.uuid] = nil
+            } else {
+                presentationInfo = cached
+                generateNewInfo = false
+            }
         }
 
-        let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
-        guard let p = await queuedItem.createPresentationInfo(style: style, expectedSize: size), item?.uuid == queuedItem.uuid else {
-            return
+        if generateNewInfo {
+            let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
+            let p = await queuedItem.createPresentationInfo(style: style, expectedSize: size)
+
+            guard item?.uuid == queuedItem.uuid else {
+                return
+            }
+
+            presentationInfo = p
         }
 
-        presentationInfo = p
         labels = queuedItem.labels
         flags = queuedItem.flags
         locked = flags.contains(.needsUnlock)

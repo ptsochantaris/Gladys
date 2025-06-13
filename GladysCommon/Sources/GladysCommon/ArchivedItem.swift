@@ -67,6 +67,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
     public var highestPriorityIconItem: Component?
     public var mostRelevantTypeItem: Component?
     public var backgroundInfoObject: Component.BackgroundInfoObject?
+    public var presentationPrefetchTask: Task<PresentationInfo, Never>?
 
     public nonisolated let suggestedName: String?
     public nonisolated let uuid: UUID
