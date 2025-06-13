@@ -83,21 +83,12 @@ public final class ArchivedItemWrapper: Identifiable {
     }
 
     private enum UpdateRequest: Equatable {
-        case update(ArchivedItem, Bool), clear, add(ArchivedItem, CGSize, Style)
+        case update(UUID, Bool), clear, add(ArchivedItem, CGSize, Style)
 
         var isReset: Bool {
             switch self {
             case .add, .update: false
             case .clear: true
-            }
-        }
-
-        var relatedItem: ArchivedItem? {
-            switch self {
-            case let .add(archivedItem, _, _), let .update(archivedItem, _):
-                archivedItem
-            case .clear:
-                nil
             }
         }
     }
@@ -114,19 +105,20 @@ public final class ArchivedItemWrapper: Identifiable {
 
     private func processUpdateRequest(updateRequest: UpdateRequest) async {
         switch updateRequest {
-        case let .update(queuedItem, ignoreCache):
-            await updatePresentationInfo(ignoreCache: ignoreCache, queuedItem: queuedItem)
+        case let .update(uuid, ignoreCache):
+            await updatePresentationInfo(ignoreCache: ignoreCache, uuid: uuid)
 
         case let .add(newItem, size, style):
             self.style = style
             cellSize = size
             item = newItem
-            updateQueue.queue(.update(newItem, false))
+            let uuid = newItem.uuid
+            updateQueue.queue(.update(uuid, false))
 
             observer = newItem
                 .itemUpdates
                 .sink { [weak self] _ in
-                    self?.updateQueue.queue(.update(newItem, true))
+                    self?.updateQueue.queue(.update(uuid, true))
                 }
 
         case .clear:
@@ -134,16 +126,9 @@ public final class ArchivedItemWrapper: Identifiable {
             observer = nil
             item = nil
 
-            clearPresentation()
+            presentationInfo = PresentationInfo()
+            setProperties()
         }
-    }
-
-    private func clearPresentation() {
-        presentationInfo = PresentationInfo()
-        labels = []
-        flags = ArchivedItem.Flags()
-        locked = false
-        status = .nominal
     }
 
     public init() {
@@ -159,17 +144,15 @@ public final class ArchivedItemWrapper: Identifiable {
         }
     }
 
-    private func updatePresentationInfo(ignoreCache: Bool, queuedItem: ArchivedItem) async {
-        let capturedUUID = queuedItem.uuid
-
-        guard item?.uuid == capturedUUID else {
+    private func updatePresentationInfo(ignoreCache: Bool, uuid: UUID) async {
+        guard let capturedItem = item, capturedItem.uuid == uuid else {
             return
         }
 
         var generateNewInfo = true
-        if let cached = presentationInfoCache[capturedUUID] {
+        if let cached = presentationInfoCache[uuid] {
             if ignoreCache {
-                presentationInfoCache[capturedUUID] = nil
+                presentationInfoCache[uuid] = nil
             } else {
                 presentationInfo = cached
                 generateNewInfo = false
@@ -177,22 +160,32 @@ public final class ArchivedItemWrapper: Identifiable {
         }
 
         if generateNewInfo {
-            clearPresentation()
-
             let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
-            let p = await queuedItem.createPresentationInfo(style: style, expectedSize: size)
+            let newInfo = await capturedItem.createPresentationInfo(style: style, expectedSize: size)
 
-            guard item?.uuid == capturedUUID else {
+            guard capturedItem.uuid == uuid else {
                 return
             }
 
-            presentationInfo = p
+            withAnimation {
+                presentationInfo = newInfo
+                setProperties()
+            }
+        } else {
+            setProperties()
         }
+    }
 
-        labels = queuedItem.labels
-        flags = queuedItem.flags
-        locked = flags.contains(.needsUnlock)
-        status = queuedItem.status
+    private func setProperties() {
+        if let item {
+            labels = item.labels
+            flags = item.flags
+            status = item.status
+        } else {
+            labels = []
+            flags = .init()
+            status = .nominal
+        }
     }
 
     var shouldShowShadow: Bool {
@@ -208,8 +201,12 @@ public final class ArchivedItemWrapper: Identifiable {
     // copied on presentation update
     var labels = [String]()
     var status: ArchivedItem.Status?
-    var flags = ArchivedItem.Flags()
     var locked = false
+    var flags = ArchivedItem.Flags() {
+        didSet {
+            locked = flags.contains(.needsUnlock)
+        }
+    }
 
     var dominantTypeDescription: String? {
         item?.dominantTypeDescription
