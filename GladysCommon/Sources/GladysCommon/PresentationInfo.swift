@@ -29,10 +29,10 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
             let height: CGFloat = switch self {
             case .none:
                 0
-            case .link:
-                50
+            case let .link(url):
+                url.absoluteString.height(for: size, lineLimit: 1) + 20
             case let .hint(text), let .note(text), let .text(text):
-                text.height(for: size.width, lineLimit: lineLimit(isTop: atTop, size: size)) + 30
+                text.height(for: size, lineLimit: lineLimit(isTop: atTop, size: size)) + 20
             }
 
             return height / size.height
@@ -90,7 +90,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let hasFullImage: Bool
     public let isPlaceholder: Bool
     public let accessibilityText: String
-    public let size: CGSize
+    public let cellSize: CGSize
 
     public nonisolated static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
@@ -110,7 +110,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         hasFullImage = false
         isPlaceholder = true
         accessibilityText = ""
-        size = .zero
+        cellSize = .zero
     }
 
     public static func placeholders(count: Int) -> [PresentationInfo] {
@@ -128,13 +128,25 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
     #endif
 
-    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?, size: CGSize) async {
+    public static func labelPadding(compact: Bool) -> CGFloat {
+        #if canImport(AppKit)
+            10
+        #else
+            compact ? 9 : 14
+        #endif
+    }
+
+    public static func labelSize(for cellSize: CGSize) -> CGSize {
+        CGSize(width: cellSize.width - labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
+    }
+
+    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?, cellSize: CGSize) async {
         itemId = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
         self.image = image
         self.highlightColor = highlightColor
-        self.size = size
+        self.cellSize = cellSize
         hasTransparentBackground = self.top.hasTransparentBackground || self.bottom.hasTransparentBackground
         self.hasFullImage = hasFullImage
         isPlaceholder = false

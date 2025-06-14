@@ -66,14 +66,6 @@ public final class ArchivedItemWrapper: Identifiable {
     private weak var item: ArchivedItem?
     private var observer: Cancellable?
 
-    public static func labelPadding(compact: Bool) -> CGFloat {
-        #if canImport(AppKit)
-            10
-        #else
-            compact ? 9 : 14
-        #endif
-    }
-
     var labelSpacing: CGFloat {
         #if canImport(AppKit)
             4
@@ -160,8 +152,7 @@ public final class ArchivedItemWrapper: Identifiable {
         }
 
         if generateNewInfo {
-            let size = CGSize(width: cellSize.width - Self.labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
-            let newInfo = await capturedItem.createPresentationInfo(style: style, expectedSize: size)
+            let newInfo = await capturedItem.createPresentationInfo(style: style, cellSize: cellSize)
 
             guard capturedItem.uuid == uuid else {
                 return

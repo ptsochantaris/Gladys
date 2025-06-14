@@ -6,7 +6,7 @@ import Semalot
 import SwiftUI
 
 public extension ArchivedItem {
-    func prefetchPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) {
+    func prefetchPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize) {
         if presentationPrefetchTask != nil {
             return
         }
@@ -14,7 +14,7 @@ public extension ArchivedItem {
             guard let self else {
                 return PresentationInfo()
             }
-            let info = await createPresentationInfo(style: style, expectedSize: expectedSize, isPrefetch: true)
+            let info = await createPresentationInfo(style: style, cellSize: cellSize, isPrefetch: true)
             Task { @MainActor in
                 presentationPrefetchTask = nil
             }
@@ -22,12 +22,12 @@ public extension ArchivedItem {
         }
     }
 
-    nonisolated func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
+    nonisolated func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
         assert(!Thread.isMainThread)
 
         if !isPrefetch, let p = await presentationPrefetchTask {
             let info = await p.value
-            if info.size == expectedSize {
+            if info.cellSize == cellSize {
                 return info
             }
         }
@@ -61,9 +61,12 @@ public extension ArchivedItem {
             #endif
 
             if var processedImage {
-                if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
-                    let top = topInfo.expectedHeightEstimate(for: expectedSize, atTop: true)
-                    let bottom = bottomInfo.expectedHeightEstimate(for: expectedSize, atTop: false)
+                if cellSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
+                    let textSize = PresentationInfo.labelSize(for: cellSize)
+
+                    let top = topInfo.expectedHeightEstimate(for: textSize, atTop: true)
+                    let bottom = bottomInfo.expectedHeightEstimate(for: textSize, atTop: false)
+
                     if let withBlur = processedImage.applyLensEffect(top: top, bottom: bottom)?.cropped(to: CGRect(origin: .zero, size: originalSize)) {
                         processedImage = withBlur
                     }
@@ -112,7 +115,7 @@ public extension ArchivedItem {
             locked: isLocked,
             labels: labels,
             dominantTypeDescription: dominantTypeDescription,
-            size: expectedSize
+            cellSize: cellSize
         )
 
         presentationInfoCache[uuid] = p

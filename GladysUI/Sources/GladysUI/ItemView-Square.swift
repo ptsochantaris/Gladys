@@ -70,7 +70,7 @@ extension ItemView {
 
             let presentation = wrapper.presentationInfo
             let info = atTop ? presentation.top.content : presentation.bottom.content
-            lineLimit = info.lineLimit(isTop: atTop, size: wrapper.cellSize)
+            lineLimit = info.lineLimit(isTop: atTop, size: PresentationInfo.labelSize(for: presentation.cellSize))
             switch info {
             case let .hint(hintText):
                 contentText = hintText
@@ -147,7 +147,7 @@ extension ItemView {
                     textView
                     shareView
                 }
-                .padding(ArchivedItemWrapper.labelPadding(compact: cellSize.isCompact))
+                .padding(PresentationInfo.labelPadding(compact: cellSize.isCompact))
                 .frame(maxWidth: .infinity)
                 .background {
                     if wrapper.style == .widget {
