@@ -65,16 +65,102 @@ public extension IMAGE {
     #if canImport(CoreImage)
 
         var createCiImage: CIImage? {
-            #if canImport(AppKit)
-                let cgi = cgImage(forProposedRect: nil, context: nil, hints: nil)
-            #else
-                let cgi = cgImage
-            #endif
-            guard let cgi else { return nil }
+            guard let cgi = getCgImage() else { return nil }
 
             return CIImage(cgImage: cgi, options: [.nearestSampling: true])
         }
     #endif
+
+    private final nonisolated func calculateAverageColor(rect: CGRect, rawData: UnsafeMutableRawBufferPointer) -> (UInt8, UInt8, UInt8, UInt8)? {
+        guard let cgi = getCgImage(), cgi.width > 0, cgi.height > 0 else { return nil }
+        #if canImport(AppKit)
+            let scale: CGFloat = 1
+        #endif
+
+        let bytesPerRow = cgi.width * 4
+
+        let scanOriginX = Int(rect.origin.x * scale)
+        let scanWidth = Int(rect.width * scale)
+
+        let scanOriginY = Int(rect.origin.y * scale)
+        let scanHeight = Int(rect.height * scale)
+
+        var rt = 0
+        var bt = 0
+        var gt = 0
+        var at = 0
+
+        for y in scanOriginY ..< (scanOriginY + scanHeight) {
+            for x in scanOriginX ..< (scanOriginX + scanWidth) {
+                var i = x * 4 + (y * bytesPerRow)
+                at += Int(rawData[i])
+                i += 1
+                rt += Int(rawData[i])
+                i += 1
+                gt += Int(rawData[i])
+                i += 1
+                bt += Int(rawData[i])
+            }
+        }
+
+        let numberOfPixels = scanWidth * scanHeight
+        let a = UInt8(at / numberOfPixels)
+        let r = UInt8(rt / numberOfPixels)
+        let g = UInt8(gt / numberOfPixels)
+        let b = UInt8(bt / numberOfPixels)
+
+        return (r, g, b, a)
+    }
+
+    func getCgImage() -> CGImage? {
+        #if canImport(AppKit)
+            cgImage(forProposedRect: nil, context: nil, hints: nil)
+        #else
+            cgImage
+        #endif
+    }
+
+    final nonisolated func calculateOuterColor(size: CGSize, top: Bool?, rawData: UnsafeMutableRawBufferPointer) async -> COLOR? {
+        guard let cgi = getCgImage() else { return nil }
+        let wholeWidth = cgi.width
+        let wholeHeight = cgi.height
+        if wholeWidth <= 0 || wholeHeight <= 0 {
+            return nil
+        }
+
+        let edgeInset: CGFloat = 50
+        let H: CGFloat = 20
+        let total = edgeInset + H
+        let sampleRect: CGRect
+
+        if let top, size.width > total, size.height > total {
+            let W = size.width - edgeInset * 2
+            let sampleSize = CGSize(width: W, height: H)
+            if top {
+                sampleRect = CGRect(origin: CGPoint(x: edgeInset, y: edgeInset), size: sampleSize)
+            } else {
+                sampleRect = CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset - H), size: sampleSize)
+            }
+        } else {
+            sampleRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        }
+
+        guard let cols = calculateAverageColor(rect: sampleRect, rawData: rawData), cols.3 > 200 else {
+            return nil
+        }
+
+        #if canImport(AppKit)
+            return COLOR(srgbRed: CGFloat(cols.0) / 255,
+                         green: CGFloat(cols.1) / 255,
+                         blue: CGFloat(cols.2) / 255,
+                         alpha: CGFloat(cols.3) / 255)
+        #else
+            return COLOR(red: CGFloat(cols.0) / 255,
+                         green: CGFloat(cols.1) / 255,
+                         blue: CGFloat(cols.2) / 255,
+                         alpha: CGFloat(cols.3) / 255)
+        #endif
+    }
 }
 
 #if canImport(CoreImage)
@@ -111,70 +197,6 @@ public extension IMAGE {
             #else
                 return IMAGE(cgImage: new)
             #endif
-        }
-
-        // with thanks to https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
-        private final nonisolated func calculateAverageColor(rect: CGRect) async -> (UInt8, UInt8, UInt8, UInt8)? {
-            if extent.isEmpty {
-                return nil
-            }
-
-            let filter = CIFilter.areaAverage()
-            filter.inputImage = self
-            filter.extent = rect
-
-            guard let outputImage = filter.outputImage else {
-                return nil
-            }
-
-            let ciContext = await ciBuffer.getContext()
-            defer {
-                Task {
-                    await ciBuffer.returnContext(ciContext)
-                }
-            }
-
-            var bitmap: (UInt8, UInt8, UInt8, UInt8) = (0, 0, 0, 0)
-            ciContext.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: srgb)
-            return bitmap
-        }
-
-        final nonisolated func calculateOuterColor(size: CGSize, top: Bool?) async -> COLOR? {
-            var cols: (UInt8, UInt8, UInt8, UInt8)?
-            let edgeInset: CGFloat = 50
-            let H: CGFloat = 20
-            let total = edgeInset + H
-
-            if let top, size.width > total, size.height > total {
-                let W = size.width - edgeInset * 2
-                let sampleSize = CGSize(width: W, height: H)
-                if top {
-                    cols = await calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset), size: sampleSize))
-                } else {
-                    cols = await calculateAverageColor(rect: CGRect(origin: CGPoint(x: edgeInset, y: edgeInset - H), size: sampleSize))
-                }
-            } else {
-                cols = await calculateAverageColor(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-            }
-
-            if let cols {
-                if cols.3 < 200 {
-                    return nil
-                }
-                #if canImport(AppKit)
-                    return COLOR(srgbRed: CGFloat(cols.0) / 255,
-                                 green: CGFloat(cols.1) / 255,
-                                 blue: CGFloat(cols.2) / 255,
-                                 alpha: CGFloat(cols.3) / 255)
-                #else
-                    return COLOR(red: CGFloat(cols.0) / 255,
-                                 green: CGFloat(cols.1) / 255,
-                                 blue: CGFloat(cols.2) / 255,
-                                 alpha: CGFloat(cols.3) / 255)
-                #endif
-            } else {
-                return nil
-            }
         }
 
         private func topGradientFilterImage(distance: CGFloat) -> CIImage? {
@@ -247,9 +269,9 @@ public extension IMAGE {
 #endif
 
 private let bitmapInfo = CGBitmapInfo(alpha: .premultipliedFirst, component: .integer, byteOrder: .orderDefault)
-private let srgb = CGColorSpace(name: CGColorSpace.sRGB)
-private func createCgContext(width: Int, height _: Int) -> CGContext {
-    CGContext(data: nil,
+private let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
+public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, height _: Int) -> CGContext {
+    CGContext(data: data,
               width: width,
               height: width,
               bitsPerComponent: 8,
@@ -395,13 +417,13 @@ private func createCgContext(width: Int, height _: Int) -> CGContext {
             let mySizePixelWidth = size.width * targetScale
             let mySizePixelHeight = size.height * targetScale
 
-            let s = if useScreenScale {
+            let effectiveScale = if useScreenScale {
                 await screenScale
             } else {
                 targetScale
             }
-            let outputImagePixelWidth = targetSize.width * s
-            let outputImagePixelHeight = targetSize.height * s
+            let outputImagePixelWidth = targetSize.width * effectiveScale
+            let outputImagePixelHeight = targetSize.height * effectiveScale
 
             if mySizePixelWidth <= 0 || mySizePixelHeight <= 0 || outputImagePixelWidth <= 0 || outputImagePixelHeight <= 0 {
                 return UIImage()
@@ -457,7 +479,7 @@ private func createCgContext(width: Int, height _: Int) -> CGContext {
                 return UIImage()
             }
 
-            return UIImage(cgImage: createdCgImage, scale: s, orientation: .up)
+            return UIImage(cgImage: createdCgImage, scale: effectiveScale, orientation: .up)
         }
 
         #if canImport(CoreImage)

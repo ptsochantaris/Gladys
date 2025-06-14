@@ -69,15 +69,33 @@ public extension ArchivedItem {
                     }
                 }
 
-                if topInfo.willBeVisible {
-                    top = await processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
-                }
-
-                if bottomInfo.willBeVisible {
-                    bottom = await processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
-                }
-
                 result = processedImage.asImage
+
+                let t1 = topInfo.willBeVisible
+                let t2 = bottomInfo.willBeVisible
+
+                if t1 || t2, let result, let cgImage = result.getCgImage() {
+                    let wholeWidth = cgImage.width
+                    let wholeHeight = cgImage.height
+                    let dataLen = wholeWidth * wholeHeight * 4
+                    let memory = calloc(1, dataLen)!
+                    defer {
+                        free(memory)
+                    }
+
+                    let context = createCgContext(data: memory, width: wholeWidth, height: wholeHeight)
+                    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: wholeWidth, height: wholeHeight))
+
+                    let rawData = UnsafeMutableRawBufferPointer(start: memory, count: dataLen)
+
+                    if t1 {
+                        top = await result.calculateOuterColor(size: originalSize, top: true, rawData: rawData) ?? defaultColor
+                    }
+
+                    if t2 {
+                        bottom = await result.calculateOuterColor(size: originalSize, top: false, rawData: rawData) ?? defaultColor
+                    }
+                }
             }
         }
 
