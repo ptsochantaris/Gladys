@@ -71,47 +71,6 @@ public extension IMAGE {
         }
     #endif
 
-    private final nonisolated func calculateAverageColor(rect: CGRect, rawData: UnsafeMutableRawBufferPointer) -> (UInt8, UInt8, UInt8, UInt8)? {
-        guard let cgi = getCgImage(), cgi.width > 0, cgi.height > 0 else { return nil }
-        #if canImport(AppKit)
-            let scale: CGFloat = 1
-        #endif
-
-        let bytesPerRow = cgi.width * 4
-
-        let scanOriginX = Int(rect.origin.x * scale)
-        let scanWidth = Int(rect.width * scale)
-
-        let scanOriginY = Int(rect.origin.y * scale)
-        let scanHeight = Int(rect.height * scale)
-
-        var rt = 0
-        var bt = 0
-        var gt = 0
-        var at = 0
-
-        for y in scanOriginY ..< (scanOriginY + scanHeight) {
-            for x in scanOriginX ..< (scanOriginX + scanWidth) {
-                var i = x * 4 + (y * bytesPerRow)
-                at += Int(rawData[i])
-                i += 1
-                rt += Int(rawData[i])
-                i += 1
-                gt += Int(rawData[i])
-                i += 1
-                bt += Int(rawData[i])
-            }
-        }
-
-        let numberOfPixels = scanWidth * scanHeight
-        let a = UInt8(at / numberOfPixels)
-        let r = UInt8(rt / numberOfPixels)
-        let g = UInt8(gt / numberOfPixels)
-        let b = UInt8(bt / numberOfPixels)
-
-        return (r, g, b, a)
-    }
-
     func getCgImage() -> CGImage? {
         #if canImport(AppKit)
             cgImage(forProposedRect: nil, context: nil, hints: nil)
@@ -146,20 +105,46 @@ public extension IMAGE {
             sampleRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         }
 
-        guard let cols = calculateAverageColor(rect: sampleRect, rawData: rawData), cols.3 > 200 else {
-            return nil
+        #if canImport(AppKit)
+            let scale: CGFloat = 1
+        #endif
+
+        let bytesPerRow = cgi.width * 4
+
+        let scanOriginX = Int(sampleRect.origin.x * scale)
+        let scanWidth = Int(sampleRect.width * scale)
+
+        let scanOriginY = Int(sampleRect.origin.y * scale)
+        let scanHeight = Int(sampleRect.height * scale)
+
+        var rt = 0
+        var bt = 0
+        var gt = 0
+        var at = 0
+
+        for y in stride(from: scanOriginY, to: scanOriginY + scanHeight, by: 2) {
+            for x in stride(from: scanOriginX, to: scanOriginX + scanWidth, by: 2) {
+                var i = x * 4 + (y * bytesPerRow)
+                at += Int(rawData[i])
+                i += 1
+                rt += Int(rawData[i])
+                i += 1
+                gt += Int(rawData[i])
+                i += 1
+                bt += Int(rawData[i])
+            }
         }
 
+        let numberOfPixels = CGFloat(scanWidth * scanHeight * 255)
+        let a = CGFloat(at) / numberOfPixels
+        let r = CGFloat(rt) / numberOfPixels
+        let g = CGFloat(gt) / numberOfPixels
+        let b = CGFloat(bt) / numberOfPixels
+
         #if canImport(AppKit)
-            return COLOR(srgbRed: CGFloat(cols.0) / 255,
-                         green: CGFloat(cols.1) / 255,
-                         blue: CGFloat(cols.2) / 255,
-                         alpha: CGFloat(cols.3) / 255)
+            return COLOR(srgbRed: r, green: g, blue: b, alpha: a)
         #else
-            return COLOR(red: CGFloat(cols.0) / 255,
-                         green: CGFloat(cols.1) / 255,
-                         blue: CGFloat(cols.2) / 255,
-                         alpha: CGFloat(cols.3) / 255)
+            return COLOR(red: r, green: g, blue: b, alpha: a)
         #endif
     }
 }

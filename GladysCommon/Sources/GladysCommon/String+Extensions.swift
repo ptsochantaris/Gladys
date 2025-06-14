@@ -58,8 +58,7 @@ public extension String {
             let font = FONT.preferredFont(forTextStyle: FONT.TextStyle.caption1)
         #endif
 
-        let lineHeight = font.ascender + font.descender + font.leading
-        let maxHeight = CGFloat(lineLimit) * lineHeight + 8
+        let maxHeight = CGFloat(lineLimit) * font.lineHeight + (CGFloat(lineLimit - 1) * font.leading)
 
         let attributedText = NSAttributedString(string: self, attributes: [.font: font])
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedText)

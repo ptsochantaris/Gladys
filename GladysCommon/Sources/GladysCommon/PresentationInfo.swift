@@ -30,9 +30,9 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
             case .none:
                 0
             case .link:
-                39
+                50
             case let .hint(text), let .note(text), let .text(text):
-                min(92, text.height(for: size.width, lineLimit: lineLimit(isTop: atTop, size: size)) + 30)
+                text.height(for: size.width, lineLimit: lineLimit(isTop: atTop, size: size)) + 30
             }
 
             return height / size.height
