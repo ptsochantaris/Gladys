@@ -1009,7 +1009,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
             guard let self else { return }
             presentationInfoCache.reset()
-            collection.reloadData()
+            let visibleItems = collection.visibleCells.compactMap { $0 as? ArchivedItemCell }.compactMap(\.archivedDropItem)
+            for item in visibleItems {
+                item.itemUpdates.send()
+            }
         }
     }
 

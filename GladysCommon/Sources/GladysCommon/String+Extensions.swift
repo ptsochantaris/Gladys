@@ -76,9 +76,9 @@ public extension String {
 
         let height = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, visibleRange, nil, containerSize, nil).height
         #if canImport(AppKit)
-        return height + 2
+            return height + 2
         #else
-        return height + 14
+            return height + 14
         #endif
     }
 }
