@@ -167,10 +167,19 @@ public final class ArchivedItemWrapper: Identifiable {
                 return
             }
 
-            withAnimation {
+            let wasLoading = status?.shouldDisplayLoading ?? true
+            let isLoading = item?.status.shouldDisplayLoading ?? true
+
+            if wasLoading != isLoading {
+                withAnimation {
+                    presentationInfo = newInfo
+                    setProperties()
+                }
+            } else {
                 presentationInfo = newInfo
                 setProperties()
             }
+
         } else {
             setProperties()
         }

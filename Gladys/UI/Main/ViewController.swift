@@ -176,13 +176,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         let center = cell.center
         let x = center.x
         let y = center.y
-        let w = cell.frame.size.width
+        let w = cell.frame.width
         cell.accessibilityDropPointDescriptors = [
             UIAccessibilityLocationDescriptor(name: "Drop after item", point: CGPoint(x: x + w, y: y), in: collectionView),
             UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
         ]
 
-        if let cell = cell as? ArchivedItemCell, let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
+        if let cell = cell as? ArchivedItemCell, cell.needsConfig, let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
             configureCell(cell, identifier: uuid)
         }
     }
@@ -853,13 +853,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         cell.owningViewController = self
         cell.archivedDropItem = DropStore.item(uuid: identifier)
         cell.isEditing = isEditing
+        cell.needsConfig = false
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier> { [unowned self] cell, _, identifier in
-            configureCell(cell, identifier: identifier.uuid)
+            if cell.needsConfig {
+                configureCell(cell, identifier: identifier.uuid)
+            }
         }
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in

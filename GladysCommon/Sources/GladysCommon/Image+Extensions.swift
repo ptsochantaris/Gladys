@@ -128,18 +128,19 @@ public extension IMAGE {
             return nil
         }
 
-        let edgeInset: CGFloat = 50
-        let H: CGFloat = 20
-        let total = edgeInset + H
+        let edgeInsetH: CGFloat = 50
+        let edgeInsetV: CGFloat = 10
+        let H: CGFloat = 24
+        let total = edgeInsetH + H
         let sampleRect: CGRect
 
         if let top, size.width > total, size.height > total {
-            let W = size.width - edgeInset * 2
+            let W = size.width - edgeInsetH * 2
             let sampleSize = CGSize(width: W, height: H)
             if top {
-                sampleRect = CGRect(origin: CGPoint(x: edgeInset, y: edgeInset), size: sampleSize)
+                sampleRect = CGRect(origin: CGPoint(x: edgeInsetH, y: edgeInsetV), size: sampleSize)
             } else {
-                sampleRect = CGRect(origin: CGPoint(x: edgeInset, y: size.height - edgeInset - H), size: sampleSize)
+                sampleRect = CGRect(origin: CGPoint(x: edgeInsetH, y: size.height - edgeInsetV - H), size: sampleSize)
             }
         } else {
             sampleRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
