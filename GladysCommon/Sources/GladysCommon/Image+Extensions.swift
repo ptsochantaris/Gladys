@@ -1,16 +1,22 @@
-#if canImport(AppKit)
-    import AppKit
-    import CoreImage
-    import CoreImage.CIFilterBuiltins
-#elseif os(iOS) || os(visionOS)
-    import CoreImage
-    import CoreImage.CIFilterBuiltins
-    import UIKit
-#elseif os(watchOS)
-    import WatchKit
-#endif
 import Foundation
 import SwiftUI
+
+#if canImport(AppKit)
+    import AppKit
+#endif
+
+#if canImport(UIKit)
+    import UIKit
+#endif
+
+#if canImport(WatchKit)
+    import WatchKit
+#endif
+
+#if canImport(CoreImage)
+    import CoreImage
+    import CoreImage.CIFilterBuiltins
+#endif
 
 public extension CGSize {
     var isCompact: Bool {
@@ -353,18 +359,17 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
 
     #if canImport(WatchKit)
         @MainActor
-        private var screenScale: CGFloat {
-            WKInterfaceDevice.current().screenScale
-        }
-
-    #elseif os(visionOS)
-        private let screenScale: CGFloat = 2
+        private let screenScale: CGFloat = WKInterfaceDevice.current().screenScale
 
     #else
-        @MainActor
-        private var screenScale: CGFloat {
-            UIScreen.main.scale
-        }
+        #if os(visionOS)
+            private let screenScale: CGFloat = 2
+        #else
+            @MainActor
+            private var screenScale: CGFloat {
+                UIScreen.main.scale
+            }
+        #endif
     #endif
 
     @MainActor

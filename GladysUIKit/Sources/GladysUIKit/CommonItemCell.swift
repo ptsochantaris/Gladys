@@ -108,13 +108,13 @@ open class CommonItemCell: UICollectionViewCell {
             if itemViewController.parent == nil, let owningViewController {
                 owningViewController.addChildController(itemViewController, to: contentView)
             }
-        }
 
-        #if os(visionOS)
-            layer.rasterizationScale = 2
-        #else
-            layer.rasterizationScale = window?.screen.scale ?? UIScreen.main.scale
-        #endif
+            #if os(visionOS)
+                layer.rasterizationScale = 2
+            #else
+                layer.rasterizationScale = window?.screen.scale ?? UIScreen.main.scale
+            #endif
+        }
 
         super.layoutSubviews()
 

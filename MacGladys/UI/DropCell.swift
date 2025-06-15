@@ -84,8 +84,9 @@ final class DropCell: NSCollectionViewItem, NSMenuDelegate {
                 myWrapper.clear()
             }
             lastLayout = size
+
+            view.layer?.rasterizationScale = view.window?.screen?.backingScaleFactor ?? 1
         }
-        view.layer?.rasterizationScale = view.window?.screen?.backingScaleFactor ?? 1
 
         super.viewWillLayout()
     }
