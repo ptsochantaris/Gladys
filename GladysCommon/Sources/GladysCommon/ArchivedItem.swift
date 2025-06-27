@@ -204,22 +204,21 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         createdAt = c
         uuid = try v.decode(UUID.self, forKey: .uuid)
 
-        nonisolated(unsafe) let Nv = v
-        try onlyOnMainThread {
-            updatedAt = try Nv.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
-            components = try Nv.decode(ContiguousArray<Component>.self, forKey: .components)
-            note = try Nv.decodeIfPresent(String.self, forKey: .note) ?? ""
-            titleOverride = try Nv.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
-            labels = try Nv.decodeIfPresent([String].self, forKey: .labels) ?? []
-            lockHint = try Nv.decodeIfPresent(String.self, forKey: .lockHint)
+        updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
+        components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
+        note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
+        titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
+        labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
+        lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
 
-            let lp = try Nv.decodeIfPresent(Data.self, forKey: .lockPassword)
-            lockPassword = lp
+        let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+        lockPassword = lp
 
-            flags = lp == nil ? [] : .needsUnlock
-            status = try Nv.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
-            highlightColor = try Nv.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+        flags = lp == nil ? [] : .needsUnlock
+        status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
+        highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
 
+        onlyOnMainThread {
             componentsDidUpdate()
             itemUpdates.send()
         }

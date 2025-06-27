@@ -12,7 +12,6 @@ import SwiftUI
     public typealias FONT = NSFont
     public let groupName = "X727JSJUGJ.build.bru.MacGladys"
 
-    extension NSImage: @retroactive @unchecked Sendable {}
 #elseif canImport(UIKit)
     import UIKit
 
