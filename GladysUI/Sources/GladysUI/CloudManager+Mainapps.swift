@@ -228,7 +228,8 @@ public extension CloudManager {
         let i = -last.timeIntervalSinceNow
         if i < 1.0 {
             return "Synced"
-        } else if last != .distantPast, let s = agoFormatter.string(from: i) {
+        } else if last != .distantPast {
+            let s = agoFormat.format(last ..< .now)
             return "Synced \(s) ago"
         } else {
             return "Never"

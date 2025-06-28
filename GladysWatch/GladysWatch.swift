@@ -1,13 +1,7 @@
 import SwiftUI
 import WatchConnectivity
 
-private let formatter: DateFormatter = {
-    let d = DateFormatter()
-    d.dateStyle = .medium
-    d.timeStyle = .medium
-    d.doesRelativeDateFormatting = true
-    return d
-}()
+public let nearbyDateFormat = Date.FormatStyle(date: .abbreviated, time: .shortened, locale: .autoupdatingCurrent, calendar: .autoupdatingCurrent, timeZone: .autoupdatingCurrent, capitalizationContext: .standalone)
 
 private struct Label: View {
     var text: String
@@ -59,7 +53,7 @@ private struct DropView: View {
                 VStack {
                     Label(text: drop.title, lineLimit: 3)
                     Spacer()
-                    Label(text: formatter.string(from: drop.imageDate), lineLimit: 1)
+                    Label(text: nearbyDateFormat.format(drop.imageDate), lineLimit: 1)
                 }
 
             case let .action(label):

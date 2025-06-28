@@ -134,7 +134,7 @@ final class ComponentCell: NSCollectionViewItem, NSMenuDelegate {
         } else if typeEntry.dataExists {
             previewLabel.alphaValue = 0.7
             if typeEntry.isWebArchive {
-                previewLabel.stringValue = shortDateFormatter.string(from: typeEntry.createdAt)
+                previewLabel.stringValue = shortDateFormat.format(typeEntry.createdAt)
             } else if typeEntry.displayIconContentMode == .fill {
                 previewLabel.stringValue = ""
                 showPreview = true

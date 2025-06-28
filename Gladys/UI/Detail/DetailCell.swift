@@ -130,7 +130,7 @@ final class DetailCell: UITableViewCell {
 
         } else if component.dataExists {
             if component.isWebArchive {
-                name.text = shortDateFormatter.string(from: component.createdAt)
+                name.text = shortDateFormat.format(component.createdAt)
             } else {
                 name.text = hasImage ? nil : "Binary Data"
             }

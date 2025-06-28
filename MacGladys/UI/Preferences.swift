@@ -497,7 +497,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                     activationConfirmed()
                 } else {
                     let contentSize = await DropStore.sizeInBytes()
-                    let contentSizeString = diskSizeFormatter.string(fromByteCount: contentSize)
+                    let contentSizeString = diskSizeFormat.format(contentSize)
                     self.confirm(title: "Upload Existing Items?",
                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                  action: "Proceed", cancel: "Cancel") { confirmed in

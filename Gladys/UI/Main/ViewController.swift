@@ -1215,7 +1215,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Task {
                 let drops = someSelected ? filteredDrops.filter { selected.contains($0) } : filteredDrops
                 let size = await DropStore.sizeForItems(uuids: drops.map(\.uuid))
-                let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
+                let sizeLabel = diskSizeFormat.format(size)
                 totalSizeLabel.title = sizeLabel
             }
             deleteButton.isEnabled = someSelected

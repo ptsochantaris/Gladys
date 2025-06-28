@@ -200,7 +200,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             window.title = "…"
             Task {
                 let size = await DropStore.sizeForItems(uuids: selectedItems)
-                let sizeString = diskSizeFormatter.string(fromByteCount: size)
+                let sizeString = diskSizeFormat.format(size)
                 let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
                 window.title = "\(title) — \(selectedReport)"
             }

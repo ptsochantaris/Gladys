@@ -605,7 +605,7 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
                   let e = segue.destination as? HexEdit {
             e.bytes = typeEntry.bytes ?? Data()
 
-            let size = diskSizeFormatter.string(fromByteCount: Int64(e.bytes.count))
+            let size = diskSizeFormat.format(Int64(e.bytes.count))
             e.title = typeEntry.typeDescription + " (\(size))"
 
         } else if segue.identifier == "plistEdit",

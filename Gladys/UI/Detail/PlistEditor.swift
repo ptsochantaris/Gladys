@@ -122,7 +122,7 @@ final class PlistEditor: GladysViewController, UITableViewDataSource, UITableVie
                 return "Data, empty"
             } else {
                 let c = Int64(v.count)
-                let countText = diskSizeFormatter.string(fromByteCount: c)
+                let countText = diskSizeFormat.format(c)
                 return "Data, \(countText)"
             }
 
