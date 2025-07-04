@@ -2031,6 +2031,7 @@
 		161718D12094D334005ABD6C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = MacGladys/Boot/MacGladys.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -2059,6 +2060,7 @@
 		161718D22094D334005ABD6C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Mac";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = MacGladys/Boot/MacGladys.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -2400,6 +2402,7 @@
 		1694264F1F12D58700F3A0A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
@@ -2554,6 +2557,7 @@
 		169426551F12D59B00F3A0A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
