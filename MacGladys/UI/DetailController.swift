@@ -4,7 +4,7 @@ import Combine
 import GladysAppKit
 import GladysCommon
 import GladysUI
-import QuickLookUI
+@preconcurrency import QuickLookUI
 
 final class ComponentCollectionView: NSCollectionView {
     weak var detailController: DetailController?
