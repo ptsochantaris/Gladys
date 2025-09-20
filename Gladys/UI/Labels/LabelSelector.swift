@@ -3,7 +3,7 @@ import GladysUI
 import GladysUIKit
 import UIKit
 
-final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate, @MainActor WindowSizing {
+final class LabelSelector: GladysViewController, UITableViewDelegate, UITableViewDataSource, UISearchControllerDelegate, UISearchResultsUpdating, UITableViewDragDelegate, WindowSizing {
     @IBOutlet private var table: UITableView!
     @IBOutlet private var clearAllButton: UIBarButtonItem!
     @IBOutlet private var modeButton: UIBarButtonItem!

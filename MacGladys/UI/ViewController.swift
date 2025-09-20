@@ -5,7 +5,7 @@ import PopTimer
 @preconcurrency import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, @MainActor FilterDelegate, HighlightListener, NSCollectionViewPrefetching {
+    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener, NSCollectionViewPrefetching {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!

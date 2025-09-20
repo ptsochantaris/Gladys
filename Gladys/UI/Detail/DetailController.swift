@@ -9,9 +9,9 @@ protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
 }
 
-final class DetailController: GladysViewController, @MainActor ResizingCellDelegate, @MainActor DetailCellDelegate,
+final class DetailController: GladysViewController, ResizingCellDelegate, DetailCellDelegate,
     UITableViewDelegate, UITableViewDataSource, UITableViewDragDelegate, UITableViewDropDelegate,
-    UIPopoverPresentationControllerDelegate, @MainActor AddLabelControllerDelegate {
+    UIPopoverPresentationControllerDelegate, AddLabelControllerDelegate {
     var sourceIndexPath: IndexPath?
 
     private var itemObservation: Cancellable?
@@ -277,7 +277,8 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
         #else
             let preferredWidth: CGFloat = 360
         #endif
-        let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
+        let extra: CGFloat = if #available(iOS 26.0, *), popoverPresentationController?.presentingViewController.view.traitCollection.horizontalSizeClass == .regular { 28 } else { 0 }
+        let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom + extra)
         preferredContentSize = preferredSize
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
         log("Detail view preferred size set to \(preferredSize)")
@@ -645,8 +646,15 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
 
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0: 16
-        default: 44
+        case 0:
+            if #available(iOS 26.0, *) {
+                0
+            } else {
+                16
+            }
+
+        default:
+            44
         }
     }
 

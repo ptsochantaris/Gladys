@@ -47,7 +47,7 @@ final class FocusableTextField: NSTextField {
     }
 }
 
-final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, @MainActor NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, @MainActor ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, @MainActor FocusableTextFieldDelegate, NSMenuItemValidation {
+final class DetailController: NSViewController, NSTableViewDelegate, NSTableViewDataSource, NewLabelControllerDelegate, NSCollectionViewDelegate, NSCollectionViewDataSource, ComponentCellDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate, NSCloudSharingServiceDelegate, FocusableTextFieldDelegate, NSMenuItemValidation {
     static var showingUUIDs = Set<UUID>()
 
     var associatedFilter: Filter?

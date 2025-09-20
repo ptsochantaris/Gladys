@@ -24,7 +24,7 @@ import UniformTypeIdentifiers
 #endif
 
 @MainActor
-public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProviding {
+public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     public enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
 

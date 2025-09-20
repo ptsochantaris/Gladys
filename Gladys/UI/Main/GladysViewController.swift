@@ -16,7 +16,7 @@ final class GladysView: UIView {
     }
 }
 
-class GladysViewController: UIViewController, @MainActor GladysViewDelegate {
+class GladysViewController: UIViewController, GladysViewDelegate {
     enum ActionLocation {
         case none, left, right
     }

@@ -10,7 +10,7 @@ extension SectionIdentifier: @retroactive @unchecked Sendable {}
 
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
-    UIPopoverPresentationControllerDelegate, @MainActor FilterDelegate, HighlightListener {
+    UIPopoverPresentationControllerDelegate, FilterDelegate, HighlightListener {
     @IBOutlet private var collection: UICollectionView!
     @IBOutlet private var totalSizeLabel: UIBarButtonItem!
     @IBOutlet private var deleteButton: UIBarButtonItem!

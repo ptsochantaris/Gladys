@@ -3,7 +3,7 @@ import GladysUI
 import GladysUIKit
 import UIKit
 
-final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, @MainActor WindowSizing {
+final class IOSSettingsController: UITabBarController, UITabBarControllerDelegate, WindowSizing {
     override func viewDidLoad() {
         super.viewDidLoad()
 
