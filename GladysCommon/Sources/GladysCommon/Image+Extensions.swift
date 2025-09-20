@@ -54,7 +54,7 @@ public extension COLOR {
 }
 
 public extension IMAGE {
-    @concurrent static func from(data: Data) async -> IMAGE? {
+    static func from(data: Data) -> IMAGE? {
         IMAGE(data: data)
     }
 
@@ -83,7 +83,7 @@ public extension IMAGE {
         #endif
     }
 
-    @concurrent final func calculateOuterColor(size: CGSize, top: Bool?, rawData: UnsafeMutableRawBufferPointer) async -> COLOR? {
+    final func calculateOuterColor(size: CGSize, top: Bool?, rawData: UnsafeMutableRawBufferPointer) async -> COLOR? {
         guard let cgi = getCgImage() else { return nil }
         let wholeWidth = cgi.width
         let wholeHeight = cgi.height
@@ -313,8 +313,8 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return NSImage(cgImage: c.makeImage()!, size: targetSize)
         }
 
-        @concurrent func desaturated() async -> NSImage? {
-            guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+        func desaturated() async -> NSImage? {
+           guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else {
                 return nil
             }
             let blackAndWhiteImage = CIImage(cgImage: cgImage).applyingFilter("CIColorControls", parameters: [
@@ -384,8 +384,8 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return nil
         }
 
-        @concurrent static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
-            if let data = try? Data(contentsOf: url), let image = await UIImage(data: data, scale: template ? screenScale : 1) {
+        static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? (await screenScale) : 1) {
                 if template {
                     return image.withRenderingMode(.alwaysTemplate)
                 } else {

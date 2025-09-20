@@ -10,34 +10,32 @@ public extension ArchivedItem {
         if presentationPrefetchTask != nil {
             return
         }
-        presentationPrefetchTask = Task { @concurrent [weak self] in
+        presentationPrefetchTask = Task { [weak self] in
             guard let self else {
                 return PresentationInfo()
             }
             let info = await createPresentationInfo(style: style, cellSize: cellSize, isPrefetch: true)
-            Task { @MainActor in
-                presentationPrefetchTask = nil
-            }
+            presentationPrefetchTask = nil
             return info
         }
     }
 
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
-        if !isPrefetch, let p = presentationPrefetchTask {
+    @concurrent func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
+        if !isPrefetch, let p = await presentationPrefetchTask {
             let info = await p.value
             if info.cellSize == cellSize {
                 return info
             }
         }
 
-        let topInfo = prepareTopText()
-        let bottomInfo = prepareBottomText()
+        let (dm, status) = await (displayMode, status)
+        let topInfo = await prepareTopText()
+        let bottomInfo = await prepareBottomText()
 
         let defaultColor = PresentationInfo.defaultCardColor
         var top = defaultColor
         var bottom = defaultColor
         var result: IMAGE?
-        let (dm, status) = (displayMode, status)
 
         if status.shouldDisplayLoading {
             // nothing to do for now

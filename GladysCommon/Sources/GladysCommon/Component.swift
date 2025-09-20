@@ -686,8 +686,6 @@ public final class Component: Codable, Hashable {
     #endif
 
     @concurrent public func getComponentIcon() async -> IMAGE? {
-        assert(!Thread.isMainThread)
-
         let (path, template) = await (imagePath, displayIconTemplate)
         #if canImport(AppKit)
             guard let d = try? Data(contentsOf: path), let i = NSImage(data: d) else {
@@ -723,12 +721,11 @@ public final class Component: Codable, Hashable {
         #endif
     }
 
-    public func getThumbnail() async -> IMAGE? {
-        assert(!Thread.isMainThread)
+    @concurrent public func getThumbnail() async -> IMAGE? {
         #if canImport(AppKit)
             return await getComponentIcon()
         #else
-            if displayIconTemplate {
+            if await displayIconTemplate {
                 return await UIImage.fromFile(imagePath, template: true)
             } else {
                 return await UIImage.fromFile(imagePath, template: false)?.limited(to: CGSize(width: 128, height: 128), singleScale: true)
@@ -1113,7 +1110,7 @@ public final class Component: Codable, Hashable {
             typeIdentifier = "public.zip-archive"
         }
 
-        if let image = await IMAGE.from(data: data) {
+        if let image = IMAGE.from(data: data) {
             await setDisplayIcon(image, 50, .fill)
 
         } else if typeIdentifier == "public.vcard" {
@@ -1122,7 +1119,7 @@ public final class Component: Codable, Hashable {
                 let job = [person.jobTitle, person.organizationName].filter(\.isPopulated).joined(separator: ", ")
                 accessoryTitle = [name, job].filter(\.isPopulated).joined(separator: " - ")
 
-                if let imageData = person.imageData, let img = await IMAGE.from(data: imageData) {
+                if let imageData = person.imageData, let img = IMAGE.from(data: imageData) {
                     await setDisplayIcon(img, 9, .circle)
                 } else {
                     await setDisplayIcon(#imageLiteral(resourceName: "iconPerson"), 5, .center)

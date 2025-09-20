@@ -15,7 +15,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
 
         Task {
-            assert(Thread.isMainThread)
             if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
                 _ = await CloudManager.received(notificationInfo: pushUserInfo)
             } else {

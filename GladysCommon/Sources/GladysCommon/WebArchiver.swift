@@ -297,6 +297,6 @@ public final actor WebArchiver {
     private func fetchImage(url: URL) async throws -> IMAGE? {
         let (data, _) = try await URLSession.shared.data(from: url)
         log("Image fetched for \(url)")
-        return await IMAGE.from(data: data)
+        return IMAGE.from(data: data)
     }
 }

@@ -18,8 +18,12 @@ final class DetailController: GladysViewController, @MainActor ResizingCellDeleg
 
     var item: ArchivedItem! {
         didSet {
-            itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
-                self?.updateUI()
+            if let item {
+                itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
+                    self?.updateUI()
+                }
+            } else {
+                itemObservation = nil
             }
         }
     }

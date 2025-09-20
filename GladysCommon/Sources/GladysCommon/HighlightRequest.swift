@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol HighlightListener: AnyObject, Sendable {
-    @concurrent func highlightItem(request: HighlightRequest) async
+    func highlightItem(request: HighlightRequest) async
 }
 
 public struct HighlightRequest: Sendable {
