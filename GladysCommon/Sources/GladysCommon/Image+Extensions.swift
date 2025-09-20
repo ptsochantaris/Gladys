@@ -314,7 +314,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
         }
 
         func desaturated() async -> NSImage? {
-           guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else {
                 return nil
             }
             let blackAndWhiteImage = CIImage(cgImage: cgImage).applyingFilter("CIColorControls", parameters: [
@@ -385,7 +385,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
         }
 
         static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
-            if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? (await screenScale) : 1) {
+            if let data = try? Data(contentsOf: url), let image = await UIImage(data: data, scale: template ? screenScale : 1) {
                 if template {
                     return image.withRenderingMode(.alwaysTemplate)
                 } else {

@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 
 /// Archiver
 public struct WebArchiver {
-    nonisolated(unsafe) public static let shared = WebArchiver()
+    public nonisolated(unsafe) static let shared = WebArchiver()
 
     /// Error type
     public enum ArchiveErrorType: Error {

@@ -1532,6 +1532,7 @@
 				"fi",
 				"",
 				"",
+				"",
 			);
 		};
 		165529CB286675C700FC52F2 /* Format */ = {
@@ -1543,6 +1544,7 @@
 				"if which swiftformat >/dev/null; then",
 				"  swiftformat . --swiftversion 5.9",
 				"fi",
+				"",
 				"",
 				"",
 			);
@@ -1558,6 +1560,7 @@
 				"fi",
 				"",
 				"",
+				"",
 			);
 		};
 		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
@@ -1569,6 +1572,7 @@
 				"if which swiftlint >/dev/null; then",
 				"  swiftlint",
 				"fi",
+				"",
 				"",
 				"",
 			);
@@ -2199,6 +2203,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2282,7 +2287,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -2359,6 +2363,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = colorTint;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_OPTIMIZATION = time;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2439,7 +2444,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-iOS";
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=xros*]" = vision_icon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gladys/Gladys.entitlements;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
@@ -2513,6 +2517,7 @@
 		16A4E7FD1FBB844A00D60596 /* Debug configuration for PBXNativeTarget "GladysWatch" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
@@ -2531,6 +2536,7 @@
 		16A4E7FE1FBB844A00D60596 /* Release configuration for PBXNativeTarget "GladysWatch" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = GladysWatch/GladysWatch.entitlements;
 				INFOPLIST_FILE = GladysWatch/Info.plist;
