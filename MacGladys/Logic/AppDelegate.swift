@@ -500,7 +500,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
         let o = NSOpenPanel()
         o.title = "Import Archive…"
         o.prompt = "Import"
-        o.message = "Select an archive from which to\nmerge items into your existing collection."
+        o.message = "Select an archive from which to merge items into your existing collection."
         o.isExtensionHidden = true
         o.allowedContentTypes = [.gladysArchive]
         let response = o.runModal()

@@ -1531,6 +1531,7 @@
 				"  swiftformat . --swiftversion 5.6",
 				"fi",
 				"",
+				"",
 			);
 		};
 		165529CB286675C700FC52F2 /* Format */ = {
@@ -1542,6 +1543,7 @@
 				"if which swiftformat >/dev/null; then",
 				"  swiftformat . --swiftversion 5.9",
 				"fi",
+				"",
 				"",
 			);
 		};
@@ -1555,6 +1557,7 @@
 				"  swiftlint",
 				"fi",
 				"",
+				"",
 			);
 		};
 		16CFDC4C23E5E59000FA4F00 /* Lint */ = {
@@ -1566,6 +1569,7 @@
 				"if which swiftlint >/dev/null; then",
 				"  swiftlint",
 				"fi",
+				"",
 				"",
 			);
 		};
