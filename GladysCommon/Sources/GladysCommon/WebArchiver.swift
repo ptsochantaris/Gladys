@@ -3,8 +3,8 @@ import SwiftSoup
 import UniformTypeIdentifiers
 
 /// Archiver
-public final actor WebArchiver {
-    public static let shared = WebArchiver()
+public struct WebArchiver {
+    nonisolated(unsafe) public static let shared = WebArchiver()
 
     /// Error type
     public enum ArchiveErrorType: Error {
@@ -12,7 +12,7 @@ public final actor WebArchiver {
         case PlistSerializeFailed
     }
 
-    public func archiveFromUrl(_ urlString: String) async throws -> (Data, String) {
+    @concurrent public func archiveFromUrl(_ urlString: String) async throws -> (Data, String) {
         guard let url = URL(string: urlString) else {
             throw GladysError.networkIssue
         }
@@ -137,7 +137,7 @@ public final actor WebArchiver {
         public let isThumbnail: Bool
     }
 
-    public func fetchWebPreview(for urlString: String) async throws -> WebPreviewResult {
+    @concurrent public func fetchWebPreview(for urlString: String) async throws -> WebPreviewResult {
         guard let url = URL(string: urlString) else {
             throw GladysError.networkIssue
         }

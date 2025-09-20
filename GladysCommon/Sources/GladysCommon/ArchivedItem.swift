@@ -792,7 +792,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
     #endif
 
-    private func componentIngestDone() async {
+    private func componentIngestDone() {
         status = .nominal
         componentsDidUpdate()
         Task {
@@ -824,9 +824,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         }
 
         defer {
-            Task {
-                await componentIngestDone()
-            }
+            componentIngestDone()
         }
 
         let loadCount = components.count
@@ -874,9 +872,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
 
     private func newItemIngest(providers: [DataImporter], limitToType: String?) async {
         defer {
-            Task {
-                await componentIngestDone()
-            }
+            componentIngestDone()
         }
 
         let loadingProgress = Progress()
