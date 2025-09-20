@@ -3513,15 +3513,15 @@ Only</string>
                                 </scroller>
                             </scrollView>
                             <visualEffectView autoresizesSubviews="NO" wantsLayer="YES" blendingMode="withinWindow" material="titlebar" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="Loc-lN-MBo">
-                                <rect key="frame" x="0.0" y="373" width="670" height="67"/>
+                                <rect key="frame" x="0.0" y="370" width="670" height="70"/>
                             </visualEffectView>
                             <stackView autoresizesSubviews="NO" wantsLayer="YES" distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E1G-ru-fcT">
-                                <rect key="frame" x="0.0" y="373" width="670" height="67"/>
+                                <rect key="frame" x="0.0" y="370" width="670" height="70"/>
                                 <subviews>
                                     <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WdL-bw-uFk">
-                                        <rect key="frame" x="0.0" y="40" width="670" height="27"/>
+                                        <rect key="frame" x="0.0" y="40" width="670" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="27" id="EWe-6q-p52"/>
+                                            <constraint firstAttribute="height" constant="30" id="EWe-6q-p52"/>
                                         </constraints>
                                     </customView>
                                     <customView autoresizesSubviews="NO" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YpT-d8-ghf">

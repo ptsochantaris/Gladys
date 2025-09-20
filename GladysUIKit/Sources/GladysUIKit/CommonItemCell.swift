@@ -26,6 +26,11 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
+    public func invalidate(lowMemoryMode lowMem: Bool) {
+        lowMemoryMode = lowMem
+        invalidateView()
+    }
+
     private func invalidateView() {
         lastLayout = .zero
         setNeedsLayout()

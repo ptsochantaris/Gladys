@@ -698,7 +698,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 setupLayout()
                 collection.collectionViewLayout.invalidateLayout()
                 updateDataSource(animated: false)
-                collection.reloadData()
+                reloadCollection()
             } else {
                 let uuids = filter.filteredDrops.map(\.uuid)
                 DropStore.reloadCells(for: Set(uuids))
@@ -1098,28 +1098,33 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     private var lowMemoryMode = false
 
     override func didReceiveMemoryWarning() {
-        if let collection {
-            if UIApplication.shared.applicationState == .background {
-                log("Placing UI in background low-memory mode")
-                lowMemoryMode = true
-                collection.reloadData()
-            }
+        if UIApplication.shared.applicationState == .background {
+            log("Placing UI in background low-memory mode")
+            lowMemoryMode = true
+            reloadCollection()
         }
         super.didReceiveMemoryWarning()
     }
 
     func sceneBackgrounded() {
         lowMemoryMode = true
-        if let collection {
-            collection.reloadData()
+        reloadCollection()
+    }
+
+    private func reloadCollection() {
+        guard let collection else {
+            return
+        }
+        collection.reloadData()
+        let lowMem = lowMemoryMode
+        for cell in collection.visibleCells {
+            (cell as? ArchivedItemCell)?.invalidate(lowMemoryMode: lowMem)
         }
     }
 
     func sceneForegrounded() {
         lowMemoryMode = false
-        if let collection {
-            collection.reloadData()
-        }
+        reloadCollection()
         if emptyView != nil {
             blurb(Greetings.randomGreetLine)
         }
