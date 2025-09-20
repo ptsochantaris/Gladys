@@ -32,12 +32,10 @@ public enum Model {
 
     public static func reloadDataIfNeeded() async throws {
         await storageGatekeeper.takeTicket()
-        try await Task.detached {
-            defer {
-                storageGatekeeper.returnTicket()
-            }
-            try _reloadDataIfNeeded()
-        }.value
+        defer {
+            storageGatekeeper.returnTicket()
+        }
+        try await _reloadDataIfNeeded()
     }
 
     public static func reloadIfPossible() async throws {
@@ -59,8 +57,8 @@ public enum Model {
         }
     }
 
-    private nonisolated static func _reloadDataIfNeeded() throws {
-        if onlyOnMainThread({ brokenMode }) {
+    @concurrent private static func _reloadDataIfNeeded() async throws {
+        if await brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
             return
         }
@@ -367,13 +365,11 @@ public enum Model {
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")
         } else {
-            await Task.detached(priority: .background) {
-                do {
-                    try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
-                } catch {
-                    log("Saving Error: \(error.localizedDescription)")
-                }
-            }.value
+            do {
+                try await coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
+            } catch {
+                log("Saving Error: \(error.localizedDescription)")
+            }
         }
 
         trimTemporaryDirectory()
@@ -417,18 +413,16 @@ public enum Model {
 
             await indexDelegate.reIndex(items: searchableItems, in: CSSearchableIndex.default())
 
-            await Task.detached(priority: .background) {
-                do {
-                    _ = try coordinatedSave(allItems: allItemsToKeepInStorage, dirtyUuids: dirtyUUIDs)
-                    log("Ingest completed for items \(dirtyUUIDs) and committed to disk")
-                } catch {
-                    log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
-                }
-            }.value
+            do {
+                _ = try await coordinatedSave(allItems: allItemsToKeepInStorage, dirtyUuids: dirtyUUIDs)
+                log("Ingest completed for items \(dirtyUUIDs) and committed to disk")
+            } catch {
+                log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
+            }
         }
     }
 
-    private nonisolated static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
+    @concurrent private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) async throws {
         var closureError: NSError?
         var coordinationError: NSError?
         Coordination.coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in

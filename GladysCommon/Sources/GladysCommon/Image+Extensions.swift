@@ -54,10 +54,8 @@ public extension COLOR {
 }
 
 public extension IMAGE {
-    static func from(data: Data) async -> IMAGE? {
-        await Task.detached {
-            IMAGE(data: data)
-        }.value
+    @concurrent static func from(data: Data) async -> IMAGE? {
+        IMAGE(data: data)
     }
 
     var swiftUiImage: Image {
@@ -85,7 +83,7 @@ public extension IMAGE {
         #endif
     }
 
-    final nonisolated func calculateOuterColor(size: CGSize, top: Bool?, rawData: UnsafeMutableRawBufferPointer) async -> COLOR? {
+    @concurrent final func calculateOuterColor(size: CGSize, top: Bool?, rawData: UnsafeMutableRawBufferPointer) async -> COLOR? {
         guard let cgi = getCgImage() else { return nil }
         let wholeWidth = cgi.width
         let wholeHeight = cgi.height
@@ -282,7 +280,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return image
         }
 
-        final nonisolated func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) async -> NSImage {
+        @concurrent final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale _: Bool = false, singleScale _: Bool = false) async -> NSImage {
             let mySizePixelWidth = size.width
             let mySizePixelHeight = size.height
             let outputImagePixelWidth = targetSize.width
@@ -315,22 +313,20 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return NSImage(cgImage: c.makeImage()!, size: targetSize)
         }
 
-        func desaturated() async -> NSImage? {
-            await Task.detached {
-                guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                    return nil
-                }
-                let blackAndWhiteImage = CIImage(cgImage: cgImage).applyingFilter("CIColorControls", parameters: [
-                    "inputSaturation": 0,
-                    "inputContrast": 0.35,
-                    "inputBrightness": -0.3
-                ])
+        @concurrent func desaturated() async -> NSImage? {
+            guard let cgImage = cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                return nil
+            }
+            let blackAndWhiteImage = CIImage(cgImage: cgImage).applyingFilter("CIColorControls", parameters: [
+                "inputSaturation": 0,
+                "inputContrast": 0.35,
+                "inputBrightness": -0.3
+            ])
 
-                let rep = NSCIImageRep(ciImage: blackAndWhiteImage)
-                let img = NSImage(size: rep.size)
-                img.addRepresentation(rep)
-                return img
-            }.value
+            let rep = NSCIImageRep(ciImage: blackAndWhiteImage)
+            let img = NSImage(size: rep.size)
+            img.addRepresentation(rep)
+            return img
         }
 
         convenience init?(systemName _: String) {
@@ -388,7 +384,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return nil
         }
 
-        nonisolated static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
+        @concurrent static func fromFile(_ url: URL, template: Bool) async -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = await UIImage(data: data, scale: template ? screenScale : 1) {
                 if template {
                     return image.withRenderingMode(.alwaysTemplate)
@@ -399,7 +395,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
             return nil
         }
 
-        final nonisolated func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) async -> UIImage {
+        @concurrent final func limited(to targetSize: CGSize, limitTo: CGFloat = 1.0, useScreenScale: Bool = false, singleScale: Bool = false) async -> UIImage {
             guard let cgImage else {
                 return UIImage()
             }

@@ -390,6 +390,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
+    @MainActor
     func highlightItem(request: HighlightRequest) async {
         // focusOnChild ignored for now
         resetSearch(andLabels: true)

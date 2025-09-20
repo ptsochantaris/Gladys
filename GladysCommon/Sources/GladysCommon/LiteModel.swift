@@ -109,7 +109,7 @@ public enum LiteModel {
                 let semaphore = DispatchSemaphore(value: 0)
                 for u in uuids {
                     nonisolated(unsafe) var go = true
-                    Task { @Sendable in // doubles as an autoreleasepool
+                    Task { @Sendable @concurrent in // doubles as an autoreleasepool
                         let u = UUID(uuid: u)
                         let dataPath = url.appendingPathComponent(u.uuidString)
                         if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {

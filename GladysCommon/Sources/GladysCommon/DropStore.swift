@@ -164,24 +164,20 @@ public enum DropStore {
         return nil
     }
 
-    public static func sizeInBytes() async -> Int64 {
-        await Task.detached {
-            var total: Int64 = 0
-            for drop in await allDrops {
-                total += await drop.sizeInBytes
-            }
-            return total
-        }.value
+    @concurrent public static func sizeInBytes() async -> Int64 {
+        var total: Int64 = 0
+        for drop in await allDrops {
+            total += await drop.sizeInBytes
+        }
+        return total
     }
 
-    public static func sizeForItems(uuids: [UUID]) async -> Int64 {
-        await Task.detached {
-            var total: Int64 = 0
-            for drop in await allDrops where uuids.contains(drop.uuid) {
-                total += await drop.sizeInBytes
-            }
-            return total
-        }.value
+    @concurrent public static func sizeForItems(uuids: [UUID]) async -> Int64 {
+        var total: Int64 = 0
+        for drop in await allDrops where uuids.contains(drop.uuid) {
+            total += await drop.sizeInBytes
+        }
+        return total
     }
 
     public static var sharingMyItems: Bool {

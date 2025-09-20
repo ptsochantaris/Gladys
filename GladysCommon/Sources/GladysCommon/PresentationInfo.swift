@@ -92,11 +92,11 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let accessibilityText: String
     public let cellSize: CGSize
 
-    public nonisolated static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
+    public static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
     }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 

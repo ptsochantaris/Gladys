@@ -1959,6 +1959,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
+    @MainActor
     func highlightItem(request: HighlightRequest) async {
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {

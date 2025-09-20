@@ -10,7 +10,7 @@ public extension ArchivedItem {
         if presentationPrefetchTask != nil {
             return
         }
-        presentationPrefetchTask = Task.detached { [weak self] in
+        presentationPrefetchTask = Task { @concurrent [weak self] in
             guard let self else {
                 return PresentationInfo()
             }
@@ -22,24 +22,22 @@ public extension ArchivedItem {
         }
     }
 
-    nonisolated func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
-        assert(!Thread.isMainThread)
-
-        if !isPrefetch, let p = await presentationPrefetchTask {
+    func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
+        if !isPrefetch, let p = presentationPrefetchTask {
             let info = await p.value
             if info.cellSize == cellSize {
                 return info
             }
         }
 
-        let topInfo = await prepareTopText()
-        let bottomInfo = await prepareBottomText()
+        let topInfo = prepareTopText()
+        let bottomInfo = prepareBottomText()
 
         let defaultColor = PresentationInfo.defaultCardColor
         var top = defaultColor
         var bottom = defaultColor
         var result: IMAGE?
-        let (dm, status) = await (displayMode, status)
+        let (dm, status) = (displayMode, status)
 
         if status.shouldDisplayLoading {
             // nothing to do for now
@@ -147,14 +145,12 @@ public extension ArchivedItem {
         }
     }
 
-    private nonisolated func prepareImage(asThumbnail: Bool) async -> IMAGE? {
-        assert(!Thread.isMainThread)
-
+    private func prepareImage(asThumbnail: Bool) async -> IMAGE? {
         if asThumbnail {
             return await thumbnail
         }
 
-        if let bgItem = await backgroundInfoObject {
+        if let bgItem = backgroundInfoObject {
             switch bgItem.content {
             case let .map(mapItem):
                 let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)

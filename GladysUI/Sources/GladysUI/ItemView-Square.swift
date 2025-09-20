@@ -6,7 +6,7 @@ extension ItemView {
     struct SquareContentView: View {
         let wrapper: ArchivedItemWrapper
 
-        public var body: some View {
+        var body: some View {
             ZStack {
                 Color(PresentationInfo.defaultCardColor)
 

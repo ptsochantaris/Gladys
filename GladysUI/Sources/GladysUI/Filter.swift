@@ -71,14 +71,12 @@ public final class Filter {
         }
     }
 
-    public func sizeOfVisibleItemsInBytes() async -> Int64 {
-        await Task.detached { [filteredDrops] in
-            var total: Int64 = 0
-            for drop in filteredDrops {
-                total += await drop.sizeInBytes
-            }
-            return total
-        }.value
+    @concurrent public func sizeOfVisibleItemsInBytes() async -> Int64 {
+        var total: Int64 = 0
+        for drop in await filteredDrops {
+            total += await drop.sizeInBytes
+        }
+        return total
     }
 
     public var isFilteringLabels: Bool {

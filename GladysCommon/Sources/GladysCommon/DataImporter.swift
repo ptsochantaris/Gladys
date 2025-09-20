@@ -23,10 +23,10 @@ public final class DataImporter: Sendable {
             suggestedName = itemProvider.suggestedName
         #endif
 
-        dataLookupTask = Task.detached {
-            await withTaskGroup { group in
+        dataLookupTask = Task { @concurrent in
+            await withTaskGroup { @concurrent group in
                 for identifier in identifierList {
-                    group.addTask {
+                    group.addTask { @concurrent in
                         await withCheckedContinuation { (continuation: CheckedContinuation<(String, Data)?, Never>) in
                             itemProvider.loadDataRepresentation(forTypeIdentifier: identifier) { data, error in
                                 if let data {
@@ -52,7 +52,7 @@ public final class DataImporter: Sendable {
         }
     }
 
-    public var dataLookup: [String: Data] {
+    @concurrent public var dataLookup: [String: Data] {
         get async {
             await dataLookupTask.value
         }
@@ -66,7 +66,7 @@ public final class DataImporter: Sendable {
             }
             identifiers = Array(lookup.keys)
             self.suggestedName = suggestedName
-            dataLookupTask = Task { lookup }
+            dataLookupTask = Task { @concurrent in lookup }
         }
     #endif
 

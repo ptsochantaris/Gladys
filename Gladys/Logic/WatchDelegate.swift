@@ -67,7 +67,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private static func handle(message: WatchMessage) async -> WatchMessage {
+    @concurrent private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
             guard let item = await DropStore.item(uuid: imageInfo.id) else {
@@ -132,7 +132,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
+    @concurrent private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
         do {
             let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
             let img = try await Images.mapSnapshot(with: options)
@@ -142,7 +142,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) async -> Data {
+    @concurrent private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) async -> Data {
         if let size {
             if mode == .center || mode == .circle {
                 let scaledImage = await icon.limited(to: size, limitTo: 0.2, singleScale: true)

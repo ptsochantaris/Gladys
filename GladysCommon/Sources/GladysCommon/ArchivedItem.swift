@@ -364,7 +364,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         lhs.uuid == rhs.uuid
     }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
@@ -390,13 +390,13 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
         highestPriorityIconItem?.imagePath
     }
 
-    public nonisolated var displayIcon: IMAGE {
+    public var displayIcon: IMAGE {
         get async {
             await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
     }
 
-    public nonisolated var thumbnail: IMAGE {
+    public var thumbnail: IMAGE {
         get async {
             await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
@@ -680,7 +680,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             var transcribedText: String?
 
             if autoImage || ocrImage, displayMode == .fill, let img {
-                (visualRequests, tags1, transcribedText) = await Task.detached { @Sendable in
+                (visualRequests, tags1, transcribedText) = await Task { @Sendable @concurrent in
                     var _visualRequests = [VNImageBasedRequest]()
                     var _tags1 = [String]()
                     var _transcribedText: String?
@@ -760,7 +760,7 @@ public final class ArchivedItem: Codable, Hashable, @MainActor DisplayImageProvi
             var tags2 = [String]()
 
             if autoText, let finalTitle = transcribedText ?? finalTitle {
-                let tagTask = Task.detached { () -> [String] in
+                let tagTask = Task { @concurrent () async -> [String] in
                     let tagger = NLTagger(tagSchemes: [.nameType])
                     tagger.string = finalTitle
                     let range = finalTitle.startIndex ..< finalTitle.endIndex

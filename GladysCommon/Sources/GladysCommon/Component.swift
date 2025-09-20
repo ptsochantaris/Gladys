@@ -32,30 +32,27 @@ public final class Component: Codable, Hashable {
         case order
     }
 
-    public nonisolated func encode(to encoder: Encoder) throws {
-        nonisolated(unsafe) let encoder = encoder
-        try onlyOnMainThread {
-            var v = encoder.container(keyedBy: CodingKeys.self)
-            try v.encode(typeIdentifier, forKey: .typeIdentifier)
-            try v.encode(representedClass, forKey: .representedClass)
-            try v.encode(classWasWrapped, forKey: .classWasWrapped)
-            try v.encode(uuid, forKey: .uuid)
-            try v.encode(parentUuid, forKey: .parentUuid)
-            try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
-            try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
-            try v.encode(displayTitleAlignment.rawValue, forKey: .displayTitleAlignment)
-            try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
-            try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
-            try v.encode(displayIconPriority, forKey: .displayIconPriority)
-            try v.encode(createdAt, forKey: .createdAt)
-            try v.encode(updatedAt, forKey: .updatedAt)
-            try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
-            try v.encode(needsDeletion, forKey: .needsDeletion)
-            try v.encode(order, forKey: .order)
-        }
+    public func encode(to encoder: Encoder) throws {
+        var v = encoder.container(keyedBy: CodingKeys.self)
+        try v.encode(typeIdentifier, forKey: .typeIdentifier)
+        try v.encode(representedClass, forKey: .representedClass)
+        try v.encode(classWasWrapped, forKey: .classWasWrapped)
+        try v.encode(uuid, forKey: .uuid)
+        try v.encode(parentUuid, forKey: .parentUuid)
+        try v.encodeIfPresent(accessoryTitle, forKey: .accessoryTitle)
+        try v.encodeIfPresent(displayTitle, forKey: .displayTitle)
+        try v.encode(displayTitleAlignment.rawValue, forKey: .displayTitleAlignment)
+        try v.encode(displayTitlePriority, forKey: .displayTitlePriority)
+        try v.encode(displayIconContentMode.rawValue, forKey: .displayIconContentMode)
+        try v.encode(displayIconPriority, forKey: .displayIconPriority)
+        try v.encode(createdAt, forKey: .createdAt)
+        try v.encode(updatedAt, forKey: .updatedAt)
+        try v.encode(displayIconTemplate, forKey: .displayIconTemplate)
+        try v.encode(needsDeletion, forKey: .needsDeletion)
+        try v.encode(order, forKey: .order)
     }
 
-    public nonisolated init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let v = try decoder.container(keyedBy: CodingKeys.self)
         typeIdentifier = try v.decode(String.self, forKey: .typeIdentifier)
         classWasWrapped = try v.decode(Bool.self, forKey: .classWasWrapped)
@@ -81,10 +78,7 @@ public final class Component: Codable, Hashable {
         let m = try v.decode(Int.self, forKey: .displayIconContentMode)
         displayIconContentMode = ArchivedDropItemDisplayType(rawValue: m) ?? .center
 
-        nonisolated(unsafe) let Nv = v
-        try onlyOnMainThread {
-            representedClass = try Nv.decode(RepresentedClass.self, forKey: .representedClass)
-        }
+        representedClass = try v.decode(RepresentedClass.self, forKey: .representedClass)
     }
 
     public var typeIdentifier: String
@@ -691,7 +685,7 @@ public final class Component: Codable, Hashable {
         }
     #endif
 
-    public nonisolated func getComponentIcon() async -> IMAGE? {
+    @concurrent public func getComponentIcon() async -> IMAGE? {
         assert(!Thread.isMainThread)
 
         let (path, template) = await (imagePath, displayIconTemplate)
@@ -712,23 +706,21 @@ public final class Component: Codable, Hashable {
         #endif
     }
 
-    public func setComponentIcon(_ icon: IMAGE?) async {
-        let ipath = imagePath
-        await Task.detached {
-            #if canImport(AppKit)
-                if let icon, let data = icon.tiffRepresentation {
-                    try? data.write(to: ipath)
-                } else if FileManager.default.fileExists(atPath: ipath.path) {
-                    try? FileManager.default.removeItem(at: ipath)
-                }
-            #else
-                if let icon, let data = icon.pngData() {
-                    try? data.write(to: ipath)
-                } else {
-                    try? FileManager.default.removeItem(at: ipath)
-                }
-            #endif
-        }.value
+    @concurrent public func setComponentIcon(_ icon: IMAGE?) async {
+        let ipath = await imagePath
+        #if canImport(AppKit)
+            if let icon, let data = icon.tiffRepresentation {
+                try? data.write(to: ipath)
+            } else if FileManager.default.fileExists(atPath: ipath.path) {
+                try? FileManager.default.removeItem(at: ipath)
+            }
+        #else
+            if let icon, let data = icon.pngData() {
+                try? data.write(to: ipath)
+            } else {
+                try? FileManager.default.removeItem(at: ipath)
+            }
+        #endif
     }
 
     public func getThumbnail() async -> IMAGE? {
@@ -744,11 +736,11 @@ public final class Component: Codable, Hashable {
         #endif
     }
 
-    public nonisolated static func == (lhs: Component, rhs: Component) -> Bool {
+    public static func == (lhs: Component, rhs: Component) -> Bool {
         lhs.uuid == rhs.uuid
     }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
@@ -1010,44 +1002,42 @@ public final class Component: Codable, Hashable {
         return nil
     }
 
-    private func generatePdfPreview() async -> IMAGE? {
-        let path = bytesPath
-        return await Task.detached {
-            guard let document = CGPDFDocument(path as CFURL), let firstPage = document.page(at: 1) else { return nil }
+    @concurrent private func generatePdfPreview() async -> IMAGE? {
+        let path = await bytesPath
+        guard let document = CGPDFDocument(path as CFURL), let firstPage = document.page(at: 1) else { return nil }
 
-            let side: CGFloat = 1024
+        let side: CGFloat = 1024
 
-            var pageRect = firstPage.getBoxRect(.cropBox)
-            let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
-            pageRect.origin = .zero
-            pageRect.size.width *= pdfScale
-            pageRect.size.height *= pdfScale
+        var pageRect = firstPage.getBoxRect(.cropBox)
+        let pdfScale = min(side / pageRect.size.width, side / pageRect.size.height)
+        pageRect.origin = .zero
+        pageRect.size.width *= pdfScale
+        pageRect.size.height *= pdfScale
 
-            guard let context = CGContext(data: nil,
-                                          width: Int(pageRect.size.width),
-                                          height: Int(pageRect.size.height),
-                                          bitsPerComponent: 8,
-                                          bytesPerRow: Int(pageRect.size.width) * 4,
-                                          space: CGColorSpaceCreateDeviceRGB(),
-                                          bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)
-            else { return nil }
+        guard let context = CGContext(data: nil,
+                                      width: Int(pageRect.size.width),
+                                      height: Int(pageRect.size.height),
+                                      bitsPerComponent: 8,
+                                      bytesPerRow: Int(pageRect.size.width) * 4,
+                                      space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue | CGImageByteOrderInfo.order32Little.rawValue)
+        else { return nil }
 
-            context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
-            context.fill(pageRect)
+        context.setFillColor(red: 1, green: 1, blue: 1, alpha: 1)
+        context.fill(pageRect)
 
-            context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
-            context.drawPDFPage(firstPage)
+        context.concatenate(firstPage.getDrawingTransform(.cropBox, rect: pageRect, rotate: 0, preserveAspectRatio: true))
+        context.drawPDFPage(firstPage)
 
-            if let cgImage = context.makeImage() {
-                #if canImport(AppKit)
-                    return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
-                #else
-                    return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
-                #endif
-            } else {
-                return nil
-            }
-        }.value
+        if let cgImage = context.makeImage() {
+            #if canImport(AppKit)
+                return IMAGE(cgImage: cgImage, size: CGSize(width: cgImage.width, height: cgImage.height))
+            #else
+                return IMAGE(cgImage: cgImage, scale: 1, orientation: .up)
+            #endif
+        } else {
+            return nil
+        }
     }
 
     public var previewTempPath: URL {
@@ -1211,16 +1201,14 @@ public final class Component: Codable, Hashable {
             return
         }
 
-        let img = await Task.detached {
-            switch contentMode {
-            case .fit:
-                await icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
-            case .fill:
-                await icon.limited(to: Component.iconPointSize, useScreenScale: true)
-            case .center, .circle:
-                icon
-            }
-        }.value
+        let img: IMAGE = switch contentMode {
+        case .fit:
+            await icon.limited(to: Component.iconPointSize, limitTo: 0.75, useScreenScale: true)
+        case .fill:
+            await icon.limited(to: Component.iconPointSize, useScreenScale: true)
+        case .center, .circle:
+            icon
+        }
 
         await setComponentIcon(img)
 
