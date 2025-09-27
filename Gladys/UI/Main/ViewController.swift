@@ -694,9 +694,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         notifications(for: .ItemCollectionNeedsDisplay) { [weak self] object in
             guard let self else { return }
             if object as? Bool == true || object as? UIWindowScene == view.window?.windowScene {
-                lastLayoutProcessed = 0
-                setupLayout()
-                collection.collectionViewLayout.invalidateLayout()
+                view.setNeedsLayout()
                 updateDataSource(animated: false)
                 reloadCollection()
             } else {
@@ -949,6 +947,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
         searchController.searchBar.isLookToDictateEnabled = true
         navigationItem.searchController = searchController
+        if #available(iOS 26.0, *) {
+            navigationItem.preferredSearchBarPlacement = .integrated
+        }
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
             guard let self, let searchController else { return }
@@ -1097,16 +1098,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private var lowMemoryMode = false
 
-    override func didReceiveMemoryWarning() {
-        if UIApplication.shared.applicationState == .background {
-            log("Placing UI in background low-memory mode")
-            lowMemoryMode = true
-            reloadCollection()
-        }
-        super.didReceiveMemoryWarning()
-    }
-
     func sceneBackgrounded() {
+        presentationInfoCache.reset()
         lowMemoryMode = true
         reloadCollection()
     }
@@ -1770,66 +1763,52 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return layout
     }
 
-    private var lastLayoutProcessed: CGFloat = 0
-
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        setupLayout()
-    }
 
-    private func setupLayout() {
         let width = view.safeAreaLayoutGuide.layoutFrame.width
         let wideMode = PersistedOptions.wideMode
-        let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
 
-        let key = width + (wideMode ? 1 : 0) + (forceTwoColumn ? 1 : 0)
-        if lastLayoutProcessed == key {
-            // log("setupLayout not needed")
-            return
-        }
-
-        lastLayoutProcessed = key
-
-        log("setupLayout ran for: \(key)")
+        log("setupLayout running for: \(width)")
 
         #if os(visionOS)
-            if wideMode {
+            collection.collectionViewLayout = if wideMode {
                 if width >= 768 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 24, fixedHeight: 80, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 24, fixedHeight: 80, dataSource: dataSource)
                 }
             } else {
                 if width > 1365 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 5, spacing: 24, dataSource: dataSource)
                 } else if width > 980 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 4, spacing: 24, dataSource: dataSource)
                 } else if width > 438 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 3, spacing: 24, dataSource: dataSource)
                 } else if width > 320 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 24, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 24, dataSource: dataSource)
                 }
             }
         #else
-            if wideMode {
+            collection.collectionViewLayout = if wideMode {
                 if width >= 768 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
                 }
             } else {
-                if width <= 320, !forceTwoColumn {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
+                if width <= 320, !PersistedOptions.forceTwoColumnPreference {
+                    createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
                 } else if width > 1365 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
+                    createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
                 } else if width > 980 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
+                    createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
                 } else if width > 438 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
+                    createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
                 }
             }
         #endif

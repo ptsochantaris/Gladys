@@ -194,34 +194,24 @@ final class ArchivedDropItemActivitySource: NSObject, UIActivityItemSource {
         super.init()
     }
 
-    nonisolated func activityViewControllerPlaceholderItem(_: UIActivityViewController) -> Any {
-        onlyOnMainThread {
-            component.encodedUrl ?? previewItem.previewItemURL
-        } ?? Data()
+    func activityViewControllerPlaceholderItem(_: UIActivityViewController) -> Any {
+        (component.encodedUrl ?? previewItem.previewItemURL) as Any
     }
 
-    nonisolated func activityViewController(_: UIActivityViewController, itemForActivityType _: UIActivity.ActivityType?) -> Any? {
-        onlyOnMainThread {
-            component.encodedUrl ?? previewItem.previewItemURL
-        }
+    func activityViewController(_: UIActivityViewController, itemForActivityType _: UIActivity.ActivityType?) -> Any? {
+        component.encodedUrl ?? previewItem.previewItemURL
     }
 
-    nonisolated func activityViewController(_: UIActivityViewController, subjectForActivityType _: UIActivity.ActivityType?) -> String {
-        onlyOnMainThread {
-            previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
-        }
+    func activityViewController(_: UIActivityViewController, subjectForActivityType _: UIActivity.ActivityType?) -> String {
+        previewItem.previewItemTitle?.truncateWithEllipses(limit: 64) ?? ""
     }
 
-    nonisolated func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
-        onlyOnMainThread {
-            component.getComponentIconSync()
-        }
+    func activityViewController(_: UIActivityViewController, thumbnailImageForActivityType _: UIActivity.ActivityType?, suggestedSize _: CGSize) -> UIImage? {
+        component.getComponentIconSync()
     }
 
-    nonisolated func activityViewController(_: UIActivityViewController, dataTypeIdentifierForActivityType _: UIActivity.ActivityType?) -> String {
-        onlyOnMainThread {
-            component.typeIdentifier
-        }
+    func activityViewController(_: UIActivityViewController, dataTypeIdentifierForActivityType _: UIActivity.ActivityType?) -> String {
+        component.typeIdentifier
     }
 
     /*

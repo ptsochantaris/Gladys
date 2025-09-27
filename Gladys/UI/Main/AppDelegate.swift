@@ -26,26 +26,24 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: BackgroundRefreshTasks.bgRefreshTaskIdentifier, using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: BackgroundRefreshTasks.bgRefreshTaskIdentifier, using: .main) { task in
             task.expirationHandler = {
                 log("Warning: Background refresh task was expired by the system")
             }
             log("Running scheduled background task")
-            _ = onlyOnMainThread { // bgtask <-> Swift 6.0 acrobatics
-                Task {
-                    let result: Bool
-                    do {
-                        try await CloudManager.syncAfterSaveIfNeeded()
-                        for session in application.openSessions {
-                            application.requestSceneSessionRefresh(session)
-                        }
-                        result = true
-                    } catch {
-                        log("Failure while syncing based on background refresh request: \(error.localizedDescription)")
-                        result = false
+            Task { @MainActor in
+                let result: Bool
+                do {
+                    try await CloudManager.syncAfterSaveIfNeeded()
+                    for session in application.openSessions {
+                        application.requestSceneSessionRefresh(session)
                     }
-                    task.setTaskCompleted(success: result)
+                    result = true
+                } catch {
+                    log("Failure while syncing based on background refresh request: \(error.localizedDescription)")
+                    result = false
                 }
+                task.setTaskCompleted(success: result)
             }
         }
 

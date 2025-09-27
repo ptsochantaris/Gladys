@@ -19,7 +19,7 @@ public enum Model {
 
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
-    public static var brokenMode = false
+    public nonisolated(unsafe) static var brokenMode = false
 
     private static var dataFileLastModified = Date.distantPast
 
@@ -58,7 +58,7 @@ public enum Model {
     }
 
     @concurrent private static func _reloadDataIfNeeded() async throws {
-        if await brokenMode {
+        if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
             return
         }
@@ -95,7 +95,7 @@ public enum Model {
             }
         }
 
-        if onlyOnMainThread({ brokenMode }) {
+        if brokenMode {
             log("Model in broken state, further loading or error processing aborted")
             return
         }
@@ -182,14 +182,14 @@ public enum Model {
     }
 
     private nonisolated static func handleLoadingError(_ error: NSError) throws {
-        onlyOnMainThread { brokenMode = true }
+        brokenMode = true
         log("Error while loading: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelLoadingError(finalError)
     }
 
     private nonisolated static func handleCoordinationError(_ error: NSError) throws {
-        onlyOnMainThread { brokenMode = true }
+        brokenMode = true
         log("Error in file coordinator: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelCoordinationError(finalError)

@@ -55,15 +55,13 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
 
     nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
         nonisolated(unsafe) let handler = replyHandler
-        _ = onlyOnMainThread { // Swift 6.0 <-> WatchKit acrobatics
-            Task {
-                guard let watchMessage = WatchMessage.parse(from: messageData) else {
-                    handler(Data())
-                    return
-                }
-                let replyData = await Self.handle(message: watchMessage).asData ?? Data()
-                handler(replyData)
+        Task { @MainActor in
+            guard let watchMessage = WatchMessage.parse(from: messageData) else {
+                handler(Data())
+                return
             }
+            let replyData = await Self.handle(message: watchMessage).asData ?? Data()
+            handler(replyData)
         }
     }
 

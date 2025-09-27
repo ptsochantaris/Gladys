@@ -120,10 +120,8 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    deinit {
-        onlyOnMainThread {
-            _ = DetailController.showingUUIDs.remove(item.uuid)
-        }
+    isolated deinit {
+        _ = DetailController.showingUUIDs.remove(item.uuid)
     }
 
     private var itemObservation: Cancellable?
@@ -648,21 +646,17 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
+    func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
         1
     }
 
-    nonisolated func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
-        onlyOnMainThread {
-            selectedItem?.quickLookItem
-        }
+    func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
+        selectedItem?.quickLookItem
     }
 
-    nonisolated func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+    func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
         if event.type == .keyDown {
-            onlyOnMainThread {
-                components.keyDown(with: event)
-            }
+            components.keyDown(with: event)
             return true
         }
         return false
@@ -737,19 +731,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         view.window?.close()
     }
 
-    nonisolated func sharingService(_: NSSharingService, didSave share: CKShare) {
-        onlyOnMainThread {
-            item.cloudKitShareRecord = share
-        }
+    func sharingService(_: NSSharingService, didSave share: CKShare) {
+        item.cloudKitShareRecord = share
     }
 
-    nonisolated func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
-        onlyOnMainThread {
-            let wasImported = item.isImportedShare
-            item.cloudKitShareRecord = nil
-            if wasImported {
-                Model.delete(items: [item])
-            }
+    func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
+        let wasImported = item.isImportedShare
+        item.cloudKitShareRecord = nil
+        if wasImported {
+            Model.delete(items: [item])
         }
     }
 

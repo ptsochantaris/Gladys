@@ -53,7 +53,7 @@ public extension Component {
             previewItemTitle = typeItem.oneTitle
         }
 
-        deinit {
+        isolated deinit {
             if needsCleanup, let previewItemURL {
                 PreviewItem.cleanupUrl(previewItemURL: previewItemURL)
             }
@@ -61,19 +61,17 @@ public extension Component {
 
         public static var previewUrls = [URL: Int]()
 
-        private nonisolated static func cleanupUrl(previewItemURL: URL) {
-            onlyOnMainThread {
-                let currentCount = previewUrls[previewItemURL] ?? 0
-                if currentCount == 1 {
-                    previewUrls[previewItemURL] = nil
-                    let fm = FileManager.default
-                    if fm.fileExists(atPath: previewItemURL.path) {
-                        try? fm.removeItem(at: previewItemURL)
-                        log("Removed temporary preview at \(previewItemURL.path)")
-                    }
-                } else {
-                    previewUrls[previewItemURL] = currentCount - 1
+        private static func cleanupUrl(previewItemURL: URL) {
+            let currentCount = previewUrls[previewItemURL] ?? 0
+            if currentCount == 1 {
+                previewUrls[previewItemURL] = nil
+                let fm = FileManager.default
+                if fm.fileExists(atPath: previewItemURL.path) {
+                    try? fm.removeItem(at: previewItemURL)
+                    log("Removed temporary preview at \(previewItemURL.path)")
                 }
+            } else {
+                previewUrls[previewItemURL] = currentCount - 1
             }
         }
     }

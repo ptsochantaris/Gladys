@@ -183,18 +183,37 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         try v.encode(createdAt, forKey: .createdAt)
         try v.encode(uuid, forKey: .uuid)
 
-        nonisolated(unsafe) var Nv = v
-        try onlyOnMainThread {
-            try Nv.encode(updatedAt, forKey: .updatedAt)
-            try Nv.encode(components, forKey: .components)
-            try Nv.encode(status, forKey: .status)
-            try Nv.encode(note, forKey: .note)
-            try Nv.encode(titleOverride, forKey: .titleOverride)
-            try Nv.encode(labels, forKey: .labels)
-            try Nv.encode(highlightColor, forKey: .highlightColor)
-            try Nv.encodeIfPresent(lockPassword, forKey: .lockPassword)
-            try Nv.encodeIfPresent(lockHint, forKey: .lockHint)
+        var _updatedAt: Date = .distantPast
+        var _components: ContiguousArray<Component> = []
+        var _status: Status = .nominal
+        var _note = ""
+        var _titleOverride = ""
+        var _labels: [String] = []
+        var _highlightColor: ItemColor = .none
+        var _lockPassword: Data?
+        var _lockHint: String?
+
+        onlyOnMainThread {
+            _updatedAt = updatedAt
+            _components = components
+            _status = status
+            _note = note
+            _titleOverride = titleOverride
+            _labels = labels
+            _highlightColor = highlightColor
+            _lockPassword = lockPassword
+            _lockHint = lockHint
         }
+
+        try v.encode(_updatedAt, forKey: .updatedAt)
+        try v.encode(_components, forKey: .components)
+        try v.encode(_status, forKey: .status)
+        try v.encode(_note, forKey: .note)
+        try v.encode(_titleOverride, forKey: .titleOverride)
+        try v.encode(_labels, forKey: .labels)
+        try v.encode(_highlightColor, forKey: .highlightColor)
+        try v.encodeIfPresent(_lockPassword, forKey: .lockPassword)
+        try v.encodeIfPresent(_lockHint, forKey: .lockHint)
     }
 
     public nonisolated init(from decoder: Decoder) throws {

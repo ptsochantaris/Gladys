@@ -83,6 +83,7 @@ open class CommonItemCell: UICollectionViewCell {
     public func didEndDisplaying() {
         myWrapper.clear()
         needsConfig = true
+        invalidateView()
     }
 
     private var lastLayout = CGSize.zero
