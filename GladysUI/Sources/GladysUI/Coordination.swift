@@ -13,7 +13,7 @@ import Foundation
     import UIKit
 
     public enum Coordination {
-        private final class ModelFilePresenter: NSObject, NSFilePresenter {
+        private final class ModelFilePresenter: NSObject, NSFilePresenter, Sendable {
             let presentedItemURL: URL? = itemsDirectoryUrl
 
             let presentedItemOperationQueue = OperationQueue()
@@ -25,11 +25,11 @@ import Foundation
             }
         }
 
-        nonisolated static var coordinator: NSFileCoordinator {
+        static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: filePresenter)
         }
 
-        private nonisolated(unsafe) static let filePresenter = ModelFilePresenter()
+        private static let filePresenter = ModelFilePresenter()
 
         public static func beginMonitoringChanges() {
             notifications(for: UIApplication.willEnterForegroundNotification) { _ in

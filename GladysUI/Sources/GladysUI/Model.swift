@@ -45,16 +45,14 @@ public enum Model {
         try await reloadDataIfNeeded()
     }
 
-    private nonisolated static func shouldLoad(from url: URL) -> Bool {
-        onlyOnMainThread {
-            guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {
-                return false
-            }
-
-            dataFileLastModified = dataModified
-            log("Need to reload data, new file date: \(dataModified)")
-            return true
+    private static func shouldLoad(from url: URL) -> Bool {
+        guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {
+            return false
         }
+
+        dataFileLastModified = dataModified
+        log("Need to reload data, new file date: \(dataModified)")
+        return true
     }
 
     @concurrent private static func _reloadDataIfNeeded() async throws {
@@ -77,7 +75,8 @@ public enum Model {
             }
 
             do {
-                guard shouldLoad(from: url) else {
+                let ok = onlyOnMainThread { shouldLoad(from: url) }
+                guard ok else {
                     log("No need to reload data")
                     return
                 }
