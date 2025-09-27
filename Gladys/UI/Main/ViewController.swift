@@ -172,7 +172,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt _: IndexPath) {
         let center = cell.center
         let x = center.x
         let y = center.y
@@ -181,14 +181,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             UIAccessibilityLocationDescriptor(name: "Drop after item", point: CGPoint(x: x + w, y: y), in: collectionView),
             UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
         ]
-
-        if let cell = cell as? ArchivedItemCell, cell.needsConfig, let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
-            configureCell(cell, identifier: uuid)
-        }
-    }
-
-    func collectionView(_: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt _: IndexPath) {
-        (cell as? ArchivedItemCell)?.didEndDisplaying()
     }
 
     private func path(at point: CGPoint) -> IndexPath {
@@ -845,20 +837,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func configureCell(_ cell: ArchivedItemCell, identifier: UUID) {
         cell.wideCell = PersistedOptions.wideMode
-        cell.lowMemoryMode = lowMemoryMode
         cell.owningViewController = self
         cell.archivedDropItem = DropStore.item(uuid: identifier)
         cell.isEditing = isEditing
-        cell.needsConfig = false
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let cellRegistration = UICollectionView.CellRegistration<ArchivedItemCell, ItemIdentifier> { [unowned self] cell, _, identifier in
-            if cell.needsConfig {
-                configureCell(cell, identifier: identifier.uuid)
-            }
+            configureCell(cell, identifier: identifier.uuid)
         }
 
         dataSource = UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { collectionView, indexPath, sectionItem in
@@ -1096,12 +1084,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    private var lowMemoryMode = false
-
     func sceneBackgrounded() {
         presentationInfoCache.reset()
-        lowMemoryMode = true
-        reloadCollection()
     }
 
     private func reloadCollection() {
@@ -1109,15 +1093,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             return
         }
         collection.reloadData()
-        let lowMem = lowMemoryMode
-        for cell in collection.visibleCells {
-            (cell as? ArchivedItemCell)?.invalidate(lowMemoryMode: lowMem)
-        }
     }
 
     func sceneForegrounded() {
-        lowMemoryMode = false
-        reloadCollection()
         if emptyView != nil {
             blurb(Greetings.randomGreetLine)
         }

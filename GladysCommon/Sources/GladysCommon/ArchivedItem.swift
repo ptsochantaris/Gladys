@@ -3,11 +3,7 @@
 #elseif canImport(UIKit)
     import UIKit
 #endif
-#if !os(watchOS)
-    import CoreSpotlight
-    import Speech
-    import Vision
-#endif
+
 import CloudKit
 import Combine
 import Foundation
@@ -18,6 +14,10 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 #if !os(watchOS)
+    import CoreSpotlight
+    import Speech
+    import Vision
+
     extension SFSpeechRecognitionTask: @retroactive @unchecked Sendable {}
     extension SFSpeechRecognitionResult: @retroactive @unchecked Sendable {}
     extension VNImageBasedRequest: @retroactive @unchecked Sendable {}

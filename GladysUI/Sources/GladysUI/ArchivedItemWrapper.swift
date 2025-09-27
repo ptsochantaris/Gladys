@@ -87,12 +87,12 @@ public final class ArchivedItemWrapper: Identifiable {
 
     private let updateQueue = Grouper<UpdateRequest>()
 
-    public func configure(with newItem: ArchivedItem, size: CGSize, style: Style) {
-        updateQueue.queue(.add(newItem, size, style))
-    }
-
-    public func clear() {
-        updateQueue.queue(.clear)
+    public func configure(with newItem: ArchivedItem?, size: CGSize, style: Style) {
+        if let newItem {
+            updateQueue.queue(.add(newItem, size, style))
+        } else {
+            updateQueue.queue(.clear)
+        }
     }
 
     private func processUpdateRequest(updateRequest: UpdateRequest) async {

@@ -26,16 +26,6 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    public func invalidate(lowMemoryMode lowMem: Bool) {
-        lowMemoryMode = lowMem
-        invalidateView()
-    }
-
-    private func invalidateView() {
-        lastLayout = .zero
-        setNeedsLayout()
-    }
-
     open func setup() {
         contentView.backgroundColor = .clear
         contentView.clipsToBounds = false
@@ -48,8 +38,7 @@ open class CommonItemCell: UICollectionViewCell {
         setNeedsLayout()
 
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
-            guard let archivedDropItem = self?.archivedDropItem else { return }
-            archivedDropItem.itemUpdates.send()
+            self?.archivedDropItem?.itemUpdates.send()
         }
     }
 
@@ -74,16 +63,9 @@ open class CommonItemCell: UICollectionViewCell {
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
-            invalidateView()
+            lastLayout = .zero
+            setNeedsLayout()
         }
-    }
-
-    public var needsConfig = true
-
-    public func didEndDisplaying() {
-        myWrapper.clear()
-        needsConfig = true
-        invalidateView()
     }
 
     private var lastLayout = CGSize.zero
@@ -105,11 +87,7 @@ open class CommonItemCell: UICollectionViewCell {
         if lastLayout != currentSize {
             lastLayout = currentSize
 
-            if lowMemoryMode {
-                myWrapper.clear()
-            } else if let archivedDropItem {
-                myWrapper.configure(with: archivedDropItem, size: bounds.size, style: style)
-            }
+            myWrapper.configure(with: archivedDropItem, size: bounds.size, style: style)
 
             if itemViewController.parent == nil, let owningViewController {
                 owningViewController.addChildController(itemViewController, to: contentView)
@@ -139,14 +117,6 @@ open class CommonItemCell: UICollectionViewCell {
             true
         }
         set {}
-    }
-
-    public var lowMemoryMode = false {
-        didSet {
-            if lowMemoryMode != oldValue {
-                invalidateView()
-            }
-        }
     }
 
     override public var isSelected: Bool {

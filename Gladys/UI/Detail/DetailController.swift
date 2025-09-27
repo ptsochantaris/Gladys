@@ -382,7 +382,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
                 ]
 
                 if UIApplication.shared.supportsMultipleScenes, let scene = view.window?.windowScene {
-                    children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                    children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "macwindow.badge.plus")) { _ in
                         Filter.Toggle.Function.userLabel(text).openInWindow(from: scene)
                     }, at: 1)
                 }
