@@ -27,7 +27,7 @@
 
         public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
-            Task {
+            Task { @MainActor in // needed explicitly
                 do {
                     log("Clearing items before full reindex")
                     try await searchableIndex.deleteAllSearchableItems()
@@ -54,7 +54,7 @@
 
         public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
-            Task {
+            Task { @MainActor in // needed explicitly
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
                 await itemProvider.iterateThroughItems { item in
