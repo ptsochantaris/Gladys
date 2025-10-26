@@ -5,13 +5,11 @@
     extension CSSearchableIndex: @retroactive @unchecked Sendable {}
     extension CSSearchableItem: @retroactive @unchecked Sendable {}
 
-    @MainActor
     public protocol IndexerItemProvider: AnyObject {
         func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async
         func getItem(uuid: String) -> ArchivedItem?
     }
 
-    @MainActor
     public final class Indexer: NSObject, CSSearchableIndexDelegate {
         private weak var itemProvider: IndexerItemProvider!
 
@@ -27,6 +25,7 @@
 
         public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
+            nonisolated(unsafe) let i = itemProvider!
             Task { @MainActor in // needed explicitly
                 do {
                     log("Clearing items before full reindex")
@@ -35,7 +34,7 @@
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughItems { item in
+                await i.iterateThroughItems { item in
                     searchableItems.append(item.searchableItem)
                     if searchableItems.count > 99 {
                         await Self.indexBlock(of: searchableItems, in: searchableIndex)
@@ -54,10 +53,11 @@
 
         public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
+            nonisolated(unsafe) let i = itemProvider!
             Task { @MainActor in // needed explicitly
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughItems { item in
+                await i.iterateThroughItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
                         if searchableItems.count > 99 {
@@ -105,7 +105,7 @@
 
         private func data(itemIdentifier: String, typeIdentifier: String) throws -> Data {
             if let item = itemProvider.getItem(uuid: itemIdentifier),
-               let data = item.bytes(for: typeIdentifier) {
+               let data = onlyOnMainThread({ item.bytes(for: typeIdentifier) }) {
                 return data
             }
             return Data()
@@ -113,7 +113,7 @@
 
         private func fileURL(itemIdentifier: String, typeIdentifier: String) throws -> URL {
             if let item = itemProvider.getItem(uuid: itemIdentifier),
-               let url = item.url(for: typeIdentifier) {
+               let url = onlyOnMainThread({ item.url(for: typeIdentifier) }) {
                 return url as URL
             }
             return URL(string: "file://")!

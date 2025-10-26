@@ -262,8 +262,8 @@ public enum Model {
 
     ///////////////////////// Migrating
 
-    @MainActor
-    private final class IndexProxy: IndexerItemProvider {
+    private final class IndexProxy: @MainActor IndexerItemProvider {
+        @MainActor
         func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async {
             for drop in DropStore.allDrops {
                 let go = await perItem(drop)
@@ -271,6 +271,7 @@ public enum Model {
             }
         }
 
+        @MainActor
         func getItem(uuid: String) -> GladysCommon.ArchivedItem? {
             DropStore.item(uuid: uuid)
         }
