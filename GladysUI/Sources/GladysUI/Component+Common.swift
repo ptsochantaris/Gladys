@@ -8,7 +8,7 @@ import GladysCommon
 
 public extension Component {
     var sizeDescription: String? {
-        diskSizeFormatter.string(fromByteCount: sizeInBytes)
+        diskSizeFormat.format(sizeInBytes)
     }
 
     var canPreview: Bool {

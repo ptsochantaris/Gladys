@@ -11,34 +11,32 @@ struct LabelQuery: EntityStringQuery {
         return all.filter { $0.id.localizedCaseInsensitiveContains(string) }
     }
 
+    @MainActor
     func entities(for identifiers: [String]) async throws -> [LabelOption] {
-        await Task { @MainActor in
-            let allItems = await LiteModel.allItems()
-            let filter = Filter(manualDropSource: allItems)
-            let names = Set(filter.labelToggles.map(\.function.displayText))
-            return identifiers.compactMap { entityId in
-                if entityId == "" {
-                    return LabelOption.clear
-                }
-                if names.contains(entityId) {
-                    return LabelOption(id: entityId, label: entityId)
-                }
-                return nil
+        let allItems = await LiteModel.allItems()
+        let filter = Filter(manualDropSource: allItems)
+        let names = Set(filter.labelToggles.map(\.function.displayText))
+        return identifiers.compactMap { entityId in
+            if entityId == "" {
+                return LabelOption.clear
             }
-        }.value
+            if names.contains(entityId) {
+                return LabelOption(id: entityId, label: entityId)
+            }
+            return nil
+        }
     }
 
+    @MainActor
     func suggestedEntities() async throws -> [LabelOption] {
-        await Task { @MainActor in
-            let allItems = await LiteModel.allItems()
-            let filter = Filter(manualDropSource: allItems)
-            return [LabelOption.clear] + filter.labelToggles.compactMap {
-                if case .userLabel = $0.function {
-                    let labelText = $0.function.displayText
-                    return LabelOption(id: labelText, label: labelText)
-                }
-                return nil
+        let allItems = await LiteModel.allItems()
+        let filter = Filter(manualDropSource: allItems)
+        return [LabelOption.clear] + filter.labelToggles.compactMap {
+            if case .userLabel = $0.function {
+                let labelText = $0.function.displayText
+                return LabelOption(id: labelText, label: labelText)
             }
-        }.value
+            return nil
+        }
     }
 }

@@ -28,3 +28,15 @@ public func onlyOnMainThread<T: Sendable>(_ block: @Sendable @MainActor () throw
         }
     }
 }
+
+public func onlyOnMainThread<T: Sendable>(_ block: @Sendable @MainActor () -> T) -> T {
+    if Thread.isMainThread {
+        MainActor.assumeIsolated {
+            block()
+        }
+    } else {
+        DispatchQueue.main.sync {
+            block()
+        }
+    }
+}

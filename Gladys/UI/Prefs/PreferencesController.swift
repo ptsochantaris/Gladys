@@ -248,7 +248,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             if count > 0 {
                 Task {
                     let bytes = await filter.sizeOfVisibleItemsInBytes()
-                    let size = diskSizeFormatter.string(fromByteCount: bytes)
+                    let size = diskSizeFormat.format(bytes)
                     if count > 1 {
                         infoLabel.text = "\(count) Visible Items\n\(size)"
                     } else {
@@ -263,7 +263,7 @@ final class PreferencesController: GladysViewController, UIDragInteractionDelega
             if count > 0 {
                 Task {
                     let bytes = await filter.sizeOfVisibleItemsInBytes()
-                    let size = diskSizeFormatter.string(fromByteCount: bytes)
+                    let size = diskSizeFormat.format(bytes)
                     if count > 1 {
                         infoLabel.text = "\(count) Items\n\(size)"
                     } else {

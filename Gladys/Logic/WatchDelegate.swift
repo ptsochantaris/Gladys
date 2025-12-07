@@ -55,19 +55,17 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
 
     nonisolated func session(_: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void) {
         nonisolated(unsafe) let handler = replyHandler
-        _ = onlyOnMainThread { // Swift 6.0 <-> WatchKit acrobatics
-            Task {
-                guard let watchMessage = WatchMessage.parse(from: messageData) else {
-                    handler(Data())
-                    return
-                }
-                let replyData = await Self.handle(message: watchMessage).asData ?? Data()
-                handler(replyData)
+        Task { @MainActor in
+            guard let watchMessage = WatchMessage.parse(from: messageData) else {
+                handler(Data())
+                return
             }
+            let replyData = await Self.handle(message: watchMessage).asData ?? Data()
+            handler(replyData)
         }
     }
 
-    private static func handle(message: WatchMessage) async -> WatchMessage {
+    @concurrent private static func handle(message: WatchMessage) async -> WatchMessage {
         switch message {
         case let .imageRequest(imageInfo):
             guard let item = await DropStore.item(uuid: imageInfo.id) else {
@@ -85,7 +83,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
                         context.cgContext.setFillColor(color.cgColor)
                         context.fill(CGRect(origin: .zero, size: size))
                     }
-                    data = Self.proceedWithImage(icon, size: nil, mode: .center)
+                    data = await Self.proceedWithImage(icon, size: nil, mode: .center)
 
                 case let .map(mapItem):
                     let icon = await item.displayIcon
@@ -132,23 +130,23 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
         }
     }
 
-    private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
+    @concurrent private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
         do {
             let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
             let img = try await Images.mapSnapshot(with: options)
-            return proceedWithImage(img, size: size, mode: .fill)
+            return await proceedWithImage(img, size: size, mode: .fill)
         } catch {
-            return proceedWithImage(fallbackIcon, size: size, mode: .center)
+            return await proceedWithImage(fallbackIcon, size: size, mode: .center)
         }
     }
 
-    private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) -> Data {
+    @concurrent private static func proceedWithImage(_ icon: UIImage, size: CGSize?, mode: ArchivedDropItemDisplayType) async -> Data {
         if let size {
             if mode == .center || mode == .circle {
-                let scaledImage = icon.limited(to: size, limitTo: 0.2, singleScale: true)
+                let scaledImage = await icon.limited(to: size, limitTo: 0.2, singleScale: true)
                 return scaledImage.pngData()!
             } else {
-                let scaledImage = icon.limited(to: size, limitTo: 1.0, singleScale: true)
+                let scaledImage = await icon.limited(to: size, limitTo: 1.0, singleScale: true)
                 return scaledImage.jpegData(compressionQuality: 0.6)!
             }
         } else {

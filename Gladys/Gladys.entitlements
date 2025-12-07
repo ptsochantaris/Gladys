@@ -18,15 +18,9 @@
 	<true/>
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
 	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
-	<key>com.apple.security.app-sandbox</key>
-	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
 		<string>group.build.bru.Gladys</string>
 	</array>
-	<key>com.apple.security.network.client</key>
-	<true/>
-	<key>com.apple.security.personal-information.photos-library</key>
-	<true/>
 </dict>
 </plist>

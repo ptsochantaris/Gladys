@@ -20,12 +20,10 @@ public enum ImportExport {
         let p = Progress(totalUnitCount: Int64(count))
         progress.addChild(p, withPendingUnitCount: 100)
 
-        return try await Task.detached {
-            try createArchiveThread(progress: p, eligibleItems: eligibleItems)
-        }.value
+        return try await createArchiveThread(progress: p, eligibleItems: eligibleItems)
     }
 
-    private static func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedItem]) throws -> URL {
+    @concurrent private static func createArchiveThread(progress p: Progress, eligibleItems: [ArchivedItem]) async throws -> URL {
         let fm = FileManager()
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys Archive.gladysArchive")
         let path = tempPath.path
@@ -57,20 +55,17 @@ public enum ImportExport {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @MainActor
     public static func createZip(using filter: Filter, progress: Progress) async throws -> URL {
-        let dropsCopy = filter.eligibleDropsForExport
+        let dropsCopy = await filter.eligibleDropsForExport
         let itemCount = Int64(1 + dropsCopy.count)
 
         let p = Progress(totalUnitCount: itemCount)
         progress.addChild(p, withPendingUnitCount: 100)
 
-        return try await Task.detached {
-            try await createZipThread(dropsCopy: dropsCopy, progress: p)
-        }.value
+        return try await createZipThread(dropsCopy: dropsCopy, progress: p)
     }
 
-    private static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
+    @concurrent private static func createZipThread(dropsCopy: ContiguousArray<ArchivedItem>, progress p: Progress) async throws -> URL {
         let tempPath = temporaryDirectoryUrl.appendingPathComponent("Gladys.zip")
 
         let fm = FileManager.default
@@ -103,7 +98,7 @@ public enum ImportExport {
         return tempPath
     }
 
-    private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) async throws {
+    @concurrent private static func addZipItem(_ typeItem: Component, directory: String?, name: String, in archive: Archive) async throws {
         var bytes: Data?
         if await typeItem.isWebURL, let url = await typeItem.encodedUrl {
             bytes = url.urlFileContent
@@ -129,7 +124,7 @@ public enum ImportExport {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static func bringInItem(_ item: ArchivedItem, from url: URL, moveItem: Bool) async throws -> Bool {
+    @concurrent private static func bringInItem(_ item: ArchivedItem, from url: URL, moveItem: Bool) async throws -> Bool {
         let remotePath = url.appendingPathComponent(item.uuid.uuidString)
         let fm = FileManager.default
         if !fm.fileExists(atPath: remotePath.path) {
@@ -151,7 +146,7 @@ public enum ImportExport {
         return true
     }
 
-    public static func importArchive(from url: URL, removingOriginal: Bool) async throws {
+    @concurrent public static func importArchive(from url: URL, removingOriginal: Bool) async throws {
         let fm = FileManager.default
         defer {
             if removingOriginal {

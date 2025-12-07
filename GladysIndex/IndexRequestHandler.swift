@@ -1,7 +1,7 @@
 import CoreSpotlight
 import GladysCommon
 
-final class IndexRequestHandler: CSIndexExtensionRequestHandler, IndexerItemProvider, @unchecked Sendable {
+final class IndexRequestHandler: CSIndexExtensionRequestHandler, @MainActor IndexerItemProvider, @unchecked Sendable {
     func iterateThroughItems(perItem: @escaping @MainActor @Sendable (ArchivedItem) async -> Bool) async {
         await LiteModel.iterateThroughSavedItemsWithoutLoading(perItemCallback: perItem)
     }

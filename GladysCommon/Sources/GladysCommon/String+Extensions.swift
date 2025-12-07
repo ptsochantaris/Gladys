@@ -51,20 +51,34 @@ public extension String {
         return string
     }
 
-    func height(for width: CGFloat, lineLimit: Int) -> CGFloat {
+    func height(for containerSize: CGSize, lineLimit: Int) -> CGFloat {
         #if os(visionOS)
             let font = FONT.preferredFont(forTextStyle: FONT.TextStyle.body)
         #else
             let font = FONT.preferredFont(forTextStyle: FONT.TextStyle.caption1)
         #endif
 
-        let lineHeight = font.ascender + font.descender + font.leading
-        let maxHeight = CGFloat(lineLimit) * lineHeight + 8
-
         let attributedText = NSAttributedString(string: self, attributes: [.font: font])
         let frameSetter = CTFramesetterCreateWithAttributedString(attributedText)
-        let guide = CGSize(width: width, height: maxHeight)
-        let result = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(0, 0), nil, guide, nil)
-        return result.height
+        let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, CFRangeMake(0, 0), nil, containerSize, nil)
+        let ctFRame = CTFramesetterCreateFrame(frameSetter,
+                                               CFRange(location: 0, length: count),
+                                               CGPath(rect: CGRect(origin: .zero, size: suggestedSize), transform: nil),
+                                               nil)
+
+        let lines = CTFrameGetLines(ctFRame) as! [CTLine]
+        guard let lastLine = lines.prefix(lineLimit).last else {
+            return 10
+        }
+        let lastLineRange = CTLineGetStringRange(lastLine)
+        let maxCount = lastLineRange.location + lastLineRange.length
+        let visibleRange = CFRangeMake(0, maxCount)
+
+        let height = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, visibleRange, nil, containerSize, nil).height
+        #if canImport(AppKit)
+            return height + 2
+        #else
+            return height + 14
+        #endif
     }
 }

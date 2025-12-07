@@ -7,11 +7,11 @@ public extension ArchivedItem {
     }
 
     func removeFromCloudkit() {
-        cloudKitRecord = nil
-        cloudKitShareRecord = nil
         for typeItem in components {
             typeItem.cloudKitRecord = nil
         }
+        cloudKitRecord = nil
+        cloudKitShareRecord = nil
     }
 
     func delete() {
@@ -49,7 +49,7 @@ public extension ArchivedItem {
     }
 
     var addedString: String {
-        diskSizeFormatter.string(fromByteCount: sizeInBytes) + "\n" + shortDateFormatter.string(from: createdAt)
+        diskSizeFormat.format(sizeInBytes) + "\n" + shortDateFormat.format(createdAt)
     }
 
     var previewableTypeItem: Component? {

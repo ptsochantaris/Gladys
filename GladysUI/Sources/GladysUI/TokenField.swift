@@ -125,6 +125,7 @@ final class TokenField: VIEWCLASS {
         #endif
 
         let lines = CTFrameGetLines(totalFrame) as! [CTLine]
+
         var origins = [CGPoint](repeating: .zero, count: lines.count)
         CTFrameGetLineOrigins(totalFrame, TokenField.emptyRange, &origins)
         let key = unsafeBitCast(TokenField.highlightTextKey, to: UnsafeRawPointer.self)

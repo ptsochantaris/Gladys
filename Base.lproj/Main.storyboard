@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24093.7" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24053.1"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -16,11 +15,11 @@
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" id="BYZ-38-t0r" customClass="ViewController" customModule="Gladys" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GladysView" customModule="Gladys" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView autoresizesSubviews="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="90w-Xn-bmO">
-                                <rect key="frame" x="-1" y="0.0" width="414" height="896"/>
+                                <rect key="frame" x="-1" y="0.0" width="414" height="736"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" name="colorPaper"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GOE-Ci-zLW">
@@ -129,16 +128,16 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sCD-me-cQ0">
-                            <rect key="frame" x="20" y="59.5" width="160" height="60.5"/>
+                            <rect key="frame" x="20" y="59.666666666666657" width="160" height="60.333333333333343"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Copying" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="srE-1O-tlR">
-                                    <rect key="frame" x="0.0" y="0.0" width="160" height="26.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="160" height="26.333333333333332"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Oo-XrT">
-                                    <rect key="frame" x="0.0" y="42.5" width="160" height="18"/>
+                                    <rect key="frame" x="0.0" y="42.333333333333336" width="160" height="18"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                     <color key="textColor" name="colorTint"/>
                                     <nil key="highlightedColor"/>
@@ -181,7 +180,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9At-u8-ZrJ">
-                                <rect key="frame" x="0.0" y="56" width="240" height="414"/>
+                                <rect key="frame" x="0.0" y="70" width="240" height="400"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelToggleCell" rowHeight="70" id="pwg-9e-MlX" customClass="LabelToggleCell" customModule="Gladys" customModuleProvider="target">
@@ -192,13 +191,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIL-f2-cgn">
-                                                    <rect key="frame" x="16" y="11" width="208" height="18"/>
+                                                    <rect key="frame" x="16" y="15" width="208" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="999" verticalCompressionResistancePriority="1000" text="Item count" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phz-mJ-ghT">
-                                                    <rect key="frame" x="16" y="29" width="208" height="30"/>
+                                                    <rect key="frame" x="16" y="33" width="208" height="22"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
@@ -231,7 +230,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOj-EL-dRw">
-                                <rect key="frame" x="24" y="219" width="192" height="88"/>
+                                <rect key="frame" x="24" y="226.33333333333334" width="192" height="87.666666666666657"/>
                                 <string key="text">You can add labels to items, and they will appear here.
 
 Selecting them will show only items that contain these labels.</string>
@@ -240,7 +239,7 @@ Selecting them will show only items that contain these labels.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWn-S9-INk">
-                                <rect key="frame" x="78.5" y="351" width="83" height="41"/>
+                                <rect key="frame" x="78.666666666666671" y="358" width="83.000000000000014" height="41"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <inset key="contentEdgeInsets" minX="20" minY="10" maxX="20" maxY="10"/>
                                 <state key="normal" title="Close"/>
@@ -296,7 +295,7 @@ Selecting them will show only items that contain these labels.</string>
                 <navigationController storyboardIdentifier="Central" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="eMV-4y-lvX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="oc1-ut-DYH">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -304,7 +303,6 @@ Selecting them will show only items that contain these labels.</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Xv4-HG-X2o">
-                        <rect key="frame" x="0.0" y="813" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
@@ -322,7 +320,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JPd-vO-wga">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
+                        <rect key="frame" x="0.0" y="24" width="240" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -344,7 +342,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8VE-3P-ayT">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="44"/>
+                        <rect key="frame" x="0.0" y="24" width="240" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -368,14 +366,14 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Ju-bV-ySp">
-                                <rect key="frame" x="0.0" y="44" width="240" height="196"/>
+                                <rect key="frame" x="0.0" y="78" width="240" height="162"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="gto-xm-PNG">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="65"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add A New Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0hU-SI-8eo">
-                                            <rect key="frame" x="16" y="15.5" width="208" height="34"/>
+                                            <rect key="frame" x="16" y="15.666666666666664" width="208" height="34"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
@@ -400,13 +398,13 @@ Selecting them will show only items that contain these labels.</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Label name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eka-Yu-Qoc">
-                                                    <rect key="frame" x="16" y="15" width="180" height="40"/>
+                                                    <rect key="frame" x="16" y="19" width="180" height="32"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" name="colorComponentLabel"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="checkmark.circle" catalog="system" highlightedImage="checkmark.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="XuS-mV-EV4">
-                                                    <rect key="frame" x="204" y="25.5" width="20" height="19"/>
+                                                    <rect key="frame" x="204" y="25.666666666666664" width="20" height="18.666666666666664"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="Oj4-F2-SmH"/>
                                                         <constraint firstAttribute="width" constant="20" id="tGk-PG-RWo"/>
@@ -454,7 +452,7 @@ Selecting them will show only items that contain these labels.</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <value key="contentSizeForViewInPopover" type="size" width="240" height="380"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="380"/>
                     <size key="freeformSize" width="240" height="240"/>
                     <connections>
                         <outlet property="headerLabel" destination="OzW-Qz-ZYJ" id="5q7-KB-7aJ"/>
@@ -552,18 +550,18 @@ Selecting them will show only items that contain these labels.</string>
                         <viewControllerLayoutGuide type="bottom" id="xxY-Hc-KMP"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rdm-ky-kRz">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gladysImage" translatesAutoresizingMaskIntoConstraints="NO" id="gha-n2-WE1">
-                                <rect key="frame" x="127" y="368" width="160" height="160"/>
+                                <rect key="frame" x="127" y="288" width="160" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="9Jv-Ht-VV3"/>
                                     <constraint firstAttribute="height" constant="160" id="ZcI-EH-zDz"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Just a sec…" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDX-MR-PoD">
-                                <rect key="frame" x="127" y="536" width="160" height="14"/>
+                                <rect key="frame" x="127" y="456" width="160" height="14"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>
@@ -596,7 +594,7 @@ Selecting them will show only items that contain these labels.</string>
         <image name="line.3.horizontal.circle" catalog="system" width="128" height="123"/>
         <image name="list.bullet" catalog="system" width="128" height="87"/>
         <image name="slider.horizontal.3" catalog="system" width="128" height="99"/>
-        <image name="square.and.arrow.up" catalog="system" width="32" height="32"/>
+        <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <image name="square.grid.3x3" catalog="system" width="128" height="113"/>
         <image name="xmark.bin" catalog="system" width="128" height="92"/>
         <namedColor name="colorComponentLabel">
@@ -612,13 +610,13 @@ Selecting them will show only items that contain these labels.</string>
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

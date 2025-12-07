@@ -7,10 +7,6 @@ import PopTimer
 import Semalot
 import UniformTypeIdentifiers
 
-extension UnsafeMutableBufferPointer: @unchecked @retroactive Sendable {}
-extension UnsafeBufferPointer<uuid_t>: @unchecked @retroactive Sendable {}
-extension ThrowingTaskGroup: @unchecked @retroactive Sendable {}
-
 public extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
@@ -23,7 +19,7 @@ public enum Model {
 
     public static var badgeHandler: (() -> Void)?
     public static var stateHandler: ((State) -> Void)?
-    public static var brokenMode = false
+    public nonisolated(unsafe) static var brokenMode = false
 
     private static var dataFileLastModified = Date.distantPast
 
@@ -36,12 +32,10 @@ public enum Model {
 
     public static func reloadDataIfNeeded() async throws {
         await storageGatekeeper.takeTicket()
-        try await Task.detached {
-            defer {
-                storageGatekeeper.returnTicket()
-            }
-            try _reloadDataIfNeeded()
-        }.value
+        defer {
+            storageGatekeeper.returnTicket()
+        }
+        try await _reloadDataIfNeeded()
     }
 
     public static func reloadIfPossible() async throws {
@@ -51,20 +45,18 @@ public enum Model {
         try await reloadDataIfNeeded()
     }
 
-    private nonisolated static func shouldLoad(from url: URL) -> Bool {
-        onlyOnMainThread {
-            guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {
-                return false
-            }
-
-            dataFileLastModified = dataModified
-            log("Need to reload data, new file date: \(dataModified)")
-            return true
+    private static func shouldLoad(from url: URL) -> Bool {
+        guard let dataModified = modificationDate(for: url), dataModified != dataFileLastModified else {
+            return false
         }
+
+        dataFileLastModified = dataModified
+        log("Need to reload data, new file date: \(dataModified)")
+        return true
     }
 
-    private nonisolated static func _reloadDataIfNeeded() throws {
-        if onlyOnMainThread({ brokenMode }) {
+    @concurrent private static func _reloadDataIfNeeded() async throws {
+        if brokenMode {
             log("Ignoring load, model is broken, app needs restart.")
             return
         }
@@ -83,7 +75,8 @@ public enum Model {
             }
 
             do {
-                guard shouldLoad(from: url) else {
+                let ok = onlyOnMainThread { shouldLoad(from: url) }
+                guard ok else {
                     log("No need to reload data")
                     return
                 }
@@ -101,7 +94,7 @@ public enum Model {
             }
         }
 
-        if onlyOnMainThread({ brokenMode }) {
+        if brokenMode {
             log("Model in broken state, further loading or error processing aborted")
             return
         }
@@ -188,14 +181,14 @@ public enum Model {
     }
 
     private nonisolated static func handleLoadingError(_ error: NSError) throws {
-        onlyOnMainThread { brokenMode = true }
+        brokenMode = true
         log("Error while loading: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelLoadingError(finalError)
     }
 
     private nonisolated static func handleCoordinationError(_ error: NSError) throws {
-        onlyOnMainThread { brokenMode = true }
+        brokenMode = true
         log("Error in file coordinator: \(error)")
         let finalError = error.userInfo[NSUnderlyingErrorKey] as? NSError ?? error
         throw GladysError.modelCoordinationError(finalError)
@@ -251,7 +244,6 @@ public enum Model {
     public static func lockUnlockedItems() {
         for item in DropStore.allDrops where item.isTemporarilyUnlocked {
             item.flags.insert(.needsUnlock)
-            item.postModified()
         }
     }
 
@@ -270,8 +262,8 @@ public enum Model {
 
     ///////////////////////// Migrating
 
-    @MainActor
-    private final class IndexProxy: IndexerItemProvider {
+    private final class IndexProxy: @MainActor IndexerItemProvider {
+        @MainActor
         func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async {
             for drop in DropStore.allDrops {
                 let go = await perItem(drop)
@@ -279,6 +271,7 @@ public enum Model {
             }
         }
 
+        @MainActor
         func getItem(uuid: String) -> GladysCommon.ArchivedItem? {
             DropStore.item(uuid: uuid)
         }
@@ -372,19 +365,19 @@ public enum Model {
         if brokenMode {
             log("Ignoring save, model is broken, app needs restart.")
         } else {
-            await Task.detached(priority: .background) {
-                do {
-                    try coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
-                } catch {
-                    log("Saving Error: \(error.localizedDescription)")
-                }
-            }.value
+            do {
+                try await coordinatedSave(allItems: saveableItems, dirtyUuids: uuidsToEncode)
+            } catch {
+                log("Saving Error: \(error.localizedDescription)")
+            }
         }
 
         trimTemporaryDirectory()
         ingestItemsIfNeeded()
         stateHandler?(.saveComplete(dueToSyncFetch: dueToSyncFetch))
     }
+
+    private static var commitPool = ContiguousArray<ArchivedItem>()
 
     public static func commitItem(item: ArchivedItem) {
         item.flags.remove(.needsSaving)
@@ -394,28 +387,42 @@ public enum Model {
             return
         }
 
+        commitPool.append(item)
+
         Task {
             await storageGatekeeper.takeTicket()
+
             defer {
                 storageGatekeeper.returnTicket()
             }
-            if brokenMode || item.status == .deleted {
+
+            let pool = commitPool
+            commitPool.removeAll()
+
+            let dirtyItems = pool.filter {
+                $0.status != .deleted
+            }
+
+            if dirtyItems.isEmpty {
                 return
             }
-            let itemsToSave: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
-            await indexDelegate.reIndex(items: [item.searchableItem], in: CSSearchableIndex.default())
-            await Task.detached(priority: .background) {
-                do {
-                    _ = try coordinatedSave(allItems: itemsToSave, dirtyUuids: [item.uuid])
-                    log("Ingest completed for items (\(item.uuid)) and committed to disk")
-                } catch {
-                    log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
-                }
-            }.value
+
+            let dirtyUUIDs = Set(dirtyItems.map(\.uuid))
+            let searchableItems = dirtyItems.map(\.searchableItem)
+            let allItemsToKeepInStorage: ContiguousArray<ArchivedItem> = DropStore.allDrops.filter(\.goodToSave)
+
+            await indexDelegate.reIndex(items: searchableItems, in: CSSearchableIndex.default())
+
+            do {
+                _ = try await coordinatedSave(allItems: allItemsToKeepInStorage, dirtyUuids: dirtyUUIDs)
+                log("Ingest completed for items \(dirtyUUIDs) and committed to disk")
+            } catch {
+                log("Warning: Error while committing item to disk: (\(error.localizedDescription))")
+            }
         }
     }
 
-    private nonisolated static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) throws {
+    @concurrent private static func coordinatedSave(allItems: ContiguousArray<ArchivedItem>, dirtyUuids: Set<UUID>) async throws {
         var closureError: NSError?
         var coordinationError: NSError?
         Coordination.coordinator.coordinate(writingItemAt: itemsDirectoryUrl, options: [], error: &coordinationError) { url in

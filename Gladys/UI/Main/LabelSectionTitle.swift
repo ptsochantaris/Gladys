@@ -269,7 +269,7 @@ final class LabelSectionTitle: UICollectionReusableView {
         labelView.textAlignment = .center
         labelView.setContentHuggingPriority(.required, for: .vertical)
 
-        let number = decimalNumberFormatter.string(for: sectionCount) ?? ""
+        let number = decimalNumberFormat.format(Decimal(sectionCount))
 
         let countView = UILabel(frame: .zero)
         countView.text = "\(number) items"
@@ -306,7 +306,7 @@ extension LabelSectionTitle: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
         var myOptions = menuOptions
         if UIApplication.shared.supportsMultipleScenes, let scene = window?.windowScene {
-            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+            let windowOption = UIAction(title: "Open in Window", image: UIImage(systemName: "macwindow.badge.plus")) { [weak self] _ in
                 guard let self else { return }
                 toggle?.function.openInWindow(from: scene)
             }

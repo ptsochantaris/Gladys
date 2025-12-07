@@ -1,7 +1,6 @@
 import GladysUI
 import UIKit
 
-@MainActor
 protocol AddLabelControllerDelegate: AnyObject {
     func addLabelController(_ addLabelController: AddLabelController, didEnterLabel: String?)
 }

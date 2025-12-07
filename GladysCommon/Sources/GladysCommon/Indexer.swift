@@ -6,14 +6,10 @@
     extension CSSearchableItem: @retroactive @unchecked Sendable {}
 
     public protocol IndexerItemProvider: AnyObject {
-        @MainActor
         func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async
-
-        @MainActor
         func getItem(uuid: String) -> ArchivedItem?
     }
 
-    @MainActor
     public final class Indexer: NSObject, CSSearchableIndexDelegate {
         private weak var itemProvider: IndexerItemProvider!
 
@@ -27,9 +23,10 @@
             log("Indexer disposed")
         }
 
-        public nonisolated func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
+        public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexAllSearchableItemsWithAcknowledgementHandler acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
-            Task { @MainActor in
+            nonisolated(unsafe) let i = itemProvider!
+            Task { @MainActor in // needed explicitly
                 do {
                     log("Clearing items before full reindex")
                     try await searchableIndex.deleteAllSearchableItems()
@@ -37,7 +34,7 @@
                     log("Warning: Error while deleting all items for re-index: \(error.localizedDescription)")
                 }
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughItems { item in
+                await i.iterateThroughItems { item in
                     searchableItems.append(item.searchableItem)
                     if searchableItems.count > 99 {
                         await Self.indexBlock(of: searchableItems, in: searchableIndex)
@@ -54,12 +51,13 @@
             }
         }
 
-        public nonisolated func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
+        public func searchableIndex(_ searchableIndex: CSSearchableIndex, reindexSearchableItemsWithIdentifiers identifiers: [String], acknowledgementHandler: @escaping () -> Void) {
             nonisolated(unsafe) let handler = acknowledgementHandler
-            Task { @MainActor in
+            nonisolated(unsafe) let i = itemProvider!
+            Task { @MainActor in // needed explicitly
                 let identifierSet = Set(identifiers)
                 var searchableItems = [CSSearchableItem]()
-                await itemProvider.iterateThroughItems { item in
+                await i.iterateThroughItems { item in
                     if identifierSet.contains(item.uuid.uuidString) {
                         searchableItems.append(item.searchableItem)
                         if searchableItems.count > 99 {
@@ -78,7 +76,7 @@
             }
         }
 
-        private static func indexBlock(of items: [CSSearchableItem], in index: CSSearchableIndex) async {
+        @concurrent private static func indexBlock(of items: [CSSearchableItem], in index: CSSearchableIndex) async {
             log("Submitting block for indexing")
             do {
                 try await index.indexSearchableItems(items)
@@ -88,15 +86,15 @@
             }
         }
 
-        public nonisolated func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
+        public func data(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String) throws -> Data {
             try data(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
-        public nonisolated func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
+        public func fileURL(for _: CSSearchableIndex, itemIdentifier: String, typeIdentifier: String, inPlace _: Bool) throws -> URL {
             try fileURL(itemIdentifier: itemIdentifier, typeIdentifier: typeIdentifier)
         }
 
-        public nonisolated func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) async {
+        public func reIndex(items: [CSSearchableItem], in index: CSSearchableIndex) async {
             do {
                 try await index.indexSearchableItems(items)
                 log("\(items.count) item(s) indexed")
@@ -105,24 +103,20 @@
             }
         }
 
-        private nonisolated func data(itemIdentifier: String, typeIdentifier: String) throws -> Data {
-            onlyOnMainThread {
-                if let item = itemProvider.getItem(uuid: itemIdentifier),
-                   let data = item.bytes(for: typeIdentifier) {
-                    return data
-                }
-                return Data()
+        private func data(itemIdentifier: String, typeIdentifier: String) throws -> Data {
+            if let item = itemProvider.getItem(uuid: itemIdentifier),
+               let data = onlyOnMainThread({ item.bytes(for: typeIdentifier) }) {
+                return data
             }
+            return Data()
         }
 
-        private nonisolated func fileURL(itemIdentifier: String, typeIdentifier: String) throws -> URL {
-            onlyOnMainThread {
-                if let item = itemProvider.getItem(uuid: itemIdentifier),
-                   let url = item.url(for: typeIdentifier) {
-                    return url as URL
-                }
-                return URL(string: "file://")!
+        private func fileURL(itemIdentifier: String, typeIdentifier: String) throws -> URL {
+            if let item = itemProvider.getItem(uuid: itemIdentifier),
+               let url = onlyOnMainThread({ item.url(for: typeIdentifier) }) {
+                return url as URL
             }
+            return URL(string: "file://")!
         }
     }
 #endif

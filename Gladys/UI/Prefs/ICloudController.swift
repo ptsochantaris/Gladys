@@ -74,7 +74,8 @@ final class ICloudController: GladysViewController {
         let syncing = await CloudManager.syncing
         if transitioning || syncing {
             icloudSwitch.isEnabled = false
-            icloudLabel.text = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            icloudLabel.text = swiftString
             icloudSpinner.startAnimating()
         } else {
             icloudSwitch.isEnabled = true
@@ -130,7 +131,7 @@ final class ICloudController: GladysViewController {
                     await activate()
                 } else {
                     let contentSize = await DropStore.sizeInBytes()
-                    let contentSizeString = diskSizeFormatter.string(fromByteCount: contentSize)
+                    let contentSizeString = diskSizeFormat.format(contentSize)
                     let confirmed = await confirm(title: "Upload Existing Items?",
                                                   message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                                   action: "Proceed", cancel: "Cancel")

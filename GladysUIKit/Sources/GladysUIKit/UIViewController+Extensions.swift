@@ -1,6 +1,5 @@
 import UIKit
 
-@MainActor
 public protocol WindowSizing {
     func sizeWindow()
 }

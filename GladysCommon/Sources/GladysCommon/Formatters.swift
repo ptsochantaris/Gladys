@@ -1,32 +1,9 @@
 import Foundation
 
-@MainActor
-public let diskSizeFormatter = ByteCountFormatter()
+public let diskSizeFormat = ByteCountFormatStyle(style: .file, allowedUnits: .all, spellsOutZero: true, includesActualByteCount: false)
 
-public let agoFormatter: DateComponentsFormatter = {
-    let f = DateComponentsFormatter()
-    f.allowedUnits = [.year, .month, .weekOfMonth, .day, .hour, .minute, .second]
-    f.unitsStyle = .abbreviated
-    f.maximumUnitCount = 2
-    return f
-}()
+public let agoFormat = Date.ComponentsFormatStyle(style: .abbreviated, fields: [.year, .month, .week, .day, .hour, .minute, .second])
 
-public let priceFormatter: NumberFormatter = {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .currency
-    return formatter
-}()
+public let shortDateFormat = Date.FormatStyle(date: .abbreviated, time: .shortened, capitalizationContext: .standalone)
 
-public let shortDateFormatter: DateFormatter = {
-    let d = DateFormatter()
-    d.doesRelativeDateFormatting = true
-    d.dateStyle = .short
-    d.timeStyle = .short
-    return d
-}()
-
-public let decimalNumberFormatter: NumberFormatter = {
-    let n = NumberFormatter()
-    n.numberStyle = .decimal
-    return n
-}()
+public let decimalNumberFormat = Decimal.FormatStyle()

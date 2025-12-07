@@ -3,11 +3,7 @@
 #elseif canImport(UIKit)
     import UIKit
 #endif
-#if !os(watchOS)
-    import CoreSpotlight
-    @preconcurrency import Speech
-    @preconcurrency import Vision
-#endif
+
 import CloudKit
 import Combine
 import Foundation
@@ -18,12 +14,16 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 #if !os(watchOS)
+    import CoreSpotlight
+    import Speech
+    import Vision
+
+    extension SFSpeechRecognitionTask: @retroactive @unchecked Sendable {}
     extension SFSpeechRecognitionResult: @retroactive @unchecked Sendable {}
     extension VNImageBasedRequest: @retroactive @unchecked Sendable {}
 #endif
 
 @MainActor
-@Observable
 public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     public enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
@@ -49,6 +49,13 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
             }
         }
 
+        public var shouldTryToExtendBackgroundTime: Bool {
+            switch self {
+            case .isBeingConstructed, .isBeingIngested: true
+            case .deleted, .needsIngest, .nominal: false
+            }
+        }
+
         public var shouldDisplayLoading: Bool {
             switch self {
             case .isBeingConstructed, .isBeingIngested, .needsIngest: true
@@ -57,12 +64,18 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
+    public var highestPriorityIconItem: Component?
+    public var mostRelevantTypeItem: Component?
+    public var backgroundInfoObject: Component.BackgroundInfoObject?
+    public var presentationPrefetchTask: Task<PresentationInfo, Never>?
+
     public nonisolated let suggestedName: String?
     public nonisolated let uuid: UUID
     public nonisolated let createdAt: Date
 
     public var components: ContiguousArray<Component> = [] {
         didSet {
+            componentsDidUpdate()
             status = .needsIngest // also sets needsSaving
         }
     }
@@ -73,8 +86,22 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
+    private var extendBackground = false {
+        didSet {
+            if extendBackground == oldValue {
+                return
+            }
+            if extendBackground {
+                Maintini.startMaintaining()
+            } else {
+                Maintini.endMaintaining()
+            }
+        }
+    }
+
     public var status: Status = .needsIngest {
         didSet {
+            extendBackground = status.shouldTryToExtendBackgroundTime
             flags.insert(.needsSaving)
         }
     }
@@ -129,7 +156,11 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         public static let editing = Flags(rawValue: 1 << 4)
     }
 
-    public var flags = Flags()
+    public var flags = Flags() {
+        didSet {
+            itemUpdates.send()
+        }
+    }
 
     private enum CodingKeys: String, CodingKey {
         case suggestedName
@@ -152,18 +183,37 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         try v.encode(createdAt, forKey: .createdAt)
         try v.encode(uuid, forKey: .uuid)
 
-        nonisolated(unsafe) var Nv = v
-        try onlyOnMainThread {
-            try Nv.encode(updatedAt, forKey: .updatedAt)
-            try Nv.encode(components, forKey: .components)
-            try Nv.encode(status, forKey: .status)
-            try Nv.encode(note, forKey: .note)
-            try Nv.encode(titleOverride, forKey: .titleOverride)
-            try Nv.encode(labels, forKey: .labels)
-            try Nv.encode(highlightColor, forKey: .highlightColor)
-            try Nv.encodeIfPresent(lockPassword, forKey: .lockPassword)
-            try Nv.encodeIfPresent(lockHint, forKey: .lockHint)
+        var _updatedAt: Date = .distantPast
+        var _components: ContiguousArray<Component> = []
+        var _status: Status = .nominal
+        var _note = ""
+        var _titleOverride = ""
+        var _labels: [String] = []
+        var _highlightColor: ItemColor = .none
+        var _lockPassword: Data?
+        var _lockHint: String?
+
+        onlyOnMainThread {
+            _updatedAt = updatedAt
+            _components = components
+            _status = status
+            _note = note
+            _titleOverride = titleOverride
+            _labels = labels
+            _highlightColor = highlightColor
+            _lockPassword = lockPassword
+            _lockHint = lockHint
         }
+
+        try v.encode(_updatedAt, forKey: .updatedAt)
+        try v.encode(_components, forKey: .components)
+        try v.encode(_status, forKey: .status)
+        try v.encode(_note, forKey: .note)
+        try v.encode(_titleOverride, forKey: .titleOverride)
+        try v.encode(_labels, forKey: .labels)
+        try v.encode(_highlightColor, forKey: .highlightColor)
+        try v.encodeIfPresent(_lockPassword, forKey: .lockPassword)
+        try v.encodeIfPresent(_lockHint, forKey: .lockHint)
     }
 
     public nonisolated init(from decoder: Decoder) throws {
@@ -173,21 +223,23 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         createdAt = c
         uuid = try v.decode(UUID.self, forKey: .uuid)
 
-        nonisolated(unsafe) let Nv = v
-        try onlyOnMainThread {
-            updatedAt = try Nv.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
-            components = try Nv.decode(ContiguousArray<Component>.self, forKey: .components)
-            note = try Nv.decodeIfPresent(String.self, forKey: .note) ?? ""
-            titleOverride = try Nv.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
-            labels = try Nv.decodeIfPresent([String].self, forKey: .labels) ?? []
-            lockHint = try Nv.decodeIfPresent(String.self, forKey: .lockHint)
+        updatedAt = try v.decodeIfPresent(Date.self, forKey: .updatedAt) ?? c
+        components = try v.decode(ContiguousArray<Component>.self, forKey: .components)
+        note = try v.decodeIfPresent(String.self, forKey: .note) ?? ""
+        titleOverride = try v.decodeIfPresent(String.self, forKey: .titleOverride) ?? ""
+        labels = try v.decodeIfPresent([String].self, forKey: .labels) ?? []
+        lockHint = try v.decodeIfPresent(String.self, forKey: .lockHint)
 
-            let lp = try Nv.decodeIfPresent(Data.self, forKey: .lockPassword)
-            lockPassword = lp
+        let lp = try v.decodeIfPresent(Data.self, forKey: .lockPassword)
+        lockPassword = lp
 
-            flags = lp == nil ? [] : .needsUnlock
-            status = try Nv.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
-            highlightColor = try Nv.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+        flags = lp == nil ? [] : .needsUnlock
+        status = try v.decodeIfPresent(Status.self, forKey: .status) ?? .nominal
+        highlightColor = try v.decodeIfPresent(ItemColor.self, forKey: .highlightColor) ?? .none
+
+        onlyOnMainThread {
+            componentsDidUpdate()
+            itemUpdates.send()
         }
     }
 
@@ -211,6 +263,16 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         components = ContiguousArray(item.components.map {
             Component(cloning: $0, newParentUUID: myUUID)
         })
+
+        componentsDidUpdate()
+    }
+
+    deinit {
+        if extendBackground {
+            Task {
+                await Maintini.endMaintaining()
+            }
+        }
     }
 
     public static func importData(providers: [DataImporter], overrides: ImportOverrides?) -> Lista<ArchivedItem> {
@@ -244,6 +306,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         note = overrides?.note ?? ""
         labels = overrides?.labels ?? []
         components = ContiguousArray<Component>()
+        componentsDidUpdate()
         flags = .needsSaving
 
         Task {
@@ -320,7 +383,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         lhs.uuid == rhs.uuid
     }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)
     }
 
@@ -332,37 +395,38 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         displayTitleOrUuid.truncateWithEllipses(limit: 128)
     }
 
+    private func componentsDidUpdate() {
+        highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
+        mostRelevantTypeItem = components.max { $0.contentPriority < $1.contentPriority }
+        backgroundInfoObject = components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
+    }
+
     public var sizeInBytes: Int64 {
         components.reduce(0) { $0 + $1.sizeInBytes }
     }
 
     public var imagePath: URL? {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.imagePath
+        highestPriorityIconItem?.imagePath
     }
 
     public var displayIcon: IMAGE {
         get async {
-            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-            return await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
+            await highestPriorityIconItem?.getComponentIcon() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
     }
 
     public var thumbnail: IMAGE {
         get async {
-            let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-            return await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
+            await highestPriorityIconItem?.getThumbnail() ?? #imageLiteral(resourceName: "iconStickyNote")
         }
     }
 
     public var dominantTypeDescription: String? {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.typeDescription
+        highestPriorityIconItem?.typeDescription
     }
 
     public var displayMode: ArchivedDropItemDisplayType {
-        let highestPriorityIconItem = components.max { $0.displayIconPriority < $1.displayIconPriority }
-        return highestPriorityIconItem?.displayIconContentMode ?? .center
+        highestPriorityIconItem?.displayIconContentMode ?? .center
     }
 
     public var displayText: (String?, NSTextAlignment) {
@@ -398,7 +462,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     public var nonOverridenText: (String?, NSTextAlignment) {
         if let a = components.first(where: { $0.accessoryTitle != nil })?.accessoryTitle { return (a, .center) }
 
-        let highestPriorityItem = components.max { $0.displayTitlePriority < $1.displayTitlePriority }
+        let highestPriorityItem = highestPriorityIconItem
         if let title = highestPriorityItem?.displayTitle {
             let alignment = highestPriorityItem?.displayTitleAlignment ?? .center
             return (title, alignment)
@@ -556,6 +620,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                     try? f.removeItem(atPath: path)
                 }
             }
+            itemUpdates.send()
         }
     }
 
@@ -589,11 +654,8 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                     try? f.removeItem(atPath: path)
                 }
             }
+            itemUpdates.send()
         }
-    }
-
-    public var mostRelevantTypeItem: Component? {
-        components.max { $0.contentPriority < $1.contentPriority }
     }
 
     public var mostRelevantTypeItemImage: Component? {
@@ -629,25 +691,29 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     #if !os(watchOS)
         private func processML(autoText: Bool, autoImage: Bool, ocrImage: Bool, transcribeAudio: Bool, loadingProgress: Progress) async {
             let finalTitle = displayText.0
-            var transcribedText: String?
             let img = imageOfImageComponentIfExists
             let mediaInfo = urlOfMediaComponentIfExists
 
+            var visualRequests = [VNImageBasedRequest]()
             var tags1 = [String]()
+            var transcribedText: String?
 
             if autoImage || ocrImage, displayMode == .fill, let img {
-                let vr = await Task.detached {
-                    var visualRequests = [VNImageBasedRequest]()
+                (visualRequests, tags1, transcribedText) = await Task { @Sendable @concurrent in
+                    var _visualRequests = [VNImageBasedRequest]()
+                    var _tags1 = [String]()
+                    var _transcribedText: String?
+
                     if autoImage {
                         let r = VNClassifyImageRequest { request, _ in
                             if let observations = request.results as? [VNClassificationObservation] {
                                 let relevant = observations.filter {
                                     $0.hasMinimumPrecision(0.7, forRecall: 0)
                                 }.map { $0.identifier.replacingOccurrences(of: "_other", with: "").replacingOccurrences(of: "_", with: " ").capitalized }
-                                tags1.append(contentsOf: relevant)
+                                _tags1.append(contentsOf: relevant)
                             }
                         }
-                        visualRequests.append(r)
+                        _visualRequests.append(r)
                     }
 
                     if ocrImage {
@@ -655,24 +721,24 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                             if let observations = request.results as? [VNRecognizedTextObservation] {
                                 let detectedText = observations.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
                                 if detectedText.isPopulated {
-                                    transcribedText = detectedText
+                                    _transcribedText = detectedText
                                 }
                             }
                         }
                         r.recognitionLevel = .accurate
-                        visualRequests.append(r)
+                        _visualRequests.append(r)
                     }
 
-                    if visualRequests.isPopulated {
+                    if _visualRequests.isPopulated {
                         let handler = VNImageRequestHandler(cgImage: img)
                         do {
-                            try handler.perform(visualRequests)
+                            try handler.perform(_visualRequests)
                         } catch {
                             log("Warning - VNImageRequestHandler failed: \(error.localizedDescription)")
                         }
                     }
 
-                    return visualRequests
+                    return (_visualRequests, _tags1, _transcribedText)
                 }.value
 
                 var speechTask: SFSpeechRecognitionTask?
@@ -704,17 +770,16 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
                     try? FileManager.default.removeItem(at: link)
                 }
 
-                let st = speechTask
-                loadingProgress.cancellationHandler = {
-                    vr.forEach { $0.cancel() }
-                    st?.cancel()
+                loadingProgress.cancellationHandler = { [visualRequests, speechTask] in
+                    visualRequests.forEach { $0.cancel() }
+                    speechTask?.cancel()
                 }
             }
 
             var tags2 = [String]()
 
             if autoText, let finalTitle = transcribedText ?? finalTitle {
-                let tagTask = Task.detached { () -> [String] in
+                let tagTask = Task { @concurrent () async -> [String] in
                     let tagger = NLTagger(tagSchemes: [.nameType])
                     tagger.string = finalTitle
                     let range = finalTitle.startIndex ..< finalTitle.endIndex
@@ -746,14 +811,14 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     #endif
 
-    private func componentIngestDone() async {
+    private func componentIngestDone() {
         status = .nominal
+        componentsDidUpdate()
         Task {
             // timing corner case
             await Task.yield()
-            postModified()
             sendNotification(name: .IngestComplete, object: self)
-            Maintini.endMaintaining()
+            itemUpdates.send()
         }
     }
 
@@ -777,11 +842,8 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
             break
         }
 
-        Maintini.startMaintaining()
         defer {
-            Task {
-                await componentIngestDone()
-            }
+            componentIngestDone()
         }
 
         let loadCount = components.count
@@ -828,11 +890,8 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     private func newItemIngest(providers: [DataImporter], limitToType: String?) async {
-        Maintini.startMaintaining()
         defer {
-            Task {
-                await componentIngestDone()
-            }
+            componentIngestDone()
         }
 
         let loadingProgress = Progress()
@@ -945,16 +1004,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
 
     public let itemUpdates = PassthroughSubject<Void, Never>()
 
-    public func postModified() {
-        presentationGenerator?.cancel()
-        presentationInfoCache[uuid] = nil
-        signalItemUpdate()
-    }
-
-    public func signalItemUpdate() {
-        itemUpdates.send()
-    }
-
     public func cloudKitUpdate(from record: CKRecord) {
         updatedAt = record["updatedAt"] as? Date ?? .distantPast
         titleOverride = record["titleOverride"] as? String ?? ""
@@ -976,7 +1025,6 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
 
         cloudKitRecord = record
-        postModified()
     }
 
     public var parentZone: CKRecordZone.ID {
@@ -1003,36 +1051,5 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         record["lockHint"] = lockHint
         record["highlightColor"] = highlightColor.rawValue
         return record
-    }
-
-    public var backgroundInfoObject: Component.BackgroundInfoObject? {
-        components.compactMap(\.backgroundInfoObject).max { $0.priority < $1.priority }
-    }
-
-    private var presentationGenerator: Task<PresentationInfo?, Never>?
-
-    public var activePresentationGenerationResult: PresentationInfo? {
-        get async {
-            if let presentationGenerator, !presentationGenerator.isCancelled {
-                await presentationGenerator.value
-            } else {
-                nil
-            }
-        }
-    }
-
-    public func cancelPresentationGeneration() async {
-        presentationGenerator?.cancel()
-        _ = await presentationGenerator?.value
-        presentationGenerator = nil
-        presentationInfoCache[uuid] = nil
-    }
-
-    public func usingPresentationGenerator(_ newTask: Task<PresentationInfo?, Never>) async -> PresentationInfo? {
-        presentationGenerator = newTask
-        defer {
-            presentationGenerator = nil
-        }
-        return await newTask.value
     }
 }

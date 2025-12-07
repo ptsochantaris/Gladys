@@ -99,9 +99,11 @@ final class AboutController: GladysViewController {
 
     @IBAction private func aboutSelected(_: UIButton) {
         guard let u = URL(string: "https://bru.build/app/gladys") else { return }
-        UIApplication.shared.connectedScenes.first?.open(u, options: nil) { success in
+        UIApplication.shared.connectedScenes.first?.open(u, options: nil) { [weak self] success in
             if success {
-                self.done()
+                Task { @MainActor in
+                    self?.done()
+                }
             }
         }
     }

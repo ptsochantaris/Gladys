@@ -94,7 +94,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem) {
                     item.labels.append(toggle.function.displayText)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }
@@ -102,7 +101,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem), !item.labels.contains(toggle.function.displayText) {
                     item.labels.append(toggle.function.displayText)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }
@@ -110,7 +108,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem), let i = item.labels.firstIndex(of: toggle.function.displayText) {
                     item.labels.remove(at: i)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }
@@ -230,7 +227,6 @@ final class LabelEditorController: GladysViewController, NotesEditorViewControll
         for selectedItem in selectedItems {
             if let item = DropStore.item(uuid: selectedItem) {
                 item.note = note
-                item.postModified()
                 editedUUIDs.insert(selectedItem)
             }
         }

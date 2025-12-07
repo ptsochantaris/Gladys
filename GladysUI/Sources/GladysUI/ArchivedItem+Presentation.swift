@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import GladysCommon
 import MapKit
@@ -5,81 +6,44 @@ import Semalot
 import SwiftUI
 
 public extension ArchivedItem {
-    private static let warmupLock = Semalot(tickets: UInt(ProcessInfo().processorCount))
-    private static let singleLock = Semalot(tickets: 1)
-
-    @discardableResult
-    func createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        if let existing = presentationInfoCache[uuid] {
-            log(">>> Using cached presentation info for \(uuid.uuidString)")
-            return existing
+    func prefetchPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize) {
+        if presentationPrefetchTask != nil {
+            return
         }
-
-        if let info = await activePresentationGenerationResult {
-            log(">>> Deduped presentation task \(uuid.uuidString)")
+        presentationPrefetchTask = Task { [weak self] in
+            guard let self else {
+                return PresentationInfo()
+            }
+            let info = await createPresentationInfo(style: style, cellSize: cellSize, isPrefetch: true)
+            presentationPrefetchTask = nil
             return info
         }
-
-        let newTask = Task.detached(priority: .userInitiated) { [weak self] in
-            await self?._createPresentationInfo(style: style, expectedSize: expectedSize)
-        }
-        return await usingPresentationGenerator(newTask)
     }
 
-    private nonisolated func _createPresentationInfo(style: ArchivedItemWrapper.Style, expectedSize: CGSize) async -> PresentationInfo? {
-        assert(!Thread.isMainThread)
-
-        let lock = await style == .widget ? ArchivedItem.singleLock : ArchivedItem.warmupLock
-
-        await lock.takeTicket()
-
-        defer {
-            if Task.isCancelled {
-                log(">>> Cancelled presentation task \(uuid.uuidString)")
-            } else {
-                log(">>> Finished presentation task \(uuid.uuidString)")
+    @concurrent func createPresentationInfo(style: ArchivedItemWrapper.Style, cellSize: CGSize, isPrefetch: Bool = false) async -> PresentationInfo {
+        if !isPrefetch, let p = await presentationPrefetchTask {
+            let info = await p.value
+            if info.cellSize == cellSize {
+                return info
             }
-            lock.returnTicket()
         }
 
-        if Task.isCancelled {
-            return nil
-        }
-
-        log(">>> New presentation task \(uuid.uuidString)")
-
+        let (dm, status) = await (displayMode, status)
         let topInfo = await prepareTopText()
-
-        if Task.isCancelled {
-            return nil
-        }
-
         let bottomInfo = await prepareBottomText()
-
-        if Task.isCancelled {
-            return nil
-        }
 
         let defaultColor = PresentationInfo.defaultCardColor
         var top = defaultColor
         var bottom = defaultColor
         var result: IMAGE?
-        let (dm, status) = await (displayMode, status)
 
         if status.shouldDisplayLoading {
             // nothing to do for now
 
         } else if dm == .center || style != .square {
             result = await prepareImage(asThumbnail: style == .widget)
-            if Task.isCancelled {
-                return nil
-            }
 
         } else if let img = await prepareImage(asThumbnail: false) {
-            if Task.isCancelled {
-                return nil
-            }
-
             var processedImage: CIImage?
             let originalSize = img.size
             #if canImport(AppKit)
@@ -93,44 +57,45 @@ public extension ArchivedItem {
             #endif
 
             if var processedImage {
-                if Task.isCancelled {
-                    return nil
-                }
+                if cellSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
+                    let textSize = PresentationInfo.labelSize(for: cellSize)
 
-                if expectedSize.width > 0, topInfo.willBeVisible || bottomInfo.willBeVisible {
-                    let top = topInfo.expectedHeightEstimate(for: expectedSize, atTop: true)
-                    let bottom = bottomInfo.expectedHeightEstimate(for: expectedSize, atTop: false)
+                    let top = topInfo.expectedHeightEstimate(for: textSize, atTop: true)
+                    let bottom = bottomInfo.expectedHeightEstimate(for: textSize, atTop: false)
+
                     if let withBlur = processedImage.applyLensEffect(top: top, bottom: bottom)?.cropped(to: CGRect(origin: .zero, size: originalSize)) {
                         processedImage = withBlur
-                    }
-
-                    if Task.isCancelled {
-                        return nil
-                    }
-                }
-
-                if topInfo.willBeVisible {
-                    top = processedImage.calculateOuterColor(size: originalSize, top: true) ?? defaultColor
-
-                    if Task.isCancelled {
-                        return nil
-                    }
-                }
-
-                if bottomInfo.willBeVisible {
-                    bottom = processedImage.calculateOuterColor(size: originalSize, top: false) ?? defaultColor
-
-                    if Task.isCancelled {
-                        return nil
                     }
                 }
 
                 result = processedImage.asImage
-            }
-        }
 
-        if Task.isCancelled {
-            return nil
+                let t1 = topInfo.willBeVisible
+                let t2 = bottomInfo.willBeVisible
+
+                if t1 || t2, let result, let cgImage = result.getCgImage() {
+                    let wholeWidth = cgImage.width
+                    let wholeHeight = cgImage.height
+                    let dataLen = wholeWidth * wholeHeight * 4
+                    let memory = calloc(1, dataLen)!
+                    defer {
+                        free(memory)
+                    }
+
+                    let context = createCgContext(data: memory, width: wholeWidth, height: wholeHeight)
+                    context.draw(cgImage, in: CGRect(x: 0, y: 0, width: wholeWidth, height: wholeHeight))
+
+                    let rawData = UnsafeMutableRawBufferPointer(start: memory, count: dataLen)
+
+                    if t1 {
+                        top = await result.calculateOuterColor(size: originalSize, top: true, rawData: rawData) ?? defaultColor
+                    }
+
+                    if t2 {
+                        bottom = await result.calculateOuterColor(size: originalSize, top: false, rawData: rawData) ?? defaultColor
+                    }
+                }
+            }
         }
 
         let p = await PresentationInfo(
@@ -145,14 +110,11 @@ public extension ArchivedItem {
             status: status,
             locked: isLocked,
             labels: labels,
-            dominantTypeDescription: dominantTypeDescription
+            dominantTypeDescription: dominantTypeDescription,
+            cellSize: cellSize
         )
 
         presentationInfoCache[uuid] = p
-
-        if Task.isCancelled {
-            return nil
-        }
 
         return p
     }

@@ -5,7 +5,6 @@ import GladysUIKit
 import UIKit
 import UniformTypeIdentifiers
 
-@MainActor
 protocol ResizingCellDelegate: AnyObject {
     func cellNeedsResize(cell: UITableViewCell, caretRect: CGRect?, heightChange: Bool)
 }
@@ -19,8 +18,12 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
 
     var item: ArchivedItem! {
         didSet {
-            itemObservation = item.itemUpdates.sink { [weak self] _ in
-                self?.updateUI()
+            if let item {
+                itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
+                    self?.updateUI()
+                }
+            } else {
+                itemObservation = nil
             }
         }
     }
@@ -139,7 +142,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         }
     }
 
-    @objc private func updateUI() {
+    private func updateUI() {
         view.endEditing(true)
         if item == nil {
             done()
@@ -272,9 +275,10 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         #if os(visionOS)
             let preferredWidth: CGFloat = 480
         #else
-            let preferredWidth: CGFloat = 320
+            let preferredWidth: CGFloat = 360
         #endif
-        let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom)
+        let extra: CGFloat = if #available(iOS 26.0, *), popoverPresentationController?.presentingViewController.view.traitCollection.horizontalSizeClass == .regular { 28 } else { 0 }
+        let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom + extra)
         preferredContentSize = preferredSize
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
         log("Detail view preferred size set to \(preferredSize)")
@@ -378,7 +382,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
                 ]
 
                 if UIApplication.shared.supportsMultipleScenes, let scene = view.window?.windowScene {
-                    children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                    children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "macwindow.badge.plus")) { _ in
                         Filter.Toggle.Function.userLabel(text).openInWindow(from: scene)
                     }, at: 1)
                 }
@@ -606,7 +610,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
                   let e = segue.destination as? HexEdit {
             e.bytes = typeEntry.bytes ?? Data()
 
-            let size = diskSizeFormatter.string(fromByteCount: Int64(e.bytes.count))
+            let size = diskSizeFormat.format(Int64(e.bytes.count))
             e.title = typeEntry.typeDescription + " (\(size))"
 
         } else if segue.identifier == "plistEdit",
@@ -642,8 +646,15 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
 
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-        case 0: 16
-        default: 44
+        case 0:
+            if #available(iOS 26.0, *) {
+                0
+            } else {
+                16
+            }
+
+        default:
+            44
         }
     }
 

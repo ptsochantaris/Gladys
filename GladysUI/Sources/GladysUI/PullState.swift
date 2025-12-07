@@ -207,53 +207,55 @@ final class PullState {
             }
         }
 
-        try await withThrowingDiscardingTaskGroup { taskGroup in
-            for zoneID in zoneIDs {
-                taskGroup.addTask {
-                    var zoneToken = await self.zoneToken(for: zoneID)
-                    var moreComing = true
-                    while moreComing {
-                        let zoneChangesResults: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
-                                                 deletions: [CKDatabase.RecordZoneChange.Deletion],
-                                                 changeToken: CKServerChangeToken,
-                                                 moreComing: Bool)?
-                        do {
-                            zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
-                        } catch {
-                            if error.changeTokenExpired {
-                                zoneToken = nil
-                                await CloudManager.setSyncProgressString("Fetching Full Update…")
-                                log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
-                                continue
-                            } else {
-                                throw error
-                            }
+        var zoneTasks = [Task<Void, Error>]()
+        for zoneID in zoneIDs {
+            let task = Task {
+                var zoneToken = zoneToken(for: zoneID)
+                var moreComing = true
+                while moreComing {
+                    let zoneChangesResults: (modificationResultsByID: [CKRecord.ID: Result<CKDatabase.RecordZoneChange.Modification, Error>],
+                                             deletions: [CKDatabase.RecordZoneChange.Deletion],
+                                             changeToken: CKServerChangeToken,
+                                             moreComing: Bool)?
+                    do {
+                        zoneChangesResults = try await database.recordZoneChanges(inZoneWith: zoneID, since: zoneToken)
+                    } catch {
+                        if error.changeTokenExpired {
+                            zoneToken = nil
+                            await CloudManager.setSyncProgressString("Fetching Full Update…")
+                            log("Zone \(zoneID.zoneName) changes fetch had stale token, will retry")
+                            continue
+                        } else {
+                            throw error
                         }
-
-                        guard let zoneChangesResults else { return }
-
-                        for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
-                            switch fetchResult {
-                            case let .success(modification):
-                                changeQueue.continuation.yield(.itemModified(modification: modification))
-                            case let .failure(error):
-                                log("Changes could not be fetched for record \(recordId): \(error.localizedDescription)")
-                            }
-                        }
-
-                        for deletion in zoneChangesResults.deletions {
-                            changeQueue.continuation.yield(.itemDeleted(deletion: deletion))
-                        }
-
-                        zoneToken = zoneChangesResults.changeToken
-                        moreComing = zoneChangesResults.moreComing
                     }
 
-                    changeQueue.continuation.yield(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
-                }
-            }
-        }
+                    guard let zoneChangesResults else { return }
 
+                    for (recordId, fetchResult) in zoneChangesResults.modificationResultsByID {
+                        switch fetchResult {
+                        case let .success(modification):
+                            changeQueue.continuation.yield(.itemModified(modification: modification))
+                        case let .failure(error):
+                            log("Changes could not be fetched for record \(recordId): \(error.localizedDescription)")
+                        }
+                    }
+
+                    for deletion in zoneChangesResults.deletions {
+                        changeQueue.continuation.yield(.itemDeleted(deletion: deletion))
+                    }
+
+                    zoneToken = zoneChangesResults.changeToken
+                    moreComing = zoneChangesResults.moreComing
+                }
+
+                changeQueue.continuation.yield(.setZoneToken(zoneToken: zoneToken, zoneId: zoneID))
+            }
+            zoneTasks.append(task)
+        }
+        for task in zoneTasks {
+            try await task.value
+        }
         changeQueue.continuation.finish()
         _ = await queueTask.value
     }
@@ -342,24 +344,28 @@ final class PullState {
         await CloudManager.setSyncProgressString("Checking…")
 
         do {
-            let skipCommits = try await withThrowingTaskGroup { group in
+            let privateTask = Task {
                 if scope == nil || scope == .private {
-                    group.addTask {
-                        try await self.fetchDBChanges(database: CloudManager.container.privateCloudDatabase)
-                    }
+                    try await fetchDBChanges(database: CloudManager.container.privateCloudDatabase)
+                } else {
+                    false
                 }
-
-                if scope == nil || scope == .shared {
-                    group.addTask {
-                        try await self.fetchDBChanges(database: CloudManager.container.sharedCloudDatabase)
-                    }
-                }
-
-                return try await group.contains(true)
             }
 
+            let sharedTask = Task {
+                if scope == nil || scope == .shared {
+                    try await fetchDBChanges(database: CloudManager.container.sharedCloudDatabase)
+                } else {
+                    false
+                }
+            }
+
+            let privateResult = try await privateTask.value
+            let sharedResult = try await sharedTask.value
+            let somethingWentWrong = privateResult || sharedResult
+
             try? await CloudManager.fetchMissingShareRecords()
-            await processChanges(commitTokens: !skipCommits)
+            await processChanges(commitTokens: !somethingWentWrong)
 
         } catch {
             await processChanges(commitTokens: false)

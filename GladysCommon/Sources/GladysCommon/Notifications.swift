@@ -17,8 +17,6 @@ public struct PasteRequest {
     public let overrides: ImportOverrides?
 }
 
-extension Notification: @unchecked @retroactive Sendable {}
-
 public extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
     static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
@@ -44,7 +42,7 @@ public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
 }
 
 public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
-    Task {
+    Task { @MainActor in
         for await notification in NotificationCenter.default.notifications(named: name) {
             let obj = notification.object
             await block(obj)

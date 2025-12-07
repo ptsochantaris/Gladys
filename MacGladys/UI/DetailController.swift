@@ -4,7 +4,7 @@ import Combine
 import GladysAppKit
 import GladysCommon
 import GladysUI
-import QuickLookUI
+@preconcurrency import QuickLookUI
 
 final class ComponentCollectionView: NSCollectionView {
     weak var detailController: DetailController?
@@ -17,7 +17,6 @@ final class ComponentCollectionView: NSCollectionView {
     }
 }
 
-@MainActor
 protocol FocusableTextFieldDelegate: AnyObject {
     func fieldReceivedFocus(_ field: FocusableTextField)
 }
@@ -121,16 +120,14 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    deinit {
-        onlyOnMainThread {
-            _ = DetailController.showingUUIDs.remove(item.uuid)
-        }
+    isolated deinit {
+        _ = DetailController.showingUUIDs.remove(item.uuid)
     }
 
     private var itemObservation: Cancellable?
     override var representedObject: Any? {
         didSet {
-            itemObservation = item.itemUpdates.sink { [weak self] _ in
+            itemObservation = item.itemUpdates.debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] _ in
                 self?.updateInfo()
             }
         }
@@ -474,7 +471,7 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    @objc private func editCurrent(_ sender: Any?) {
+    @objc private func editCurrent(_: Any?) {
         guard let typeItem = selectedItem else { return }
         guard let urlString = typeItem.encodedUrl?.absoluteString else { return }
 
@@ -494,15 +491,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.window.initialFirstResponder = textField
         a.beginSheetModal(for: view.window!) { [weak self] response in
             if let self, response.rawValue == 1000 {
-                if let newURL = URL(string: textField.stringValue) {
-                    typeItem.replaceURL(newURL)
-                    item.markUpdated()
-                    item.status = .needsIngest
-                    saveItem()
-                } else {
-                    Task {
+                Task { @MainActor in
+                    if let newURL = URL(string: textField.stringValue) {
+                        typeItem.replaceURL(newURL)
+                        item.markUpdated()
+                        item.status = .needsIngest
+                        saveItem()
+                    } else {
                         await genericAlert(title: "This is not a valid URL", message: textField.stringValue, windowOverride: self.view.window!)
-                        self.editCurrent(sender)
+                        self.editCurrent(nil)
                     }
                 }
             }
@@ -649,21 +646,17 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         }
     }
 
-    nonisolated func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
+    func numberOfPreviewItems(in _: QLPreviewPanel!) -> Int {
         1
     }
 
-    nonisolated func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
-        onlyOnMainThread {
-            selectedItem?.quickLookItem
-        }
+    func previewPanel(_: QLPreviewPanel!, previewItemAt _: Int) -> QLPreviewItem! {
+        selectedItem?.quickLookItem
     }
 
-    nonisolated func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
+    func previewPanel(_: QLPreviewPanel!, handle event: NSEvent!) -> Bool {
         if event.type == .keyDown {
-            onlyOnMainThread {
-                components.keyDown(with: event)
-            }
+            components.keyDown(with: event)
             return true
         }
         return false
@@ -738,22 +731,15 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         view.window?.close()
     }
 
-    nonisolated func sharingService(_: NSSharingService, didSave share: CKShare) {
-        onlyOnMainThread {
-            item.cloudKitShareRecord = share
-            item.postModified()
-        }
+    func sharingService(_: NSSharingService, didSave share: CKShare) {
+        item.cloudKitShareRecord = share
     }
 
-    nonisolated func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
-        onlyOnMainThread {
-            let wasImported = item.isImportedShare
-            item.cloudKitShareRecord = nil
-            if wasImported {
-                Model.delete(items: [item])
-            } else {
-                item.postModified()
-            }
+    func sharingService(_: NSSharingService, didStopSharing _: CKShare) {
+        let wasImported = item.isImportedShare
+        item.cloudKitShareRecord = nil
+        if wasImported {
+            Model.delete(items: [item])
         }
     }
 
@@ -774,10 +760,12 @@ final class DetailController: NSViewController, NSTableViewDelegate, NSTableView
         a.addButton(withTitle: "Options")
         a.beginSheetModal(for: view.window!) { [weak self] response in
             guard let self else { return }
-            if response.rawValue == 1002 {
-                editInvites(sender)
-            } else if response.rawValue == 1001 {
-                deleteShare(sender)
+            Task { @MainActor in
+                if response.rawValue == 1002 {
+                    editInvites(sender)
+                } else if response.rawValue == 1001 {
+                    deleteShare(sender)
+                }
             }
         }
     }

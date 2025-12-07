@@ -5,7 +5,7 @@ import PopTimer
 @preconcurrency import QuickLookUI
 
 final class ViewController: NSViewController, NSCollectionViewDelegate, QLPreviewPanelDataSource, QLPreviewPanelDelegate,
-    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener {
+    NSMenuItemValidation, NSSearchFieldDelegate, NSTouchBarDelegate, FilterDelegate, HighlightListener, NSCollectionViewPrefetching {
     let filter = Filter()
 
     @IBOutlet private var collection: MainCollectionView!
@@ -80,10 +80,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         updateEmptyView()
     }
 
-    private lazy var dataSource = NSCollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { _, _, archivedItem in
-        let item = DropCell()
-        item.representedObject = DropStore.item(uuid: archivedItem.uuid)
-        return item
+    private lazy var dataSource = NSCollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>(collectionView: collection) { _, _, identifier in
+        let cell = DropCell()
+        cell.representedObject = DropStore.item(uuid: identifier.uuid)
+        return cell
     }
 
     override func awakeFromNib() {
@@ -92,6 +92,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         MainActor.assumeIsolated {
             collection.dataSource = dataSource
             collection.registerForDraggedTypes([NSPasteboard.PasteboardType(UTType.item.identifier), NSPasteboard.PasteboardType(UTType.content.identifier)])
+            collection.prefetchDataSource = self
         }
     }
 
@@ -199,7 +200,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             window.title = "…"
             Task {
                 let size = await DropStore.sizeForItems(uuids: selectedItems)
-                let sizeString = diskSizeFormatter.string(fromByteCount: size)
+                let sizeString = diskSizeFormat.format(size)
                 let selectedReport = "Selected \(selectedItems.count) Items: \(sizeString)"
                 window.title = "\(title) — \(selectedReport)"
             }
@@ -257,6 +258,19 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         w.standardWindowButton(.miniaturizeButton)?.isHidden = true
         w.standardWindowButton(.zoomButton)?.isHidden = true
         updateScrollviewInsets()
+    }
+
+    func collectionView(_: NSCollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        guard let cellSize = (collection.collectionViewLayout as? NSCollectionViewFlowLayout)?.itemSize, cellSize.height > 0 else {
+            return
+        }
+
+        for ip in indexPaths {
+            if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
+               let item = DropStore.item(uuid: uuid) {
+                item.prefetchPresentationInfo(style: .square, cellSize: cellSize)
+            }
+        }
     }
 
     func collectionView(_: NSCollectionView, didSelectItemsAt _: Set<IndexPath>) {
@@ -376,6 +390,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
+    @MainActor
     func highlightItem(request: HighlightRequest) async {
         // focusOnChild ignored for now
         resetSearch(andLabels: true)
@@ -615,7 +630,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         let instaLock = lockableSelectedItems.filter { $0.isLocked && !$0.flags.contains(.needsUnlock) }
         for item in instaLock {
             item.flags.insert(.needsUnlock)
-            item.postModified()
         }
 
         let items = lockableSelectedItems
@@ -679,7 +693,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             if success {
                 for item in items {
                     item.flags.remove(.needsUnlock)
-                    item.postModified()
                 }
             } else {
                 unlockWithPassword(items: items, label: label, plural: plural)
@@ -704,7 +717,6 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             let hashed = sha1(text)
             for item in items where item.lockPassword == hashed {
                 item.flags.remove(.needsUnlock)
-                item.postModified()
                 successCount += 1
             }
             if successCount == 0 {
@@ -1195,9 +1207,10 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         NSAnimationContext.runAnimationGroup { _ in
             window.animator().alphaValue = 0
-        }
-        completionHandler: {
-            window.orderOut(nil)
+        } completionHandler: {
+            Task { @MainActor in
+                window.orderOut(nil)
+            }
         }
     }
 }

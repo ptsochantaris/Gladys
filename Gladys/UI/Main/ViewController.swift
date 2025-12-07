@@ -172,23 +172,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt _: IndexPath) {
         let center = cell.center
         let x = center.x
         let y = center.y
-        let w = cell.frame.size.width
+        let w = cell.frame.width
         cell.accessibilityDropPointDescriptors = [
             UIAccessibilityLocationDescriptor(name: "Drop after item", point: CGPoint(x: x + w, y: y), in: collectionView),
             UIAccessibilityLocationDescriptor(name: "Drop before item", point: CGPoint(x: x - w, y: y), in: collectionView)
         ]
-
-        if let cell = cell as? ArchivedItemCell, let uuid = dataSource.itemIdentifier(for: indexPath)?.uuid {
-            configureCell(cell, identifier: uuid)
-        }
-    }
-
-    func collectionView(_: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt _: IndexPath) {
-        (cell as? ArchivedItemCell)?.didEndDisplaying()
     }
 
     private func path(at point: CGPoint) -> IndexPath {
@@ -280,7 +272,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             insert(item: existingItem, at: destinationIndexPath)
             if !PersistedOptions.dontAutoLabelNewItems, filter.isFilteringLabels, existingItem.labels != filter.enabledLabelsForItems {
                 existingItem.labels = Array(Set(existingItem.labels).union(filter.enabledLabelsForItems))
-                existingItem.postModified()
                 existingItem.markUpdated()
             }
             return .save
@@ -470,17 +461,11 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     func collectionView(_: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         let style: ArchivedItemWrapper.Style = PersistedOptions.wideMode ? .wide : .square
-        let compact = cellSize.isCompact
-        let expectedCellSize = CGSize(width: cellSize.width - ArchivedItemWrapper.labelPadding(compact: compact) * 2, height: cellSize.height)
 
         for ip in indexPaths {
             if let uuid = dataSource.itemIdentifier(for: ip)?.uuid,
-               presentationInfoCache[uuid] == nil,
                let item = DropStore.item(uuid: uuid) {
-                log("Prefetching presentation info for \(uuid)")
-                Task {
-                    await item.createPresentationInfo(style: style, expectedSize: expectedCellSize)
-                }
+                item.prefetchPresentationInfo(style: style, cellSize: cellSize)
             }
         }
     }
@@ -557,7 +542,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Task {
                 if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                     item.flags.remove(.needsUnlock)
-                    item.postModified()
                 }
             }
             return
@@ -701,12 +685,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         notifications(for: .ItemCollectionNeedsDisplay) { [weak self] object in
             guard let self else { return }
+            log("Item collection needs display - payload: \(object.debugDescription)")
             if object as? Bool == true || object as? UIWindowScene == view.window?.windowScene {
-                lastLayoutProcessed = 0
-                setupLayout()
-                collection.collectionViewLayout.invalidateLayout()
+                view.setNeedsLayout()
                 updateDataSource(animated: false)
-                collection.reloadData()
+                if let collection {
+                    collection.reloadData()
+                }
             } else {
                 let uuids = filter.filteredDrops.map(\.uuid)
                 DropStore.reloadCells(for: Set(uuids))
@@ -855,7 +840,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private func configureCell(_ cell: ArchivedItemCell, identifier: UUID) {
         cell.wideCell = PersistedOptions.wideMode
-        cell.lowMemoryMode = lowMemoryMode
         cell.owningViewController = self
         cell.archivedDropItem = DropStore.item(uuid: identifier)
         cell.isEditing = isEditing
@@ -924,21 +908,25 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        #if os(visionOS)
-            navigationController?.navigationBar.titleTextAttributes = [
-                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-            ]
-            navigationController?.navigationBar.largeTitleTextAttributes = [
-                .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-            ]
-        #else
-            navigationController?.navigationBar.titleTextAttributes = [
-                .foregroundColor: UIColor.g_colorLightGray
-            ]
-            navigationController?.navigationBar.largeTitleTextAttributes = [
-                .foregroundColor: UIColor.g_colorLightGray
-            ]
-        #endif
+        if #unavailable(iOS 26) {
+            if let navigationBar = navigationController?.navigationBar {
+                #if os(visionOS)
+                    navigationBar.titleTextAttributes = [
+                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                    ]
+                    navigationBar.largeTitleTextAttributes = [
+                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
+                    ]
+                #else
+                    navigationBar.titleTextAttributes = [
+                        .foregroundColor: UIColor.g_colorLightGray
+                    ]
+                    navigationBar.largeTitleTextAttributes = [
+                        .foregroundColor: UIColor.g_colorLightGray
+                    ]
+                #endif
+            }
+        }
 
         let searchController = UISearchController(searchResultsController: nil)
         searchController.obscuresBackgroundDuringPresentation = false
@@ -950,6 +938,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
         searchController.searchBar.isLookToDictateEnabled = true
         navigationItem.searchController = searchController
+        if #available(iOS 26.0, *) {
+            navigationItem.preferredSearchBarPlacement = .integrated
+        }
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
             guard let self, let searchController else { return }
@@ -1010,7 +1001,10 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
             guard let self else { return }
             presentationInfoCache.reset()
-            collection.reloadData()
+            let visibleItems = collection.visibleCells.compactMap { $0 as? ArchivedItemCell }.compactMap(\.archivedDropItem)
+            for item in visibleItems {
+                item.itemUpdates.send()
+            }
         }
     }
 
@@ -1063,7 +1057,8 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
 
         if syncing || transitioning {
-            collection.accessibilityLabel = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            collection.accessibilityLabel = swiftString
         } else {
             collection.accessibilityLabel = "Items"
         }
@@ -1092,34 +1087,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    private var lowMemoryMode = false
-
-    override func didReceiveMemoryWarning() {
-        if let collection {
-            if UIApplication.shared.applicationState == .background {
-                log("Placing UI in background low-memory mode")
-                lowMemoryMode = true
-                collection.reloadData()
-            }
+    func sceneForegrounded() {
+        if emptyView == nil {
+            sendNotification(name: .ItemCollectionNeedsDisplay)
+        } else {
+            blurb(Greetings.randomGreetLine)
         }
-        super.didReceiveMemoryWarning()
     }
 
     func sceneBackgrounded() {
-        lowMemoryMode = true
-        if let collection {
-            collection.reloadData()
-        }
-    }
-
-    func sceneForegrounded() {
-        lowMemoryMode = false
-        if let collection {
-            collection.reloadData()
-        }
-        if emptyView != nil {
-            blurb(Greetings.randomGreetLine)
-        }
+        presentationInfoCache.reset()
     }
 
     private func _modelDataUpdate(_ object: Any?) async {
@@ -1212,7 +1189,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             Task {
                 let drops = someSelected ? filteredDrops.filter { selected.contains($0) } : filteredDrops
                 let size = await DropStore.sizeForItems(uuids: drops.map(\.uuid))
-                let sizeLabel = diskSizeFormatter.string(fromByteCount: size)
+                let sizeLabel = diskSizeFormat.format(size)
                 totalSizeLabel.title = sizeLabel
             }
             deleteButton.isEnabled = someSelected
@@ -1466,7 +1443,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                     Task {
                         if let success = await item.unlock(label: "Unlock Item", action: "Unlock"), success {
                             item.flags.remove(.needsUnlock)
-                            item.postModified()
                         }
                     }
                 }
@@ -1490,7 +1466,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             item.lockHint = nil
         }
         item.markUpdated()
-        item.postModified()
         Task {
             await Model.save()
         }
@@ -1764,66 +1739,52 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         return layout
     }
 
-    private var lastLayoutProcessed: CGFloat = 0
-
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        setupLayout()
-    }
 
-    private func setupLayout() {
         let width = view.safeAreaLayoutGuide.layoutFrame.width
         let wideMode = PersistedOptions.wideMode
-        let forceTwoColumn = PersistedOptions.forceTwoColumnPreference
 
-        let key = width + (wideMode ? 1 : 0) + (forceTwoColumn ? 1 : 0)
-        if lastLayoutProcessed == key {
-            // log("setupLayout not needed")
-            return
-        }
-
-        lastLayoutProcessed = key
-
-        log("setupLayout ran for: \(key)")
+        log("setupLayout running for: \(width)")
 
         #if os(visionOS)
-            if wideMode {
+            collection.collectionViewLayout = if wideMode {
                 if width >= 768 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 24, fixedHeight: 80, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 24, fixedHeight: 80, dataSource: dataSource)
                 }
             } else {
                 if width > 1365 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 5, spacing: 24, dataSource: dataSource)
                 } else if width > 980 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 4, spacing: 24, dataSource: dataSource)
                 } else if width > 438 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 3, spacing: 24, dataSource: dataSource)
                 } else if width > 320 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 24, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 24, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 24, dataSource: dataSource)
                 }
             }
         #else
-            if wideMode {
+            collection.collectionViewLayout = if wideMode {
                 if width >= 768 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 8, fixedHeight: 80, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
+                    createLayout(width: width, columns: 1, spacing: 8, fixedHeight: 80, dataSource: dataSource)
                 }
             } else {
-                if width <= 320, !forceTwoColumn {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
+                if width <= 320, !PersistedOptions.forceTwoColumnPreference {
+                    createLayout(width: width, columns: 1, spacing: 10, fixedWidth: 300, fixedHeight: 200, dataSource: dataSource)
                 } else if width > 1365 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
+                    createLayout(width: width, columns: 5, spacing: 10, dataSource: dataSource)
                 } else if width > 980 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
+                    createLayout(width: width, columns: 4, spacing: 10, dataSource: dataSource)
                 } else if width > 438 {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
+                    createLayout(width: width, columns: 3, spacing: 8, dataSource: dataSource)
                 } else {
-                    collection.collectionViewLayout = createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
+                    createLayout(width: width, columns: 2, spacing: 6, dataSource: dataSource)
                 }
             }
         #endif
@@ -1958,6 +1919,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
+    @MainActor
     func highlightItem(request: HighlightRequest) async {
         guard let uuid = UUID(uuidString: request.uuid) else { return }
         if filter.filteredDrops.contains(where: { $0.uuid == uuid }) {
@@ -2174,7 +2136,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         await provider.registerCKShare(container: CloudManager.container, allowedSharingOptions: .standard) {
             let share = try await CloudManager.share(item: item, rootRecord: rootRecord)
             await item.setCloudKitShareRecord(share)
-            await item.postModified()
             return share
         }
 
@@ -2234,7 +2195,6 @@ extension ViewController: UICloudSharingControllerDelegate {
             return
         }
         item.cloudKitShareRecord = csc.share
-        item.postModified()
     }
 
     func cloudSharingControllerDidStopSharing(_: UICloudSharingController) {
@@ -2256,7 +2216,7 @@ extension ViewController: UICloudSharingControllerDelegate {
                 try? await Task.sleep(for: .seconds(1))
                 Model.delete(items: [item])
             } else {
-                item.postModified()
+                item.itemUpdates.send()
             }
         }
     }

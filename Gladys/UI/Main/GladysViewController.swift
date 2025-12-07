@@ -2,7 +2,6 @@ import GladysCommon
 import GladysUI
 import UIKit
 
-@MainActor
 protocol GladysViewDelegate: AnyObject {
     func movedToWindow()
 }
@@ -214,7 +213,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 
     private lazy var newWindowButton: UIBarButtonItem = {
         let b = UIBarButtonItem(title: "New Window", style: .plain, target: self, action: #selector(newWindowSelected))
-        b.image = UIImage(systemName: "uiwindow.split.2x1")
+        b.image = UIImage(systemName: "macwindow.badge.plus")
         b.tag = 10923
         return b
     }()

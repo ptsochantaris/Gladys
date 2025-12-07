@@ -27,7 +27,7 @@ public extension CloudManager {
     private static let syncProgressDebouncer = PopTimer(timeInterval: 0.1) {
         #if DEBUG
             if let syncProgressString = await syncProgressString {
-                log(">>> Sync label updated: \(syncProgressString)")
+                log(">>> Sync label: \(syncProgressString)")
             } else {
                 log(">>> Sync label cleared")
             }
@@ -63,17 +63,20 @@ public extension CloudManager {
             }
         }
 
-        try await withThrowingDiscardingTaskGroup { group in
-            group.addTask {
-                let pushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
+        let pushTask = Task {
+            let pushState = await PushState(zoneId: privateZoneId, database: container.privateCloudDatabase)
+            try await pushState.perform()
+        }
+        var pushTasks = [pushTask]
+        for sharedZoneId in sharedZonesToPush {
+            let task = Task {
+                let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
                 try await pushState.perform()
             }
-            for sharedZoneId in sharedZonesToPush {
-                group.addTask {
-                    let pushState = await PushState(zoneId: sharedZoneId, database: container.sharedCloudDatabase)
-                    try await pushState.perform()
-                }
-            }
+            pushTasks.append(task)
+        }
+        for task in pushTasks {
+            try await task.value
         }
     }
 
@@ -225,7 +228,8 @@ public extension CloudManager {
         let i = -last.timeIntervalSinceNow
         if i < 1.0 {
             return "Synced"
-        } else if last != .distantPast, let s = agoFormatter.string(from: i) {
+        } else if last != .distantPast {
+            let s = agoFormat.format(last ..< .now)
             return "Synced \(s) ago"
         } else {
             return "Never"
@@ -282,7 +286,6 @@ public extension CloudManager {
                 if let item = await DropStore.item(shareId: recordUUID) {
                     await item.setCloudKitShareRecord(nil)
                     log("Shut down sharing for item \(item.uuid) before deactivation")
-                    await item.postModified()
                 }
             }
         } catch {
@@ -310,14 +313,14 @@ public extension CloudManager {
         }
 
         do {
-            try await withThrowingDiscardingTaskGroup {
-                $0.addTask {
-                    _ = try await container.sharedCloudDatabase.deleteSubscription(withID: sharedDatabaseSubscriptionId)
-                }
-                $0.addTask {
-                    _ = try await container.privateCloudDatabase.deleteSubscription(withID: privateDatabaseSubscriptionId)
-                }
+            let sharedTask = Task {
+                _ = try await container.sharedCloudDatabase.deleteSubscription(withID: sharedDatabaseSubscriptionId)
             }
+            let privateTask = Task {
+                _ = try await container.privateCloudDatabase.deleteSubscription(withID: privateDatabaseSubscriptionId)
+            }
+            try await sharedTask.value
+            try await privateTask.value
         } catch {
             if force { return }
             log("Cloud sync deactivation failed: \(error.localizedDescription)")
@@ -358,16 +361,16 @@ public extension CloudManager {
         log("Updating subscriptions to CK zones")
 
         do {
-            try await withThrowingDiscardingTaskGroup {
-                $0.addTask {
-                    let subscribeToPrivateDatabase = await subscriptionToDatabaseZone(id: privateDatabaseSubscriptionId)
-                    _ = try await container.privateCloudDatabase.modifySubscriptions(saving: [subscribeToPrivateDatabase], deleting: [])
-                }
-                $0.addTask {
-                    let subscribeToSharedDatabase = await subscriptionToDatabaseZone(id: sharedDatabaseSubscriptionId)
-                    _ = try await container.sharedCloudDatabase.modifySubscriptions(saving: [subscribeToSharedDatabase], deleting: [])
-                }
+            let privateTask = Task {
+                let subscribeToPrivateDatabase = subscriptionToDatabaseZone(id: privateDatabaseSubscriptionId)
+                _ = try await container.privateCloudDatabase.modifySubscriptions(saving: [subscribeToPrivateDatabase], deleting: [])
             }
+            let sharedTask = Task {
+                let subscribeToSharedDatabase = subscriptionToDatabaseZone(id: sharedDatabaseSubscriptionId)
+                _ = try await container.sharedCloudDatabase.modifySubscriptions(saving: [subscribeToSharedDatabase], deleting: [])
+            }
+            try await privateTask.value
+            try await sharedTask.value
         } catch {
             log("CK zone subscription failed: \(error.localizedDescription)")
             throw error
@@ -432,36 +435,38 @@ public extension CloudManager {
             return
         }
 
-        try await withThrowingDiscardingTaskGroup { taskGroup in
-            for (zoneId, fetchGroup) in fetchGroups {
-                let groupArray = Array(fetchGroup)
-                taskGroup.addTask {
-                    let c = await container
-                    let database = zoneId == privateZoneId ? c.privateCloudDatabase : c.sharedCloudDatabase
-                    let fetchResults = try await database.records(for: groupArray)
-                    for (id, result) in fetchResults {
-                        switch result {
-                        case let .success(record):
-                            if let share = record as? CKShare, let existingItem = await DropStore.item(shareId: share.recordID.recordName) {
-                                await MainActor.run {
-                                    existingItem.cloudKitShareRecord = share
-                                }
+        var tasks = [Task<Void, Error>]()
+        for (zoneId, fetchGroup) in fetchGroups {
+            let groupArray = Array(fetchGroup)
+            let task = Task {
+                let database = zoneId == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
+                let fetchResults = try await database.records(for: groupArray)
+                for (id, result) in fetchResults {
+                    switch result {
+                    case let .success(record):
+                        if let share = record as? CKShare, let existingItem = await DropStore.item(shareId: share.recordID.recordName) {
+                            await MainActor.run {
+                                existingItem.cloudKitShareRecord = share
                             }
-                        case let .failure(error):
-                            if error.itemDoesNotExistOnServer {
-                                // this share record does not exist. Our local data is wrong
-                                if let itemWithShare = await DropStore.item(shareId: id.recordName) {
-                                    log("Warning: Our local data thinks we have a share in the cloud (\(id.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
-                                    try? await fetchCloudRecord(for: itemWithShare)
-                                }
-                            } else {
-                                log("Error fetching missing share records: \(error.localizedDescription)")
-                                throw error
+                        }
+                    case let .failure(error):
+                        if error.itemDoesNotExistOnServer {
+                            // this share record does not exist. Our local data is wrong
+                            if let itemWithShare = await DropStore.item(shareId: id.recordName) {
+                                log("Warning: Our local data thinks we have a share in the cloud (\(id.recordName) for item (\(itemWithShare.uuid.uuidString), but no such record exists. Trying a rescue of the remote record.")
+                                try? await fetchCloudRecord(for: itemWithShare)
                             }
+                        } else {
+                            log("Error fetching missing share records: \(error.localizedDescription)")
+                            throw error
                         }
                     }
                 }
             }
+            tasks.append(task)
+        }
+        for task in tasks {
+            try await task.value
         }
     }
 
@@ -473,13 +478,11 @@ public extension CloudManager {
             let record = try await database.record(for: recordIdNeedingRefresh)
             log("Replaced local cloud record with latest copy from server (\(item.uuid))")
             await item.setCloudKitRecord(record)
-            await item.postModified()
 
         } catch {
             if error.itemDoesNotExistOnServer {
                 log("Determined no cloud record exists for item, clearing local related cloud records so next sync can re-create them (\(item.uuid))")
                 await item.removeFromCloudkit()
-                await item.postModified()
             }
         }
     }
@@ -545,8 +548,8 @@ public extension CloudManager {
             try await attemptSync(scope: nil, force: force)
 
         case .alreadyShared, .assetFileNotFound, .batchRequestFailed, .constraintViolation, .internalError, .invalidArguments, .limitExceeded, .networkFailure,
-             .networkUnavailable, .operationCancelled, .partialFailure, .participantMayNeedVerification, .permissionFailure, .quotaExceeded,
-             .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem:
+             .networkUnavailable, .operationCancelled, .partialFailure, .participantAlreadyInvited, .participantMayNeedVerification, .permissionFailure,
+             .quotaExceeded, .referenceViolation, .resultsTruncated, .serverRecordChanged, .serverRejectedRequest, .tooManyParticipants, .unknownItem:
             // regular failure
             throw ckError
 
@@ -611,7 +614,6 @@ public extension CloudManager {
             let database = shareId.zoneID == privateZoneId ? container.privateCloudDatabase : container.sharedCloudDatabase
             _ = try await database.deleteRecord(withID: shareId)
             await item.setCloudKitShareRecord(nil)
-            await item.postModified()
         } catch {
             if error.itemDoesNotExistOnServer {
                 do {

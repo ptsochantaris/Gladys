@@ -1,10 +1,6 @@
 import CloudKit
 import Lista
 
-extension CKRecord: @unchecked Sendable {}
-extension CKShare.Metadata: @unchecked Sendable {}
-extension CKRecordZone: @unchecked Sendable {}
-
 @globalActor
 public enum CloudActor {
     public final actor ActorType {}

@@ -127,36 +127,16 @@ public struct ItemView: View {
         }
     }
 
-    private let wrapper = ArchivedItemWrapper()
+    let wrapper: ArchivedItemWrapper
+
     @Environment(\.colorScheme) var colorScheme
 
-    public init() {}
-
-    public func setItem(_ item: ArchivedItem?, for size: CGSize, style: ArchivedItemWrapper.Style) {
-        wrapper.configure(with: item, size: size, style: style)
-    }
-
-    public func didEndDisplaying() {
-        wrapper.clear()
-    }
+    public init(wrapper: ArchivedItemWrapper) { self.wrapper = wrapper }
 
     public var body: some View {
         if wrapper.hasItem {
             itemMode
         }
-    }
-
-    public var shade: Bool {
-        get {
-            wrapper.shade
-        }
-        set {
-            wrapper.shade = newValue
-        }
-    }
-
-    public var accessibilityText: String {
-        wrapper.accessibilityText
     }
 
     @ViewBuilder

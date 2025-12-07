@@ -3,10 +3,11 @@ import GladysCommon
 import GladysUI
 import WidgetKit
 
+@MainActor
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> CurrentState {
         let itemCount = context.family.maxCount - 1
-        let placeholders = onlyOnMainThread { PresentationInfo.placeholders(count: itemCount) }
+        let placeholders = PresentationInfo.placeholders(count: itemCount)
         return CurrentState(date: Date(), displaySize: context.displaySize, items: placeholders)
     }
 
@@ -27,8 +28,7 @@ struct Provider: AppIntentTimelineProvider {
 
             let drops = filter.filteredDrops.prefix(itemCount)
             return await drops.asyncCompactMap {
-                await $0.cancelPresentationGeneration()
-                return await $0.createPresentationInfo(style: .widget, expectedSize: .zero)
+                await $0.createPresentationInfo(style: .widget, cellSize: .zero)
             }
         }.value
 

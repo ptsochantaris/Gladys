@@ -29,10 +29,10 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
             let height: CGFloat = switch self {
             case .none:
                 0
-            case .link:
-                39
+            case let .link(url):
+                url.absoluteString.height(for: size, lineLimit: 1) + 20
             case let .hint(text), let .note(text), let .text(text):
-                min(92, text.height(for: size.width, lineLimit: lineLimit(isTop: atTop, size: size)) + 30)
+                text.height(for: size, lineLimit: lineLimit(isTop: atTop, size: size)) + 20
             }
 
             return height / size.height
@@ -80,7 +80,8 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         }
     }
 
-    public let id: UUID
+    public let id = UUID()
+    public let itemId: UUID
     public let top: LabelInfo
     public let bottom: LabelInfo
     public let image: IMAGE?
@@ -89,17 +90,18 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
     public let hasFullImage: Bool
     public let isPlaceholder: Bool
     public let accessibilityText: String
+    public let cellSize: CGSize
 
-    public nonisolated static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
+    public static func == (lhs: PresentationInfo, rhs: PresentationInfo) -> Bool {
         lhs.id == rhs.id
     }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 
     public init() {
-        id = UUID()
+        itemId = UUID()
         top = LabelInfo()
         bottom = LabelInfo()
         image = nil
@@ -108,6 +110,7 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         hasFullImage = false
         isPlaceholder = true
         accessibilityText = ""
+        cellSize = .zero
     }
 
     public static func placeholders(count: Int) -> [PresentationInfo] {
@@ -125,12 +128,25 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
     #endif
 
-    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?) async {
-        self.id = id
+    public static func labelPadding(compact: Bool) -> CGFloat {
+        #if canImport(AppKit)
+            10
+        #else
+            compact ? 9 : 14
+        #endif
+    }
+
+    public static func labelSize(for cellSize: CGSize) -> CGSize {
+        CGSize(width: cellSize.width - labelPadding(compact: cellSize.isCompact) * 2, height: cellSize.height)
+    }
+
+    public init(id: UUID, topText: FieldContent, top: COLOR, bottomText: FieldContent, bottom: COLOR, image: IMAGE?, highlightColor: ItemColor, hasFullImage: Bool, status: ArchivedItem.Status, locked: Bool, labels: [String]?, dominantTypeDescription: String?, cellSize: CGSize) async {
+        itemId = id
         self.top = LabelInfo(content: topText, backgroundColor: top)
         self.bottom = LabelInfo(content: bottomText, backgroundColor: bottom)
         self.image = image
         self.highlightColor = highlightColor
+        self.cellSize = cellSize
         hasTransparentBackground = self.top.hasTransparentBackground || self.bottom.hasTransparentBackground
         self.hasFullImage = hasFullImage
         isPlaceholder = false

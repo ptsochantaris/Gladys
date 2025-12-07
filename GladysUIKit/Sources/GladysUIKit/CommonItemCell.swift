@@ -26,22 +26,19 @@ open class CommonItemCell: UICollectionViewCell {
         }
     }
 
-    private func invalidateView() {
-        lastLayout = .zero
-        setNeedsLayout()
-    }
-
     open func setup() {
         contentView.backgroundColor = .clear
         contentView.clipsToBounds = false
-        itemViewController.view.backgroundColor = .clear
-        itemViewController.view.isOpaque = false
+
+        let v = itemViewController.view!
+        v.backgroundColor = .clear
+        v.isOpaque = false
+
         layer.shouldRasterize = true
         setNeedsLayout()
 
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
-            guard let archivedDropItem = self?.archivedDropItem else { return }
-            archivedDropItem.signalItemUpdate()
+            self?.archivedDropItem?.itemUpdates.send()
         }
     }
 
@@ -61,16 +58,14 @@ open class CommonItemCell: UICollectionViewCell {
         return UITargetedPreview(view: self, parameters: params)
     }
 
-    private var itemViewController = UIHostingController(rootView: ItemView())
+    private let myWrapper = ArchivedItemWrapper()
+    private lazy var itemViewController = UIHostingController(rootView: ItemView(wrapper: myWrapper))
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
-            invalidateView()
+            lastLayout = .zero
+            setNeedsLayout()
         }
-    }
-
-    public func didEndDisplaying() {
-        itemViewController.rootView.didEndDisplaying()
     }
 
     private var lastLayout = CGSize.zero
@@ -78,11 +73,11 @@ open class CommonItemCell: UICollectionViewCell {
 
     public var shade: Bool {
         get {
-            itemViewController.rootView.shade
+            myWrapper.shade
         }
         set {
             withAnimation {
-                itemViewController.rootView.shade = newValue
+                myWrapper.shade = newValue
             }
         }
     }
@@ -92,22 +87,18 @@ open class CommonItemCell: UICollectionViewCell {
         if lastLayout != currentSize {
             lastLayout = currentSize
 
-            if lowMemoryMode {
-                itemViewController.rootView.didEndDisplaying()
-            } else {
-                itemViewController.rootView.setItem(archivedDropItem, for: bounds.size, style: style)
-            }
+            myWrapper.configure(with: archivedDropItem, size: bounds.size, style: style)
 
             if itemViewController.parent == nil, let owningViewController {
                 owningViewController.addChildController(itemViewController, to: contentView)
             }
-        }
 
-        #if os(visionOS)
-            layer.rasterizationScale = 2
-        #else
-            layer.rasterizationScale = window?.screen.scale ?? UIScreen.main.scale
-        #endif
+            #if os(visionOS)
+                layer.rasterizationScale = 2
+            #else
+                layer.rasterizationScale = window?.screen.scale ?? UIScreen.main.scale
+            #endif
+        }
 
         super.layoutSubviews()
 
@@ -116,7 +107,7 @@ open class CommonItemCell: UICollectionViewCell {
 
     override open var accessibilityValue: String? {
         get {
-            itemViewController.rootView.accessibilityText
+            myWrapper.accessibilityText
         }
         set {}
     }
@@ -128,14 +119,6 @@ open class CommonItemCell: UICollectionViewCell {
         set {}
     }
 
-    public var lowMemoryMode = false {
-        didSet {
-            if lowMemoryMode != oldValue {
-                invalidateView()
-            }
-        }
-    }
-
     override public var isSelected: Bool {
         get { archivedDropItem?.flags.contains(.selected) ?? false }
         set {
@@ -145,7 +128,6 @@ open class CommonItemCell: UICollectionViewCell {
             } else {
                 archivedDropItem.flags.remove(.selected)
             }
-            archivedDropItem.signalItemUpdate()
         }
     }
 
@@ -158,7 +140,6 @@ open class CommonItemCell: UICollectionViewCell {
             } else {
                 archivedDropItem.flags.remove(.editing)
             }
-            archivedDropItem.signalItemUpdate()
         }
     }
 }

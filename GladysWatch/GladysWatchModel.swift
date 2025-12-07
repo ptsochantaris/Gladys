@@ -41,7 +41,7 @@ final class GladysWatchModel: NSObject, WCSessionDelegate {
 
     func getFullUpdate(session: WCSession) {
         if session.activationState == .activated {
-            Task.detached { [weak self] in
+            Task { [weak self] in
                 let reply = try? await session.sendWatchMessage(.updateRequest(full: true))
                 self?.receivedInfo(message: reply)
             }

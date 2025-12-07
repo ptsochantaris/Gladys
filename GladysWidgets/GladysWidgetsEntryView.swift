@@ -40,9 +40,9 @@ struct GladysWidgetsEntryView: View {
         Grid(alignment: .center, horizontalSpacing: spacing, verticalSpacing: spacing) {
             ForEach(rows) { row in
                 GridRow(alignment: .center) {
-                    ForEach(row.items) { item in
-                        Button(intent: itemIntent(for: item.id)) {
-                            ItemCell(item: item, width: W, height: H)
+                    ForEach(row.items) { presentationInfo in
+                        Button(intent: itemIntent(for: presentationInfo.itemId)) {
+                            ItemCell(item: presentationInfo, width: W, height: H)
                                 .allowsHitTesting(false)
                         }
                         .buttonStyle(.plain)

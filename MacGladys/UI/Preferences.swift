@@ -252,9 +252,9 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
     @IBAction private func transcribeSpeechFromMediaChanged(_ sender: NSButton) {
         if sender.integerValue == 1 {
             SFSpeechRecognizer.requestAuthorization { status in
-                switch status {
-                case .authorized:
-                    Task { @MainActor in
+                Task { @MainActor in
+                    switch status {
+                    case .authorized:
                         if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
                             PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
                             await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
@@ -263,14 +263,10 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                             PersistedOptions.transcribeSpeechFromMedia = false
                             await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
                         }
-                    }
-                case .denied, .notDetermined, .restricted:
-                    Task { @MainActor in
+                    case .denied, .notDetermined, .restricted:
                         sender.integerValue = 0
                         PersistedOptions.transcribeSpeechFromMedia = false
-                    }
-                @unknown default:
-                    Task { @MainActor in
+                    @unknown default:
                         sender.integerValue = 0
                         PersistedOptions.transcribeSpeechFromMedia = false
                     }
@@ -368,7 +364,8 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
             syncNowButton.isEnabled = false
             deleteAllButton.isEnabled = false
             eraseAlliCloudDataButton.isHidden = true
-            syncStatus.stringValue = await CloudManager.makeSyncString()
+            let swiftString = await CloudManager.makeSyncString()
+            syncStatus.stringValue = swiftString
             syncStatusHolder.isHidden = false
             syncSpinner.startAnimation(nil)
         } else {
@@ -424,12 +421,12 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
 
     @IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayNotesInMainView = sender.integerValue == 1
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func multipleSwitchChanged(_ sender: NSButton) {
@@ -496,7 +493,7 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                     activationConfirmed()
                 } else {
                     let contentSize = await DropStore.sizeInBytes()
-                    let contentSizeString = diskSizeFormatter.string(fromByteCount: contentSize)
+                    let contentSizeString = diskSizeFormat.format(contentSize)
                     self.confirm(title: "Upload Existing Items?",
                                  message: "If you have previously synced Gladys items they will merge with existing items.\n\nThis may upload up to \(contentSizeString) of data.\n\nIs it OK to proceed?",
                                  action: "Proceed", cancel: "Cancel") { confirmed in
@@ -562,14 +559,16 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
         }
     }
 
-    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
+    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping @MainActor @Sendable (Bool) -> Void) {
         let a = NSAlert()
         a.messageText = title
         a.informativeText = message
         a.addButton(withTitle: action)
         a.addButton(withTitle: cancel)
         a.beginSheetModal(for: view.window!) { response in
-            completion(response == .alertFirstButtonReturn)
+            Task { @MainActor in
+                completion(response == .alertFirstButtonReturn)
+            }
         }
     }
 

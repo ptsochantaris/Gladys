@@ -99,7 +99,6 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem) {
                     item.labels.append(name)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }
@@ -107,7 +106,6 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem), !item.labels.contains(name) {
                     item.labels.append(name)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }
@@ -115,7 +113,6 @@ final class LabelEditorViewController: NSViewController, NSTableViewDataSource, 
             for selectedItem in selectedItems {
                 if let item = DropStore.item(uuid: selectedItem), let i = item.labels.firstIndex(of: name) {
                     item.labels.remove(at: i)
-                    item.postModified()
                     editedUUIDs.insert(selectedItem)
                 }
             }

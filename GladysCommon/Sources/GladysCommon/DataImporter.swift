@@ -23,7 +23,7 @@ public final class DataImporter: Sendable {
             suggestedName = itemProvider.suggestedName
         #endif
 
-        dataLookupTask = Task.detached {
+        dataLookupTask = Task { @concurrent in
             await withTaskGroup { group in
                 for identifier in identifierList {
                     group.addTask {

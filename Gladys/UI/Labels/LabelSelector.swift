@@ -136,7 +136,7 @@ final class LabelSelector: GladysViewController, UITableViewDelegate, UITableVie
             ]
 
             if UIApplication.shared.supportsMultipleScenes, let scene = self.view.window?.windowScene {
-                children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+                children.insert(UIAction(title: "Open in Window", image: UIImage(systemName: "macwindow.badge.plus")) { _ in
                     toggle.function.openInWindow(from: scene)
                 }, at: 1)
             }

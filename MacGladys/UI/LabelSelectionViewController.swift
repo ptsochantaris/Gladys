@@ -97,10 +97,12 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         a.beginSheetModal(for: view.window!) { [weak self] response in
             guard let self else { return }
             if response.rawValue == 1000 {
-                let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-                if text.isPopulated {
-                    presentingGladysVc.filter.renameLabel(name, to: text)
-                    tableView.reloadData()
+                Task { @MainActor in
+                    let text = label.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if text.isPopulated {
+                        presentingGladysVc.filter.renameLabel(name, to: text)
+                        tableView.reloadData()
+                    }
                 }
             }
         }
@@ -124,14 +126,16 @@ final class LabelSelectionViewController: NSViewController, NSTableViewDataSourc
         }
     }
 
-    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping (Bool) -> Void) {
+    private func confirm(title: String, message: String, action: String, cancel: String, completion: @escaping @Sendable @MainActor (Bool) -> Void) {
         let a = NSAlert()
         a.messageText = title
         a.informativeText = message
         a.addButton(withTitle: action)
         a.addButton(withTitle: cancel)
         a.beginSheetModal(for: view.window!) { response in
-            completion(response == .alertFirstButtonReturn)
+            Task { @MainActor in
+                completion(response == .alertFirstButtonReturn)
+            }
         }
     }
 }

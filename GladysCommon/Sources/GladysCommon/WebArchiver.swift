@@ -3,8 +3,8 @@ import SwiftSoup
 import UniformTypeIdentifiers
 
 /// Archiver
-public final actor WebArchiver {
-    public static let shared = WebArchiver()
+public struct WebArchiver {
+    public nonisolated(unsafe) static let shared = WebArchiver()
 
     /// Error type
     public enum ArchiveErrorType: Error {
@@ -12,7 +12,7 @@ public final actor WebArchiver {
         case PlistSerializeFailed
     }
 
-    public func archiveFromUrl(_ urlString: String) async throws -> (Data, String) {
+    @concurrent public func archiveFromUrl(_ urlString: String) async throws -> (Data, String) {
         guard let url = URL(string: urlString) else {
             throw GladysError.networkIssue
         }
@@ -39,9 +39,9 @@ public final actor WebArchiver {
 
         let resources = try resourcePaths(from: url, pageText: pageText)
 
-        let resourceInfo = await withTaskGroup { group -> [String: Sendable] in
+        let resourceInfo = await withTaskGroup { group async -> [String: Sendable] in
             for resourceUrlString in resources {
-                group.addTask { () -> (String, [String: Sendable])? in
+                group.addTask { () async -> (String, [String: Sendable])? in
                     guard let resourceUrl = URL(string: resourceUrlString),
                           let (data, response) = try? await URLSession.shared.data(from: resourceUrl),
                           let response = response as? HTTPURLResponse,
@@ -137,7 +137,7 @@ public final actor WebArchiver {
         public let isThumbnail: Bool
     }
 
-    public func fetchWebPreview(for urlString: String) async throws -> WebPreviewResult {
+    @concurrent public func fetchWebPreview(for urlString: String) async throws -> WebPreviewResult {
         guard let url = URL(string: urlString) else {
             throw GladysError.networkIssue
         }
@@ -297,6 +297,6 @@ public final actor WebArchiver {
     private func fetchImage(url: URL) async throws -> IMAGE? {
         let (data, _) = try await URLSession.shared.data(from: url)
         log("Image fetched for \(url)")
-        return await IMAGE.from(data: data)
+        return IMAGE.from(data: data)
     }
 }
