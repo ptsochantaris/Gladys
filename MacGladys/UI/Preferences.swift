@@ -421,12 +421,12 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
 
     @IBAction private func displayNotesSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayNotesInMainView = sender.integerValue == 1
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func displayLabelsSwitchSelected(_ sender: NSButton) {
         PersistedOptions.displayLabelsInMainView = sender.integerValue == 1
-        sendNotification(name: .ItemCollectionNeedsDisplay, object: nil)
+        sendNotification(name: .ItemCollectionNeedsDisplay)
     }
 
     @IBAction private func multipleSwitchChanged(_ sender: NSButton) {

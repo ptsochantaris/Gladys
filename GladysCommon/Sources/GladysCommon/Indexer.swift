@@ -76,7 +76,7 @@
             }
         }
 
-        private static func indexBlock(of items: [CSSearchableItem], in index: CSSearchableIndex) async {
+        @concurrent private static func indexBlock(of items: [CSSearchableItem], in index: CSSearchableIndex) async {
             log("Submitting block for indexing")
             do {
                 try await index.indexSearchableItems(items)

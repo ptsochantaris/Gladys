@@ -685,10 +685,13 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         notifications(for: .ItemCollectionNeedsDisplay) { [weak self] object in
             guard let self else { return }
+            log("Item collection needs display - payload: \(object.debugDescription)")
             if object as? Bool == true || object as? UIWindowScene == view.window?.windowScene {
                 view.setNeedsLayout()
                 updateDataSource(animated: false)
-                reloadCollection()
+                if let collection {
+                    collection.reloadData()
+                }
             } else {
                 let uuids = filter.filteredDrops.map(\.uuid)
                 DropStore.reloadCells(for: Set(uuids))
@@ -1084,21 +1087,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func sceneBackgrounded() {
-        presentationInfoCache.reset()
-    }
-
-    private func reloadCollection() {
-        guard let collection else {
-            return
-        }
-        collection.reloadData()
-    }
-
     func sceneForegrounded() {
-        if emptyView != nil {
+        if emptyView == nil {
+            sendNotification(name: .ItemCollectionNeedsDisplay)
+        } else {
             blurb(Greetings.randomGreetLine)
         }
+    }
+
+    func sceneBackgrounded() {
+        presentationInfoCache.reset()
     }
 
     private func _modelDataUpdate(_ object: Any?) async {

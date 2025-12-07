@@ -69,6 +69,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         scene.firstController?.userActivity
     }
 
+    func sceneDidBecomeActive(_: UIScene) {
+        updateWindowCount()
+        Model.updateBadge()
+    }
+
+    func sceneWillResignActive(_: UIScene) {
+        updateWindowCount()
+    }
+
     func sceneWillEnterForeground(_ scene: UIScene) {
         updateWindowCount()
         log("Scene foregrounded")
@@ -77,21 +86,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func sceneWillResignActive(_: UIScene) {
-        updateWindowCount()
-    }
-
     func sceneDidEnterBackground(_ scene: UIScene) {
         updateWindowCount()
         if let vc = scene.mainController {
             vc.sceneBackgrounded()
         }
         log("Scene backgrounded")
-    }
-
-    func sceneDidBecomeActive(_: UIScene) {
-        updateWindowCount()
-        Model.updateBadge()
     }
 
     private func updateWindowCount() {
