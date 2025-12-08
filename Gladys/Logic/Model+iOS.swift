@@ -27,7 +27,13 @@ extension Model {
 
             case let .saveComplete(dueToSyncFetch):
                 #if canImport(WidgetKit)
-                    WidgetCenter.shared.reloadAllTimelines()
+                    #if os(visionOS)
+                        if #available(visionOS 26.0, *) {
+                            WidgetCenter.shared.reloadAllTimelines()
+                        }
+                    #else
+                        WidgetCenter.shared.reloadAllTimelines()
+                    #endif
                 #endif
 
                 watchDelegate?.updateContext()

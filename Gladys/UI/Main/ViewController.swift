@@ -938,7 +938,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
         searchController.searchBar.isLookToDictateEnabled = true
         navigationItem.searchController = searchController
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             navigationItem.preferredSearchBarPlacement = .integrated
         }
 
