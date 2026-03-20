@@ -5,14 +5,14 @@ import Foundation
 #endif
 import GladysCommon
 
-public struct SectionIdentifier: Hashable {
+public struct SectionIdentifier: Hashable, @unchecked Sendable {
     public let label: Filter.Toggle?
     public init(label: Filter.Toggle?) {
         self.label = label
     }
 }
 
-public struct ItemIdentifier: Hashable {
+public struct ItemIdentifier: Hashable, @unchecked Sendable {
     public let label: Filter.Toggle?
     public let uuid: UUID
     public init(label: Filter.Toggle?, uuid: UUID) {

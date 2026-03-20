@@ -1,7 +1,7 @@
 import SwiftUI
 import WatchConnectivity
 
-public let nearbyDateFormat = Date.FormatStyle(date: .abbreviated, time: .shortened, locale: .autoupdatingCurrent, calendar: .autoupdatingCurrent, timeZone: .autoupdatingCurrent, capitalizationContext: .standalone)
+let nearbyDateFormat = Date.FormatStyle(date: .abbreviated, time: .shortened, locale: .autoupdatingCurrent, calendar: .autoupdatingCurrent, timeZone: .autoupdatingCurrent, capitalizationContext: .standalone)
 
 private struct Label: View {
     var text: String

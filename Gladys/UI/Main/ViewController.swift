@@ -5,9 +5,6 @@ import Lista
 import PopTimer
 import UIKit
 
-extension ItemIdentifier: @retroactive @unchecked Sendable {}
-extension SectionIdentifier: @retroactive @unchecked Sendable {}
-
 final class ViewController: GladysViewController, UICollectionViewDelegate, UICollectionViewDataSourcePrefetching,
     UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDropDelegate, UICollectionViewDragDelegate,
     UIPopoverPresentationControllerDelegate, FilterDelegate, HighlightListener {
@@ -471,7 +468,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     private func trackCellForAWhile(_ cell: UICollectionViewCell, for popOver: UIPopoverPresentationController, in container: UIView) {
-        var observation: NSKeyValueObservation?
+        nonisolated(unsafe) var observation: NSKeyValueObservation?
         observation = cell.observe(\.center, options: .new) { strongCell, _ in
             Task { @MainActor in
                 let cellRect = strongCell.convert(cell.bounds.insetBy(dx: 6, dy: 6), to: container)
