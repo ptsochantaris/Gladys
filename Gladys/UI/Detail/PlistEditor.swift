@@ -1,7 +1,7 @@
 import GladysCommon
 import GladysUI
 import GladysUIKit
-import UIKit
+public import UIKit
 import UniformTypeIdentifiers
 
 final class PlistEditorCell: UITableViewCell {

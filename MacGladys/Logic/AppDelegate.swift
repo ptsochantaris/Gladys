@@ -352,8 +352,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     }
 
     func application(_: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
-        Task {
-            await CloudManager.received(notificationInfo: userInfo)
+        nonisolated(unsafe) let info = userInfo
+        Task { @CloudActor in
+            await CloudManager.received(notificationInfo: info)
         }
     }
 

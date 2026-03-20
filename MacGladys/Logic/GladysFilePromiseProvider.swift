@@ -68,7 +68,8 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
             return super.pasteboardPropertyList(forType: type)
         default:
             let extraItemOfType = extraItems.first { extraItem in MainActor.assumeIsolated { extraItem.typeIdentifier } == T }
-            if extraItemOfType == nil, T == "public.file-url", let component, let tempPath {
+            let notNil = MainActor.assumeIsolated { extraItemOfType != nil }
+            if notNil, T == "public.file-url", let component, let tempPath {
                 do {
                     let tagCopy = tags
                     try MainActor.assumeIsolated {

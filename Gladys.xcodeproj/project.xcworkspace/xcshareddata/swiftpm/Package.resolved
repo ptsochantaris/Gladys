@@ -1,5 +1,5 @@
 {
-  "originHash" : "f2e92b8c8137a0aa5cffa97b5544348d754f4f34d440324fd7c8f626fab9c587",
+  "originHash" : "5504501b367bbbe8700530753063159ed401c566084e777e9e4c51d6496c82ba",
   "pins" : [
     {
       "identity" : "callbackurlkit-visionos-fork",
@@ -38,15 +38,6 @@
       }
     },
     {
-      "identity" : "lrucache",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/nicklockwood/LRUCache.git",
-      "state" : {
-        "revision" : "e0e9e039b33db8f2ef39b8e25607e38f46b13584",
-        "version" : "1.1.2"
-      }
-    },
-    {
       "identity" : "maintini",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ptsochantaris/maintini",
@@ -74,21 +65,12 @@
       }
     },
     {
-      "identity" : "swift-atomics",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-atomics.git",
-      "state" : {
-        "revision" : "b601256eab081c0f92f059e12818ac1d4f178ff7",
-        "version" : "1.3.0"
-      }
-    },
-    {
       "identity" : "swiftsoup",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup",
       "state" : {
-        "revision" : "4206bc7b8bd9a4ff8e9511211e1b4bff979ef9c4",
-        "version" : "2.11.1"
+        "revision" : "fd541c4b3fa7dcec2e7cfe049505b6e4382cd66b",
+        "version" : "2.13.2"
       }
     },
     {
@@ -96,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
-        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
-        "version" : "0.9.19"
+        "revision" : "22787ffb59de99e5dc1fbfe80b19c97a904ad48d",
+        "version" : "0.9.20"
       }
     }
   ],
