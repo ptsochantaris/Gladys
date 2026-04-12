@@ -71,7 +71,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     }
 
     func reloadItems() {
-        presentationInfoCache.reset()
+        presentationInfoCache.removeAll()
         collection.reloadData()
     }
 
