@@ -41,6 +41,12 @@ open class CommonItemCell: UICollectionViewCell {
             self?.archivedDropItem?.itemUpdates.send()
         }
     }
+    
+    public func restoreWeakItemAfterReload() {
+        if let trackingItem, archivedDropItem == nil {
+            archivedDropItem = DropStore.item(uuid: trackingItem)
+        }
+    }
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,10 +65,12 @@ open class CommonItemCell: UICollectionViewCell {
     }
 
     private let myWrapper = ArchivedItemWrapper()
+    private var trackingItem: UUID?
     private lazy var itemViewController = UIHostingController(rootView: ItemView(wrapper: myWrapper))
     public weak var owningViewController: UIViewController?
     public weak var archivedDropItem: ArchivedItem? {
         didSet {
+            trackingItem = archivedDropItem?.uuid
             lastLayout = .zero
             setNeedsLayout()
         }

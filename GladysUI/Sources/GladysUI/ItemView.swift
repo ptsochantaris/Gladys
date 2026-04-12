@@ -18,11 +18,11 @@ public struct ItemView: View {
                     ProgressView(value: progress)
                         .progressViewStyle(LinearProgressViewStyle())
 
-                    Button(action: {
+                    Button {
                         wrapper.delete()
-                    }, label: {
+                    } label: {
                         Text("Cancel")
-                    })
+                    }
                 }
                 .padding()
             } else {
@@ -127,7 +127,7 @@ public struct ItemView: View {
         }
     }
 
-    let wrapper: ArchivedItemWrapper
+    private let wrapper: ArchivedItemWrapper
 
     @Environment(\.colorScheme) var colorScheme
 

@@ -1,5 +1,6 @@
 import CloudKit
 import Foundation
+import LRUCache
 
 public struct CKRecordCacheEntry {
     public let record: CKRecord?
@@ -9,17 +10,28 @@ public struct CKShareCacheEntry {
     public let share: CKShare?
 }
 
-public let folderUrlCache = Cache<UUID, URL>()
-public let bytesPathCache = Cache<UUID, URL>()
-public let presentationInfoCache = Cache<UUID, PresentationInfo>()
-public let encodedURLCache = Cache<UUID, (Bool, URL?)>()
-public let canPreviewCache = Cache<UUID, Bool>()
+public extension LRUCache {
+    subscript(key: Key) -> Value? {
+        get {
+            value(forKey: key)
+        }
+        set {
+            setValue(newValue, forKey: key)
+        }
+    }
+}
 
-public let cloudKitRecordCache = Cache<UUID, CKRecordCacheEntry>()
-public let cloudKitShareCache = Cache<UUID, CKShareCacheEntry>()
-public let cloudKitDataPathCache = Cache<UUID, URL>()
-public let cloudKitShareDataPathCache = Cache<UUID, URL>()
-public let needsCloudPushCache = Cache<UUID, Bool>()
+public let folderUrlCache = LRUCache<UUID, URL>()
+public let bytesPathCache = LRUCache<UUID, URL>()
+public let presentationInfoCache = LRUCache<UUID, PresentationInfo>()
+public let encodedURLCache = LRUCache<UUID, (Bool, URL?)>()
+public let canPreviewCache = LRUCache<UUID, Bool>()
+
+public let cloudKitRecordCache = LRUCache<UUID, CKRecordCacheEntry>()
+public let cloudKitShareCache = LRUCache<UUID, CKShareCacheEntry>()
+public let cloudKitDataPathCache = LRUCache<UUID, URL>()
+public let cloudKitShareDataPathCache = LRUCache<UUID, URL>()
+public let needsCloudPushCache = LRUCache<UUID, Bool>()
 
 public func clearCacheData(for uuid: UUID) {
     folderUrlCache[uuid] = nil
@@ -38,17 +50,17 @@ public func clearCacheData(for uuid: UUID) {
 }
 
 public func clearCaches() {
-    folderUrlCache.reset()
-    bytesPathCache.reset()
-    presentationInfoCache.reset()
-    encodedURLCache.reset()
-    canPreviewCache.reset()
+    folderUrlCache.removeAll()
+    bytesPathCache.removeAll()
+    presentationInfoCache.removeAll()
+    encodedURLCache.removeAll()
+    canPreviewCache.removeAll()
 
-    cloudKitRecordCache.reset()
-    cloudKitShareCache.reset()
-    cloudKitDataPathCache.reset()
-    cloudKitShareDataPathCache.reset()
-    needsCloudPushCache.reset()
-    encodedURLCache.reset()
-    bytesPathCache.reset()
+    cloudKitRecordCache.removeAll()
+    cloudKitShareCache.removeAll()
+    cloudKitDataPathCache.removeAll()
+    cloudKitShareDataPathCache.removeAll()
+    needsCloudPushCache.removeAll()
+    encodedURLCache.removeAll()
+    bytesPathCache.removeAll()
 }

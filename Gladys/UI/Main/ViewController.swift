@@ -997,7 +997,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
         registerForTraitChanges([UITraitActiveAppearance.self]) { [weak self] (_: UITraitEnvironment, _: UITraitCollection) in
             guard let self else { return }
-            presentationInfoCache.reset()
+            presentationInfoCache.removeAll()
             let visibleItems = collection.visibleCells.compactMap { $0 as? ArchivedItemCell }.compactMap(\.archivedDropItem)
             for item in visibleItems {
                 item.itemUpdates.send()
@@ -1093,10 +1093,16 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
     }
 
     func sceneBackgrounded() {
-        presentationInfoCache.reset()
+        presentationInfoCache.removeAll()
     }
 
     private func _modelDataUpdate(_ object: Any?) async {
+        for cell in collection.visibleCells {
+            if let cell = cell as? ArchivedItemCell {
+                cell.restoreWeakItemAfterReload()
+            }
+        }
+        
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
         let oldSet = Set(oldUUIDs)
 
