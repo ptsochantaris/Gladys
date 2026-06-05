@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24093.7" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vWV-e6-pEn">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24053.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -76,7 +76,7 @@
                                 </connections>
                             </barButtonItem>
                             <barButtonItem tag="382611" title="Paste" id="jsK-Yx-Re8">
-                                <imageReference key="image" image="arrow.down.doc" catalog="system"/>
+                                <imageReference key="image" image="arrow.down.document" catalog="system"/>
                                 <connections>
                                     <action selector="pasteSelected:" destination="BYZ-38-t0r" id="Z8T-pE-mzS"/>
                                 </connections>
@@ -320,7 +320,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JPd-vO-wga">
-                        <rect key="frame" x="0.0" y="24" width="240" height="54"/>
+                        <rect key="frame" x="0.0" y="10" width="240" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -342,7 +342,7 @@ Selecting them will show only items that contain these labels.</string>
                     <toolbarItems/>
                     <size key="freeformSize" width="240" height="240"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8VE-3P-ayT">
-                        <rect key="frame" x="0.0" y="24" width="240" height="54"/>
+                        <rect key="frame" x="0.0" y="10" width="240" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -366,7 +366,7 @@ Selecting them will show only items that contain these labels.</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7Ju-bV-ySp">
-                                <rect key="frame" x="0.0" y="78" width="240" height="162"/>
+                                <rect key="frame" x="0.0" y="64" width="240" height="176"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="gto-xm-PNG">
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="65"/>
@@ -585,7 +585,7 @@ Selecting them will show only items that contain these labels.</string>
     </scenes>
     <color key="tintColor" name="colorTint"/>
     <resources>
-        <image name="arrow.down.doc" catalog="system" width="115" height="128"/>
+        <image name="arrow.down.document" catalog="system" width="115" height="128"/>
         <image name="arrow.up.arrow.down.circle" catalog="system" width="128" height="123"/>
         <image name="checkmark.circle" catalog="system" width="128" height="123"/>
         <image name="checkmark.circle.fill" catalog="system" width="128" height="123"/>
@@ -610,13 +610,13 @@ Selecting them will show only items that contain these labels.</string>
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tertiaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29803921570000003" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

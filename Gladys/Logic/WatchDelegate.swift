@@ -132,7 +132,7 @@ final class WatchDelegate: NSObject, WCSessionDelegate {
 
     @concurrent private static func handleMapItemPreview(mapItem: MKMapItem, size: CGSize, fallbackIcon: UIImage) async -> Data {
         do {
-            let options = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 150, outputSize: size)
+            let options = Images.SnapshotOptions(coordinate: mapItem.location.coordinate, range: 150, outputSize: size)
             let img = try await Images.mapSnapshot(with: options)
             return await proceedWithImage(img, size: size, mode: .fill)
         } catch {
