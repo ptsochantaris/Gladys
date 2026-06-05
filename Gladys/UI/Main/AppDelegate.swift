@@ -15,14 +15,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
 
         Task {
-            if let pushUserInfo = launchOptions?[UIApplication.LaunchOptionsKey.remoteNotification] as? [AnyHashable: Any] {
-                _ = await CloudManager.received(notificationInfo: pushUserInfo)
-            } else {
-                do {
-                    try await CloudManager.opportunisticSyncIfNeeded(force: true)
-                } catch {
-                    log("Error in startup sync: \(error.localizedDescription)")
-                }
+            do {
+                try await CloudManager.opportunisticSyncIfNeeded(force: true)
+            } catch {
+                log("Error in startup sync: \(error.localizedDescription)")
             }
         }
 

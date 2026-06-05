@@ -345,11 +345,12 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
 
         topDivider.isHidden = UIDevice.current.userInterfaceIdiom == .phone
 
-        let pixelHeight: CGFloat = 1 / UIScreen.main.scale
+        let scene = view.window?.windowScene as? UIWindowScene
+        let pixelHeight: CGFloat = 1 / (scene?.screen.scale ?? 2)
         topDividerHeight.constant = pixelHeight
         bottomDividerHeight.constant = pixelHeight
 
-        height.constant = min(400, UIScreen.main.bounds.height * 0.5)
+        height.constant = min(400, (scene?.screen.bounds.height ?? 568) * 0.5)
 
         let config = if traitCollection.horizontalSizeClass == .regular {
             UIImage.SymbolConfiguration(pointSize: 23, weight: .light, scale: .default)
