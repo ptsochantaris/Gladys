@@ -1,5 +1,5 @@
 {
-  "originHash" : "cdf5f3e4c77c9bd3f2995ea4442ddcab366291a5c198d5ff22b5388234b2c0b9",
+  "originHash" : "2c206e6aa72defc3807bc25b8bc6a468fa7ccb2f0061cde8f335f17f3e62e189",
   "pins" : [
     {
       "identity" : "callbackurlkit-visionos-fork",
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scinfu/SwiftSoup",
       "state" : {
-        "revision" : "6c7915e16f729857aec3e99068c361e58a00ed68",
-        "version" : "2.13.4"
+        "revision" : "49dcadd93161f4a44b4994d3a3e8de9f085aface",
+        "version" : "2.13.5"
       }
     },
     {
