@@ -1092,9 +1092,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    func sceneBackgrounded() {
-        presentationInfoCache.removeAll()
-    }
 
     private func _modelDataUpdate(_ object: Any?) async {
         for cell in collection.visibleCells {
