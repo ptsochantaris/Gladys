@@ -1092,7 +1092,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-
     private func _modelDataUpdate(_ object: Any?) async {
         for cell in collection.visibleCells {
             if let cell = cell as? ArchivedItemCell {

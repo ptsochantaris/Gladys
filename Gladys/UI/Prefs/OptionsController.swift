@@ -148,30 +148,36 @@ final class OptionsController: GladysViewController, UIPopoverPresentationContro
     }
 
     @IBAction private func transcribeSpeechInMediaSelected(_ sender: UISwitch) {
-        if sender.isOn {
-            SFSpeechRecognizer.requestAuthorization { status in
-                Task { @MainActor in
-                    switch status {
-                    case .authorized:
-                        if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
-                            PersistedOptions.transcribeSpeechFromMedia = true
-                            await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
-                        } else {
-                            sender.isOn = false
-                            PersistedOptions.transcribeSpeechFromMedia = false
-                            await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
-                        }
-                    case .denied, .notDetermined, .restricted:
-                        sender.isOn = false
-                        PersistedOptions.transcribeSpeechFromMedia = false
-                    @unknown default:
-                        sender.isOn = false
-                        PersistedOptions.transcribeSpeechFromMedia = false
-                    }
+        guard sender.isOn else {
+            PersistedOptions.transcribeSpeechFromMedia = false
+            return
+        }
+
+        Task { @MainActor in
+            // The completion handler fires on a background queue, so it must only touch the Sendable continuation
+            let status = await withCheckedContinuation { continuation in
+                SFSpeechRecognizer.requestAuthorization { @Sendable status in
+                    continuation.resume(returning: status)
                 }
             }
-        } else {
-            PersistedOptions.transcribeSpeechFromMedia = false
+
+            switch status {
+            case .authorized:
+                if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
+                    PersistedOptions.transcribeSpeechFromMedia = true
+                    await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media items with long durations.")
+                } else {
+                    sender.isOn = false
+                    PersistedOptions.transcribeSpeechFromMedia = false
+                    await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                }
+            case .denied, .notDetermined, .restricted:
+                sender.isOn = false
+                PersistedOptions.transcribeSpeechFromMedia = false
+            @unknown default:
+                sender.isOn = false
+                PersistedOptions.transcribeSpeechFromMedia = false
+            }
         }
     }
 
