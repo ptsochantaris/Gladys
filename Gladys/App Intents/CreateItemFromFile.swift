@@ -17,7 +17,9 @@ extension GladysAppIntents {
         @Parameter(title: "Labels")
         var labels: [ArchivedItemLabel]?
 
-        static var title: LocalizedStringResource { "Create item from file" }
+        static var title: LocalizedStringResource {
+            "Create item from file"
+        }
 
         func perform() async throws -> some IntentResult & ReturnsValue<ArchivedItemEntity> & OpensIntent {
             let data: IntentFile = if let file {

@@ -1041,8 +1041,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
             if let drop = DropStore.item(uuid: qlItem.parentUuid), let index = filter.filteredDrops.firstIndex(of: drop) {
                 let frameRealativeToCollection = collection.frameForItem(at: index)
                 let frameRelativeToWindow = collection.convert(frameRealativeToCollection, to: nil)
-                let frameRelativeToScreen = view.window!.convertToScreen(frameRelativeToWindow)
-                return frameRelativeToScreen
+                return view.window!.convertToScreen(frameRelativeToWindow)
             }
             return .zero
         }

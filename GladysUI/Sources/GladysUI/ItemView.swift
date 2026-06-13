@@ -131,7 +131,9 @@ public struct ItemView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
-    public init(wrapper: ArchivedItemWrapper) { self.wrapper = wrapper }
+    public init(wrapper: ArchivedItemWrapper) {
+        self.wrapper = wrapper
+    }
 
     public var body: some View {
         if wrapper.hasItem {

@@ -1105,7 +1105,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
                 cell.restoreWeakItemAfterReload()
             }
         }
-        
+
         let oldUUIDs = filter.filteredDrops.map(\.uuid)
         let oldSet = Set(oldUUIDs)
 

@@ -8,7 +8,9 @@ extension GladysAppIntents {
         @Parameter(title: "Item")
         var entity: ArchivedItemEntity?
 
-        static var title: LocalizedStringResource { "Copy item to clipboard" }
+        static var title: LocalizedStringResource {
+            "Copy item to clipboard"
+        }
 
         func perform() async throws -> some IntentResult {
             guard let entity,

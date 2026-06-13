@@ -9,7 +9,9 @@ import GladysUI
 
 extension GladysAppIntents {
     struct PasteIntoGladys: AppIntent {
-        static var title: LocalizedStringResource { "Paste from clipboard" }
+        static var title: LocalizedStringResource {
+            "Paste from clipboard"
+        }
 
         static let openAppWhenRun = true
 

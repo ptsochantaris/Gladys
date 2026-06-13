@@ -8,7 +8,9 @@ extension GladysAppIntents {
         @Parameter(title: "Item")
         var entity: ArchivedItemEntity?
 
-        static var title: LocalizedStringResource { "Delete item" }
+        static var title: LocalizedStringResource {
+            "Delete item"
+        }
 
         func perform() async throws -> some IntentResult {
             guard let entity,

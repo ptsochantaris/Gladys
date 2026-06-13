@@ -41,7 +41,7 @@ open class CommonItemCell: UICollectionViewCell {
             self?.archivedDropItem?.itemUpdates.send()
         }
     }
-    
+
     public func restoreWeakItemAfterReload() {
         if let trackingItem, archivedDropItem == nil {
             archivedDropItem = DropStore.item(uuid: trackingItem)

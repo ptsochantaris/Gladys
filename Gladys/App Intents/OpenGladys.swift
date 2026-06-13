@@ -10,7 +10,10 @@ extension GladysAppIntents {
 
         enum OpenGladysAction: String, AppEnum {
             case highlight, details, tryQuicklook, tryOpen, userDefault
-            static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Action" }
+            static var typeDisplayRepresentation: TypeDisplayRepresentation {
+                "Gladys Action"
+            }
+
             static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
                 .highlight: DisplayRepresentation(stringLiteral: "Highlight"),
                 .details: DisplayRepresentation(stringLiteral: "Info"),
@@ -29,7 +32,9 @@ extension GladysAppIntents {
         @Parameter(title: "Action", optionsProvider: ActionProvider())
         var action: OpenGladysAction
 
-        static var title: LocalizedStringResource { "Select item" }
+        static var title: LocalizedStringResource {
+            "Select item"
+        }
 
         static let openAppWhenRun = true
 

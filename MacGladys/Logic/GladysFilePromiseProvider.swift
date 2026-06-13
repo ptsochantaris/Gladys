@@ -11,8 +11,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
         let delegate = GladysFileProviderDelegate(item: component, title: title, tempPath: tempPath, tags: tags)
 
         let extra = extraItems.filter { $0.typeIdentifier != "public.file-url" }
-        let p = GladysFilePromiseProvider(fileType: "public.data", delegate: delegate, extraItems: extra, strongReference: delegate, component: component, tempPath: tempPath, tags: tags)
-        return p
+        return GladysFilePromiseProvider(fileType: "public.data", delegate: delegate, extraItems: extra, strongReference: delegate, component: component, tempPath: tempPath, tags: tags)
     }
 
     init(fileType: String, delegate: NSFilePromiseProviderDelegate, extraItems: [Component], strongReference: GladysFileProviderDelegate?, component: Component?, tempPath: URL?, tags: [String]?) {

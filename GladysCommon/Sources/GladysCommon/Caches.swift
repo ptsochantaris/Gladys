@@ -22,17 +22,17 @@ public extension LRUCache {
 }
 
 public extension PresentationInfo {
-    // Approximate bytes of decoded bitmap backing this entry, used as its eviction cost
+    /// Approximate bytes of decoded bitmap backing this entry, used as its eviction cost
     var cacheCost: Int {
         guard let cg = image?.getCgImage() else { return 0 }
         return cg.bytesPerRow * cg.height
     }
 }
 
-// Caches keyed by item identity that hold small computed values; bounded by entry count
+/// Caches keyed by item identity that hold small computed values; bounded by entry count
 private let metadataCountLimit = 1000
 
-// Decoded thumbnail images can be large, so this cache is bounded by total bitmap memory
+/// Decoded thumbnail images can be large, so this cache is bounded by total bitmap memory
 private let presentationMemoryLimit = 128 * 1024 * 1024
 
 public let folderUrlCache = LRUCache<UUID, URL>(countLimit: metadataCountLimit)

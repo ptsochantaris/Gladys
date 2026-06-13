@@ -108,5 +108,7 @@ public enum SortOption {
         }
     }
 
-    public static var options: [SortOption] { [.title, .dateAdded, .dateModified, .note, .label, .size] }
+    public static var options: [SortOption] {
+        [.title, .dateAdded, .dateModified, .note, .label, .size]
+    }
 }

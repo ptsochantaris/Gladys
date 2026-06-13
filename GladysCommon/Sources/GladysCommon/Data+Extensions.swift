@@ -11,8 +11,7 @@ public extension Data {
             && self[0 ..< 2].elementsEqual([0x50, 0x4B])
             && (self[2 ..< 4].elementsEqual([3, 4])
                 || self[2 ..< 4].elementsEqual([5, 6])
-                || self[2 ..< 4].elementsEqual([7, 8])
-            )
+                || self[2 ..< 4].elementsEqual([7, 8]))
     }
 
     static func forceMemoryMapped(contentsOf url: URL) -> Data? {

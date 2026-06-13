@@ -142,7 +142,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    // Transient
+    /// Transient
     public struct Flags: OptionSet, Sendable {
         public let rawValue: Int
         public init(rawValue: Int) {

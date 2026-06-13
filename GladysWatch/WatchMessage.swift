@@ -3,14 +3,14 @@ import WatchConnectivity
 
 extension WCSession: @retroactive @unchecked Sendable {}
 
-enum WatchMessage: Sendable, Codable {
-    struct ImageInfo: Sendable, Codable {
+enum WatchMessage: Codable {
+    struct ImageInfo: Codable {
         let id: String
         let width: CGFloat
         let height: CGFloat
     }
 
-    struct DropInfo: Sendable, Codable {
+    struct DropInfo: Codable {
         let id: String
         let title: String
         let imageDate: Date

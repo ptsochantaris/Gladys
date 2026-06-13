@@ -51,7 +51,7 @@ final class Drop: Identifiable {
     let title: String
     let imageDate: Date
 
-    enum ImageState: Sendable {
+    enum ImageState {
         case none, loading, empty, loaded(image: UIImage)
     }
 

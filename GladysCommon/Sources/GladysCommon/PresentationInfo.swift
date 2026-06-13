@@ -125,7 +125,9 @@ public struct PresentationInfo: Identifiable, Hashable, Sendable {
         private static let defaultCardIsBright = false
     #else
         public static let defaultCardColor = COLOR.g_colorMacCard
-        private static var defaultCardIsBright: Bool { defaultCardColor.isBright } // must be dynamic
+        private static var defaultCardIsBright: Bool {
+            defaultCardColor.isBright
+        } // must be dynamic
     #endif
 
     public static func labelPadding(compact: Bool) -> CGFloat {

@@ -17,12 +17,26 @@ final class PullState {
         case setZoneToken(zoneToken: CKServerChangeToken?, zoneId: CKRecordZone.ID)
     }
 
-    private var newDropCount = 0 { didSet { updateProgress() } }
-    private var newTypeItemCount = 0 { didSet { updateProgress() } }
+    private var newDropCount = 0 {
+        didSet { updateProgress() }
+    }
 
-    private var typeUpdateCount = 0 { didSet { updateProgress() } }
-    private var deletionCount = 0 { didSet { updateProgress() } }
-    private var updateCount = 0 { didSet { updateProgress() } }
+    private var newTypeItemCount = 0 {
+        didSet { updateProgress() }
+    }
+
+    private var typeUpdateCount = 0 {
+        didSet { updateProgress() }
+    }
+
+    private var deletionCount = 0 {
+        didSet { updateProgress() }
+    }
+
+    private var updateCount = 0 {
+        didSet { updateProgress() }
+    }
+
     private var newTypesAppended = 0
 
     private var updatedDatabaseTokens = [CKDatabase.Scope: CKServerChangeToken]()

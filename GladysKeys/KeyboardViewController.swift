@@ -1,7 +1,7 @@
+public import UIKit
 import GladysCommon
 import GladysUI
 import GladysUIKit
-public import UIKit
 
 @MainActor
 private var latestOffset = CGPoint.zero

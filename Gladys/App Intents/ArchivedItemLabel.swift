@@ -7,8 +7,12 @@ extension GladysAppIntents {
 
         static let defaultQuery = ArchivedItemLabelQuery()
 
-        static var typeDisplayRepresentation: TypeDisplayRepresentation { "Gladys Label" }
+        static var typeDisplayRepresentation: TypeDisplayRepresentation {
+            "Gladys Label"
+        }
 
-        var displayRepresentation: DisplayRepresentation { DisplayRepresentation(stringLiteral: id) }
+        var displayRepresentation: DisplayRepresentation {
+            DisplayRepresentation(stringLiteral: id)
+        }
     }
 }
