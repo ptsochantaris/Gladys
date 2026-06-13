@@ -21,17 +21,31 @@ public extension LRUCache {
     }
 }
 
-public let folderUrlCache = LRUCache<UUID, URL>()
-public let bytesPathCache = LRUCache<UUID, URL>()
-public let presentationInfoCache = LRUCache<UUID, PresentationInfo>()
-public let encodedURLCache = LRUCache<UUID, (Bool, URL?)>()
-public let canPreviewCache = LRUCache<UUID, Bool>()
+public extension PresentationInfo {
+    // Approximate bytes of decoded bitmap backing this entry, used as its eviction cost
+    var cacheCost: Int {
+        guard let cg = image?.getCgImage() else { return 0 }
+        return cg.bytesPerRow * cg.height
+    }
+}
 
-public let cloudKitRecordCache = LRUCache<UUID, CKRecordCacheEntry>()
-public let cloudKitShareCache = LRUCache<UUID, CKShareCacheEntry>()
-public let cloudKitDataPathCache = LRUCache<UUID, URL>()
-public let cloudKitShareDataPathCache = LRUCache<UUID, URL>()
-public let needsCloudPushCache = LRUCache<UUID, Bool>()
+// Caches keyed by item identity that hold small computed values; bounded by entry count
+private let metadataCountLimit = 1000
+
+// Decoded thumbnail images can be large, so this cache is bounded by total bitmap memory
+private let presentationMemoryLimit = 128 * 1024 * 1024
+
+public let folderUrlCache = LRUCache<UUID, URL>(countLimit: metadataCountLimit)
+public let bytesPathCache = LRUCache<UUID, URL>(countLimit: metadataCountLimit)
+public let presentationInfoCache = LRUCache<UUID, PresentationInfo>(totalCostLimit: presentationMemoryLimit, countLimit: metadataCountLimit)
+public let encodedURLCache = LRUCache<UUID, (Bool, URL?)>(countLimit: metadataCountLimit)
+public let canPreviewCache = LRUCache<UUID, Bool>(countLimit: metadataCountLimit)
+
+public let cloudKitRecordCache = LRUCache<UUID, CKRecordCacheEntry>(countLimit: metadataCountLimit)
+public let cloudKitShareCache = LRUCache<UUID, CKShareCacheEntry>(countLimit: metadataCountLimit)
+public let cloudKitDataPathCache = LRUCache<UUID, URL>(countLimit: metadataCountLimit)
+public let cloudKitShareDataPathCache = LRUCache<UUID, URL>(countLimit: metadataCountLimit)
+public let needsCloudPushCache = LRUCache<UUID, Bool>(countLimit: metadataCountLimit)
 
 public func clearCacheData(for uuid: UUID) {
     folderUrlCache[uuid] = nil

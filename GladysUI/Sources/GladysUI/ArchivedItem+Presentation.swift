@@ -114,7 +114,7 @@ public extension ArchivedItem {
             cellSize: cellSize
         )
 
-        presentationInfoCache[uuid] = p
+        presentationInfoCache.setValue(p, forKey: uuid, cost: p.cacheCost)
 
         return p
     }
