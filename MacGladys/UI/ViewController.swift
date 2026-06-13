@@ -104,33 +104,33 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
         updateDragOperationIndicators()
 
-        notifications(for: .ModelDataUpdated) { [weak self] object in
+        observe(.ModelDataUpdated) { [weak self] object in
             guard let self else { return }
             filter.rebuildLabels()
             updateEmptyView()
             modelDataUpdate(object)
         }
 
-        notifications(for: .ItemCollectionNeedsDisplay) { [weak self] _ in
+        observe(.ItemCollectionNeedsDisplay) { [weak self] _ in
             self?.itemCollectionNeedsDisplay()
         }
 
-        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+        observe(.CloudManagerStatusChanged) { [weak self] _ in
             await self?.updateTitle()
         }
 
-        notifications(for: .LabelSelectionChanged) { [weak self] _ in
+        observe(.LabelSelectionChanged) { [weak self] _ in
             guard let self else { return }
             collection.deselectAll(nil)
             filter.update(signalUpdate: .animated)
             await updateTitle()
         }
 
-        notifications(for: .AlwaysOnTopChanged) { [weak self] _ in
+        observe(.AlwaysOnTopChanged) { [weak self] _ in
             self?.updateAlwaysOnTop()
         }
 
-        notifications(for: NSScroller.preferredScrollerStyleDidChangeNotification) { [weak self] _ in
+        observe(NSScroller.preferredScrollerStyleDidChangeNotification) { [weak self] _ in
             self?.handleLayout()
         }
 
@@ -157,7 +157,16 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
     deinit {
         modeChangeRegistration = nil
         highlightRegistration?.cancel()
+        for observer in notificationObservers {
+            observer.cancel()
+        }
         log("Main VC deinitialised")
+    }
+
+    private var notificationObservers = [Task<Void, Never>]()
+
+    private func observe(_ name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
+        notificationObservers.append(notifications(for: name, block: block))
     }
 
     private func itemCollectionNeedsDisplay() {

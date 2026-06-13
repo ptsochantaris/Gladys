@@ -108,17 +108,21 @@ public enum LiteModel {
                 let uuids = d.withUnsafeBytes { $0.bindMemory(to: uuid_t.self) }
                 let semaphore = DispatchSemaphore(value: 0)
                 for u in uuids {
-                    nonisolated(unsafe) var go = true
-                    Task { @Sendable in // doubles as an autoreleasepool
-                        let u = UUID(uuid: u)
-                        let dataPath = url.appendingPathComponent(u.uuidString)
-                        if let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) {
-                            go = await perItemCallback(item)
+                    let keepGoing = autoreleasepool { () -> Bool in
+                        let uuid = UUID(uuid: u)
+                        let dataPath = url.appendingPathComponent(uuid.uuidString)
+                        guard let data = try? Data(contentsOf: dataPath), let item = try? decoder.decode(ArchivedItem.self, from: data) else {
+                            return true
                         }
-                        semaphore.signal()
+                        nonisolated(unsafe) var go = true
+                        Task { @Sendable @MainActor in
+                            go = await perItemCallback(item)
+                            semaphore.signal()
+                        }
+                        semaphore.wait()
+                        return go
                     }
-                    semaphore.wait()
-                    if !go { break }
+                    if !keepGoing { break }
                 }
             } catch {
                 log("Error in searching through saved items for a component: \(error)")

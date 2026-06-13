@@ -672,15 +672,21 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     private var dataSource: UICollectionViewDiffableDataSource<SectionIdentifier, ItemIdentifier>!
 
+    private var notificationObservers = [Task<Void, Never>]()
+
+    private func observe(_ name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
+        notificationObservers.append(notifications(for: name, block: block))
+    }
+
     private func setupNotificationHandlers() {
-        notifications(for: .LabelSelectionChanged) { [weak self] _ in
+        observe(.LabelSelectionChanged) { [weak self] _ in
             guard let self else { return }
             filter.update(signalUpdate: .animated, forceAnnounce: filter.groupingMode == .byLabel) // as there may be new label sections to show even if the items don't change
             updateLabelIcon()
             userActivity?.needsSave = true
         }
 
-        notifications(for: .ItemCollectionNeedsDisplay) { [weak self] object in
+        observe(.ItemCollectionNeedsDisplay) { [weak self] object in
             guard let self else { return }
             log("Item collection needs display - payload: \(object.debugDescription)")
             if object as? Bool == true || object as? UIWindowScene == view.window?.windowScene {
@@ -695,15 +701,15 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        notifications(for: .ModelDataUpdated) { [weak self] object in
+        observe(.ModelDataUpdated) { [weak self] object in
             await self?._modelDataUpdate(object)
         }
 
-        notifications(for: .CloudManagerStatusChanged) { [weak self] _ in
+        observe(.CloudManagerStatusChanged) { [weak self] _ in
             await self?.cloudStatusChanged()
         }
 
-        notifications(for: .ReachabilityChanged) { _ in
+        observe(.ReachabilityChanged) { _ in
             guard await CloudManager.syncContextSetting == .wifiOnly, await Reachability.shared.isReachableViaLowCost else {
                 return
             }
@@ -714,20 +720,20 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        notifications(for: .AcceptStarting) { _ in
+        observe(.AcceptStarting) { _ in
             await genericAlert(title: "Accepting Share…", message: nil) { [weak self] alert in
                 guard let self else { return }
                 acceptAlert = alert
             }
         }
 
-        notifications(for: .AcceptEnding) { [weak self] _ in
+        observe(.AcceptEnding) { [weak self] _ in
             guard let self else { return }
             await acceptAlert?.dismiss(animated: true)
             acceptAlert = nil
         }
 
-        notifications(for: .IngestComplete) { [weak self] object in
+        observe(.IngestComplete) { [weak self] object in
             if let self,
                let item = object as? ArchivedItem,
                let firstIdentifier = dataSource.snapshot().itemIdentifiers.first(where: { $0.uuid == item.uuid }),
@@ -746,7 +752,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         // Not using notifications macro because registration needs to be immediate
         highlightRegistration = HighlightRequest.registerListener(listener: self)
 
-        notifications(for: .UIRequest) { [weak self] object in
+        observe(.UIRequest) { [weak self] object in
             guard let self,
                   let request = object as? UIRequest,
                   request.sourceScene == view.window?.windowScene
@@ -764,18 +770,18 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        notifications(for: .DismissPopoversRequest) { [weak self] _ in
+        observe(.DismissPopoversRequest) { [weak self] _ in
             await self?.dismissAnyPopOver()
         }
 
-        notifications(for: .ResetSearchRequest) { [weak self] _ in
+        observe(.ResetSearchRequest) { [weak self] _ in
             guard let self else { return }
             if searchActive || filter.isFiltering {
                 await resetSearch(andLabels: true)
             }
         }
 
-        notifications(for: UIApplication.keyboardWillHideNotification) { [weak self] _ in
+        observe(UIApplication.keyboardWillHideNotification) { [weak self] _ in
             guard let self else { return }
             if presentedViewController != nil {
                 return
@@ -788,7 +794,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        notifications(for: .SectionHeaderTapped) { [weak self] object in
+        observe(.SectionHeaderTapped) { [weak self] object in
             guard let self, let event = object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
             var name = event.name
 
@@ -807,7 +813,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             userActivity?.needsSave = true
         }
 
-        notifications(for: .SectionShowAllTapped) { [weak self] object in
+        observe(.SectionShowAllTapped) { [weak self] object in
             guard let self, let event = object as? BackgroundSelectionEvent, event.scene == view.window?.windowScene else { return }
             var name = event.name
 
@@ -935,9 +941,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         searchController.searchBar.focusGroupIdentifier = "build.bru.gladys.searchbar"
         searchController.searchBar.isLookToDictateEnabled = true
         navigationItem.searchController = searchController
-        if #available(iOS 26.0, visionOS 26.0, *) {
-            navigationItem.preferredSearchBarPlacement = .integrated
-        }
+        navigationItem.preferredSearchBarPlacement = .integrated
 
         searchTimer = PopTimer(timeInterval: 0.4) { [weak searchController, weak self] in
             guard let self, let searchController else { return }
@@ -1007,6 +1011,9 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
 
     deinit {
         highlightRegistration?.cancel()
+        for observer in notificationObservers {
+            observer.cancel()
+        }
         log("Main VC deinitialised")
     }
 

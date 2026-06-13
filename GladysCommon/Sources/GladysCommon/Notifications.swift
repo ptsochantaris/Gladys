@@ -41,9 +41,11 @@ public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
     }
 }
 
-public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) {
+@discardableResult
+public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) -> Task<Void, Never> {
     Task { @MainActor in
         for await notification in NotificationCenter.default.notifications(named: name) {
+            if Task.isCancelled { return }
             let obj = notification.object
             await block(obj)
         }

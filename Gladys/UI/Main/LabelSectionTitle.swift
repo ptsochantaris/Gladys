@@ -17,6 +17,7 @@ final class PassthroughStackView: UIStackView {
 final class ScrollFadeView: UICollectionReusableView {
     private weak var viewController: ViewController?
     private var toggle: Filter.Toggle?
+    private var notificationObserver: Task<Void, Never>?
 
     private var sectionCount: Int {
         guard let viewController, let toggle else {
@@ -38,7 +39,7 @@ final class ScrollFadeView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
-        notifications(for: .ModelDataUpdated) { [weak self] _ in
+        notificationObserver = notifications(for: .ModelDataUpdated) { [weak self] _ in
             self?.updateColor()
         }
 
@@ -46,6 +47,10 @@ final class ScrollFadeView: UICollectionReusableView {
             guard let self else { return }
             updateColor()
         }
+    }
+
+    deinit {
+        notificationObserver?.cancel()
     }
 
     private func updateColor() {
@@ -91,6 +96,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     private var layoutForColumnCount = 0
     fileprivate var toggle: Filter.Toggle?
     private weak var viewController: ViewController?
+    private var notificationObserver: Task<Void, Never>?
 
     private static let titleStyle = UIFont.TextStyle.subheadline
 
@@ -175,7 +181,7 @@ final class LabelSectionTitle: UICollectionReusableView {
             bottomLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 44)
         ])
 
-        notifications(for: .ModelDataUpdated) { [weak self] _ in
+        notificationObserver = notifications(for: .ModelDataUpdated) { [weak self] _ in
             self?.setNeedsLayout()
         }
     }
@@ -186,7 +192,7 @@ final class LabelSectionTitle: UICollectionReusableView {
     }
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        notificationObserver?.cancel()
     }
 
     func configure(with toggle: Filter.Toggle, firstSection: Bool, viewController: ViewController, menuOptions: [UIMenuElement]) {

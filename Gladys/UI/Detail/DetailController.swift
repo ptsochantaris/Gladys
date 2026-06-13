@@ -277,7 +277,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
         #else
             let preferredWidth: CGFloat = 360
         #endif
-        let extra: CGFloat = if #available(iOS 26.0, *), popoverPresentationController?.presentingViewController.view.traitCollection.horizontalSizeClass == .regular { 28 } else { 0 }
+        let extra: CGFloat = if popoverPresentationController?.presentingViewController.view.traitCollection.horizontalSizeClass == .regular { 28 } else { 0 }
         let preferredSize = CGSize(width: preferredWidth, height: table.contentSize.height + table.contentInset.top + table.contentInset.bottom + extra)
         preferredContentSize = preferredSize
         popoverPresentationController?.presentedViewController.preferredContentSize = preferredSize
@@ -647,11 +647,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            if #available(iOS 26.0, *) {
-                0
-            } else {
-                16
-            }
+            0
 
         default:
             44

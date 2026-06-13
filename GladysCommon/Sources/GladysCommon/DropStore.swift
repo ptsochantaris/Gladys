@@ -36,9 +36,13 @@ public enum DropStore {
 
     public static func sortDrops(by sequence: [UUID]) {
         if sequence.isEmpty { return }
+        var positions = [UUID: Int](minimumCapacity: sequence.count)
+        for (index, uuid) in sequence.enumerated() where positions[uuid] == nil {
+            positions[uuid] = index
+        }
         dropStore.sort { i1, i2 in
-            let p1 = sequence.firstIndex(of: i1.uuid) ?? -1
-            let p2 = sequence.firstIndex(of: i2.uuid) ?? -1
+            let p1 = positions[i1.uuid] ?? -1
+            let p2 = positions[i2.uuid] ?? -1
             return p1 < p2
         }
         uuidindex = nil
