@@ -1,5 +1,5 @@
 {
-  "originHash" : "2c206e6aa72defc3807bc25b8bc6a468fa7ccb2f0061cde8f335f17f3e62e189",
+  "originHash" : "af8e1416daf05bf8038ecdfc149399ffaa3918da418e3de5cb6630173d483c15",
   "pins" : [
     {
       "identity" : "callbackurlkit-visionos-fork",
@@ -34,7 +34,7 @@
       "location" : "https://github.com/ptsochantaris/lista",
       "state" : {
         "branch" : "main",
-        "revision" : "548c1ae3f64d265bbf95c324002ded901e3af55e"
+        "revision" : "56e6a46113f48e5db6b76997ec2c828f14df52d7"
       }
     },
     {
@@ -52,7 +52,7 @@
       "location" : "https://github.com/ptsochantaris/maintini",
       "state" : {
         "branch" : "main",
-        "revision" : "fa3c7d1b5ee1ac78842e78857707e2f97f42cbb4"
+        "revision" : "7aac5d225361b6c91db19b9c1e8540ec01935ce7"
       }
     },
     {
@@ -61,7 +61,7 @@
       "location" : "https://github.com/ptsochantaris/pop-timer",
       "state" : {
         "branch" : "main",
-        "revision" : "976417188ba25b95ef9e469927502e722f2eca68"
+        "revision" : "f1267d84a18f4dbdd97875949659226eb770318d"
       }
     },
     {
@@ -70,7 +70,7 @@
       "location" : "https://github.com/ptsochantaris/semalot",
       "state" : {
         "branch" : "main",
-        "revision" : "25ad59cdcfab8666ff151d639bd354cc9977af10"
+        "revision" : "c447f306834752de8ff0d3f49509026af1ad37f5"
       }
     },
     {
