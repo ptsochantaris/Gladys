@@ -13,6 +13,8 @@ final class PushState {
     private let recordsToUpload: [[CKRecord]]
     private let currentUUIDSequence: [String]
 
+    private let recordsByItem: [String: Set<String>]
+
     init(zoneId: CKRecordZone.ID, database: CKDatabase) async {
         self.database = database
 
@@ -23,6 +25,7 @@ final class PushState {
         var _dropsToPush = 0
         var _dataItemsToPush = 0
         var _recordsToDelete = 0
+        var _recordsByItem = [String: Set<String>]()
 
         var _recordsToUpload = await drops.asyncCompactMap { @SyncActor item -> [CKRecord]? in
             guard let itemRecord = await item.populatedCloudKitRecord,
@@ -35,8 +38,10 @@ final class PushState {
             _dropsToPush += 1
 
             let itemId = item.uuid.uuidString
+            let componentIds = await components.asyncMap { @MainActor in $0.uuid.uuidString }
             idsToPush.insert(itemId)
-            await idsToPush.formUnion(components.asyncMap { @MainActor in $0.uuid.uuidString })
+            idsToPush.formUnion(componentIds)
+            _recordsByItem[itemId] = Set(componentIds + [itemId])
 
             var payload = await components.asyncMap { @MainActor in $0.populatedCloudKitRecord }
             payload.append(itemRecord)
@@ -107,6 +112,7 @@ final class PushState {
         dropsToPush = _dropsToPush
         recordsToUpload = _recordsToUpload
         recordsToDelete = _recordsToDelete
+        recordsByItem = _recordsByItem
     }
 
     private static func sequenceNeedsUpload(_ currentSequence: [String]) async -> Bool {
@@ -137,6 +143,27 @@ final class PushState {
         let paddedDeletionRecordIds = recordIdsToDelete + [[CKRecord.ID]](repeating: [], count: max(0, diff))
         let updatePairs = zip(paddedRecordsToUpload, paddedDeletionRecordIds)
 
+        // Records confirmed saved by the server, keyed by record name. Because uploads are not
+        // atomic and a single item's records can be spread across several operations, we only
+        // commit (and clear needsCloudPush) once every record belonging to an item has landed.
+        var savedRecords = [String: CKRecord]()
+
+        func commitFullyConfirmedItems() async {
+            let confirmed = Set(savedRecords.keys)
+            for (itemId, requiredRecords) in recordsByItem where requiredRecords.isSubset(of: confirmed) {
+                for recordId in requiredRecords where recordId != itemId {
+                    if let component = await DropStore.component(uuid: recordId), let record = savedRecords[recordId] {
+                        await component.setCloudKitRecord(record)
+                        componentsToPush -= 1
+                    }
+                }
+                if let item = await DropStore.item(uuid: itemId), let record = savedRecords[itemId] {
+                    await item.setCloudKitRecord(record) // clears needsCloudPush
+                    dropsToPush -= 1
+                }
+            }
+        }
+
         do {
             for (updateRecordList, deletionIdList) in updatePairs {
                 let outcome = try await database.modifyRecords(saving: updateRecordList, deleting: deletionIdList, savePolicy: .allKeys, atomically: false)
@@ -153,13 +180,8 @@ final class PushState {
                                 CloudManager.uuidSequenceRecord = record
                             }
 
-                        } else if let item = await DropStore.item(uuid: uuid) {
-                            await item.setCloudKitRecord(record)
-                            dropsToPush -= 1
-
-                        } else if let component = await DropStore.component(uuid: uuid) {
-                            await component.setCloudKitRecord(record)
-                            componentsToPush -= 1
+                        } else {
+                            savedRecords[uuid] = record
                         }
 
                     case let .failure(error):
@@ -192,9 +214,12 @@ final class PushState {
             }
 
         } catch {
+            await commitFullyConfirmedItems()
             updateSyncMessage()
             log("Error updating cloud records: \(error.localizedDescription)")
             throw error
         }
+
+        await commitFullyConfirmedItems()
     }
 }

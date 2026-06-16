@@ -5,10 +5,10 @@ import PackageDescription
 let package = Package(
     name: "GladysCommon",
     platforms: [
-        .macOS(.v14),
-        .iOS(.v18),
-        .watchOS(.v10),
-        .visionOS(.v2)
+        .macOS(.v26),
+        .iOS(.v26),
+        .watchOS(.v26),
+        .visionOS(.v26)
     ],
     products: [
         .library(

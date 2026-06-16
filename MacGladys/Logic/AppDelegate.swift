@@ -346,7 +346,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
             do {
                 try await CloudManager.opportunisticSyncIfNeeded()
             } catch {
-                log("Error in system wake triggered sync: \(error.localizedDescription)")
+                log("Error in system-wake triggered sync: \(error.localizedDescription)")
             }
         }
     }

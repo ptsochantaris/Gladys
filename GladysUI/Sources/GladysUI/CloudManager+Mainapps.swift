@@ -492,6 +492,8 @@ public extension CloudManager {
             return
         }
 
+        try? await Model.reloadDataIfNeeded()
+
         if force || lastSyncCompletion.timeIntervalSinceNow < -60 {
             try await sync()
             return
@@ -661,7 +663,7 @@ public extension CloudManager {
         syncing = true
 
         do {
-            while await DropStore.ingestingItems == true {
+            while await DropStore.ingestingItems {
                 log("Waiting for ingest to complete before syncing up")
                 try? await Task.sleep(nanoseconds: 500 * NSEC_PER_MSEC)
             }

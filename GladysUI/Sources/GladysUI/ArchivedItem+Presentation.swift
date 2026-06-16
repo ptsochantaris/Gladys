@@ -151,7 +151,7 @@ public extension ArchivedItem {
         if let bgItem = backgroundInfoObject {
             switch bgItem.content {
             case let .map(mapItem):
-                let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.placemark.coordinate, range: 200, outputSize: imageDimensions)
+                let snapshotOptions = Images.SnapshotOptions(coordinate: mapItem.location.coordinate, range: 200, outputSize: imageDimensions)
                 return try? await Images.mapSnapshot(with: snapshotOptions)
 
             case let .color(colour):
