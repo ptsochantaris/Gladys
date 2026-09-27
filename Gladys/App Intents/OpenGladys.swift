@@ -36,7 +36,7 @@ extension GladysAppIntents {
             "Select item"
         }
 
-        static let openAppWhenRun = true
+        static let supportedModes: IntentModes = .foreground
 
         func perform() async throws -> some IntentResult {
             guard let entity else {

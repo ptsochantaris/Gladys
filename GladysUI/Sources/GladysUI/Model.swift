@@ -283,6 +283,11 @@ public enum Model {
     public static func setup() throws {
         try loadInitialData()
         CSSearchableIndex.default().indexDelegate = indexDelegate
+        ArchivedItemQuery.textSearchProvider = { text in
+            let filter = Filter()
+            filter.text = text
+            return Array(filter.filteredDrops)
+        }
 
         // migrate if needed
         let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as! String

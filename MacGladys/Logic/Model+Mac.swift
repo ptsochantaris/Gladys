@@ -1,5 +1,6 @@
 import AppIntents
 import AppKit
+import CoreSpotlight
 import GladysCommon
 import GladysUI
 import UniformTypeIdentifiers
@@ -34,6 +35,13 @@ extension Model {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result = Model.addItems(itemProviders: [provider], indexPath: IndexPath(item: 0, section: 0), overrides: importOverrides, filterContext: currentFilter)
         return try await GladysAppIntents.processCreationResult(result)
+    }
+
+    /// Routes through the same path as a Spotlight "continue search in app" request
+    static func startSearch(text: String) {
+        let activity = NSUserActivity(activityType: CSQueryContinuationActionType)
+        activity.addUserInfoEntries(from: [CSSearchQueryString: text])
+        _ = AppDelegate.shared?.application(NSApp, continue: activity) { _ in }
     }
 
     private static var eventMonitor: FileMonitor?

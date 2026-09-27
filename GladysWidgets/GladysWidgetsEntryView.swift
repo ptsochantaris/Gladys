@@ -11,7 +11,7 @@ struct GladysWidgetsEntryView: View {
 
     private func itemIntent(for id: UUID) -> GladysAppIntents.OpenGladys {
         let x = GladysAppIntents.OpenGladys()
-        x.entity = GladysAppIntents.ArchivedItemEntity(id: id, title: "")
+        x.entity = GladysAppIntents.ArchivedItemEntity(id: id)
         x.action = .userDefault
         return x
     }

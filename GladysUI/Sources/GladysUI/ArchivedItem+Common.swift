@@ -1,3 +1,4 @@
+import AppIntents
 import Foundation
 import GladysCommon
 
@@ -76,5 +77,7 @@ public extension ArchivedItem {
         activity.contentAttributeSet = item.searchAttributes
         activity.contentAttributeSet?.relatedUniqueIdentifier = uuidString
         activity.isEligibleForSearch = true
+        // Lets Siri and Apple Intelligence resolve "this" to the item on screen
+        activity.appEntityIdentifier = EntityIdentifier(for: ArchivedItemEntity.self, identifier: item.uuid)
     }
 }

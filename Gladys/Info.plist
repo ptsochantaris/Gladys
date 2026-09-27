@@ -84,9 +84,6 @@
 	<string>Gladys will only transcribe speech from media items when this setting is on, and only process it on the local device.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>CopyComponentIntent</string>
-		<string>CopyItemIntent</string>
-		<string>PasteClipboardIntent</string>
 		<string>build.bru.Gladys.item.quicklook</string>
 		<string>build.bru.Gladys.item.view</string>
 		<string>build.bru.Gladys.main.list</string>

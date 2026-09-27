@@ -4,7 +4,7 @@ import GladysCommon
     import AppKit
 
     extension ArchivedItem {
-        func copyToPasteboard(donateShortcut _: Bool = true) {
+        func copyToPasteboard() {
             if let pi = pasteboardItem(forDrag: false) {
                 let g = NSPasteboard.general
                 g.clearContents()

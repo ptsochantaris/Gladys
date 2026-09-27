@@ -998,7 +998,10 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
 
         public var searchableItem: CSSearchableItem {
-            CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: searchAttributes)
+            let item = CSSearchableItem(uniqueIdentifier: uuid.uuidString, domainIdentifier: nil, attributeSet: searchAttributes)
+            // Links this Spotlight entry to its App Intents entity, so Siri and Apple Intelligence can act on it
+            item.associateAppEntity(ArchivedItemEntity(item: self))
+            return item
         }
     #endif
 

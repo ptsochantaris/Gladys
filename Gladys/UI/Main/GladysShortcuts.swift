@@ -18,12 +18,24 @@ struct GladysShortcuts: AppShortcutsProvider {
                     shortTitle: "Select item",
                     systemImageName: "square.grid.3x3.topleft.filled")
 
+        if #available(iOS 27.0, macOS 27.0, visionOS 27.0, *) {
+            AppShortcut(intent: GladysAppIntents.OpenItem(),
+                        phrases: ["Open \(.applicationName) item"],
+                        shortTitle: "Open item",
+                        systemImageName: "arrow.up.forward.app")
+
+            AppShortcut(intent: GladysAppIntents.SearchInGladys(),
+                        phrases: ["Search \(.applicationName)", "Search in \(.applicationName)"],
+                        shortTitle: "Search",
+                        systemImageName: "magnifyingglass")
+        }
+
         AppShortcut(intent: GladysAppIntents.CreateItemFromText(),
                     phrases: ["Create \(.applicationName) item from text"],
                     shortTitle: "Create from text",
                     systemImageName: "doc.text")
 
-        AppShortcut(intent: GladysAppIntents.CreateItemFromText(),
+        AppShortcut(intent: GladysAppIntents.CreateItemFromUrl(),
                     phrases: ["Create \(.applicationName) item from link"],
                     shortTitle: "Create from link",
                     systemImageName: "link")

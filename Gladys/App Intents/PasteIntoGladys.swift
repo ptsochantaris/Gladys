@@ -13,7 +13,7 @@ extension GladysAppIntents {
             "Paste from clipboard"
         }
 
-        static let openAppWhenRun = true
+        static let supportedModes: IntentModes = .foreground
 
         func perform() async throws -> some IntentResult {
             let topIndex = IndexPath(item: 0, section: 0)

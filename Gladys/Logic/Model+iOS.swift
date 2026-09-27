@@ -1,4 +1,5 @@
 import AppIntents
+import CoreSpotlight
 import Foundation
 import GladysCommon
 import GladysUI
@@ -59,5 +60,14 @@ extension Model {
         let importOverrides = ImportOverrides(title: title, note: note, labels: labels.map(\.id))
         let result = pasteItems(from: [provider], overrides: importOverrides, currentFilter: currentFilter)
         return try await GladysAppIntents.processCreationResult(result)
+    }
+
+    /// Routes through the same path as a Spotlight "continue search in app" request
+    static func startSearch(text: String) {
+        let activity = NSUserActivity(activityType: CSQueryContinuationActionType)
+        activity.addUserInfoEntries(from: [CSSearchQueryString: text])
+        let scenes = UIApplication.shared.connectedScenes
+        let scene = scenes.first { $0.activationState == .foregroundActive } ?? scenes.first
+        Singleton.shared.boot(with: activity, in: scene)
     }
 }
