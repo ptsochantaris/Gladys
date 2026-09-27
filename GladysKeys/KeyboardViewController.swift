@@ -410,7 +410,7 @@ final class KeyboardViewController: UIInputViewController, UICollectionViewDeleg
     func collectionView(_: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
         let item = filteredDrops[indexPath.item]
 
-        return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSString, previewProvider: nil) { _ in
+        return UIContextMenuConfiguration(identifier: item.uuid.uuidString as NSString, previewProvider: nil) { [weak self] _ in
             let copyAction = UIAction(title: "Copy") { _ in
                 item.copyToPasteboard()
             }

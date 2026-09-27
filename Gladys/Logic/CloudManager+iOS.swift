@@ -5,12 +5,14 @@ import Maintini
 import UIKit
 
 extension CloudManager {
-    enum SyncPermissionContext: Int {
+    nonisolated enum SyncPermissionContext: Int {
         case always, wifiOnly, manualOnly
     }
 
-    @EnumUserDefault(key: "syncContextSetting", defaultValue: .always)
-    static var syncContextSetting: SyncPermissionContext
+    static var syncContextSetting: SyncPermissionContext {
+        get { SyncPermissionContext(rawValue: PersistedOptions.defaults.integer(forKey: "syncContextSetting")) ?? .always }
+        set { PersistedOptions.defaults.set(newValue.rawValue, forKey: "syncContextSetting") }
+    }
 
     @MainActor
     static func received(notificationInfo: [AnyHashable: Any]) async -> UIBackgroundFetchResult {

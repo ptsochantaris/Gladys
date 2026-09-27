@@ -56,17 +56,17 @@ public struct ItemView: View {
                     img
                         .resizable()
                         .accessibilityIgnoresInvertColors()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                 case .fill:
                     img
                         .resizable()
                         .accessibilityIgnoresInvertColors()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                 case .circle:
                     img
                         .resizable()
                         .accessibilityIgnoresInvertColors()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                         .clipShape(Circle())
                 case .center:
                     img

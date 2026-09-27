@@ -21,7 +21,7 @@ public final class Tip {
     }
 }
 
-public enum TipJarError: LocalizedError {
+public nonisolated enum TipJarError: LocalizedError {
     case noFetchedProduct(String)
 
     public var errorDescription: String? {

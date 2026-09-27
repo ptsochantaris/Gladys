@@ -1,6 +1,6 @@
 import SwiftUI
 
-public extension COLOR {
+public nonisolated extension COLOR {
     static let g_colorComponentLabel = COLOR(named: "colorComponentLabel")!
     static let g_colorComponentLabelInverse = COLOR(named: "colorComponentLabelInverse")!
     static let g_colorKeyboardBright = COLOR(named: "colorKeyboardBright")!

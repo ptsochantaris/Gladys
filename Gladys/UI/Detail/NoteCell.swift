@@ -11,7 +11,7 @@ final class NoteCell: UITableViewCell, UITextViewDelegate {
 
     private var observer: NSKeyValueObservation?
 
-    override func awakeFromNib() {
+    override nonisolated func awakeFromNib() {
         super.awakeFromNib()
 
         MainActor.assumeIsolated {

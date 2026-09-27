@@ -5,14 +5,14 @@ import Foundation
 #endif
 import GladysCommon
 
-public struct SectionIdentifier: Hashable, @unchecked Sendable {
+public nonisolated struct SectionIdentifier: Hashable, @unchecked Sendable {
     public let label: Filter.Toggle?
     public init(label: Filter.Toggle?) {
         self.label = label
     }
 }
 
-public struct ItemIdentifier: Hashable, @unchecked Sendable {
+public nonisolated struct ItemIdentifier: Hashable, @unchecked Sendable {
     public let label: Filter.Toggle?
     public let uuid: UUID
     public init(label: Filter.Toggle?, uuid: UUID) {
@@ -27,15 +27,15 @@ public protocol FilterDelegate: AnyObject {
 
 @MainActor
 public final class Filter {
-    public enum UpdateType {
+    public nonisolated enum UpdateType {
         case none, instant, animated
     }
 
-    public enum DisplayMode: Int, Codable {
+    public nonisolated enum DisplayMode: Int, Codable {
         case collapsed, scrolling, full
     }
 
-    public enum GroupingMode: Int {
+    public nonisolated enum GroupingMode: Int {
         case flat, byLabel
 
         public var imageName: String {
@@ -372,7 +372,7 @@ public final class Filter {
         }
     }
 
-    public struct Toggle: Hashable, Codable {
+    public nonisolated struct Toggle: Hashable, Codable {
         public enum Section {
             case recent(labels: [String], title: String)
             case filtered(labels: [String], title: String)

@@ -124,8 +124,10 @@ public extension CloudManager {
         }
     }
 
-    @UserDefault(key: "lastSyncCompletion", defaultValue: .distantPast)
-    static var lastSyncCompletion: Date
+    static var lastSyncCompletion: Date {
+        get { PersistedOptions.defaults.object(forKey: "lastSyncCompletion") as? Date ?? .distantPast }
+        set { PersistedOptions.defaults.set(newValue, forKey: "lastSyncCompletion") }
+    }
 
     internal static var uuidSequence: [String] {
         get {
@@ -597,7 +599,7 @@ public extension CloudManager {
             showNetwork = false
         }
 
-        try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
+        _ = try await CKContainer(identifier: metadata.containerIdentifier).accept(metadata)
 
         try? await sync() // get the new shared objects
     }

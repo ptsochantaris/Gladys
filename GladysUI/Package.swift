@@ -1,4 +1,4 @@
-// swift-tools-version: 6.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
@@ -31,7 +31,7 @@ let package = Package(
 for target in package.targets {
     var settings = target.swiftSettings ?? []
     settings.append(contentsOf: [
-        // .defaultIsolation(MainActor.self),
+        .defaultIsolation(MainActor.self),
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableUpcomingFeature("InferIsolatedConformances")
     ])

@@ -1,7 +1,7 @@
 import Foundation
 import GladysCommon
 
-final class FileMonitor: NSObject, NSFilePresenter {
+nonisolated final class FileMonitor: NSObject, NSFilePresenter {
     var presentedItemURL: URL?
 
     var presentedItemOperationQueue = OperationQueue.main

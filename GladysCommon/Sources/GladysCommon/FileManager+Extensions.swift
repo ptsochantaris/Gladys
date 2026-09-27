@@ -1,6 +1,6 @@
 import Foundation
 
-public extension FileManager {
+public nonisolated extension FileManager {
     func contentSizeOfDirectory(at directoryURL: URL) -> Int64 {
         var contentSize: Int64 = 0
         if let e = enumerator(at: directoryURL, includingPropertiesForKeys: [.fileSizeKey]) {

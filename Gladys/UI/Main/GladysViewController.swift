@@ -220,7 +220,7 @@ class GladysViewController: UIViewController, GladysViewDelegate {
 
     // MARK: scrolling
 
-    private final class ScrollInfo {
+    private final nonisolated class ScrollInfo {
         let scrollLink: CADisplayLink
         let scrollView: UIScrollView
 

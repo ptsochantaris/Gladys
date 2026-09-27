@@ -1,6 +1,6 @@
 import CloudKit
 
-public enum RecordChangeCheck {
+public nonisolated enum RecordChangeCheck {
     case none, changed, tagOnly
 
     public init(localRecord: CKRecord?, remoteRecord: CKRecord) {
@@ -18,7 +18,7 @@ public enum RecordChangeCheck {
     }
 }
 
-public extension CKDatabase.Scope {
+public nonisolated extension CKDatabase.Scope {
     var keyName: String {
         switch self {
         case .public: "1"

@@ -32,7 +32,7 @@ struct ItemCell: View {
             } else if item.hasFullImage, let img = item.image?.swiftUiImage {
                 img
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFill()
                     .frame(width: width, height: height)
                     .clipped()
                     .cornerRadius(cornerRadius)
@@ -42,7 +42,7 @@ struct ItemCell: View {
                     if let img = item.image?.swiftUiImage {
                         img
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .scaledToFit()
                             .frame(width: 36)
                     }
 

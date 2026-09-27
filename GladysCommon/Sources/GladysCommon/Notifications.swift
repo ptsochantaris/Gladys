@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ImportOverrides {
+public nonisolated struct ImportOverrides {
     public let title: String?
     public let note: String?
     public let labels: [String]?
@@ -12,12 +12,12 @@ public struct ImportOverrides {
     }
 }
 
-public struct PasteRequest {
+public nonisolated struct PasteRequest {
     public let providers: [DataImporter]
     public let overrides: ImportOverrides?
 }
 
-public extension Notification.Name {
+public nonisolated extension Notification.Name {
     static let ItemCollectionNeedsDisplay = Notification.Name("ItemCollectionNeedsDisplay")
     static let ModelDataUpdated = Notification.Name("ModelDataUpdated")
     static let ItemsRemoved = Notification.Name("ItemsRemoved")
@@ -34,7 +34,7 @@ public extension Notification.Name {
     static let FiltersShouldUpdate = Notification.Name("FiltersShouldUpdate")
 }
 
-public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
+public nonisolated func sendNotification(name: Notification.Name, object: Sendable? = nil) {
     Task { @MainActor in
         await Task.yield()
         NotificationCenter.default.post(name: name, object: object)
@@ -42,7 +42,7 @@ public func sendNotification(name: Notification.Name, object: Sendable? = nil) {
 }
 
 @discardableResult
-public func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) -> Task<Void, Never> {
+public nonisolated func notifications(for name: Notification.Name, block: @MainActor @escaping (Any?) async -> Void) -> Task<Void, Never> {
     Task { @MainActor in
         for await notification in NotificationCenter.default.notifications(named: name) {
             if Task.isCancelled { return }
@@ -55,7 +55,7 @@ public func notifications(for name: Notification.Name, block: @MainActor @escapi
 #if canImport(UIKit) && !canImport(WatchKit)
     import UIKit
 
-    public struct UIRequest: Sendable {
+    public nonisolated struct UIRequest: Sendable {
         public let vc: UIViewController
         public let sourceView: UIView?
         public let sourceRect: CGRect?
@@ -73,7 +73,7 @@ public func notifications(for name: Notification.Name, block: @MainActor @escapi
         }
     }
 
-    public extension Notification.Name {
+    public nonisolated extension Notification.Name {
         static let UIRequest = Notification.Name("UIRequest")
         static let DismissPopoversRequest = Notification.Name("DismissPopoversRequest")
         static let ResetSearchRequest = Notification.Name("ResetSearchRequest")

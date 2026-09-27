@@ -3,7 +3,7 @@ import UIKit
 final class LabelListCell: UITableViewCell {
     @IBOutlet var labelName: UILabel!
 
-    override func awakeFromNib() {
+    override nonisolated func awakeFromNib() {
         super.awakeFromNib()
 
         MainActor.assumeIsolated {

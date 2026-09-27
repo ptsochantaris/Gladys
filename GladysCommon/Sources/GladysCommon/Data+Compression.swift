@@ -1,7 +1,7 @@
 import Compression
 import Foundation
 
-public extension Data {
+public nonisolated extension Data {
     enum CompressionOperation {
         case compress
         case decompress

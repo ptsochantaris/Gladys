@@ -18,13 +18,13 @@ import SwiftUI
     import CoreImage.CIFilterBuiltins
 #endif
 
-public extension CGSize {
+public nonisolated extension CGSize {
     var isCompact: Bool {
         width < 170
     }
 }
 
-public extension COLOR {
+public nonisolated extension COLOR {
     func interpolate(with color: COLOR) -> COLOR {
         let (r1, g1, b1, a1) = components
         let (r2, g2, b2, a2) = color.components
@@ -53,7 +53,7 @@ public extension COLOR {
     }
 }
 
-public extension IMAGE {
+public nonisolated extension IMAGE {
     static func from(data: Data) -> IMAGE? {
         IMAGE(data: data)
     }
@@ -173,11 +173,11 @@ public extension IMAGE {
         }
     }
 
-    private let ciBuffer = CIBuffer()
+    private nonisolated let ciBuffer = CIBuffer()
 
-    private let sharedCiContext = CIContext(options: [.cacheIntermediates: false])
+    private nonisolated let sharedCiContext = CIContext(options: [.cacheIntermediates: false])
 
-    public extension CIImage {
+    public nonisolated extension CIImage {
         var asImage: IMAGE? {
             guard let new = sharedCiContext.createCGImage(self, from: extent) else {
                 return nil
@@ -258,9 +258,9 @@ public extension IMAGE {
 
 #endif
 
-private let bitmapInfo = CGBitmapInfo(alpha: .premultipliedFirst, component: .integer, byteOrder: .orderDefault)
-private let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
-public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, height _: Int) -> CGContext {
+private nonisolated let bitmapInfo = CGBitmapInfo(alpha: .premultipliedFirst, component: .integer, byteOrder: .orderDefault)
+private nonisolated let srgb = CGColorSpace(name: CGColorSpace.sRGB)!
+public nonisolated func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, height _: Int) -> CGContext {
     CGContext(data: data,
               width: width,
               height: width,
@@ -271,7 +271,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
 }
 
 #if canImport(AppKit)
-    public extension NSImage {
+    public nonisolated extension NSImage {
         static func block(color: NSColor, size: CGSize) -> NSImage {
             let image = NSImage(size: size)
             image.lockFocus()
@@ -371,7 +371,7 @@ public func createCgContext(data: UnsafeMutableRawPointer? = nil, width: Int, he
     @MainActor
     public let pixelSize: CGFloat = 1 / screenScale
 
-    public extension UIImage {
+    public nonisolated extension UIImage {
         @MainActor
         static func fromFileSync(_ url: URL, template: Bool) -> UIImage? {
             if let data = try? Data(contentsOf: url), let image = UIImage(data: data, scale: template ? screenScale : 1) {

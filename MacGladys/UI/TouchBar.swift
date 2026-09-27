@@ -114,11 +114,9 @@ final class GladysTouchBarScrubber: NSCustomTouchBarItem, NSScrubberDelegate, NS
         return NSScrubberItemView()
     }
 
-    private static let itemSize = NSSize(width: 50, height: 30)
+    private nonisolated static let itemSize = NSSize(width: 50, height: 30)
     nonisolated func scrubber(_: NSScrubber, layout _: NSScrubberFlowLayout, sizeForItemAt _: Int) -> NSSize {
-        MainActor.assumeIsolated {
-            GladysTouchBarScrubber.itemSize
-        }
+        GladysTouchBarScrubber.itemSize
     }
 
     func scrubber(_ scrubber: NSScrubber, didSelectItemAt index: Int) {

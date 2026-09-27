@@ -585,7 +585,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    override func awakeFromNib() {
+    override nonisolated func awakeFromNib() {
         super.awakeFromNib()
 
         MainActor.assumeIsolated {
@@ -720,7 +720,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        observe(.AcceptStarting) { _ in
+        observe(.AcceptStarting) { [weak self] _ in
             await genericAlert(title: "Accepting Share…", message: nil) { [weak self] alert in
                 guard let self else { return }
                 acceptAlert = alert
@@ -911,26 +911,6 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
             }
         }
 
-        if #unavailable(iOS 26) {
-            if let navigationBar = navigationController?.navigationBar {
-                #if os(visionOS)
-                    navigationBar.titleTextAttributes = [
-                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-                    ]
-                    navigationBar.largeTitleTextAttributes = [
-                        .foregroundColor: UIColor.white.withAlphaComponent(0.7)
-                    ]
-                #else
-                    navigationBar.titleTextAttributes = [
-                        .foregroundColor: UIColor.g_colorLightGray
-                    ]
-                    navigationBar.largeTitleTextAttributes = [
-                        .foregroundColor: UIColor.g_colorLightGray
-                    ]
-                #endif
-            }
-        }
-
         let searchController = UISearchController(searchResultsController: nil)
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
@@ -1009,7 +989,7 @@ final class ViewController: GladysViewController, UICollectionViewDelegate, UICo
         }
     }
 
-    deinit {
+    isolated deinit {
         highlightRegistration?.cancel()
         for observer in notificationObservers {
             observer.cancel()

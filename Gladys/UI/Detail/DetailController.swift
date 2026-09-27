@@ -36,7 +36,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
     @IBOutlet private var dateLabelHolder: UIView!
     @IBOutlet private var menuButton: UIBarButtonItem?
 
-    deinit {
+    isolated deinit {
         log("Detail view deinit")
     }
 
@@ -746,7 +746,7 @@ final class DetailController: GladysViewController, ResizingCellDelegate, Detail
                     }
 
                     if existingLabel == nil {
-                        _ = dragItem.itemProvider.loadObject(ofClass: String.self) { newLabel, _ in
+                        _ = dragItem.itemProvider.loadObject(ofClass: String.self) { [weak self] newLabel, _ in
                             if let newLabel {
                                 Task { @MainActor [weak self] in
                                     guard let self else { return }

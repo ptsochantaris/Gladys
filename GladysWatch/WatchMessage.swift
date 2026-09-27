@@ -3,7 +3,7 @@ import WatchConnectivity
 
 extension WCSession: @retroactive @unchecked Sendable {}
 
-enum WatchMessage: Codable {
+nonisolated enum WatchMessage: Codable {
     struct ImageInfo: Codable {
         let id: String
         let width: CGFloat
@@ -41,10 +41,11 @@ extension WCSession {
         }
 
         return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<WatchMessage?, Error>) in
-            sendMessageData(data) {
-                let watchMessage = WatchMessage.parse(from: $0)
+            // Reply and error handlers arrive on a WatchConnectivity background queue
+            sendMessageData(data) { @Sendable reply in
+                let watchMessage = WatchMessage.parse(from: reply)
                 continuation.resume(returning: watchMessage)
-            } errorHandler: { error in
+            } errorHandler: { @Sendable error in
                 continuation.resume(throwing: error)
             }
         }

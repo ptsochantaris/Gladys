@@ -1,7 +1,7 @@
 import CloudKit
 import Foundation
 
-public enum GladysError: LocalizedError {
+public nonisolated enum GladysError: LocalizedError {
     case cloudAccountRetirevalFailed
     case cloudLoginRequired
     case cloudAccessRestricted
@@ -78,7 +78,7 @@ public enum GladysError: LocalizedError {
     }
 }
 
-public extension Error {
+public nonisolated extension Error {
     var itemDoesNotExistOnServer: Bool {
         (self as? CKError)?.code == .unknownItem
     }

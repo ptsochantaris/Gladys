@@ -5,12 +5,12 @@
     extension CSSearchableIndex: @retroactive @unchecked Sendable {}
     extension CSSearchableItem: @retroactive @unchecked Sendable {}
 
-    public protocol IndexerItemProvider: AnyObject {
+    public nonisolated protocol IndexerItemProvider: AnyObject {
         func iterateThroughItems(perItem: @escaping @Sendable @MainActor (ArchivedItem) async -> Bool) async
         func getItem(uuid: String) -> ArchivedItem?
     }
 
-    public final class Indexer: NSObject, CSSearchableIndexDelegate {
+    public final nonisolated class Indexer: NSObject, CSSearchableIndexDelegate {
         private weak var itemProvider: IndexerItemProvider!
 
         public init(itemProvider: IndexerItemProvider) {

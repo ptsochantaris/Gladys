@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-public extension String {
+public nonisolated extension String {
     static func fromUTF8Data(_ data: Data) -> String {
         String(data: data, encoding: .utf8) ?? ""
     }

@@ -251,25 +251,30 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
 
     @IBAction private func transcribeSpeechFromMediaChanged(_ sender: NSButton) {
         if sender.integerValue == 1 {
-            SFSpeechRecognizer.requestAuthorization { status in
-                Task { @MainActor in
-                    switch status {
-                    case .authorized:
-                        if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
-                            PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
-                            await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
-                        } else {
-                            sender.integerValue = 0
-                            PersistedOptions.transcribeSpeechFromMedia = false
-                            await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
-                        }
-                    case .denied, .notDetermined, .restricted:
-                        sender.integerValue = 0
-                        PersistedOptions.transcribeSpeechFromMedia = false
-                    @unknown default:
-                        sender.integerValue = 0
-                        PersistedOptions.transcribeSpeechFromMedia = false
+            Task { @MainActor in
+                // The completion handler fires on a background queue, so it must only touch the Sendable continuation
+                let status = await withCheckedContinuation { continuation in
+                    SFSpeechRecognizer.requestAuthorization { @Sendable status in
+                        continuation.resume(returning: status)
                     }
+                }
+
+                switch status {
+                case .authorized:
+                    if let testRecognizer = SFSpeechRecognizer(), testRecognizer.isAvailable, testRecognizer.supportsOnDeviceRecognition {
+                        PersistedOptions.transcribeSpeechFromMedia = sender.integerValue == 1
+                        await genericAlert(title: "Activated", message: "Please note that this feature can significantly increase the processing time of media with long durations.")
+                    } else {
+                        sender.integerValue = 0
+                        PersistedOptions.transcribeSpeechFromMedia = false
+                        await genericAlert(title: "Could not activate", message: "This device does not support on-device speech recognition.")
+                    }
+                case .denied, .notDetermined, .restricted:
+                    sender.integerValue = 0
+                    PersistedOptions.transcribeSpeechFromMedia = false
+                @unknown default:
+                    sender.integerValue = 0
+                    PersistedOptions.transcribeSpeechFromMedia = false
                 }
             }
         } else {
@@ -550,8 +555,8 @@ final class Preferences: NSViewController, NSTextFieldDelegate {
                 confirm(title: "Are you sure?",
                         message: "This will remove any data that Gladys has stored in iCloud from any device. If you have other devices with sync switched on, it will stop working there until it is re-enabled.",
                         action: "Delete iCloud Data",
-                        cancel: "Cancel") { [weak self] confirmed in
-                    if let self, confirmed {
+                        cancel: "Cancel") { [self] confirmed in
+                    if confirmed {
                         eraseiCloudData()
                     }
                 }

@@ -9,6 +9,7 @@ extension WidgetFamily {
         case .systemMedium: 4
         case .systemLarge: 4
         case .systemExtraLarge: 8
+        case .systemExtraLargePortrait: 4
         @unknown default: 1
         }
     }
@@ -20,6 +21,7 @@ extension WidgetFamily {
         case .systemMedium: 2
         case .systemLarge: 4
         case .systemExtraLarge: 4
+        case .systemExtraLargePortrait: 8
         @unknown default: 1
         }
     }
@@ -30,7 +32,7 @@ extension WidgetFamily {
         case .systemSmall: 4
         case .systemMedium: 8
         case .systemLarge: 16
-        case .systemExtraLarge: 32
+        case .systemExtraLarge, .systemExtraLargePortrait: 32
         @unknown default: 1
         }
     }

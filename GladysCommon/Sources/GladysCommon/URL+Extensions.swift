@@ -1,6 +1,6 @@
 import Foundation
 
-public extension URL {
+public nonisolated extension URL {
     var urlFileContent: Data {
         Data("[InternetShortcut]\r\nURL=\(absoluteString)\r\n".utf8)
     }

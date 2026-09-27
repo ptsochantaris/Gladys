@@ -1,6 +1,6 @@
 import Foundation
 
-public extension Data {
+public nonisolated extension Data {
     var isPlist: Bool {
         count > 5
             && self[0 ..< 6].elementsEqual([0x62, 0x70, 0x6C, 0x69, 0x73, 0x74])

@@ -1,4 +1,4 @@
-public enum RepresentedClass: Codable, Equatable {
+public nonisolated enum RepresentedClass: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         try self.init(name: decoder.singleValueContainer().decode(String.self))
     }

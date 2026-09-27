@@ -7,7 +7,7 @@ import UniformTypeIdentifiers
 
 extension NSItemProvider: @retroactive @unchecked Sendable {}
 
-public final class DataImporter: Sendable {
+public final nonisolated class DataImporter: Sendable {
     public let identifiers: [String]
     public let suggestedName: String?
 

@@ -3,7 +3,7 @@ import ExceptionCatcher
 import Foundation
 import MapKit
 
-public enum SafeArchiving {
+public nonisolated enum SafeArchiving {
     private static let allowedClasses = [
         NSString.classForKeyedUnarchiver(),
         NSAttributedString.classForKeyedUnarchiver(),

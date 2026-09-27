@@ -1,11 +1,11 @@
 import CoreLocation
 import MapKit
 
-extension MKMapItem: @retroactive @unchecked Sendable {}
+nonisolated extension MKMapItem: @retroactive @unchecked Sendable {}
 
-extension CLLocationCoordinate2D: @retroactive Equatable {}
+nonisolated extension CLLocationCoordinate2D: @retroactive Equatable {}
 
-extension CLLocationCoordinate2D: @retroactive Hashable {
+nonisolated extension CLLocationCoordinate2D: @retroactive Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
         lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
     }
@@ -16,14 +16,14 @@ extension CLLocationCoordinate2D: @retroactive Hashable {
     }
 }
 
-public let imageDimensions = CGSize(width: 512, height: 512)
+public nonisolated let imageDimensions = CGSize(width: 512, height: 512)
 
 public protocol DisplayImageProviding {
     var imageCacheKey: String { get }
     var displayIcon: IMAGE { get async }
 }
 
-public enum Images {
+public nonisolated enum Images {
     public struct SnapshotOptions: Hashable, Sendable {
         public var coordinate: CLLocationCoordinate2D?
         public let range: CLLocationDistance

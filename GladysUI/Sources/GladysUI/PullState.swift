@@ -100,8 +100,10 @@ final class PullState {
 
     ///////////////////////////////////////
 
-    @UserDefault(key: "zoneTokens", defaultValue: [String: Data]())
-    private var zoneTokens: [String: Data]
+    private var zoneTokens: [String: Data] {
+        get { PersistedOptions.defaults.object(forKey: "zoneTokens") as? [String: Data] ?? [:] }
+        set { PersistedOptions.defaults.set(newValue, forKey: "zoneTokens") }
+    }
 
     static func wipeZoneTokens() {
         PersistedOptions.defaults.removeObject(forKey: "zoneTokens")
@@ -125,8 +127,10 @@ final class PullState {
 
     ///////////////////////////////////////
 
-    @UserDefault(key: "databaseTokens", defaultValue: [String: Data]())
-    private var databaseTokens: [String: Data]
+    private var databaseTokens: [String: Data] {
+        get { PersistedOptions.defaults.object(forKey: "databaseTokens") as? [String: Data] ?? [:] }
+        set { PersistedOptions.defaults.set(newValue, forKey: "databaseTokens") }
+    }
 
     static func wipeDatabaseTokens() {
         PersistedOptions.defaults.removeObject(forKey: "databaseTokens")

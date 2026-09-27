@@ -41,13 +41,17 @@ final class AboutController: GladysViewController {
         super.viewDidLoad()
 
         supportStack.isHidden = true
+        testFlightStack.isHidden = true
 
-        if isRunningInTestFlightEnvironment {
-            testFlightStack.isHidden = false
-        } else {
-            testFlightStack.isHidden = true
+        for v in [p1, p2, p3, p4, p5] {
+            v?.layer.cornerRadius = 8
+        }
 
-            Task {
+        Task {
+            if await isRunningInTestFlightEnvironment() {
+                testFlightStack.isHidden = false
+                sizingHolder?.sizeWindow()
+            } else {
                 await TipJar.shared.setupIfNeeded()
 
                 let fetchedProducts = TipJar.shared.tips.compactMap(\.fetchedProduct)
@@ -68,15 +72,11 @@ final class AboutController: GladysViewController {
                 if firstAppearance {
                     supportStack.isHidden = false
                 } else {
-                    UIView.animate(withDuration: 0.2) { [weak self] in
-                        self?.supportStack.isHidden = false
+                    UIView.animate(withDuration: 0.2) { [self] in
+                        supportStack.isHidden = false
                     }
                 }
                 sizingHolder?.sizeWindow()
-            }
-
-            for v in [p1, p2, p3, p4, p5] {
-                v?.layer.cornerRadius = 8
             }
         }
 

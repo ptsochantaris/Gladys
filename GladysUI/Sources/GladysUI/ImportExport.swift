@@ -3,7 +3,7 @@ import GladysCommon
 import ZIPFoundation
 
 public enum ImportExport {
-    private class FileManagerFilter: NSObject, FileManagerDelegate {
+    private final nonisolated class FileManagerFilter: NSObject, FileManagerDelegate {
         func fileManager(_: FileManager, shouldCopyItemAt srcURL: URL, to _: URL) -> Bool {
             guard let lastComponent = srcURL.pathComponents.last else { return false }
             return !(lastComponent == "shared-blob" || lastComponent == "ck-record" || lastComponent == "ck-share")
@@ -56,7 +56,7 @@ public enum ImportExport {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static func createZip(using filter: Filter, progress: Progress) async throws -> URL {
-        let dropsCopy = await filter.eligibleDropsForExport
+        let dropsCopy = filter.eligibleDropsForExport
         let itemCount = Int64(1 + dropsCopy.count)
 
         let p = Progress(totalUnitCount: itemCount)

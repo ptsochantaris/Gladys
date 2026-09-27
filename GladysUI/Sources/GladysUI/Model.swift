@@ -7,7 +7,7 @@ import PopTimer
 import Semalot
 import UniformTypeIdentifiers
 
-public extension UTType {
+public nonisolated extension UTType {
     static let gladysArchive = UTType(tag: "gladysArchive", tagClass: .filenameExtension, conformingTo: .bundle)!
 }
 

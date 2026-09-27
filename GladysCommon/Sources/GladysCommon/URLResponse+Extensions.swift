@@ -1,6 +1,6 @@
 import Foundation
 
-extension URLResponse {
+nonisolated extension URLResponse {
     var guessedEncoding: String.Encoding {
         if let encodingName = textEncodingName {
             let cfEncoding = CFStringConvertIANACharSetNameToEncoding(encodingName as CFString)

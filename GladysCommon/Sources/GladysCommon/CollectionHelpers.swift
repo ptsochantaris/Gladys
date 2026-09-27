@@ -1,7 +1,7 @@
 import Foundation
 import Lista
 
-public extension Collection where Element: Hashable {
+public nonisolated extension Collection where Element: Hashable {
     var uniqued: [Element] {
         var set = Set<Element>()
         set.reserveCapacity(underestimatedCount)
@@ -38,13 +38,13 @@ public extension Collection where Element: Hashable {
     }
 }
 
-public extension Collection {
+public nonisolated extension Collection {
     var isPopulated: Bool {
         !isEmpty
     }
 }
 
-public extension Collection where Self.Index == Int {
+public nonisolated extension Collection where Self.Index == Int {
     func bunch(maxSize: Int) -> [[Element]] {
         var pos = 0
         let slices = Lista<Self.SubSequence>()

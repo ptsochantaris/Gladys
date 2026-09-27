@@ -104,7 +104,7 @@ open class CommonItemCell: UICollectionViewCell {
             #if os(visionOS)
                 layer.rasterizationScale = 2
             #else
-                layer.rasterizationScale = window?.screen.scale ?? UIScreen.main.scale
+                layer.rasterizationScale = window?.screen.scale ?? traitCollection.displayScale
             #endif
         }
 

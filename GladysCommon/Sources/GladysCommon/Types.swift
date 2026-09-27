@@ -10,7 +10,7 @@ import SwiftUI
     public typealias VIEWCLASS = NSView
     public typealias VRCLASS = NSViewRepresentable
     public typealias FONT = NSFont
-    public let groupName = "X727JSJUGJ.build.bru.MacGladys"
+    public nonisolated let groupName = "X727JSJUGJ.build.bru.MacGladys"
 
 #elseif canImport(UIKit)
     import UIKit
@@ -22,30 +22,30 @@ import SwiftUI
         public typealias VRCLASS = UIViewRepresentable
     #endif
     public typealias FONT = UIFont
-    public let groupName = "group.build.bru.Gladys"
+    public nonisolated let groupName = "group.build.bru.Gladys"
 #endif
 
 #if os(visionOS)
-    public let cellCornerRadius: CGFloat = 36
+    public nonisolated let cellCornerRadius: CGFloat = 36
 #else
-    public let cellCornerRadius: CGFloat = 18
+    public nonisolated let cellCornerRadius: CGFloat = 18
 #endif
 
-public let GladysFileUTI = "build.bru.gladys.archive"
+public nonisolated let GladysFileUTI = "build.bru.gladys.archive"
 
-public let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
-public let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
-public let kGladysMainListActivity = "build.bru.Gladys.main.list"
-public let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
-public let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
-public let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
-public let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
-public let kGladysMainViewSearchText = "kGladysMainViewSearchText"
-public let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
-public let kGladysMainViewSections = "kGladysMainViewSections"
-public let kGladysMainFilter = "mainFilter"
+public nonisolated let kGladysStartSearchShortcutActivity = "build.bru.Gladys.shortcut.search"
+public nonisolated let kGladysStartPasteShortcutActivity = "build.bru.Gladys.shortcut.paste"
+public nonisolated let kGladysMainListActivity = "build.bru.Gladys.main.list"
+public nonisolated let kGladysDetailViewingActivity = "build.bru.Gladys.item.view"
+public nonisolated let kGladysQuicklookActivity = "build.bru.Gladys.item.quicklook"
+public nonisolated let kGladysDetailViewingActivityItemUuid = "kGladysDetailViewingActivityItemUuid"
+public nonisolated let kGladysDetailViewingActivityItemTypeUuid = "kGladysDetailViewingActivityItemTypeUuid"
+public nonisolated let kGladysMainViewSearchText = "kGladysMainViewSearchText"
+public nonisolated let kGladysMainViewDisplayMode = "kGladysMainViewDisplayMode"
+public nonisolated let kGladysMainViewSections = "kGladysMainViewSections"
+public nonisolated let kGladysMainFilter = "mainFilter"
 
-public enum ArchivedDropItemDisplayType: Int, Sendable {
+public nonisolated enum ArchivedDropItemDisplayType: Int, Sendable {
     case fit, fill, center, circle
 
     public var prefersFullSizeImage: Bool {
@@ -58,19 +58,19 @@ public enum ArchivedDropItemDisplayType: Int, Sendable {
     }
 }
 
-public let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
+public nonisolated let privateZoneId = CKRecordZone.ID(zoneName: "archivedDropItems", ownerName: CKCurrentUserDefaultName)
 
-public let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
+public nonisolated let itemsDirectoryUrl: URL = appStorageUrl.appendingPathComponent("items", isDirectory: true)
 
-public enum PasteResult: Sendable {
+public nonisolated enum PasteResult: Sendable {
     case success([ArchivedItem]), noData
 }
 
-public func modificationDate(for url: URL) -> Date? {
+public nonisolated func modificationDate(for url: URL) -> Date? {
     (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
 }
 
-public let appStorageUrl: URL = {
+public nonisolated let appStorageUrl: URL = {
     #if canImport(AppKit)
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!
     #else
@@ -80,7 +80,7 @@ public let appStorageUrl: URL = {
     return url
 }()
 
-public let temporaryDirectoryUrl: URL = {
+public nonisolated let temporaryDirectoryUrl: URL = {
     let url = appStorageUrl.appendingPathComponent("temporary", isDirectory: true)
     let fm = FileManager.default
     let p = url.path
@@ -91,14 +91,14 @@ public let temporaryDirectoryUrl: URL = {
     return url
 }()
 
-public let loadDecoder: JSONDecoder = {
+public nonisolated let loadDecoder: JSONDecoder = {
     log("Creating new loading decoder")
     let decoder = JSONDecoder()
     decoder.nonConformingFloatDecodingStrategy = .convertFromString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")
     return decoder
 }()
 
-public let saveEncoder: JSONEncoder = {
+public nonisolated let saveEncoder: JSONEncoder = {
     log("Creating new saving encoder")
     let encoder = JSONEncoder()
     encoder.nonConformingFloatEncodingStrategy = .convertToString(positiveInfinity: "pi", negativeInfinity: "ni", nan: "nan")

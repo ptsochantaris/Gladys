@@ -3,8 +3,8 @@ import SwiftSoup
 import UniformTypeIdentifiers
 
 /// Archiver
-public struct WebArchiver {
-    public nonisolated(unsafe) static let shared = WebArchiver()
+public nonisolated struct WebArchiver: Sendable {
+    public static let shared = WebArchiver()
 
     /// Error type
     public enum ArchiveErrorType: Error {

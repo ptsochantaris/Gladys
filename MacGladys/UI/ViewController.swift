@@ -86,7 +86,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         return cell
     }
 
-    override func awakeFromNib() {
+    override nonisolated func awakeFromNib() {
         super.awakeFromNib()
 
         MainActor.assumeIsolated {
@@ -991,14 +991,14 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
 
     //////////////////////////////////////////////////// Quicklook
 
-    override func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
+    override nonisolated func acceptsPreviewPanelControl(_: QLPreviewPanel!) -> Bool {
         MainActor.assumeIsolated {
             collection.selectionIndexPaths.isPopulated
         }
     }
 
     private var previewPanel: QLPreviewPanel?
-    override func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
+    override nonisolated func beginPreviewPanelControl(_ panel: QLPreviewPanel!) {
         MainActor.assumeIsolated {
             previewPanel = panel
             panel.delegate = self
@@ -1006,7 +1006,7 @@ final class ViewController: NSViewController, NSCollectionViewDelegate, QLPrevie
         }
     }
 
-    override func endPreviewPanelControl(_: QLPreviewPanel!) {
+    override nonisolated func endPreviewPanelControl(_: QLPreviewPanel!) {
         MainActor.assumeIsolated {
             previewPanel = nil
         }

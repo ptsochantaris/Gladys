@@ -2,7 +2,7 @@ import AppKit
 import GladysCommon
 import GladysUI
 
-final class GladysFilePromiseProvider: NSFilePromiseProvider {
+final nonisolated class GladysFilePromiseProvider: NSFilePromiseProvider {
     @MainActor
     static func provider(for component: Component, with title: String, extraItems: ContiguousArray<Component>, tags: [String]?) -> GladysFilePromiseProvider {
         let title = component.prepareFilename(name: title.dropFilenameSafe, directory: nil)
@@ -87,7 +87,7 @@ final class GladysFilePromiseProvider: NSFilePromiseProvider {
     }
 }
 
-final class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate {
+final nonisolated class GladysFileProviderDelegate: NSObject, NSFilePromiseProviderDelegate {
     private weak var typeItem: Component?
     private let title: String
     private let tempPath: URL

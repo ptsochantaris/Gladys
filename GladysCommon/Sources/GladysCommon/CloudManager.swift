@@ -27,7 +27,7 @@ public extension [[CKRecord]] {
 
 @CloudActor
 public enum CloudManager {
-    public enum RecordType: String {
+    public nonisolated enum RecordType: String {
         case item = "ArchivedDropItem"
         case component = "ArchivedDropItemType"
         case positionList = "PositionList"
@@ -37,8 +37,10 @@ public enum CloudManager {
 
     public static let container = CKContainer(identifier: "iCloud.build.bru.Gladys")
 
-    @UserDefault(key: "syncSwitchedOn", defaultValue: false)
-    public static var syncSwitchedOn: Bool
+    public static var syncSwitchedOn: Bool {
+        get { PersistedOptions.defaults.bool(forKey: "syncSwitchedOn") }
+        set { PersistedOptions.defaults.set(newValue, forKey: "syncSwitchedOn") }
+    }
 
     public static func check(_ results: ([CKRecordZone.ID: Result<CKRecordZone, Error>], [CKRecordZone.ID: Result<Void, Error>])) throws {
         try results.0.forEach { _ = try $0.value.get() }

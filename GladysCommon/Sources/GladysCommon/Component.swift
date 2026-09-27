@@ -13,7 +13,7 @@ import ZIPFoundation
 
 @MainActor
 public final class Component: Codable, Hashable {
-    private enum CodingKeys: String, CodingKey {
+    private nonisolated enum CodingKeys: String, CodingKey {
         case typeIdentifier
         case representedClass
         case classWasWrapped
@@ -100,7 +100,7 @@ public final class Component: Codable, Hashable {
     public var displayTitlePriority: Int
     public var displayTitleAlignment: NSTextAlignment
 
-    public struct Flags: OptionSet, Sendable {
+    public nonisolated struct Flags: OptionSet, Sendable {
         public let rawValue: Int
         public init(rawValue: Int) {
             self.rawValue = rawValue
@@ -751,7 +751,7 @@ public final class Component: Codable, Hashable {
         needsDeletion = newValue
     }
 
-    public struct BackgroundInfoObject: Sendable {
+    public nonisolated struct BackgroundInfoObject: Sendable {
         public enum Content: Sendable {
             case map(MKMapItem), color(COLOR)
         }

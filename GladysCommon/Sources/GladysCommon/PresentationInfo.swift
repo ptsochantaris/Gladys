@@ -4,7 +4,7 @@ import SwiftUI
     import UIKit
 #endif
 
-public struct PresentationInfo: Identifiable, Hashable, Sendable {
+public nonisolated struct PresentationInfo: Identifiable, Hashable, Sendable {
     public enum FieldContent: Sendable {
         case none, text(String), link(URL), note(String), hint(String)
 

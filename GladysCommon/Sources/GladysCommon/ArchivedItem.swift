@@ -25,7 +25,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
-    public enum Status: RawRepresentable, Codable, Sendable {
+    public nonisolated enum Status: RawRepresentable, Codable, Sendable {
         case isBeingConstructed, needsIngest, isBeingIngested(Progress?), deleted, nominal
 
         public init?(rawValue: Int) {
@@ -143,7 +143,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     /// Transient
-    public struct Flags: OptionSet, Sendable {
+    public nonisolated struct Flags: OptionSet, Sendable {
         public let rawValue: Int
         public init(rawValue: Int) {
             self.rawValue = rawValue
@@ -162,7 +162,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    private enum CodingKeys: String, CodingKey {
+    private nonisolated enum CodingKeys: String, CodingKey {
         case suggestedName
         case components = "typeItems"
         case createdAt
@@ -539,7 +539,7 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
         }
     }
 
-    public enum ShareMode: Sendable {
+    public nonisolated enum ShareMode: Sendable {
         case none, elsewhereReadOnly, elsewhereReadWrite, sharing
     }
 

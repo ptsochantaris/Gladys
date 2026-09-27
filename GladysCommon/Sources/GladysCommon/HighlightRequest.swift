@@ -4,7 +4,7 @@ public protocol HighlightListener: AnyObject, Sendable {
     func highlightItem(request: HighlightRequest) async
 }
 
-public struct HighlightRequest: Sendable {
+public nonisolated struct HighlightRequest: Sendable {
     public enum Action: Sendable {
         case none, detail, open, preview(String?), userDefault
     }

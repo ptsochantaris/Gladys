@@ -41,7 +41,7 @@ public final class ArchivedItemWrapper: Identifiable {
         item != nil
     }
 
-    public enum Style: Sendable {
+    public nonisolated enum Style: Sendable {
         case square, widget, wide
 
         var allowsLabels: Bool {

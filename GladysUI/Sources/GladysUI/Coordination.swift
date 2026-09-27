@@ -1,7 +1,7 @@
 import Foundation
 
 #if canImport(AppKit)
-    public enum Coordination {
+    public nonisolated enum Coordination {
         static var coordinator: NSFileCoordinator {
             NSFileCoordinator(filePresenter: nil)
         }
@@ -12,8 +12,8 @@ import Foundation
     import GladysCommon
     import UIKit
 
-    public enum Coordination {
-        private final class ModelFilePresenter: NSObject, NSFilePresenter, Sendable {
+    public nonisolated enum Coordination {
+        nonisolated private final class ModelFilePresenter: NSObject, NSFilePresenter, Sendable {
             let presentedItemURL: URL? = itemsDirectoryUrl
 
             let presentedItemOperationQueue = OperationQueue()

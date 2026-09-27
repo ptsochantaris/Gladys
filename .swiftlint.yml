@@ -15,7 +15,7 @@ disabled_rules:
   - large_tuple
 
 excluded:
-  - Pods
+  - ci_scripts # contains a 'parent' symlink to the repo root, which makes file collection recurse forever
 
 analyzer_rules:
   - unused_import
