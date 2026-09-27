@@ -58,6 +58,9 @@
       <StoreKitConfigurationFileReference
          identifier = "../../StoreKit/Gladys.storekit">
       </StoreKitConfigurationFileReference>
+      <MetalAPIValidationSettings
+         isEnabled = "No">
+      </MetalAPIValidationSettings>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

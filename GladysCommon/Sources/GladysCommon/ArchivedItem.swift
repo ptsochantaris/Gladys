@@ -1032,7 +1032,10 @@ public final class ArchivedItem: Codable, Hashable, DisplayImageProviding {
     }
 
     public var populatedCloudKitRecord: CKRecord? {
-        guard needsCloudPush, status != .deleted, goodToSave else { return nil }
+        // Never push an item while it is still being constructed or ingested: its component list may be empty or
+        // partial, and a successful push clears needsCloudPush, so the completed item would never be sent. Once
+        // ingest finishes, the resulting save triggers another sync which will pick it up.
+        guard needsCloudPush, !status.shouldDisplayLoading, goodToSave else { return nil }
 
         let record = cloudKitRecord ??
             CKRecord(recordType: CloudManager.RecordType.item.rawValue,
